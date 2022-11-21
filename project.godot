@@ -8,6 +8,28 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "Object",
+"class": &"Gamescope",
+"language": &"GDScript",
+"path": "res://core/systems/gamescope.gd"
+}, {
+"base": "Node",
+"class": &"LaunchManager",
+"language": &"GDScript",
+"path": "res://core/systems/launcher/launch_manager.gd"
+}, {
+"base": "Node",
+"class": &"Launcher",
+"language": &"GDScript",
+"path": "res://core/systems/launcher/launcher.gd"
+}]
+_global_script_class_icons={
+"Gamescope": "",
+"LaunchManager": "",
+"Launcher": ""
+}
+
 [application]
 
 config/name="Open Gamepad UI"

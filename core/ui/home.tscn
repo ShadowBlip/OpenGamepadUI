@@ -1,52 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d4nia8vaynf48"]
 
-[sub_resource type="GDScript" id="GDScript_hb2x7"]
-script/source = "extends Button
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func _on_button_up() -> void:
-	print(\"Launching game\")
-	var pid = OS.create_process(\"bash\", [\"-c\", \"DISPLAY=:3 vkcube\"])
-	#var pid = OS.create_process(\"bash\", [\"-c\", \"DISPLAY=:2 steam steam://rungameid/219740\"])
-	#var pid = OS.create_process(\"bash\", [\"-c\", \"DISPLAY=:3 xdg-open heroic://launch/4f272a49a39742b795d63e1f483a7c7d\"])
-	print(\"PID: \", pid)
-	get_parent().visible = false
-
-	_set_gamescope_atom()
-	#DISPLAY=:2 xprop -id 4194306 -f GAMESCOPE_EXTERNAL_OVERLAY 32a -set GAMESCOPE_EXTERNAL_OVERLAY SECONDARY
-
-# Lets us run as an overlay in gamescope
-func _set_gamescope_atom() -> void:
-	var pid: int = OS.get_process_id()
-	# Fetch Window ID
-	var output = []
-	#OS.execute(\"xdotool\", [\"search\", \"--pid\", str(pid)], output)
-	OS.execute(\"bash\", [\"-c\", \"DISPLAY=:2 xdotool search --pid \" + str(pid)], output)
-	var window_id: String
-	for line in output:
-		if line == \"\":
-			continue
-		window_id = line
-	print(\"Window ID: \", window_id)
-		
-	# Set gamescope atom to allow overlay
-	#OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"32a\", \"-set\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"PRIMARY\"])
-	
-	# Pretend to be Steam
-	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_OVERLAY\", \"32c\", \"-set\", \"STEAM_OVERLAY\", \"1\"])
-	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_GAME\", \"32c\", \"-set\", \"STEAM_GAME\", \"769\"])
-	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_INPUT_FOCUS\", \"32c\", \"-set\", \"STEAM_INPUT_FOCUS\", \"1\"])
-"
+[ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
 
 [node name="HomeMenu" type="Control"]
 layout_mode = 3
@@ -64,14 +18,47 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "LAUNCH"
-script = SubResource("GDScript_hb2x7")
 
-[connection signal="button_up" from="Button" to="Button" method="_on_button_up"]
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+offset_right = 397.0
+offset_bottom = 800.0
+size_flags_horizontal = 3
+text = "LAUNCH
+vkCube"
+
+[node name="Launcher" parent="HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
+cmd = "vkcube"
+
+[node name="Button2" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+offset_left = 401.0
+offset_right = 798.0
+offset_bottom = 800.0
+size_flags_horizontal = 3
+text = "LAUNCH
+Don't Starve"
+
+[node name="Launcher" parent="HBoxContainer/Button2" instance=ExtResource("1_pm3kc")]
+cmd = "steam"
+args = PackedStringArray("steam://rungameid/219740")
+
+[node name="Button3" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+offset_left = 802.0
+offset_right = 1200.0
+offset_bottom = 800.0
+size_flags_horizontal = 3
+text = "LAUNCH
+Heroic"
+
+[node name="Launcher" parent="HBoxContainer/Button3" instance=ExtResource("1_pm3kc")]
+cmd = "xdg-open"
+args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")

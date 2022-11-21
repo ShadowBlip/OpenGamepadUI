@@ -1,8 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://ccaxo42gq5r1"]
+[gd_scene load_steps=8 format=3 uid="uid://ccaxo42gq5r1"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
+[ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
 [ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/home.tscn" id="2_ysfw8"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_oabh5"]
+
+[sub_resource type="Animation" id="Animation_gvlwc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TextureRect:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_06yi2"]
 resource_name = "bounce"
@@ -20,21 +36,6 @@ tracks/0/keys = {
 "values": [Vector2(0, 0), Vector2(6.5, 0), Vector2(0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_gvlwc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("TextureRect:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_y1q0p"]
 _data = {
 "RESET": SubResource("Animation_gvlwc"),
@@ -50,8 +51,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4l3sd")
 
+[node name="LaunchManager" parent="." instance=ExtResource("2_bsexb")]
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -61,16 +63,16 @@ theme_override_constants/margin_top = 55
 theme_override_constants/margin_bottom = 55
 
 [node name="HomeMenu" parent="MarginContainer" instance=ExtResource("2_ysfw8")]
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_top = 55.0
 offset_right = 1200.0
 offset_bottom = 745.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
 offset_right = 128.0
 offset_bottom = 128.0
 scale = Vector2(0.25, 0.25)

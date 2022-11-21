@@ -58,6 +58,6 @@ func _process(delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
-	print(event)
+	#print(event)
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit()
