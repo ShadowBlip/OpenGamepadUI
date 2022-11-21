@@ -14,4 +14,5 @@ func _on_launch():
 	launch_manager.launch(cmd, args)
 
 	# TODO: Make this better
-	#parent.get_parent().get_parent().visible = false
+	for child in parent.get_parent().get_parent().get_children():
+		child.visible = false

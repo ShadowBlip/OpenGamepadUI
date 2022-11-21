@@ -11,7 +11,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,7 +18,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -27,8 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Button" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-offset_right = 397.0
+offset_right = 424.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
 text = "LAUNCH
@@ -38,9 +35,8 @@ vkCube"
 cmd = "vkcube"
 
 [node name="Button2" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-offset_left = 401.0
-offset_right = 798.0
+offset_left = 428.0
+offset_right = 852.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
 text = "LAUNCH
@@ -51,9 +47,8 @@ cmd = "steam"
 args = PackedStringArray("steam://rungameid/219740")
 
 [node name="Button3" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-offset_left = 802.0
-offset_right = 1200.0
+offset_left = 856.0
+offset_right = 1280.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
 text = "LAUNCH
