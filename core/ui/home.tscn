@@ -40,8 +40,12 @@ func _set_gamescope_atom() -> void:
 	print(\"Window ID: \", window_id)
 		
 	# Set gamescope atom to allow overlay
-	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"32a\", \"-set\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"PRIMARY\"])
-	#OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_OVERLAY\", \"32c\", \"-set\", \"STEAM_OVERLAY\", \"1\"])
+	#OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"32a\", \"-set\", \"GAMESCOPE_EXTERNAL_OVERLAY\", \"PRIMARY\"])
+	
+	# Pretend to be Steam
+	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_OVERLAY\", \"32c\", \"-set\", \"STEAM_OVERLAY\", \"1\"])
+	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_GAME\", \"32c\", \"-set\", \"STEAM_GAME\", \"769\"])
+	OS.execute(\"xprop\", [\"-id\", window_id, \"-f\", \"STEAM_INPUT_FOCUS\", \"32c\", \"-set\", \"STEAM_INPUT_FOCUS\", \"1\"])
 "
 
 [node name="HomeMenu" type="Control"]
@@ -53,6 +57,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -60,6 +65,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Button" type="Button" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
