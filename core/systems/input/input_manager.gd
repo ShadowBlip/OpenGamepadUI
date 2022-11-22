@@ -21,7 +21,9 @@ func set_focus(focused: bool):
 	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "0")
 
 func _on_state_changed(from: int, to: int):
-	print_debug("Switched from state {0} to {1}".format([from, to]))
+	var from_str = StateManager.StateMap[from]
+	var to_str = StateManager.StateMap[from]
+	print_debug("Switched from state {0} to {1}".format([from_str, to_str]))
 	if to == StateManager.State.IN_GAME:
 		set_focus(false)
 	else:
@@ -29,12 +31,18 @@ func _on_state_changed(from: int, to: int):
 
 func _input(event: InputEvent) -> void:
 	var state = state_mgr.current_state()
+	
+	# Handle "guide" button presses
 	if event.is_action_pressed("ogui_guide"):
-		if state == StateManager.State.IN_GAME:
-			state_mgr.push_state(StateManager.State.HOME)
-		if state == StateManager.State.HOME:
-			if state_mgr.has_state(StateManager.State.IN_GAME):
-				state_mgr.pop_state()
-			
-	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()
+		# Handle cases where a game is running
+		if state_mgr.has_state(StateManager.State.IN_GAME):
+			# If we're in game, pull up the in-game menu
+			if state == StateManager.State.IN_GAME:
+				state_mgr.push_state(StateManager.State.IN_GAME_MENU)
+			# If we're not in game, go back
+			else:
+				state_mgr.replace_state(StateManager.State.IN_GAME)
+	
+	#if state != StateManager.State.IN_GAME:
+	#	if event.is_action_pressed("ui_cancel"):
+	#		get_tree().quit()
