@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://ccaxo42gq5r1"]
+[gd_scene load_steps=12 format=3 uid="uid://bouj7k1ys0wvq"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
-[ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/home.tscn" id="2_ysfw8"]
-[ext_resource type="PackedScene" uid="uid://c522u0ublby0k" path="res://core/ui/topbar.tscn" id="3_nnt7i"]
+[ext_resource type="PackedScene" uid="uid://ciy6tp2k7hsdl" path="res://core/systems/input/input_manager.tscn" id="2_yno6k"]
+[ext_resource type="PackedScene" uid="uid://c522u0ublby0k" path="res://core/ui/menu/topbar.tscn" id="3_4jaod"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_oabh5"]
-[ext_resource type="PackedScene" uid="uid://b4e4cgsvm0pkd" path="res://core/ui/contextbar.tscn" id="5_3870e"]
+[ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/menu/home.tscn" id="4_cej3c"]
+[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
+[ext_resource type="PackedScene" uid="uid://b4e4cgsvm0pkd" path="res://core/ui/menu/contextbar.tscn" id="5_t8uiy"]
 
 [sub_resource type="Animation" id="Animation_gvlwc"]
 length = 0.001
@@ -53,43 +55,40 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4l3sd")
 
+[node name="StateManager" parent="." instance=ExtResource("4_ew432")]
+
+[node name="InputManager" parent="." instance=ExtResource("2_yno6k")]
+
 [node name="LaunchManager" parent="." instance=ExtResource("2_bsexb")]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
 
-[node name="TopBar" parent="VBoxContainer" instance=ExtResource("3_nnt7i")]
-custom_minimum_size = Vector2(0, 55)
-layout_mode = 2
+[node name="TopBar" parent="VBoxContainer" instance=ExtResource("3_4jaod")]
 anchors_preset = 0
 anchor_right = 0.0
-anchor_bottom = 0.0
 offset_right = 1280.0
 offset_bottom = 55.0
 grow_horizontal = 1
-grow_vertical = 1
 
-[node name="HomeMenu" parent="VBoxContainer" instance=ExtResource("2_ysfw8")]
-layout_mode = 2
+[node name="HomeMenu" parent="VBoxContainer" instance=ExtResource("4_cej3c")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_top = 59.0
+offset_top = 55.0
 offset_right = 1280.0
-offset_bottom = 741.0
+offset_bottom = 745.0
 grow_horizontal = 1
 grow_vertical = 1
-size_flags_vertical = 3
 
-[node name="ContextBar" parent="VBoxContainer" instance=ExtResource("5_3870e")]
-custom_minimum_size = Vector2(0, 55)
-layout_mode = 2
+[node name="ContextBar" parent="VBoxContainer" instance=ExtResource("5_t8uiy")]
 anchors_preset = 0
+anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_top = 745.0
@@ -99,7 +98,6 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
 offset_right = 128.0
 offset_bottom = 128.0
 scale = Vector2(0.25, 0.25)

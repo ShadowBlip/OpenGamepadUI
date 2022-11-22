@@ -12,7 +12,3 @@ func _ready() -> void:
 func _on_launch():
 	var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 	launch_manager.launch(cmd, args)
-
-	# TODO: Make this better
-	for child in parent.get_parent().get_parent().get_children():
-		child.visible = false

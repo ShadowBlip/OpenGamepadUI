@@ -1,15 +1,17 @@
 [gd_scene load_steps=2 format=3 uid="uid://b4e4cgsvm0pkd"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x7a55"]
-bg_color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ugw8r"]
 
-[node name="ContextBar" type="Control"]
+[node name="ContextBar" type="Control" groups=["menu"]]
+custom_minimum_size = Vector2(0, 55)
 layout_mode = 3
-anchors_preset = 15
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+theme = ExtResource("1_ugw8r")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
@@ -18,4 +20,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_x7a55")

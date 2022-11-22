@@ -1,14 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://d4nia8vaynf48"]
+[gd_scene load_steps=3 format=3 uid="uid://d4nia8vaynf48"]
 
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_x16u8"]
 
-[node name="HomeMenu" type="Control"]
+[node name="HomeMenu" type="Control" groups=["menu"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_x16u8")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15

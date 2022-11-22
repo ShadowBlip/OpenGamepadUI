@@ -27,6 +27,11 @@ extends Control
 #  providerAppId: 1234
 #  tags: []
 #  categories: []
+#  images:
+#	poster: foo.png
+
+# Storage Manager
+#  Lets plugins determine where to install things
 
 # Store Plugin Interface
 #  get_available()
@@ -48,6 +53,24 @@ func _ready() -> void:
 	# Set bg to transparent
 	get_tree().get_root().transparent_bg = true
 	$AnimationPlayer.play("bounce")
+	
+	# Subscribe to state changes
+	var state_manager: StateManager = $StateManager
+	state_manager.state_changed.connect(_on_state_changed)
+
+# Handle state changes
+func _on_state_changed(from: int, to: int):
+	# Hide all menus when in-game
+	if to == StateManager.State.IN_GAME:
+		for child in $VBoxContainer.get_children():
+			child.visible = false
+		return
+	
+	# Display all menus?
+	if from == StateManager.State.IN_GAME:
+		for child in $VBoxContainer.get_children():
+			child.visible = true
+		return
 
 # Look in XDG_APP_PATH for .desktop files
 func _discover_apps() -> void:
@@ -56,8 +79,3 @@ func _discover_apps() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
-func _input(event: InputEvent) -> void:
-	#print(event)
-	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()

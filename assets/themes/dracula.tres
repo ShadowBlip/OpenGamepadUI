@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://bko0q7gp1hwjp"]
+
+[ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="1_vsinb"]
+[ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_vv7ku"]
+
+[resource]
+Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/colors/font_disabled_color = Color(0.384314, 0.447059, 0.643137, 1)
+Button/colors/font_focus_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/styles/hover = ExtResource("1_vv7ku")
+Panel/styles/panel = ExtResource("1_vsinb")

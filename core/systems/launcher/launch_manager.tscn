@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://core/systems/launcher/launch_manager.gd" id="1_lr73j"]
 
-[node name="LaunchManager" type="Node"]
+[node name="LaunchManager" type="Node" groups=["launch_manager"]]
 script = ExtResource("1_lr73j")

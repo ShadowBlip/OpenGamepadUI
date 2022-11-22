@@ -15,6 +15,11 @@ _global_script_classes=[{
 "path": "res://core/systems/gamescope.gd"
 }, {
 "base": "Node",
+"class": &"InputManager",
+"language": &"GDScript",
+"path": "res://core/systems/input/input_manager.gd"
+}, {
+"base": "Node",
 "class": &"LaunchManager",
 "language": &"GDScript",
 "path": "res://core/systems/launcher/launch_manager.gd"
@@ -23,11 +28,18 @@ _global_script_classes=[{
 "class": &"Launcher",
 "language": &"GDScript",
 "path": "res://core/systems/launcher/launcher.gd"
+}, {
+"base": "Node",
+"class": &"StateManager",
+"language": &"GDScript",
+"path": "res://core/systems/state/state_manager.gd"
 }]
 _global_script_class_icons={
 "Gamescope": "",
+"InputManager": "",
 "LaunchManager": "",
-"Launcher": ""
+"Launcher": "",
+"StateManager": ""
 }
 
 [application]
@@ -46,3 +58,11 @@ window/size/borderless=true
 window/size/always_on_top=true
 window/size/transparent=true
 window/per_pixel_transparency/allowed=true
+
+[input]
+
+ogui_guide={
+"deadzone": 0.5,
+"events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":5,"pressure":0.0,"pressed":false,"script":null)
+]
+}
