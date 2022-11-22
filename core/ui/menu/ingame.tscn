@@ -14,7 +14,6 @@ script = ExtResource("2_4nawu")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0.384314)
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,7 +21,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,7 +32,6 @@ theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
 offset_left = 25.0
 offset_top = 25.0
 offset_right = 275.0
@@ -44,13 +41,11 @@ grow_vertical = 2
 theme_override_constants/separation = 12
 
 [node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_right = 250.0
 offset_bottom = 31.0
 text = "Resume Game"
 
 [node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_top = 43.0
 offset_right = 250.0
 offset_bottom = 74.0

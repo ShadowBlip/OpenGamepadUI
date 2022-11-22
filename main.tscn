@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bouj7k1ys0wvq"]
+[gd_scene load_steps=10 format=3 uid="uid://bouj7k1ys0wvq"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -7,8 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/menu/home.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
 [ext_resource type="PackedScene" uid="uid://b4e4cgsvm0pkd" path="res://core/ui/menu/contextbar.tscn" id="5_t8uiy"]
-[ext_resource type="PackedScene" uid="uid://c52owtpe0p02v" path="res://core/ui/menu/main.tscn" id="7_v03hv"]
-[ext_resource type="PackedScene" uid="uid://deu6a6ouuxgob" path="res://core/ui/menu/ingame.tscn" id="8_ilbpb"]
+[ext_resource type="PackedScene" uid="uid://bxh58e52ox2yd" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quickaccess.tscn" id="9_8xlqm"]
 
 [node name="Main" type="Control"]
@@ -51,28 +50,9 @@ size_flags_vertical = 3
 
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
 
-[node name="MainMenuContainer" type="HBoxContainer" parent="UIContainer/Content"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 50
-
-[node name="MainMenu" parent="UIContainer/Content/MainMenuContainer" instance=ExtResource("7_v03hv")]
-anchors_preset = 0
-anchor_bottom = 0.0
-offset_right = 300.0
+[node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
+offset_right = 1280.0
 offset_bottom = 690.0
-grow_vertical = 1
-
-[node name="InGameMenu" parent="UIContainer/Content/MainMenuContainer" instance=ExtResource("8_ilbpb")]
-anchors_preset = 0
-anchor_bottom = 0.0
-offset_left = 350.0
-offset_right = 650.0
-offset_bottom = 690.0
-grow_vertical = 1
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 visible = false

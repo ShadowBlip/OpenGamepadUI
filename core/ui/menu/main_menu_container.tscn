@@ -1,0 +1,125 @@
+[gd_scene load_steps=8 format=3 uid="uid://bxh58e52ox2yd"]
+
+[ext_resource type="PackedScene" uid="uid://c52owtpe0p02v" path="res://core/ui/menu/main.tscn" id="1_aknsm"]
+[ext_resource type="Script" path="res://core/ui/menu/main_menu_container.gd" id="1_shfdj"]
+[ext_resource type="PackedScene" uid="uid://deu6a6ouuxgob" path="res://core/ui/menu/ingame.tscn" id="2_4ogvu"]
+
+[sub_resource type="Animation" id="Animation_qwelv"]
+resource_name = "hide"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-800, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_8ltbq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_0yjse"]
+resource_name = "show"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-800, 0), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_51nek"]
+_data = {
+"RESET": SubResource("Animation_8ltbq"),
+"hide": SubResource("Animation_qwelv"),
+"show": SubResource("Animation_0yjse")
+}
+
+[node name="MainMenuContainer" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+script = ExtResource("1_shfdj")
+
+[node name="MainMenu" parent="." instance=ExtResource("1_aknsm")]
+layout_mode = 2
+anchors_preset = 0
+anchor_bottom = 0.0
+offset_bottom = 800.0
+grow_vertical = 1
+
+[node name="InGameMenu" parent="." instance=ExtResource("2_4ogvu")]
+layout_mode = 2
+anchors_preset = 0
+anchor_bottom = 0.0
+offset_left = 350.0
+offset_right = 650.0
+offset_bottom = 800.0
+grow_vertical = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_51nek")
+}
