@@ -29,6 +29,11 @@ var _state_stack: Array = []
 func _ready() -> void:
 	push_state(starting_state)
 
+func set_state(stack: Array):
+	var cur = current_state()
+	_state_stack = stack
+	state_changed.emit(cur, stack[-1])
+
 func push_state(state: int, unique: bool = true):
 	var cur = current_state()
 	if unique:
@@ -60,8 +65,7 @@ func remove_state(state: int):
 		if state != s:
 			continue
 		_state_stack.remove_at(i)
-	if cur == state:
-		state_changed.emit(cur, current_state())
+	state_changed.emit(cur, current_state())
 	
 func current_state() -> int:
 	var length = len(_state_stack)

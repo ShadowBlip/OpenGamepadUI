@@ -10,10 +10,11 @@ func _ready() -> void:
 
 
 func _on_state_changed(from: int, to: int):
+	if not state_mgr.has_state(StateManager.State.IN_GAME) and state_mgr.has_state(StateManager.State.IN_GAME_MENU):
+		state_mgr.remove_state(StateManager.State.IN_GAME_MENU)
 	if to != StateManager.State.IN_GAME_MENU:
 		visible = false
 		return
-	print("In game menu state!")
 	visible = true
 
 

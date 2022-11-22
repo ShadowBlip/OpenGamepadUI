@@ -62,8 +62,12 @@ func _remove_running(pid: int):
 	var i = running.find(pid)
 	if i < 0:
 		return
-	print_debug("Cleaning ip pid {0}".format([pid]))
+	print_debug("Cleaning up pid {0}".format([pid]))
 	running.remove_at(i)
+	
+	# TODO: Better way to do this?
+	state_mgr.set_state([StateManager.State.HOME])
+	
 	app_stopped.emit(pid)
 
 # Returns the target xwayland display to launch on
@@ -91,8 +95,8 @@ func _set_overylay(window_id: String) -> void:
 # Checks for running apps and updates our state accordingly
 func _check_running():
 	if len(running) == 0:
-		if state_mgr.current_state() == StateManager.State.IN_GAME:
-			state_mgr.pop_state()
+		if state_mgr.has_state(StateManager.State.IN_GAME):
+			state_mgr.remove_state(StateManager.State.IN_GAME)
 		return
 	
 	# Check all running apps

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4e4cgsvm0pkd"]
+[gd_scene load_steps=3 format=3 uid="uid://b4e4cgsvm0pkd"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ugw8r"]
+[ext_resource type="Script" path="res://core/ui/menu/contextbar.gd" id="2_0wa62"]
 
 [node name="ContextBar" type="Control" groups=["menu"]]
 custom_minimum_size = Vector2(0, 55)
@@ -12,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("1_ugw8r")
+script = ExtResource("2_0wa62")
 
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = 15
@@ -20,3 +22,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 1270.0
+offset_bottom = 45.0
+
+[node name="DebugLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+offset_top = 6.0
+offset_right = 1.0
+offset_bottom = 29.0
