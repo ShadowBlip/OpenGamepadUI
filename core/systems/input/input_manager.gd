@@ -29,6 +29,7 @@ func _on_state_changed(from: int, to: int):
 	else:
 		set_focus(true)
 
+
 func _input(event: InputEvent) -> void:
 	var state = state_mgr.current_state()
 	
@@ -42,6 +43,14 @@ func _input(event: InputEvent) -> void:
 			# If we're not in game, go back
 			else:
 				state_mgr.replace_state(StateManager.State.IN_GAME)
+				
+		# Handle opening the main menu outside of a running game
+		elif state == StateManager.State.MAIN_MENU:
+			print("Removing mm state")
+			state_mgr.remove_state(StateManager.State.MAIN_MENU)
+		elif state != StateManager.State.MAIN_MENU:
+			print("Adding mm state")
+			state_mgr.push_state(StateManager.State.MAIN_MENU)
 	
 	#if state != StateManager.State.IN_GAME:
 	#	if event.is_action_pressed("ui_cancel"):

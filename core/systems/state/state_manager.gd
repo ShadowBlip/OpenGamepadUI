@@ -12,7 +12,7 @@ enum State {
 }
 
 const StateMap = {
-	State.NONE: "none",
+	State.NONE: "",
 	State.HOME: "home",
 	State.MAIN_MENU: "main_menu",
 	State.QUICK_ACCESS_MENU: "quick_access_menu",
@@ -24,10 +24,16 @@ const StateMap = {
 signal state_changed(from: State, to: State)
 
 @export var starting_state: State = State.HOME
-var _state_stack: Array = []
+var _state_stack: Array = [State.NONE]
 
 func _ready() -> void:
+	state_changed.connect(_on_state_changed)
 	push_state(starting_state)
+
+func _on_state_changed(from: int, to: int) -> void:
+	# Always switch to home if we end up with no state
+	if to == State.NONE:
+		push_state(starting_state)
 
 func set_state(stack: Array):
 	var cur = current_state()
@@ -60,11 +66,12 @@ func replace_state(state: int, unique: bool = true):
 # Removes all instances of the given state from the stack
 func remove_state(state: int):
 	var cur = current_state()
-	for i in range(0, len(_state_stack)-1):
+	var new_state_stack = []
+	for i in range(0, len(_state_stack)):
 		var s = _state_stack[i]
 		if state != s:
-			continue
-		_state_stack.remove_at(i)
+			new_state_stack.push_back(s)
+	_state_stack = new_state_stack
 	state_changed.emit(cur, current_state())
 	
 func current_state() -> int:
@@ -80,7 +87,7 @@ func has_state(state: int) -> bool:
 	
 func _push_unique(state: int):
 	var i = _state_stack.find(state)
-	if i > 0:
+	if i >= 0:
 		_state_stack.remove_at(i)
 	_state_stack.push_back(state)
 	

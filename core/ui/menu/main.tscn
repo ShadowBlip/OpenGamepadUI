@@ -14,7 +14,6 @@ theme = ExtResource("1_r20uv")
 script = ExtResource("2_2uoqx")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,7 +21,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,7 +32,6 @@ theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
 offset_left = 25.0
 offset_top = 25.0
 offset_right = 275.0
@@ -43,30 +40,27 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HomeButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_right = 250.0
 offset_bottom = 31.0
 text = "Home"
 
 [node name="LibraryButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_top = 35.0
 offset_right = 250.0
 offset_bottom = 66.0
 text = "Library"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_top = 70.0
 offset_right = 250.0
 offset_bottom = 101.0
 text = "Settings"
 
 [node name="PowerButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
 offset_top = 105.0
 offset_right = 250.0
 offset_bottom = 136.0
 text = "Power"
 
-[connection signal="button_up" from="MarginContainer/VBoxContainer/HomeButton" to="." method="_on_home_button_button_up"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HomeButton" to="." method="_on_home_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PowerButton" to="." method="_on_power_button_pressed"]

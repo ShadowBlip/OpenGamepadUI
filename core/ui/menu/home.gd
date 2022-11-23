@@ -6,6 +6,11 @@ extends Control
 func _ready() -> void:
 	state_mgr.state_changed.connect(_on_state_changed)
 
+	# Grab the first button as focus
+	var button: Button = $HBoxContainer/Button
+	button.grab_focus.call_deferred()
 
 func _on_state_changed(from: int, to: int):
-	visible = to == StateManager.State.HOME
+	visible = state_mgr.has_state(StateManager.State.HOME)
+	if visible and to == StateManager.State.IN_GAME:
+		state_mgr.remove_state(StateManager.State.HOME)

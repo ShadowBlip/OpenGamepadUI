@@ -34,6 +34,8 @@ grow_vertical = 2
 offset_right = 424.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../Button3")
+focus_neighbor_right = NodePath("../Button2")
 text = "LAUNCH
 vkCube"
 
@@ -45,6 +47,8 @@ offset_left = 428.0
 offset_right = 852.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../Button")
+focus_neighbor_right = NodePath("../Button3")
 text = "LAUNCH
 Don't Starve"
 
@@ -57,6 +61,8 @@ offset_left = 856.0
 offset_right = 1280.0
 offset_bottom = 800.0
 size_flags_horizontal = 3
+focus_neighbor_left = NodePath("../Button2")
+focus_neighbor_right = NodePath("../Button")
 text = "LAUNCH
 Heroic"
 
