@@ -14,3 +14,7 @@ func _on_state_changed(from: int, to: int):
 	visible = state_mgr.has_state(StateManager.State.HOME)
 	if visible and to == StateManager.State.IN_GAME:
 		state_mgr.remove_state(StateManager.State.HOME)
+	if to == StateManager.State.HOME:
+		# Grab the first button as focus
+		var button: Button = $HBoxContainer/Button
+		button.grab_focus.call_deferred()

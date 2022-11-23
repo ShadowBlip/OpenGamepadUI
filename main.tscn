@@ -51,8 +51,8 @@ size_flags_vertical = 3
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 14080.0
-offset_bottom = 7590.0
+offset_right = 15360.0
+offset_bottom = 8280.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 visible = false

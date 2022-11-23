@@ -98,22 +98,20 @@ _data = {
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 3840.0
-offset_bottom = 2400.0
+offset_right = 5120.0
+offset_bottom = 3200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
 script = ExtResource("1_shfdj")
 
 [node name="MainMenu" parent="." instance=ExtResource("1_aknsm")]
-layout_mode = 2
 anchors_preset = 0
 anchor_bottom = 0.0
 offset_bottom = 3200.0
 grow_vertical = 1
 
 [node name="InGameMenu" parent="." instance=ExtResource("2_4ogvu")]
-layout_mode = 2
 anchors_preset = 0
 anchor_bottom = 0.0
 offset_left = 350.0
