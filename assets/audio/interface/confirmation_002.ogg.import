@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/confirmation_002.ogg-494955b2feec06cb145a1f9d
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

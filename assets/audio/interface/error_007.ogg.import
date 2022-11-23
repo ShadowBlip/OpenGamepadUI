@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/error_007.ogg-02a4d98fcd3ae42d81f172deda8c16b
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/switch_002.ogg-0b975d8b508b1b0e8f6301d916260e
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

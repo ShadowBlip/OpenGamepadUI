@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/pluck_002.ogg-fe3e536abc7a9d096e66d471910b3c1
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

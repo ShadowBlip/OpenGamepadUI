@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/question_002.ogg-4f346b3286dee9a9c8ffcc9d4b0f
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

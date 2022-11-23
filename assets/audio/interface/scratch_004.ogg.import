@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/scratch_004.ogg-7801f6721ba932b5e55347b50b649
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

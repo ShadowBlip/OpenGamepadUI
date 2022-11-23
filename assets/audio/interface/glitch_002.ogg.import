@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/glitch_002.ogg-8ec955482b03935dcb0520c49ac427
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

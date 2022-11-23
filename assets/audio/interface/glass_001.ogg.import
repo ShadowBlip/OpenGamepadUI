@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/glass_001.ogg-7999c0d800eeb9259c00debbf34c57a
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

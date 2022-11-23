@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/maximize_008.ogg-4dfbf9dcf252c215fa8461204977
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

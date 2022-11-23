@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/bong_001.ogg-ea40ad11d5cca55deddc21a32944ec76
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/select_008.ogg-47810b027189951fc42f0b40f87612
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

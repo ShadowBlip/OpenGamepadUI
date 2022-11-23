@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/minimize_008.ogg-880c2367777bb379d32705aaaae4
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

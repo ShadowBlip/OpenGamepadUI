@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/scroll_002.ogg-b7592bbd0a6f306aa6bd84f00e2fa1
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0

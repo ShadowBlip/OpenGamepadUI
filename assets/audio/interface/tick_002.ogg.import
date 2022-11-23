@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/tick_002.ogg-6b82bd07e80d90209a0edea87ecd755a
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
 bpm=0
 beat_count=0
