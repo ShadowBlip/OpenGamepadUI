@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://im2bxtbv71yn"]
-
-[ext_resource type="Script" path="res://plugins/example/plugin.gd" id="1_f8utj"]
-
-[node name="ExamplePlugin" type="Node"]
-script = ExtResource("1_f8utj")
