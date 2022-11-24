@@ -9,5 +9,5 @@
   "store.images": [],
   "author.name": "William Edwards",
   "author.email": "shadowapex@gmail.com",
-  "entrypoint": "example_plugin.gd"
+  "entrypoint": "plugin.gd"
 }

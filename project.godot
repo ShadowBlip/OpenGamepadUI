@@ -35,6 +35,11 @@ _global_script_classes=[{
 "path": "res://core/systems/debug/log.gd"
 }, {
 "base": "Node",
+"class": &"Plugin",
+"language": &"GDScript",
+"path": "res://core/systems/plugin/plugin.gd"
+}, {
+"base": "Node",
 "class": &"PluginLoader",
 "language": &"GDScript",
 "path": "res://core/systems/plugin/plugin_loader.gd"
@@ -50,6 +55,7 @@ _global_script_class_icons={
 "LaunchManager": "",
 "Launcher": "",
 "Log": "",
+"Plugin": "",
 "PluginLoader": "",
 "StateManager": ""
 }

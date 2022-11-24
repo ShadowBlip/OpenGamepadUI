@@ -6,7 +6,7 @@ class_name PluginLoader
 const PLUGIN_API_VERSION = "1.0.0"
 const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
-const REQUIRED_META = ["plugin.name", "plugin.version", "entrypoint"]
+const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
 
 signal plugin_loaded(name: String)
 signal plugin_initialized(name: String)
@@ -20,6 +20,7 @@ func _init() -> void:
 	print_debug("PluginLoader: Initializing plugins")
 	_init_plugins()
 	print_debug("PluginLoader: Done initializing plugins")
+
 
 # Looks in the user plugins directory for plugin json files and loads them.
 func _load_plugins() -> void:
@@ -46,8 +47,19 @@ func _load_plugins() -> void:
 			file_name = dir.get_next()
 			continue
 		
+		# Validate the plugin metadata
+		if not _is_valid_plugin_meta(meta):
+			print_debug("PluginLoader: %s has invalid plugin JSON" % file_name)
+			file_name = dir.get_next()
+			continue
+		
+		# Ensure the plugin is compatible
+		if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
+			print_debug("PluginLoader: %s is not compatible with this plugin API verion" % file_name)
+			file_name = dir.get_next()
+			continue
+		
 		# Load the plugin
-		# TODO: Validate metadata
 		var plugin_file = plugin_name + ".zip"
 		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, plugin_file])):
 			print_debug("PluginLoader: %s failed to load" % file_name)
@@ -58,6 +70,7 @@ func _load_plugins() -> void:
 
 		file_name = dir.get_next()
 
+
 # Initializes the loaded plugins
 func _init_plugins() -> void:
 	for name in plugins.keys():
@@ -66,9 +79,13 @@ func _init_plugins() -> void:
 			print_debug("PluginLoader: %s has no entrypoint defined" % name)
 			continue
 		var plugin = load("/".join([LOADED_PLUGINS_DIR, name, meta["entrypoint"]]))
+		if not plugin:
+			print_debug("PluginLoader: Unable to load plugin '{0}'. Is the entrypoint correct?".format([name]))
+			continue
 		var instance = plugin.new()
 		add_child(instance)
 		plugin_initialized.emit(name)
+
 
 # Loads plugin metadata and returns it as a parsed dictionary. Returns null
 # if there was an error parsing.
@@ -76,6 +93,15 @@ func _load_plugin_meta(path: String):
 	var file = FileAccess.open(path, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	return data
+
+
+# Ensures the given plugin metadata has all required fields
+func _is_valid_plugin_meta(meta: Dictionary) -> bool:
+	for field in REQUIRED_META:
+		if not field in meta:
+			return false
+	return true 
+
 
 # Returns whether or not the given semantic version string is greater than or
 # equal to the target semantic version string, except if the target major
@@ -97,6 +123,7 @@ func _is_compatible_version(version: String, target: String) -> bool:
 		return false
 	
 	return true
+
 
 # Returns whether or not the given version array is a valid semver
 func _is_valid_semver(version: Array) -> bool:
