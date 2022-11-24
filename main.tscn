@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bouj7k1ys0wvq"]
+[gd_scene load_steps=11 format=3 uid="uid://bouj7k1ys0wvq"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c522u0ublby0k" path="res://core/ui/menu/topbar.tscn" id="3_4jaod"]
 [ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/menu/home.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
+[ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
 [ext_resource type="PackedScene" uid="uid://b4e4cgsvm0pkd" path="res://core/ui/menu/contextbar.tscn" id="5_t8uiy"]
 [ext_resource type="PackedScene" uid="uid://bxh58e52ox2yd" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quickaccess.tscn" id="9_8xlqm"]
@@ -24,6 +25,8 @@ script = ExtResource("1_4l3sd")
 [node name="InputManager" parent="." instance=ExtResource("2_yno6k")]
 
 [node name="LaunchManager" parent="." instance=ExtResource("2_bsexb")]
+
+[node name="PluginLoader" parent="." instance=ExtResource("5_8300b")]
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
 anchors_preset = 15
@@ -51,8 +54,8 @@ size_flags_vertical = 3
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 15360.0
-offset_bottom = 8280.0
+offset_right = 20480.0
+offset_bottom = 11040.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 visible = false

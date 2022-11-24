@@ -1,5 +1,10 @@
 extends Control
 
+# Plugin "mods"
+# https://blog.cy.md/2022/05/27/modding-for-godot/
+# We can load plugins from user://plugins
+# This normally resolves to: ~/.local/share/godot/app_userdata/Open Gamepad UI/plugins
+
 # We need:
 # - "Shortcut" structure
 # - Plugin Store

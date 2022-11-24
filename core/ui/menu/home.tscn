@@ -37,6 +37,8 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 offset_right = 424.0
 offset_bottom = 800.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "LAUNCH
 vkCube"
 
@@ -50,6 +52,8 @@ anchor_bottom = 0.0
 offset_left = 428.0
 offset_right = 852.0
 offset_bottom = 800.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "LAUNCH
 Don't Starve"
 
@@ -64,6 +68,8 @@ anchor_bottom = 0.0
 offset_left = 856.0
 offset_right = 1280.0
 offset_bottom = 800.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "LAUNCH
 Heroic"
 

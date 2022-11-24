@@ -1,0 +1,13 @@
+{
+  "plugin.name": "Example Plugin",
+  "plugin.version": "1.0.0",
+  "plugin.min-api-version": "1.0.0",
+  "plugin.link": "https://github.com/ShadowBlip/opengamepad-ui",
+  "plugin.source": "https://github.com/ShadowBlip/opengamepad-ui",
+  "plugin.description": "An example plugin",
+  "store.tags": [],
+  "store.images": [],
+  "author.name": "William Edwards",
+  "author.email": "shadowapex@gmail.com",
+  "entrypoint": "example_plugin.gd"
+}
