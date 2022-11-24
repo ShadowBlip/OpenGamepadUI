@@ -18,6 +18,7 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,6 +26,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,6 +34,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Button" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -46,6 +49,7 @@ vkCube"
 cmd = "vkcube"
 
 [node name="Button1" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -62,6 +66,7 @@ cmd = "steam"
 args = PackedStringArray("steam://rungameid/219740")
 
 [node name="Button2" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0

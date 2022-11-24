@@ -82,7 +82,8 @@ func _init_plugins() -> void:
 		if not plugin:
 			print_debug("PluginLoader: Unable to load plugin '{0}'. Is the entrypoint correct?".format([name]))
 			continue
-		var instance = plugin.new()
+		var instance: Plugin = plugin.new()
+		instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, name])
 		add_child(instance)
 		plugin_initialized.emit(name)
 
