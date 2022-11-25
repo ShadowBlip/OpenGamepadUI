@@ -42,10 +42,6 @@ func _on_state_changed(from: int, to: int):
 	# game.
 	if state_mgr.has_state(StateManager.State.IN_GAME):
 		set_overlay(true)
-		#if to in [StateManager.State.IN_GAME_MENU, StateManager.State.MAIN_MENU]:
-		#	set_overlay(true)
-		#else:
-		#	set_overlay(false)
 	else:
 		set_overlay(false)
 

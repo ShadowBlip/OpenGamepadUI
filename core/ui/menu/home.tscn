@@ -18,66 +18,73 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
+[node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
 
-[node name="Button" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
-layout_mode = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+offset_left = 50.0
+offset_top = 50.0
+offset_right = 1230.0
+offset_bottom = 750.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_right = 424.0
-offset_bottom = 800.0
+offset_right = 390.0
+offset_bottom = 700.0
 grow_horizontal = 1
 grow_vertical = 1
 text = "LAUNCH
 vkCube"
 
-[node name="Launcher" parent="HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
 cmd = "vkcube"
 
-[node name="Button1" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
-layout_mode = 2
+[node name="Button1" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 428.0
-offset_right = 852.0
-offset_bottom = 800.0
+offset_left = 394.0
+offset_right = 785.0
+offset_bottom = 700.0
 grow_horizontal = 1
 grow_vertical = 1
 text = "LAUNCH
 Don't Starve"
 
-[node name="Launcher" parent="HBoxContainer/Button1" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/HBoxContainer/Button1" instance=ExtResource("1_pm3kc")]
 cmd = "steam"
 args = PackedStringArray("steam://rungameid/219740")
 
-[node name="Button2" parent="HBoxContainer" instance=ExtResource("3_qu1mp")]
-layout_mode = 2
+[node name="Button2" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 856.0
-offset_right = 1280.0
-offset_bottom = 800.0
+offset_left = 789.0
+offset_right = 1180.0
+offset_bottom = 700.0
 grow_horizontal = 1
 grow_vertical = 1
 text = "LAUNCH
 Heroic"
 
-[node name="Launcher" parent="HBoxContainer/Button2" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/HBoxContainer/Button2" instance=ExtResource("1_pm3kc")]
 cmd = "xdg-open"
 args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")

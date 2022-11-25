@@ -86,7 +86,6 @@ func _get_target_display(exclude_display: int) -> int:
 # Lets us run as an overlay in gamescope
 func _set_overylay(window_id: String) -> void:
 	# Pretend to be Steam
-	Gamescope.set_xprop(window_id, "STEAM_OVERLAY", "32c", "1")
 	# Gamescope is hard-coded to look for appId 769
 	Gamescope.set_xprop(window_id, "STEAM_GAME", "32c", "769")
 	# Sets ourselves to the input focus

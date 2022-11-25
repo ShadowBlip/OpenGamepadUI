@@ -3,7 +3,7 @@
 extends Node
 class_name PluginLoader
 
-const PLUGIN_API_VERSION = "1.0.0"
+const PLUGIN_API_VERSION = "1.1.0"
 const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
