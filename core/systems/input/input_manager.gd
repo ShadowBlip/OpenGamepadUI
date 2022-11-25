@@ -10,7 +10,7 @@ func _ready() -> void:
 	state_mgr.state_changed.connect(_on_state_changed)
 
 # Set focus will use Gamescope to focus OpenGamepadUI
-func set_focus(focused: bool):
+func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
 	var window_id = launch_mgr.overlay_window_id
 	if focused:
@@ -20,6 +20,15 @@ func set_focus(focused: bool):
 	print_debug("Un-focusing overlay")
 	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "0")
 
+
+func set_overlay(enable: bool) -> void:
+	var window_id = launch_mgr.overlay_window_id
+	var overlay_enabled = "0"
+	if enable:
+		overlay_enabled = "1"
+	Gamescope.set_xprop(window_id, "STEAM_OVERLAY", "32c", overlay_enabled)
+
+
 func _on_state_changed(from: int, to: int):
 	var from_str = StateManager.StateMap[from]
 	var to_str = StateManager.StateMap[from]
@@ -28,6 +37,17 @@ func _on_state_changed(from: int, to: int):
 		set_focus(false)
 	else:
 		set_focus(true)
+
+	# Setting overlay should only happen when we are overlaying UI over a running
+	# game.
+	if state_mgr.has_state(StateManager.State.IN_GAME):
+		set_overlay(true)
+		#if to in [StateManager.State.IN_GAME_MENU, StateManager.State.MAIN_MENU]:
+		#	set_overlay(true)
+		#else:
+		#	set_overlay(false)
+	else:
+		set_overlay(false)
 
 
 func _input(event: InputEvent) -> void:

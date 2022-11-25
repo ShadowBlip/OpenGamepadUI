@@ -1,5 +1,5 @@
 
-GODOT ?= $(HOME)/Projects/godot-engine/Godot_v4.0-beta5_linux.x86_64
+GODOT ?= $(HOME)/Projects/godot-engine/Godot_v4.0-beta6_linux.x86_64
 GAMESCOPE ?= $(HOME)/Projects/gamescope/build/gamescope
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')

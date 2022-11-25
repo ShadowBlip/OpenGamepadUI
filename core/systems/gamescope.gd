@@ -1,3 +1,7 @@
+# Manages Gamescope specific functionality
+# TODO: Instead of relying on xprop/wininfo, we should use native X11 methods
+# though the DisplayServer through an extension.
+# https://docs.godotengine.org/en/latest/classes/class_displayserver.html
 extends Object
 class_name Gamescope
 
