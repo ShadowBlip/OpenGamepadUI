@@ -8,7 +8,18 @@ ALL_SCENES := $(shell find ./ -name '*.tscn')
 .PHONY: build
 build: build/opengamepad-ui.x86_64
 build/opengamepad-ui.x86_64: $(ALL_GDSCRIPT) $(ALL_SCENES)
+	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
+
+.PHONY: plugins
+plugins: build/plugins.zip
+build/plugins.zip: $(ALL_GDSCRIPT) $(ALL_SCENES)
+	mkdir -p build
+	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
+
+.PHONY: clean
+clean:
+	rm -rf build
 
 .PHONY: run
 run: build/opengamepad-ui.x86_64
