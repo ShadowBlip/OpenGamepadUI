@@ -14,7 +14,6 @@ grow_vertical = 2
 script = ExtResource("1_cl0ln")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -23,7 +22,6 @@ grow_vertical = 2
 theme = ExtResource("2_3di5k")
 
 [node name="StoresContent" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,7 +33,6 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="StoresContent"]
-layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
@@ -44,7 +41,6 @@ follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="StoresContent/ScrollContainer"]
-layout_mode = 2
 offset_right = 1180.0
 offset_bottom = 31.0
 size_flags_horizontal = 3
@@ -52,7 +48,6 @@ theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
 [node name="Button" parent="StoresContent/ScrollContainer/HFlowContainer" instance=ExtResource("3_rolvk")]
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -64,7 +59,6 @@ text = "Test Store"
 
 [node name="HomeContent" type="MarginContainer" parent="."]
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -76,7 +70,6 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HomeContent"]
-layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
@@ -85,7 +78,6 @@ follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="HomeContent/ScrollContainer"]
-layout_mode = 2
 offset_right = 1180.0
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16

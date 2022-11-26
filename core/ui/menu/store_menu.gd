@@ -25,7 +25,7 @@ func _on_store_registered(store: Store) -> void:
 	
 	# Build the poster to display
 	var poster: TextureButton = poster_scene.instantiate()
-	poster.set_layout(poster.LAYOUT_LANDSCAPE)
+	poster.layout = poster.LAYOUT_MODE.LANDSCAPE
 	var img: Texture2D = load(store.store_image)
 	poster.texture_normal = img
 	var label: Label = poster.get_node("Label")
@@ -44,6 +44,11 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State) -> void
 	
 	if _current_store == "":
 		var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
+		for child in grid.get_children():
+			child.grab_focus.call_deferred()
+			break
+	else:
+		var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
 		for child in grid.get_children():
 			child.grab_focus.call_deferred()
 			break
@@ -69,7 +74,7 @@ func _on_home_loaded(results: Array):
 		
 		# Build a poster for each item on the store home
 		var poster: TextureButton = poster_scene.instantiate()
-		poster.set_layout(poster.LAYOUT_PORTRAIT)
+		poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		var img: Texture2D = load("res://assets/images/placeholder-grid-portrait.png")
 		poster.texture_normal = img
 		var label: Label = poster.get_node("Label")
