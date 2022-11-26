@@ -31,9 +31,11 @@ signal state_changed(from: State, to: State)
 @export var starting_state: State = State.HOME
 var _state_stack: Array = [State.NONE]
 
+
 func _ready() -> void:
 	state_changed.connect(_on_state_changed)
 	push_state(starting_state)
+
 
 func _on_state_changed(from: int, to: int) -> void:
 	# Always switch to home if we end up with no state
@@ -43,11 +45,13 @@ func _on_state_changed(from: int, to: int) -> void:
 	var to_str = StateManager.StateMap[from]
 	print_debug("Switched from state {0} to {1}".format([from_str, to_str]))
 
+
 # Set state will set the entire state stack to the given array of states
 func set_state(stack: Array):
 	var cur = current_state()
 	_state_stack = stack
 	state_changed.emit(cur, stack[-1])
+
 
 # Push state will push the given state to the top of the state stack. You can
 # optionally pass 'unique' to allow/disallow duplicate states in the stack.
@@ -74,6 +78,7 @@ func pop_state() -> int:
 	state_changed.emit(popped, cur)
 	return popped
 	
+	
 # Replaces the current state at the end of the stack with the given state
 func replace_state(state: int, unique: bool = true):
 	var popped = _state_stack.pop_back()
@@ -82,6 +87,7 @@ func replace_state(state: int, unique: bool = true):
 	else:
 		_state_stack.push_back(state)
 	state_changed.emit(popped, state)
+
 
 # Removes all instances of the given state from the stack
 func remove_state(state: int):
@@ -94,6 +100,7 @@ func remove_state(state: int):
 	_state_stack = new_state_stack
 	state_changed.emit(cur, current_state())
 
+
 # Returns the current state at the end of the state stack
 func current_state() -> int:
 	var length = len(_state_stack)
@@ -101,12 +108,19 @@ func current_state() -> int:
 		return State.NONE
 	return _state_stack[len(_state_stack)-1]
 
+
+# Returns the length of the state stack
+func stack_length() -> int:
+	return len(_state_stack)
+
+
 # Returns true if the given state exists anywhere in the state stack
 func has_state(state: int) -> bool:
 	if _state_stack.find(state) != -1:
 		return true
 	return false
-	
+
+
 func _push_unique(state: int):
 	var i = _state_stack.find(state)
 	if i >= 0:

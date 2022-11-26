@@ -50,3 +50,7 @@ func _input(event: InputEvent) -> void:
 		elif state != StateManager.State.MAIN_MENU:
 			print("Adding mm state")
 			state_manager.push_state(StateManager.State.MAIN_MENU)
+
+	# Handle back button presses
+	if event.is_action_pressed("ogui_back") and state_manager.stack_length() > 1:
+		state_manager.pop_state()

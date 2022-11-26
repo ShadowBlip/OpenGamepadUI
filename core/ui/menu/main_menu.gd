@@ -20,6 +20,10 @@ func _on_home_button_pressed() -> void:
 	state_mgr.set_state([StateManager.State.HOME])
 
 
+func _on_library_button_pressed() -> void:
+	state_mgr.set_state([StateManager.State.LIBRARY])
+
+
 func _on_store_button_pressed() -> void:
 	state_mgr.set_state([StateManager.State.STORE])
 

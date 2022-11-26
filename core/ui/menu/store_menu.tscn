@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bwmmf2q2bf12y"]
+[gd_scene load_steps=4 format=3 uid="uid://bwmmf2q2bf12y"]
 
 [ext_resource type="Script" path="res://core/ui/menu/store_menu.gd" id="1_cl0ln"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_3di5k"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_rolvk"]
 
 [node name="StoreMenu" type="Control" groups=["store_menu"]]
 layout_mode = 3
@@ -13,7 +14,6 @@ grow_vertical = 2
 script = ExtResource("1_cl0ln")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,7 +22,6 @@ grow_vertical = 2
 theme = ExtResource("2_3di5k")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,9 +33,19 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer"]
-layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
 offset_bottom = 750.0
-columns = 4
+theme_override_constants/h_separation = 40
+columns = 2
+
+[node name="Button" parent="MarginContainer/GridContainer" instance=ExtResource("3_rolvk")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 590.0
+offset_bottom = 31.0
+grow_horizontal = 1
+grow_vertical = 1
+text = "Test Store"

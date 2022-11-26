@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cyst6853eansj"]
+[gd_scene load_steps=15 format=3 uid="uid://cyst6853eansj"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -10,9 +10,10 @@
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
 [ext_resource type="PackedScene" uid="uid://bmv41ngl22a02" path="res://core/systems/store/store_manager.tscn" id="5_b0s7f"]
 [ext_resource type="PackedScene" uid="uid://c6rr12t4fv7py" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
-[ext_resource type="PackedScene" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
+[ext_resource type="PackedScene" uid="uid://yyh7kcog2w7m" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://bwmmf2q2bf12y" path="res://core/ui/menu/store_menu.tscn" id="8_cx1y5"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
+[ext_resource type="PackedScene" uid="uid://cka4dm6cf0i16" path="res://core/ui/menu/library_menu.tscn" id="10_nynup"]
 
 [node name="Main" type="Control" groups=["main"]]
 layout_mode = 3
@@ -60,12 +61,15 @@ size_flags_vertical = 3
 
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
 
+[node name="LibraryMenu" parent="UIContainer/Content" instance=ExtResource("10_nynup")]
+visible = false
+
 [node name="StoreMenu" parent="UIContainer/Content" instance=ExtResource("8_cx1y5")]
 visible = false
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 8960.0
-offset_bottom = 4830.0
+offset_right = 11520.0
+offset_bottom = 6210.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 

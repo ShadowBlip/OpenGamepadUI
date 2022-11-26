@@ -1,6 +1,6 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://yyh7kcog2w7m"]
 
-[ext_resource type="PackedScene" path="res://core/ui/menu/main_menu.tscn" id="1_aknsm"]
+[ext_resource type="PackedScene" uid="uid://cs67bnlsoxcmy" path="res://core/ui/menu/main_menu.tscn" id="1_aknsm"]
 [ext_resource type="Script" path="res://core/ui/menu/main_menu_container.gd" id="1_shfdj"]
 [ext_resource type="PackedScene" path="res://core/ui/menu/in-game_menu.tscn" id="2_4ogvu"]
 
@@ -98,8 +98,8 @@ _data = {
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1280.0
-offset_bottom = 800.0
+offset_right = 5120.0
+offset_bottom = 3200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
@@ -108,7 +108,7 @@ script = ExtResource("1_shfdj")
 [node name="MainMenu" parent="." instance=ExtResource("1_aknsm")]
 anchors_preset = 0
 anchor_bottom = 0.0
-offset_bottom = 800.0
+offset_bottom = 3200.0
 grow_vertical = 1
 
 [node name="InGameMenu" parent="." instance=ExtResource("2_4ogvu")]
@@ -116,7 +116,7 @@ anchors_preset = 0
 anchor_bottom = 0.0
 offset_left = 350.0
 offset_right = 650.0
-offset_bottom = 800.0
+offset_bottom = 3200.0
 grow_vertical = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -2,6 +2,7 @@ extends Node
 class_name Store
 
 @export var store_name: String
+@export_file("*.png") var store_image: String
 
 @onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
 
