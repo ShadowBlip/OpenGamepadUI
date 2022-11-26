@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ekp4a"]
 [ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_hp3xd"]
+[sub_resource type="LabelSettings" id="LabelSettings_1rha2"]
 shadow_size = 3
 shadow_offset = Vector2(2, 2)
 
@@ -22,7 +22,6 @@ script = ExtResource("2_op5nj")
 [node name="Panel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(0, 22)
-layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -32,7 +31,6 @@ grow_vertical = 0
 theme = ExtResource("1_ekp4a")
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -41,7 +39,7 @@ offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Empty"
-label_settings = SubResource("LabelSettings_hp3xd")
+label_settings = SubResource("LabelSettings_1rha2")
 horizontal_alignment = 1
 vertical_alignment = 1
 

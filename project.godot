@@ -69,6 +69,16 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://core/systems/store/store.gd"
 }, {
+"base": "Object",
+"class": &"StoreItem",
+"language": &"GDScript",
+"path": "res://core/systems/store/store_item.gd"
+}, {
+"base": "Object",
+"class": &"StoreItemDetails",
+"language": &"GDScript",
+"path": "res://core/systems/store/store_item_details.gd"
+}, {
 "base": "Node",
 "class": &"StoreManager",
 "language": &"GDScript",
@@ -87,6 +97,8 @@ _global_script_class_icons={
 "PluginLoader": "",
 "StateManager": "",
 "Store": "",
+"StoreItem": "",
+"StoreItemDetails": "",
 "StoreManager": ""
 }
 

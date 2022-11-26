@@ -1,0 +1,2 @@
+extends Object
+class_name StoreItemDetails
