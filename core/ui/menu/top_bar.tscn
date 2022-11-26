@@ -16,7 +16,6 @@ theme = ExtResource("1_pvtqf")
 script = ExtResource("2_s10b7")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,7 +24,6 @@ grow_vertical = 2
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,7 +33,6 @@ theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-layout_mode = 2
 offset_left = 50.0
 offset_top = 10.0
 offset_right = 1270.0
@@ -46,7 +43,6 @@ size_flags_vertical = 4
 
 [node name="SearchBar" type="TextEdit" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 35)
-layout_mode = 2
 offset_right = 1036.0
 offset_bottom = 35.0
 size_flags_horizontal = 3
@@ -55,7 +51,6 @@ placeholder_text = "Search"
 
 [node name="NetworkIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
 offset_left = 1040.0
 offset_top = 5.0
 offset_right = 1064.0
@@ -66,7 +61,6 @@ texture = ExtResource("3_xu4r1")
 stretch_mode = 4
 
 [node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer"]
-layout_mode = 2
 offset_left = 1068.0
 offset_top = 4.0
 offset_right = 1110.0
@@ -74,7 +68,6 @@ offset_bottom = 30.0
 text = "100%"
 
 [node name="TimeLabel" type="Label" parent="MarginContainer/HBoxContainer"]
-layout_mode = 2
 offset_left = 1114.0
 offset_top = 4.0
 offset_right = 1181.0
@@ -83,7 +76,6 @@ text = "12:00pm"
 
 [node name="ProfileIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(35, 35)
-layout_mode = 2
 offset_left = 1185.0
 offset_right = 1220.0
 offset_bottom = 35.0

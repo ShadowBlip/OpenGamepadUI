@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=11 format=3 uid="uid://cyst6853eansj"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -7,11 +7,11 @@
 [ext_resource type="PackedScene" path="res://core/ui/menu/home_menu.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
-[ext_resource type="PackedScene" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
+[ext_resource type="PackedScene" uid="uid://c6rr12t4fv7py" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
 [ext_resource type="PackedScene" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,6 +29,7 @@ script = ExtResource("1_4l3sd")
 [node name="PluginLoader" parent="." instance=ExtResource("5_8300b")]
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -37,6 +38,7 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="TopBar" parent="UIContainer" instance=ExtResource("3_4jaod")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 offset_right = 1280.0
@@ -44,7 +46,7 @@ offset_bottom = 55.0
 grow_horizontal = 1
 
 [node name="Content" type="Control" parent="UIContainer"]
-layout_mode = 3
+layout_mode = 2
 anchors_preset = 0
 offset_top = 55.0
 offset_right = 1280.0
@@ -52,15 +54,18 @@ offset_bottom = 745.0
 size_flags_vertical = 3
 
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
+layout_mode = 1
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 2560.0
-offset_bottom = 1380.0
+layout_mode = 1
+offset_right = 3840.0
+offset_bottom = 2070.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
-visible = false
+layout_mode = 1
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
+layout_mode = 2
 anchors_preset = 0
 anchor_top = 0.0
 anchor_right = 0.0

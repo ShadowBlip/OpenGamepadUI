@@ -1,55 +1,13 @@
 extends Control
+class_name Main
 
-# Plugin "mods"
-# https://blog.cy.md/2022/05/27/modding-for-godot/
-# We can load plugins from user://plugins
-# This normally resolves to: ~/.local/share/godot/app_userdata/Open Gamepad UI/plugins
+var PID: int = OS.get_process_id()
+var overlay_display = Gamescope.discover_xwayland_display(PID)
+var overlay_window_id = Gamescope.get_window_id(PID, overlay_display)
 
-# We need:
-# - "Shortcut" structure
-# - Plugin Store
-# - Ability to foreground the overlay
-# - Main menu
-# - Storefront?
-# - Library menu
-# - Home menu
-
-# Near term:
-# - Manage bluetooth
-# - Audio?
-
-# Far future
-# - Friends/Chat?
-# - GamepadUI Input Manager
-# - Cloud saves
-
-# Shortcuts .osf
-#  shortcutId: 123
-#  name: Fortnite
-#  command: steam
-#  args: []
-#  provider: steam
-#  providerAppId: 1234
-#  tags: []
-#  categories: []
-#  images:
-#	poster: foo.png
-
-# Storage Manager
-#  Lets plugins determine where to install things
-
-# Store Plugin Interface
-#  get_available()
-#  get_installed()
-#  install(game)
-#  uninstall(game)
-
-# Store Plugin
-#  - Steam
-#		manager.add_shortcut()
-#  - Heroic
-#  - Flatpak
-#  - Local - look for .desktop files
+func _init() -> void:
+	# Tell gamescope that we're an overlay
+	_set_overylay(overlay_window_id)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -61,6 +19,7 @@ func _ready() -> void:
 	# Subscribe to state changes
 	var state_manager: StateManager = $StateManager
 	state_manager.state_changed.connect(_on_state_changed)
+
 
 # Handle state changes
 func _on_state_changed(from: int, to: int):
@@ -75,10 +34,11 @@ func _on_state_changed(from: int, to: int):
 		child.visible = true
 	return
 
-# Look in XDG_APP_PATH for .desktop files
-func _discover_apps() -> void:
-	pass
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+# Lets us run as an overlay in gamescope
+func _set_overylay(window_id: String) -> void:
+	# Pretend to be Steam
+	# Gamescope is hard-coded to look for appId 769
+	Gamescope.set_xprop(window_id, "STEAM_GAME", "32c", "769")
+	# Sets ourselves to the input focus
+	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "1")

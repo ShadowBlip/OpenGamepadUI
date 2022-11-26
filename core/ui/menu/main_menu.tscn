@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://cs67bnlsoxcmy"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_r20uv"]
 [ext_resource type="Script" path="res://core/ui/menu/main_menu.gd" id="2_2uoqx"]
