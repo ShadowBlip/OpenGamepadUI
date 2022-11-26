@@ -31,9 +31,17 @@ func _on_state_changed(from: int, to: int):
 
 func _input(event: InputEvent) -> void:
 	var state = state_manager.current_state()
-	
+
+	# Handle "QAM" button combo
+	if Input.is_action_pressed("ogui_x"):
+		if state_manager.current_state() == StateManager.State.QUICK_ACCESS_MENU:
+			state_manager.pop_state()
+		else:
+			state_manager.push_state(StateManager.State.QUICK_ACCESS_MENU)
+
+
 	# Handle "guide" button presses
-	if event.is_action_pressed("ogui_guide"):
+	elif event.is_action_pressed("ogui_guide"):
 		# Handle cases where a game is running
 		if state_manager.has_state(StateManager.State.IN_GAME):
 			# If we're in game, pull up the in-game menu
@@ -42,7 +50,7 @@ func _input(event: InputEvent) -> void:
 			# If we're not in game, go back
 			else:
 				state_manager.replace_state(StateManager.State.IN_GAME)
-				
+
 		# Handle opening the main menu outside of a running game
 		elif state == StateManager.State.MAIN_MENU:
 			print("Removing mm state")

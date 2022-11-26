@@ -10,3 +10,11 @@ func _ready() -> void:
 
 func _on_state_changed(from: int, to: int) -> void:
 	visible = to == StateManager.State.QUICK_ACCESS_MENU
+
+	# Don't do anything if its not our time.
+	if not visible:
+		return
+
+	var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
+	var button: Button = icon_bar.get_child(0)
+	button.grab_focus()
