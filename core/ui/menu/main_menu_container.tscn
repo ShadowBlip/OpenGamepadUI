@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://bxh58e52ox2yd"]
+[gd_scene load_steps=8 format=3]
 
-[ext_resource type="PackedScene" uid="uid://c52owtpe0p02v" path="res://core/ui/menu/main.tscn" id="1_aknsm"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/main_menu.tscn" id="1_aknsm"]
 [ext_resource type="Script" path="res://core/ui/menu/main_menu_container.gd" id="1_shfdj"]
-[ext_resource type="PackedScene" uid="uid://deu6a6ouuxgob" path="res://core/ui/menu/ingame.tscn" id="2_4ogvu"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/in-game_menu.tscn" id="2_4ogvu"]
 
 [sub_resource type="Animation" id="Animation_8ltbq"]
 length = 0.001

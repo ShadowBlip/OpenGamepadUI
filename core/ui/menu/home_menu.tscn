@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://d4nia8vaynf48"]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_x16u8"]
-[ext_resource type="Script" path="res://core/ui/menu/home.gd" id="2_inwir"]
+[ext_resource type="Script" path="res://core/ui/menu/home_menu.gd" id="2_inwir"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_qu1mp"]
 
 [node name="HomeMenu" type="Control" groups=["menu"]]

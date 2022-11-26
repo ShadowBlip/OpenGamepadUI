@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://deu6a6ouuxgob"]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_tvlyc"]
-[ext_resource type="Script" path="res://core/ui/menu/ingame.gd" id="2_4nawu"]
+[ext_resource type="Script" path="res://core/ui/menu/in-game_menu.gd" id="2_4nawu"]
 
 [node name="InGameMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)

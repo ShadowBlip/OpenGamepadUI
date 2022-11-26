@@ -1,15 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://bouj7k1ys0wvq"]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
 [ext_resource type="PackedScene" uid="uid://ciy6tp2k7hsdl" path="res://core/systems/input/input_manager.tscn" id="2_yno6k"]
-[ext_resource type="PackedScene" uid="uid://c522u0ublby0k" path="res://core/ui/menu/topbar.tscn" id="3_4jaod"]
-[ext_resource type="PackedScene" uid="uid://d4nia8vaynf48" path="res://core/ui/menu/home.tscn" id="4_cej3c"]
+[ext_resource type="PackedScene" uid="uid://x5ay8cr0c1xq" path="res://core/ui/menu/top_bar.tscn" id="3_4jaod"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/home_menu.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
-[ext_resource type="PackedScene" uid="uid://b4e4cgsvm0pkd" path="res://core/ui/menu/contextbar.tscn" id="5_t8uiy"]
-[ext_resource type="PackedScene" uid="uid://bxh58e52ox2yd" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
-[ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quickaccess.tscn" id="9_8xlqm"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
+[ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
 
 [node name="Main" type="Control"]
 layout_mode = 3

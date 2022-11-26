@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://c522u0ublby0k"]
+[gd_scene load_steps=5 format=3 uid="uid://x5ay8cr0c1xq"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_hgshd"]
-[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_ynpun"]
-[ext_resource type="Texture2D" uid="uid://djaa45t1ecopj" path="res://assets/icons/wifi.svg" id="2_37ven"]
-[ext_resource type="Script" path="res://core/ui/menu/topbar.gd" id="2_pguqy"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_pvtqf"]
+[ext_resource type="Script" path="res://core/ui/menu/top_bar.gd" id="2_s10b7"]
+[ext_resource type="Texture2D" uid="uid://djaa45t1ecopj" path="res://assets/icons/wifi.svg" id="3_xu4r1"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="4_lv4ws"]
 
 [node name="TopBar" type="Control" groups=["menu"]]
 custom_minimum_size = Vector2(0, 55)
@@ -12,8 +12,8 @@ anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 size_flags_horizontal = 3
-theme = ExtResource("1_hgshd")
-script = ExtResource("2_pguqy")
+theme = ExtResource("1_pvtqf")
+script = ExtResource("2_s10b7")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -62,7 +62,7 @@ offset_right = 1064.0
 offset_bottom = 29.0
 size_flags_horizontal = 8
 size_flags_vertical = 4
-texture = ExtResource("2_37ven")
+texture = ExtResource("3_xu4r1")
 stretch_mode = 4
 
 [node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer"]
@@ -89,6 +89,6 @@ offset_right = 1220.0
 offset_bottom = 35.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("1_ynpun")
+texture = ExtResource("4_lv4ws")
 ignore_texture_size = true
 stretch_mode = 4
