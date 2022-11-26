@@ -13,6 +13,9 @@ var target_display: int = -1
 
 
 func _ready() -> void:
+	# Watch for state changes
+	state_manager.state_changed.connect(_on_state_changed)
+	
 	# Get the target xwayland display to launch on
 	target_display = _get_target_display(overlay_display)
 	
@@ -22,7 +25,30 @@ func _ready() -> void:
 	running_timer.wait_time = 1
 	add_child(running_timer)
 	running_timer.start()
-	
+
+
+func _on_state_changed(from: int, to: int):
+	# If a game is running and our stack doesn't have IN_GAME, push it.
+	if len(running) > 0 and not state_manager.has_state(StateManager.State.IN_GAME):
+		state_manager.push_state_front(StateManager.State.IN_GAME)
+		
+	# Setting overlay should only happen when we are overlaying UI over a running
+	# game.
+	if state_manager.has_state(StateManager.State.IN_GAME):
+		_set_overlay(true)
+	else:
+		_set_overlay(false)
+
+
+# Set overlay will set the Gamescope atom to indicate that we should be drawn
+# over a running game or not.
+func _set_overlay(enable: bool) -> void:
+	var window_id = main.overlay_window_id
+	var overlay_enabled = "0"
+	if enable:
+		overlay_enabled = "1"
+	Gamescope.set_xprop(window_id, "STEAM_OVERLAY", "32c", overlay_enabled)
+
 
 # Launches the given command on the target xwayland display. Returns a PID
 # of the launched process.
@@ -40,7 +66,7 @@ func launch(cmd: String, args: PackedStringArray) -> int:
 	
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(pid)
-	state_manager.push_state(StateManager.State.IN_GAME)
+	state_manager.set_state([StateManager.State.IN_GAME])
 	return pid
 
 

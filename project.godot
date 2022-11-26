@@ -29,6 +29,16 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://core/systems/launcher/launcher.gd"
 }, {
+"base": "Node",
+"class": &"Library",
+"language": &"GDScript",
+"path": "res://core/systems/library/library.gd"
+}, {
+"base": "Node",
+"class": &"LibraryManager",
+"language": &"GDScript",
+"path": "res://core/systems/library/library_manager.gd"
+}, {
 "base": "Object",
 "class": &"Log",
 "language": &"GDScript",
@@ -53,17 +63,31 @@ _global_script_classes=[{
 "class": &"StateManager",
 "language": &"GDScript",
 "path": "res://core/systems/state/state_manager.gd"
+}, {
+"base": "Node",
+"class": &"Store",
+"language": &"GDScript",
+"path": "res://core/systems/store/store.gd"
+}, {
+"base": "Node",
+"class": &"StoreManager",
+"language": &"GDScript",
+"path": "res://core/systems/store/store_manager.gd"
 }]
 _global_script_class_icons={
 "Gamescope": "",
 "InputManager": "",
 "LaunchManager": "",
 "Launcher": "",
+"Library": "",
+"LibraryManager": "",
 "Log": "",
 "Main": "",
 "Plugin": "",
 "PluginLoader": "",
-"StateManager": ""
+"StateManager": "",
+"Store": "",
+"StoreManager": ""
 }
 
 [application]

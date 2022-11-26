@@ -17,7 +17,11 @@ func _on_state_changed(from: int, to: int) -> void:
 		button.grab_focus.call_deferred()
 
 func _on_home_button_pressed() -> void:
-	state_mgr.replace_state(StateManager.State.HOME)
+	state_mgr.set_state([StateManager.State.HOME])
+
+
+func _on_store_button_pressed() -> void:
+	state_mgr.set_state([StateManager.State.STORE])
 
 
 func _on_power_button_pressed() -> void:

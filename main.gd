@@ -7,7 +7,7 @@ var overlay_window_id = Gamescope.get_window_id(PID, overlay_display)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
-	_set_overylay(overlay_window_id)
+	_setup(overlay_window_id)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -36,7 +36,7 @@ func _on_state_changed(from: int, to: int):
 
 
 # Lets us run as an overlay in gamescope
-func _set_overylay(window_id: String) -> void:
+func _setup(window_id: String) -> void:
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
 	Gamescope.set_xprop(window_id, "STEAM_GAME", "32c", "769")

@@ -1,3 +1,6 @@
+# StateManager is responsible for managing the overall state of OpenGamepadUI.
+# It is implemented as a state machine with a stack of states that you can
+# push to and pop.
 extends Node
 class_name StateManager
 
@@ -7,6 +10,7 @@ enum State {
 	MAIN_MENU,
 	QUICK_ACCESS_MENU,
 	LIBRARY,
+	STORE,
 	IN_GAME,
 	IN_GAME_MENU,
 }
@@ -17,6 +21,7 @@ const StateMap = {
 	State.MAIN_MENU: "main_menu",
 	State.QUICK_ACCESS_MENU: "quick_access_menu",
 	State.LIBRARY: "library",
+	State.STORE: "store",
 	State.IN_GAME: "in-game",
 	State.IN_GAME_MENU: "in-game_menu",
 }
@@ -34,12 +39,18 @@ func _on_state_changed(from: int, to: int) -> void:
 	# Always switch to home if we end up with no state
 	if to == State.NONE:
 		push_state(starting_state)
+	var from_str = StateManager.StateMap[from]
+	var to_str = StateManager.StateMap[from]
+	print_debug("Switched from state {0} to {1}".format([from_str, to_str]))
 
+# Set state will set the entire state stack to the given array of states
 func set_state(stack: Array):
 	var cur = current_state()
 	_state_stack = stack
 	state_changed.emit(cur, stack[-1])
 
+# Push state will push the given state to the top of the state stack. You can
+# optionally pass 'unique' to allow/disallow duplicate states in the stack.
 func push_state(state: int, unique: bool = true):
 	var cur = current_state()
 	if unique:
@@ -48,13 +59,22 @@ func push_state(state: int, unique: bool = true):
 		_state_stack.push_back(state)
 	state_changed.emit(cur, state)
 	
+
+# Pushes the given state to the front of the stack
+func push_state_front(state: int):
+	var cur = current_state()
+	_state_stack.push_front(state)
+	state_changed.emit(cur, current_state())
+
+
+# Pop state will remove the last state from the stack and return it.
 func pop_state() -> int:
 	var popped = _state_stack.pop_back()
 	var cur = current_state()
 	state_changed.emit(popped, cur)
 	return popped
 	
-# Replaces the current state with the given state
+# Replaces the current state at the end of the stack with the given state
 func replace_state(state: int, unique: bool = true):
 	var popped = _state_stack.pop_back()
 	if unique:
@@ -73,13 +93,15 @@ func remove_state(state: int):
 			new_state_stack.push_back(s)
 	_state_stack = new_state_stack
 	state_changed.emit(cur, current_state())
-	
+
+# Returns the current state at the end of the state stack
 func current_state() -> int:
 	var length = len(_state_stack)
 	if length == 0:
 		return State.NONE
 	return _state_stack[len(_state_stack)-1]
-	
+
+# Returns true if the given state exists anywhere in the state stack
 func has_state(state: int) -> bool:
 	if _state_stack.find(state) != -1:
 		return true
