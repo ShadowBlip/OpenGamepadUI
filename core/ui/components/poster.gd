@@ -1,7 +1,7 @@
 extends TextureButton
 
 const LAYOUT_LANDSCAPE: Vector2 = Vector2(460, 215)
-const LAYOUT_PORTRAIT: Vector2 = Vector2(600, 900)
+const LAYOUT_PORTRAIT: Vector2 = Vector2(600, 900) / 3
 
 @export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"

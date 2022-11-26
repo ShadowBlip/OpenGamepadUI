@@ -8,7 +8,7 @@ var _current_store: String
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Clear the template buttons
-	var grid: GridContainer = $StoresContent/GridContainer
+	var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
 	for child in grid.get_children():
 		grid.remove_child(child)
 		child.queue_free()
@@ -21,7 +21,7 @@ func _ready() -> void:
 
 # When a store is registered, add an entry to the stores menu
 func _on_store_registered(store: Store) -> void:
-	var grid: GridContainer = $StoresContent/GridContainer
+	var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
 	
 	# Build the poster to display
 	var poster: TextureButton = poster_scene.instantiate()
@@ -43,7 +43,7 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State) -> void
 		state_manager.remove_state(StateManager.State.STORE)
 	
 	if _current_store == "":
-		var grid: GridContainer = $StoresContent/GridContainer
+		var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
 		for child in grid.get_children():
 			child.grab_focus.call_deferred()
 			break
@@ -62,7 +62,7 @@ func _launch_store(store: Store):
 
 
 func _on_home_loaded(results: Array):
-	var grid: GridContainer = $HomeContent/GridContainer
+	var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
 	for i in results:
 		var item: StoreItem = i
 		print("Got item: ", item.id)
@@ -76,3 +76,8 @@ func _on_home_loaded(results: Array):
 		label.text = item.name
 		#poster.pressed.connect(_launch_store.bind(store))
 		grid.add_child(poster)
+
+	# Focus the first item
+	for child in grid.get_children():
+		child.grab_focus.call_deferred()
+		break
