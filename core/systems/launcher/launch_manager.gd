@@ -70,9 +70,9 @@ func launch(cmd: String, args: PackedStringArray) -> int:
 	return pid
 
 
-# Stops the game with the given PID
+# Stops the game and all its children with the given PID
 func stop(pid: int) -> void:
-	OS.kill(pid)
+	Reaper.reap(pid)
 	_remove_running(pid)
 
 
@@ -124,6 +124,19 @@ func _check_running():
 		if OS.is_process_running(pid):
 			continue
 		
+		# If it's not running, let's check to make sure it's REALLY not running
+		# and hasn't re-parented itself
+		var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
+		if not Reaper.is_gamescope_pid(gamescope_pid):
+			push_warning("We weren't launched with gamescope! Unexpected behavior expected.")
+		
+		# Try checking to see if there are any other processes running with our
+		# app's process group
+		var candidates = Reaper.get_children_with_pgid(gamescope_pid, pid)
+		if len(candidates) > 0:
+			print("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
+			continue
+		
 		# If it's not running, make sure we remove it from our list
 		to_remove.push_back(pid)
 		
@@ -134,3 +147,7 @@ func _check_running():
 	# Change away from IN_GAME state if nothing is running
 	if state_manager.current_state() == StateManager.State.IN_GAME and len(running) == 0:
 		state_manager.pop_state()
+
+
+func pstree(pid: int):
+	pass
