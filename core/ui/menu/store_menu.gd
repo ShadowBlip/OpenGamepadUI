@@ -75,7 +75,8 @@ func _on_home_loaded(results: Array):
 		# Build a poster for each item on the store home
 		var poster: TextureButton = poster_scene.instantiate()
 		poster.layout = poster.LAYOUT_MODE.PORTRAIT
-		var img: Texture2D = load("res://assets/images/placeholder-grid-portrait.png")
+		#var img: Texture2D = load("res://assets/images/placeholder-grid-portrait.png")
+		var img: Texture2D = item.texture
 		poster.texture_normal = img
 		var label: Label = poster.get_node("Label")
 		label.text = item.name

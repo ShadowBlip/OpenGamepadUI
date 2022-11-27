@@ -68,8 +68,8 @@ visible = false
 visible = false
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 17920.0
-offset_bottom = 9660.0
+offset_right = 23040.0
+offset_bottom = 12420.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 

@@ -50,6 +50,11 @@ _global_script_classes=[{
 "path": "res://main.gd"
 }, {
 "base": "Node",
+"class": &"MultiHTTPRequest",
+"language": &"GDScript",
+"path": "res://core/systems/network/multi_http_request.gd"
+}, {
+"base": "Node",
 "class": &"Plugin",
 "language": &"GDScript",
 "path": "res://core/systems/plugin/plugin.gd"
@@ -93,6 +98,7 @@ _global_script_class_icons={
 "LibraryManager": "",
 "Log": "",
 "Main": "",
+"MultiHTTPRequest": "",
 "Plugin": "",
 "PluginLoader": "",
 "StateManager": "",

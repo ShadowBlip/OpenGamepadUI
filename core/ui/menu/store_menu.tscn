@@ -42,7 +42,6 @@ horizontal_scroll_mode = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="StoresContent/ScrollContainer"]
 offset_right = 1180.0
-offset_bottom = 31.0
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
