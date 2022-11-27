@@ -64,9 +64,16 @@ func _launch_store(store: Store):
 	_current_store = store.store_id
 	store.home_loaded.connect(_on_home_loaded, CONNECT_ONE_SHOT)
 	store.load_home()
+	
+	# Show the loading animation while we wait for the store home.
+	$Loading01.visible = true
 
 
 func _on_home_loaded(results: Array):
+	# Hide the loading animation
+	$Loading01.visible = false
+	
+	# Populate our home content grid with store items
 	var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
 	for i in results:
 		var item: StoreItem = i
