@@ -24,6 +24,7 @@ script = ExtResource("2_op5nj")
 [node name="Panel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(0, 22)
+layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -35,6 +36,7 @@ theme = ExtResource("1_ekp4a")
 [node name="EmptyPanel" type="Panel" parent="."]
 modulate = Color(0.956863, 1, 0.760784, 1)
 show_behind_parent = true
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -42,6 +44,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="."]
+layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -56,3 +59,22 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+offset_left = 540.0
+offset_top = 250.0
+offset_right = 740.0
+offset_bottom = 550.0
+texture = ExtResource("2_0ro1r")
+ignore_texture_size = true

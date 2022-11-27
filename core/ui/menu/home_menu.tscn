@@ -18,7 +18,6 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,7 +25,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -38,7 +36,6 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
-layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
@@ -48,7 +45,6 @@ horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer"]
-layout_mode = 2
 offset_right = 848.0
 offset_bottom = 300.0
 grow_horizontal = 2
@@ -57,7 +53,6 @@ theme_override_constants/separation = 16
 
 [node name="Button" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -73,7 +68,6 @@ cmd = "vkcube"
 
 [node name="Button3" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -91,7 +85,6 @@ args = PackedStringArray("steam://rungameid/219740")
 
 [node name="Button4" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -109,7 +102,6 @@ args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")
 
 [node name="Poster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0

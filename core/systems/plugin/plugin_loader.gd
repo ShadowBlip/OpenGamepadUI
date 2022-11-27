@@ -2,6 +2,7 @@
 # https://gitlab.com/Delta-V-Modding/Mods/-/blob/main/game/ModLoader.gd
 extends Node
 class_name PluginLoader
+@icon("res://assets/icons/codesandbox.svg")
 
 const PLUGIN_API_VERSION = "1.1.0"
 const PLUGINS_DIR = "user://plugins"
