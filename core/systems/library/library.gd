@@ -13,12 +13,7 @@ func _ready() -> void:
 
 
 # Returns an array of available library items
-func get_available() -> Array:
-	return []
-	
-
-# Returns an array of library items that are installed
-func get_installed() -> Array:
+func get_library_items() -> Array:
 	return []
 	
 

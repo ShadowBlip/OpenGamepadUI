@@ -1,12 +1,17 @@
 extends Node
 class_name LibraryManager
 
-
 const REQUIRED_FIELDS: Array = ["library_id"]
 
 signal library_registered(library: Library)
+signal library_reloaded()
 
+# Dictionary of registered library providers
 var _libraries: Dictionary = {}
+var _available_apps: Dictionary = {}
+var _installed_apps: Dictionary = {}
+var _app_by_category: Dictionary = {}
+var _app_by_tag: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -19,7 +24,38 @@ func _on_parent_ready() -> void:
 	var libraries = get_tree().get_nodes_in_group("library")
 	for library in libraries:
 		_register_library(library)
-	get_installed()
+	
+	# Load the library items from each library provider
+	reload_library()
+
+
+# Returns a dictionary of all installed apps
+func get_installed() -> Dictionary:
+	return _installed_apps
+	
+
+# Returns a dictionary of all available apps
+func get_available() -> Dictionary:
+	return _available_apps
+
+
+# Loads all library items from each provider and sorts them.
+func reload_library():
+	_available_apps = _load_library()
+	_installed_apps = {}
+
+	# Store all installed apps
+	for name in _available_apps.keys():
+		var game: Dictionary = _available_apps[name]
+		for library_id in game.keys():
+			var library_item: LibraryItem = game[library_id]
+			if library_item.installed:
+				if not name in _installed_apps:
+					_installed_apps[name] = {}
+				_installed_apps[name][library_id] = library_item
+			# TODO: Sort by tags and category
+	
+	library_reloaded.emit()
 
 
 # Returns a dictionary of all installed library items from every registered provider.
@@ -29,17 +65,15 @@ func _on_parent_ready() -> void:
 #	    "library-id": <LibraryItem>
 #	  }
 #   }
-func get_installed() -> Dictionary:
+func _load_library() -> Dictionary:
 	var library_items: Dictionary = {}
 	for l in _libraries.values():
 		var library: Library = l
-		var items: Array = library.get_installed()
+		var items: Array = library.get_library_items()
 		for i in items:
 			var item: LibraryItem = i
 			if not item.name in library_items:
 				library_items[item.name] = {}
-			if not library.library_id in library_items[item.name]:
-				library_items[item.name][library.library_id] = {}
 			library_items[item.name][library.library_id] = item
 			
 	return library_items
