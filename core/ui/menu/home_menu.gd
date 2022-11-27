@@ -7,7 +7,7 @@ func _ready() -> void:
 	state_mgr.state_changed.connect(_on_state_changed)
 
 	# Grab the first button as focus
-	var button: Button = $MarginContainer/HBoxContainer/Button
+	var button: TextureButton = $MarginContainer/ScrollContainer/HBoxContainer/Button
 	button.grab_focus.call_deferred()
 
 func _on_state_changed(from: int, to: int):
@@ -16,5 +16,5 @@ func _on_state_changed(from: int, to: int):
 		state_mgr.remove_state(StateManager.State.HOME)
 	if to == StateManager.State.HOME:
 		# Grab the first button as focus
-		var button: Button = $MarginContainer/HBoxContainer/Button
+		var button: TextureButton = $MarginContainer/ScrollContainer/HBoxContainer/Button
 		button.grab_focus.call_deferred()

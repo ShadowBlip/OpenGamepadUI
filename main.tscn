@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
 [ext_resource type="PackedScene" uid="uid://ciy6tp2k7hsdl" path="res://core/systems/input/input_manager.tscn" id="2_yno6k"]
 [ext_resource type="PackedScene" uid="uid://x5ay8cr0c1xq" path="res://core/ui/menu/top_bar.tscn" id="3_4jaod"]
-[ext_resource type="PackedScene" path="res://core/ui/menu/home_menu.tscn" id="4_cej3c"]
+[ext_resource type="PackedScene" uid="uid://bj8ej083is2oc" path="res://core/ui/menu/home_menu.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
 [ext_resource type="PackedScene" uid="uid://003wgys4a6wl" path="res://core/systems/library/library_manager.tscn" id="5_5nsnb"]
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]

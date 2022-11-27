@@ -1,3 +1,4 @@
+@tool
 extends TextureButton
 
 enum LAYOUT_MODE {
@@ -10,18 +11,21 @@ const LAYOUTS: Dictionary = {
 	LAYOUT_MODE.PORTRAIT: Vector2(600, 900) / 3,
 }
 
+@export var text: String = "Empty"
 @export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
 @export var layout: LAYOUT_MODE = LAYOUT_MODE.LANDSCAPE
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
 
+@onready var label: Label = $Label
 @onready var panel: Panel = $Panel
 @onready var panel_alpha: int = panel.modulate.a8
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_set_layout(LAYOUTS[layout])
+	label.text = text
 	
 	# Connect to focus events
 	focus_entered.connect(_play_sound.bind(focus_audio_stream))

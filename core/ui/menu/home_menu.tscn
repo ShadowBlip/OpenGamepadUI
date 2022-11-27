@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_x16u8"]
 [ext_resource type="Script" path="res://core/ui/menu/home_menu.gd" id="2_inwir"]
-[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_qu1mp"]
+[ext_resource type="PackedScene" uid="uid://dy11p1f1avde" path="res://core/ui/components/poster.tscn" id="5_hs4on"]
 
 [node name="HomeMenu" type="Control" groups=["menu"]]
 layout_mode = 3
@@ -18,6 +18,7 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,6 +26,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,56 +37,86 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
 offset_bottom = 750.0
+follow_focus = true
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer"]
+layout_mode = 2
+offset_right = 848.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 16
 
-[node name="Button" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
+[node name="Button" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_right = 390.0
-offset_bottom = 700.0
+offset_right = 200.0
+offset_bottom = 300.0
 grow_horizontal = 1
 grow_vertical = 1
-text = "LAUNCH
-vkCube"
+text = "vkCube"
+layout = 1
 
-[node name="Launcher" parent="MarginContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
 cmd = "vkcube"
 
-[node name="Button1" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
+[node name="Button3" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 394.0
-offset_right = 785.0
-offset_bottom = 700.0
+offset_left = 216.0
+offset_right = 416.0
+offset_bottom = 300.0
 grow_horizontal = 1
 grow_vertical = 1
-text = "LAUNCH
-Don't Starve"
+text = "Don't Starve"
+layout = 1
 
-[node name="Launcher" parent="MarginContainer/HBoxContainer/Button1" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button3" instance=ExtResource("1_pm3kc")]
 cmd = "steam"
 args = PackedStringArray("steam://rungameid/219740")
 
-[node name="Button2" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_qu1mp")]
+[node name="Button4" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 789.0
-offset_right = 1180.0
-offset_bottom = 700.0
+offset_left = 432.0
+offset_right = 632.0
+offset_bottom = 300.0
 grow_horizontal = 1
 grow_vertical = 1
-text = "LAUNCH
-Heroic"
+text = "while True: learn()"
+layout = 1
 
-[node name="Launcher" parent="MarginContainer/HBoxContainer/Button2" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button4" instance=ExtResource("1_pm3kc")]
 cmd = "xdg-open"
 args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")
+
+[node name="Poster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 648.0
+offset_right = 848.0
+offset_bottom = 300.0
+grow_horizontal = 1
+grow_vertical = 1
+text = "Library"
+layout = 1
