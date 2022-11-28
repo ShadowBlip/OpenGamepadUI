@@ -23,6 +23,10 @@ import: .godot
 	@echo "Importing project assets. This will take some time..."
 	timeout --foreground 60 $(GODOT) --headless --editor . || echo "Finished"
 
+.PHONY: edit
+edit:
+	$(GODOT) --editor .
+
 .PHONY: clean
 clean:
 	rm -rf build
