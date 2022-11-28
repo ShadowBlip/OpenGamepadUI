@@ -7,6 +7,8 @@ to launch and play games.
 
 > :warning: NOTE: This project is currently in the very early stages of development.
 
+![](docs/screenshot01.png)
+
 ## Requirements
 
 The following are required to run and build Open Gamepad UI:
