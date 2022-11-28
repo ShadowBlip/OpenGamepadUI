@@ -11,10 +11,14 @@ to launch and play games.
 
 ## Requirements
 
-The following are required to run and build Open Gamepad UI:
+The following are required to build Open Gamepad UI:
+
+- godot 4.x
+- make (optional)
+
+The following are required to run Open Gamepad UI:
 
 - gamescope
-- godot 4.x
 - xorg-xprop
 - xorg-xwininfo
 
