@@ -8,5 +8,5 @@ func _ready() -> void:
 	state_mgr.state_changed.connect(_on_state_changed)
 	
 
-func _on_state_changed(from: int, to: int) -> void:
+func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
 	visible = to == StateManager.State.QUICK_ACCESS_MENU

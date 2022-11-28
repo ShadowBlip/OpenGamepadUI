@@ -22,7 +22,7 @@ func _ready() -> void:
 
 
 # Handle state changes
-func _on_state_changed(from: int, to: int):
+func _on_state_changed(from: int, to: int, _data: Dictionary):
 	# Hide all menus when in-game
 	if to == StateManager.State.IN_GAME:
 		for child in $UIContainer.get_children():

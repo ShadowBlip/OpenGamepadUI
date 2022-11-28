@@ -6,6 +6,8 @@ class_name Library
 @export var library_id: String
 # Optional store that this library is linked to
 @export var store_id: String
+# Icon for library provider
+@export var library_icon: Texture2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -35,7 +35,7 @@ func _on_store_registered(store: Store) -> void:
 	grid.add_child(poster)
 
 
-func _on_state_changed(from: StateManager.State, to: StateManager.State) -> void:
+func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
 	visible = state_manager.has_state(StateManager.State.STORE)
 	if not visible:
 		_reset_store()

@@ -8,7 +8,7 @@ func _ready() -> void:
 	state_mgr.state_changed.connect(_on_state_changed)
 
 
-func _on_state_changed(from: int, to: int) -> void:
+func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
 	var should_show = to == StateManager.State.MAIN_MENU or to == StateManager.State.IN_GAME_MENU
 	_animate(should_show)
 

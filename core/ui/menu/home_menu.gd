@@ -10,7 +10,7 @@ func _ready() -> void:
 	var button: TextureButton = $MarginContainer/ScrollContainer/HBoxContainer/Button
 	button.grab_focus.call_deferred()
 
-func _on_state_changed(from: int, to: int):
+func _on_state_changed(from: int, to: int, _data: Dictionary):
 	visible = state_mgr.has_state(StateManager.State.HOME)
 	if visible and to == StateManager.State.IN_GAME:
 		state_mgr.remove_state(StateManager.State.HOME)

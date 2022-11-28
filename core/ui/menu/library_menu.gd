@@ -69,7 +69,7 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		grid.add_child(poster)
 
 
-func _on_state_changed(from: StateManager.State, to: StateManager.State) -> void:
+func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
 	visible = state_manager.has_state(StateManager.State.LIBRARY)
 	if not visible:
 		return

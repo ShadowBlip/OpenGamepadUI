@@ -27,7 +27,7 @@ func _ready() -> void:
 	running_timer.start()
 
 
-func _on_state_changed(from: int, to: int):
+func _on_state_changed(from: int, to: int, _data: Dictionary):
 	# If a game is running and our stack doesn't have IN_GAME, push it.
 	if len(running) > 0 and not state_manager.has_state(StateManager.State.IN_GAME):
 		state_manager.push_state_front(StateManager.State.IN_GAME)
@@ -128,7 +128,7 @@ func _check_running():
 		# and hasn't re-parented itself
 		var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
 		if not Reaper.is_gamescope_pid(gamescope_pid):
-			push_warning("We weren't launched with gamescope! Unexpected behavior expected.")
+			push_warning("OpenGamepadUI wasn't launched with gamescope! Unexpected behavior expected.")
 		
 		# Try checking to see if there are any other processes running with our
 		# app's process group

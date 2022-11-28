@@ -22,7 +22,7 @@ func set_focus(focused: bool) -> void:
 
 
 # Set ourselves to focused in any state other than IN_GAME
-func _on_state_changed(from: int, to: int):
+func _on_state_changed(from: int, to: int, _data: Dictionary):
 	if to == StateManager.State.IN_GAME:
 		set_focus(false)
 		return

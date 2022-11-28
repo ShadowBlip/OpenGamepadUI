@@ -16,7 +16,7 @@ func _process(delta: float) -> void:
 
 
 
-func _on_state_changed(from: int, to: int):
+func _on_state_changed(from: int, to: int, _data: Dictionary):
 	var stack = []
 	for state in state_mgr._state_stack:
 		stack.push_back(StateManager.StateMap[state])
