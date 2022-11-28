@@ -52,6 +52,7 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		
 		# Build a poster for each library item
 		var poster: TextureButton = poster_scene.instantiate()
+		poster.library_item = item
 		poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		poster.text = item.name
 		

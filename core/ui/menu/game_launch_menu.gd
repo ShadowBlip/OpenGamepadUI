@@ -18,3 +18,14 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 
 	# Focus the first entry on state change
 	launch_button.grab_focus.call_deferred()
+
+	# Get the library item from the data passed by the state change
+	if not "item" in data:
+		push_error("No library item found to configure launcher!")
+		return
+
+	# Configure the game launch menu based on the library item
+	var library_item: LibraryItem = data["item"]
+	var launcher: Launcher = launch_button.get_node("Launcher")
+	launcher.cmd = library_item.command
+	launcher.args = library_item.args

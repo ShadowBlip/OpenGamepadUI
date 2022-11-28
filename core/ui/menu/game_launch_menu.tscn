@@ -1,11 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://c17eji6q8e40p"]
+[gd_scene load_steps=9 format=3 uid="uid://c17eji6q8e40p"]
 
 [ext_resource type="Script" path="res://core/ui/menu/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_io70p"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_7y2kk"]
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="5_13gqy"]
-[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="5_h5gq1"]
+[ext_resource type="Texture2D" uid="uid://bi3kevyi1dgys" path="res://assets/icons/game-controller.svg" id="6_hc1fc"]
+[ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ef1c"]
+bg_color = Color(0.741176, 0.576471, 0.976471, 1)
 
 [node name="GameLaunchMenu" type="Control"]
 layout_mode = 3
@@ -17,6 +21,7 @@ grow_vertical = 2
 script = ExtResource("1_uhkt4")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,6 +30,7 @@ grow_vertical = 2
 theme = ExtResource("2_q87np")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,6 +40,7 @@ follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
 offset_right = 1280.0
 offset_bottom = 540.0
 size_flags_horizontal = 3
@@ -41,6 +48,7 @@ theme_override_constants/separation = 20
 
 [node name="GameBanner" type="TextureRect" parent="ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 440)
+layout_mode = 2
 offset_right = 1280.0
 offset_bottom = 440.0
 texture = ExtResource("3_io70p")
@@ -48,6 +56,7 @@ ignore_texture_size = true
 stretch_mode = 4
 
 [node name="LaunchBarMargin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 460.0
 offset_right = 1280.0
 offset_bottom = 516.0
@@ -55,6 +64,7 @@ theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
 [node name="LaunchBar" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin"]
+layout_mode = 2
 offset_left = 20.0
 offset_right = 1260.0
 offset_bottom = 56.0
@@ -62,11 +72,13 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="LaunchButtonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_right = 429.0
 offset_bottom = 56.0
 size_flags_horizontal = 3
 
 [node name="LaunchButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer" instance=ExtResource("4_7y2kk")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -74,50 +86,63 @@ offset_right = 405.0
 offset_bottom = 56.0
 grow_horizontal = 1
 grow_vertical = 1
+focus_neighbor_left = NodePath("../../SettingsButton")
+focus_neighbor_right = NodePath("../OptionButton")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ef1c")
 text = "Launch"
 
 [node name="Launcher" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton" instance=ExtResource("5_13gqy")]
+direct = true
 
 [node name="OptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer"]
 custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
 offset_left = 409.0
 offset_right = 429.0
 offset_bottom = 56.0
+focus_neighbor_left = NodePath("../LaunchButton")
+focus_neighbor_right = NodePath("../../ControllerButton")
 
 [node name="LastPlayedContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_left = 449.0
 offset_right = 550.0
 offset_bottom = 56.0
 
 [node name="LastPlayedTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
 offset_right = 101.0
 offset_bottom = 26.0
 text = "LAST PLAYED"
 
 [node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 101.0
 offset_bottom = 56.0
 text = "Nov 21"
 
 [node name="PlayTimeContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_left = 570.0
 offset_right = 651.0
 offset_bottom = 56.0
 
 [node name="PlayTimeTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
 offset_right = 81.0
 offset_bottom = 26.0
 text = "PLAY TIME"
 
 [node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 81.0
 offset_bottom = 56.0
 text = "Nov 21"
 
 [node name="Spacer" type="Control" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
-layout_mode = 3
+layout_mode = 2
 anchors_preset = 0
 offset_left = 671.0
 offset_right = 1100.0
@@ -126,6 +151,7 @@ size_flags_horizontal = 3
 
 [node name="ControllerButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
 custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -135,12 +161,15 @@ offset_bottom = 56.0
 grow_horizontal = 1
 grow_vertical = 1
 size_flags_horizontal = 1
-icon = ExtResource("5_h5gq1")
+focus_neighbor_left = NodePath("../LaunchButtonContainer/OptionButton")
+focus_neighbor_right = NodePath("../SettingsButton")
+icon = ExtResource("6_hc1fc")
 icon_alignment = 1
 expand_icon = true
 
 [node name="SettingsButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
 custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -150,11 +179,14 @@ offset_bottom = 56.0
 grow_horizontal = 1
 grow_vertical = 1
 size_flags_horizontal = 1
-icon = ExtResource("5_h5gq1")
+focus_neighbor_left = NodePath("../ControllerButton")
+focus_neighbor_right = NodePath("../LaunchButtonContainer/LaunchButton")
+icon = ExtResource("7_qo3p1")
 icon_alignment = 1
 expand_icon = true
 
 [node name="HSeparator" type="HSeparator" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 536.0
 offset_right = 1280.0
 offset_bottom = 540.0

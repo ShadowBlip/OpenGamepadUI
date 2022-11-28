@@ -65,6 +65,7 @@ layout = 1
 
 [node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
 cmd = "vkcube"
+direct = true
 
 [node name="Button3" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
@@ -82,6 +83,7 @@ layout = 1
 [node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button3" instance=ExtResource("1_pm3kc")]
 cmd = "steam"
 args = PackedStringArray("steam://rungameid/219740")
+direct = true
 
 [node name="Button4" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
@@ -99,6 +101,7 @@ layout = 1
 [node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button4" instance=ExtResource("1_pm3kc")]
 cmd = "xdg-open"
 args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")
+direct = true
 
 [node name="Poster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)

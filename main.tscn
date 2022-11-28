@@ -70,12 +70,10 @@ visible = false
 
 [node name="GameLaunchMenu" parent="UIContainer/Content" instance=ExtResource("12_vmyfm")]
 visible = false
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 24320.0
-offset_bottom = 13110.0
+offset_right = 25600.0
+offset_bottom = 13800.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 
