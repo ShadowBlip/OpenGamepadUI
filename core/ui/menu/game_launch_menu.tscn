@@ -21,6 +21,7 @@ grow_vertical = 2
 script = ExtResource("1_uhkt4")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,6 +30,7 @@ grow_vertical = 2
 theme = ExtResource("2_q87np")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -38,6 +40,7 @@ follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
 offset_right = 1280.0
 offset_bottom = 540.0
 size_flags_horizontal = 3
@@ -45,6 +48,7 @@ theme_override_constants/separation = 20
 
 [node name="GameBanner" type="TextureRect" parent="ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 440)
+layout_mode = 2
 offset_right = 1280.0
 offset_bottom = 440.0
 texture = ExtResource("3_io70p")
@@ -52,6 +56,7 @@ ignore_texture_size = true
 stretch_mode = 4
 
 [node name="LaunchBarMargin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 460.0
 offset_right = 1280.0
 offset_bottom = 516.0
@@ -59,6 +64,7 @@ theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
 [node name="LaunchBar" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin"]
+layout_mode = 2
 offset_left = 20.0
 offset_right = 1260.0
 offset_bottom = 56.0
@@ -66,11 +72,13 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="LaunchButtonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_right = 429.0
 offset_bottom = 56.0
 size_flags_horizontal = 3
 
 [node name="LaunchButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer" instance=ExtResource("4_7y2kk")]
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -87,6 +95,7 @@ text = "Launch"
 
 [node name="OptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer"]
 custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
 offset_left = 409.0
 offset_right = 429.0
 offset_bottom = 56.0
@@ -94,39 +103,45 @@ focus_neighbor_left = NodePath("../LaunchButton")
 focus_neighbor_right = NodePath("../../ControllerButton")
 
 [node name="LastPlayedContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_left = 449.0
 offset_right = 550.0
 offset_bottom = 56.0
 
 [node name="LastPlayedTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
 offset_right = 101.0
 offset_bottom = 26.0
 text = "LAST PLAYED"
 
 [node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 101.0
 offset_bottom = 56.0
 text = "Nov 21"
 
 [node name="PlayTimeContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
 offset_left = 570.0
 offset_right = 651.0
 offset_bottom = 56.0
 
 [node name="PlayTimeTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
 offset_right = 81.0
 offset_bottom = 26.0
 text = "PLAY TIME"
 
 [node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 81.0
 offset_bottom = 56.0
 text = "Nov 21"
 
 [node name="Spacer" type="Control" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
-layout_mode = 3
+layout_mode = 2
 anchors_preset = 0
 offset_left = 671.0
 offset_right = 1100.0
@@ -135,6 +150,7 @@ size_flags_horizontal = 3
 
 [node name="ControllerButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
 custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -152,6 +168,7 @@ expand_icon = true
 
 [node name="SettingsButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
 custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -168,6 +185,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="HSeparator" type="HSeparator" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
 offset_top = 536.0
 offset_right = 1280.0
 offset_bottom = 540.0

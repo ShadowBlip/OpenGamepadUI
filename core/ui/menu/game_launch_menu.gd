@@ -1,6 +1,8 @@
 extends Control
 
 @onready var state_manager: StateManager = get_node("/root/Main/StateManager")
+@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
+@onready var banner: TextureRect = $ScrollContainer/VBoxContainer/GameBanner
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
 
 # Called when the node enters the scene tree for the first time.
@@ -10,8 +12,9 @@ func _ready() -> void:
 	
 	
 func _on_state_changed(from: StateManager.State, to: StateManager.State, data: Dictionary):
-	visible = state_manager.has_state(StateManager.State.GAME_LAUNCHER)
-	if not visible:
+	var is_visible = state_manager.has_state(StateManager.State.GAME_LAUNCHER)
+	if not is_visible:
+		visible = false
 		return
 	if to == StateManager.State.IN_GAME:
 		state_manager.remove_state(StateManager.State.GAME_LAUNCHER)
@@ -22,9 +25,16 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 	# Get the library item from the data passed by the state change
 	if not "item" in data:
 		push_error("No library item found to configure launcher!")
+		visible = true
 		return
 
 	# Configure the game launch menu based on the library item
 	var library_item: LibraryItem = data["item"]
 	var launcher: Launcher = launch_button.get_node("Launcher")
 	launcher.library_item = library_item
+
+	# Load the banner for the game
+	var banner_img: Texture2D = boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
+	banner.texture = banner_img
+	visible = true
+	
