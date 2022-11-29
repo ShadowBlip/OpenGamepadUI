@@ -7,7 +7,7 @@ extends Control
 @onready var installed_games_grid: HFlowContainer = $"TabContainer/Installed/MarginContainer/HFlowContainer"
 
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
-var launcher_scene: PackedScene = preload("res://core/systems/launcher/launcher.tscn")
+var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -29,20 +29,10 @@ func _on_library_reloaded() -> void:
 	# Load our library entries and add them to all games
 	# TODO: Handle launching from multiple providers
 	var available: Dictionary = library_manager.get_available()
-	var launchers: Array = []
-	for entry in available.values():
-		for library_id in entry.keys():
-			var item: LibraryItem = entry[library_id]
-			launchers.push_back(item)
-	_populate_grid(all_games_grid, launchers)
+	_populate_grid(all_games_grid, available.values())
 
 	var installed: Dictionary = library_manager.get_installed()
-	launchers = []
-	for entry in installed.values():
-		for library_id in entry.keys():
-			var item: LibraryItem = entry[library_id]
-			launchers.push_back(item)
-	_populate_grid(installed_games_grid, launchers)
+	_populate_grid(installed_games_grid, installed.values())
 
 
 # Populates the given grid with library items
@@ -52,7 +42,7 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		
 		# Build a poster for each library item
 		var poster: TextureButton = poster_scene.instantiate()
-		poster.library_item = item
+		poster.library_item = item # Do we need this?
 		poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		poster.text = item.name
 		
@@ -61,10 +51,12 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		#poster.texture_normal = img
 		
 		# Build a launcher from the library item
-		var launcher: Launcher = launcher_scene.instantiate()
-		launcher.cmd = item.command
-		launcher.args = item.args
-		poster.add_child(launcher)
+		var state_changer: StateChanger = state_changer_scene.instantiate()
+		state_changer.signal_name = "button_up"
+		state_changer.state = StateManager.State.GAME_LAUNCHER
+		state_changer.action = StateChanger.Action.PUSH
+		state_changer.data = {"item": item}
+		poster.add_child(state_changer)
 		
 		# Add the poster to the grid
 		grid.add_child(poster)

@@ -1,9 +1,33 @@
-[gd_scene load_steps=5 format=3 uid="uid://bj8ej083is2oc"]
+[gd_scene load_steps=11 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_x16u8"]
 [ext_resource type="Script" path="res://core/ui/menu/home_menu.gd" id="2_inwir"]
+[ext_resource type="Texture2D" uid="uid://djeanchdp7u18" path="res://assets/icons/book.svg" id="5_b234g"]
+[ext_resource type="Script" path="res://core/systems/library/library_launch_item.gd" id="5_hkttn"]
 [ext_resource type="PackedScene" uid="uid://dy11p1f1avde" path="res://core/ui/components/poster.tscn" id="5_hs4on"]
+[ext_resource type="Script" path="res://core/systems/library/library_item.gd" id="5_r5h71"]
+[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="6_w5mek"]
+
+[sub_resource type="Resource" id="Resource_gsruu"]
+script = ExtResource("5_hkttn")
+_id = null
+_provider_id = null
+provider_app_id = null
+name = "vkCube"
+command = "vkcube"
+args = null
+tags = null
+categories = null
+installed = true
+
+[sub_resource type="Resource" id="Resource_icex7"]
+script = ExtResource("5_r5h71")
+_id = null
+name = "vkCube"
+launch_items = [SubResource("Resource_gsruu")]
+tags = null
+categories = null
 
 [node name="HomeMenu" type="Control" groups=["menu"]]
 layout_mode = 3
@@ -18,6 +42,7 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,6 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,6 +62,7 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
 offset_right = 1230.0
@@ -45,7 +72,8 @@ horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer"]
-offset_right = 848.0
+layout_mode = 2
+offset_right = 416.0
 offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -53,6 +81,7 @@ theme_override_constants/separation = 16
 
 [node name="Button" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -64,11 +93,11 @@ text = "vkCube"
 layout = 1
 
 [node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
-cmd = "vkcube"
-direct = true
+library_item = SubResource("Resource_icex7")
 
-[node name="Button3" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+[node name="LibraryPoster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -77,41 +106,29 @@ offset_right = 416.0
 offset_bottom = 300.0
 grow_horizontal = 1
 grow_vertical = 1
-text = "Don't Starve"
-layout = 1
-
-[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button3" instance=ExtResource("1_pm3kc")]
-cmd = "steam"
-args = PackedStringArray("steam://rungameid/219740")
-direct = true
-
-[node name="Button4" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
-custom_minimum_size = Vector2(200, 300)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 432.0
-offset_right = 632.0
-offset_bottom = 300.0
-grow_horizontal = 1
-grow_vertical = 1
-text = "while True: learn()"
-layout = 1
-
-[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button4" instance=ExtResource("1_pm3kc")]
-cmd = "xdg-open"
-args = PackedStringArray("heroic://launch/4f272a49a39742b795d63e1f483a7c7d")
-direct = true
-
-[node name="Poster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
-custom_minimum_size = Vector2(200, 300)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 648.0
-offset_right = 848.0
-offset_bottom = 300.0
-grow_horizontal = 1
-grow_vertical = 1
+texture_normal = null
 text = "Library"
 layout = 1
+
+[node name="TextureContainer" type="CenterContainer" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster/TextureContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+offset_left = 50.0
+offset_top = 100.0
+offset_right = 150.0
+offset_bottom = 200.0
+texture = ExtResource("5_b234g")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="StateChanger" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster" instance=ExtResource("6_w5mek")]
+state = 4
+action = 2

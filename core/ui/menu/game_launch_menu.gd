@@ -27,5 +27,4 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 	# Configure the game launch menu based on the library item
 	var library_item: LibraryItem = data["item"]
 	var launcher: Launcher = launch_button.get_node("Launcher")
-	launcher.cmd = library_item.command
-	launcher.args = library_item.args
+	launcher.library_item = library_item

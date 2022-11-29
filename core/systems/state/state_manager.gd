@@ -1,8 +1,9 @@
-# StateManager is responsible for managing the overall state of OpenGamepadUI.
+# StateManager is responsible for managing the states for different components.
 # It is implemented as a state machine with a stack of states that you can
 # push to and pop.
 extends Node
 class_name StateManager
+@icon("res://assets/icons/log-in.svg")
 
 enum State {
 	NONE,
@@ -28,7 +29,7 @@ const StateMap = {
 	State.GAME_LAUNCHER: "game_launcher_menu"
 }
 
-signal state_changed(from: State, to: State, data: Dictionary)
+signal state_changed(from: int, to: int, data: Dictionary)
 
 @export var starting_state: State = State.HOME
 var _state_stack: Array = [State.NONE]

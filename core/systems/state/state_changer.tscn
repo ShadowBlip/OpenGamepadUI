@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd5txkd83wntb"]
+
+[ext_resource type="Script" path="res://core/systems/state/state_changer.gd" id="1_7v3oj"]
+
+[node name="StateChanger" type="Node"]
+editor_description = "Connects to the given signal of its parent and changes to the given state when that signal is emitted"
+script = ExtResource("1_7v3oj")

@@ -34,10 +34,15 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://core/systems/library/library.gd"
 }, {
-"base": "Object",
+"base": "Resource",
 "class": &"LibraryItem",
 "language": &"GDScript",
 "path": "res://core/systems/library/library_item.gd"
+}, {
+"base": "Resource",
+"class": &"LibraryLaunchItem",
+"language": &"GDScript",
+"path": "res://core/systems/library/library_launch_item.gd"
 }, {
 "base": "Node",
 "class": &"LibraryManager",
@@ -75,6 +80,11 @@ _global_script_classes=[{
 "path": "res://core/systems/launcher/reaper.gd"
 }, {
 "base": "Node",
+"class": &"StateChanger",
+"language": &"GDScript",
+"path": "res://core/systems/state/state_changer.gd"
+}, {
+"base": "Node",
 "class": &"StateManager",
 "language": &"GDScript",
 "path": "res://core/systems/state/state_manager.gd"
@@ -106,6 +116,7 @@ _global_script_class_icons={
 "Launcher": "",
 "Library": "res://assets/icons/book-open.svg",
 "LibraryItem": "res://assets/icons/box.svg",
+"LibraryLaunchItem": "res://assets/icons/box.svg",
 "LibraryManager": "",
 "Log": "",
 "Main": "",
@@ -113,12 +124,18 @@ _global_script_class_icons={
 "Plugin": "",
 "PluginLoader": "res://assets/icons/codesandbox.svg",
 "Reaper": "",
-"StateManager": "",
+"StateChanger": "",
+"StateManager": "res://assets/icons/log-in.svg",
 "Store": "",
 "StoreItem": "",
 "StoreItemDetails": "",
 "StoreManager": ""
 }
+
+[OpenGamepadUI]
+
+plugin/directory="user://plugins"
+data/directory="user://data"
 
 [application]
 

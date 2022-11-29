@@ -1,15 +1,24 @@
 extends Node
 class_name LaunchManager
 
-signal app_launched(pid: int)
-signal app_stopped(pid: int)
+signal app_launched(app: LibraryLaunchItem, pid: int)
+signal app_stopped(app: LibraryLaunchItem, pid: int)
+signal recent_apps_changed()
 
+var apps_running: Dictionary = {}
 var running: PackedInt64Array = []
 var target_display: int = -1
+var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
+var _persist_path: String = "/".join([_data_dir, "launcher.json"])
+var _persist_data: Dictionary = {"version": 1}
 
 @onready var main: Main = get_node("..")
 @onready var state_manager: StateManager = get_node("../StateManager")
 @onready var overlay_display = main.overlay_display
+
+
+func _init() -> void:
+	_load_persist_data()
 
 
 func _ready() -> void:
@@ -25,6 +34,31 @@ func _ready() -> void:
 	running_timer.wait_time = 1
 	add_child(running_timer)
 	running_timer.start()
+
+
+# Loads persistent data like recent games launched, etc.
+func _load_persist_data():
+	# Create the data directory if it doesn't exist
+	DirAccess.make_dir_absolute(_data_dir)
+	
+	# Create our data file if it doesn't exist
+	if not FileAccess.file_exists(_persist_path):
+		print("LaunchManager: Launcher data does not exist. Creating it.")
+		_save_persist_data()
+	
+	# Read our persistent data and parse it
+	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.READ)
+	var data: String = file.get_as_text()
+	_persist_data = JSON.parse_string(data)
+	print("LaunchManager: Loaded persistent data")
+	
+
+# Saves our persistent data
+func _save_persist_data():
+	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.WRITE_READ)
+	var persist_json: String = JSON.stringify(_persist_data)
+	file.store_string(JSON.stringify(_persist_data))
+	file.flush()
 
 
 func _on_state_changed(from: int, to: int, _data: Dictionary):
@@ -52,7 +86,10 @@ func _set_overlay(enable: bool) -> void:
 
 # Launches the given command on the target xwayland display. Returns a PID
 # of the launched process.
-func launch(cmd: String, args: PackedStringArray) -> int:
+func launch(app: LibraryLaunchItem) -> int:
+	var cmd: String = app.command
+	var args: PackedStringArray = app.args
+	
 	# Discover the target display to launch on.
 	if target_display < 0:
 		target_display = _get_target_display(overlay_display)
@@ -65,8 +102,9 @@ func launch(cmd: String, args: PackedStringArray) -> int:
 	print_debug("Launched with PID: {0}".format([pid]))
 	
 	# Add the running app to our list and change to the IN_GAME state
-	_add_running(pid)
+	_add_running(app, pid)
 	state_manager.set_state([StateManager.State.IN_GAME])
+	_update_recent_apps(app)
 	return pid
 
 
@@ -76,10 +114,33 @@ func stop(pid: int) -> void:
 	_remove_running(pid)
 
 
+# Returns a list of apps that have been launched recently
+func get_recent_apps() -> Array:
+	if not "recent" in _persist_data:
+		return []
+	return _persist_data["recent"]
+
+
+# Updates our list of recently launched apps
+func _update_recent_apps(app: LibraryLaunchItem) -> void:
+	if not "recent" in _persist_data:
+		_persist_data["recent"] = []
+	var recent: Array = _persist_data["recent"]
+	recent.erase(app.name)
+	recent.push_front(app.name)
+	# TODO: Make this configurable instead of hard coding at 10
+	if len(recent) > 10:
+		recent.pop_back()
+	_persist_data["recent"] = recent
+	_save_persist_data()
+	recent_apps_changed.emit()
+
+
 # Adds the given PID to our list of running apps
-func _add_running(pid: int):
+func _add_running(app: LibraryLaunchItem, pid: int):
+	apps_running[pid] = app
 	running.append(pid)
-	app_launched.emit(pid)
+	app_launched.emit(app, pid)
 
 
 # Removes the given PID from our list of running apps
@@ -88,12 +149,14 @@ func _remove_running(pid: int):
 	if i < 0:
 		return
 	print_debug("Cleaning up pid {0}".format([pid]))
+	var app: LibraryLaunchItem = apps_running[pid]
+	apps_running.erase(pid)
 	running.remove_at(i)
 	
 	# TODO: Better way to do this?
 	state_manager.set_state([StateManager.State.HOME])
 	
-	app_stopped.emit(pid)
+	app_stopped.emit(app, pid)
 
 
 # Returns the target xwayland display to launch on
@@ -147,7 +210,3 @@ func _check_running():
 	# Change away from IN_GAME state if nothing is running
 	if state_manager.current_state() == StateManager.State.IN_GAME and len(running) == 0:
 		state_manager.pop_state()
-
-
-func pstree(pid: int):
-	pass

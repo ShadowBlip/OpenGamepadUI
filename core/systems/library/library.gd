@@ -14,8 +14,8 @@ func _ready() -> void:
 	add_to_group("library")
 
 
-# Returns an array of available library items
-func get_library_items() -> Array:
+# Returns an array of available library launch items
+func get_library_launch_items() -> Array:
 	return []
 	
 
