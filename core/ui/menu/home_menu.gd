@@ -4,7 +4,9 @@ extends Control
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
-@onready var container: HBoxContainer = $MarginContainer/ScrollContainer/HBoxContainer
+@onready var container: HBoxContainer = $ScrollContainer/MarginContainer/HBoxContainer
+@onready var banner: TextureRect = $SelectedBanner
+@onready var player: AnimationPlayer = $AnimationPlayer
 
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
@@ -59,6 +61,14 @@ func _grab_focus():
 		break
 
 
+# Called when a poster is focused
+func _on_poster_focused(item: LibraryItem):
+	player.stop(true)
+	player.play("fade_in")
+	var banner_img: Texture2D = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.BANNER)
+	banner.texture = banner_img
+
+
 # Populates the given grid with library items
 func _populate_grid(grid: HBoxContainer, library_items: Array):
 	var i: int = 0
@@ -81,6 +91,9 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		else:
 			boxart = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.GRID_PORTRAIT)
 		poster.texture_normal = boxart
+		
+		# Listen for focus events on the posters
+		poster.focus_entered.connect(_on_poster_focused.bind(item))
 
 		# Build a launcher from the library item
 		var state_changer: StateChanger = state_changer_scene.instantiate()

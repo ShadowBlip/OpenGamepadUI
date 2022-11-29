@@ -3,6 +3,7 @@ extends Control
 @onready var state_manager: StateManager = get_node("/root/Main/StateManager")
 @onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var banner: TextureRect = $ScrollContainer/VBoxContainer/GameBanner
+@onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
 
 # Called when the node enters the scene tree for the first time.
@@ -36,5 +37,9 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 	# Load the banner for the game
 	var banner_img: Texture2D = boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
 	banner.texture = banner_img
+	
+	var logo_img: Texture2D = boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.LOGO)
+	logo.texture = logo_img
+	
 	visible = true
 	

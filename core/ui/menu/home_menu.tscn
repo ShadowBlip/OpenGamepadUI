@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://bj8ej083is2oc"]
+[gd_scene load_steps=15 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="1_pm3kc"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_x16u8"]
 [ext_resource type="Script" path="res://core/ui/menu/home_menu.gd" id="2_inwir"]
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_f4ep8"]
 [ext_resource type="Texture2D" uid="uid://djeanchdp7u18" path="res://assets/icons/book.svg" id="5_b234g"]
 [ext_resource type="Script" path="res://core/systems/library/library_launch_item.gd" id="5_hkttn"]
 [ext_resource type="PackedScene" uid="uid://dy11p1f1avde" path="res://core/ui/components/poster.tscn" id="5_hs4on"]
@@ -29,6 +30,43 @@ launch_items = [SubResource("Resource_gsruu")]
 tags = null
 categories = null
 
+[sub_resource type="Animation" id="Animation_sbcib"]
+resource_name = "fade_in"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SelectedBanner:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.0470588)]
+}
+
+[sub_resource type="Animation" id="Animation_bxhwc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SelectedBanner:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.0470588)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8ibrx"]
+_data = {
+"RESET": SubResource("Animation_bxhwc"),
+"fade_in": SubResource("Animation_sbcib")
+}
+
 [node name="HomeMenu" type="Control" groups=["menu"]]
 layout_mode = 3
 anchors_preset = 15
@@ -42,16 +80,38 @@ theme = ExtResource("1_x16u8")
 script = ExtResource("2_inwir")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="SelectedBanner" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.0470588)
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_f4ep8")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+offset_right = 516.0
+offset_bottom = 400.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 50
@@ -59,24 +119,19 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/MarginContainer"]
+layout_mode = 2
 offset_left = 50.0
 offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 750.0
-follow_focus = true
-horizontal_scroll_mode = 3
-vertical_scroll_mode = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer"]
-offset_right = 416.0
-offset_bottom = 300.0
+offset_right = 466.0
+offset_bottom = 350.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
 
-[node name="Button" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+[node name="Button" parent="ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -87,11 +142,12 @@ grow_vertical = 1
 text = "vkCube"
 layout = 1
 
-[node name="Launcher" parent="MarginContainer/ScrollContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
+[node name="Launcher" parent="ScrollContainer/MarginContainer/HBoxContainer/Button" instance=ExtResource("1_pm3kc")]
 library_item = SubResource("Resource_icex7")
 
-[node name="LibraryPoster" parent="MarginContainer/ScrollContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
+[node name="LibraryPoster" parent="ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(200, 300)
+layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
@@ -104,15 +160,17 @@ texture_normal = null
 text = "Library"
 layout = 1
 
-[node name="TextureContainer" type="CenterContainer" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster"]
+[node name="TextureContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster/TextureContainer"]
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster/TextureContainer"]
 custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 offset_left = 50.0
 offset_top = 100.0
 offset_right = 150.0
@@ -121,6 +179,11 @@ texture = ExtResource("5_b234g")
 ignore_texture_size = true
 stretch_mode = 4
 
-[node name="StateChanger" parent="MarginContainer/ScrollContainer/HBoxContainer/LibraryPoster" instance=ExtResource("6_w5mek")]
+[node name="StateChanger" parent="ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster" instance=ExtResource("6_w5mek")]
 state = 4
 action = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_8ibrx")
+}
