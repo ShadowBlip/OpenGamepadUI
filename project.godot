@@ -9,6 +9,16 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "Node",
+"class": &"BoxArtManager",
+"language": &"GDScript",
+"path": "res://core/systems/boxart/boxart_manager.gd"
+}, {
+"base": "Node",
+"class": &"BoxArtProvider",
+"language": &"GDScript",
+"path": "res://core/systems/boxart/boxart_provider.gd"
+}, {
 "base": "Object",
 "class": &"Gamescope",
 "language": &"GDScript",
@@ -110,6 +120,8 @@ _global_script_classes=[{
 "path": "res://core/systems/store/store_manager.gd"
 }]
 _global_script_class_icons={
+"BoxArtManager": "res://assets/icons/image.svg",
+"BoxArtProvider": "res://assets/icons/image.svg",
 "Gamescope": "",
 "InputManager": "",
 "LaunchManager": "",

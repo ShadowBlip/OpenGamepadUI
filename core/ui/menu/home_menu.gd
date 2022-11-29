@@ -69,6 +69,8 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		poster.library_item = item
 		if i == 0:
 			poster.layout = poster.LAYOUT_MODE.LANDSCAPE
+			var img: Texture2D = load("res://assets/images/placeholder-grid-landscape.png")
+			poster.texture_normal = img
 		else:
 			poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		poster.text = item.name

@@ -15,3 +15,13 @@ var cache: String
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("plugin")
+
+
+# Registers the given library implementation
+func add_library(library: Library) -> void:
+	library_manager.add_child(library)
+
+
+# Registers the given store implementation
+func add_store(store: Store) -> void:
+	store_manager.add_child(store)
