@@ -3,6 +3,7 @@ extends Control
 @onready var state_manager: StateManager = get_node("/root/Main/StateManager")
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
+@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var container: HBoxContainer = $MarginContainer/ScrollContainer/HBoxContainer
 
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
@@ -69,15 +70,17 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		poster.library_item = item
 		if i == 0:
 			poster.layout = poster.LAYOUT_MODE.LANDSCAPE
-			var img: Texture2D = load("res://assets/images/placeholder-grid-landscape.png")
-			poster.texture_normal = img
 		else:
 			poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		poster.text = item.name
 
-		# TODO: Get texture from somewhere
-		#var img: Texture2D = item.texture
-		#poster.texture_normal = img
+		# Get the boxart for the item
+		var boxart: Texture
+		if poster.layout == poster.LAYOUT_MODE.LANDSCAPE:
+			boxart = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.GRID_LANDSCAPE)
+		else:
+			boxart = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.GRID_PORTRAIT)
+		poster.texture_normal = boxart
 
 		# Build a launcher from the library item
 		var state_changer: StateChanger = state_changer_scene.instantiate()

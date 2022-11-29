@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cyst6853eansj"]
+[gd_scene load_steps=18 format=3 uid="uid://cyst6853eansj"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c6rr12t4fv7py" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
 [ext_resource type="PackedScene" uid="uid://yyh7kcog2w7m" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://c76kmr31ujcw2" path="res://core/systems/boxart/boxart_manager.tscn" id="7_tm3nj"]
+[ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="8_6edcd"]
 [ext_resource type="PackedScene" uid="uid://bwmmf2q2bf12y" path="res://core/ui/menu/store_menu.tscn" id="8_cx1y5"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
 [ext_resource type="PackedScene" uid="uid://cka4dm6cf0i16" path="res://core/ui/menu/library_menu.tscn" id="10_nynup"]
@@ -32,16 +33,17 @@ script = ExtResource("1_4l3sd")
 
 [node name="LaunchManager" parent="." instance=ExtResource("2_bsexb")]
 
+[node name="BoxArtManager" parent="." instance=ExtResource("7_tm3nj")]
+
+[node name="BoxArtLocal" parent="BoxArtManager" instance=ExtResource("8_6edcd")]
+
 [node name="LibraryManager" parent="." instance=ExtResource("5_5nsnb")]
 
 [node name="StoreManager" parent="." instance=ExtResource("5_b0s7f")]
 
-[node name="BoxArtManager" parent="." instance=ExtResource("7_tm3nj")]
-
 [node name="PluginLoader" parent="." instance=ExtResource("5_8300b")]
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -50,7 +52,6 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="TopBar" parent="UIContainer" instance=ExtResource("3_4jaod")]
-layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 offset_right = 1280.0
@@ -58,7 +59,7 @@ offset_bottom = 55.0
 grow_horizontal = 1
 
 [node name="Content" type="Control" parent="UIContainer"]
-layout_mode = 2
+layout_mode = 3
 anchors_preset = 0
 offset_top = 55.0
 offset_right = 1280.0
@@ -66,30 +67,23 @@ offset_bottom = 745.0
 size_flags_vertical = 3
 
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
-layout_mode = 1
 
 [node name="LibraryMenu" parent="UIContainer/Content" instance=ExtResource("10_nynup")]
 visible = false
-layout_mode = 1
 
 [node name="StoreMenu" parent="UIContainer/Content" instance=ExtResource("8_cx1y5")]
 visible = false
-layout_mode = 1
 
 [node name="GameLaunchMenu" parent="UIContainer/Content" instance=ExtResource("12_vmyfm")]
 visible = false
-layout_mode = 1
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-layout_mode = 1
-offset_right = 32000.0
-offset_bottom = 17250.0
+offset_right = 33280.0
+offset_bottom = 17940.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
-layout_mode = 1
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
-layout_mode = 2
 anchors_preset = 0
 anchor_top = 0.0
 anchor_right = 0.0

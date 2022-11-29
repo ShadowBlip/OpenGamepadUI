@@ -2,6 +2,7 @@ extends Control
 
 @onready var state_manager: StateManager = get_node("/root/Main/StateManager")
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
+@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var tab_container: TabContainer = $TabContainer
 @onready var all_games_grid: HFlowContainer = $"TabContainer/All Games/MarginContainer/HFlowContainer"
 @onready var installed_games_grid: HFlowContainer = $"TabContainer/Installed/MarginContainer/HFlowContainer"
@@ -46,9 +47,9 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		poster.layout = poster.LAYOUT_MODE.PORTRAIT
 		poster.text = item.name
 		
-		# TODO: Get texture from somewhere
-		#var img: Texture2D = item.texture
-		#poster.texture_normal = img
+		# Get the box art for the library item
+		var boxart: Texture2D = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.GRID_PORTRAIT)
+		poster.texture_normal = boxart
 		
 		# Build a launcher from the library item
 		var state_changer: StateChanger = state_changer_scene.instantiate()

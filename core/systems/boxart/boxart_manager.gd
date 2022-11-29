@@ -14,6 +14,14 @@ enum Layout {
 	LOGO,
 }
 
+# Map the layouts to different placeholders
+const _placeholder_map = {
+	Layout.GRID_PORTRAIT: preload("res://assets/images/placeholder-grid-portrait.png"),
+	Layout.GRID_LANDSCAPE: preload("res://assets/images/placeholder-grid-landscape.png"),
+	Layout.BANNER: preload("res://assets/images/placeholder-grid-banner.png"),
+	Layout.LOGO: preload("res://assets/images/empty-grid-logo.png")
+}
+
 # Dictionary of registered boxart providers
 var _providers: Dictionary = {}
 var _providers_by_priority: Array = []
@@ -63,6 +71,17 @@ func get_boxart(item: LibraryItem, kind: Layout, fallthrough: bool = true, provi
 		provider = _providers[provider_id]
 		
 	return provider.get_boxart(item, kind)
+
+
+# Returns the boxart of the given kind for the given library item. If 'fallthrough'
+# is true, we will keep trying additional providers in order of priority until
+# boxart is returned. Optionally a boxart provider id can be given to only use
+# a single provider (fallthrough is ignored).
+func get_boxart_or_placeholder(item: LibraryItem, kind: Layout, fallthrough: bool = true, provider_id: String = "") -> Texture2D:
+	var boxart: Texture2D = get_boxart(item, kind, fallthrough, provider_id)
+	if boxart == null:
+		return _placeholder_map[kind]
+	return boxart
 
 
 # Returns the given boxart implementation by id
