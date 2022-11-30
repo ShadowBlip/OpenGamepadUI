@@ -78,9 +78,7 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: 
 		state_manager.remove_state(StateManager.State.LIBRARY)
 
 	# Focus the first entry on state change
-	for child in all_games_grid.get_children():
-		child.grab_focus.call_deferred()
-		break
+	_on_tab_container_tab_changed(tab_container.current_tab)
 
 
 func _input(event: InputEvent) -> void:

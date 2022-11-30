@@ -7,8 +7,8 @@ enum LAYOUT_MODE {
 }
 
 const LAYOUTS: Dictionary = {
-	LAYOUT_MODE.LANDSCAPE: Vector2(460, 215),
-	LAYOUT_MODE.PORTRAIT: Vector2(600, 900) / 3,
+	LAYOUT_MODE.LANDSCAPE: Vector2(460, 215),  # Original: 460 x 215
+	LAYOUT_MODE.PORTRAIT: Vector2(143, 215), # Original: 600 x 900
 }
 
 @export var text: String = "Empty"

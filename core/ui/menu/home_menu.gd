@@ -4,7 +4,7 @@ extends Control
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
-@onready var container: HBoxContainer = $ScrollContainer/MarginContainer/HBoxContainer
+@onready var container: HBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer
 @onready var banner: TextureRect = $SelectedBanner
 @onready var player: AnimationPlayer = $AnimationPlayer
 
