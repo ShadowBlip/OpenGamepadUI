@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_0ro1r"]
 [ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_qcuf6"]
+[sub_resource type="LabelSettings" id="LabelSettings_3v1jq"]
 shadow_size = 3
 shadow_offset = Vector2(2, 2)
 
@@ -50,7 +50,7 @@ offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Empty"
-label_settings = SubResource("LabelSettings_qcuf6")
+label_settings = SubResource("LabelSettings_3v1jq")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3

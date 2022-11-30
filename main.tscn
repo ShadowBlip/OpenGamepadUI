@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cyst6853eansj"]
+[gd_scene load_steps=19 format=3 uid="uid://cyst6853eansj"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
 [ext_resource type="PackedScene" uid="uid://bmv41ngl22a02" path="res://core/systems/store/store_manager.tscn" id="5_b0s7f"]
 [ext_resource type="PackedScene" uid="uid://c6rr12t4fv7py" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
+[ext_resource type="PackedScene" uid="uid://cqt8yytb2u7mc" path="res://core/systems/boxart/boxart_steam.tscn" id="6_vj2tt"]
 [ext_resource type="PackedScene" uid="uid://yyh7kcog2w7m" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://c76kmr31ujcw2" path="res://core/systems/boxart/boxart_manager.tscn" id="7_tm3nj"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="8_6edcd"]
@@ -34,6 +35,8 @@ script = ExtResource("1_4l3sd")
 [node name="LaunchManager" parent="." instance=ExtResource("2_bsexb")]
 
 [node name="BoxArtManager" parent="." instance=ExtResource("7_tm3nj")]
+
+[node name="BoxArtSteam" parent="BoxArtManager" instance=ExtResource("6_vj2tt")]
 
 [node name="BoxArtLocal" parent="BoxArtManager" instance=ExtResource("8_6edcd")]
 
@@ -78,8 +81,8 @@ visible = false
 visible = false
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 35840.0
-offset_bottom = 19320.0
+offset_right = 38400.0
+offset_bottom = 20700.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 

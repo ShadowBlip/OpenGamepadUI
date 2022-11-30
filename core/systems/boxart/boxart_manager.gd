@@ -73,6 +73,25 @@ func get_boxart(item: LibraryItem, kind: Layout, fallthrough: bool = true, provi
 	return provider.get_boxart(item, kind)
 
 
+# Does the same as 'get_boxart', but is called asyncronously. When a result is
+# found, the given callback will get called with the result.
+func get_boxart_async(item: LibraryItem, kind: Layout, callback: Callable) -> void:
+	if _providers.is_empty():
+		push_error("No box art providers were found!")
+		callback.call(null)
+		return
+
+	# Send the request to all providers
+	for id in _providers_by_priority:
+		var provider: BoxArtProvider = _providers[id]
+		var texture: Texture2D = await provider.get_boxart(item, kind)
+		if texture == null:
+			continue
+		callback.call(texture)
+		return
+	callback.call(null)
+
+
 # Returns the boxart of the given kind for the given library item. If 'fallthrough'
 # is true, we will keep trying additional providers in order of priority until
 # boxart is returned. Optionally a boxart provider id can be given to only use
@@ -82,6 +101,19 @@ func get_boxart_or_placeholder(item: LibraryItem, kind: Layout, fallthrough: boo
 	if boxart == null:
 		return _placeholder_map[kind]
 	return boxart
+
+
+# Does the same as 'get_boxart_or_placeholder', but is called asyncronously. When a result is
+# found, the given callback will get called with the result.
+func get_boxart_or_placeholder_async(item: LibraryItem, kind: Layout, callback: Callable) -> void:
+	get_boxart_async(item, kind, _on_boxart_found.bind(kind, callback))
+	
+
+func _on_boxart_found(boxart: Texture2D, kind: int, callback: Callable) -> void:
+	if boxart == null:
+		callback.call(_placeholder_map[kind])
+		return
+	callback.call(boxart)
 
 
 # Returns the given boxart implementation by id

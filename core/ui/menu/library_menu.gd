@@ -48,8 +48,11 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		poster.text = item.name
 		
 		# Get the box art for the library item
-		var boxart: Texture2D = boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.GRID_PORTRAIT)
-		poster.texture_normal = boxart
+		boxart_manager.get_boxart_or_placeholder_async(
+			item, 
+			BoxArtManager.Layout.GRID_PORTRAIT, 
+			_on_poster_boxart_loaded.bind(poster)
+		)
 		
 		# Build a launcher from the library item
 		var state_changer: StateChanger = state_changer_scene.instantiate()
@@ -61,6 +64,10 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		
 		# Add the poster to the grid
 		grid.add_child(poster)
+
+
+func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton):
+	poster.texture_normal = texture
 
 
 func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
