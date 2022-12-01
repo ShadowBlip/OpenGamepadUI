@@ -35,12 +35,11 @@ func _load_plugins() -> void:
 	var file_name = dir.get_next()
 	while file_name != "":
 		# Skip any non-plugins
-		if not file_name.ends_with(".json"):
+		if not file_name.ends_with(".zip"):
 			file_name = dir.get_next()
 			continue
 		
 		# Read the plugin metadata
-		var plugin_name = file_name.trim_suffix(".json")
 		print_debug("PluginLoader: Found plugin: " + file_name)
 		var meta = _load_plugin_meta("/".join([PLUGINS_DIR, file_name]))
 		if meta == null:
@@ -61,11 +60,11 @@ func _load_plugins() -> void:
 			continue
 		
 		# Load the plugin
-		var plugin_file = plugin_name + ".zip"
-		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, plugin_file])):
+		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, file_name])):
 			print_debug("PluginLoader: %s failed to load" % file_name)
 		
 		# Register the plugin
+		var plugin_name: String = meta["plugin.id"]
 		plugins[plugin_name] = meta
 		plugin_loaded.emit(plugin_name)
 
@@ -91,10 +90,33 @@ func _init_plugins() -> void:
 
 # Loads plugin metadata and returns it as a parsed dictionary. Returns null
 # if there was an error parsing.
-func _load_plugin_meta(path: String):
-	var file = FileAccess.open(path, FileAccess.READ)
-	var data = JSON.parse_string(file.get_as_text())
-	return data
+func _load_plugin_meta(path: String) -> Variant:
+	# Open the archive
+	var reader: ZIPReader = ZIPReader.new()
+	reader.open(path)
+	
+	# Look for plugin.json
+	var plugin_meta_file: String = ""
+	var files: PackedStringArray = reader.get_files()
+	for file in files:
+		if file.begins_with("plugins/") and file.ends_with("/plugin.json"):
+			plugin_meta_file = file
+			break
+
+	# Error if no plugin.json was found in the archive
+	if plugin_meta_file == "":
+		push_error("PluginLoader: No plugin.json found in %s" % path)
+		reader.close()
+		return null
+		
+	# Extract the plugin.json
+	var bytes: PackedByteArray = reader.read_file(plugin_meta_file)
+	reader.close()
+	var data: String = bytes.get_string_from_utf8()
+	
+	# Parse the plugin.json
+	var meta = JSON.parse_string(data)
+	return meta
 
 
 # Ensures the given plugin metadata has all required fields
