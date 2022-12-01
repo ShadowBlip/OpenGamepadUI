@@ -9,6 +9,11 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "Object",
+"class": &"Battery",
+"language": &"GDScript",
+"path": "res://core/systems/battery.gd"
+}, {
 "base": "Node",
 "class": &"BoxArtManager",
 "language": &"GDScript",
@@ -120,6 +125,7 @@ _global_script_classes=[{
 "path": "res://core/systems/store/store_manager.gd"
 }]
 _global_script_class_icons={
+"Battery": "res://assets/icons/battery-charging.svg",
 "BoxArtManager": "res://assets/icons/image.svg",
 "BoxArtProvider": "res://assets/icons/image.svg",
 "Gamescope": "",
