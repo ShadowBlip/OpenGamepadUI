@@ -35,15 +35,8 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 	launcher.library_item = library_item
 
 	# Load the banner for the game
-	boxart_manager.get_boxart_or_placeholder_async(library_item, BoxArtManager.Layout.BANNER, _on_banner_boxart_loaded)
-	boxart_manager.get_boxart_or_placeholder_async(library_item, BoxArtManager.Layout.LOGO, _on_logo_boxart_loaded)
+	banner.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
+	logo.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.LOGO)
 	
 	visible = true
 	
-
-func _on_banner_boxart_loaded(texture: Texture2D):
-	banner.texture = texture
-	
-	
-func _on_logo_boxart_loaded(texture: Texture2D):
-	logo.texture = texture

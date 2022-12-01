@@ -65,11 +65,7 @@ func _grab_focus():
 func _on_poster_focused(item: LibraryItem):
 	player.stop(true)
 	player.play("fade_in")
-	boxart_manager.get_boxart_or_placeholder_async(item, BoxArtManager.Layout.BANNER, _on_banner_boxart_loaded)
-	
-	
-func _on_banner_boxart_loaded(texture: Texture2D):
-	banner.texture = texture
+	banner.texture = await boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.BANNER)
 
 
 func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton):
@@ -95,7 +91,7 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		var layout = BoxArtManager.Layout.GRID_PORTRAIT
 		if poster.layout == poster.LAYOUT_MODE.LANDSCAPE:
 			layout = BoxArtManager.Layout.GRID_LANDSCAPE
-		boxart_manager.get_boxart_or_placeholder_async(item, layout, _on_poster_boxart_loaded.bind(poster))
+		poster.texture_normal = await boxart_manager.get_boxart_or_placeholder(item, layout)
 		
 		# Listen for focus events on the posters
 		poster.focus_entered.connect(_on_poster_focused.bind(item))

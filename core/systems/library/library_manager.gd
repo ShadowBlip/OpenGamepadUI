@@ -47,9 +47,10 @@ func get_available() -> Dictionary:
 	return _available_apps
 
 
-# Loads all library items from each provider and sorts them.
-func reload_library():
-	_available_apps = _load_library()
+# Loads all library items from each provider and sorts them. This can take
+# a while, so should be called asyncronously
+func reload_library() -> void:
+	_available_apps = await _load_library()
 	_installed_apps = []
 
 	# Store all installed apps
@@ -73,11 +74,13 @@ func _load_library() -> Dictionary:
 	var library_items: Dictionary = {}
 	for l in _libraries.values():
 		var library: Library = l
-		var items: Array = library.get_library_launch_items()
+		var items: Array = await library.get_library_launch_items()
 		for i in items:
 			var item: LibraryLaunchItem = i
 			if not item.name in library_items:
 				library_items[item.name] = LibraryItem.new_from_launch_item(item)
+			# Update the provider fields on the library item
+			item._provider_id = library.library_id
 			library_items[item.name].launch_items.push_back(item)
 			
 	return library_items
@@ -106,6 +109,7 @@ func _register_library(library: Library) -> void:
 	if not _is_valid_library(library):
 		push_error("Invalid library defined! Ensure you have all required properties set: ", ",".join(REQUIRED_FIELDS))
 		return
+	# Set library properties
 	_libraries[library.library_id] = library
 	print("Registered library: ", library.library_id)
 	library_registered.emit(library)

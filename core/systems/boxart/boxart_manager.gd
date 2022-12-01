@@ -41,79 +41,29 @@ func _on_parent_ready() -> void:
 	# TODO: Load settings and sort by provider priority
 
 
-# Returns the boxart of the given kind for the given library item. If 'fallthrough'
-# is true, we will keep trying additional providers in order of priority until
-# boxart is returned. Optionally a boxart provider id can be given to only use
-# a single provider (fallthrough is ignored).
-func get_boxart(item: LibraryItem, kind: Layout, fallthrough: bool = true, provider_id: String = "") -> Texture2D:
+# Returns the boxart of the given kind for the given library item. 
+func get_boxart(item: LibraryItem, kind: Layout) -> Texture2D:
 	if _providers.is_empty():
 		push_error("No box art providers were found!")
 		return null
 	
 	# Try each provider in order of priority
-	if fallthrough:
-		for id in _providers_by_priority:
-			var provider: BoxArtProvider = _providers[id]
-			var texture: Texture2D = provider.get_boxart(item, kind)
-			if texture == null:
-				continue
-			return texture
-		return null
-	
-	# If no provider was passed, use the first one we find.
-	var provider: BoxArtProvider
-	if provider_id == "":
-		provider = _providers[_providers_by_priority[0]]
-	else:
-		if not provider_id in _providers:
-			push_error("BoxArt Provider {0} was not found!".format([provider_id]))
-			return null
-		provider = _providers[provider_id]
-		
-	return provider.get_boxart(item, kind)
-
-
-# Does the same as 'get_boxart', but is called asyncronously. When a result is
-# found, the given callback will get called with the result.
-func get_boxart_async(item: LibraryItem, kind: Layout, callback: Callable) -> void:
-	if _providers.is_empty():
-		push_error("No box art providers were found!")
-		callback.call(null)
-		return
-
-	# Send the request to all providers
 	for id in _providers_by_priority:
 		var provider: BoxArtProvider = _providers[id]
 		var texture: Texture2D = await provider.get_boxart(item, kind)
 		if texture == null:
 			continue
-		callback.call(texture)
-		return
-	callback.call(null)
+		return texture
+	return null
 
 
-# Returns the boxart of the given kind for the given library item. If 'fallthrough'
-# is true, we will keep trying additional providers in order of priority until
-# boxart is returned. Optionally a boxart provider id can be given to only use
-# a single provider (fallthrough is ignored).
-func get_boxart_or_placeholder(item: LibraryItem, kind: Layout, fallthrough: bool = true, provider_id: String = "") -> Texture2D:
-	var boxart: Texture2D = get_boxart(item, kind, fallthrough, provider_id)
+# Returns the boxart of the given kind for the given library item. If one is not
+# found, a placeholder texture will be returned
+func get_boxart_or_placeholder(item: LibraryItem, kind: Layout) -> Texture2D:
+	var boxart: Texture2D = await get_boxart(item, kind)
 	if boxart == null:
 		return _placeholder_map[kind]
 	return boxart
-
-
-# Does the same as 'get_boxart_or_placeholder', but is called asyncronously. When a result is
-# found, the given callback will get called with the result.
-func get_boxart_or_placeholder_async(item: LibraryItem, kind: Layout, callback: Callable) -> void:
-	get_boxart_async(item, kind, _on_boxart_found.bind(kind, callback))
-	
-
-func _on_boxart_found(boxart: Texture2D, kind: int, callback: Callable) -> void:
-	if boxart == null:
-		callback.call(_placeholder_map[kind])
-		return
-	callback.call(boxart)
 
 
 # Returns the given boxart implementation by id
