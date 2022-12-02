@@ -9,6 +9,7 @@ extends Control
 
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
+var _current_selection: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -30,14 +31,14 @@ func _on_library_reloaded() -> void:
 	# Load our library entries and add them to all games
 	# TODO: Handle launching from multiple providers
 	var available: Dictionary = library_manager.get_available()
-	_populate_grid(all_games_grid, available.values())
+	_populate_grid(all_games_grid, available.values(), 1)
 
 	var installed: Dictionary = library_manager.get_installed()
-	_populate_grid(installed_games_grid, installed.values())
+	_populate_grid(installed_games_grid, installed.values(), 0)
 
 
 # Populates the given grid with library items
-func _populate_grid(grid: HFlowContainer, library_items: Array):
+func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 	for i in library_items:
 		var item: LibraryItem = i
 		
@@ -61,8 +62,16 @@ func _populate_grid(grid: HFlowContainer, library_items: Array):
 		state_changer.data = {"item": item}
 		poster.add_child(state_changer)
 		
+		# Listen for focus changes to keep track of our current selection
+		# between state changes.
+		poster.focus_entered.connect(_on_focus_updated.bind(poster, tab_num))
+		
 		# Add the poster to the grid
 		grid.add_child(poster)
+
+
+func _on_focus_updated(poster: TextureButton, tab: int) -> void:
+	_current_selection[tab] = poster
 
 
 func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
@@ -99,7 +108,13 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 	var container: ScrollContainer = tab_container.get_child(tab)
 	var grid: HFlowContainer = container.get_child(0).get_child(0)
 	
-	# Focus the first entry on tab change
+	# If we had a previous selection, grab focus on that.
+	if tab in _current_selection:
+		var poster: TextureButton = _current_selection[tab]
+		poster.grab_focus.call_deferred()
+		return
+	
+	# Otherwise, focus the first entry on tab change
 	for child in grid.get_children():
 		child.grab_focus.call_deferred()
 		break

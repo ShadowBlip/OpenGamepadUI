@@ -20,13 +20,14 @@ var _focus_audio_stream = load(focus_audio)
 var _select_audio_stream = load(select_audio)
 
 @onready var _label: Label = $Label
-@onready var _panel: Panel = $Panel
+@onready var _panel: Panel = $Label/Panel
 @onready var _panel_alpha: int = _panel.modulate.a8
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_set_layout(LAYOUTS[layout])
 	_label.text = text
+	_highlight(false)
 	
 	# Connect to focus events
 	focus_entered.connect(_play_sound.bind(_focus_audio_stream))
@@ -38,11 +39,17 @@ func _ready() -> void:
 # Transforms our poster when we are highlighted or not
 func _highlight(focused: bool) -> void:
 	if focused:
-		var focused_alpha = _panel_alpha/3
+		var focused_alpha = _panel_alpha*1.5
 		_panel.modulate.a8 = focused_alpha
+		self_modulate.r = 1.15
+		self_modulate.g = 1.15
+		self_modulate.b = 1.15
 		return
 	
 	_panel.modulate.a8 = _panel_alpha
+	self_modulate.r = 0.85
+	self_modulate.g = 0.85
+	self_modulate.b = 0.85
 
 
 func _play_sound(stream: AudioStream) -> void:

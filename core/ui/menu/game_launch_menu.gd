@@ -38,5 +38,11 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 	banner.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
 	logo.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.LOGO)
 	
+	# Check if the app is installed or not
+	if library_item.is_installed():
+		launch_button.text = "Launch"
+	else:
+		launch_button.text = "Install"
+	
 	visible = true
 	

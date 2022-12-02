@@ -4,11 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_0ro1r"]
 [ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_06xi5"]
+[sub_resource type="LabelSettings" id="LabelSettings_rlfl1"]
 shadow_size = 3
 shadow_offset = Vector2(2, 2)
 
 [node name="Poster" type="TextureButton"]
+self_modulate = Color(0.85, 0.85, 0.85, 1)
 custom_minimum_size = Vector2(460, 215)
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,17 +21,6 @@ texture_normal = ExtResource("2_0ro1r")
 ignore_texture_size = true
 stretch_mode = 4
 script = ExtResource("2_op5nj")
-
-[node name="Panel" type="Panel" parent="."]
-modulate = Color(1, 1, 1, 0.501961)
-custom_minimum_size = Vector2(0, 22)
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-theme = ExtResource("1_ekp4a")
 
 [node name="EmptyPanel" type="Panel" parent="."]
 modulate = Color(0.956863, 1, 0.760784, 1)
@@ -50,10 +40,21 @@ offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Empty"
-label_settings = SubResource("LabelSettings_06xi5")
+label_settings = SubResource("LabelSettings_rlfl1")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="Panel" type="Panel" parent="Label"]
+modulate = Color(0, 0, 0, 0.501961)
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 22)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ekp4a")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
