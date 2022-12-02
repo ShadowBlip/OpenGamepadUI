@@ -39,7 +39,7 @@ run: build/opengamepad-ui.x86_64
 	$(GAMESCOPE) --xwayland-count 2 -- ./build/opengamepad-ui.x86_64
 
 $(EXPORT_TEMPLATE):
-	mkdir -p $(@D)
+	mkdir -p $(HOME)/.local/share/godot/export_templates
 	@echo "Downloading export templates"
 	wget $(EXPORT_TEMPLATE_URL) -O $(HOME)/.local/share/godot/export_templates/templates.zip
 	@echo "Extracting export templates"
