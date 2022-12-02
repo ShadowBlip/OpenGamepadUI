@@ -14,7 +14,13 @@ to launch and play games.
 The following are required to build Open Gamepad UI:
 
 - godot 4.x
+- libxcursor1
+- libxinerama1
+- libxrandr2
+- libxi6
 - make (optional)
+- unzip (optional)
+- wget (optional)
 
 The following are required to run Open Gamepad UI:
 
@@ -28,6 +34,13 @@ You can build Open Gamepad UI using the following:
 
 ```bash
 make build
+```
+
+Godot imports and converts assets when it builds. If you see
+errors related to failing to load resources. Try running:
+
+```bash
+make import
 ```
 
 ## Usage
