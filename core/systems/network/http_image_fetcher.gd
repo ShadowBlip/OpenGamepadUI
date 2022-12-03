@@ -62,7 +62,6 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 
 	return texture
 
-
 func _remove(child: Node):
 	remove_child(child)
 	child.queue_free()
