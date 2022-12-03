@@ -1,12 +1,34 @@
-[gd_scene load_steps=2 format=3 uid="uid://dia5mjlx8b7fl"]
+[gd_scene load_steps=3 format=3 uid="uid://ctmlv7iyhn721"]
 
-[ext_resource type="Script" path="res://core/ui/menu/plugin_store_menu.gd" id="1_5b8r3"]
+[ext_resource type="Script" path="res://core/ui/menu/plugin_store_menu.gd" id="1_mnuo8"]
+[ext_resource type="PackedScene" uid="uid://djoicd3vhbr1y" path="res://core/ui/components/plugin_store_item.tscn" id="1_vqpb4"]
 
-[node name="PluginStoreMenu" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_5b8r3")
+[node name="PluginStore" type="HFlowContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+script = ExtResource("1_mnuo8")
+
+[node name="PluginStoreItem" parent="." instance=ExtResource("1_vqpb4")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 415.0
+offset_bottom = 200.0
+
+[node name="PluginStoreItem2" parent="." instance=ExtResource("1_vqpb4")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 210.0
+offset_right = 415.0
+offset_bottom = 410.0
+
+[node name="PluginStoreItem3" parent="." instance=ExtResource("1_vqpb4")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 420.0
+offset_right = 415.0
+offset_bottom = 620.0

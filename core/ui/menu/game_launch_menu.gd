@@ -6,6 +6,8 @@ extends Control
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
 
+var logger := Log.get_logger("GameLaunchMenu")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	state_manager.state_changed.connect(_on_state_changed)
@@ -25,7 +27,7 @@ func _on_state_changed(from: StateManager.State, to: StateManager.State, data: D
 
 	# Get the library item from the data passed by the state change
 	if not "item" in data:
-		push_error("No library item found to configure launcher!")
+		logger.error("No library item found to configure launcher!")
 		visible = true
 		return
 

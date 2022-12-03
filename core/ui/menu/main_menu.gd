@@ -16,17 +16,6 @@ func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
 		var button: Button = $MarginContainer/VBoxContainer/HomeButton
 		button.grab_focus.call_deferred()
 
-func _on_home_button_pressed() -> void:
-	state_mgr.set_state([StateManager.State.HOME])
-
-
-func _on_library_button_pressed() -> void:
-	state_mgr.set_state([StateManager.State.LIBRARY])
-
-
-func _on_store_button_pressed() -> void:
-	state_mgr.set_state([StateManager.State.STORE])
-
 
 func _on_power_button_pressed() -> void:
 	get_tree().quit()

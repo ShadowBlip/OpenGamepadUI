@@ -15,6 +15,7 @@ enum State {
 	IN_GAME,
 	IN_GAME_MENU,
 	GAME_LAUNCHER,
+	SETTINGS,
 }
 
 const StateMap = {
@@ -26,13 +27,15 @@ const StateMap = {
 	State.STORE: "store",
 	State.IN_GAME: "in-game",
 	State.IN_GAME_MENU: "in-game_menu",
-	State.GAME_LAUNCHER: "game_launcher_menu"
+	State.GAME_LAUNCHER: "game_launcher_menu",
+	State.SETTINGS: "settings_menu",
 }
 
 signal state_changed(from: int, to: int, data: Dictionary)
 
 @export var starting_state: State = State.HOME
 var _state_stack: Array = [State.NONE]
+var logger := Log.get_logger("StateManager")
 
 
 func _ready() -> void:
@@ -46,7 +49,7 @@ func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
 		push_state(starting_state)
 	var from_str = StateManager.StateMap[from]
 	var to_str = StateManager.StateMap[from]
-	print_debug("Switched from state {0} to {1}".format([from_str, to_str]))
+	logger.info("Switched from state {0} to {1}".format([from_str, to_str]))
 
 
 # Set state will set the entire state stack to the given array of states

@@ -11,6 +11,8 @@ var layout_map: Dictionary = {
 	BoxArtManager.Layout.LOGO: "-logo",
 }
 
+var logger := Log.get_logger("LocalBoxArt")
+
 func _init() -> void:
 	# Create the data directory if it doesn't exist
 	DirAccess.make_dir_recursive_absolute(_boxart_dir)
@@ -19,25 +21,25 @@ func _init() -> void:
 
 func _ready() -> void:
 	super()
-	print("Local BoxArt provider loaded")
+	logger.info("Local BoxArt provider loaded")
 
 
 # Looks for boxart in the local user directory based on the app name
 func get_boxart(item: LibraryItem, kind: int) -> Texture2D:
-	print("Fetching box art for: ", item.name)
+	logger.debug("Fetching box art for: " + item.name)
 	if not kind in layout_map:
-		push_error("Unsupported boxart layout: ", kind)
+		logger.error("Unsupported boxart layout: {0}".format([kind]))
 		return null
 		
 	var name: String = item.name + layout_map[kind]
 	for ext in _supported_ext:
 		var path: String = "/".join([_boxart_dir, name + ext])
-		print("Checking path '{0}' for local artwork".format([path]))
+		logger.debug("Checking path '{0}' for local artwork".format([path]))
 		if not FileAccess.file_exists(path):
 			continue
 		var image: Image = Image.new()
 		if image.load(path) != OK:
-			push_error("Unable to load artwork at " + path)
+			logger.error("Unable to load artwork at " + path)
 			return null
 		var texture: ImageTexture = ImageTexture.create_from_image(image)
 		return texture

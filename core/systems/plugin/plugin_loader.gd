@@ -4,7 +4,8 @@ extends Node
 class_name PluginLoader
 @icon("res://assets/icons/codesandbox.svg")
 
-const PLUGIN_API_VERSION = "1.1.0"
+const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
+const PLUGIN_API_VERSION = "1.0.0"
 const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
@@ -12,22 +13,53 @@ const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version"
 signal plugin_loaded(name: String)
 signal plugin_initialized(name: String)
 
-var plugins: Dictionary = {}
+var logger := Log.get_logger("PluginLoader")
+var plugins := {}
 
 func _init() -> void:
-	print_debug("PluginLoader: Loading plugins")
+	logger.info("Loading plugins")
 	_load_plugins()
-	print_debug("PluginLoader: Done loading plugins")
-	print_debug("PluginLoader: Initializing plugins")
+	logger.info("Done loading plugins")
+	logger.info("Initializing plugins")
 	_init_plugins()
-	print_debug("PluginLoader: Done initializing plugins")
+	logger.info("Done initializing plugins")
+
+
+# Returns the parsed dictionary of plugin store items. Returns null if there
+# is a failure.
+func get_plugin_store_items() -> Variant:
+	var http: HTTPRequest = HTTPRequest.new()
+	add_child(http)
+	if http.request(PLUGIN_STORE_URL) != OK:
+		logger.error("Error making http request to plugin store")
+		remove_child(http)
+		http.queue_free()
+		return null
+	
+	# Wait for the request signal to complete
+	var args: Array = await http.request_completed
+	var result: int = args[0]
+	var response_code: int = args[1]
+	var headers: PackedStringArray = args[2]
+	var body: PackedByteArray = args[3]
+
+	if result != HTTPRequest.RESULT_SUCCESS:
+		logger.error("Plugin store http request failed")
+		remove_child(http)
+		http.queue_free()
+		return null
+	
+	# Parse the results
+	var items: Dictionary = JSON.parse_string(body.get_string_from_utf8())
+
+	return items
 
 
 # Looks in the user plugins directory for plugin json files and loads them.
 func _load_plugins() -> void:
 	var dir = DirAccess.open(PLUGINS_DIR)
 	if not dir:
-		print_debug("PluginLoader: Unable to open plugin directory!")
+		logger.debug("Unable to open plugin directory!")
 		return
 	
 	# Iterate through all plugins
@@ -40,28 +72,28 @@ func _load_plugins() -> void:
 			continue
 		
 		# Read the plugin metadata
-		print_debug("PluginLoader: Found plugin: " + file_name)
+		logger.debug("Found plugin: " + file_name)
 		var meta = _load_plugin_meta("/".join([PLUGINS_DIR, file_name]))
 		if meta == null:
-			print_debug("PluginLoader: %s failed to load" % file_name)
+			logger.warning("%s failed to load" % file_name)
 			file_name = dir.get_next()
 			continue
 		
 		# Validate the plugin metadata
 		if not _is_valid_plugin_meta(meta):
-			print_debug("PluginLoader: %s has invalid plugin JSON" % file_name)
+			logger.warning("%s has invalid plugin JSON" % file_name)
 			file_name = dir.get_next()
 			continue
 		
 		# Ensure the plugin is compatible
 		if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
-			print_debug("PluginLoader: %s is not compatible with this plugin API verion" % file_name)
+			logger.warning("%s is not compatible with this plugin API verion" % file_name)
 			file_name = dir.get_next()
 			continue
 		
 		# Load the plugin
 		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, file_name])):
-			print_debug("PluginLoader: %s failed to load" % file_name)
+			logger.warning("%s failed to load" % file_name)
 		
 		# Register the plugin
 		var plugin_name: String = meta["plugin.id"]
@@ -76,11 +108,11 @@ func _init_plugins() -> void:
 	for name in plugins.keys():
 		var meta = plugins[name]
 		if not "entrypoint" in meta:
-			print_debug("PluginLoader: %s has no entrypoint defined" % name)
+			logger.warning("%s has no entrypoint defined" % name)
 			continue
 		var plugin = load("/".join([LOADED_PLUGINS_DIR, name, meta["entrypoint"]]))
 		if not plugin:
-			print_debug("PluginLoader: Unable to load plugin '{0}'. Is the entrypoint correct?".format([name]))
+			logger.warning("Unable to load plugin '{0}'. Is the entrypoint correct?".format([name]))
 			continue
 		var instance: Plugin = plugin.new()
 		instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, name])
@@ -105,7 +137,7 @@ func _load_plugin_meta(path: String) -> Variant:
 
 	# Error if no plugin.json was found in the archive
 	if plugin_meta_file == "":
-		push_error("PluginLoader: No plugin.json found in %s" % path)
+		logger.error("PluginLoader: No plugin.json found in %s" % path)
 		reader.close()
 		return null
 		

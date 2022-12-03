@@ -6,6 +6,8 @@ extends Control
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _current_store: String
 
+var logger := Log.get_logger("StoreMenu")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Clear the template buttons
@@ -71,7 +73,7 @@ func _launch_store(store: Store):
 	$HomeContent.visible = true
 	
 	# Call the store's load_home method and wait for a response
-	print("Launching store: ", store.store_id)
+	logger.info("Launching store: " + store.store_id)
 	_current_store = store.store_id
 	store.home_loaded.connect(_on_home_loaded, CONNECT_ONE_SHOT)
 	store.load_home()

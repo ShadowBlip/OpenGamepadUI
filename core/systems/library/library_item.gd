@@ -1,7 +1,7 @@
 # LibraryItem is a high-level structure that contains data about a game.
 extends Resource
 class_name LibraryItem
-@icon("res://assets/icons/box.svg")
+@icon("res://assets/icons/package.svg")
 
 @export var _id: String
 @export var name: String

@@ -6,6 +6,8 @@ const REQUIRED_FIELDS: Array = ["provider_id"]
 
 signal provider_registered(boxart: BoxArtProvider)
 
+var logger := Log.get_logger("BoxArtManager")
+
 # The different layouts of boxart that are supported
 enum Layout {
 	GRID_PORTRAIT,
@@ -44,7 +46,7 @@ func _on_parent_ready() -> void:
 # Returns the boxart of the given kind for the given library item. 
 func get_boxart(item: LibraryItem, kind: Layout) -> Texture2D:
 	if _providers.is_empty():
-		push_error("No box art providers were found!")
+		logger.error("No box art providers were found!")
 		return null
 	
 	# Try each provider in order of priority
@@ -79,11 +81,11 @@ func get_providers() -> Array:
 # Registers the given boxart provider with the boxart manager.
 func _register_provider(provider: BoxArtProvider) -> void:
 	if not _is_valid_provider(provider):
-		push_error("Invalid boxart provider defined! Ensure you have all required properties set: ", ",".join(REQUIRED_FIELDS))
+		logger.error("Invalid boxart provider defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
 		return
 	_providers[provider.provider_id] = provider
 	_providers_by_priority.push_back(provider.provider_id)
-	print("Registered boxart provider: ", provider.provider_id)
+	logger.info("Registered boxart provider: " + provider.provider_id)
 	provider_registered.emit(provider)
 
 

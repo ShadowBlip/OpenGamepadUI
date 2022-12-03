@@ -12,7 +12,8 @@ static func reap(pid: int) -> void:
 	for p in pids:
 		OS.execute("kill", ["-TERM", "--", "-{0}".format([p])])
 		#OS.kill(p)
-	print("Reaped pids: ", ",".join(pids))
+	var logger := Log.get_logger("Reaper")
+	logger.info("Reaped pids: " + ",".join(pids))
 
 
 # Returns an array of child PIDs that are in the given process group
@@ -44,8 +45,9 @@ static func get_pid_property_int(pid: int, key: String) -> int:
 	if not key in status:
 		return -1
 	if not status[key].is_valid_int():
-		push_error(key, " was not a valid integar!")
-		print(status)
+		var logger := Log.get_logger("Reaper")
+		logger.error("{0} was not a valid integar!".format([key]))
+		logger.error(status)
 		return -1
 	return int(status[key])
 
@@ -62,7 +64,8 @@ static func get_pid_status(pid: int) -> Dictionary:
 	var status_path: String = "/".join(["/proc", str(pid), "status"])
 	var status_file: FileAccess = FileAccess.open(status_path, FileAccess.READ)
 	if not status_file:
-		push_error("Unable to check status for pid:", pid)
+		var logger := Log.get_logger("Reaper")
+		logger.error("Unable to check status for pid: {0}".format([pid]))
 		return {}
 	
 	# Parse the status output
@@ -87,6 +90,7 @@ static func get_pid_status(pid: int) -> Dictionary:
 
 # Recursively finds all descendant processes and returns it as an array of PIDs
 static func pstree(pid: int) -> Array:
+	var logger := Log.get_logger("Reaper")
 	var proc_path: String = "/proc/{0}".format([pid])
 	var task_path: String = "{0}/task".format([proc_path])
 	
@@ -95,7 +99,7 @@ static func pstree(pid: int) -> Array:
 	# Loop through each task for the pid and get its children
 	var tasks: DirAccess = DirAccess.open(task_path)
 	if not tasks:
-		push_error("Unable to open proc directory")
+		logger.error("Unable to open proc directory")
 		return []
 	tasks.list_dir_begin()
 	var task: String = tasks.get_next()
@@ -104,7 +108,7 @@ static func pstree(pid: int) -> Array:
 		var children_path: String = "/".join([task_path, task, "children"])
 		var children: FileAccess = FileAccess.open(children_path, FileAccess.READ)
 		if not children:
-			push_error("Unable to open children: ", children_path)
+			logger.error("Unable to open children: " + children_path)
 			task = tasks.get_next()
 			continue
 		
@@ -128,7 +132,8 @@ static func pstree(pid: int) -> Array:
 static func is_gamescope_pid(pid: int) -> bool:
 	var status: Dictionary = get_pid_status(pid)
 	if not "Name" in status:
-		push_error("No name was found in pid status!")
+		var logger := Log.get_logger("Reaper")
+		logger.error("No name was found in pid status!")
 		return false
 	if status["Name"] == "gamescope-wl":
 		return true

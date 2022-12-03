@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cs67bnlsoxcmy"]
+[gd_scene load_steps=4 format=3 uid="uid://cs67bnlsoxcmy"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_r20uv"]
 [ext_resource type="Script" path="res://core/ui/menu/main_menu.gd" id="2_2uoqx"]
+[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="3_e10ks"]
 
 [node name="MainMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)
@@ -36,13 +37,15 @@ offset_left = 25.0
 offset_top = 25.0
 offset_right = 275.0
 offset_bottom = 775.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="HomeButton" type="Button" parent="MarginContainer/VBoxContainer"]
 offset_right = 250.0
 offset_bottom = 31.0
 text = "Home"
+
+[node name="StateChanger" parent="MarginContainer/VBoxContainer/HomeButton" instance=ExtResource("3_e10ks")]
+state = 1
+action = 3
 
 [node name="LibraryButton" type="Button" parent="MarginContainer/VBoxContainer"]
 offset_top = 35.0
@@ -50,11 +53,19 @@ offset_right = 250.0
 offset_bottom = 66.0
 text = "Library"
 
+[node name="StateChanger" parent="MarginContainer/VBoxContainer/LibraryButton" instance=ExtResource("3_e10ks")]
+state = 4
+action = 3
+
 [node name="StoreButton" type="Button" parent="MarginContainer/VBoxContainer"]
 offset_top = 70.0
 offset_right = 250.0
 offset_bottom = 101.0
 text = "Store"
+
+[node name="StateChanger" parent="MarginContainer/VBoxContainer/StoreButton" instance=ExtResource("3_e10ks")]
+state = 5
+action = 3
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
 offset_top = 105.0
@@ -62,13 +73,14 @@ offset_right = 250.0
 offset_bottom = 136.0
 text = "Settings"
 
+[node name="StateChanger" parent="MarginContainer/VBoxContainer/SettingsButton" instance=ExtResource("3_e10ks")]
+state = 9
+action = 3
+
 [node name="PowerButton" type="Button" parent="MarginContainer/VBoxContainer"]
 offset_top = 140.0
 offset_right = 250.0
 offset_bottom = 171.0
 text = "Power"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HomeButton" to="." method="_on_home_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/LibraryButton" to="." method="_on_library_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/StoreButton" to="." method="_on_store_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/PowerButton" to="." method="_on_power_button_pressed"]

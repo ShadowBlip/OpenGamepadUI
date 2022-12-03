@@ -1,5 +1,6 @@
 extends Node
 class_name LibraryManager
+@icon("res://assets/icons/trello.svg")
 
 const REQUIRED_FIELDS: Array = ["library_id"]
 
@@ -17,6 +18,7 @@ var _available_apps: Dictionary = {}
 var _installed_apps: PackedStringArray = []
 var _app_by_category: Dictionary = {}
 var _app_by_tag: Dictionary = {}
+var logger := Log.get_logger("LibraryManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -89,7 +91,7 @@ func _load_library() -> Dictionary:
 # Returns the library item for the given app for all library providers
 func get_app_by_name(name: String) -> LibraryItem:
 	if not name in _available_apps:
-		push_error("App with name {0} not found".format([name]))
+		logger.error("App with name {0} not found".format([name]))
 		return null
 	return _available_apps[name]
 
@@ -107,11 +109,11 @@ func get_libraries() -> Array:
 # Registers the given library with the library manager.
 func _register_library(library: Library) -> void:
 	if not _is_valid_library(library):
-		push_error("Invalid library defined! Ensure you have all required properties set: ", ",".join(REQUIRED_FIELDS))
+		logger.error("Invalid library defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
 		return
 	# Set library properties
 	_libraries[library.library_id] = library
-	print("Registered library: ", library.library_id)
+	logger.info("Registered library: " + library.library_id)
 	library_registered.emit(library)
 
 

@@ -5,6 +5,7 @@ enum Action {
 	PUSH,
 	POP,
 	REPLACE,
+	SET,
 }
 
 # Signal on our parent to connect to
@@ -33,3 +34,5 @@ func _on_signal():
 			state_manager.pop_state()
 		Action.REPLACE:
 			state_manager.replace_state(state, true, data)
+		Action.SET:
+			state_manager.set_state([state])

@@ -4,6 +4,8 @@ class_name Battery
 
 const power_supply_dir = "/sys/class/power_supply"
 
+var logger := Log.get_logger("Battery")
+
 # Finds the battery path. If none is found, returns null.
 static func find_battery_path() -> Variant:
 	var power_dir: DirAccess = DirAccess.open(power_supply_dir)
@@ -15,7 +17,6 @@ static func find_battery_path() -> Variant:
 			break
 	if battery_dir == "":
 		return null
-	print("Battery: Found battery path: ", battery_dir)
 	
 	return "/".join([power_supply_dir, battery_dir])
 

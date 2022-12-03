@@ -1,11 +1,13 @@
 extends Node
 class_name StoreManager
+@icon("res://assets/icons/tag.svg")
 
 const REQUIRED_FIELDS: Array = ["store_id", "store_name", "store_image"]
 
 signal store_registered(store: Store)
 
 var _stores: Dictionary = {}
+var logger := Log.get_logger("StoreManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,7 +25,7 @@ func _on_parent_ready() -> void:
 # Registers the given store with the store manager.
 func _register_store(store: Store) -> void:
 	if not _is_valid_store(store):
-		push_error("Invalid store defined! Ensure you have all required properties set: ", ",".join(REQUIRED_FIELDS))
+		logger.error("Invalid store defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
 		return
 	_stores[store.store_id] = store
 	store_registered.emit(store)

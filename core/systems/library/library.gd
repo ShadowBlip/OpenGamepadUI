@@ -10,6 +10,7 @@ class_name Library
 @export var library_icon: Texture2D
 
 var _cache_dir: String = "/".join(["user://cache/library", library_id])
+var logger := Log.get_logger("Library")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -36,7 +37,7 @@ func uninstall(item: LibraryItem):
 func _ensure_cache_dir() -> int:
 	var err: int = DirAccess.make_dir_recursive_absolute(_cache_dir)
 	if err != OK:
-		push_error("Unable to create cache directory!")
+		logger.error("Unable to create cache directory!")
 	return err
 
 

@@ -25,9 +25,19 @@ _global_script_classes=[{
 "path": "res://core/systems/boxart/boxart_provider.gd"
 }, {
 "base": "Object",
+"class": &"Cache",
+"language": &"GDScript",
+"path": "res://core/systems/network/cache.gd"
+}, {
+"base": "Object",
 "class": &"Gamescope",
 "language": &"GDScript",
 "path": "res://core/systems/gamescope.gd"
+}, {
+"base": "Node",
+"class": &"HTTPImageFetcher",
+"language": &"GDScript",
+"path": "res://core/systems/network/http_image_fetcher.gd"
 }, {
 "base": "Node",
 "class": &"InputManager",
@@ -128,18 +138,20 @@ _global_script_class_icons={
 "Battery": "res://assets/icons/battery-charging.svg",
 "BoxArtManager": "res://assets/icons/image.svg",
 "BoxArtProvider": "res://assets/icons/image.svg",
+"Cache": "",
 "Gamescope": "",
-"InputManager": "",
-"LaunchManager": "",
-"Launcher": "",
+"HTTPImageFetcher": "",
+"InputManager": "res://assets/icons/navigation.svg",
+"LaunchManager": "res://assets/icons/upload.svg",
+"Launcher": "res://assets/icons/loader.svg",
 "Library": "res://assets/icons/book-open.svg",
-"LibraryItem": "res://assets/icons/box.svg",
+"LibraryItem": "res://assets/icons/package.svg",
 "LibraryLaunchItem": "res://assets/icons/box.svg",
-"LibraryManager": "",
+"LibraryManager": "res://assets/icons/trello.svg",
 "Log": "",
 "Main": "",
 "MultiHTTPRequest": "",
-"Plugin": "",
+"Plugin": "res://assets/icons/box.svg",
 "PluginLoader": "res://assets/icons/codesandbox.svg",
 "Reaper": "",
 "StateChanger": "",
@@ -147,13 +159,14 @@ _global_script_class_icons={
 "Store": "",
 "StoreItem": "",
 "StoreItemDetails": "",
-"StoreManager": ""
+"StoreManager": "res://assets/icons/tag.svg"
 }
 
 [OpenGamepadUI]
 
 plugin/directory="user://plugins"
 data/directory="user://data"
+cache/directory="user://cache"
 
 [application]
 

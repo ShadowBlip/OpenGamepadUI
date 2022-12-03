@@ -11,6 +11,7 @@ var _requests: Array = []
 var _requests_queue: Array = []
 var _responses_queue: Array = []
 var _done: Array = []
+var logger := Log.get_logger("MultiHTTPRequest")
 
 
 func _ready() -> void:
@@ -30,7 +31,7 @@ func _ready() -> void:
 
 func _http_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, worker: int) -> void:
 	# Push the response
-	print("Worker {0} got response: {1}".format([worker, response_code]))
+	logger.debug("Worker {0} got response: {1}".format([worker, response_code]))
 	var response: Dictionary = {
 		"result": result,
 		"response_code": response_code,
@@ -40,13 +41,13 @@ func _http_request_completed(result: int, response_code: int, headers: PackedStr
 	_responses_queue[worker].push_back(response)
 	
 	# Pop the item off the queue
-	print("Worker {0} done".format([worker]))
+	logger.debug("Worker {0} done".format([worker]))
 	_requests_queue[worker].pop_front()
 	
 	# If we don't have more work, emit completed
 	if len(_requests_queue[worker]) == 0:
 		worker_done.emit(worker)
-		print("ALL WORK DONE!")
+		logger.debug("ALL WORK DONE!")
 		return
 	
 	# Continue working on our queue
@@ -62,7 +63,7 @@ func _on_worker_done(worker: int):
 		if not done:
 			return
 	
-	print("ALL WORKERS ARE DONE!")
+	logger.debug("ALL WORKERS ARE DONE!")
 	_collect_results()
 
 
@@ -112,7 +113,7 @@ func request(urls: PackedStringArray) -> int:
 		_requests.push_back(url)
 		var worker = i % num_clients
 		_requests_queue[worker].push_back(url)
-		print("URL {0} goes to worker {1}".format([url, worker]))
+		logger.debug("URL {0} goes to worker {1}".format([url, worker]))
 		i += 1
 		
 	# Start their work on their queues

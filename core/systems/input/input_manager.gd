@@ -1,9 +1,12 @@
 extends Node
 class_name InputManager
+@icon("res://assets/icons/navigation.svg")
 
 @onready var main: Main = get_node("..")
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 @onready var state_manager: StateManager = get_node("../StateManager")
+
+var logger := Log.get_logger("InputManager")
 
 func _ready() -> void:
 	state_manager.state_changed.connect(_on_state_changed)
@@ -14,10 +17,10 @@ func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
 	var window_id = main.overlay_window_id
 	if focused:
-		print_debug("Focusing overlay")
+		logger.debug("Focusing overlay")
 		Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "1")
 		return
-	print_debug("Un-focusing overlay")
+	logger.debug("Un-focusing overlay")
 	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "0")
 
 
@@ -45,10 +48,10 @@ func _input(event: InputEvent) -> void:
 				
 		# Handle opening the main menu outside of a running game
 		elif state == StateManager.State.MAIN_MENU:
-			print("Removing mm state")
+			logger.debug("Removing mm state")
 			state_manager.remove_state(StateManager.State.MAIN_MENU)
 		elif state != StateManager.State.MAIN_MENU:
-			print("Adding mm state")
+			logger.debug("Adding mm state")
 			state_manager.push_state(StateManager.State.MAIN_MENU)
 
 	# Handle back button presses

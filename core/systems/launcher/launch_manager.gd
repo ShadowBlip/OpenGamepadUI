@@ -1,5 +1,6 @@
 extends Node
 class_name LaunchManager
+@icon("res://assets/icons/upload.svg")
 
 signal app_launched(app: LibraryLaunchItem, pid: int)
 signal app_stopped(app: LibraryLaunchItem, pid: int)
@@ -16,6 +17,7 @@ var _persist_data: Dictionary = {"version": 1}
 @onready var state_manager: StateManager = get_node("../StateManager")
 @onready var overlay_display = main.overlay_display
 
+var logger := Log.get_logger("LaunchManager")
 
 func _init() -> void:
 	_load_persist_data()
@@ -43,14 +45,14 @@ func _load_persist_data():
 	
 	# Create our data file if it doesn't exist
 	if not FileAccess.file_exists(_persist_path):
-		print("LaunchManager: Launcher data does not exist. Creating it.")
+		logger.debug("LaunchManager: Launcher data does not exist. Creating it.")
 		_save_persist_data()
 	
 	# Read our persistent data and parse it
 	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.READ)
 	var data: String = file.get_as_text()
 	_persist_data = JSON.parse_string(data)
-	print("LaunchManager: Loaded persistent data")
+	logger.debug("LaunchManager: Loaded persistent data")
 	
 
 # Saves our persistent data
@@ -97,9 +99,9 @@ func launch(app: LibraryLaunchItem) -> int:
 	
 	# Build the launch command to run
 	var command = "DISPLAY=:{0} {1} {2}".format([display, cmd, " ".join(args)])
-	print_debug("Launching game with command: {0}".format([command]))
+	logger.info("Launching game with command: {0}".format([command]))
 	var pid = OS.create_process("sh", ["-c", command])
-	print_debug("Launched with PID: {0}".format([pid]))
+	logger.info("Launched with PID: {0}".format([pid]))
 	
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(app, pid)
@@ -148,7 +150,7 @@ func _remove_running(pid: int):
 	var i = running.find(pid)
 	if i < 0:
 		return
-	print_debug("Cleaning up pid {0}".format([pid]))
+	logger.info("Cleaning up pid {0}".format([pid]))
 	var app: LibraryLaunchItem = apps_running[pid]
 	apps_running.erase(pid)
 	running.remove_at(i)
@@ -163,7 +165,7 @@ func _remove_running(pid: int):
 func _get_target_display(exclude_display: int) -> int:
 	# Get all gamescope xwayland displays
 	var all_displays = Gamescope.discover_all_xwayland_displays(exclude_display)
-	print_debug("Found xwayland displays: " + ",".join(all_displays))
+	logger.info("Found xwayland displays: " + ",".join(all_displays))
 	# Return the xwayland display that doesn't match our excluded display
 	for display in all_displays:
 		if display == exclude_display:
@@ -191,13 +193,13 @@ func _check_running():
 		# and hasn't re-parented itself
 		var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
 		if not Reaper.is_gamescope_pid(gamescope_pid):
-			push_warning("OpenGamepadUI wasn't launched with gamescope! Unexpected behavior expected.")
+			logger.warning("OpenGamepadUI wasn't launched with gamescope! Unexpected behavior expected.")
 		
 		# Try checking to see if there are any other processes running with our
 		# app's process group
 		var candidates = Reaper.get_children_with_pgid(gamescope_pid, pid)
 		if len(candidates) > 0:
-			print("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
+			logger.info("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
 			continue
 		
 		# If it's not running, make sure we remove it from our list
