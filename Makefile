@@ -10,13 +10,13 @@ ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
 
 .PHONY: build
-build: build/opengamepad-ui.x86_64
+build: addons build/opengamepad-ui.x86_64
 build/opengamepad-ui.x86_64: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
 .PHONY: plugins
-plugins: build/plugins.zip
+plugins: addons build/plugins.zip
 build/plugins.zip: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
@@ -25,6 +25,11 @@ build/plugins.zip: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 import:
 	@echo "Importing project assets. This will take some time..."
 	timeout --foreground 60 $(GODOT) --headless --editor . || echo "Finished"
+
+.PHONY: addons
+addons:
+	@echo "Building gdnative addons"
+	cd ./addons/godot-xlib && make build
 
 .PHONY: edit
 edit:
@@ -35,7 +40,7 @@ clean:
 	rm -rf build
 
 .PHONY: run
-run: build/opengamepad-ui.x86_64
+run: addons build/opengamepad-ui.x86_64
 	$(GAMESCOPE) --xwayland-count 2 -- ./build/opengamepad-ui.x86_64
 
 $(EXPORT_TEMPLATE):

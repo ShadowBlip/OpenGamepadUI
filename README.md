@@ -11,16 +11,30 @@ to launch and play games.
 
 ## Requirements
 
+### Build Requirements
+
 The following are required to build Open Gamepad UI:
 
-- godot 4.x
-- libxcursor1
-- libxinerama1
-- libxrandr2
-- libxi6
+- Godot 4.x
+- GCC 7+ or Clang 6+.
+- Python 3.5+.
+- SCons 3.0+ build system
+- pkg-config (used to detect the dependencies below).
+- X11, Xcursor, Xinerama, Xi and XRandR development libraries.
+- MesaGL development libraries.
+- ALSA development libraries.
+- PulseAudio development libraries.
 - make (optional)
 - unzip (optional)
 - wget (optional)
+
+If you are using ArchLinux, you can run the following:
+
+```bash
+pacman -S --needed scons pkgconf gcc libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib pulseaudio make unzip wget git
+```
+
+### Runtime Requirements
 
 The following are required to run Open Gamepad UI:
 
