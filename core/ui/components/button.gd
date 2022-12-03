@@ -10,12 +10,10 @@ func _ready() -> void:
 	focus_entered.connect(_play_sound.bind(focus_audio_stream))
 	pressed.connect(_play_sound.bind(select_audio_stream))
 
-
 func _play_sound(stream: AudioStream) -> void:
 	var audio_player: AudioStreamPlayer = $AudioStreamPlayer
 	audio_player.stream = stream
 	audio_player.play()
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

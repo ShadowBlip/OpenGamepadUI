@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bl8wldq8qc4xe"]
+[gd_scene load_steps=7 format=3 uid="uid://bl8wldq8qc4xe"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
+[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="2_fpxtd"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_11sf6"]
 [ext_resource type="PackedScene" uid="uid://ctmlv7iyhn721" path="res://core/ui/menu/plugin_store_menu.tscn" id="4_dx1s7"]
-[ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="5_f1s84"]
+[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_art7k"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -15,8 +16,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_olmbp")
 
+[node name="StateManager" parent="." instance=ExtResource("2_fpxtd")]
+
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,7 +27,6 @@ grow_vertical = 2
 theme = ExtResource("2_7txcp")
 
 [node name="MainContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -33,7 +34,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MenuMarginContainer" type="MarginContainer" parent="MainContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -41,25 +41,37 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MenuMarginContainer"]
-layout_mode = 2
 
 [node name="GeneralButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
-layout_mode = 2
 text = "General"
 
+[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton" instance=ExtResource("5_art7k")]
+signal_name = "focus_entered"
+state = 1
+action = 2
+state_manager_path = "../../../../../StateManager"
+
 [node name="HSeparator" type="HSeparator" parent="MainContainer/MenuMarginContainer/VBoxContainer"]
-layout_mode = 2
 
 [node name="PluginsButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
-layout_mode = 2
 text = "Plugins"
 
+[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginsButton" instance=ExtResource("5_art7k")]
+signal_name = "focus_entered"
+state = 2
+action = 2
+state_manager_path = "../../../../../StateManager"
+
 [node name="PluginStoreButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
-layout_mode = 2
 text = "Plugin Store"
 
+[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginStoreButton" instance=ExtResource("5_art7k")]
+signal_name = "focus_entered"
+state = 3
+action = 2
+state_manager_path = "../../../../../StateManager"
+
 [node name="ContentMarginContainer" type="MarginContainer" parent="MainContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 theme_override_constants/margin_left = 20
@@ -68,11 +80,8 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/ContentMarginContainer"]
-layout_mode = 2
 follow_focus = true
 
 [node name="PluginStore" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
-layout_mode = 2
-
-[node name="HTTPImageFetcher" type="Node" parent="."]
-script = ExtResource("5_f1s84")
+offset_right = 415.0
+state_manager_path = NodePath("../../../../StateManager")
