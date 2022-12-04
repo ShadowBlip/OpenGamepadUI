@@ -9,68 +9,78 @@ const max_xwaylands: int = 10
 
 
 # Sets the given X property on the given window.
-# The format can be 8, 16, or 32 bits, followed by 's' for a c string, 'c' for
-# a cardinal, or 'i' for an integer.
-# Example: 32c
-static func set_xprop(window_id: String, key: String, format: String, value: String) -> int:
+# Example:
+#  Gamescope.set_xprop(":0", 1234, "STEAM_INPUT", 1)
+static func set_xprop(display: String, window_id: int, key: String, value: int) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting window {0} key {1} to {2}".format([window_id, key, value]))
-	return OS.execute("xprop", ["-id", window_id, "-f", key, format, "-set", key, value])
+	return Xlib.set_xprop(display, window_id, key, value)
 
 
-# Returns true if the given x property exists on the given window.
-static func has_xprop(display: int, window_id: String, key: String) -> bool:
-	var target_arg = "-id {0}".format([window_id])
-	if window_id == "root":
-		target_arg = "-root"
-	var output = []
-	var cmd = ["-c", "DISPLAY=:{0} timeout 0.5 xprop {1} {2}".format([display, target_arg, key])]
-	var code = OS.execute("sh", cmd, output)
-	if code != 0:
-		return false
-	for line in output:
-		if line.contains(key) and not line.contains("no such atom"):
-			return true
-	return false
+# Returns the value of the given X property for the given window. Returns
+# Xlib.ERR_XPROP_NOT_FOUND if property doesn't exist.
+static func get_xprop(display: String, window_id: int, key: String) -> int:
+	return Xlib.get_xprop(display, window_id, key)
 
 
-# Returns the xwayland number that we're running in
-static func discover_xwayland_display(pid: int) -> int:
-	var display: int = -1
-	for i in range(0, max_xwaylands):
-		if get_window_id(pid, i) != "":
-			display = i
-			break
-	
-	if display < 0:
-		var logger := Log.get_logger("Gamescope")
-		logger.error("Unable to detect running xwayland display! We won't be able to launch games!")
-		
-	return display
+# Returns true if the given X property exists on the given window.
+static func has_xprop(display: String, window_id: int, key: String) -> bool:
+	return Xlib.has_xprop(display, window_id, key)
 
 
 # Returns all gamescope displays
 # TODO: This seems brittle. Is there any other way we can discover Gamescope displays?
-static func discover_all_xwayland_displays(start: int = 0) -> Array:
-	var displays = []
-	for i in range(start, max_xwaylands):
-		if has_xprop(i, "root", "GAMESCOPE_CURSOR_VISIBLE_FEEDBACK"):
-			displays.push_back(i)
-	return displays
+static func discover_xwayland_displays() -> PackedStringArray:
+	var logger := Log.get_logger("Gamescope")
+	logger.info("Discovering xwaylands!")
+
+	# X11 displays have a corresponding socket in /tmp/.X11-unix
+	# The sockets are named like: X0, X1, X2, etc.
+	var dir := DirAccess.open("/tmp/.X11-unix")
+	var sockets := dir.get_files()
+	print(sockets)
+	
+	# Loop through each socket file and derrive the display number.
+	var displays: PackedInt32Array = []
+	for socket in sockets:
+		var suffix := (socket as String).trim_prefix("X")
+		if not suffix.is_valid_int():
+			logger.warn("Skipping X11 socket with a weird name: " + socket)
+			continue
+		displays.append(suffix.to_int())
+	
+	# Check to see if the root window of these displays has gamescope-specific properties
+	var gamescope_displays := PackedStringArray()
+	for display_num in displays:
+		var display := ":{0}".format([display_num])
+		var root_id := Xlib.get_root_window_id(display)
+		if has_xprop(display, root_id, "GAMESCOPE_CURSOR_VISIBLE_FEEDBACK"):
+			gamescope_displays.append(display)
+	return gamescope_displays
 
 
-# Returns the xwayland window ID for the given process
-static func get_window_id(pid: int, display: int) -> String:
+# Returns the xwayland window ID for the given process. Returns -1 if no
+# window was found.
+static func get_window_id(display: String, pid: int) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display]))
-	var output = []
-	var cmd = ["-c", "DISPLAY=:{0} xdotool search --pid {1}".format([display, pid])]
-	if OS.execute("sh", cmd, output) != 0:
-		return ""
-	var window_id: String
-	for line in output:
-		if line == "":
-			continue
-		window_id = line.trim_suffix("\n")
-	logger.debug("Found Window ID: " + window_id)
-	return window_id
+	var root_id := Xlib.get_root_window_id(display)
+	var all_windows := get_all_windows(display, root_id)
+	for window_id in all_windows:
+		var window_pid := Xlib.get_xprop(display, window_id, "_NET_WM_PID")
+		if pid == window_pid:
+			return window_id
+	return -1
+
+
+# Recursively returns all child windows of the given window id
+static func get_all_windows(display: String, window_id: int) -> PackedInt32Array:
+	var children := Xlib.get_window_children(display, window_id)
+	if len(children) == 0:
+		return children
+	
+	var all_children := PackedInt32Array()
+	for child in children:
+		all_children.append_array(Xlib.get_window_children(display, child))
+		
+	return all_children

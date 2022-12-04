@@ -1,9 +1,10 @@
 extends Control
 class_name Main
 
+var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
-var overlay_display = Gamescope.discover_xwayland_display(PID)
-var overlay_window_id = Gamescope.get_window_id(PID, overlay_display)
+var overlay_display = DISPLAY
+var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
@@ -36,9 +37,9 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 
 
 # Lets us run as an overlay in gamescope
-func _setup(window_id: String) -> void:
+func _setup(window_id: int) -> void:
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	Gamescope.set_xprop(window_id, "STEAM_GAME", "32c", "769")
+	Gamescope.set_xprop(DISPLAY, window_id, "STEAM_GAME", 769)
 	# Sets ourselves to the input focus
-	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "1")
+	Gamescope.set_xprop(DISPLAY, window_id, "STEAM_INPUT_FOCUS", 1)

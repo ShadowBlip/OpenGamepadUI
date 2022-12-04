@@ -39,8 +39,6 @@ pacman -S --needed scons pkgconf gcc libxcursor libxinerama libxi libxrandr mesa
 The following are required to run Open Gamepad UI:
 
 - gamescope
-- xorg-xprop
-- xorg-xwininfo
 
 ## Building
 

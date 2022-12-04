@@ -15,13 +15,14 @@ func _ready() -> void:
 # Set focus will use Gamescope to focus OpenGamepadUI
 func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
+	var display = OS.get_environment("DISPLAY")
 	var window_id = main.overlay_window_id
 	if focused:
 		logger.debug("Focusing overlay")
-		Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "1")
+		Gamescope.set_xprop(display, window_id, "STEAM_INPUT_FOCUS", 1)
 		return
 	logger.debug("Un-focusing overlay")
-	Gamescope.set_xprop(window_id, "STEAM_INPUT_FOCUS", "32c", "0")
+	Gamescope.set_xprop(display, window_id, "STEAM_INPUT_FOCUS", 0)
 
 
 # Set ourselves to focused in any state other than IN_GAME

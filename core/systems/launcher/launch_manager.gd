@@ -8,7 +8,7 @@ signal recent_apps_changed()
 
 var apps_running: Dictionary = {}
 var running: PackedInt64Array = []
-var target_display: int = -1
+var target_display: String = OS.get_environment("DISPLAY")
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
@@ -80,10 +80,11 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 # over a running game or not.
 func _set_overlay(enable: bool) -> void:
 	var window_id = main.overlay_window_id
-	var overlay_enabled = "0"
+	var overlay_enabled = 0
 	if enable:
-		overlay_enabled = "1"
-	Gamescope.set_xprop(window_id, "STEAM_OVERLAY", "32c", overlay_enabled)
+		overlay_enabled = 1
+	var display := OS.get_environment("DISPLAY")
+	Gamescope.set_xprop(display, window_id, "STEAM_OVERLAY", overlay_enabled)
 
 
 # Launches the given command on the target xwayland display. Returns a PID
@@ -93,12 +94,11 @@ func launch(app: LibraryLaunchItem) -> int:
 	var args: PackedStringArray = app.args
 	
 	# Discover the target display to launch on.
-	if target_display < 0:
-		target_display = _get_target_display(overlay_display)
+	target_display = _get_target_display(overlay_display)
 	var display = target_display
 	
 	# Build the launch command to run
-	var command = "DISPLAY=:{0} {1} {2}".format([display, cmd, " ".join(args)])
+	var command = "DISPLAY={0} {1} {2}".format([display, cmd, " ".join(args)])
 	logger.info("Launching game with command: {0}".format([command]))
 	var pid = OS.create_process("sh", ["-c", command])
 	logger.info("Launched with PID: {0}".format([pid]))
@@ -162,9 +162,9 @@ func _remove_running(pid: int):
 
 
 # Returns the target xwayland display to launch on
-func _get_target_display(exclude_display: int) -> int:
+func _get_target_display(exclude_display: String) -> String:
 	# Get all gamescope xwayland displays
-	var all_displays = Gamescope.discover_all_xwayland_displays(exclude_display)
+	var all_displays := Gamescope.discover_xwayland_displays()
 	logger.info("Found xwayland displays: " + ",".join(all_displays))
 	# Return the xwayland display that doesn't match our excluded display
 	for display in all_displays:
