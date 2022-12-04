@@ -30,7 +30,7 @@ static func has_xprop(display: String, window_id: int, key: String) -> bool:
 
 # Returns all gamescope displays
 # TODO: This seems brittle. Is there any other way we can discover Gamescope displays?
-static func discover_xwayland_displays() -> PackedStringArray:
+static func discover_gamescope_displays() -> PackedStringArray:
 	var logger := Log.get_logger("Gamescope")
 	logger.info("Discovering xwaylands!")
 
@@ -38,7 +38,6 @@ static func discover_xwayland_displays() -> PackedStringArray:
 	# The sockets are named like: X0, X1, X2, etc.
 	var dir := DirAccess.open("/tmp/.X11-unix")
 	var sockets := dir.get_files()
-	print(sockets)
 	
 	# Loop through each socket file and derrive the display number.
 	var displays: PackedInt32Array = []

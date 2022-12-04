@@ -164,7 +164,7 @@ func _remove_running(pid: int):
 # Returns the target xwayland display to launch on
 func _get_target_display(exclude_display: String) -> String:
 	# Get all gamescope xwayland displays
-	var all_displays := Gamescope.discover_xwayland_displays()
+	var all_displays := Gamescope.discover_gamescope_displays()
 	logger.info("Found xwayland displays: " + ",".join(all_displays))
 	# Return the xwayland display that doesn't match our excluded display
 	for display in all_displays:
