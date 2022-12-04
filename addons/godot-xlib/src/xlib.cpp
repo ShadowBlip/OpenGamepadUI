@@ -159,7 +159,7 @@ void Xlib::_bind_methods() {
       &Xlib::get_window_children);
   ClassDB::bind_static_method(
       "Xlib", D_METHOD("set_xprop", "display", "window_id", "key", "value"),
-      &Xlib::get_xprop);
+      &Xlib::set_xprop);
   ClassDB::bind_static_method(
       "Xlib", D_METHOD("get_xprop", "display", "window_id", "key"),
       &Xlib::get_xprop);
