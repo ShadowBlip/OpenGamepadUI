@@ -1,8 +1,9 @@
 #include "xlib.h"
 
+#include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/string.hpp"
+#include <X11/X.h>
 #include <cstring>
-#include <godot_cpp/classes/display_server.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -14,69 +15,88 @@ using namespace godot;
 Xlib::Xlib(){};
 Xlib::~Xlib(){};
 
-void Xlib::test_static() {
-  UtilityFunctions::print("  Simple static func called!");
-  DisplayServer *display_server = DisplayServer::get_singleton();
-  String name = display_server->get_name();
-  UtilityFunctions::print(" Display name: ", name);
-
-  // Do xwindows stuff
-  Display *display;
-  int screen;
-
+// Returns the root window id of the given display.
+int Xlib::get_root_window_id(String display) {
   // Open a connection with the server
-  display = XOpenDisplay(NULL); // XOpenDisplay(":0")?
-  if (display == NULL) {
-    UtilityFunctions::print("Unable to open display!");
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")
+  if (dpy == NULL) {
+    UtilityFunctions::push_error("Unable to open display!");
+    return ERR_X_DISPLAY_NOT_FOUND;
   }
 
-  UtilityFunctions::print(display_server->get_window_list());
+  // Return the root window id
+  Window root = DefaultRootWindow(dpy);
+  XCloseDisplay(dpy);
+  return root;
+};
 
-  // Query the tree
-  // https://cpp.hotexamples.com/examples/-/-/XQueryTree/cpp-xquerytree-function-examples.html
-  Window parent, root, *children; // A 'Window' is also the window id
+// Returns the children of the given window.
+PackedInt32Array Xlib::get_window_children(String display, int window_id) {
+  Window window = (Window)window_id;
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")
+  if (dpy == NULL) {
+    UtilityFunctions::push_error("Unable to open display!");
+    return PackedInt32Array();
+  }
+
+  // Variables to store the return results
+  Window parent, root, *children;
   unsigned int nchildren;
   XWindowAttributes attributes;
 
-  // Get the root window
-  Status status = XQueryTree(display, DefaultRootWindow(display), &root,
-                             &parent, &children, &nchildren);
+  // Query the tree
+  // https://cpp.hotexamples.com/examples/-/-/XQueryTree/cpp-xquerytree-function-examples.html
+  Status status =
+      XQueryTree(dpy, window, &root, &parent, &children, &nchildren);
   if (!status) {
-    UtilityFunctions::push_error("Unable to query x tree");
-    return;
+    UtilityFunctions::push_error("Unable to query X tree for window: ",
+                                 window_id);
+    XCloseDisplay(dpy);
+    return PackedInt32Array();
   }
 
-  // Loop through all the children
+  // Loop through all the children and add them to our int array
+  PackedInt32Array results = PackedInt32Array();
   while (nchildren--) {
     Window child = children[nchildren];
-    UtilityFunctions::print("Got child with id: ", child);
+    results.append((int64_t)child);
   }
-  XFree(children);
 
-  XGetWindowAttributes(display, DefaultRootWindow(display), &attributes);
+  // Let the children be free!
+  if (children)
+    XFree(children);
 
-  // Get the name
-  char *window_name;
-  XFetchName(display, DefaultRootWindow(display), &window_name);
-  UtilityFunctions::print("Name: '", window_name, "' ",
-                          DefaultRootWindow(display));
+  XCloseDisplay(dpy);
+  return results;
+};
 
-  // XGetWindowAttributes(display, root, &attributes);
+// Sets the given x window property value on the given window. Returns 0 if
+// successful.
+int Xlib::set_xprop(String display, int window_id, String key, int value) {
+  Window window = (Window)window_id;
 
-  // Close connection to server
-  XCloseDisplay(display);
-  UtilityFunctions::print("Closed display");
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    UtilityFunctions::push_error("Unable to open display!");
+    return ERR_X_DISPLAY_NOT_FOUND;
+  }
 
-  // Look for _NET_WM_PID for the process id
-  Atom steamInputFocus = XInternAtom(display, "STEAM_INPUT_FOCUS", false);
+  // Build the atom to set
+  Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
 
-  // Get a window property
+  // Fetch the actual property
   Atom actual;
   int format;
   unsigned long n, left;
   unsigned char *data;
-  XGetWindowProperty(display, root, steamInputFocus, 0L, 1L, false, XA_CARDINAL,
-                     &actual, &format, &n, &left, &data);
+  int result = XChangeProperty(dpy, window, atom, XA_CARDINAL, 32,
+                               PropModeReplace, (unsigned char *)&value, 1);
+  return result;
 };
 
 // Returns the value of the given x property on the given window. Returns -255
@@ -89,7 +109,7 @@ int Xlib::get_xprop(String display, int window_id, String key) {
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
   if (dpy == NULL) {
     UtilityFunctions::push_error("Unable to open display!");
-    return XPROP_NOT_FOUND;
+    return ERR_XPROP_NOT_FOUND;
   }
 
   // Build the atom to get
@@ -117,13 +137,13 @@ int Xlib::get_xprop(String display, int window_id, String key) {
   UtilityFunctions::push_error("Property ", key,
                                " not found on window: ", window_id);
   XCloseDisplay(dpy);
-  return XPROP_NOT_FOUND;
+  return ERR_XPROP_NOT_FOUND;
 };
 
 // Returns true if the given property exists on the given window.
 bool Xlib::has_xprop(String display, int window_id, String key) {
   int value = Xlib::get_xprop(display, window_id, key);
-  if (value == XPROP_NOT_FOUND) {
+  if (value == ERR_XPROP_NOT_FOUND) {
     return false;
   }
   return true;
@@ -132,13 +152,22 @@ bool Xlib::has_xprop(String display, int window_id, String key) {
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Static methods
-  ClassDB::bind_static_method("Xlib", D_METHOD("test_static"),
-                              &Xlib::test_static);
-  ClassDB::bind_static_method("Xlib", D_METHOD("get_xprop", "window_id", "key"),
-                              &Xlib::get_xprop);
-  ClassDB::bind_static_method("Xlib", D_METHOD("has_xprop", "window_id", "key"),
-                              &Xlib::has_xprop);
+  ClassDB::bind_static_method("Xlib", D_METHOD("get_root_window_id", "display"),
+                              &Xlib::get_root_window_id);
+  ClassDB::bind_static_method(
+      "Xlib", D_METHOD("get_window_children", "display", "window_id"),
+      &Xlib::get_window_children);
+  ClassDB::bind_static_method(
+      "Xlib", D_METHOD("set_xprop", "display", "window_id", "key", "value"),
+      &Xlib::get_xprop);
+  ClassDB::bind_static_method(
+      "Xlib", D_METHOD("get_xprop", "display", "window_id", "key"),
+      &Xlib::get_xprop);
+  ClassDB::bind_static_method(
+      "Xlib", D_METHOD("has_xprop", "display", "window_id", "key"),
+      &Xlib::has_xprop);
 
   // Constants
-  BIND_CONSTANT(XPROP_NOT_FOUND);
+  BIND_CONSTANT(ERR_XPROP_NOT_FOUND);
+  BIND_CONSTANT(ERR_X_DISPLAY_NOT_FOUND);
 };

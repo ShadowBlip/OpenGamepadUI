@@ -1,6 +1,8 @@
 #ifndef XLIB_CLASS_H
 #define XLIB_CLASS_H
 
+#include "godot_cpp/variant/array.hpp"
+#include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/string.hpp"
 #include <godot_cpp/classes/node.hpp>
 
@@ -17,7 +19,8 @@ protected:
 public:
   // Constants
   enum {
-    XPROP_NOT_FOUND = -255,
+    ERR_XPROP_NOT_FOUND = -255,
+    ERR_X_DISPLAY_NOT_FOUND = -1,
   };
 
   // Constructor/deconstructor
@@ -25,9 +28,11 @@ public:
   ~Xlib();
 
   // Static Functions
+  static int get_root_window_id(String display);
+  static PackedInt32Array get_window_children(String display, int window_id);
+  static int set_xprop(String display, int window_id, String key, int value);
   static int get_xprop(String display, int window_id, String key);
   static bool has_xprop(String display, int window_id, String key);
-  static void test_static();
 };
 
 #endif // XLIB_CLASS_H
