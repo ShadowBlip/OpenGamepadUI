@@ -98,8 +98,8 @@ _data = {
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 8960.0
-offset_bottom = 5600.0
+offset_right = 10240.0
+offset_bottom = 6400.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
@@ -108,7 +108,7 @@ script = ExtResource("1_shfdj")
 [node name="MainMenu" parent="." instance=ExtResource("1_aknsm")]
 anchors_preset = 0
 anchor_bottom = 0.0
-offset_bottom = 5600.0
+offset_bottom = 6400.0
 grow_vertical = 1
 
 [node name="InGameMenu" parent="." instance=ExtResource("2_4ogvu")]
@@ -116,7 +116,7 @@ anchors_preset = 0
 anchor_bottom = 0.0
 offset_left = 350.0
 offset_right = 650.0
-offset_bottom = 5600.0
+offset_bottom = 6400.0
 grow_vertical = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

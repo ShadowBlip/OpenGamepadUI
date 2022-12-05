@@ -3,6 +3,7 @@ extends Control
 @onready var battery: String = Battery.find_battery_path()
 @onready var time_label: Label = $MarginContainer/HBoxContainer/TimeLabel
 @onready var battery_label: Label = $MarginContainer/HBoxContainer/BatteryLabel
+@onready var search_bar := $MarginContainer/HBoxContainer/SearchBar
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

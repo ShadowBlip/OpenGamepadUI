@@ -104,6 +104,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://core/systems/launcher/reaper.gd"
 }, {
+"base": "TextEdit",
+"class": &"SearchBar",
+"language": &"GDScript",
+"path": "res://core/ui/components/search_bar.gd"
+}, {
 "base": "Node",
 "class": &"StateChanger",
 "language": &"GDScript",
@@ -154,6 +159,7 @@ _global_script_class_icons={
 "Plugin": "res://assets/icons/box.svg",
 "PluginLoader": "res://assets/icons/codesandbox.svg",
 "Reaper": "",
+"SearchBar": "",
 "StateChanger": "",
 "StateManager": "res://assets/icons/log-in.svg",
 "Store": "",

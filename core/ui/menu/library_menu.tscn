@@ -13,6 +13,7 @@ grow_vertical = 2
 script = ExtResource("1_d0j34")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -21,6 +22,7 @@ grow_vertical = 2
 theme = ExtResource("2_7p3g5")
 
 [node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,20 +32,12 @@ theme = ExtResource("2_7p3g5")
 tab_alignment = 1
 
 [node name="Installed" type="ScrollContainer" parent="TabContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 31.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Installed"]
-offset_right = 1280.0
-offset_bottom = 769.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 50
@@ -52,29 +46,18 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Installed/MarginContainer"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 719.0
+layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
 [node name="All Games" type="ScrollContainer" parent="TabContainer"]
 visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 31.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/All Games"]
-offset_right = 1280.0
-offset_bottom = 769.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 50
@@ -83,29 +66,18 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/All Games/MarginContainer"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 719.0
+layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
 [node name="Collections" type="ScrollContainer" parent="TabContainer"]
 visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 31.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Collections"]
-offset_right = 1280.0
-offset_bottom = 769.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 50
@@ -114,10 +86,7 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Collections/MarginContainer"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 719.0
+layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
