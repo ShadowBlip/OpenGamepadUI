@@ -20,6 +20,8 @@ class Logger:
 	
 	func _get_caller() -> Dictionary:
 		var stack := get_stack()
+		if len(stack) == 0:
+			return {"source": "", "line": 0}
 		return stack[2]
 		
 	func _format_prefix(level: String, caller: Dictionary) -> String:
