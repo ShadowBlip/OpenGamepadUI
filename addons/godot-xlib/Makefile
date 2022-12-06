@@ -17,3 +17,6 @@ bin/libxlib.linux.template_release.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_
 	cd .. && git clone https://github.com/godotengine/godot-cpp.git
 	touch ../godot-cpp/.gdignore
 
+.PHONY: clean
+clean:
+	rm -rf bin

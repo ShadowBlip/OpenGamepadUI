@@ -16,6 +16,9 @@ env = SConscript("../godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
+# Include dependency libraries for xlib
+env.Append(LIBS=["X11"])
+
 
 # Generating the compilation DB (`compile_commands.json`) requires SCons 4.0.0 or later.
 from SCons import __version__ as scons_raw_version
@@ -33,6 +36,7 @@ env.Tool("compilation_db")
 env.Alias("compiledb", env.CompilationDatabase())
 
 
+# Build the shared library
 library = env.SharedLibrary(
     "bin/libxlib{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
     source=sources,
