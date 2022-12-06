@@ -36,12 +36,9 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 
 func _input(event: InputEvent) -> void:
 	var state = state_manager.current_state()
-	logger.info(event)
 	if event.is_action_pressed("ogui_guide"):
 		if not guide_action:
 			guide_action = true
-	logger.info(event)
-	logger.info(guide_action)
 	# Handle OSK Button combo
 	if Input.is_action_pressed("ogui_north"):
 		if guide_action:
@@ -56,7 +53,6 @@ func _input(event: InputEvent) -> void:
 
 	# Handle "QAM" button combo
 	if Input.is_action_pressed("ogui_south"):
-		logger.info("south")
 		if guide_action:
 			guide_action = false
 			if state == StateManager.State.QUICK_ACCESS_MENU:
