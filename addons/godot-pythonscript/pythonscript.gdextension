@@ -1,0 +1,8 @@
+[configuration]
+
+entry_symbol = "pythonscript_library_init"
+
+[libraries]
+
+linux.debug.x86_64 = "res://addons/godot-pythonscript/bin/libpythonscript.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/godot-pythonscript/bin/libpythonscript.linux.template_release.x86_64.so"
