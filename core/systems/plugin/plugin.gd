@@ -18,6 +18,11 @@ var OGUIButton := preload("res://core/ui/components/button.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("plugin")
+	
+# To be overridden by plugin implementation. Should unload changes done by
+# the plugin.
+func unload() -> void:
+	pass
 
 # Registers the given library implementation
 func add_library(library: Library) -> void:

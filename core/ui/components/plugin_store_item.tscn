@@ -3,11 +3,11 @@
 [ext_resource type="Script" path="res://core/ui/components/plugin_store_item.gd" id="1_mwjyr"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_nlpc7"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_fc1y0"]
+[sub_resource type="LabelSettings" id="LabelSettings_qn751"]
 font_size = 24
 shadow_size = 4
 
-[sub_resource type="LabelSettings" id="LabelSettings_miv7f"]
+[sub_resource type="LabelSettings" id="LabelSettings_rww3h"]
 font_size = 12
 
 [node name="PluginStoreItem" type="Control"]
@@ -46,7 +46,7 @@ layout_mode = 2
 [node name="PluginNameLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Store Item"
-label_settings = SubResource("LabelSettings_fc1y0")
+label_settings = SubResource("LabelSettings_qn751")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -70,7 +70,7 @@ text = "Author: Unknown"
 layout_mode = 2
 size_flags_vertical = 3
 text = "This is some short description of this plugin that isn't too long"
-label_settings = SubResource("LabelSettings_miv7f")
+label_settings = SubResource("LabelSettings_rww3h")
 autowrap_mode = 3
 clip_text = true
 

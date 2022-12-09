@@ -12,9 +12,11 @@ const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version"
 
 signal plugin_loaded(name: String)
 signal plugin_initialized(name: String)
+signal plugin_installed(id: String, status: int)
 
 var logger := Log.get_logger("PluginLoader")
 var plugins := {}
+var plugin_nodes := {}
 
 func _init() -> void:
 	logger.info("Loading plugins")
@@ -53,6 +55,82 @@ func get_plugin_store_items() -> Variant:
 	var items: Dictionary = JSON.parse_string(body.get_string_from_utf8())
 
 	return items
+
+
+# Downloads and installs the given plugin
+func install_plugin(plugin_id: String, download_url: String, sha256: String) -> void:
+	# Build the request
+	var http: HTTPRequest = HTTPRequest.new()
+	add_child(http)
+	if http.request(download_url) != OK:
+		logger.error("Error making http request for plugin package: " + download_url)
+		remove_child(http)
+		http.queue_free()
+		plugin_installed.emit(plugin_id, FAILED)
+		return
+		
+	# Wait for the request signal to complete
+	# result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
+	var args: Array = await http.request_completed
+	var result: int = args[0]
+	var response_code: int = args[1]
+	var headers: PackedStringArray = args[2]
+	var body: PackedByteArray = args[3]
+	remove_child(http)
+	http.queue_free()
+	
+	if result != HTTPRequest.RESULT_SUCCESS:
+		logger.error("Plugin couldn't be downloaded: " + download_url)
+		plugin_installed.emit(plugin_id, FAILED)
+		return
+		
+	# Now we have the body ;)
+	var ctx = HashingContext.new()
+	
+	# Start a SHA-256 context.
+	ctx.start(HashingContext.HASH_SHA256)
+	ctx.update(body)
+	
+	# Get the computed hash.
+	var res = ctx.finish()
+	
+	# Print the result as hex string and array.
+	if res.hex_encode() != sha256:
+		logger.error("sha256 hash does not match for the downloaded plugin archive. Contact the plugin maintainer.")
+		plugin_installed.emit(plugin_id, FAILED)
+		return
+	
+	# Install the plugin.
+	var plugin_dir : String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
+	DirAccess.make_dir_recursive_absolute(plugin_dir)
+	var file := FileAccess.open("/".join([plugin_dir, plugin_id + ".zip"]), FileAccess.WRITE_READ)
+	file.store_buffer(body)
+	
+	plugin_installed.emit(plugin_id, OK)
+
+
+# Unloads and uninstalls the given plugin. Returns OK if removed successfully.
+func uninstall_plugin(plugin_id: String) -> int:
+	# Unload the plugin
+	unload_plugin(plugin_id)
+	
+	# Remove the plugin archive
+	var plugin_dir: String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
+	var filename: String = "/".join([plugin_dir, plugin_id + ".zip"])
+	return DirAccess.remove_absolute(filename)
+
+
+# Unloads the given plugin
+func unload_plugin(plugin_id: String):
+	if not plugin_id in plugin_nodes:
+		logger.error("Cannot unload plugin {0} as it does not appear to be loaded".format([plugin_id]))
+		return
+	var instance: Plugin = plugin_nodes[plugin_id]
+	instance.unload()
+	remove_child(instance)
+	instance.queue_free()
+	plugin_nodes.erase(plugin_id)
+	plugins.erase(plugin_id)
 
 
 # Looks in the user plugins directory for plugin json files and loads them.
@@ -117,6 +195,7 @@ func _init_plugins() -> void:
 		var instance: Plugin = plugin.new()
 		instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, name])
 		add_child(instance)
+		plugin_nodes[name] = instance
 		plugin_initialized.emit(name)
 
 
