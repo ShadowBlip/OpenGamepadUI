@@ -120,17 +120,30 @@ func uninstall_plugin(plugin_id: String) -> int:
 	return DirAccess.remove_absolute(filename)
 
 
-# Unloads the given plugin
-func unload_plugin(plugin_id: String):
+# Unloads the given plugin. Returns OK if successful.
+func unload_plugin(plugin_id: String) -> int:
 	if not plugin_id in plugin_nodes:
 		logger.error("Cannot unload plugin {0} as it does not appear to be loaded".format([plugin_id]))
-		return
+		return FAILED
 	var instance: Plugin = plugin_nodes[plugin_id]
 	instance.unload()
 	remove_child(instance)
 	instance.queue_free()
 	plugin_nodes.erase(plugin_id)
 	plugins.erase(plugin_id)
+	return OK
+
+
+# Returns true if the given plugin is installed.
+func is_installed(plugin_id: String) -> bool:
+	var plugin_dir: String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
+	var filename: String = "/".join([plugin_dir, plugin_id + ".zip"])
+	return FileAccess.file_exists(filename)
+	
+
+# Returns true if the given plugin is loaded.
+func is_loaded(plugin_id: String) -> bool:
+	return plugin_id in plugins
 
 
 # Looks in the user plugins directory for plugin json files and loads them.

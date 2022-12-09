@@ -44,6 +44,7 @@ func _on_plugin_store_loaded(plugin_items: Dictionary):
 		child.queue_free()
 	_populate_plugin_store_items(self, plugin_items)
 
+
 # Populates the plugin store grid with the given plugin items
 func _populate_plugin_store_items(grid: Container, plugin_items: Dictionary):
 	for plugin_id in plugin_items.keys():
@@ -52,15 +53,14 @@ func _populate_plugin_store_items(grid: Container, plugin_items: Dictionary):
 		# Build the store item
 		var store_item := plugin_store_item_scene.instantiate()
 		store_item.visible = false
-		grid.add_child(store_item)
-		
-		store_item.plugin_name_label.text = plugin["plugin.name"]
-		store_item.author_label.text = "Author: " + plugin["author.name"]
-		store_item.summary_label.text = plugin["plugin.summary"]
 		store_item.download_url = plugin["archive.url"]
 		store_item.project_url = plugin["plugin.link"]
 		store_item.sha256 = plugin["archive.sha256"]
 		store_item.plugin_id = plugin["plugin.id"]
+		grid.add_child(store_item)
+		store_item.plugin_name_label.text = plugin["plugin.name"]
+		store_item.author_label.text = "Author: " + plugin["author.name"]
+		store_item.summary_label.text = plugin["plugin.summary"]
 		
 		# Load the plugin image
 		if len(plugin["store.images"]) > 0:

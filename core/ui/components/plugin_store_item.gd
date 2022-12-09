@@ -16,13 +16,31 @@ var plugin_id: String
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	install_button.button_up.connect(_on_install_button)
+	_set_installed_state()
+
+
+# Updates the store item based on whether it is installed
+func _set_installed_state():
+	if plugin_loader.is_installed(plugin_id):
+		install_button.text = "Uninstall"
+		return
+	install_button.text = "Install"
+
 
 func set_logger(name: String) -> void:
 	logger = Log.get_logger(name)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
+# Handle install/uninstall
 func _on_install_button() -> void:
+	# Handle uninstall
+	if plugin_loader.is_installed(plugin_id):
+		if plugin_loader.uninstall_plugin(plugin_id) != OK:
+			logger.error("Failed to uninstall plugin: " + plugin_id)
+		_set_installed_state()
+		return
+	
+	# Handle install
 	plugin_loader.install_plugin(plugin_id, download_url, sha256)
+	await plugin_loader.plugin_installed
+	_set_installed_state()
