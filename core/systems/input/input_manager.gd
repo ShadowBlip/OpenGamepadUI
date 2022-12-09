@@ -36,47 +36,50 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 
 func _input(event: InputEvent) -> void:
 	var state = state_manager.current_state()
-	
 	if event.is_action_pressed("ogui_guide"):
 		if not guide_action:
 			guide_action = true
+	# Handle OSK Button combo
+	if Input.is_action_pressed("ogui_north"):
+		if guide_action:
+			guide_action = false
+			return
+#			if state == StateManager.State.OSK_STATE:
+#				state_manager.pop_state()
+#			elif state in [StateManager.State.MAIN_MENU, StateManager.State.IN_GAME_MENU, SateManager.State.QUICK_ACCESS_MENU]:
+#				state_manager.replace_state(StateManager.State.OSK_STATE)
+#			else:
+#				state_manager.push_state(StateManager.State.OSK_STATE)
 
 	# Handle "QAM" button combo
-	if Input.is_action_pressed("ogui_north"):
+	if Input.is_action_pressed("ogui_south"):
 		if guide_action:
 			guide_action = false
 			if state == StateManager.State.QUICK_ACCESS_MENU:
 				state_manager.pop_state()
+			elif state in [StateManager.State.MAIN_MENU, StateManager.State.IN_GAME_MENU]: #, StateManager.State.OSK_STATE]:
+				state_manager.replace_state(StateManager.State.QUICK_ACCESS_MENU)
 			else:
-				if not state in [StateManager.State.HOME, StateManager.State.IN_GAME]:
-					state_manager.replace_state(StateManager.State.QUICK_ACCESS_MENU)
-				else:
-					state_manager.push_state(StateManager.State.QUICK_ACCESS_MENU)
+				state_manager.push_state(StateManager.State.QUICK_ACCESS_MENU)
 
 	# Handle "guide" button presses
 	if event.is_action_released("ogui_guide"):
-		if guide_action:
-			guide_action = false
+		if not guide_action:
+			return
+		
+		guide_action = false
+		
+		var menu_state:= StateManager.State.MAIN_MENU
+		# Handle cases where a game is running
+		if state_manager.has_state(StateManager.State.IN_GAME):
+			menu_state = StateManager.State.IN_GAME_MENU
 
-			# Handle cases where a game is running
-			if state_manager.has_state(StateManager.State.IN_GAME):
-				# If we're in game, pull up the in-game menu
-				if state == StateManager.State.IN_GAME:
-					state_manager.push_state(StateManager.State.IN_GAME_MENU)
-				# If we're not in game, go back
-				else:
-					state_manager.replace_state(StateManager.State.IN_GAME)
-
-			# Handle opening the main menu outside of a running game
-			elif state == StateManager.State.MAIN_MENU:
-				logger.debug("Removing mm state")
-				state_manager.pop_state()
-			elif state != StateManager.State.MAIN_MENU:
-				logger.debug("Adding mm state")
-				if state == StateManager.State.HOME:
-					state_manager.push_state(StateManager.State.MAIN_MENU)
-				else:
-					state_manager.replace_state(StateManager.State.MAIN_MENU)
+		if state == menu_state:
+			state_manager.pop_state()
+		elif state in [StateManager.State.QUICK_ACCESS_MENU]: #StateManager.State.OSK_STATE]:
+			state_manager.replace_state(menu_state)
+		else:
+			state_manager.push_state(menu_state)
 
 	# Handle back button presses
 	if event.is_action_pressed("ogui_east") and state_manager.stack_length() > 1:
