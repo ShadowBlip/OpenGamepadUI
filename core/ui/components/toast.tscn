@@ -1,0 +1,142 @@
+[gd_scene load_steps=8 format=3 uid="uid://bjxpafq4ic16x"]
+
+[ext_resource type="Script" path="res://core/ui/components/toast.gd" id="1_7hhey"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_rp4sb"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_5ggw4"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_bilxt"]
+
+[sub_resource type="Animation" id="Animation_j5gb0"]
+resource_name = "hide"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(640, 0), Vector2(640, -500)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_624hb"]
+resource_name = "show"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(640, -500), Vector2(640, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1d74t"]
+_data = {
+"hide": SubResource("Animation_j5gb0"),
+"show": SubResource("Animation_624hb")
+}
+
+[node name="Toast" type="Control" groups=["notification_toast"]]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+script = ExtResource("1_7hhey")
+
+[node name="ToastContainer" type="VBoxContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_right = 150.0
+offset_bottom = 88.0
+grow_horizontal = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="ToastContainer"]
+custom_minimum_size = Vector2(400, 0)
+
+[node name="Panel" type="Panel" parent="ToastContainer/PanelContainer"]
+theme = ExtResource("1_rp4sb")
+
+[node name="MarginContainer" type="MarginContainer" parent="ToastContainer/PanelContainer"]
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ContentContainer" type="HFlowContainer" parent="ToastContainer/PanelContainer/MarginContainer"]
+theme_override_constants/h_separation = 5
+
+[node name="IconContainer" type="CenterContainer" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="Icon" type="TextureRect" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer/IconContainer"]
+custom_minimum_size = Vector2(64, 64)
+size_flags_horizontal = 3
+texture = ExtResource("3_5ggw4")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "this is much shorter notification that can maybe expand downward which is pretty cool I guess, maybe that would be pretty sweet"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="ToastContainer"]
+visible = false
+
+[node name="ActionsContainer" type="HBoxContainer" parent="ToastContainer"]
+
+[node name="ActionButton" parent="ToastContainer/ActionsContainer" instance=ExtResource("4_bilxt")]
+text = "Action"
+
+[node name="DismissButton" parent="ToastContainer/ActionsContainer" instance=ExtResource("4_bilxt")]
+text = "Dismiss"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_1d74t")
+}
+
+[node name="TimeoutTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true

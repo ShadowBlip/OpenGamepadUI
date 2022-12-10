@@ -90,6 +90,11 @@ _global_script_classes=[{
 "path": "res://core/systems/network/multi_http_request.gd"
 }, {
 "base": "Node",
+"class": &"NotificationManager",
+"language": &"GDScript",
+"path": "res://core/systems/notification/notification_manager.gd"
+}, {
+"base": "Node",
 "class": &"Plugin",
 "language": &"GDScript",
 "path": "res://core/systems/plugin/plugin.gd"
@@ -138,6 +143,16 @@ _global_script_classes=[{
 "class": &"StoreManager",
 "language": &"GDScript",
 "path": "res://core/systems/store/store_manager.gd"
+}, {
+"base": "Object",
+"class": &"UUID",
+"language": &"GDScript",
+"path": "res://addons/uuid/uuid.gd"
+}, {
+"base": "Node",
+"class": &"WebsocketRPCClient",
+"language": &"GDScript",
+"path": "res://core/systems/network/websocket_rpc_client.gd"
 }]
 _global_script_class_icons={
 "Battery": "res://assets/icons/battery-charging.svg",
@@ -156,6 +171,7 @@ _global_script_class_icons={
 "Log": "",
 "Main": "",
 "MultiHTTPRequest": "",
+"NotificationManager": "res://assets/icons/alert-triangle.svg",
 "Plugin": "res://assets/icons/box.svg",
 "PluginLoader": "res://assets/icons/codesandbox.svg",
 "Reaper": "",
@@ -165,7 +181,9 @@ _global_script_class_icons={
 "Store": "",
 "StoreItem": "",
 "StoreItemDetails": "",
-"StoreManager": "res://assets/icons/tag.svg"
+"StoreManager": "res://assets/icons/tag.svg",
+"UUID": "",
+"WebsocketRPCClient": ""
 }
 
 [OpenGamepadUI]

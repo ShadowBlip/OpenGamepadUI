@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cyst6853eansj"]
+[gd_scene load_steps=21 format=3 uid="uid://cyst6853eansj"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -15,7 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="8_6edcd"]
 [ext_resource type="PackedScene" uid="uid://bwmmf2q2bf12y" path="res://core/ui/menu/store_menu.tscn" id="8_cx1y5"]
 [ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
+[ext_resource type="PackedScene" uid="uid://b3k1c5guu53q0" path="res://core/systems/notification/notification_manager.tscn" id="9_dm16k"]
 [ext_resource type="PackedScene" uid="uid://cka4dm6cf0i16" path="res://core/ui/menu/library_menu.tscn" id="10_nynup"]
+[ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="11_llrsu"]
 [ext_resource type="PackedScene" uid="uid://c17eji6q8e40p" path="res://core/ui/menu/game_launch_menu.tscn" id="12_vmyfm"]
 [ext_resource type="PackedScene" uid="uid://bl8wldq8qc4xe" path="res://core/ui/menu/settings_menu.tscn" id="16_xub48"]
 
@@ -41,6 +43,8 @@ script = ExtResource("1_4l3sd")
 [node name="LibraryManager" parent="." instance=ExtResource("5_5nsnb")]
 
 [node name="StoreManager" parent="." instance=ExtResource("5_b0s7f")]
+
+[node name="NotificationManager" parent="." instance=ExtResource("9_dm16k")]
 
 [node name="PluginLoader" parent="." instance=ExtResource("5_8300b")]
 
@@ -82,11 +86,11 @@ visible = false
 visible = false
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 99840.0
-offset_bottom = 53820.0
+offset_right = 104960.0
+offset_bottom = 56580.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
-offset_bottom = 3450.0
+offset_bottom = 6210.0
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
 anchors_preset = 0
@@ -98,3 +102,5 @@ offset_right = 1280.0
 offset_bottom = 800.0
 grow_horizontal = 1
 grow_vertical = 1
+
+[node name="Toast" parent="." instance=ExtResource("11_llrsu")]
