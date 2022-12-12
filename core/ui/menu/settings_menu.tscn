@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bl8wldq8qc4xe"]
+[gd_scene load_steps=8 format=3 uid="uid://bl8wldq8qc4xe"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_11sf6"]
 [ext_resource type="PackedScene" uid="uid://ctmlv7iyhn721" path="res://core/ui/menu/plugin_store_menu.tscn" id="4_dx1s7"]
 [ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_art7k"]
+[ext_resource type="PackedScene" uid="uid://qss2f77wig01" path="res://core/ui/menu/plugin_settings_menu.tscn" id="6_tmsre"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -79,9 +80,12 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
+[node name="PluginSettings" parent="MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
+state_manager_path = NodePath("../../../StateManager")
+
 [node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/ContentMarginContainer"]
 follow_focus = true
 
 [node name="PluginStore" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
-offset_right = 415.0
+visible = false
 state_manager_path = NodePath("../../../../StateManager")

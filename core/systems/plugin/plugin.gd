@@ -14,23 +14,34 @@ var OGUIButton := preload("res://core/ui/components/button.tscn")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
+@onready var notification_manager: NotificationManager = get_node("/root/Main/NotificationManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("plugin")
+	
 	
 # To be overridden by plugin implementation. Should unload changes done by
 # the plugin.
 func unload() -> void:
 	pass
 
+
+# To be overridden by plugin implementation. Should return a scene with plugin
+# settings.
+func get_settings_menu() -> Control:
+	return null
+
+
 # Registers the given library implementation
 func add_library(library: Library) -> void:
 	library_manager.add_child(library)
 
+
 # Registers the given store implementation
 func add_store(store: Store) -> void:
 	store_manager.add_child(store)
+	
 	
 func add_to_qam(qam_item: Control, icon: Texture2D) -> void:
 	var qam_list := get_tree().get_nodes_in_group("qam")

@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://qss2f77wig01"]
+
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="1_0x8ci"]
+[ext_resource type="Script" path="res://core/ui/menu/plugin_settings_menu.gd" id="1_cydsi"]
+[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="3_eky71"]
+[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="4_eda1f"]
+
+[node name="PluginSettings" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+script = ExtResource("1_cydsi")
+
+[node name="StateManager" parent="." instance=ExtResource("3_eky71")]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 0
+
+[node name="PluginSettings" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="Button" parent="HBoxContainer/MarginContainer/PluginSettings" instance=ExtResource("1_0x8ci")]
+layout_mode = 2
+text = "Steam"
+
+[node name="StateChanger" parent="HBoxContainer/MarginContainer/PluginSettings/Button" instance=ExtResource("4_eda1f")]
+state_manager_path = "../../../../../StateManager"
+
+[node name="PluginSettingsContentContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginSettingsContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "No plugins found"
+horizontal_alignment = 1
+vertical_alignment = 1

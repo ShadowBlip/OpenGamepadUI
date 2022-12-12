@@ -86,11 +86,11 @@ visible = false
 visible = false
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 104960.0
-offset_bottom = 56580.0
+offset_right = 108800.0
+offset_bottom = 58650.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
-offset_bottom = 6210.0
+offset_bottom = 8280.0
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
 anchors_preset = 0
