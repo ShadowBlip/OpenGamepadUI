@@ -20,6 +20,8 @@ var _app_by_category: Dictionary = {}
 var _app_by_tag: Dictionary = {}
 var logger := Log.get_logger("LibraryManager")
 
+@onready var notification_manager: NotificationManager = get_node("../NotificationManager")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var main: Main = get_parent()
@@ -52,6 +54,7 @@ func get_available() -> Dictionary:
 # Loads all library items from each provider and sorts them. This can take
 # a while, so should be called asyncronously
 func reload_library() -> void:
+	notification_manager.show_notification("Loading libraries")
 	_available_apps = await _load_library()
 	_installed_apps = []
 
@@ -91,7 +94,7 @@ func _load_library() -> Dictionary:
 # Returns the library item for the given app for all library providers
 func get_app_by_name(name: String) -> LibraryItem:
 	if not name in _available_apps:
-		logger.error("App with name {0} not found".format([name]))
+		logger.warn("App with name {0} not found".format([name]))
 		return null
 	return _available_apps[name]
 

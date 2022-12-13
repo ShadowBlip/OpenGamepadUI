@@ -14,7 +14,8 @@ func _ready() -> void:
 
 # Called when our parent is ready
 func _on_parent_ready() -> void:
-	show_notification("Notification manager is ready")
+	pass
+	#show_notification("Notification manager is ready")
 
 
 # Shows the given notification

@@ -3,7 +3,7 @@ class_name WebsocketRPCClient
 
 signal socket_connected()
 signal socket_closed()
-signal request_completed(status: int, data: Variant)
+signal request_completed(status: int, data: Variant, id: String)
 
 var socket := WebSocketPeer.new()
 var connected := false
@@ -30,8 +30,17 @@ func make_request(method: String, args: Array) -> Variant:
 	if socket.send_text(JSON.stringify(req)) != OK:
 		logger.error("Failed to send RPC message")
 		return null
-	var response: Array = await request_completed
-	var data: Variant = response[1]
+	
+	# TODO: This is horrible
+	var data: Variant
+	while true:
+		var response: Array = await request_completed
+		# Skip responses that are not ours
+		if response[2] != id:
+			continue
+		data = response[1]
+		break
+		
 	return data
 
 
@@ -62,9 +71,9 @@ func _process_response(data: PackedByteArray) -> void:
 	var response: Dictionary = JSON.parse_string(response_str)
 	if "error" in response:
 		logger.error("Got error response: " + response["error"]["message"])
-		request_completed.emit(FAILED, null)
+		request_completed.emit(FAILED, null, response["id"])
 		return
 	if "result" in response:
-		request_completed.emit(OK, response["result"])
+		request_completed.emit(OK, response["result"], response["id"])
 		return
-	request_completed.emit(OK, null)
+	request_completed.emit(OK, null, response["id"])

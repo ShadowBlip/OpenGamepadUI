@@ -53,15 +53,14 @@ func _populate_plugins():
 		
 		# Callback method for menu button focus to show plugin settings
 		var on_focus := func ():
+			for child in plugin_content_container.get_children():
+				child.visible = false
 			plugin_settings.visible = true
-		var on_unfocus := func ():
-			plugin_settings.visible = false
 		
 		# Build the menu button
 		var button := button_scene.instantiate()
 		button.text = meta["plugin.name"]
 		button.focus_entered.connect(on_focus)
-		button.focus_exited.connect(on_unfocus)
 		plugin_menu_container.add_child(button)
 	
 	# If no plugins are available, display a message that there are no plugin
