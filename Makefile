@@ -1,10 +1,10 @@
 
-GODOT_VERSION ?= 4.0.beta7
+GODOT_VERSION ?= 4.0.beta9
 GODOT ?= /usr/bin/godot4
 GAMESCOPE ?= /usr/bin/gamescope
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_VERSION)/linux_debug.x86_64
-EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta7/Godot_v4.0-beta7_export_templates.tpz
+EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta9/Godot_v4.0-beta9_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
@@ -51,3 +51,7 @@ $(EXPORT_TEMPLATE):
 	unzip $(HOME)/.local/share/godot/export_templates/templates.zip -d $(HOME)/.local/share/godot/export_templates/
 	rm $(HOME)/.local/share/godot/export_templates/templates.zip
 	mv $(HOME)/.local/share/godot/export_templates/templates $(@D)
+
+.PHONY: debug 
+debug: addons
+	$(GAMESCOPE) --xwayland-count 2 -- /usr/bin/godot4 --path $(PWD) --remote-debug tcp://127.0.0.1:6007 --position 320,140 res://main.tscn
