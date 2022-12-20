@@ -5,9 +5,14 @@ var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
 var overlay_display = DISPLAY
 var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
+var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
+	if overlay_window_id < 0:
+		logger.error("Unable to detect Window ID. Overlay is not going to work!")
+	logger.debug("Found primary X display: " + DISPLAY)
+	logger.debug("Found primary window id: {0}".format([overlay_window_id]))
 	_setup(overlay_window_id)
 
 
@@ -17,6 +22,7 @@ func _ready() -> void:
 	# Set bg to transparent
 	get_tree().get_root().transparent_bg = true
 	
+	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	# Subscribe to state changes
 	var state_manager: StateManager = $StateManager
 	state_manager.state_changed.connect(_on_state_changed)
@@ -40,6 +46,8 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 func _setup(window_id: int) -> void:
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	Gamescope.set_xprop(DISPLAY, window_id, "STEAM_GAME", 769)
+	if Gamescope.set_xprop(DISPLAY, window_id, "STEAM_GAME", 769) != OK:
+		logger.error("Unable to set STEAM_GAME atom!")
 	# Sets ourselves to the input focus
-	Gamescope.set_xprop(DISPLAY, window_id, "STEAM_INPUT_FOCUS", 1)
+	if Gamescope.set_xprop(DISPLAY, window_id, "STEAM_INPUT_FOCUS", 1) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")

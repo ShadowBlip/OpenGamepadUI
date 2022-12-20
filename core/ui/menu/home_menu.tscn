@@ -107,14 +107,8 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 1260.0
-offset_bottom = 780.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
-offset_right = 1240.0
-offset_bottom = 315.0
 follow_focus = true
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
@@ -128,21 +122,10 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 352.0
-offset_bottom = 265.0
 theme_override_constants/separation = 16
 
 [node name="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(143, 215)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 143.0
-offset_bottom = 215.0
-grow_horizontal = 1
-grow_vertical = 1
 text = "vkCube"
 layout = 1
 
@@ -151,14 +134,6 @@ library_item = SubResource("Resource_icex7")
 
 [node name="LibraryPoster" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_hs4on")]
 custom_minimum_size = Vector2(143, 215)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 159.0
-offset_right = 302.0
-offset_bottom = 215.0
-grow_horizontal = 1
-grow_vertical = 1
 texture_normal = null
 text = "Library"
 layout = 1
@@ -172,10 +147,6 @@ grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster/TextureContainer"]
 custom_minimum_size = Vector2(100, 100)
-offset_left = 21.0
-offset_top = 57.0
-offset_right = 121.0
-offset_bottom = 157.0
 texture = ExtResource("5_b234g")
 ignore_texture_size = true
 stretch_mode = 4

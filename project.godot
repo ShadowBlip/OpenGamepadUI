@@ -211,10 +211,6 @@ window/per_pixel_transparency/allowed=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[editor]
-
-run/main_run_args="/usr/bin/gamescope --xwayland-count 2 -- %command%"
-
 [input]
 
 ui_accept={

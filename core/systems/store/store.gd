@@ -15,9 +15,12 @@ signal search_completed(results: Array)
 
 @onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
 
+var logger := Log.get_logger("Library")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("store")
+	logger = Log.get_logger(store_id)
 
 func load_home():
 	pass

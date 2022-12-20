@@ -76,10 +76,10 @@ static func get_window_id(display: String, pid: int) -> int:
 static func get_all_windows(display: String, window_id: int) -> PackedInt32Array:
 	var children := Xlib.get_window_children(display, window_id)
 	if len(children) == 0:
-		return children
+		return PackedInt32Array([window_id])
 	
-	var all_children := PackedInt32Array()
+	var leaves := PackedInt32Array()
 	for child in children:
-		all_children.append_array(Xlib.get_window_children(display, child))
+		leaves.append_array(get_all_windows(display, child))
 		
-	return all_children
+	return leaves
