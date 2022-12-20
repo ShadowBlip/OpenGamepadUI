@@ -88,6 +88,10 @@ int Xlib::set_xprop(String display, int window_id, String key, int value) {
 
   // Build the atom to set
   Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
+  if (atom == None) {
+    UtilityFunctions::push_error("Failed to create atom with name: ", key);
+    return BadAtom;
+  }
 
   // Fetch the actual property
   Atom actual;
@@ -96,7 +100,12 @@ int Xlib::set_xprop(String display, int window_id, String key, int value) {
   unsigned char *data;
   int result = XChangeProperty(dpy, window, atom, XA_CARDINAL, 32,
                                PropModeReplace, (unsigned char *)&value, 1);
-  return result;
+  XCloseDisplay(dpy);
+  if (result > 1) {
+    return result;
+  }
+
+  return 0;
 };
 
 // Returns the value of the given x property on the given window. Returns -255
