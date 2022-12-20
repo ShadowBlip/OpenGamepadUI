@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://yyh7kcog2w7m"]
+[gd_scene load_steps=8 format=3 uid="uid://b0p4eo4ny7veo"]
 
-[ext_resource type="PackedScene" uid="uid://cs67bnlsoxcmy" path="res://core/ui/menu/main_menu.tscn" id="1_aknsm"]
-[ext_resource type="Script" path="res://core/ui/menu/main_menu_container.gd" id="1_shfdj"]
-[ext_resource type="PackedScene" path="res://core/ui/menu/in-game_menu.tscn" id="2_4ogvu"]
+[ext_resource type="Script" path="res://core/ui/menu/main-menu/main_menu_container.gd" id="1_3yu6b"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/main-menu/main_menu.tscn" id="2_pw1ol"]
+[ext_resource type="PackedScene" uid="uid://bsh0lhgpd2xuh" path="res://core/ui/menu/main-menu/in-game_menu.tscn" id="3_w8b06"]
 
 [sub_resource type="Animation" id="Animation_8ltbq"]
 length = 0.001
@@ -98,26 +98,16 @@ _data = {
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 10240.0
-offset_bottom = 6400.0
+offset_right = 11520.0
+offset_bottom = 7200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
-script = ExtResource("1_shfdj")
+script = ExtResource("1_3yu6b")
 
-[node name="MainMenu" parent="." instance=ExtResource("1_aknsm")]
-anchors_preset = 0
-anchor_bottom = 0.0
-offset_bottom = 6400.0
-grow_vertical = 1
+[node name="MainMenu" parent="." instance=ExtResource("2_pw1ol")]
 
-[node name="InGameMenu" parent="." instance=ExtResource("2_4ogvu")]
-anchors_preset = 0
-anchor_bottom = 0.0
-offset_left = 350.0
-offset_right = 650.0
-offset_bottom = 6400.0
-grow_vertical = 1
+[node name="InGameMenu" parent="." instance=ExtResource("3_w8b06")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dp3acbklushpr"]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
-[ext_resource type="Script" path="res://core/ui/menu/quick_access_menu.gd" id="2_h1vfn"]
+[ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_57lda"]
 
 [sub_resource type="Animation" id="Animation_0q7gh"]

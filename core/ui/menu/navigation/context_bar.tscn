@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c6rr12t4fv7py"]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
-[ext_resource type="Script" path="res://core/ui/menu/context_bar.gd" id="2_jserv"]
+[ext_resource type="Script" path="res://core/ui/menu/navigation/context_bar.gd" id="2_jserv"]
 
 [node name="ContextBar" type="Control" groups=["menu"]]
 custom_minimum_size = Vector2(0, 55)

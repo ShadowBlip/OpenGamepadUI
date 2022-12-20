@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfcdpy4pckmmb"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://core/ui/menu/on_screen_keyboard.gd" id="1_3r64j"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/on_screen_keyboard.gd" id="1_3r64j"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_xfm60"]
 
 [node name="OnScreenKeyboard" type="Control"]

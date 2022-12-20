@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://bsh0lhgpd2xuh"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_tvlyc"]
-[ext_resource type="Script" path="res://core/ui/menu/in-game_menu.gd" id="2_4nawu"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_qltg0"]
+[ext_resource type="Script" path="res://core/ui/menu/main-menu/in-game_menu.gd" id="2_7lx20"]
 
 [node name="InGameMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)
@@ -9,8 +9,8 @@ layout_mode = 3
 anchors_preset = 9
 anchor_bottom = 1.0
 grow_vertical = 2
-theme = ExtResource("1_tvlyc")
-script = ExtResource("2_4nawu")
+theme = ExtResource("1_qltg0")
+script = ExtResource("2_7lx20")
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color(1, 1, 1, 0.384314)
@@ -36,8 +36,6 @@ offset_left = 25.0
 offset_top = 25.0
 offset_right = 275.0
 offset_bottom = 775.0
-grow_horizontal = 2
-grow_vertical = 2
 theme_override_constants/separation = 12
 
 [node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]

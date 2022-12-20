@@ -1,12 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bl8wldq8qc4xe"]
+[gd_scene load_steps=8 format=3 uid="uid://ibmgxjl33jn8"]
 
-[ext_resource type="Script" path="res://core/ui/menu/settings_menu.gd" id="1_olmbp"]
+[ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="2_fpxtd"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_11sf6"]
-[ext_resource type="PackedScene" uid="uid://ctmlv7iyhn721" path="res://core/ui/menu/plugin_store_menu.tscn" id="4_dx1s7"]
+[ext_resource type="PackedScene" uid="uid://cbybmmt7bigkt" path="res://core/ui/menu/settings/plugin_store_menu.tscn" id="4_dx1s7"]
 [ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_art7k"]
-[ext_resource type="PackedScene" uid="uid://qss2f77wig01" path="res://core/ui/menu/plugin_settings_menu.tscn" id="6_tmsre"]
+[ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="6_tmsre"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -35,6 +35,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MenuMarginContainer" type="MarginContainer" parent="MainContainer"]
+offset_right = 319.0
+offset_bottom = 800.0
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -42,8 +44,19 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MenuMarginContainer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 299.0
+offset_bottom = 780.0
 
 [node name="GeneralButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 279.0
+offset_bottom = 31.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "General"
 
 [node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton" instance=ExtResource("5_art7k")]
@@ -53,8 +66,19 @@ action = 2
 state_manager_path = "../../../../../StateManager"
 
 [node name="HSeparator" type="HSeparator" parent="MainContainer/MenuMarginContainer/VBoxContainer"]
+offset_top = 35.0
+offset_right = 279.0
+offset_bottom = 39.0
 
 [node name="PluginsButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 43.0
+offset_right = 279.0
+offset_bottom = 74.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "Plugins"
 
 [node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginsButton" instance=ExtResource("5_art7k")]
@@ -64,6 +88,14 @@ action = 2
 state_manager_path = "../../../../../StateManager"
 
 [node name="PluginStoreButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 78.0
+offset_right = 279.0
+offset_bottom = 109.0
+grow_horizontal = 1
+grow_vertical = 1
 text = "Plugin Store"
 
 [node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginStoreButton" instance=ExtResource("5_art7k")]
@@ -73,6 +105,9 @@ action = 2
 state_manager_path = "../../../../../StateManager"
 
 [node name="ContentMarginContainer" type="MarginContainer" parent="MainContainer"]
+offset_left = 323.0
+offset_right = 1280.0
+offset_bottom = 800.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 theme_override_constants/margin_left = 20
@@ -81,9 +116,22 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="PluginSettings" parent="MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 937.0
+offset_bottom = 780.0
+grow_horizontal = 1
+grow_vertical = 1
 state_manager_path = NodePath("../../../StateManager")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/ContentMarginContainer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 937.0
+offset_bottom = 780.0
 follow_focus = true
 
 [node name="PluginStore" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]

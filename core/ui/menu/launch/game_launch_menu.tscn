@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://c17eji6q8e40p"]
+[gd_scene load_steps=9 format=3 uid="uid://bwl2icwgry4l"]
 
-[ext_resource type="Script" path="res://core/ui/menu/game_launch_menu.gd" id="1_uhkt4"]
+[ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_io70p"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_7y2kk"]

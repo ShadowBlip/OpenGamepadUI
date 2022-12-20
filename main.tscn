@@ -1,25 +1,25 @@
-[gd_scene load_steps=21 format=3 uid="uid://cyst6853eansj"]
+[gd_scene load_steps=21 format=3 uid="uid://dtqnl1he886r4"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
 [ext_resource type="PackedScene" uid="uid://ciy6tp2k7hsdl" path="res://core/systems/input/input_manager.tscn" id="2_yno6k"]
-[ext_resource type="PackedScene" uid="uid://x5ay8cr0c1xq" path="res://core/ui/menu/top_bar.tscn" id="3_4jaod"]
-[ext_resource type="PackedScene" uid="uid://bj8ej083is2oc" path="res://core/ui/menu/home_menu.tscn" id="4_cej3c"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/navigation/top_bar.tscn" id="3_4jaod"]
+[ext_resource type="PackedScene" uid="uid://bj8ej083is2oc" path="res://core/ui/menu/home/home_menu.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="4_ew432"]
 [ext_resource type="PackedScene" uid="uid://003wgys4a6wl" path="res://core/systems/library/library_manager.tscn" id="5_5nsnb"]
 [ext_resource type="PackedScene" uid="uid://de5i6sl03tw4" path="res://core/systems/plugin/plugin_loader.tscn" id="5_8300b"]
 [ext_resource type="PackedScene" uid="uid://bmv41ngl22a02" path="res://core/systems/store/store_manager.tscn" id="5_b0s7f"]
-[ext_resource type="PackedScene" uid="uid://c6rr12t4fv7py" path="res://core/ui/menu/context_bar.tscn" id="5_t8uiy"]
-[ext_resource type="PackedScene" uid="uid://yyh7kcog2w7m" path="res://core/ui/menu/main_menu_container.tscn" id="7_oh5xv"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/navigation/context_bar.tscn" id="5_t8uiy"]
+[ext_resource type="PackedScene" uid="uid://b0p4eo4ny7veo" path="res://core/ui/menu/main-menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://c76kmr31ujcw2" path="res://core/systems/boxart/boxart_manager.tscn" id="7_tm3nj"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="8_6edcd"]
-[ext_resource type="PackedScene" uid="uid://bwmmf2q2bf12y" path="res://core/ui/menu/store_menu.tscn" id="8_cx1y5"]
-[ext_resource type="PackedScene" uid="uid://dp3acbklushpr" path="res://core/ui/menu/quick_access_menu.tscn" id="9_8xlqm"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/store/store_menu.tscn" id="8_cx1y5"]
+[ext_resource type="PackedScene" path="res://core/ui/menu/qam/quick_access_menu.tscn" id="9_8xlqm"]
 [ext_resource type="PackedScene" uid="uid://b3k1c5guu53q0" path="res://core/systems/notification/notification_manager.tscn" id="9_dm16k"]
-[ext_resource type="PackedScene" uid="uid://cka4dm6cf0i16" path="res://core/ui/menu/library_menu.tscn" id="10_nynup"]
+[ext_resource type="PackedScene" uid="uid://ckm4bau85l6sg" path="res://core/ui/menu/library/library_menu.tscn" id="10_nynup"]
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="11_llrsu"]
-[ext_resource type="PackedScene" uid="uid://c17eji6q8e40p" path="res://core/ui/menu/game_launch_menu.tscn" id="12_vmyfm"]
-[ext_resource type="PackedScene" uid="uid://bl8wldq8qc4xe" path="res://core/ui/menu/settings_menu.tscn" id="16_xub48"]
+[ext_resource type="PackedScene" uid="uid://bwl2icwgry4l" path="res://core/ui/menu/launch/game_launch_menu.tscn" id="12_vmyfm"]
+[ext_resource type="PackedScene" uid="uid://ibmgxjl33jn8" path="res://core/ui/menu/settings/settings_menu.tscn" id="16_xub48"]
 
 [node name="Main" type="Control" groups=["main"]]
 layout_mode = 3
@@ -49,6 +49,7 @@ script = ExtResource("1_4l3sd")
 [node name="PluginLoader" parent="." instance=ExtResource("5_8300b")]
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -57,47 +58,44 @@ grow_vertical = 2
 theme_override_constants/separation = 0
 
 [node name="TopBar" parent="UIContainer" instance=ExtResource("3_4jaod")]
-anchors_preset = 0
-anchor_right = 0.0
-offset_right = 1280.0
-offset_bottom = 55.0
+layout_mode = 2
 
 [node name="Content" type="Control" parent="UIContainer"]
-layout_mode = 3
-anchors_preset = 0
-offset_top = 55.0
-offset_right = 1280.0
-offset_bottom = 745.0
+layout_mode = 2
 size_flags_vertical = 3
 
 [node name="HomeMenu" parent="UIContainer/Content" instance=ExtResource("4_cej3c")]
+layout_mode = 1
 
 [node name="LibraryMenu" parent="UIContainer/Content" instance=ExtResource("10_nynup")]
 visible = false
+layout_mode = 1
 
 [node name="StoreMenu" parent="UIContainer/Content" instance=ExtResource("8_cx1y5")]
 visible = false
+layout_mode = 1
 
 [node name="GameLaunchMenu" parent="UIContainer/Content" instance=ExtResource("12_vmyfm")]
 visible = false
+layout_mode = 1
 
 [node name="SettingsMenu" parent="UIContainer/Content" instance=ExtResource("16_xub48")]
 visible = false
+layout_mode = 1
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
-offset_right = 119040.0
-offset_bottom = 64170.0
+layout_mode = 1
+offset_right = 121600.0
+offset_bottom = 65550.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
-offset_bottom = 13800.0
+layout_mode = 1
+offset_left = -300.0
+offset_right = 0.0
+offset_bottom = 15180.0
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
-anchors_preset = 0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_top = 745.0
-offset_right = 1280.0
-offset_bottom = 800.0
+layout_mode = 2
 
 [node name="Toast" parent="." instance=ExtResource("11_llrsu")]
+layout_mode = 1

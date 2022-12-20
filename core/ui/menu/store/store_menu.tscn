@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwmmf2q2bf12y"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" path="res://core/ui/menu/store_menu.gd" id="1_cl0ln"]
+[ext_resource type="Script" path="res://core/ui/menu/store/store_menu.gd" id="1_cl0ln"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_3di5k"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_rolvk"]
 [ext_resource type="PackedScene" uid="uid://bugbaxcj7rtbq" path="res://core/ui/components/loading01.tscn" id="4_c22vd"]
