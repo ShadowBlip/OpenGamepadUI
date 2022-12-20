@@ -27,7 +27,7 @@ _global_script_classes=[{
 "base": "Object",
 "class": &"Cache",
 "language": &"GDScript",
-"path": "res://core/systems/network/cache.gd"
+"path": "res://core/systems/cache/cache.gd"
 }, {
 "base": "Object",
 "class": &"Gamescope",
@@ -158,7 +158,7 @@ _global_script_class_icons={
 "Battery": "res://assets/icons/battery-charging.svg",
 "BoxArtManager": "res://assets/icons/image.svg",
 "BoxArtProvider": "res://assets/icons/image.svg",
-"Cache": "",
+"Cache": "res://assets/icons/database.svg",
 "Gamescope": "",
 "HTTPImageFetcher": "",
 "InputManager": "res://assets/icons/navigation.svg",
@@ -210,6 +210,10 @@ window/size/transparent=true
 window/per_pixel_transparency/allowed=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor]
+
+run/main_run_args="/usr/bin/gamescope --xwayland-count 2 -- %command%"
 
 [input]
 

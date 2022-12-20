@@ -6,8 +6,14 @@ const REQUIRED_FIELDS: Array = ["library_id"]
 
 signal library_registered(library: Library)
 signal library_reloaded()
+signal library_launch_item_added(item: LibraryLaunchItem)
+signal library_launch_item_removed(item: LibraryLaunchItem)
 
 # Dictionary of registered library providers
+# The dictionary is in the form of:
+#   {
+#     "library-id": <Library>
+#   }
 var _libraries: Dictionary = {}
 # Mapping of all available apps from all library providers
 # The dictionary is in the form of:
@@ -15,6 +21,7 @@ var _libraries: Dictionary = {}
 #     "game-name": <LibraryItem>
 #   }
 var _available_apps: Dictionary = {}
+# Array of apps that are currently installed
 var _installed_apps: PackedStringArray = []
 var _app_by_category: Dictionary = {}
 var _app_by_tag: Dictionary = {}
@@ -54,7 +61,6 @@ func get_available() -> Dictionary:
 # Loads all library items from each provider and sorts them. This can take
 # a while, so should be called asyncronously
 func reload_library() -> void:
-	notification_manager.show_notification("Loading libraries")
 	_available_apps = await _load_library()
 	_installed_apps = []
 
@@ -70,6 +76,41 @@ func reload_library() -> void:
 	library_reloaded.emit()
 
 
+# Add the given library launch item to the list of available apps.
+func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> void:
+	if not has_library(library_id):
+		logger.warn("Unable to add library launch item. Library is not registered: " + library_id)
+		return
+	var library_items := get_available()
+	var library: Library = get_library_by_id(library_id)
+	if not item.name in library_items:
+		library_items[item.name] = LibraryItem.new_from_launch_item(item)
+	# Update the provider fields on the library item
+	item._provider_id = library.library_id
+	library_items[item.name].launch_items.push_back(item)
+	
+	_available_apps = library_items
+	library_launch_item_added.emit(item)
+
+
+# Remove the given library launch item from the list of available apps.
+func remove_library_launch_item(library_id: String, name: String) -> void:
+	if not has_library(library_id):
+		logger.warn("Unable to remove {0} library launch item. Library is not registered: {1}".format([name, library_id]))
+		return
+	if not has_app(name):
+		logger.warn("Unable to remove {0}. Item does not exist in library.".format([name]))
+		return
+	
+	# Iterate backwards over the launch items and remove any matches
+	var app := get_app_by_name(name)
+	for i in range(app.launch_items.size(), 0, -1):
+		var launch_item: LibraryLaunchItem = app.launch_items[i]
+		if launch_item._provider_id == library_id:
+			app.launch_items.remove_at(i)
+			library_launch_item_removed.emit(launch_item)
+
+
 # Returns a dictionary of all installed library items from every registered provider.
 # The dictionary is in the form of:
 #   {
@@ -77,7 +118,7 @@ func reload_library() -> void:
 #   }
 func _load_library() -> Dictionary:
 	var library_items: Dictionary = {}
-	for l in _libraries.values():
+	for l in get_libraries():
 		var library: Library = l
 		var items: Array = await library.get_library_launch_items()
 		for i in items:
@@ -91,12 +132,22 @@ func _load_library() -> Dictionary:
 	return library_items
 
 
+# Returns true if the app with the given name exists in the library.
+func has_app(name: String) -> bool:
+	return name in _available_apps
+
+
 # Returns the library item for the given app for all library providers
 func get_app_by_name(name: String) -> LibraryItem:
 	if not name in _available_apps:
 		logger.warn("App with name {0} not found".format([name]))
 		return null
 	return _available_apps[name]
+
+
+# Returns true if the library with the given id is registered
+func has_library(id: String) -> bool:
+	return id in _libraries
 
 
 # Returns the given library implementation by id

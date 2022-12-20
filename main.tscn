@@ -85,14 +85,14 @@ layout_mode = 1
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
 layout_mode = 1
-offset_right = 115200.0
-offset_bottom = 62100.0
+offset_right = 117760.0
+offset_bottom = 63480.0
 
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("9_8xlqm")]
 layout_mode = 1
 offset_left = -300.0
 offset_right = 0.0
-offset_bottom = 11730.0
+offset_bottom = 13110.0
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
 layout_mode = 2

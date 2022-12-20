@@ -1,5 +1,6 @@
 extends Object
 class_name Cache
+@icon("res://assets/icons/database.svg")
 
 const CHUNK_SIZE = 256
 const IMAGE_EXTS = ["png", "jpg", "jpeg", "bmp"]
@@ -14,13 +15,17 @@ enum FLAGS {
 	SAVE,
 }
 
+# Returns the caching directory
+static func get_cache_dir() -> String:
+	return ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	
 
 # Deletes the given cache item from the cache
 static func delete(folder: String, key: String) -> int:
 	var hash := key.sha256_text()
 	
 	# Build the cache directory to look in
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	var cached_file_path := "/".join([cache_dir, hash])
 	
@@ -28,12 +33,31 @@ static func delete(folder: String, key: String) -> int:
 	return DirAccess.remove_absolute(cached_file_path)
 
 
+# Saves the given data as JSON to the given file in the cache directory.
+static func save_json(folder: String, key: String, data: Variant, flush: bool = false) -> int:
+	var hash := key.sha256_text()
+	
+	# Build the cache directory to look in
+	var base_dir: String = get_cache_dir()
+	var cache_dir := "/".join([base_dir, folder])
+	var cached_file_path := "/".join([cache_dir, hash])
+	_ensure_cache_dir(folder)
+		
+	# Save the data
+	var file: FileAccess = FileAccess.open(cached_file_path, FileAccess.WRITE_READ)
+	file.store_string(JSON.stringify(data))
+	if flush:
+		file.flush()
+		
+	return OK
+
+
 # Saves the given PackedByteArray to the given folder cache key
 static func save_data(folder: String, key: String, data: PackedByteArray, flush: bool = false) -> int:
 	var hash := key.sha256_text()
 	
 	# Build the cache directory to look in
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	var cached_file_path := "/".join([cache_dir, hash])
 	_ensure_cache_dir(folder)
@@ -63,7 +87,7 @@ static func save_image(folder: String, key: String, texture: Texture2D, image_ty
 		return ERR_CANT_CREATE
 
 	# Build the cache directory to look in
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	var cached_file_path := "/".join([cache_dir, hash])
 	_ensure_cache_dir(folder)
@@ -79,6 +103,25 @@ static func save_image(folder: String, key: String, texture: Texture2D, image_ty
 	return err
 
 
+# Loads JSON data from the given cache file. Returns null if the
+# given key is not cached.
+static func get_json(folder: String, key: String) -> Variant:
+	# Check if the item is actually cached
+	var hash := key.sha256_text()
+	if not _is_cached_hash(folder, hash):
+		return null
+	
+	# Build the cache directory to look in
+	var base_dir: String = get_cache_dir()
+	var cache_dir := "/".join([base_dir, folder])
+	var cached_file_path := "/".join([cache_dir, hash])
+	
+	# Open our cache file
+	var file := FileAccess.open(cached_file_path, FileAccess.READ)
+	var data: String = file.get_as_text()
+	return JSON.parse_string(data)
+
+
 # Returns the given cached data as a PackedByteArray. Returns null if the
 # given key is not cached.
 static func get_data(folder: String, key: String) -> Variant:
@@ -88,7 +131,7 @@ static func get_data(folder: String, key: String) -> Variant:
 		return null
 	
 	# Build the cache directory to look in
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	var cached_file_path := "/".join([cache_dir, hash])
 	
@@ -148,7 +191,7 @@ static func is_cached(folder: String, key: String) -> bool:
 
 # Checks if the given hash is in the given cache folder
 static func _is_cached_hash(folder: String, hash: String) -> bool:
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	var cached_file_path := "/".join([cache_dir, hash])
 	if FileAccess.file_exists(cached_file_path):
@@ -158,6 +201,6 @@ static func _is_cached_hash(folder: String, hash: String) -> bool:
 
 # Ensures the given cache folder is created
 static func _ensure_cache_dir(folder: String) -> void:
-	var base_dir: String = ProjectSettings.get_setting("OpenGamepadUI/cache/directory")
+	var base_dir: String = get_cache_dir()
 	var cache_dir := "/".join([base_dir, folder])
 	DirAccess.make_dir_recursive_absolute(cache_dir)
