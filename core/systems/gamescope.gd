@@ -5,7 +5,12 @@
 extends Object
 class_name Gamescope
 
-const max_xwaylands: int = 10
+# Gamescope Blur modes
+enum BLUR_MODE {
+	OFF = 0,
+	COND = 1,
+	ALWAYS = 2,
+}
 
 
 # Sets the given X property on the given window.
@@ -83,3 +88,60 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 		leaves.append_array(get_all_windows(display, child))
 		
 	return leaves
+
+
+# Gamescope is hard-coded to look for appId 769
+static func set_main_overlay(display: String, window_id: int) -> int:
+	return set_xprop(display, window_id, "STEAM_GAME", 769)
+
+
+# Set the given window as the primary overlay input focus
+static func set_input_focus(display: String, window_id: int, value: int) -> int:
+	return set_xprop(display, window_id, "STEAM_INPUT_FOCUS", value)
+
+
+# Sets the Gamescope FPS limit
+static func set_fps(display: String, fps: int = 60) -> int:
+	var logger := Log.get_logger("Gamescope")
+	logger.debug("Setting FPS to: {0}".format([fps]))
+	var root_id := Xlib.get_root_window_id(display)
+	return set_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT", fps)
+
+
+# Returns the Gamescope FPS limit
+static func get_fps(display: String) -> int:
+	var root_id := Xlib.get_root_window_id(display)
+	return get_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT")
+
+
+# Sets the Gamescope blur mode
+static func set_blur_mode(display: String, mode: int = BLUR_MODE.OFF) -> int:
+	var logger := Log.get_logger("Gamescope")
+	logger.debug("Setting blur mode to: {0}".format([mode]))
+	var root_id := Xlib.get_root_window_id(display)
+	return set_xprop(display, root_id, "GAMESCOPE_BLUR_MODE", mode)
+
+
+# Sets the Gamescope blur radius when blur is active
+static func set_blur_radius(display: String, radius: int) -> int:
+	var logger := Log.get_logger("Gamescope")
+	logger.debug("Setting blur radius to: {0}".format([radius]))
+	var root_id := Xlib.get_root_window_id(display)
+	return set_xprop(display, root_id, "GAMESCOPE_BLUR_RADIUS", radius)
+
+
+# Configures Gamescope to allow tearing or not
+static func set_allow_tearing(display: String, allow: bool) -> int:
+	var logger := Log.get_logger("Gamescope")
+	logger.debug("Setting tearing to: {0}".format([allow]))
+	var value := 0
+	if allow:
+		value = 1
+	var root_id := Xlib.get_root_window_id(display)
+	return set_xprop(display, root_id, "GAMESCOPE_ALLOW_TEARING", value)
+
+
+# Focuses the given window
+static func set_baselayer_window(display: String, window_id: int) -> int:
+	var root_id := Xlib.get_root_window_id(display)
+	return set_xprop(display, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW", window_id)
