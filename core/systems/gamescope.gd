@@ -1,7 +1,4 @@
 # Manages Gamescope specific functionality
-# TODO: Instead of relying on xprop/wininfo, we should use native X11 methods
-# though the DisplayServer through an extension.
-# https://docs.godotengine.org/en/latest/classes/class_displayserver.html
 extends Object
 class_name Gamescope
 
@@ -28,9 +25,20 @@ static func get_xprop(display: String, window_id: int, key: String) -> int:
 	return Xlib.get_xprop(display, window_id, key)
 
 
+# Returns an array of values for the given X property for the given window.
+# Returns an empty array if property was not found.
+static func get_xprop_array(display: String, window_id: int, key: String) -> PackedInt32Array:
+	return Xlib.get_xprop_array(display, window_id, key)
+
+
 # Returns true if the given X property exists on the given window.
 static func has_xprop(display: String, window_id: int, key: String) -> bool:
 	return Xlib.has_xprop(display, window_id, key)
+
+
+# Returns the name of the given window.
+static func get_window_name(display: String, window_id: int) -> String:
+	return Xlib.get_window_name(display, window_id)
 
 
 # Returns all gamescope displays
@@ -88,6 +96,28 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 		leaves.append_array(get_all_windows(display, child))
 		
 	return leaves
+
+
+# Returns a list of focusable window ids
+static func get_focusable_windows(display: String) -> PackedInt32Array:
+	var root_id := Xlib.get_root_window_id(display)
+	return get_xprop_array(display, root_id, "GAMESCOPE_FOCUSABLE_WINDOWS")
+
+
+# Returns a list of focusable window names
+static func get_focusable_window_names(display: String) -> PackedStringArray:
+	var focusable := get_focusable_windows(display)
+	var results := PackedStringArray()
+	for window_id in focusable:
+		var name := get_window_name(display, window_id)
+		results.append(name)
+	return results
+
+
+# Return the currently focused window id.
+static func get_focused_window(display: String) -> int:
+	var root_id := Xlib.get_root_window_id(display)
+	return get_xprop(display, root_id, "GAMESCOPE_FOCUSED_WINDOW")
 
 
 # Gamescope is hard-coded to look for appId 769
