@@ -6,6 +6,7 @@ class_name InputManager
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 @onready var state_manager: StateManager = get_node("../StateManager")
 
+var display = OS.get_environment("DISPLAY")
 var logger := Log.get_logger("InputManager")
 var guide_action := false
 
@@ -16,22 +17,26 @@ func _ready() -> void:
 # Set focus will use Gamescope to focus OpenGamepadUI
 func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
-	var display = OS.get_environment("DISPLAY")
 	var window_id = main.overlay_window_id
 	if focused:
 		logger.debug("Focusing overlay")
-		Gamescope.set_xprop(display, window_id, "STEAM_INPUT_FOCUS", 1)
+		Gamescope.set_input_focus(display, window_id, 1)
 		return
 	logger.debug("Un-focusing overlay")
-	Gamescope.set_xprop(display, window_id, "STEAM_INPUT_FOCUS", 0)
+	Gamescope.set_input_focus(display, window_id, 0)
 
 
 # Set ourselves to focused in any state other than IN_GAME
 func _on_state_changed(from: int, to: int, _data: Dictionary):
 	if to == StateManager.State.IN_GAME:
+		Gamescope.set_blur_mode(display, Gamescope.BLUR_MODE.OFF)
 		set_focus(false)
 		return
 	set_focus(true)
+	if state_manager.has_state(StateManager.State.IN_GAME):
+		Gamescope.set_blur_mode(display, Gamescope.BLUR_MODE.ALWAYS)
+	else:
+		Gamescope.set_blur_mode(display, Gamescope.BLUR_MODE.OFF)
 
 
 func _input(event: InputEvent) -> void:
