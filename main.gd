@@ -46,8 +46,8 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 func _setup(window_id: int) -> void:
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	if Gamescope.set_xprop(DISPLAY, window_id, "STEAM_GAME", 769) != OK:
+	if Gamescope.set_main_app(DISPLAY, window_id) != OK:
 		logger.error("Unable to set STEAM_GAME atom!")
 	# Sets ourselves to the input focus
-	if Gamescope.set_xprop(DISPLAY, window_id, "STEAM_INPUT_FOCUS", 1) != OK:
+	if Gamescope.set_input_focus(DISPLAY, window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")

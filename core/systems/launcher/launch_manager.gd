@@ -84,7 +84,7 @@ func _set_overlay(enable: bool) -> void:
 	if enable:
 		overlay_enabled = 1
 	var display := OS.get_environment("DISPLAY")
-	Gamescope.set_xprop(display, window_id, "STEAM_OVERLAY", overlay_enabled)
+	Gamescope.set_overlay(display, window_id, overlay_enabled)
 
 
 # Launches the given command on the target xwayland display. Returns a PID

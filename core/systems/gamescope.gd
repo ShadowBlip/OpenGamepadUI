@@ -12,8 +12,8 @@ enum BLUR_MODE {
 
 # Sets the given X property on the given window.
 # Example:
-#  Gamescope.set_xprop(":0", 1234, "STEAM_INPUT", 1)
-static func set_xprop(display: String, window_id: int, key: String, value: int) -> int:
+#  Gamescope._set_xprop(":0", 1234, "STEAM_INPUT", 1)
+static func _set_xprop(display: String, window_id: int, key: String, value: int) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting window {0} key {1} to {2}".format([window_id, key, value]))
 	return Xlib.set_xprop(display, window_id, key, value)
@@ -21,13 +21,13 @@ static func set_xprop(display: String, window_id: int, key: String, value: int) 
 
 # Returns the value of the given X property for the given window. Returns
 # Xlib.ERR_XPROP_NOT_FOUND if property doesn't exist.
-static func get_xprop(display: String, window_id: int, key: String) -> int:
+static func _get_xprop(display: String, window_id: int, key: String) -> int:
 	return Xlib.get_xprop(display, window_id, key)
 
 
 # Returns an array of values for the given X property for the given window.
 # Returns an empty array if property was not found.
-static func get_xprop_array(display: String, window_id: int, key: String) -> PackedInt32Array:
+static func _get_xprop_array(display: String, window_id: int, key: String) -> PackedInt32Array:
 	return Xlib.get_xprop_array(display, window_id, key)
 
 
@@ -101,7 +101,7 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 # Returns a list of focusable window ids
 static func get_focusable_windows(display: String) -> PackedInt32Array:
 	var root_id := Xlib.get_root_window_id(display)
-	return get_xprop_array(display, root_id, "GAMESCOPE_FOCUSABLE_WINDOWS")
+	return _get_xprop_array(display, root_id, "GAMESCOPE_FOCUSABLE_WINDOWS")
 
 
 # Returns a list of focusable window names
@@ -117,17 +117,22 @@ static func get_focusable_window_names(display: String) -> PackedStringArray:
 # Return the currently focused window id.
 static func get_focused_window(display: String) -> int:
 	var root_id := Xlib.get_root_window_id(display)
-	return get_xprop(display, root_id, "GAMESCOPE_FOCUSED_WINDOW")
+	return _get_xprop(display, root_id, "GAMESCOPE_FOCUSED_WINDOW")
 
 
 # Gamescope is hard-coded to look for appId 769
-static func set_main_overlay(display: String, window_id: int) -> int:
-	return set_xprop(display, window_id, "STEAM_GAME", 769)
+static func set_main_app(display: String, window_id: int) -> int:
+	return _set_xprop(display, window_id, "STEAM_GAME", 769)
 
 
 # Set the given window as the primary overlay input focus
 static func set_input_focus(display: String, window_id: int, value: int) -> int:
-	return set_xprop(display, window_id, "STEAM_INPUT_FOCUS", value)
+	return _set_xprop(display, window_id, "STEAM_INPUT_FOCUS", value)
+
+
+# Set the given window as an overlay
+static func set_overlay(display: String, window_id: int, value: int) -> int:
+	return _set_xprop(display, window_id, "STEAM_OVERLAY", value)
 
 
 # Sets the Gamescope FPS limit
@@ -135,13 +140,13 @@ static func set_fps(display: String, fps: int = 60) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting FPS to: {0}".format([fps]))
 	var root_id := Xlib.get_root_window_id(display)
-	return set_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT", fps)
+	return _set_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT", fps)
 
 
 # Returns the Gamescope FPS limit
 static func get_fps(display: String) -> int:
 	var root_id := Xlib.get_root_window_id(display)
-	return get_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT")
+	return _get_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT")
 
 
 # Sets the Gamescope blur mode
@@ -149,7 +154,7 @@ static func set_blur_mode(display: String, mode: int = BLUR_MODE.OFF) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting blur mode to: {0}".format([mode]))
 	var root_id := Xlib.get_root_window_id(display)
-	return set_xprop(display, root_id, "GAMESCOPE_BLUR_MODE", mode)
+	return _set_xprop(display, root_id, "GAMESCOPE_BLUR_MODE", mode)
 
 
 # Sets the Gamescope blur radius when blur is active
@@ -157,7 +162,7 @@ static func set_blur_radius(display: String, radius: int) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting blur radius to: {0}".format([radius]))
 	var root_id := Xlib.get_root_window_id(display)
-	return set_xprop(display, root_id, "GAMESCOPE_BLUR_RADIUS", radius)
+	return _set_xprop(display, root_id, "GAMESCOPE_BLUR_RADIUS", radius)
 
 
 # Configures Gamescope to allow tearing or not
@@ -168,10 +173,10 @@ static func set_allow_tearing(display: String, allow: bool) -> int:
 	if allow:
 		value = 1
 	var root_id := Xlib.get_root_window_id(display)
-	return set_xprop(display, root_id, "GAMESCOPE_ALLOW_TEARING", value)
+	return _set_xprop(display, root_id, "GAMESCOPE_ALLOW_TEARING", value)
 
 
 # Focuses the given window
 static func set_baselayer_window(display: String, window_id: int) -> int:
 	var root_id := Xlib.get_root_window_id(display)
-	return set_xprop(display, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW", window_id)
+	return _set_xprop(display, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW", window_id)
