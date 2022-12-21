@@ -9,6 +9,7 @@
 
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 using namespace godot;
 
@@ -149,6 +150,50 @@ int Xlib::get_xprop(String display, int window_id, String key) {
   return ERR_XPROP_NOT_FOUND;
 };
 
+// Returns the values of the given x property on the given window.
+PackedInt32Array Xlib::get_xprop_array(String display, int window_id,
+                                       String key) {
+  Window window = (Window)window_id;
+  PackedInt32Array results = PackedInt32Array();
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    UtilityFunctions::push_error("Unable to open display!");
+    return results;
+  }
+
+  // Build the atom to get
+  Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
+
+  // Fetch the actual property
+  Atom actual;
+  int format;
+  unsigned long n, left;
+  uint64_t *data;
+  // Get up to 16 results
+  int result =
+      XGetWindowProperty(dpy, window, atom, 0L, 16L, false, XA_CARDINAL,
+                         &actual, &format, &n, &left, (unsigned char **)&data);
+
+  // If the property exists, loop through the result and append it to the array
+  if (result == Success && data != NULL) {
+    for (uint32_t i = 0; i < n; i++) {
+      results.append(data[i]);
+    }
+    XFree((void *)data);
+    XCloseDisplay(dpy);
+    return results;
+  }
+
+  // Close the connection to the x server
+  UtilityFunctions::push_error("Property ", key,
+                               " not found on window: ", window_id);
+  XCloseDisplay(dpy);
+  return results;
+}
+
 // Returns true if the given property exists on the given window.
 bool Xlib::has_xprop(String display, int window_id, String key) {
   int value = Xlib::get_xprop(display, window_id, key);
@@ -156,6 +201,32 @@ bool Xlib::has_xprop(String display, int window_id, String key) {
     return false;
   }
   return true;
+};
+
+// Returns the value of the given x property on the given window. Returns -255
+// if no value was found.
+String Xlib::get_window_name(String display, int window_id) {
+  Window window = (Window)window_id;
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    UtilityFunctions::push_error("Unable to open display!");
+    return String();
+  }
+
+  // Build the atom to get
+  Atom atom = XInternAtom(dpy, "WM_NAME", false);
+
+  // Fetch the actual property
+  XTextProperty property;
+  XGetTextProperty(dpy, window, &property, atom);
+  const char *text = strndup((char *)property.value, property.nitems);
+
+  // Close the connection to the x server
+  XCloseDisplay(dpy);
+  return String(text);
 };
 
 // Register the methods with Godot
@@ -173,8 +244,14 @@ void Xlib::_bind_methods() {
       "Xlib", D_METHOD("get_xprop", "display", "window_id", "key"),
       &Xlib::get_xprop);
   ClassDB::bind_static_method(
+      "Xlib", D_METHOD("get_xprop_array", "display", "window_id", "key"),
+      &Xlib::get_xprop_array);
+  ClassDB::bind_static_method(
       "Xlib", D_METHOD("has_xprop", "display", "window_id", "key"),
       &Xlib::has_xprop);
+  ClassDB::bind_static_method(
+      "Xlib", D_METHOD("get_window_name", "display", "window_id"),
+      &Xlib::get_window_name);
 
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);

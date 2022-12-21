@@ -32,7 +32,10 @@ public:
   static PackedInt32Array get_window_children(String display, int window_id);
   static int set_xprop(String display, int window_id, String key, int value);
   static int get_xprop(String display, int window_id, String key);
+  static PackedInt32Array get_xprop_array(String display, int window_id,
+                                          String key);
   static bool has_xprop(String display, int window_id, String key);
+  static String get_window_name(String display, int window_id);
 };
 
 #endif // XLIB_CLASS_H
