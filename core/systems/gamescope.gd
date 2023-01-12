@@ -136,7 +136,7 @@ static func set_overlay(display: String, window_id: int, value: int) -> int:
 
 
 # Sets the Gamescope FPS limit
-static func set_fps(display: String, fps: int = 60) -> int:
+static func set_fps_limit(display: String, fps: int = 60) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting FPS to: {0}".format([fps]))
 	var root_id := Xlib.get_root_window_id(display)
@@ -144,13 +144,13 @@ static func set_fps(display: String, fps: int = 60) -> int:
 
 
 # Returns the Gamescope FPS limit
-static func get_fps(display: String) -> int:
+static func get_fps_limit(display: String) -> int:
 	var root_id := Xlib.get_root_window_id(display)
 	return _get_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT")
 
 
 # Sets the Gamescope blur mode
-static func set_blur_mode(display: String, mode: int = BLUR_MODE.OFF) -> int:
+static func set_blur_mode(display: String, mode: BLUR_MODE = BLUR_MODE.OFF) -> int:
 	var logger := Log.get_logger("Gamescope")
 	logger.debug("Setting blur mode to: {0}".format([mode]))
 	var root_id := Xlib.get_root_window_id(display)
