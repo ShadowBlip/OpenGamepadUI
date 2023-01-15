@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://ctm54o2rhe5fw"]
+
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_layout.gd" id="1_cil3p"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_key_config.gd" id="1_y38tr"]
+
+[sub_resource type="Resource" id="Resource_sdoch"]
+script = ExtResource("1_y38tr")
+type = 0
+output = "`"
+display = "`"
+display_uppercase = "`"
+stretch_ratio = 0.75
+
+[sub_resource type="Resource" id="Resource_pjlnf"]
+script = ExtResource("1_y38tr")
+type = 0
+output = "Q"
+display = "q"
+display_uppercase = "Q"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_70yki"]
+script = ExtResource("1_y38tr")
+type = 0
+output = "W"
+display = "w"
+display_uppercase = "W"
+stretch_ratio = 1.0
+
+[resource]
+script = ExtResource("1_cil3p")
+name = "Default"
+rows = [[SubResource("Resource_sdoch"), null], [SubResource("Resource_pjlnf"), SubResource("Resource_70yki")], [], [], []]
