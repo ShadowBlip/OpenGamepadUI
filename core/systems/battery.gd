@@ -16,13 +16,15 @@ static func find_battery_path() -> Variant:
 			battery_dir = folder
 			break
 	if battery_dir == "":
-		return null
+		return ""
 	
 	return "/".join([power_supply_dir, battery_dir])
 
 
 # Returns the current battery capacity as a percentage
 static func get_capacity(battery: String) -> int:
+	if battery == "":
+		return -1
 	var capacity_file: String = "/".join([battery, "capacity"])
 	var file: FileAccess = FileAccess.open(capacity_file, FileAccess.READ)
 	var bytes: PackedByteArray = file.get_buffer(100)

@@ -98,16 +98,18 @@ _data = {
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 11520.0
-offset_bottom = 7200.0
+offset_right = 12800.0
+offset_bottom = 8000.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
 script = ExtResource("1_3yu6b")
 
 [node name="MainMenu" parent="." instance=ExtResource("2_pw1ol")]
+layout_mode = 2
 
 [node name="InGameMenu" parent="." instance=ExtResource("3_w8b06")]
+layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

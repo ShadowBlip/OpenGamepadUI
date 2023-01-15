@@ -7,7 +7,9 @@ class_name Plugin
 var plugin_base: String
 var cache: String
 var logger := Log.get_logger("Plugin")
-var OGUIButton := preload("res://core/ui/components/button.tscn")
+
+const OGUIButton := preload("res://core/ui/components/button.tscn")
+const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 
 @onready var state_manager: StateManager = get_node("/root/Main/StateManager")
 @onready var input_manager: InputManager = get_node("/root/Main/InputManager")
@@ -56,11 +58,4 @@ func add_to_qam(qam_item: Control, icon: Texture2D) -> void:
 		logger.error("Unable to find the Quick Access Menu. Plugin {} can not be loaded.".format(qam_item.name))
 		return
 	
-	qam_item.visible = false
-	qam.viewport.add_child(qam_item)
-	var new_but := OGUIButton.instantiate()
-	new_but.icon = icon
-	new_but.custom_minimum_size = Vector2(50, 50)
-	new_but.expand_icon = true
-	new_but.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	qam.icon_bar.add_child(new_but)
+	qam.add_child_menu(qam_item, icon)

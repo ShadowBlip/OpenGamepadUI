@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://b2se1l330qmln"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_pvtqf"]
 [ext_resource type="Script" path="res://core/ui/menu/navigation/top_bar.gd" id="2_s10b7"]
@@ -17,7 +17,7 @@ theme = ExtResource("1_pvtqf")
 script = ExtResource("2_s10b7")
 
 [node name="Panel" type="Panel" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -25,7 +25,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -34,50 +34,33 @@ theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-offset_left = 50.0
-offset_top = 10.0
-offset_right = 1270.0
-offset_bottom = 45.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_vertical = 4
 
 [node name="SearchBar" parent="MarginContainer/HBoxContainer" groups=["global_search_bar"] instance=ExtResource("3_4ldf8")]
-offset_right = 1036.0
-offset_bottom = 35.0
+layout_mode = 2
 
 [node name="NetworkIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(24, 24)
-offset_left = 1040.0
-offset_top = 5.0
-offset_right = 1064.0
-offset_bottom = 29.0
+layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 texture = ExtResource("3_xu4r1")
 stretch_mode = 4
 
 [node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer"]
-offset_left = 1068.0
-offset_top = 4.0
-offset_right = 1110.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "100%"
 
 [node name="TimeLabel" type="Label" parent="MarginContainer/HBoxContainer"]
-offset_left = 1114.0
-offset_top = 4.0
-offset_right = 1181.0
-offset_bottom = 30.0
+layout_mode = 2
 text = "12:00pm"
 
 [node name="ProfileIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(35, 35)
-offset_left = 1185.0
-offset_right = 1220.0
-offset_bottom = 35.0
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("4_lv4ws")
-ignore_texture_size = true
+expand_mode = 1
 stretch_mode = 4
