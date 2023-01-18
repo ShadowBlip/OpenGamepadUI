@@ -17,12 +17,12 @@ class_name KeyboardLayout
 		KeyboardKeyConfig.new("0", ")"),
 		KeyboardKeyConfig.new("-", "_"),
 		KeyboardKeyConfig.new("=", "+"),
-		KeyboardKeyConfig.new("BKSP", "", "BKSP", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1.5),
+		KeyboardKeyConfig.new("", "", "BACKSPACE", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.BKSP, null, 1.5),
 	],
 	[
-		KeyboardKeyConfig.new("TAB", "", "TAB", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
+		KeyboardKeyConfig.new("", "", "TAB", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.TAB, null, 1),
 		KeyboardKeyConfig.new("q", "Q"),
 		KeyboardKeyConfig.new("w", "W"),
 		KeyboardKeyConfig.new("e", "E"),
@@ -38,8 +38,8 @@ class_name KeyboardLayout
 		KeyboardKeyConfig.new("\\", "|"),
 	],
 	[
-		KeyboardKeyConfig.new("CAPS", "", "CAPS", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1.25),
+		KeyboardKeyConfig.new("", "", "CAPS", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.CAPS, null, 1.25),
 		KeyboardKeyConfig.new("a", "A"),
 		KeyboardKeyConfig.new("s", "S"),
 		KeyboardKeyConfig.new("d", "D"),
@@ -51,12 +51,12 @@ class_name KeyboardLayout
 		KeyboardKeyConfig.new("l", "L"),
 		KeyboardKeyConfig.new(";", ":"),
 		KeyboardKeyConfig.new("'", "\""),
-		KeyboardKeyConfig.new("ENTER", "", "ENTR", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 2),
+		KeyboardKeyConfig.new("", "", "ENTER", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.ENTER, null, 2),
 	],
 	[
-		KeyboardKeyConfig.new("SHIFT", "", "SHIFT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1.5),
+		KeyboardKeyConfig.new("", "", "SHIFT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.SHIFT, null, 1.5),
 		KeyboardKeyConfig.new("z", "Z"),
 		KeyboardKeyConfig.new("x", "X"),
 		KeyboardKeyConfig.new("c", "C"),
@@ -67,21 +67,21 @@ class_name KeyboardLayout
 		KeyboardKeyConfig.new(",", "<"),
 		KeyboardKeyConfig.new(".", ">"),
 		KeyboardKeyConfig.new("/", "?"),
-		KeyboardKeyConfig.new("SHIFT", "", "SHIFT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1.5),
+		KeyboardKeyConfig.new("", "", "SHIFT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.SHIFT, null, 1.5),
 	],
 	[
-		KeyboardKeyConfig.new("CTRL", "", "CTRL", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
-		KeyboardKeyConfig.new("SUPER", "", "SUPR", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
-		KeyboardKeyConfig.new("ALT", "", "ALT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
-		KeyboardKeyConfig.new("SPACE", "", "SPACE", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 6),
-		KeyboardKeyConfig.new("ALT", "", "ALT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
-		KeyboardKeyConfig.new("CTRL", "", "CTRL", "", KeyboardKeyConfig.TYPE.SPECIAL, \
-			null, 1),
+		KeyboardKeyConfig.new("", "", "CTRL", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.CTRL, null, 1),
+		KeyboardKeyConfig.new("", "", "SUPER", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.SUPER, null, 1),
+		KeyboardKeyConfig.new("", "", "ALT", "", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.ALT, null, 1),
+		KeyboardKeyConfig.new(" ", " ", "", "", KeyboardKeyConfig.TYPE.CHAR, \
+			KeyboardKeyConfig.ACTION.NONE, null, 6),
+		KeyboardKeyConfig.new("", "", "<", "<", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.LEFT, null, 1),
+		KeyboardKeyConfig.new("", "", ">", ">", KeyboardKeyConfig.TYPE.SPECIAL, \
+			KeyboardKeyConfig.ACTION.RIGHT, null, 1),
 	],
 ]

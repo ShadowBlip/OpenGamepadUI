@@ -8,8 +8,20 @@ enum TYPE {
 }
 
 enum ACTION {
+	NONE,
 	ENTER,
 	TAB,
+	CAPS,
+	SHIFT,
+	CTRL,
+	ALT,
+	SUPER,
+	BKSP,
+	ESC,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
 }
 
 @export var type: TYPE = TYPE.CHAR
@@ -19,11 +31,13 @@ enum ACTION {
 @export var display_uppercase: String
 @export var icon: Texture2D
 @export var stretch_ratio: float = 1
+@export var action: ACTION = ACTION.NONE
 
 func _init(out: String = "", out_upper: String = "", disp: String = out, 
-		disp_upper: String = out_upper, t: TYPE = TYPE.CHAR, ico: Texture2D = null, 
-		str_ratio: float = 1) -> void:
+		disp_upper: String = out_upper, t: TYPE = TYPE.CHAR, a: ACTION = ACTION.NONE,
+		ico: Texture2D = null, str_ratio: float = 1) -> void:
 	type = t
+	action = a
 	output = out
 	output_uppercase = out_upper
 	display = disp

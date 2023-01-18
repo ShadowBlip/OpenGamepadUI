@@ -4,9 +4,10 @@ extends Control
 signal keyboard_populated
 signal layout_changed
 
-@export var layout: KeyboardLayout = KeyboardLayout.new()
-
 const key_scene := preload("res://core/ui/components/button.tscn")
+
+@export var layout: KeyboardLayout = KeyboardLayout.new()
+var logger := Log.get_logger("OSK")
 
 @onready var rows_container: VBoxContainer = $MarginContainer/VBoxContainer
 
@@ -41,6 +42,11 @@ func populate_keyboard():
 			button.size_flags_stretch_ratio = key.stretch_ratio
 			if key.type == KeyboardKeyConfig.TYPE.CHAR and key.display != "":
 				button.text = key.display
+			elif key.type == KeyboardKeyConfig.TYPE.SPECIAL and key.icon == null:
+				button.text = key.display
+			
+			# Connect the keyboard key to a method to handle key presses
+			button.button_up.connect(_on_key_pressed.bind(key))
 			
 			container.add_child(button)
 		
@@ -54,6 +60,7 @@ func set_layout(key_layout: KeyboardLayout):
 	layout_changed.emit()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+# Handle key presses
+func _on_key_pressed(key: KeyboardKeyConfig):
+	logger.debug("Pressed key: " + key.display)
+

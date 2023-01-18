@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_layout.gd" id="1_00glt"]
 [ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_key_config.gd" id="1_314ev"]
 
-[sub_resource type="Resource" id="Resource_fa4h3"]
+[sub_resource type="Resource" id="Resource_2pwso"]
 script = ExtResource("1_314ev")
 type = 0
 output = "`"
@@ -11,8 +11,9 @@ output_uppercase = "~"
 display = "`"
 display_uppercase = "~"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_vcvd7"]
+[sub_resource type="Resource" id="Resource_o5btd"]
 script = ExtResource("1_314ev")
 type = 0
 output = "1"
@@ -20,8 +21,9 @@ output_uppercase = "!"
 display = "1"
 display_uppercase = "!"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_co7kx"]
+[sub_resource type="Resource" id="Resource_55ccx"]
 script = ExtResource("1_314ev")
 type = 0
 output = "2"
@@ -29,8 +31,9 @@ output_uppercase = "@"
 display = "2"
 display_uppercase = "@"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_ayc6r"]
+[sub_resource type="Resource" id="Resource_rdu1w"]
 script = ExtResource("1_314ev")
 type = 0
 output = "3"
@@ -38,8 +41,9 @@ output_uppercase = "#"
 display = "3"
 display_uppercase = "#"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_jdmu6"]
+[sub_resource type="Resource" id="Resource_tlsvk"]
 script = ExtResource("1_314ev")
 type = 0
 output = "4"
@@ -47,8 +51,9 @@ output_uppercase = "$"
 display = "4"
 display_uppercase = "$"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_enjlc"]
+[sub_resource type="Resource" id="Resource_3n3jn"]
 script = ExtResource("1_314ev")
 type = 0
 output = "5"
@@ -56,8 +61,9 @@ output_uppercase = "%"
 display = "5"
 display_uppercase = "%"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_6obfm"]
+[sub_resource type="Resource" id="Resource_2ug4b"]
 script = ExtResource("1_314ev")
 type = 0
 output = "6"
@@ -65,8 +71,9 @@ output_uppercase = "^"
 display = "6"
 display_uppercase = "^"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_45613"]
+[sub_resource type="Resource" id="Resource_lwvj1"]
 script = ExtResource("1_314ev")
 type = 0
 output = "7"
@@ -74,8 +81,9 @@ output_uppercase = "&"
 display = "7"
 display_uppercase = "&"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_e5qey"]
+[sub_resource type="Resource" id="Resource_a6yxf"]
 script = ExtResource("1_314ev")
 type = 0
 output = "8"
@@ -83,8 +91,9 @@ output_uppercase = "*"
 display = "8"
 display_uppercase = "*"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_ry42p"]
+[sub_resource type="Resource" id="Resource_kj3hn"]
 script = ExtResource("1_314ev")
 type = 0
 output = "9"
@@ -92,8 +101,9 @@ output_uppercase = "("
 display = "9"
 display_uppercase = "("
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_xpx13"]
+[sub_resource type="Resource" id="Resource_iganp"]
 script = ExtResource("1_314ev")
 type = 0
 output = "0"
@@ -101,8 +111,9 @@ output_uppercase = ")"
 display = "0"
 display_uppercase = ")"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_mfd0u"]
+[sub_resource type="Resource" id="Resource_oi1wi"]
 script = ExtResource("1_314ev")
 type = 0
 output = "-"
@@ -110,8 +121,9 @@ output_uppercase = "_"
 display = "-"
 display_uppercase = "_"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_8hedx"]
+[sub_resource type="Resource" id="Resource_0dk7a"]
 script = ExtResource("1_314ev")
 type = 0
 output = "="
@@ -119,26 +131,29 @@ output_uppercase = "+"
 display = "="
 display_uppercase = "+"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_5eqhn"]
+[sub_resource type="Resource" id="Resource_yrvbt"]
 script = ExtResource("1_314ev")
 type = 1
-output = "BKSP"
+output = ""
 output_uppercase = ""
-display = "BKSP"
+display = "BACKSPACE"
 display_uppercase = ""
 stretch_ratio = 1.5
+action = 8
 
-[sub_resource type="Resource" id="Resource_1grh2"]
+[sub_resource type="Resource" id="Resource_k62t6"]
 script = ExtResource("1_314ev")
 type = 1
-output = "TAB"
+output = ""
 output_uppercase = ""
 display = "TAB"
 display_uppercase = ""
 stretch_ratio = 1.0
+action = 2
 
-[sub_resource type="Resource" id="Resource_sccoo"]
+[sub_resource type="Resource" id="Resource_aurhb"]
 script = ExtResource("1_314ev")
 type = 0
 output = "q"
@@ -146,8 +161,9 @@ output_uppercase = "Q"
 display = "q"
 display_uppercase = "Q"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_u6ffo"]
+[sub_resource type="Resource" id="Resource_1wb5n"]
 script = ExtResource("1_314ev")
 type = 0
 output = "w"
@@ -155,8 +171,9 @@ output_uppercase = "W"
 display = "w"
 display_uppercase = "W"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_53e2v"]
+[sub_resource type="Resource" id="Resource_v8h2o"]
 script = ExtResource("1_314ev")
 type = 0
 output = "e"
@@ -164,8 +181,9 @@ output_uppercase = "E"
 display = "e"
 display_uppercase = "E"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_t265m"]
+[sub_resource type="Resource" id="Resource_qjjed"]
 script = ExtResource("1_314ev")
 type = 0
 output = "r"
@@ -173,8 +191,9 @@ output_uppercase = "R"
 display = "r"
 display_uppercase = "R"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_sxocr"]
+[sub_resource type="Resource" id="Resource_k44ne"]
 script = ExtResource("1_314ev")
 type = 0
 output = "t"
@@ -182,8 +201,9 @@ output_uppercase = "T"
 display = "t"
 display_uppercase = "T"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_h3yde"]
+[sub_resource type="Resource" id="Resource_rfk5y"]
 script = ExtResource("1_314ev")
 type = 0
 output = "y"
@@ -191,8 +211,9 @@ output_uppercase = "Y"
 display = "y"
 display_uppercase = "Y"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_p18e3"]
+[sub_resource type="Resource" id="Resource_i8glf"]
 script = ExtResource("1_314ev")
 type = 0
 output = "u"
@@ -200,8 +221,9 @@ output_uppercase = "U"
 display = "u"
 display_uppercase = "U"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_2rohc"]
+[sub_resource type="Resource" id="Resource_m0144"]
 script = ExtResource("1_314ev")
 type = 0
 output = "i"
@@ -209,8 +231,9 @@ output_uppercase = "I"
 display = "i"
 display_uppercase = "I"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_0u037"]
+[sub_resource type="Resource" id="Resource_4bfve"]
 script = ExtResource("1_314ev")
 type = 0
 output = "o"
@@ -218,8 +241,9 @@ output_uppercase = "O"
 display = "o"
 display_uppercase = "O"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_k4it1"]
+[sub_resource type="Resource" id="Resource_op7ip"]
 script = ExtResource("1_314ev")
 type = 0
 output = "p"
@@ -227,8 +251,9 @@ output_uppercase = "P"
 display = "p"
 display_uppercase = "P"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_67a1o"]
+[sub_resource type="Resource" id="Resource_qc2xa"]
 script = ExtResource("1_314ev")
 type = 0
 output = "["
@@ -236,8 +261,9 @@ output_uppercase = "{"
 display = "["
 display_uppercase = "{"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_re8lc"]
+[sub_resource type="Resource" id="Resource_hgr38"]
 script = ExtResource("1_314ev")
 type = 0
 output = "]"
@@ -245,8 +271,9 @@ output_uppercase = "}"
 display = "]"
 display_uppercase = "}"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_r2vqb"]
+[sub_resource type="Resource" id="Resource_yfs6s"]
 script = ExtResource("1_314ev")
 type = 0
 output = "\\"
@@ -254,17 +281,19 @@ output_uppercase = "|"
 display = "\\"
 display_uppercase = "|"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_7wodp"]
+[sub_resource type="Resource" id="Resource_uwgn8"]
 script = ExtResource("1_314ev")
 type = 1
-output = "CAPS"
+output = ""
 output_uppercase = ""
 display = "CAPS"
 display_uppercase = ""
 stretch_ratio = 1.25
+action = 3
 
-[sub_resource type="Resource" id="Resource_wdbe4"]
+[sub_resource type="Resource" id="Resource_s7kho"]
 script = ExtResource("1_314ev")
 type = 0
 output = "a"
@@ -272,8 +301,9 @@ output_uppercase = "A"
 display = "a"
 display_uppercase = "A"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_8bmfk"]
+[sub_resource type="Resource" id="Resource_psqqg"]
 script = ExtResource("1_314ev")
 type = 0
 output = "s"
@@ -281,8 +311,9 @@ output_uppercase = "S"
 display = "s"
 display_uppercase = "S"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_wer4j"]
+[sub_resource type="Resource" id="Resource_3i2jn"]
 script = ExtResource("1_314ev")
 type = 0
 output = "d"
@@ -290,8 +321,9 @@ output_uppercase = "D"
 display = "d"
 display_uppercase = "D"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_w3vh1"]
+[sub_resource type="Resource" id="Resource_hk13s"]
 script = ExtResource("1_314ev")
 type = 0
 output = "f"
@@ -299,8 +331,9 @@ output_uppercase = "F"
 display = "f"
 display_uppercase = "F"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_263yl"]
+[sub_resource type="Resource" id="Resource_i4o74"]
 script = ExtResource("1_314ev")
 type = 0
 output = "g"
@@ -308,8 +341,9 @@ output_uppercase = "G"
 display = "g"
 display_uppercase = "G"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_in5po"]
+[sub_resource type="Resource" id="Resource_20rg5"]
 script = ExtResource("1_314ev")
 type = 0
 output = "h"
@@ -317,8 +351,9 @@ output_uppercase = "H"
 display = "h"
 display_uppercase = "H"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_tiikh"]
+[sub_resource type="Resource" id="Resource_7a08n"]
 script = ExtResource("1_314ev")
 type = 0
 output = "j"
@@ -326,8 +361,9 @@ output_uppercase = "J"
 display = "j"
 display_uppercase = "J"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_okcib"]
+[sub_resource type="Resource" id="Resource_bap4g"]
 script = ExtResource("1_314ev")
 type = 0
 output = "k"
@@ -335,8 +371,9 @@ output_uppercase = "K"
 display = "k"
 display_uppercase = "K"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_i1eky"]
+[sub_resource type="Resource" id="Resource_sb3gq"]
 script = ExtResource("1_314ev")
 type = 0
 output = "l"
@@ -344,8 +381,9 @@ output_uppercase = "L"
 display = "l"
 display_uppercase = "L"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_on1fl"]
+[sub_resource type="Resource" id="Resource_6r1ul"]
 script = ExtResource("1_314ev")
 type = 0
 output = ";"
@@ -353,8 +391,9 @@ output_uppercase = ":"
 display = ";"
 display_uppercase = ":"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_pekxk"]
+[sub_resource type="Resource" id="Resource_ndkl7"]
 script = ExtResource("1_314ev")
 type = 0
 output = "'"
@@ -362,26 +401,29 @@ output_uppercase = "\""
 display = "'"
 display_uppercase = "\""
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_fpoqs"]
+[sub_resource type="Resource" id="Resource_75cgc"]
 script = ExtResource("1_314ev")
 type = 1
-output = "ENTER"
+output = ""
 output_uppercase = ""
-display = "ENTR"
+display = "ENTER"
 display_uppercase = ""
 stretch_ratio = 2.0
+action = 1
 
-[sub_resource type="Resource" id="Resource_ifhog"]
+[sub_resource type="Resource" id="Resource_ggrad"]
 script = ExtResource("1_314ev")
 type = 1
-output = "SHIFT"
+output = ""
 output_uppercase = ""
 display = "SHIFT"
 display_uppercase = ""
 stretch_ratio = 1.5
+action = 4
 
-[sub_resource type="Resource" id="Resource_5k3it"]
+[sub_resource type="Resource" id="Resource_rul8l"]
 script = ExtResource("1_314ev")
 type = 0
 output = "z"
@@ -389,8 +431,9 @@ output_uppercase = "Z"
 display = "z"
 display_uppercase = "Z"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_bnf2h"]
+[sub_resource type="Resource" id="Resource_s7iiy"]
 script = ExtResource("1_314ev")
 type = 0
 output = "x"
@@ -398,8 +441,9 @@ output_uppercase = "X"
 display = "x"
 display_uppercase = "X"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_jt5jv"]
+[sub_resource type="Resource" id="Resource_f2v4q"]
 script = ExtResource("1_314ev")
 type = 0
 output = "c"
@@ -407,8 +451,9 @@ output_uppercase = "C"
 display = "c"
 display_uppercase = "C"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_u6f2x"]
+[sub_resource type="Resource" id="Resource_5v3do"]
 script = ExtResource("1_314ev")
 type = 0
 output = "v"
@@ -416,8 +461,9 @@ output_uppercase = "V"
 display = "v"
 display_uppercase = "V"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_3sal5"]
+[sub_resource type="Resource" id="Resource_24qos"]
 script = ExtResource("1_314ev")
 type = 0
 output = "b"
@@ -425,8 +471,9 @@ output_uppercase = "B"
 display = "b"
 display_uppercase = "B"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_ahjtx"]
+[sub_resource type="Resource" id="Resource_fvon5"]
 script = ExtResource("1_314ev")
 type = 0
 output = "n"
@@ -434,8 +481,9 @@ output_uppercase = "N"
 display = "n"
 display_uppercase = "N"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_s5ib7"]
+[sub_resource type="Resource" id="Resource_ilhjc"]
 script = ExtResource("1_314ev")
 type = 0
 output = "m"
@@ -443,8 +491,9 @@ output_uppercase = "M"
 display = "m"
 display_uppercase = "M"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_kwygu"]
+[sub_resource type="Resource" id="Resource_ccsmw"]
 script = ExtResource("1_314ev")
 type = 0
 output = ","
@@ -452,8 +501,9 @@ output_uppercase = "<"
 display = ","
 display_uppercase = "<"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_febjm"]
+[sub_resource type="Resource" id="Resource_5u5ug"]
 script = ExtResource("1_314ev")
 type = 0
 output = "."
@@ -461,8 +511,9 @@ output_uppercase = ">"
 display = "."
 display_uppercase = ">"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_aqnyu"]
+[sub_resource type="Resource" id="Resource_ens4p"]
 script = ExtResource("1_314ev")
 type = 0
 output = "/"
@@ -470,71 +521,79 @@ output_uppercase = "?"
 display = "/"
 display_uppercase = "?"
 stretch_ratio = 1.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_p4wsb"]
+[sub_resource type="Resource" id="Resource_tv0n3"]
 script = ExtResource("1_314ev")
 type = 1
-output = "SHIFT"
+output = ""
 output_uppercase = ""
 display = "SHIFT"
 display_uppercase = ""
 stretch_ratio = 1.5
+action = 4
 
-[sub_resource type="Resource" id="Resource_upnsd"]
+[sub_resource type="Resource" id="Resource_ncya3"]
 script = ExtResource("1_314ev")
 type = 1
-output = "CTRL"
+output = ""
 output_uppercase = ""
 display = "CTRL"
 display_uppercase = ""
 stretch_ratio = 1.0
+action = 5
 
-[sub_resource type="Resource" id="Resource_k1q0e"]
+[sub_resource type="Resource" id="Resource_hk1nw"]
 script = ExtResource("1_314ev")
 type = 1
-output = "SUPER"
+output = ""
 output_uppercase = ""
-display = "SUPR"
+display = "SUPER"
 display_uppercase = ""
 stretch_ratio = 1.0
+action = 7
 
-[sub_resource type="Resource" id="Resource_2c0il"]
+[sub_resource type="Resource" id="Resource_fbc4n"]
 script = ExtResource("1_314ev")
 type = 1
-output = "ALT"
+output = ""
 output_uppercase = ""
 display = "ALT"
 display_uppercase = ""
 stretch_ratio = 1.0
+action = 6
 
-[sub_resource type="Resource" id="Resource_vwgdr"]
+[sub_resource type="Resource" id="Resource_2eldt"]
 script = ExtResource("1_314ev")
-type = 1
-output = "SPACE"
-output_uppercase = ""
-display = "SPACE"
+type = 0
+output = " "
+output_uppercase = " "
+display = ""
 display_uppercase = ""
 stretch_ratio = 6.0
+action = 0
 
-[sub_resource type="Resource" id="Resource_b1ehy"]
+[sub_resource type="Resource" id="Resource_ax687"]
 script = ExtResource("1_314ev")
 type = 1
-output = "ALT"
+output = ""
 output_uppercase = ""
-display = "ALT"
-display_uppercase = ""
+display = "<"
+display_uppercase = "<"
 stretch_ratio = 1.0
+action = 10
 
-[sub_resource type="Resource" id="Resource_3uuhk"]
+[sub_resource type="Resource" id="Resource_pa8i2"]
 script = ExtResource("1_314ev")
 type = 1
-output = "CTRL"
+output = ""
 output_uppercase = ""
-display = "CTRL"
-display_uppercase = ""
+display = ">"
+display_uppercase = ">"
 stretch_ratio = 1.0
+action = 11
 
 [resource]
 script = ExtResource("1_00glt")
 name = "Default"
-rows = [[SubResource("Resource_fa4h3"), SubResource("Resource_vcvd7"), SubResource("Resource_co7kx"), SubResource("Resource_ayc6r"), SubResource("Resource_jdmu6"), SubResource("Resource_enjlc"), SubResource("Resource_6obfm"), SubResource("Resource_45613"), SubResource("Resource_e5qey"), SubResource("Resource_ry42p"), SubResource("Resource_xpx13"), SubResource("Resource_mfd0u"), SubResource("Resource_8hedx"), SubResource("Resource_5eqhn")], [SubResource("Resource_1grh2"), SubResource("Resource_sccoo"), SubResource("Resource_u6ffo"), SubResource("Resource_53e2v"), SubResource("Resource_t265m"), SubResource("Resource_sxocr"), SubResource("Resource_h3yde"), SubResource("Resource_p18e3"), SubResource("Resource_2rohc"), SubResource("Resource_0u037"), SubResource("Resource_k4it1"), SubResource("Resource_67a1o"), SubResource("Resource_re8lc"), SubResource("Resource_r2vqb")], [SubResource("Resource_7wodp"), SubResource("Resource_wdbe4"), SubResource("Resource_8bmfk"), SubResource("Resource_wer4j"), SubResource("Resource_w3vh1"), SubResource("Resource_263yl"), SubResource("Resource_in5po"), SubResource("Resource_tiikh"), SubResource("Resource_okcib"), SubResource("Resource_i1eky"), SubResource("Resource_on1fl"), SubResource("Resource_pekxk"), SubResource("Resource_fpoqs")], [SubResource("Resource_ifhog"), SubResource("Resource_5k3it"), SubResource("Resource_bnf2h"), SubResource("Resource_jt5jv"), SubResource("Resource_u6f2x"), SubResource("Resource_3sal5"), SubResource("Resource_ahjtx"), SubResource("Resource_s5ib7"), SubResource("Resource_kwygu"), SubResource("Resource_febjm"), SubResource("Resource_aqnyu"), SubResource("Resource_p4wsb")], [SubResource("Resource_upnsd"), SubResource("Resource_k1q0e"), SubResource("Resource_2c0il"), SubResource("Resource_vwgdr"), SubResource("Resource_b1ehy"), SubResource("Resource_3uuhk")]]
+rows = [[SubResource("Resource_2pwso"), SubResource("Resource_o5btd"), SubResource("Resource_55ccx"), SubResource("Resource_rdu1w"), SubResource("Resource_tlsvk"), SubResource("Resource_3n3jn"), SubResource("Resource_2ug4b"), SubResource("Resource_lwvj1"), SubResource("Resource_a6yxf"), SubResource("Resource_kj3hn"), SubResource("Resource_iganp"), SubResource("Resource_oi1wi"), SubResource("Resource_0dk7a"), SubResource("Resource_yrvbt")], [SubResource("Resource_k62t6"), SubResource("Resource_aurhb"), SubResource("Resource_1wb5n"), SubResource("Resource_v8h2o"), SubResource("Resource_qjjed"), SubResource("Resource_k44ne"), SubResource("Resource_rfk5y"), SubResource("Resource_i8glf"), SubResource("Resource_m0144"), SubResource("Resource_4bfve"), SubResource("Resource_op7ip"), SubResource("Resource_qc2xa"), SubResource("Resource_hgr38"), SubResource("Resource_yfs6s")], [SubResource("Resource_uwgn8"), SubResource("Resource_s7kho"), SubResource("Resource_psqqg"), SubResource("Resource_3i2jn"), SubResource("Resource_hk13s"), SubResource("Resource_i4o74"), SubResource("Resource_20rg5"), SubResource("Resource_7a08n"), SubResource("Resource_bap4g"), SubResource("Resource_sb3gq"), SubResource("Resource_6r1ul"), SubResource("Resource_ndkl7"), SubResource("Resource_75cgc")], [SubResource("Resource_ggrad"), SubResource("Resource_rul8l"), SubResource("Resource_s7iiy"), SubResource("Resource_f2v4q"), SubResource("Resource_5v3do"), SubResource("Resource_24qos"), SubResource("Resource_fvon5"), SubResource("Resource_ilhjc"), SubResource("Resource_ccsmw"), SubResource("Resource_5u5ug"), SubResource("Resource_ens4p"), SubResource("Resource_tv0n3")], [SubResource("Resource_ncya3"), SubResource("Resource_hk1nw"), SubResource("Resource_fbc4n"), SubResource("Resource_2eldt"), SubResource("Resource_ax687"), SubResource("Resource_pa8i2")]]
