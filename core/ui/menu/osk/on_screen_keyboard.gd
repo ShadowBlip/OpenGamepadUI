@@ -4,7 +4,7 @@ extends Control
 signal keyboard_populated
 signal layout_changed
 
-@export var layout: Resource
+@export var layout: KeyboardLayout = KeyboardLayout.new()
 
 const key_scene := preload("res://core/ui/components/button.tscn")
 
@@ -29,6 +29,7 @@ func populate_keyboard():
 		
 		# Create an HBox Container for the row
 		var container := HBoxContainer.new()
+		container.size_flags_vertical = HBoxContainer.SIZE_EXPAND_FILL
 		rows_container.add_child(container)
 		
 		# Loop through the layout and create key buttons for each key
@@ -37,6 +38,7 @@ func populate_keyboard():
 			if not key:
 				continue
 			var button := key_scene.instantiate()
+			button.size_flags_stretch_ratio = key.stretch_ratio
 			if key.type == KeyboardKeyConfig.TYPE.CHAR and key.display != "":
 				button.text = key.display
 			

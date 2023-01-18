@@ -1,7 +1,544 @@
-[gd_scene load_steps=3 format=3 uid="uid://bo6ui7jq422m6"]
+[gd_scene load_steps=64 format=3 uid="uid://bo6ui7jq422m6"]
 
 [ext_resource type="Script" path="res://core/ui/menu/osk/on_screen_keyboard.gd" id="1_3r64j"]
-[ext_resource type="Resource" uid="uid://ctm54o2rhe5fw" path="res://assets/keyboard/layouts/default_layout.tres" id="2_nm2mo"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_key_config.gd" id="2_wprcn"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_layout.gd" id="3_xjjwv"]
+
+[sub_resource type="Resource" id="Resource_fa4h3"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "`"
+output_uppercase = "~"
+display = "`"
+display_uppercase = "~"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_vcvd7"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "1"
+output_uppercase = "!"
+display = "1"
+display_uppercase = "!"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_co7kx"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "2"
+output_uppercase = "@"
+display = "2"
+display_uppercase = "@"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_ayc6r"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "3"
+output_uppercase = "#"
+display = "3"
+display_uppercase = "#"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_jdmu6"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "4"
+output_uppercase = "$"
+display = "4"
+display_uppercase = "$"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_enjlc"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "5"
+output_uppercase = "%"
+display = "5"
+display_uppercase = "%"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_6obfm"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "6"
+output_uppercase = "^"
+display = "6"
+display_uppercase = "^"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_45613"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "7"
+output_uppercase = "&"
+display = "7"
+display_uppercase = "&"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_e5qey"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "8"
+output_uppercase = "*"
+display = "8"
+display_uppercase = "*"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_ry42p"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "9"
+output_uppercase = "("
+display = "9"
+display_uppercase = "("
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_xpx13"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "0"
+output_uppercase = ")"
+display = "0"
+display_uppercase = ")"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_mfd0u"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "-"
+output_uppercase = "_"
+display = "-"
+display_uppercase = "_"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_8hedx"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "="
+output_uppercase = "+"
+display = "="
+display_uppercase = "+"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_5eqhn"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "BKSP"
+output_uppercase = ""
+display = "BKSP"
+display_uppercase = ""
+stretch_ratio = 1.5
+
+[sub_resource type="Resource" id="Resource_1grh2"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "TAB"
+output_uppercase = ""
+display = "TAB"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_sccoo"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "q"
+output_uppercase = "Q"
+display = "q"
+display_uppercase = "Q"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_u6ffo"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "w"
+output_uppercase = "W"
+display = "w"
+display_uppercase = "W"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_53e2v"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "e"
+output_uppercase = "E"
+display = "e"
+display_uppercase = "E"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_t265m"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "r"
+output_uppercase = "R"
+display = "r"
+display_uppercase = "R"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_sxocr"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "t"
+output_uppercase = "T"
+display = "t"
+display_uppercase = "T"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_h3yde"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "y"
+output_uppercase = "Y"
+display = "y"
+display_uppercase = "Y"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_p18e3"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "u"
+output_uppercase = "U"
+display = "u"
+display_uppercase = "U"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_2rohc"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "i"
+output_uppercase = "I"
+display = "i"
+display_uppercase = "I"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_0u037"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "o"
+output_uppercase = "O"
+display = "o"
+display_uppercase = "O"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_k4it1"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "p"
+output_uppercase = "P"
+display = "p"
+display_uppercase = "P"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_67a1o"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "["
+output_uppercase = "{"
+display = "["
+display_uppercase = "{"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_re8lc"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "]"
+output_uppercase = "}"
+display = "]"
+display_uppercase = "}"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_r2vqb"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "\\"
+output_uppercase = "|"
+display = "\\"
+display_uppercase = "|"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_7wodp"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "CAPS"
+output_uppercase = ""
+display = "CAPS"
+display_uppercase = ""
+stretch_ratio = 1.25
+
+[sub_resource type="Resource" id="Resource_wdbe4"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "a"
+output_uppercase = "A"
+display = "a"
+display_uppercase = "A"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_8bmfk"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "s"
+output_uppercase = "S"
+display = "s"
+display_uppercase = "S"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_wer4j"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "d"
+output_uppercase = "D"
+display = "d"
+display_uppercase = "D"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_w3vh1"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "f"
+output_uppercase = "F"
+display = "f"
+display_uppercase = "F"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_263yl"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "g"
+output_uppercase = "G"
+display = "g"
+display_uppercase = "G"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_in5po"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "h"
+output_uppercase = "H"
+display = "h"
+display_uppercase = "H"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_tiikh"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "j"
+output_uppercase = "J"
+display = "j"
+display_uppercase = "J"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_okcib"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "k"
+output_uppercase = "K"
+display = "k"
+display_uppercase = "K"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_i1eky"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "l"
+output_uppercase = "L"
+display = "l"
+display_uppercase = "L"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_on1fl"]
+script = ExtResource("2_wprcn")
+type = 0
+output = ";"
+output_uppercase = ":"
+display = ";"
+display_uppercase = ":"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_pekxk"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "'"
+output_uppercase = "\""
+display = "'"
+display_uppercase = "\""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_fpoqs"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "ENTER"
+output_uppercase = ""
+display = "ENTR"
+display_uppercase = ""
+stretch_ratio = 2.0
+
+[sub_resource type="Resource" id="Resource_ifhog"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "SHIFT"
+output_uppercase = ""
+display = "SHIFT"
+display_uppercase = ""
+stretch_ratio = 1.5
+
+[sub_resource type="Resource" id="Resource_5k3it"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "z"
+output_uppercase = "Z"
+display = "z"
+display_uppercase = "Z"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_bnf2h"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "x"
+output_uppercase = "X"
+display = "x"
+display_uppercase = "X"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_jt5jv"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "c"
+output_uppercase = "C"
+display = "c"
+display_uppercase = "C"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_u6f2x"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "v"
+output_uppercase = "V"
+display = "v"
+display_uppercase = "V"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_3sal5"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "b"
+output_uppercase = "B"
+display = "b"
+display_uppercase = "B"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_ahjtx"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "n"
+output_uppercase = "N"
+display = "n"
+display_uppercase = "N"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_s5ib7"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "m"
+output_uppercase = "M"
+display = "m"
+display_uppercase = "M"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_kwygu"]
+script = ExtResource("2_wprcn")
+type = 0
+output = ","
+output_uppercase = "<"
+display = ","
+display_uppercase = "<"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_febjm"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "."
+output_uppercase = ">"
+display = "."
+display_uppercase = ">"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_aqnyu"]
+script = ExtResource("2_wprcn")
+type = 0
+output = "/"
+output_uppercase = "?"
+display = "/"
+display_uppercase = "?"
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_p4wsb"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "SHIFT"
+output_uppercase = ""
+display = "SHIFT"
+display_uppercase = ""
+stretch_ratio = 1.5
+
+[sub_resource type="Resource" id="Resource_upnsd"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "CTRL"
+output_uppercase = ""
+display = "CTRL"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_k1q0e"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "SUPER"
+output_uppercase = ""
+display = "SUPR"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_2c0il"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "ALT"
+output_uppercase = ""
+display = "ALT"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_vwgdr"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "SPACE"
+output_uppercase = ""
+display = "SPACE"
+display_uppercase = ""
+stretch_ratio = 6.0
+
+[sub_resource type="Resource" id="Resource_b1ehy"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "ALT"
+output_uppercase = ""
+display = "ALT"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_3uuhk"]
+script = ExtResource("2_wprcn")
+type = 1
+output = "CTRL"
+output_uppercase = ""
+display = "CTRL"
+display_uppercase = ""
+stretch_ratio = 1.0
+
+[sub_resource type="Resource" id="Resource_hbpds"]
+script = ExtResource("3_xjjwv")
+name = "Default"
+rows = [[SubResource("Resource_fa4h3"), SubResource("Resource_vcvd7"), SubResource("Resource_co7kx"), SubResource("Resource_ayc6r"), SubResource("Resource_jdmu6"), SubResource("Resource_enjlc"), SubResource("Resource_6obfm"), SubResource("Resource_45613"), SubResource("Resource_e5qey"), SubResource("Resource_ry42p"), SubResource("Resource_xpx13"), SubResource("Resource_mfd0u"), SubResource("Resource_8hedx"), SubResource("Resource_5eqhn")], [SubResource("Resource_1grh2"), SubResource("Resource_sccoo"), SubResource("Resource_u6ffo"), SubResource("Resource_53e2v"), SubResource("Resource_t265m"), SubResource("Resource_sxocr"), SubResource("Resource_h3yde"), SubResource("Resource_p18e3"), SubResource("Resource_2rohc"), SubResource("Resource_0u037"), SubResource("Resource_k4it1"), SubResource("Resource_67a1o"), SubResource("Resource_re8lc"), SubResource("Resource_r2vqb")], [SubResource("Resource_7wodp"), SubResource("Resource_wdbe4"), SubResource("Resource_8bmfk"), SubResource("Resource_wer4j"), SubResource("Resource_w3vh1"), SubResource("Resource_263yl"), SubResource("Resource_in5po"), SubResource("Resource_tiikh"), SubResource("Resource_okcib"), SubResource("Resource_i1eky"), SubResource("Resource_on1fl"), SubResource("Resource_pekxk"), SubResource("Resource_fpoqs")], [SubResource("Resource_ifhog"), SubResource("Resource_5k3it"), SubResource("Resource_bnf2h"), SubResource("Resource_jt5jv"), SubResource("Resource_u6f2x"), SubResource("Resource_3sal5"), SubResource("Resource_ahjtx"), SubResource("Resource_s5ib7"), SubResource("Resource_kwygu"), SubResource("Resource_febjm"), SubResource("Resource_aqnyu"), SubResource("Resource_p4wsb")], [SubResource("Resource_upnsd"), SubResource("Resource_k1q0e"), SubResource("Resource_2c0il"), SubResource("Resource_vwgdr"), SubResource("Resource_b1ehy"), SubResource("Resource_3uuhk")]]
 
 [node name="OnScreenKeyboard" type="Control"]
 layout_mode = 3
@@ -11,7 +548,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3r64j")
-layout = ExtResource("2_nm2mo")
+layout = SubResource("Resource_hbpds")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
