@@ -7,6 +7,7 @@ signal layout_changed
 const key_scene := preload("res://core/ui/components/button.tscn")
 
 @export var layout: KeyboardLayout = KeyboardLayout.new()
+var context: KeyboardContext
 var logger := Log.get_logger("OSK")
 
 @onready var rows_container: VBoxContainer = $MarginContainer/VBoxContainer
@@ -58,6 +59,18 @@ func set_layout(key_layout: KeyboardLayout):
 	layout = key_layout
 	populate_keyboard()
 	layout_changed.emit()
+
+
+# Opens the OSK with the given context. The keyboard context determines where
+# keyboard inputs should go, and how to handle submits.
+func open(ctx: KeyboardContext):
+	context = ctx
+	visible = true
+
+
+# Closes the OSK
+func close():
+	visible = false
 
 
 # Handle key presses
