@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcopiu8srglu4"]
+
+[ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="1_f6er3"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/on_screen_keyboard_test.gd" id="1_l7c3f"]
+
+[node name="KeyboardTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l7c3f")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="CenterContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Some Text"
+
+[node name="OnScreenKeyboard" parent="." instance=ExtResource("1_f6er3")]
+layout_mode = 1

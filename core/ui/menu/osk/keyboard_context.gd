@@ -9,3 +9,8 @@ enum TYPE {
 var target: Control
 var submit: Callable
 var type: TYPE
+
+func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, sbmt: Callable = null) -> void:
+	target = tgt
+	submit = sbmt
+	type = t

@@ -22,6 +22,7 @@ enum ACTION {
 	RIGHT,
 	UP,
 	DOWN,
+	CLOSE_KEYBOARD,
 }
 
 @export var type: TYPE = TYPE.CHAR
