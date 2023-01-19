@@ -83,6 +83,16 @@ func get_context() -> KeyboardContext:
 # Configure the keyboard to use the given context. The keyboard context determines where
 # keyboard inputs should go, and how to handle submits.
 func set_context(ctx: KeyboardContext) -> void:
+	# If the target is a Godot TextEdit, update the caret position on context change
+	if ctx.target != null and ctx.target is TextEdit:
+		var text_edit := ctx.target as TextEdit
+		var lines := text_edit.get_line_count()
+		text_edit.set_caret_line(lines-1)
+		var current_line := text_edit.get_line(lines-1)
+		text_edit.set_caret_column(current_line.length())
+		#text_edit.clear()
+		
+	# Update our internal keyboard context
 	if _context == ctx:
 		return
 	_context = ctx
@@ -121,7 +131,7 @@ func _handle_key_char(key: KeyboardKeyConfig) -> void:
 	if _context == null:
 		logger.warn("Keyboard context not set, nowhere to send key input.")
 		return
-		
+	
 	if _context.type == KeyboardContext.TYPE.X11:
 		return
 	
@@ -129,9 +139,16 @@ func _handle_key_char(key: KeyboardKeyConfig) -> void:
 		logger.warn("Keyboard target not set, nowhere to send key input.")
 		return
 		
-	if _context.target.get("text") == null:
-		logger.warn("Non TextEdit nodes are not currently supported")
+	if not _context.target is TextEdit:
+		logger.warn("Non-TextEdit nodes are not currently supported")
 		return
+	
+	var text_edit := _context.target as TextEdit
+	var char := key.output
+	if _mode_shift:
+		char = key.output_uppercase
+	text_edit.insert_text_at_caret(char)
+
 
 # Handles special key inputs like shift, alt, ctrl, etc.
 func _handle_key_special(key: KeyboardKeyConfig) -> void:
@@ -141,4 +158,9 @@ func _handle_key_special(key: KeyboardKeyConfig) -> void:
 			return
 		KeyboardKeyConfig.ACTION.CLOSE_KEYBOARD:
 			close()
+			return
+		KeyboardKeyConfig.ACTION.BKSP:
+			if _context.target != null and _context.target is TextEdit:
+				var text_edit := _context.target as TextEdit
+				text_edit.backspace()
 			return
