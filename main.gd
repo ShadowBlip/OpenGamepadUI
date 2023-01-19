@@ -7,6 +7,8 @@ var overlay_display = DISPLAY
 var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
+@onready var osk := $OnScreenKeyboard
+
 func _init() -> void:
 	# Tell gamescope that we're an overlay
 	if overlay_window_id < 0:
@@ -22,10 +24,21 @@ func _ready() -> void:
 	# Set bg to transparent
 	get_tree().get_root().transparent_bg = true
 	
-	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	# Subscribe to state changes
+	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	var state_manager: StateManager = $StateManager
 	state_manager.state_changed.connect(_on_state_changed)
+	
+	# Wire all search bars to the on-screen keyboard
+	for b in get_tree().get_nodes_in_group("search_bar"):
+		var search_bar := b as SearchBar
+		var on_keyboard_requested := func():
+			var context := KeyboardContext.new()
+			context.type = KeyboardContext.TYPE.GODOT
+			context.target = search_bar
+			context.close_on_submit = true
+			osk.open(context)
+		search_bar.keyboard_requested.connect(on_keyboard_requested)
 
 
 # Handle state changes
@@ -35,7 +48,7 @@ func _on_state_changed(from: int, to: int, _data: Dictionary):
 		for child in $UIContainer.get_children():
 			child.visible = false
 		return
-	
+		
 	# Display all menus?
 	for child in $UIContainer.get_children():
 		child.visible = true

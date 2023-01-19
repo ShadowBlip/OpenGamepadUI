@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dtqnl1he886r4"]
+[gd_scene load_steps=22 format=3 uid="uid://dtqnl1he886r4"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://ctu7mqhywnopb" path="res://core/systems/launcher/launch_manager.tscn" id="2_bsexb"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="11_llrsu"]
 [ext_resource type="PackedScene" uid="uid://bwl2icwgry4l" path="res://core/ui/menu/launch/game_launch_menu.tscn" id="12_vmyfm"]
 [ext_resource type="PackedScene" uid="uid://ibmgxjl33jn8" path="res://core/ui/menu/settings/settings_menu.tscn" id="16_xub48"]
+[ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="21_lje1h"]
 
 [node name="Main" type="Control" groups=["main"]]
 layout_mode = 3
@@ -100,4 +101,8 @@ offset_left = 0.0
 layout_mode = 2
 
 [node name="Toast" parent="." instance=ExtResource("11_llrsu")]
+layout_mode = 1
+
+[node name="OnScreenKeyboard" parent="." instance=ExtResource("21_lje1h")]
+visible = false
 layout_mode = 1

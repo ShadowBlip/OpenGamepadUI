@@ -6,11 +6,17 @@ enum TYPE {
 	X11,
 }
 
+var type: TYPE
 var target: Control
 var submit: Callable
-var type: TYPE
+var close_on_submit: bool = false
 
-func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, sbmt: Callable = null) -> void:
+func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, sbmt: Callable = _on_submit, close_after_submit: bool = true) -> void:
+	type = t
 	target = tgt
 	submit = sbmt
-	type = t
+	close_on_submit = close_after_submit
+
+
+func _on_submit(_text: String):
+	pass
