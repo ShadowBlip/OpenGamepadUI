@@ -1,6 +1,6 @@
+@icon("res://assets/icons/box.svg")
 extends Node
 class_name Plugin
-@icon("res://assets/icons/box.svg")
 
 # The base resource directory for a given plugin. Useful for loading plugin-specific
 # resources.

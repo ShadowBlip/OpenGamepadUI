@@ -1,6 +1,6 @@
+@icon("res://assets/icons/book-open.svg")
 extends Node
 class_name Library
-@icon("res://assets/icons/book-open.svg")
 
 # Unique identifier for the library
 @export var library_id: String

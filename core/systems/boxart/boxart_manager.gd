@@ -1,6 +1,6 @@
+@icon("res://assets/icons/image.svg")
 extends Node
 class_name BoxArtManager
-@icon("res://assets/icons/image.svg")
 
 const REQUIRED_FIELDS: Array = ["provider_id"]
 

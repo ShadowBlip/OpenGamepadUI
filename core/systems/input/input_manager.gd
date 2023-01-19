@@ -1,6 +1,6 @@
+@icon("res://assets/icons/navigation.svg")
 extends Node
 class_name InputManager
-@icon("res://assets/icons/navigation.svg")
 
 @onready var main: Main = get_node("..")
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")

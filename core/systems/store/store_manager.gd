@@ -1,6 +1,6 @@
+@icon("res://assets/icons/tag.svg")
 extends Node
 class_name StoreManager
-@icon("res://assets/icons/tag.svg")
 
 const REQUIRED_FIELDS: Array = ["store_id", "store_name", "store_image"]
 

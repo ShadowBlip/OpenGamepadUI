@@ -1,6 +1,6 @@
+@icon("res://assets/icons/upload.svg")
 extends Node
 class_name LaunchManager
-@icon("res://assets/icons/upload.svg")
 
 signal app_launched(app: LibraryLaunchItem, pid: int)
 signal app_stopped(app: LibraryLaunchItem, pid: int)

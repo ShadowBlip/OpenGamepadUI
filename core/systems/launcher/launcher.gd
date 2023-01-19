@@ -1,6 +1,6 @@
+@icon("res://assets/icons/loader.svg")
 extends Node
 class_name Launcher
-@icon("res://assets/icons/loader.svg")
 
 # The library item to launch
 @export var library_item: LibraryItem

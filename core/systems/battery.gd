@@ -1,6 +1,6 @@
+@icon("res://assets/icons/battery-charging.svg")
 extends Object
 class_name Battery
-@icon("res://assets/icons/battery-charging.svg")
 
 const power_supply_dir = "/sys/class/power_supply"
 

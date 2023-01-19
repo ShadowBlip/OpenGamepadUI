@@ -1,6 +1,6 @@
+@icon("res://assets/icons/trello.svg")
 extends Node
 class_name LibraryManager
-@icon("res://assets/icons/trello.svg")
 
 const REQUIRED_FIELDS: Array = ["library_id"]
 

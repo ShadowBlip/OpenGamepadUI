@@ -1,6 +1,6 @@
+@icon("res://assets/icons/database.svg")
 extends Object
 class_name Cache
-@icon("res://assets/icons/database.svg")
 
 const CHUNK_SIZE = 256
 const IMAGE_EXTS = ["png", "jpg", "jpeg", "bmp"]

@@ -1,6 +1,6 @@
+@icon("res://assets/icons/image.svg")
 extends Node
 class_name BoxArtProvider
-@icon("res://assets/icons/image.svg")
 
 signal boxart_loaded(texture: Texture2D)
 

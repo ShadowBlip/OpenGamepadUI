@@ -1,6 +1,6 @@
+@icon("res://assets/icons/alert-triangle.svg")
 extends Node
 class_name NotificationManager
-@icon("res://assets/icons/alert-triangle.svg")
 
 const Toast := preload("res://core/ui/components/toast.gd")
 

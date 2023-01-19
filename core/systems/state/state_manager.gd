@@ -1,9 +1,9 @@
 # StateManager is responsible for managing the states for different components.
 # It is implemented as a state machine with a stack of states that you can
 # push to and pop.
+@icon("res://assets/icons/log-in.svg")
 extends Node
 class_name StateManager
-@icon("res://assets/icons/log-in.svg")
 
 enum State {
 	NONE,

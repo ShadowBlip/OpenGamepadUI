@@ -1,8 +1,8 @@
 # LibraryLaunchItem is a library-specific structure that describes how to launch
 # a game.
+@icon("res://assets/icons/box.svg")
 extends Resource
 class_name LibraryLaunchItem
-@icon("res://assets/icons/box.svg")
 
 @export var _id: String
 @export var _provider_id: String
