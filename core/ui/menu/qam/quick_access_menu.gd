@@ -15,7 +15,7 @@ func _ready() -> void:
 	
 
 func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
-	visible = to == StateManager.State.QUICK_ACCESS_MENU
+	visible = to == StateManager.STATE.QUICK_ACCESS_MENU
 	
 	# Don't do anything if its not our time.
 	if not visible:

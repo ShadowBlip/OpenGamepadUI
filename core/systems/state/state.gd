@@ -1,8 +1,9 @@
 extends Resource
-class_name StateMachineState
+class_name State
 
-signal state_entered
-signal state_exited
+signal state_entered(from: State)
+signal state_exited(to: State)
+signal state_removed
 
 @export var name: String
-var data: Variant
+@export var data: Dictionary

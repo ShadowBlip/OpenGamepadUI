@@ -5,8 +5,12 @@ var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
 var overlay_display = DISPLAY
 var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
+var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var home_state := preload("res://assets/state/states/home.tres") as State
+var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
+@onready var ui_container := $UIContainer
 @onready var osk := $OnScreenKeyboard
 
 func _init() -> void:
@@ -18,16 +22,31 @@ func _init() -> void:
 	_setup(overlay_window_id)
 
 
+# Lets us run as an overlay in gamescope
+func _setup(window_id: int) -> void:
+	# Pretend to be Steam
+	# Gamescope is hard-coded to look for appId 769
+	if Gamescope.set_main_app(DISPLAY, window_id) != OK:
+		logger.error("Unable to set STEAM_GAME atom!")
+	# Sets ourselves to the input focus
+	if Gamescope.set_input_focus(DISPLAY, window_id, 1) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+
 # Called when the node enters the scene tree for the first time.
 # gamescope --xwayland-count 2 -- build/opengamepad-ui.x86_64
 func _ready() -> void:
 	# Set bg to transparent
+	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	get_tree().get_root().transparent_bg = true
 	
-	# Subscribe to state changes
-	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
-	var state_manager: StateManager = $StateManager
-	state_manager.state_changed.connect(_on_state_changed)
+	# Initialize the state machine with its initial state
+	state_machine.push_state(home_state)
+	
+	# Show/hide the overlay when we enter/exit the in-game state
+	in_game_state.state_entered.connect(_on_game_state_entered)
+	in_game_state.state_exited.connect(_on_game_state_exited)
+	in_game_state.state_removed.connect(_on_game_state_removed)
 	
 	# Wire all search bars to the on-screen keyboard
 	for b in get_tree().get_nodes_in_group("search_bar"):
@@ -41,26 +60,20 @@ func _ready() -> void:
 		search_bar.keyboard_requested.connect(on_keyboard_requested)
 
 
-# Handle state changes
-func _on_state_changed(from: int, to: int, _data: Dictionary):
-	# Hide all menus when in-game
-	if to == StateManager.State.IN_GAME:
-		for child in $UIContainer.get_children():
-			child.visible = false
-		return
-		
-	# Display all menus?
-	for child in $UIContainer.get_children():
+func _on_game_state_entered(_from: State) -> void:
+	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	for child in ui_container.get_children():
+		child.visible = false
+
+
+func _on_game_state_exited(_to: State) -> void:
+	if state_machine.has_state(in_game_state):
+		Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.ALWAYS)
+	else:
+		Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	for child in ui_container.get_children():
 		child.visible = true
-	return
 
 
-# Lets us run as an overlay in gamescope
-func _setup(window_id: int) -> void:
-	# Pretend to be Steam
-	# Gamescope is hard-coded to look for appId 769
-	if Gamescope.set_main_app(DISPLAY, window_id) != OK:
-		logger.error("Unable to set STEAM_GAME atom!")
-	# Sets ourselves to the input focus
-	if Gamescope.set_input_focus(DISPLAY, window_id, 1) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+func _on_game_state_removed() -> void:
+	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bj8ej083is2oc"]
+[gd_scene load_steps=17 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_noo0w"]
 [ext_resource type="Script" path="res://core/ui/menu/home/home_menu.gd" id="2_ixi86"]
@@ -8,7 +8,9 @@
 [ext_resource type="Script" path="res://core/systems/library/library_launch_item.gd" id="6_cepwl"]
 [ext_resource type="Script" path="res://core/systems/library/library_item.gd" id="7_7xnh7"]
 [ext_resource type="Texture2D" uid="uid://djeanchdp7u18" path="res://assets/icons/book.svg" id="8_0qlm2"]
-[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="9_4rqgd"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_8yw4g"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_tl8ss"]
+[ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="11_lws2k"]
 
 [sub_resource type="Resource" id="Resource_gsruu"]
 script = ExtResource("6_cepwl")
@@ -80,7 +82,7 @@ theme = ExtResource("1_noo0w")
 script = ExtResource("2_ixi86")
 
 [node name="Panel" type="Panel" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -88,7 +90,7 @@ grow_vertical = 2
 
 [node name="SelectedBanner" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.0470588)
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -96,7 +98,7 @@ grow_vertical = 2
 texture = ExtResource("3_2r2w8")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 12
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -109,42 +111,28 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 1260.0
-offset_bottom = 335.0
+layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
-offset_right = 1240.0
-offset_bottom = 315.0
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
-offset_right = 402.0
-offset_bottom = 315.0
+layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 352.0
-offset_bottom = 265.0
+layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
 custom_minimum_size = Vector2(143, 215)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 143.0
-offset_bottom = 215.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 text = "vkCube"
 layout = 1
 
@@ -153,20 +141,13 @@ library_item = SubResource("Resource_icex7")
 
 [node name="LibraryPoster" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
 custom_minimum_size = Vector2(143, 215)
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 159.0
-offset_right = 302.0
-offset_bottom = 215.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 texture_normal = null
 text = "Library"
 layout = 1
 
 [node name="TextureContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster"]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -174,17 +155,16 @@ grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster/TextureContainer"]
 custom_minimum_size = Vector2(100, 100)
-offset_left = 21.0
-offset_top = 57.0
-offset_right = 121.0
-offset_bottom = 157.0
+layout_mode = 2
 texture = ExtResource("8_0qlm2")
-ignore_texture_size = true
+expand_mode = 1
 stretch_mode = 4
 
-[node name="StateChanger" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster" instance=ExtResource("9_4rqgd")]
-state = 4
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster" instance=ExtResource("9_8yw4g")]
+state_machine = ExtResource("10_tl8ss")
+state = ExtResource("11_lws2k")
 action = 2
+on_signal = "button_up"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ba34axjjpixwc"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_ioeio"]
+
+[resource]
+script = ExtResource("1_ioeio")
+name = "store"
+data = null

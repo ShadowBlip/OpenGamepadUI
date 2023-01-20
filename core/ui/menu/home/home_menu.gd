@@ -1,6 +1,10 @@
 extends Control
 
-@onready var state_manager: StateManager = get_node("/root/Main/StateManager")
+var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var home_state := preload("res://assets/state/states/home.tres") as State
+var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
+var state_changer_scene := preload("res://core/systems/state/state_changer.tscn") as PackedScene
+
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
@@ -8,19 +12,24 @@ extends Control
 @onready var banner: TextureRect = $SelectedBanner
 @onready var player: AnimationPlayer = $AnimationPlayer
 
-var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
-var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	state_manager.state_changed.connect(_on_state_changed)
 	library_manager.library_reloaded.connect(_on_recent_apps_updated)
 	launch_manager.recent_apps_changed.connect(_on_recent_apps_updated)
+	home_state.state_entered.connect(_on_home_state_entered)
+	home_state.state_exited.connect(_on_home_state_exited)
 
-	# Grab the first button as focus
+
+func _on_home_state_entered(from: State) -> void:
+	visible = true
 	_grab_focus()
-
-
+	
+	
+func _on_home_state_exited(to: State) -> void:
+	visible = state_machine.has_state(home_state)
+	
+	
 func _on_recent_apps_updated():
 	# Clear any old grid items
 	for child in container.get_children():
@@ -45,14 +54,6 @@ func _on_recent_apps_updated():
 	# Populate our grid with items
 	_populate_grid(container, items.values())
 	_grab_focus()
-
-
-func _on_state_changed(from: int, to: int, _data: Dictionary):
-	visible = state_manager.has_state(StateManager.State.HOME)
-	if visible and to == StateManager.State.IN_GAME:
-		state_manager.remove_state(StateManager.State.HOME)
-	if to == StateManager.State.HOME:
-		_grab_focus()
 
 
 func _grab_focus():
@@ -99,7 +100,7 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		# Build a launcher from the library item
 		var state_changer: StateChanger = state_changer_scene.instantiate()
 		state_changer.signal_name = "button_up"
-		state_changer.state = StateManager.State.GAME_LAUNCHER
+		state_changer.state = StateManager.STATE.GAME_LAUNCHER
 		state_changer.action = StateChanger.Action.PUSH
 		state_changer.data = {"item": item}
 		poster.add_child(state_changer)

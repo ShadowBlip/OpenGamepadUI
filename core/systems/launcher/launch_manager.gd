@@ -65,12 +65,12 @@ func _save_persist_data():
 
 func _on_state_changed(from: int, to: int, _data: Dictionary):
 	# If a game is running and our stack doesn't have IN_GAME, push it.
-	if len(running) > 0 and not state_manager.has_state(StateManager.State.IN_GAME):
-		state_manager.push_state_front(StateManager.State.IN_GAME)
+	if len(running) > 0 and not state_manager.has_state(StateManager.STATE.IN_GAME):
+		state_manager.push_state_front(StateManager.STATE.IN_GAME)
 		
 	# Setting overlay should only happen when we are overlaying UI over a running
 	# game.
-	if state_manager.has_state(StateManager.State.IN_GAME):
+	if state_manager.has_state(StateManager.STATE.IN_GAME):
 		_set_overlay(true)
 	else:
 		_set_overlay(false)
@@ -105,7 +105,7 @@ func launch(app: LibraryLaunchItem) -> int:
 	
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(app, pid)
-	state_manager.set_state([StateManager.State.IN_GAME])
+	state_manager.set_state([StateManager.STATE.IN_GAME])
 	_update_recent_apps(app)
 	return pid
 
@@ -156,7 +156,7 @@ func _remove_running(pid: int):
 	running.remove_at(i)
 	
 	# TODO: Better way to do this?
-	state_manager.set_state([StateManager.State.HOME])
+	state_manager.set_state([StateManager.STATE.HOME])
 	
 	app_stopped.emit(app, pid)
 
@@ -178,8 +178,8 @@ func _get_target_display(exclude_display: String) -> String:
 # Checks for running apps and updates our state accordingly
 func _check_running():
 	if len(running) == 0:
-		if state_manager.has_state(StateManager.State.IN_GAME):
-			state_manager.remove_state(StateManager.State.IN_GAME)
+		if state_manager.has_state(StateManager.STATE.IN_GAME):
+			state_manager.remove_state(StateManager.STATE.IN_GAME)
 		return
 	
 	# Check all running apps
@@ -210,5 +210,5 @@ func _check_running():
 		_remove_running(pid)
 		
 	# Change away from IN_GAME state if nothing is running
-	if state_manager.current_state() == StateManager.State.IN_GAME and len(running) == 0:
+	if state_manager.current_state() == StateManager.STATE.IN_GAME and len(running) == 0:
 		state_manager.pop_state()

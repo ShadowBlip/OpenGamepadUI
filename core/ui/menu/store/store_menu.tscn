@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://hg2schw8qdvn"]
 
 [ext_resource type="Script" path="res://core/ui/menu/store/store_menu.gd" id="1_cl0ln"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_3di5k"]
@@ -15,7 +15,7 @@ grow_vertical = 2
 script = ExtResource("1_cl0ln")
 
 [node name="Panel" type="Panel" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -23,7 +23,7 @@ grow_vertical = 2
 theme = ExtResource("2_3di5k")
 
 [node name="StoresContent" type="MarginContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -34,32 +34,23 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="StoresContent"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 750.0
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="StoresContent/ScrollContainer"]
-offset_right = 1180.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
 [node name="Button" parent="StoresContent/ScrollContainer/HFlowContainer" instance=ExtResource("3_rolvk")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1180.0
-offset_bottom = 31.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 text = "Test Store"
 
 [node name="HomeContent" type="MarginContainer" parent="."]
 visible = false
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -70,21 +61,19 @@ theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HomeContent"]
-offset_left = 50.0
-offset_top = 50.0
-offset_right = 1230.0
-offset_bottom = 750.0
+layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="HomeContent/ScrollContainer"]
-offset_right = 1180.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
 [node name="Loading01" parent="." instance=ExtResource("4_c22vd")]
 visible = false
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

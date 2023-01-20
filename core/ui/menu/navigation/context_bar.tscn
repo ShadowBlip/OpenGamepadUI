@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://dpajbxrv14ehk"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
 [ext_resource type="Script" path="res://core/ui/menu/navigation/context_bar.gd" id="2_jserv"]
@@ -16,7 +16,7 @@ theme = ExtResource("1_ylil8")
 script = ExtResource("2_jserv")
 
 [node name="Panel" type="Panel" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -24,7 +24,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -35,12 +35,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 1270.0
-offset_bottom = 45.0
+layout_mode = 2
 
 [node name="DebugLabel" type="Label" parent="MarginContainer/HBoxContainer"]
-offset_top = 6.0
-offset_right = 1.0
-offset_bottom = 29.0
+layout_mode = 2

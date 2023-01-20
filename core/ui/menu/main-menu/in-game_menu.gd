@@ -11,23 +11,23 @@ func _ready() -> void:
 
 func _on_state_changed(from: int, to: int, _data: Dictionary):
 	# Set the resume button focus
-	if to == StateManager.State.IN_GAME_MENU:
+	if to == StateManager.STATE.IN_GAME_MENU:
 		var button: Button = $MarginContainer/VBoxContainer/ResumeButton
 		button.grab_focus.call_deferred()
 	
 	# If we're no longer in-game, remove ourselves from the state stack.
-	if not state_mgr.has_state(StateManager.State.IN_GAME) and state_mgr.has_state(StateManager.State.IN_GAME_MENU):
-		state_mgr.remove_state(StateManager.State.IN_GAME_MENU)
+	if not state_mgr.has_state(StateManager.STATE.IN_GAME) and state_mgr.has_state(StateManager.STATE.IN_GAME_MENU):
+		state_mgr.remove_state(StateManager.STATE.IN_GAME_MENU)
 	
 	# If we're not switching to the in-game state, disable ourselves
-	if to != StateManager.State.IN_GAME_MENU:
+	if to != StateManager.STATE.IN_GAME_MENU:
 		visible = false
 		return
 	visible = true
 
 
 func _on_resume_button_button_up() -> void:
-	state_mgr.replace_state(StateManager.State.IN_GAME)
+	state_mgr.replace_state(StateManager.STATE.IN_GAME)
 
 
 func _on_exit_button_button_up() -> void:

@@ -1,12 +1,12 @@
 extends Control
 
-@onready var state_manager: StateManager = get_node("/root/Main/StateManager")
-@onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
-
+var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var store_state := preload("res://assets/state/states/store.tres") as State
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _current_store: String
-
 var logger := Log.get_logger("StoreMenu")
+
+@onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -18,8 +18,30 @@ func _ready() -> void:
 	
 	# Listen for stores that register
 	store_manager.store_registered.connect(_on_store_registered)
-	state_manager.state_changed.connect(_on_state_changed)
+	store_state.state_entered.connect(_on_store_state_entered)
+	store_state.state_exited.connect(_on_store_state_exited)
 	visible = false
+
+
+func _on_store_state_entered(_from: State):
+	visible = true
+	if _current_store == "":
+		var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
+		for child in grid.get_children():
+			child.grab_focus.call_deferred()
+			break
+	else:
+		var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
+		for child in grid.get_children():
+			child.grab_focus.call_deferred()
+			break
+
+
+func _on_store_state_exited(_to: State):
+	visible = state_machine.has_state(store_state)
+	if not visible:
+		_reset_store()
+		return
 
 
 # When a store is registered, add an entry to the stores menu
@@ -35,26 +57,6 @@ func _on_store_registered(store: Store) -> void:
 	poster.pressed.connect(_launch_store.bind(store))
 
 	grid.add_child(poster)
-
-
-func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
-	visible = state_manager.has_state(StateManager.State.STORE)
-	if not visible:
-		_reset_store()
-		return
-	if visible and to == StateManager.State.IN_GAME:
-		state_manager.remove_state(StateManager.State.STORE)
-	
-	if _current_store == "":
-		var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
-		for child in grid.get_children():
-			child.grab_focus.call_deferred()
-			break
-	else:
-		var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
-		for child in grid.get_children():
-			child.grab_focus.call_deferred()
-			break
 
 
 func _reset_store():
