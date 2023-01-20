@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://cr544el0cqjlm"]
+
+[ext_resource type="Script" path="res://core/systems/state/state_machine.gd" id="1_qv40x"]
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="2_jk20e"]
+
+[sub_resource type="Resource" id="Resource_3x4ar"]
+script = ExtResource("2_jk20e")
+name = "home"
+
+[resource]
+script = ExtResource("1_qv40x")
+starting_state = SubResource("Resource_3x4ar")
+logger_name = "StateMachine"
