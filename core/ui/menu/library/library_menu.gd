@@ -2,8 +2,9 @@ extends Control
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var library_state := preload("res://assets/state/states/library.tres") as State
+var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
-var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
 var _library := {}
 var _current_selection := {}
 
@@ -36,7 +37,7 @@ func _on_library_state_exited(_to: State):
 
 # Handle searches
 func _on_search(text: String):
-	if state_machine.current_state() != library_state:
+	if not state_machine.current_state() in [library_state, osk_state]:
 		return
 	text = text.to_lower()
 	
@@ -94,13 +95,11 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 			BoxArtManager.Layout.GRID_PORTRAIT, 
 		)
 		
-		# Build a launcher from the library item
-		var state_changer: StateChanger = state_changer_scene.instantiate()
-		state_changer.signal_name = "button_up"
-		state_changer.state = StateManager.STATE.GAME_LAUNCHER
-		state_changer.action = StateChanger.Action.PUSH
-		state_changer.data = {"item": item}
-		poster.add_child(state_changer)
+		# Listen for button presses and pass the library item with the state
+		var on_button_up := func():
+			launcher_state.data = {"item": item}
+			state_machine.push_state(launcher_state)
+		poster.button_up.connect(on_button_up)
 		
 		# Listen for focus changes to keep track of our current selection
 		# between state changes.

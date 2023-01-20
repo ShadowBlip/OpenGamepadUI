@@ -27,6 +27,8 @@ func _on_state_changed(from: State, to: State) -> void:
 	if to != null:
 		to_str = to.name
 		to.state_entered.emit(from)
+	if logger._name != logger_name:
+		logger = Log.get_logger(logger_name)
 	logger.info("Switched from state {0} to {1}".format([from_str, to_str]))
 
 

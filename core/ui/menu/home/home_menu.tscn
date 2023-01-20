@@ -163,7 +163,6 @@ stretch_mode = 4
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster" instance=ExtResource("9_8yw4g")]
 state_machine = ExtResource("10_tl8ss")
 state = ExtResource("11_lws2k")
-action = 2
 on_signal = "button_up"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

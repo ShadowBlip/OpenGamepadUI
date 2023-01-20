@@ -2,8 +2,8 @@ extends Control
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
+var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
-var state_changer_scene := preload("res://core/systems/state/state_changer.tscn") as PackedScene
 
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
@@ -80,7 +80,7 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		var item: LibraryItem = entry
 
 		# Build a poster for each library item
-		var poster: TextureButton = poster_scene.instantiate()
+		var poster := poster_scene.instantiate() as TextureButton
 		poster.library_item = item
 		if i == 0:
 			poster.layout = poster.LAYOUT_MODE.LANDSCAPE
@@ -97,13 +97,11 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		# Listen for focus events on the posters
 		poster.focus_entered.connect(_on_poster_focused.bind(item))
 
-		# Build a launcher from the library item
-		var state_changer: StateChanger = state_changer_scene.instantiate()
-		state_changer.signal_name = "button_up"
-		state_changer.state = StateManager.STATE.GAME_LAUNCHER
-		state_changer.action = StateChanger.Action.PUSH
-		state_changer.data = {"item": item}
-		poster.add_child(state_changer)
+		# Listen for button presses and pass the library item with the state
+		var on_button_up := func():
+			launcher_state.data = {"item": item}
+			state_machine.push_state(launcher_state)
+		poster.button_up.connect(on_button_up)
 
 		# Add the poster to the grid
 		grid.add_child(poster)

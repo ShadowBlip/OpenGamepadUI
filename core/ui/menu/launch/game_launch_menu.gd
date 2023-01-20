@@ -10,14 +10,14 @@ var logger := Log.get_logger("GameLaunchMenu")
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	launcher_state.state_entered.connect(_on_launcher_state_entered)
-	launcher_state.state_exited.connect(_on_launcher_state_exited)
-	visible = false
+	launcher_state.state_entered.connect(_on_state_entered)
+	launcher_state.state_exited.connect(_on_state_exited)
 	
 	
-func _on_launcher_state_entered(_from: State) -> void:
+func _on_state_entered(_from: State) -> void:
 	# Focus the first entry on state change
 	launch_button.grab_focus.call_deferred()
 
@@ -31,6 +31,7 @@ func _on_launcher_state_entered(_from: State) -> void:
 	var library_item: LibraryItem = launcher_state.data["item"]
 	var launcher: Launcher = launch_button.get_node("Launcher")
 	launcher.library_item = library_item
+	logger.info("Configured launcher for game: " + library_item.name)
 
 	# Load the banner for the game
 	banner.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
@@ -45,7 +46,7 @@ func _on_launcher_state_entered(_from: State) -> void:
 	visible = true
 
 
-func _on_launcher_state_exited(to: State) -> void:
+func _on_state_exited(to: State) -> void:
 	visible = false
 	if to == in_game_state:
 		state_machine.remove_state(launcher_state)

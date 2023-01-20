@@ -7,11 +7,12 @@ var overlay_display = DISPLAY
 var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var ui_container := $UIContainer
-@onready var osk := $OnScreenKeyboard
+@onready var osk := $OnScreenKeyboard as OnScreenKeyboard
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
@@ -47,6 +48,13 @@ func _ready() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
+	
+	# Configure the OSK with the state machine
+	var on_osk_opened := func():
+		state_machine.push_state(osk_state)
+	osk.keyboard_opened.connect(on_osk_opened)
+	var on_osk_closed := func():
+		state_machine.remove_state(osk_state)
 	
 	# Wire all search bars to the on-screen keyboard
 	for b in get_tree().get_nodes_in_group("search_bar"):
