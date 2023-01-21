@@ -70,6 +70,7 @@ func _ready() -> void:
 
 func _on_game_state_entered(_from: State) -> void:
 	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	_set_overlay(true)
 	for child in ui_container.get_children():
 		child.visible = false
 
@@ -77,11 +78,22 @@ func _on_game_state_entered(_from: State) -> void:
 func _on_game_state_exited(_to: State) -> void:
 	if state_machine.has_state(in_game_state):
 		Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.ALWAYS)
+		_set_overlay(true)
 	else:
-		Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+		_on_game_state_removed()
 	for child in ui_container.get_children():
 		child.visible = true
 
 
 func _on_game_state_removed() -> void:
 	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	_set_overlay(false)
+
+
+# Set overlay will set the Gamescope atom to indicate that we should be drawn
+# over a running game or not.
+func _set_overlay(enable: bool) -> void:
+	var overlay_enabled = 0
+	if enable:
+		overlay_enabled = 1
+	Gamescope.set_overlay(DISPLAY, overlay_window_id, overlay_enabled)

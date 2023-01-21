@@ -18,20 +18,19 @@ var _current_selection := {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	library_state.state_entered.connect(_on_library_state_entered)
-	library_state.state_exited.connect(_on_library_state_exited)
+	library_state.state_entered.connect(_on_state_entered)
+	library_state.state_exited.connect(_on_state_exited)
 	library_manager.library_reloaded.connect(_on_library_reloaded)
 	global_search.search_submitted.connect(_on_search)
-	visible = false
 
 
-func _on_library_state_entered(_from: State):
+func _on_state_entered(_from: State):
 	visible = true
 	# Focus the first entry on state change
 	_on_tab_container_tab_changed(tab_container.current_tab)
 
 
-func _on_library_state_exited(_to: State):
+func _on_state_exited(_to: State):
 	visible = state_machine.has_state(library_state)
 
 

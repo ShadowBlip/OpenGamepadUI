@@ -17,17 +17,11 @@ var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedSce
 func _ready() -> void:
 	library_manager.library_reloaded.connect(_on_recent_apps_updated)
 	launch_manager.recent_apps_changed.connect(_on_recent_apps_updated)
-	home_state.state_entered.connect(_on_home_state_entered)
-	home_state.state_exited.connect(_on_home_state_exited)
+	home_state.state_entered.connect(_on_state_entered)
 
 
-func _on_home_state_entered(from: State) -> void:
-	visible = true
+func _on_state_entered(_from: State) -> void:
 	_grab_focus()
-	
-	
-func _on_home_state_exited(to: State) -> void:
-	visible = state_machine.has_state(home_state)
 	
 	
 func _on_recent_apps_updated():

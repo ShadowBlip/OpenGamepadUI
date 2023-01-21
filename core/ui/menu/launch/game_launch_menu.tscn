@@ -1,11 +1,16 @@
-[gd_scene load_steps=9 format=3 uid="uid://bwl2icwgry4l"]
+[gd_scene load_steps=14 format=3 uid="uid://bwl2icwgry4l"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_sp632"]
+[ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="3_68ilj"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_io70p"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_7y2kk"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_mab76"]
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="5_13gqy"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_ejgx3"]
 [ext_resource type="Texture2D" uid="uid://bi3kevyi1dgys" path="res://assets/icons/game-controller.svg" id="6_hc1fc"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_t3rni"]
 [ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ef1c"]
@@ -19,6 +24,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_uhkt4")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_sp632")]
+state = ExtResource("3_68ilj")
+visible_during = [ExtResource("4_mab76"), ExtResource("5_ejgx3"), ExtResource("6_t3rni")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

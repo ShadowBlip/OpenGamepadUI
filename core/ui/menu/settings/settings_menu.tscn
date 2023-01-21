@@ -1,11 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=13 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_364oy"]
 [ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="2_fpxtd"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="3_5g7v4"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_11sf6"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_cyj3i"]
 [ext_resource type="PackedScene" uid="uid://cbybmmt7bigkt" path="res://core/ui/menu/settings/plugin_store_menu.tscn" id="4_dx1s7"]
 [ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_art7k"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tny5o"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_fyuji"]
 [ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="6_tmsre"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
@@ -16,6 +21,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_olmbp")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_364oy")]
+state = ExtResource("3_5g7v4")
+visible_during = [ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji")]
 
 [node name="StateManager" parent="." instance=ExtResource("2_fpxtd")]
 

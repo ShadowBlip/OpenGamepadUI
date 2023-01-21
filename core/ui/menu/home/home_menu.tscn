@@ -1,12 +1,17 @@
-[gd_scene load_steps=17 format=3 uid="uid://bj8ej083is2oc"]
+[gd_scene load_steps=22 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_noo0w"]
 [ext_resource type="Script" path="res://core/ui/menu/home/home_menu.gd" id="2_ixi86"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_2r2w8"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="3_mch0x"]
+[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="4_6hnsl"]
 [ext_resource type="PackedScene" uid="uid://dy11p1f1avde" path="res://core/ui/components/poster.tscn" id="4_k6kif"]
 [ext_resource type="PackedScene" uid="uid://bargrxdqbu3gl" path="res://core/systems/launcher/launcher.tscn" id="5_0bpdu"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_0kgam"]
 [ext_resource type="Script" path="res://core/systems/library/library_launch_item.gd" id="6_cepwl"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="6_sx5hr"]
 [ext_resource type="Script" path="res://core/systems/library/library_item.gd" id="7_7xnh7"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="7_51dxw"]
 [ext_resource type="Texture2D" uid="uid://djeanchdp7u18" path="res://assets/icons/book.svg" id="8_0qlm2"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_8yw4g"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_tl8ss"]
@@ -80,6 +85,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_noo0w")
 script = ExtResource("2_ixi86")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("3_mch0x")]
+state = ExtResource("4_6hnsl")
+visible_during = [ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

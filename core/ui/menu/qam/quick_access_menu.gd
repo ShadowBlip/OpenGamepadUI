@@ -2,36 +2,26 @@ extends Control
 
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
+var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
-@onready var state_mgr: StateManager = get_node("/root/Main/StateManager")
 @onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
 @onready var viewport: VBoxContainer = $MarginContainer/HBoxContainer/Viewport
-#@onready var player := $AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	visible = false
-	state_mgr.state_changed.connect(_on_state_changed)
-	
+	qam_state.state_entered.connect(_on_state_entered)
+	qam_state.state_exited.connect(_on_state_exited)
 
-func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
-	visible = to == StateManager.STATE.QUICK_ACCESS_MENU
-	
-	# Don't do anything if its not our time.
-	if not visible:
-		return
-		
-	#_animate(visible)
-	
+
+func _on_state_entered(_from: State) -> void:
+	visible = true
 	var button: Button = icon_bar.get_child(0)
 	button.grab_focus()
 
 
-#func _animate(should_show: bool) -> void:
-#	if should_show:
-#		player.play("show")
-#	else:
-#		player.play("hide")
+func _on_state_exited(_to: State) -> void:
+	visible = false
+
 
 func add_child_menu(qam_item: Control, icon: Texture2D):
 	var qam := self
