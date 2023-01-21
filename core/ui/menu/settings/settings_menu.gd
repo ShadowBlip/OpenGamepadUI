@@ -8,7 +8,6 @@ enum STATES {
 	POWER,
 }
 
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var settings_state := preload("res://assets/state/states/settings.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
@@ -18,20 +17,12 @@ var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	settings_state.state_entered.connect(_on_settings_state_entered)
-	settings_state.state_exited.connect(_on_settings_state_exited)
+	settings_state.state_entered.connect(_on_state_entered)
 	
 
-func _on_settings_state_entered(_from: State) -> void:
-	visible = true
+func _on_state_entered(_from: State) -> void:
 	general_button.grab_focus.call_deferred()
 
-
-func _on_settings_state_exited(to: State) -> void:
-	visible = state_machine.has_state(settings_state)
-	if to == in_game_state:
-		state_machine.remove_state(settings_state)
-		
 
 func _on_local_state_change(from: int, to: int, data: Dictionary) -> void:
 	pass

@@ -1,6 +1,5 @@
 extends Control
 
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var store_state := preload("res://assets/state/states/store.tres") as State
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _current_store: String
@@ -18,13 +17,12 @@ func _ready() -> void:
 	
 	# Listen for stores that register
 	store_manager.store_registered.connect(_on_store_registered)
-	store_state.state_entered.connect(_on_store_state_entered)
-	store_state.state_exited.connect(_on_store_state_exited)
+	store_state.state_entered.connect(_on_state_entered)
+	store_state.state_exited.connect(_on_state_exited)
 	visible = false
 
 
-func _on_store_state_entered(_from: State):
-	visible = true
+func _on_state_entered(_from: State):
 	if _current_store == "":
 		var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
 		for child in grid.get_children():
@@ -37,8 +35,7 @@ func _on_store_state_entered(_from: State):
 			break
 
 
-func _on_store_state_exited(_to: State):
-	visible = state_machine.has_state(store_state)
+func _on_state_exited(_to: State):
 	if not visible:
 		_reset_store()
 		return

@@ -59,12 +59,21 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_pressed("ogui_south"):
 		if guide_action:
 			guide_action = false
+			# TODO: Just send the "ogui_qam" event
 			if state == qam_state:
 				state_machine.pop_state()
 			elif state in [main_menu_state, in_game_menu_state]: #, osk_state:
 				state_machine.replace_state(qam_state)
 			else:
 				state_machine.push_state(qam_state)
+
+	if Input.is_action_just_released("ogui_qam"):
+		if state == qam_state:
+			state_machine.pop_state()
+		elif state in [main_menu_state, in_game_menu_state]: #, osk_state:
+			state_machine.replace_state(qam_state)
+		else:
+			state_machine.push_state(qam_state)
 
 	# Handle "guide" button presses
 	if event.is_action_released("ogui_guide"):

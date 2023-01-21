@@ -24,7 +24,6 @@ func _on_state_entered(_from: State) -> void:
 	# Get the library item from the data passed by the state change
 	if not "item" in launcher_state.data:
 		logger.error("No library item found to configure launcher!")
-		visible = true
 		return
 
 	# Configure the game launch menu based on the library item
@@ -42,11 +41,8 @@ func _on_state_entered(_from: State) -> void:
 		launch_button.text = "Launch"
 	else:
 		launch_button.text = "Install"
-	
-	visible = true
 
 
 func _on_state_exited(to: State) -> void:
-	visible = false
 	if to == in_game_state:
 		state_machine.remove_state(launcher_state)
