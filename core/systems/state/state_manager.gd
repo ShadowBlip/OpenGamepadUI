@@ -5,7 +5,7 @@
 extends Node
 class_name StateManager
 
-enum State {
+enum STATE {
 	NONE,
 	HOME,
 	MAIN_MENU,
@@ -20,23 +20,23 @@ enum State {
 }
 
 const StateMap = {
-	State.NONE: "",
-	State.HOME: "home",
-	State.MAIN_MENU: "main_menu",
-	State.QUICK_ACCESS_MENU: "quick_access_menu",
-	State.LIBRARY: "library",
-	State.STORE: "store",
-	State.IN_GAME: "in-game",
-	State.IN_GAME_MENU: "in-game_menu",
-	State.GAME_LAUNCHER: "game_launcher_menu",
-	State.SETTINGS: "settings_menu",
-	State.OSK: "osk",
+	STATE.NONE: "",
+	STATE.HOME: "home",
+	STATE.MAIN_MENU: "main_menu",
+	STATE.QUICK_ACCESS_MENU: "quick_access_menu",
+	STATE.LIBRARY: "library",
+	STATE.STORE: "store",
+	STATE.IN_GAME: "in-game",
+	STATE.IN_GAME_MENU: "in-game_menu",
+	STATE.GAME_LAUNCHER: "game_launcher_menu",
+	STATE.SETTINGS: "settings_menu",
+	STATE.OSK: "osk",
 }
 
 signal state_changed(from: int, to: int, data: Dictionary)
 
-@export var starting_state: State = State.HOME
-var _state_stack: Array = [State.NONE]
+@export var starting_state: STATE = STATE.HOME
+var _state_stack: Array = [STATE.NONE]
 var logger := Log.get_logger("StateManager")
 
 
@@ -47,7 +47,7 @@ func _ready() -> void:
 
 func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
 	# Always switch to home if we end up with no state
-	if to == State.NONE:
+	if to == STATE.NONE:
 		push_state(starting_state)
 	var from_str = StateManager.StateMap[from]
 	var to_str = StateManager.StateMap[from]
@@ -113,7 +113,7 @@ func remove_state(state: int, data: Dictionary = {}):
 func current_state() -> int:
 	var length = len(_state_stack)
 	if length == 0:
-		return State.NONE
+		return STATE.NONE
 	return _state_stack[len(_state_stack)-1]
 
 

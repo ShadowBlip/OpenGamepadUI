@@ -2,31 +2,24 @@ extends HFlowContainer
 
 @export var state_manager_path: NodePath
 
+const plugin_store_state: State = preload("res://assets/state/states/settings_plugin_store.tres")
 const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/plugin_store_item.tscn")
 signal plugin_store_loaded(plugin_items: Dictionary)
 
 @onready var http_image := $HTTPImageFetcher
 @onready var plugin_loader: PluginLoader = get_node("/root/Main/PluginLoader")
-@onready var state_manager: StateManager = get_node(state_manager_path)
 @onready var settings_menu := $"../../../.." #verbose?
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	state_manager.state_changed.connect(_on_state_change)
 	plugin_store_loaded.connect(_on_plugin_store_loaded)
+	plugin_store_state.state_entered.connect(_on_state_entered)
 	load_plugin_store_items()
-	visible = false
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-	
-func _on_state_change(from: int, to: int, data: Dictionary) -> void:
-	if to != settings_menu.STATES.PLUGIN_STORE:
-		visible = false
-		return
-	visible = true
-	
+
+func _on_state_entered(_from: State) -> void:
+	load_plugin_store_items()
+
 
 # Loads available plugins from the plugin store and emits the 'plugin_store_loaded'
 # signal with the loaded items
@@ -39,7 +32,10 @@ func load_plugin_store_items():
 # Gets executed on plugin store items loaded
 func _on_plugin_store_loaded(plugin_items: Dictionary):
 	# Clear the current grid of items
+	var keep_nodes := [$HTTPImageFetcher, $VisibilityManager]
 	for child in self.get_children():
+		if child in keep_nodes:
+			continue
 		self.remove_child(child)
 		child.queue_free()
 	_populate_plugin_store_items(self, plugin_items)

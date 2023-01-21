@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbybmmt7bigkt"]
+[gd_scene load_steps=7 format=3 uid="uid://cbybmmt7bigkt"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/plugin_store_menu.gd" id="1_mnuo8"]
 [ext_resource type="PackedScene" uid="uid://djoicd3vhbr1y" path="res://core/ui/components/plugin_store_item.tscn" id="1_vqpb4"]
-[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="2_ylav2"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_2d4kq"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_mt41e"]
 [ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="3_upgdo"]
+[ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="4_gd11w"]
 
 [node name="PluginStore" type="HFlowContainer"]
 size_flags_horizontal = 3
@@ -12,36 +14,19 @@ theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 script = ExtResource("1_mnuo8")
 
-[node name="StateManager" parent="." instance=ExtResource("2_ylav2")]
+[node name="VisibilityManager" parent="." instance=ExtResource("2_2d4kq")]
+state_machine = ExtResource("3_mt41e")
+state = ExtResource("4_gd11w")
+visible_during = []
 
 [node name="PluginStoreItem" parent="." instance=ExtResource("1_vqpb4")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 415.0
-offset_bottom = 200.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 
 [node name="PluginStoreItem2" parent="." instance=ExtResource("1_vqpb4")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_top = 210.0
-offset_right = 415.0
-offset_bottom = 410.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 
 [node name="PluginStoreItem3" parent="." instance=ExtResource("1_vqpb4")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_top = 420.0
-offset_right = 415.0
-offset_bottom = 620.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 
 [node name="HTTPImageFetcher" type="Node" parent="."]
 script = ExtResource("3_upgdo")

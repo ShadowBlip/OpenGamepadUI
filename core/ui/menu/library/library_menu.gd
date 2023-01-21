@@ -1,6 +1,13 @@
 extends Control
 
-@onready var state_manager: StateManager = get_node("/root/Main/StateManager")
+var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var library_state := preload("res://assets/state/states/library.tres") as State
+var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
+var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
+var _library := {}
+var _current_selection := {}
+
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
 @onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var global_search: SearchBar = get_tree().get_nodes_in_group("global_search_bar")[0]
@@ -8,23 +15,22 @@ extends Control
 @onready var all_games_grid: HFlowContainer = $"TabContainer/All Games/MarginContainer/HFlowContainer"
 @onready var installed_games_grid: HFlowContainer = $"TabContainer/Installed/MarginContainer/HFlowContainer"
 
-var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
-var state_changer_scene: PackedScene = preload("res://core/systems/state/state_changer.tscn")
-var _library := {}
-var _current_selection := {}
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	state_manager.state_changed.connect(_on_state_changed)
+	library_state.state_entered.connect(_on_state_entered)
 	library_manager.library_reloaded.connect(_on_library_reloaded)
 	global_search.search_submitted.connect(_on_search)
-	visible = false
+
+
+func _on_state_entered(_from: State):
+	# Focus the first entry on state change
+	_on_tab_container_tab_changed(tab_container.current_tab)
 
 
 # Handle searches
 func _on_search(text: String):
-	if state_manager.current_state() != StateManager.State.LIBRARY:
+	if not state_machine.current_state() in [library_state, osk_state]:
 		return
 	text = text.to_lower()
 	
@@ -82,13 +88,11 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 			BoxArtManager.Layout.GRID_PORTRAIT, 
 		)
 		
-		# Build a launcher from the library item
-		var state_changer: StateChanger = state_changer_scene.instantiate()
-		state_changer.signal_name = "button_up"
-		state_changer.state = StateManager.State.GAME_LAUNCHER
-		state_changer.action = StateChanger.Action.PUSH
-		state_changer.data = {"item": item}
-		poster.add_child(state_changer)
+		# Listen for button presses and pass the library item with the state
+		var on_button_up := func():
+			launcher_state.data = {"item": item}
+			state_machine.push_state(launcher_state)
+		poster.button_up.connect(on_button_up)
 		
 		# Listen for focus changes to keep track of our current selection
 		# between state changes.
@@ -105,17 +109,6 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 
 func _on_focus_updated(poster: TextureButton, tab: int) -> void:
 	_current_selection[tab] = poster
-
-
-func _on_state_changed(from: StateManager.State, to: StateManager.State, _data: Dictionary) -> void:
-	visible = state_manager.has_state(StateManager.State.LIBRARY)
-	if not visible:
-		return
-	if visible and to == StateManager.State.IN_GAME:
-		state_manager.remove_state(StateManager.State.LIBRARY)
-
-	# Focus the first entry on state change
-	_on_tab_container_tab_changed(tab_container.current_tab)
 
 
 func _input(event: InputEvent) -> void:

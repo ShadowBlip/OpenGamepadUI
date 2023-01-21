@@ -1,21 +1,23 @@
 extends HBoxContainer
 
-@onready var state_mgr: StateManager = get_node("/root/Main/StateManager")
+var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
+var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	visible = false
-	state_mgr.state_changed.connect(_on_state_changed)
+	main_menu_state.state_entered.connect(_on_state_entered)
+	main_menu_state.state_exited.connect(_on_state_exited)
+	in_game_menu_state.state_entered.connect(_on_state_entered)
+	in_game_menu_state.state_exited.connect(_on_state_exited)
 
 
-func _on_state_changed(from: int, to: int, _data: Dictionary) -> void:
-	var should_show = to == StateManager.State.MAIN_MENU or to == StateManager.State.IN_GAME_MENU
-	_animate(should_show)
+func _on_state_entered(_from: State) -> void:
+	_animate(true)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _on_state_exited(_to: State) -> void:
+	_animate(false)
 
 
 func _animate(should_show: bool) -> void:

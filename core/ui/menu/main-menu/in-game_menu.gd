@@ -1,33 +1,34 @@
 extends Control
 
-@onready var state_mgr: StateManager = get_node("/root/Main/StateManager")
+var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+var in_game_state := preload("res://assets/state/states/in_game.tres") as State
+
 @onready var launch_mgr: LaunchManager = get_node("/root/Main/LaunchManager")
+@onready var resume_button := $MarginContainer/VBoxContainer/ResumeButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	visible = false
-	state_mgr.state_changed.connect(_on_state_changed)
+	in_game_menu_state.state_entered.connect(_on_game_menu_entered)
+	in_game_state.state_entered.connect(_on_game_state_entered)
+	in_game_state.state_removed.connect(_on_game_state_removed)
 
 
-func _on_state_changed(from: int, to: int, _data: Dictionary):
-	# Set the resume button focus
-	if to == StateManager.State.IN_GAME_MENU:
-		var button: Button = $MarginContainer/VBoxContainer/ResumeButton
-		button.grab_focus.call_deferred()
-	
-	# If we're no longer in-game, remove ourselves from the state stack.
-	if not state_mgr.has_state(StateManager.State.IN_GAME) and state_mgr.has_state(StateManager.State.IN_GAME_MENU):
-		state_mgr.remove_state(StateManager.State.IN_GAME_MENU)
-	
-	# If we're not switching to the in-game state, disable ourselves
-	if to != StateManager.State.IN_GAME_MENU:
-		visible = false
-		return
+func _on_game_menu_entered(_from: State) -> void:
+	resume_button.grab_focus.call_deferred()
+
+
+func _on_game_state_entered(_from: State) -> void:
 	visible = true
+	
+	
+func _on_game_state_removed() -> void:
+	visible = false
 
 
 func _on_resume_button_button_up() -> void:
-	state_mgr.replace_state(StateManager.State.IN_GAME)
+	state_machine.replace_state(in_game_state)
 
 
 func _on_exit_button_button_up() -> void:

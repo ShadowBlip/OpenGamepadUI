@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=10 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_57lda"]
-[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="3_agqdv"]
-[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_pcyux"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_kd46h"]
+[ext_resource type="Resource" uid="uid://cycr83vpni1ka" path="res://assets/state/state_machines/qam_state_machine.tres" id="7_6iqch"]
+[ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/qam_notifications.tres" id="8_ktmf6"]
+[ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/qam_quick_settings.tres" id="9_uygax"]
+[ext_resource type="Resource" uid="uid://xw3l4h1vt0oa" path="res://assets/state/states/qam_performance.tres" id="10_ft1gj"]
+[ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 custom_minimum_size = Vector2(300, 0)
@@ -18,8 +22,6 @@ grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource("1_cs2ac")
 script = ExtResource("2_h1vfn")
-
-[node name="StateManager" parent="." instance=ExtResource("3_agqdv")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
@@ -59,10 +61,11 @@ icon = ExtResource("3_57lda")
 icon_alignment = 1
 expand_icon = true
 
-[node name="StateChanger" parent="MarginContainer/HBoxContainer/IconBar/Notifications" instance=ExtResource("5_pcyux")]
-state = 1
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/Notifications" instance=ExtResource("6_kd46h")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("8_ktmf6")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="QuckSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
@@ -71,10 +74,11 @@ icon = ExtResource("3_57lda")
 icon_alignment = 1
 expand_icon = true
 
-[node name="StateChanger" parent="MarginContainer/HBoxContainer/IconBar/QuckSettingsButton" instance=ExtResource("5_pcyux")]
-state = 2
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/QuckSettingsButton" instance=ExtResource("6_kd46h")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("9_uygax")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="PerformanceButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
@@ -82,10 +86,11 @@ layout_mode = 2
 icon = ExtResource("3_57lda")
 expand_icon = true
 
-[node name="StateChanger" parent="MarginContainer/HBoxContainer/IconBar/PerformanceButton" instance=ExtResource("5_pcyux")]
-state = 3
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/PerformanceButton" instance=ExtResource("6_kd46h")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("10_ft1gj")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="HelpButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
@@ -93,7 +98,8 @@ layout_mode = 2
 icon = ExtResource("3_57lda")
 expand_icon = true
 
-[node name="StateChanger" parent="MarginContainer/HBoxContainer/IconBar/HelpButton" instance=ExtResource("5_pcyux")]
-state = 4
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/HelpButton" instance=ExtResource("6_kd46h")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("11_dhes6")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"

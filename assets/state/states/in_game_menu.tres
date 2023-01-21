@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bmgs1ngma1523"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_cas7d"]
+
+[resource]
+script = ExtResource("1_cas7d")
+name = "in-game_menu"
+data = null
