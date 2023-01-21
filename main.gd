@@ -43,6 +43,7 @@ func _ready() -> void:
 	
 	# Initialize the state machine with its initial state
 	state_machine.push_state(home_state)
+	state_machine.state_changed.connect(_on_state_changed)
 	
 	# Show/hide the overlay when we enter/exit the in-game state
 	in_game_state.state_entered.connect(_on_game_state_entered)
@@ -66,6 +67,12 @@ func _ready() -> void:
 			context.close_on_submit = true
 			osk.open(context)
 		search_bar.keyboard_requested.connect(on_keyboard_requested)
+
+
+# Always push the home state if we end up with an empty stack.
+func _on_state_changed(from: State, to: State) -> void:
+	if state_machine.stack_length() == 0:
+		state_machine.push_state.call_deferred(home_state)
 
 
 func _on_game_state_entered(_from: State) -> void:
