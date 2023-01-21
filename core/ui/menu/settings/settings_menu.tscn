@@ -1,17 +1,20 @@
-[gd_scene load_steps=13 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=16 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_364oy"]
-[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="2_fpxtd"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="3_5g7v4"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_11sf6"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_cyj3i"]
 [ext_resource type="PackedScene" uid="uid://cbybmmt7bigkt" path="res://core/ui/menu/settings/plugin_store_menu.tscn" id="4_dx1s7"]
-[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="5_art7k"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tny5o"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_fyuji"]
 [ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="6_tmsre"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="11_11xk2"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="12_q442d"]
+[ext_resource type="Resource" uid="uid://4n3376qdy3y3" path="res://assets/state/states/settings_general.tres" id="13_k0fou"]
+[ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="14_wrm26"]
+[ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="15_bra7i"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -25,8 +28,6 @@ script = ExtResource("1_olmbp")
 [node name="VisibilityManager" parent="." instance=ExtResource("2_364oy")]
 state = ExtResource("3_5g7v4")
 visible_during = [ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji")]
-
-[node name="StateManager" parent="." instance=ExtResource("2_fpxtd")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
@@ -58,11 +59,11 @@ layout_mode = 2
 layout_mode = 2
 text = "General"
 
-[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton" instance=ExtResource("5_art7k")]
-signal_name = "focus_entered"
-state = 1
+[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("13_k0fou")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="HSeparator" type="HSeparator" parent="MainContainer/MenuMarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -71,21 +72,21 @@ layout_mode = 2
 layout_mode = 2
 text = "Plugins"
 
-[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginsButton" instance=ExtResource("5_art7k")]
-signal_name = "focus_entered"
-state = 2
+[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginsButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("14_wrm26")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="PluginStoreButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Plugin Store"
 
-[node name="StateChanger" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginStoreButton" instance=ExtResource("5_art7k")]
-signal_name = "focus_entered"
-state = 3
+[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginStoreButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("15_bra7i")
 action = 2
-state_manager_path = "../../../../../StateManager"
+on_signal = "focus_entered"
 
 [node name="ContentMarginContainer" type="MarginContainer" parent="MainContainer"]
 layout_mode = 2
@@ -98,7 +99,6 @@ theme_override_constants/margin_bottom = 20
 
 [node name="PluginSettings" parent="MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
 layout_mode = 2
-state_manager_path = NodePath("../../../StateManager")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/ContentMarginContainer"]
 layout_mode = 2
@@ -107,4 +107,4 @@ follow_focus = true
 [node name="PluginStore" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
 visible = false
 layout_mode = 2
-state_manager_path = NodePath("../../../../StateManager")
+state_manager_path = NodePath("")

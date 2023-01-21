@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://doxatxmp2mlty"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_gfo7t"]
+
+[resource]
+script = ExtResource("1_gfo7t")
+name = "plugins"
+data = null

@@ -1,12 +1,8 @@
 extends ScrollContainer
 
-@export var state_manager_path: NodePath
-
 const button_scene := preload("res://core/ui/components/button.tscn")
-const state_changer := preload("res://core/systems/state/state_changer.tscn")
 
 @onready var plugin_loader: PluginLoader = get_node("/root/Main/PluginLoader")
-@onready var state_manager: StateManager = get_node(state_manager_path)
 @onready var settings_menu := $"../../.."
 @onready var plugin_menu_container := $HBoxContainer/MarginContainer/PluginSettings
 @onready var plugin_content_container := $HBoxContainer/PluginSettingsContentContainer
@@ -15,16 +11,7 @@ const state_changer := preload("res://core/systems/state/state_changer.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	state_manager.state_changed.connect(_on_state_change)
-	visible = false
 	_populate_plugins()
-
-
-func _on_state_change(from: int, to: int, data: Dictionary) -> void:
-	if to != settings_menu.STATES.MANAGE_PLUGINS:
-		visible = false
-		return
-	visible = true
 
 
 # Populates the menu with plugins
@@ -36,7 +23,7 @@ func _populate_plugins():
 	
 	# Clear any plugin content menus
 	for node in plugin_content_container.get_children():
-		if node.name == "Label":
+		if node == no_plugins_label:
 			continue
 		remove_child(node)
 		node.queue_free()

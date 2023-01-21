@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://u6fyqt1ogrie"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_i1qqt"]
+
+[resource]
+script = ExtResource("1_i1qqt")
+name = "plugin_store"
+data = null

@@ -79,7 +79,8 @@ func pop_state() -> State:
 func replace_state(state: State) -> void:
 	var popped := _state_stack.pop_back()
 	_push_unique(state)
-	popped.state_removed.emit()
+	if popped != null:
+		popped.state_removed.emit()
 	state_changed.emit(popped, state)
 
 

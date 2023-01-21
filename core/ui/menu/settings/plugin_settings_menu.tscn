@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfk55ufy6luqt"]
+[gd_scene load_steps=6 format=3 uid="uid://cfk55ufy6luqt"]
 
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="1_0x8ci"]
 [ext_resource type="Script" path="res://core/ui/menu/settings/plugin_settings_menu.gd" id="1_cydsi"]
-[ext_resource type="PackedScene" uid="uid://dp4knr1strui4" path="res://core/systems/state/state_manager.tscn" id="3_eky71"]
-[ext_resource type="PackedScene" uid="uid://cd5txkd83wntb" path="res://core/systems/state/state_changer.tscn" id="4_eda1f"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_rieoa"]
+[ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="3_07iue"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_g7jsu"]
 
 [node name="PluginSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -14,18 +15,19 @@ grow_vertical = 2
 follow_focus = true
 script = ExtResource("1_cydsi")
 
-[node name="StateManager" parent="." instance=ExtResource("3_eky71")]
+[node name="VisibilityManager" parent="." instance=ExtResource("2_rieoa")]
+state_machine = ExtResource("3_g7jsu")
+state = ExtResource("3_07iue")
+visible_during = []
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_right = 1280.0
-offset_bottom = 800.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
-offset_right = 252.0
-offset_bottom = 800.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 theme_override_constants/margin_left = 5
@@ -34,29 +36,16 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 0
 
 [node name="PluginSettings" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
-offset_left = 5.0
-offset_right = 247.0
-offset_bottom = 800.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 
 [node name="Button" parent="HBoxContainer/MarginContainer/PluginSettings" instance=ExtResource("1_0x8ci")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 242.0
-offset_bottom = 31.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 text = "Steam"
 
-[node name="StateChanger" parent="HBoxContainer/MarginContainer/PluginSettings/Button" instance=ExtResource("4_eda1f")]
-state_manager_path = "../../../../../StateManager"
-
 [node name="PluginSettingsContentContainer" type="MarginContainer" parent="HBoxContainer"]
-offset_left = 272.0
-offset_right = 1280.0
-offset_bottom = 800.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 25
@@ -64,10 +53,7 @@ theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
 [node name="Label" type="Label" parent="HBoxContainer/PluginSettingsContentContainer"]
-offset_left = 25.0
-offset_top = 25.0
-offset_right = 983.0
-offset_bottom = 775.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "No plugins found"
