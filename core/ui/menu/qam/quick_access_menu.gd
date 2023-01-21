@@ -1,7 +1,7 @@
 extends Control
 
+const qam_state_machine := preload("res://assets/state/state_machines/qam_state_machine.tres")
 const OGUIButton := preload("res://core/ui/components/button.tscn")
-const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
 @onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
@@ -37,22 +37,20 @@ func add_child_menu(qam_item: Control, icon: Texture2D):
 	plugin_button.expand_icon = true
 	plugin_button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	qam.icon_bar.add_child(plugin_button)
-	var state_changer := ButtonStateChanger.instantiate()
 	
-	# Button state management
-	state_changer.signal_name = "focus_entered"
-	var state = qam.icon_bar.get_child_count()
-	state_changer.state = state
-	state_changer.action = state_changer.Action.REPLACE
-	var _state_manager : StateManager = qam.get_node("StateManager")
-	state_changer.state_manager_path = _state_manager.get_path()
+	# Replace the QAM state with the state of the QAM plugin
+	var state_updater := StateUpdater.new()
+	state_updater.state_machine = qam_state_machine
+	state_updater.on_signal = "focus_entered"
+	state_updater.state = State.new()
+	state_updater.action = StateUpdater.ACTION.REPLACE
 	
-	# Signal hook
-	var _on_state_change := func(from: int, to: int, data: Dictionary):
-		if to == state:
-			qam_item.visible= true
-			return
-		qam_item.visible= false
-	_state_manager.state_changed.connect(_on_state_change)
-
-	plugin_button.add_child(state_changer)
+	# Create a visibility manager to turn visibility of the sub-menu on when
+	# it changes to its state.
+	var visibility_manager := VisibilityManager.new()
+	visibility_manager.state_machine = qam_state_machine
+	visibility_manager.state = state_updater.state
+	visibility_manager.visible_during = []
+	qam_item.add_child(visibility_manager)
+	
+	plugin_button.add_child(state_updater)

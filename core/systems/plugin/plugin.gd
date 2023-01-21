@@ -11,7 +11,6 @@ var logger := Log.get_logger("Plugin")
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 
-@onready var state_manager: StateManager = get_node("/root/Main/StateManager")
 @onready var input_manager: InputManager = get_node("/root/Main/InputManager")
 @onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")

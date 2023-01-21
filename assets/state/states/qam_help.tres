@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bo7k4h2yc3d6q"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_56cvb"]
+
+[resource]
+script = ExtResource("1_56cvb")
+name = "help"
+data = null
