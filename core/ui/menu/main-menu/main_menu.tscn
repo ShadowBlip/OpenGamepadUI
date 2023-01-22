@@ -1,13 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwbnofm0oxd2y"]
+[gd_scene load_steps=14 format=3 uid="uid://dwbnofm0oxd2y"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_r20uv"]
 [ext_resource type="Script" path="res://core/ui/menu/main-menu/main_menu.gd" id="2_2uoqx"]
+[ext_resource type="Texture2D" uid="uid://c2ckf8g1a65ak" path="res://assets/ui/icons/round-home.svg" id="3_vp87l"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="4_v7rk2"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="5_anbat"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="6_beem7"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="6_ys5hq"]
+[ext_resource type="Texture2D" uid="uid://by2tv6lmk65o5" path="res://assets/ui/icons/library.svg" id="7_6h5ya"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="8_d7x2w"]
 [ext_resource type="Resource" uid="uid://ba34axjjpixwc" path="res://assets/state/states/store.tres" id="8_xc5xh"]
+[ext_resource type="Texture2D" uid="uid://dc7c5nyw5lso3" path="res://assets/ui/icons/round-store.svg" id="9_pnig0"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="11_u0355"]
+[ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="13_q3e8j"]
 
 [node name="MainMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)
@@ -43,8 +48,11 @@ theme_override_constants/margin_bottom = 25
 layout_mode = 2
 
 [node name="HomeButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Home"
+icon = ExtResource("3_vp87l")
+expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/HomeButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
@@ -53,8 +61,11 @@ action = 2
 on_signal = "button_up"
 
 [node name="LibraryButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Library"
+icon = ExtResource("7_6h5ya")
+expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/LibraryButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
@@ -63,8 +74,11 @@ action = 2
 on_signal = "button_up"
 
 [node name="StoreButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Store"
+icon = ExtResource("9_pnig0")
+expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/StoreButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
@@ -73,8 +87,11 @@ action = 2
 on_signal = "button_up"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Settings"
+icon = ExtResource("11_u0355")
+expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/SettingsButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
@@ -83,7 +100,10 @@ action = 2
 on_signal = "button_up"
 
 [node name="PowerButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Power"
+icon = ExtResource("13_q3e8j")
+expand_icon = true
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/PowerButton" to="." method="_on_power_button_pressed"]

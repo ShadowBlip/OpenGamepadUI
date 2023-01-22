@@ -1,13 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=13 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
-[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_57lda"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="3_1evb4"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_kd46h"]
 [ext_resource type="Resource" uid="uid://cycr83vpni1ka" path="res://assets/state/state_machines/qam_state_machine.tres" id="7_6iqch"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="7_oxxrp"]
 [ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/qam_notifications.tres" id="8_ktmf6"]
+[ext_resource type="Texture2D" uid="uid://btq2ih8opi8i7" path="res://assets/ui/icons/performance-fill.svg" id="9_ric4q"]
 [ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/qam_quick_settings.tres" id="9_uygax"]
 [ext_resource type="Resource" uid="uid://xw3l4h1vt0oa" path="res://assets/state/states/qam_performance.tres" id="10_ft1gj"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_3dgt5"]
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
@@ -57,7 +60,7 @@ theme_override_constants/separation = 10
 [node name="Notifications" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-icon = ExtResource("3_57lda")
+icon = ExtResource("3_1evb4")
 icon_alignment = 1
 expand_icon = true
 
@@ -67,14 +70,14 @@ state = ExtResource("8_ktmf6")
 action = 2
 on_signal = "focus_entered"
 
-[node name="QuckSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
+[node name="QuickSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-icon = ExtResource("3_57lda")
+icon = ExtResource("7_oxxrp")
 icon_alignment = 1
 expand_icon = true
 
-[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/QuckSettingsButton" instance=ExtResource("6_kd46h")]
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/QuickSettingsButton" instance=ExtResource("6_kd46h")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("9_uygax")
 action = 2
@@ -83,7 +86,7 @@ on_signal = "focus_entered"
 [node name="PerformanceButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-icon = ExtResource("3_57lda")
+icon = ExtResource("9_ric4q")
 expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/PerformanceButton" instance=ExtResource("6_kd46h")]
@@ -95,7 +98,7 @@ on_signal = "focus_entered"
 [node name="HelpButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-icon = ExtResource("3_57lda")
+icon = ExtResource("11_3dgt5")
 expand_icon = true
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/HelpButton" instance=ExtResource("6_kd46h")]
