@@ -78,7 +78,7 @@ size_flags_vertical = 0
 script = ExtResource("1_7hhey")
 
 [node name="ToastContainer" type="VBoxContainer" parent="."]
-anchors_preset = 5
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -150.0
@@ -89,31 +89,38 @@ theme_override_constants/separation = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="ToastContainer"]
 custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
 
 [node name="Panel" type="Panel" parent="ToastContainer/PanelContainer"]
+layout_mode = 2
 theme = ExtResource("1_rp4sb")
 
 [node name="MarginContainer" type="MarginContainer" parent="ToastContainer/PanelContainer"]
+layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="ContentContainer" type="HFlowContainer" parent="ToastContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
 theme_override_constants/h_separation = 5
 
 [node name="IconContainer" type="CenterContainer" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
 
 [node name="Icon" type="TextureRect" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer/IconContainer"]
 custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("3_5ggw4")
-ignore_texture_size = true
+expand_mode = 1
 stretch_mode = 4
 
 [node name="Label" type="Label" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "this is much shorter notification that can maybe expand downward which is pretty cool I guess, maybe that would be pretty sweet"
@@ -123,13 +130,17 @@ autowrap_mode = 3
 
 [node name="ProgressBar" type="ProgressBar" parent="ToastContainer"]
 visible = false
+layout_mode = 2
 
 [node name="ActionsContainer" type="HBoxContainer" parent="ToastContainer"]
+layout_mode = 2
 
 [node name="ActionButton" parent="ToastContainer/ActionsContainer" instance=ExtResource("4_bilxt")]
+layout_mode = 2
 text = "Action"
 
 [node name="DismissButton" parent="ToastContainer/ActionsContainer" instance=ExtResource("4_bilxt")]
+layout_mode = 2
 text = "Dismiss"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

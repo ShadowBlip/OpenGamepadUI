@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=17 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tny5o"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_fyuji"]
 [ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="6_tmsre"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_jneep"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="11_11xk2"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="12_q442d"]
 [ext_resource type="Resource" uid="uid://4n3376qdy3y3" path="res://assets/state/states/settings_general.tres" id="13_k0fou"]
@@ -27,7 +28,7 @@ script = ExtResource("1_olmbp")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_364oy")]
 state = ExtResource("3_5g7v4")
-visible_during = [ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji")]
+visible_during = [ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji"), ExtResource("7_jneep")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
