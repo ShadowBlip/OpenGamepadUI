@@ -8,17 +8,15 @@
 
 #include "xlib.h"
 
-using namespace godot;
-
-void initialize_xlib_module(ModuleInitializationLevel p_level) {
+void initialize_xlib_module(godot::ModuleInitializationLevel p_level) {
   if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
     return;
   }
 
-  ClassDB::register_class<Xlib>();
+  godot::ClassDB::register_class<Xlib>();
 }
 
-void uninitialize_xlib_module(ModuleInitializationLevel p_level) {
+void uninitialize_xlib_module(godot::ModuleInitializationLevel p_level) {
   if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
     return;
   }
@@ -40,7 +38,7 @@ xlib_library_init(const GDExtensionInterface *p_interface,
   init_obj.register_initializer(initialize_xlib_module);
   init_obj.register_terminator(uninitialize_xlib_module);
   init_obj.set_minimum_library_initialization_level(
-      MODULE_INITIALIZATION_LEVEL_SCENE);
+      godot::MODULE_INITIALIZATION_LEVEL_SCENE);
 
   return init_obj.init();
 }

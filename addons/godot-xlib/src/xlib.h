@@ -8,9 +8,7 @@
 
 #include <godot_cpp/core/binder_common.hpp>
 
-using namespace godot;
-
-class Xlib : public Object {
+class Xlib : public godot::Object {
   GDCLASS(Xlib, Object);
 
 protected:
@@ -28,14 +26,17 @@ public:
   ~Xlib();
 
   // Static Functions
-  static int get_root_window_id(String display);
-  static PackedInt32Array get_window_children(String display, int window_id);
-  static int set_xprop(String display, int window_id, String key, int value);
-  static int get_xprop(String display, int window_id, String key);
-  static PackedInt32Array get_xprop_array(String display, int window_id,
-                                          String key);
-  static bool has_xprop(String display, int window_id, String key);
-  static String get_window_name(String display, int window_id);
+  static int get_root_window_id(godot::String display);
+  static godot::PackedInt32Array get_window_children(godot::String display,
+                                                     int window_id);
+  static int set_xprop(godot::String display, int window_id, godot::String key,
+                       int value);
+  static int get_xprop(godot::String display, int window_id, godot::String key);
+  static godot::PackedInt32Array
+  get_xprop_array(godot::String display, int window_id, godot::String key);
+  static bool has_xprop(godot::String display, int window_id,
+                        godot::String key);
+  static godot::String get_window_name(godot::String display, int window_id);
 };
 
 #endif // XLIB_CLASS_H

@@ -1,28 +1,26 @@
 #include "xlib.h"
 
-#include "godot_cpp/variant/packed_int32_array.hpp"
-#include "godot_cpp/variant/string.hpp"
 #include <X11/X.h>
-#include <cstring>
-#include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
-
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <cstring>
 
-using namespace godot;
+#include "godot_cpp/variant/packed_int32_array.hpp"
+#include "godot_cpp/variant/string.hpp"
+#include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 Xlib::Xlib(){};
 Xlib::~Xlib(){};
 
 // Returns the root window id of the given display.
-int Xlib::get_root_window_id(String display) {
+int Xlib::get_root_window_id(godot::String display) {
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
+    godot::UtilityFunctions::push_error("Unable to open display!");
     return ERR_X_DISPLAY_NOT_FOUND;
   }
 
@@ -33,14 +31,15 @@ int Xlib::get_root_window_id(String display) {
 };
 
 // Returns the children of the given window.
-PackedInt32Array Xlib::get_window_children(String display, int window_id) {
+godot::PackedInt32Array Xlib::get_window_children(godot::String display,
+                                                  int window_id) {
   Window window = (Window)window_id;
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
-    return PackedInt32Array();
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return godot::PackedInt32Array();
   }
 
   // Variables to store the return results
@@ -53,14 +52,14 @@ PackedInt32Array Xlib::get_window_children(String display, int window_id) {
   Status status =
       XQueryTree(dpy, window, &root, &parent, &children, &nchildren);
   if (!status) {
-    UtilityFunctions::push_error("Unable to query X tree for window: ",
-                                 window_id);
+    godot::UtilityFunctions::push_error("Unable to query X tree for window: ",
+                                        window_id);
     XCloseDisplay(dpy);
-    return PackedInt32Array();
+    return godot::PackedInt32Array();
   }
 
   // Loop through all the children and add them to our int array
-  PackedInt32Array results = PackedInt32Array();
+  godot::PackedInt32Array results = godot::PackedInt32Array();
   while (nchildren--) {
     Window child = children[nchildren];
     results.append((int64_t)child);
@@ -76,21 +75,23 @@ PackedInt32Array Xlib::get_window_children(String display, int window_id) {
 
 // Sets the given x window property value on the given window. Returns 0 if
 // successful.
-int Xlib::set_xprop(String display, int window_id, String key, int value) {
+int Xlib::set_xprop(godot::String display, int window_id, godot::String key,
+                    int value) {
   Window window = (Window)window_id;
 
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
+    godot::UtilityFunctions::push_error("Unable to open display!");
     return ERR_X_DISPLAY_NOT_FOUND;
   }
 
   // Build the atom to set
   Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
   if (atom == None) {
-    UtilityFunctions::push_error("Failed to create atom with name: ", key);
+    godot::UtilityFunctions::push_error("Failed to create atom with name: ",
+                                        key);
     return BadAtom;
   }
 
@@ -111,14 +112,14 @@ int Xlib::set_xprop(String display, int window_id, String key, int value) {
 
 // Returns the value of the given x property on the given window. Returns -255
 // if no value was found.
-int Xlib::get_xprop(String display, int window_id, String key) {
+int Xlib::get_xprop(godot::String display, int window_id, godot::String key) {
   Window window = (Window)window_id;
 
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
+    godot::UtilityFunctions::push_error("Unable to open display!");
     return ERR_XPROP_NOT_FOUND;
   }
 
@@ -144,23 +145,23 @@ int Xlib::get_xprop(String display, int window_id, String key) {
   }
 
   // Close the connection to the x server
-  UtilityFunctions::push_error("Property ", key,
-                               " not found on window: ", window_id);
+  godot::UtilityFunctions::push_error("Property ", key,
+                                      " not found on window: ", window_id);
   XCloseDisplay(dpy);
   return ERR_XPROP_NOT_FOUND;
 };
 
 // Returns the values of the given x property on the given window.
-PackedInt32Array Xlib::get_xprop_array(String display, int window_id,
-                                       String key) {
+godot::PackedInt32Array
+Xlib::get_xprop_array(godot::String display, int window_id, godot::String key) {
   Window window = (Window)window_id;
-  PackedInt32Array results = PackedInt32Array();
+  godot::PackedInt32Array results = godot::PackedInt32Array();
 
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
+    godot::UtilityFunctions::push_error("Unable to open display!");
     return results;
   }
 
@@ -188,14 +189,14 @@ PackedInt32Array Xlib::get_xprop_array(String display, int window_id,
   }
 
   // Close the connection to the x server
-  UtilityFunctions::push_error("Property ", key,
-                               " not found on window: ", window_id);
+  godot::UtilityFunctions::push_error("Property ", key,
+                                      " not found on window: ", window_id);
   XCloseDisplay(dpy);
   return results;
 }
 
 // Returns true if the given property exists on the given window.
-bool Xlib::has_xprop(String display, int window_id, String key) {
+bool Xlib::has_xprop(godot::String display, int window_id, godot::String key) {
   int value = Xlib::get_xprop(display, window_id, key);
   if (value == ERR_XPROP_NOT_FOUND) {
     return false;
@@ -205,15 +206,15 @@ bool Xlib::has_xprop(String display, int window_id, String key) {
 
 // Returns the value of the given x property on the given window. Returns -255
 // if no value was found.
-String Xlib::get_window_name(String display, int window_id) {
+godot::String Xlib::get_window_name(godot::String display, int window_id) {
   Window window = (Window)window_id;
 
   // Open a connection with the server
   Display *dpy;
   dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
   if (dpy == NULL) {
-    UtilityFunctions::push_error("Unable to open display!");
-    return String();
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return godot::String();
   }
 
   // Build the atom to get
@@ -226,31 +227,33 @@ String Xlib::get_window_name(String display, int window_id) {
 
   // Close the connection to the x server
   XCloseDisplay(dpy);
-  return String(text);
+  return godot::String(text);
 };
 
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Static methods
-  ClassDB::bind_static_method("Xlib", D_METHOD("get_root_window_id", "display"),
-                              &Xlib::get_root_window_id);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("get_window_children", "display", "window_id"),
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_root_window_id", "display"),
+      &Xlib::get_root_window_id);
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_window_children", "display", "window_id"),
       &Xlib::get_window_children);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("set_xprop", "display", "window_id", "key", "value"),
+  godot::ClassDB::bind_static_method(
+      "Xlib",
+      godot::D_METHOD("set_xprop", "display", "window_id", "key", "value"),
       &Xlib::set_xprop);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("get_xprop", "display", "window_id", "key"),
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_xprop", "display", "window_id", "key"),
       &Xlib::get_xprop);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("get_xprop_array", "display", "window_id", "key"),
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_xprop_array", "display", "window_id", "key"),
       &Xlib::get_xprop_array);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("has_xprop", "display", "window_id", "key"),
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("has_xprop", "display", "window_id", "key"),
       &Xlib::has_xprop);
-  ClassDB::bind_static_method(
-      "Xlib", D_METHOD("get_window_name", "display", "window_id"),
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_window_name", "display", "window_id"),
       &Xlib::get_window_name);
 
   // Constants
