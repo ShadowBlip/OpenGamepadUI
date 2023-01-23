@@ -4,8 +4,8 @@ var state_machine := preload("res://assets/state/state_machines/global_state_mac
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
-@onready var launch_mgr: LaunchManager = get_node("/root/Main/LaunchManager")
 @onready var resume_button := $MarginContainer/VBoxContainer/ResumeButton
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,4 +33,4 @@ func _on_resume_button_button_up() -> void:
 
 func _on_exit_button_button_up() -> void:
 	# TODO: Handle this better
-	launch_mgr.stop(launch_mgr.running[-1])
+	LaunchManager.stop(LaunchManager.running[-1])

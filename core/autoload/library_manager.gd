@@ -1,6 +1,5 @@
 @icon("res://assets/icons/trello.svg")
 extends Node
-class_name LibraryManager
 
 const REQUIRED_FIELDS: Array = ["library_id"]
 
@@ -31,8 +30,7 @@ var logger := Log.get_logger("LibraryManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var main: Main = get_parent()
-	main.ready.connect(_on_parent_ready)
+	get_node("/root").ready.connect(_on_parent_ready)
 
 
 # Called when our parent is ready

@@ -5,9 +5,6 @@ var home_state := preload("res://assets/state/states/home.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
 
-@onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
-@onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
-@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var container: HBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer
 @onready var banner: TextureRect = $SelectedBanner
 @onready var player: AnimationPlayer = $AnimationPlayer
@@ -15,8 +12,8 @@ var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedSce
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	library_manager.library_reloaded.connect(_on_recent_apps_updated)
-	launch_manager.recent_apps_changed.connect(_on_recent_apps_updated)
+	LibraryManager.library_reloaded.connect(_on_recent_apps_updated)
+	LaunchManager.recent_apps_changed.connect(_on_recent_apps_updated)
 	home_state.state_entered.connect(_on_state_entered)
 
 
@@ -33,14 +30,14 @@ func _on_recent_apps_updated():
 		child.queue_free()
 	
 	# Get the list of recent apps from LaunchManager
-	var recent_apps: Array = launch_manager.get_recent_apps()
+	var recent_apps: Array = LaunchManager.get_recent_apps()
 	
 	# Get library items from the library manager
 	# NOTE: Weirdly, Godot does not like pushing Resource objects to an array
 	var items: Dictionary = {}
 	for n in recent_apps:
 		var name: String = n
-		var library_item: LibraryItem = library_manager.get_app_by_name(name)
+		var library_item: LibraryItem = LibraryManager.get_app_by_name(name)
 		if library_item == null:
 			continue
 		items[name] = library_item
@@ -60,7 +57,7 @@ func _grab_focus():
 func _on_poster_focused(item: LibraryItem):
 	player.stop()
 	player.play("fade_in")
-	banner.texture = await boxart_manager.get_boxart_or_placeholder(item, BoxArtManager.Layout.BANNER)
+	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)
 
 
 func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton):
@@ -83,10 +80,10 @@ func _populate_grid(grid: HBoxContainer, library_items: Array):
 		poster.text = item.name
 
 		# Get the boxart for the item
-		var layout = BoxArtManager.Layout.GRID_PORTRAIT
+		var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
 		if poster.layout == poster.LAYOUT_MODE.LANDSCAPE:
-			layout = BoxArtManager.Layout.GRID_LANDSCAPE
-		poster.texture_normal = await boxart_manager.get_boxart_or_placeholder(item, layout)
+			layout = BoxArtProvider.LAYOUT.GRID_LANDSCAPE
+		poster.texture_normal = await BoxArtManager.get_boxart_or_placeholder(item, layout)
 		
 		# Listen for focus events on the posters
 		poster.focus_entered.connect(_on_poster_focused.bind(item))

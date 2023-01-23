@@ -1,6 +1,5 @@
 @icon("res://assets/icons/upload.svg")
 extends Node
-class_name LaunchManager
 
 signal app_launched(app: LibraryLaunchItem, pid: int)
 signal app_stopped(app: LibraryLaunchItem, pid: int)
@@ -16,8 +15,7 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var logger := Log.get_logger("LaunchManager")
 
-@onready var main: Main = get_node("..")
-@onready var overlay_display = main.overlay_display
+@onready var overlay_display = OS.get_environment("DISPLAY")
 
 
 func _init() -> void:

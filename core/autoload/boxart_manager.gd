@@ -1,27 +1,19 @@
 @icon("res://assets/icons/image.svg")
 extends Node
-class_name BoxArtManager
 
+const boxart_local_provider := preload("res://core/systems/boxart/boxart_local.tscn")
 const REQUIRED_FIELDS: Array = ["provider_id"]
 
 signal provider_registered(boxart: BoxArtProvider)
 
 var logger := Log.get_logger("BoxArtManager")
 
-# The different layouts of boxart that are supported
-enum Layout {
-	GRID_PORTRAIT,
-	GRID_LANDSCAPE,
-	BANNER,
-	LOGO,
-}
-
 # Map the layouts to different placeholders
 const _placeholder_map = {
-	Layout.GRID_PORTRAIT: preload("res://assets/images/placeholder-grid-portrait.png"),
-	Layout.GRID_LANDSCAPE: preload("res://assets/images/placeholder-grid-landscape.png"),
-	Layout.BANNER: preload("res://assets/images/placeholder-grid-banner.png"),
-	Layout.LOGO: preload("res://assets/images/empty-grid-logo.png")
+	BoxArtProvider.LAYOUT.GRID_PORTRAIT: preload("res://assets/images/placeholder-grid-portrait.png"),
+	BoxArtProvider.LAYOUT.GRID_LANDSCAPE: preload("res://assets/images/placeholder-grid-landscape.png"),
+	BoxArtProvider.LAYOUT.BANNER: preload("res://assets/images/placeholder-grid-banner.png"),
+	BoxArtProvider.LAYOUT.LOGO: preload("res://assets/images/empty-grid-logo.png")
 }
 
 # Dictionary of registered boxart providers
@@ -31,8 +23,9 @@ var _providers_by_priority: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var main: Main = get_parent()
-	main.ready.connect(_on_parent_ready)
+	var boxart_local := boxart_local_provider.instantiate()
+	add_child(boxart_local)
+	get_parent().ready.connect(_on_parent_ready)
 
 
 # Called when our parent is ready
@@ -44,7 +37,7 @@ func _on_parent_ready() -> void:
 
 
 # Returns the boxart of the given kind for the given library item. 
-func get_boxart(item: LibraryItem, kind: Layout) -> Texture2D:
+func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	if _providers.is_empty():
 		logger.error("No box art providers were found!")
 		return null
@@ -61,7 +54,7 @@ func get_boxart(item: LibraryItem, kind: Layout) -> Texture2D:
 
 # Returns the boxart of the given kind for the given library item. If one is not
 # found, a placeholder texture will be returned
-func get_boxart_or_placeholder(item: LibraryItem, kind: Layout) -> Texture2D:
+func get_boxart_or_placeholder(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	var boxart: Texture2D = await get_boxart(item, kind)
 	if boxart == null:
 		return _placeholder_map[kind]

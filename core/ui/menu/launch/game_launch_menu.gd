@@ -5,7 +5,6 @@ var launcher_state := preload("res://assets/state/states/game_launcher.tres") as
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var logger := Log.get_logger("GameLaunchMenu")
 
-@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var banner: TextureRect = $ScrollContainer/VBoxContainer/GameBanner
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
@@ -33,8 +32,8 @@ func _on_state_entered(_from: State) -> void:
 	logger.info("Configured launcher for game: " + library_item.name)
 
 	# Load the banner for the game
-	banner.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.BANNER)
-	logo.texture = await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtManager.Layout.LOGO)
+	banner.texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.BANNER)
+	logo.texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.LOGO)
 	
 	# Check if the app is installed or not
 	if library_item.is_installed():

@@ -22,6 +22,16 @@ config/features=PackedStringArray("4.0", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[autoload]
+
+LibraryManager="*res://core/autoload/library_manager.gd"
+LaunchManager="*res://core/autoload/launch_manager.gd"
+NotificationManager="*res://core/autoload/notification_manager.gd"
+InputManager="*res://core/autoload/input_manager.gd"
+BoxArtManager="*res://core/autoload/boxart_manager.gd"
+StoreManager="*res://core/autoload/store_manager.gd"
+PluginLoader="*res://core/autoload/plugin_loader.gd"
+
 [display]
 
 window/size/viewport_width=1280

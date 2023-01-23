@@ -13,8 +13,6 @@ signal search_completed(results: Array)
 # A landscape banner image for the store
 @export_file("*.png") var store_image: String
 
-@onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
-
 var logger := Log.get_logger("Library")
 
 # Called when the node enters the scene tree for the first time.

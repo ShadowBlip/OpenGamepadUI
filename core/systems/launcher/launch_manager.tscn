@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctu7mqhywnopb"]
+[gd_scene load_steps=2 format=3 uid="uid://dumoh4s5dahei"]
 
-[ext_resource type="Script" path="res://core/systems/launcher/launch_manager.gd" id="1_lr73j"]
+[ext_resource type="Script" path="res://core/autoload/launch_manager.gd" id="1_cd0p1"]
 
 [node name="LaunchManager" type="Node" groups=["launch_manager"]]
-script = ExtResource("1_lr73j")
+script = ExtResource("1_cd0p1")

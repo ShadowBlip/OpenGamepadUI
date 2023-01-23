@@ -5,7 +5,6 @@ var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _current_store: String
 var logger := Log.get_logger("StoreMenu")
 
-@onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -16,7 +15,7 @@ func _ready() -> void:
 		child.queue_free()
 	
 	# Listen for stores that register
-	store_manager.store_registered.connect(_on_store_registered)
+	StoreManager.store_registered.connect(_on_store_registered)
 	store_state.state_entered.connect(_on_state_entered)
 	store_state.state_exited.connect(_on_state_exited)
 	visible = false

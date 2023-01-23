@@ -5,10 +5,10 @@ const _supported_ext = [".png", ".jpg", ".jpeg"]
 
 # Maps the layout to a file suffix
 var layout_map: Dictionary = {
-	BoxArtManager.Layout.GRID_PORTRAIT: "-portrait",
-	BoxArtManager.Layout.GRID_LANDSCAPE: "-landscape",
-	BoxArtManager.Layout.BANNER: "-banner",
-	BoxArtManager.Layout.LOGO: "-logo",
+	LAYOUT.GRID_PORTRAIT: "-portrait",
+	LAYOUT.GRID_LANDSCAPE: "-landscape",
+	LAYOUT.BANNER: "-banner",
+	LAYOUT.LOGO: "-logo",
 }
 
 var logger := Log.get_logger("LocalBoxArt")

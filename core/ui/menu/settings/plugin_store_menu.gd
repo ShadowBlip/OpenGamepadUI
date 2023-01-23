@@ -7,7 +7,6 @@ const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/p
 signal plugin_store_loaded(plugin_items: Dictionary)
 
 @onready var http_image := $HTTPImageFetcher
-@onready var plugin_loader: PluginLoader = get_node("/root/Main/PluginLoader")
 @onready var settings_menu := $"../../../.." #verbose?
 
 # Called when the node enters the scene tree for the first time.
@@ -25,7 +24,7 @@ func _on_state_entered(_from: State) -> void:
 # signal with the loaded items
 func load_plugin_store_items():
 	# Fetch available plugins from the plugin store
-	var plugin_items = await plugin_loader.get_plugin_store_items()
+	var plugin_items = await PluginLoader.get_plugin_store_items()
 	plugin_store_loaded.emit(plugin_items)
 
 

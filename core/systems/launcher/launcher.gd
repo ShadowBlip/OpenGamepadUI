@@ -16,5 +16,4 @@ func _ready() -> void:
 
 func _on_launch():
 	# Launch the game using launch manager
-	var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
-	launch_manager.launch(library_item.launch_items[launcher_index])
+	LaunchManager.launch(library_item.launch_items[launcher_index])

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://de5i6sl03tw4"]
-
-[ext_resource type="Script" path="res://core/systems/plugin/plugin_loader.gd" id="1_dyvcc"]
-
-[node name="PluginLoader" type="Node" groups=["plugin_loader"]]
-script = ExtResource("1_dyvcc")

@@ -2,7 +2,6 @@
 # https://gitlab.com/Delta-V-Modding/Mods/-/blob/main/game/ModLoader.gd
 @icon("res://assets/icons/codesandbox.svg")
 extends Node
-class_name PluginLoader
 
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
 const PLUGIN_API_VERSION = "1.0.0"

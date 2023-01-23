@@ -4,6 +4,14 @@ class_name BoxArtProvider
 
 signal boxart_loaded(texture: Texture2D)
 
+# The different layouts of boxart that are supported
+enum LAYOUT {
+	GRID_PORTRAIT,
+	GRID_LANDSCAPE,
+	BANNER,
+	LOGO,
+}
+
 # Unique identifier for the boxart provider
 @export var provider_id: String
 # Icon for boxart provider

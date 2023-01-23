@@ -8,8 +8,6 @@ var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _library := {}
 var _current_selection := {}
 
-@onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
-@onready var boxart_manager: BoxArtManager = get_node("/root/Main/BoxArtManager")
 @onready var global_search: SearchBar = get_tree().get_nodes_in_group("global_search_bar")[0]
 @onready var tab_container: TabContainer = $TabContainer
 @onready var all_games_grid: HFlowContainer = $"TabContainer/All Games/MarginContainer/HFlowContainer"
@@ -19,7 +17,7 @@ var _current_selection := {}
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	library_state.state_entered.connect(_on_state_entered)
-	library_manager.library_reloaded.connect(_on_library_reloaded)
+	LibraryManager.library_reloaded.connect(_on_library_reloaded)
 	global_search.search_submitted.connect(_on_search)
 
 
@@ -64,10 +62,10 @@ func _on_library_reloaded() -> void:
 	
 	# Load our library entries and add them to all games
 	# TODO: Handle launching from multiple providers
-	var available: Dictionary = library_manager.get_available()
+	var available: Dictionary = LibraryManager.get_available()
 	_populate_grid(all_games_grid, available.values(), 1)
 
-	var installed: Dictionary = library_manager.get_installed()
+	var installed: Dictionary = LibraryManager.get_installed()
 	_populate_grid(installed_games_grid, installed.values(), 0)
 
 
@@ -83,9 +81,9 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		poster.text = item.name
 		
 		# Get the box art for the library item
-		poster.texture_normal = await boxart_manager.get_boxart_or_placeholder(
+		poster.texture_normal = await BoxArtManager.get_boxart_or_placeholder(
 			item, 
-			BoxArtManager.Layout.GRID_PORTRAIT, 
+			BoxArtProvider.LAYOUT.GRID_PORTRAIT, 
 		)
 		
 		# Listen for button presses and pass the library item with the state

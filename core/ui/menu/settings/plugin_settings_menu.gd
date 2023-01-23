@@ -2,7 +2,6 @@ extends ScrollContainer
 
 const button_scene := preload("res://core/ui/components/button.tscn")
 
-@onready var plugin_loader: PluginLoader = get_node("/root/Main/PluginLoader")
 @onready var settings_menu := $"../../.."
 @onready var plugin_menu_container := $HBoxContainer/MarginContainer/PluginSettings
 @onready var plugin_content_container := $HBoxContainer/PluginSettingsContentContainer
@@ -29,9 +28,9 @@ func _populate_plugins():
 		node.queue_free()
 	
 	# Build the plugin settings content and menu button for each plugin
-	for plugin_id in plugin_loader.plugins.keys():
-		var meta: Dictionary = plugin_loader.plugins[plugin_id]
-		var plugin: Plugin = plugin_loader.plugin_nodes[plugin_id]
+	for plugin_id in PluginLoader.plugins.keys():
+		var meta: Dictionary = PluginLoader.plugins[plugin_id]
+		var plugin: Plugin = PluginLoader.plugin_nodes[plugin_id]
 		var plugin_settings := plugin.get_settings_menu()
 		if plugin_settings == null:
 			continue

@@ -11,11 +11,6 @@ var logger := Log.get_logger("Plugin")
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 
-@onready var input_manager: InputManager = get_node("/root/Main/InputManager")
-@onready var launch_manager: LaunchManager = get_node("/root/Main/LaunchManager")
-@onready var library_manager: LibraryManager = get_node("/root/Main/LibraryManager")
-@onready var store_manager: StoreManager = get_node("/root/Main/StoreManager")
-@onready var notification_manager: NotificationManager = get_node("/root/Main/NotificationManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -36,12 +31,12 @@ func get_settings_menu() -> Control:
 
 # Registers the given library implementation
 func add_library(library: Library) -> void:
-	library_manager.add_child(library)
+	LibraryManager.add_child(library)
 
 
 # Registers the given store implementation
 func add_store(store: Store) -> void:
-	store_manager.add_child(store)
+	StoreManager.add_child(store)
 	
 	
 func add_to_qam(qam_item: Control, icon: Texture2D) -> void:

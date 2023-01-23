@@ -1,7 +1,6 @@
 extends Control
 
 var logger : Log.Logger
-@onready var plugin_loader: PluginLoader = get_node("/root/Main/PluginLoader")
 @onready var plugin_name_label := $MarginContainer/VBoxContainer/PluginNameLabel
 @onready var plugin_texture := $MarginContainer/VBoxContainer/HBoxContainer/TextureRect
 @onready var author_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AuthorLabel
@@ -21,7 +20,7 @@ func _ready() -> void:
 
 # Updates the store item based on whether it is installed
 func _set_installed_state():
-	if plugin_loader.is_installed(plugin_id):
+	if PluginLoader.is_installed(plugin_id):
 		install_button.text = "Uninstall"
 		return
 	install_button.text = "Install"
@@ -34,13 +33,13 @@ func set_logger(name: String) -> void:
 # Handle install/uninstall
 func _on_install_button() -> void:
 	# Handle uninstall
-	if plugin_loader.is_installed(plugin_id):
-		if plugin_loader.uninstall_plugin(plugin_id) != OK:
+	if PluginLoader.is_installed(plugin_id):
+		if PluginLoader.uninstall_plugin(plugin_id) != OK:
 			logger.error("Failed to uninstall plugin: " + plugin_id)
 		_set_installed_state()
 		return
 	
 	# Handle install
-	plugin_loader.install_plugin(plugin_id, download_url, sha256)
-	await plugin_loader.plugin_installed
+	PluginLoader.install_plugin(plugin_id, download_url, sha256)
+	await PluginLoader.plugin_installed
 	_set_installed_state()

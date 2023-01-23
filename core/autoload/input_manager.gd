@@ -1,17 +1,17 @@
 @icon("res://assets/icons/navigation.svg")
 extends Node
-class_name InputManager
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+var PID: int = OS.get_process_id()
 var display = OS.get_environment("DISPLAY")
+var overlay_window_id = Gamescope.get_window_id(display, PID)
 var logger := Log.get_logger("InputManager")
 var guide_action := false
 
-@onready var main: Main = get_node("..")
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
 func _ready() -> void:
@@ -29,7 +29,7 @@ func _on_game_state_exited(_to: State) -> void:
 # Set focus will use Gamescope to focus OpenGamepadUI
 func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
-	var window_id = main.overlay_window_id
+	var window_id = overlay_window_id
 	if focused:
 		logger.debug("Focusing overlay")
 		Gamescope.set_input_focus(display, window_id, 1)

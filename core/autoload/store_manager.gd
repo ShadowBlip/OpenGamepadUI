@@ -1,6 +1,5 @@
 @icon("res://assets/icons/tag.svg")
 extends Node
-class_name StoreManager
 
 const REQUIRED_FIELDS: Array = ["store_id", "store_name", "store_image"]
 
@@ -11,8 +10,7 @@ var logger := Log.get_logger("StoreManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var main: Main = get_parent()
-	main.ready.connect(_on_parent_ready)
+	get_parent().ready.connect(_on_parent_ready)
 
 
 # Called when our parent is ready
