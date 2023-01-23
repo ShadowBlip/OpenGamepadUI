@@ -8,17 +8,20 @@ class_name Library
 @export var store_id: String
 # Icon for library provider
 @export var library_icon: Texture2D
+@export var logger_name := library_id
+@export var log_level: Log.LEVEL = Log.LEVEL.INFO
 
-var _cache_dir: String
-var logger := Log.get_logger("Library")
+@onready var _cache_dir := "/".join(["library", library_id])
+@onready var logger := Log.get_logger(logger_name, log_level)
 
-@onready var library_manager: LibraryManager = get_tree().get_first_node_in_group("library_manager")
+
+func _init() -> void:
+	add_to_group("library")
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("library")
-	_cache_dir = "/".join(["library", library_id])
-	logger = Log.get_logger(library_id)
+	pass
 
 
 # Returns an array of available library launch items

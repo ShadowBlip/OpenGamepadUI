@@ -21,4 +21,6 @@ func _on_parent_ready() -> void:
 func show_notification(text: String, icon: Texture2D = null, timeout_sec: float = 5.0):
 	# Get our toast UI
 	var toast: Toast = get_tree().get_first_node_in_group("notification_toast")
+	if toast == null:
+		return
 	toast.show_toast(text, icon, timeout_sec)

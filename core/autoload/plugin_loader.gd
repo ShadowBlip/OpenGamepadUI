@@ -12,6 +12,8 @@ const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version"
 signal plugin_loaded(name: String)
 signal plugin_initialized(name: String)
 signal plugin_installed(id: String, status: int)
+signal plugin_enabled(name: String)
+signal plugin_disabled(name: String)
 
 var logger := Log.get_logger("PluginLoader")
 var plugins := {}
@@ -121,15 +123,24 @@ func uninstall_plugin(plugin_id: String) -> int:
 
 # Unloads the given plugin. Returns OK if successful.
 func unload_plugin(plugin_id: String) -> int:
-	if not plugin_id in plugin_nodes:
+	if not plugin_id in plugins:
 		logger.error("Cannot unload plugin {0} as it does not appear to be loaded".format([plugin_id]))
+		return FAILED
+	uninitialize_plugin(plugin_id)
+	plugins.erase(plugin_id)
+	return OK
+
+
+# Uninitializes a plugin and calls its "unload" method
+func uninitialize_plugin(plugin_id: String) -> int:
+	if not plugin_id in plugin_nodes:
+		logger.error("Cannot uninitialize plugin {0} as it does not appear to be initialized".format([plugin_id]))
 		return FAILED
 	var instance: Plugin = plugin_nodes[plugin_id]
 	instance.unload()
 	remove_child(instance)
 	instance.queue_free()
 	plugin_nodes.erase(plugin_id)
-	plugins.erase(plugin_id)
 	return OK
 
 
@@ -143,6 +154,43 @@ func is_installed(plugin_id: String) -> bool:
 # Returns true if the given plugin is loaded.
 func is_loaded(plugin_id: String) -> bool:
 	return plugin_id in plugins
+
+
+# Returns true if the given plugin is initialized and running
+func is_initialized(plugin_id: String) -> bool:
+	return plugin_id in plugin_nodes
+
+
+# Returns a list of plugin_ids that were loaded
+func get_loaded_plugins() -> Array:
+	return plugins.keys()
+
+
+# Returns a list of plugin_ids that are initialized and running
+func get_initialized_plugins() -> Array:
+	return plugin_nodes.keys()
+
+
+# Instances the given plugin and adds it to the scene tree
+func initialize_plugin(plugin_id) -> int:
+	if not plugin_id in plugins:
+		logger.warn("Unable to initialize %s as it has not been loaded" % plugin_id)
+		return FAILED
+	var meta = plugins[plugin_id]
+	if not "entrypoint" in meta:
+		logger.warn("%s has no entrypoint defined" % plugin_id)
+		return FAILED
+	var plugin = load("/".join([LOADED_PLUGINS_DIR, plugin_id, meta["entrypoint"]]))
+	if not plugin:
+		logger.warn("Unable to load plugin '{0}'. Is the entrypoint correct?".format([plugin_id]))
+		return FAILED
+	var instance: Plugin = plugin.new()
+	instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, plugin_id])
+	add_child(instance)
+	plugin_nodes[plugin_id] = instance
+	plugin_initialized.emit(plugin_id)
+	logger.info("Initialized plugin: " + plugin_id)
+	return OK
 
 
 # Looks in the user plugins directory for plugin json files and loads them.
@@ -196,19 +244,7 @@ func _load_plugins() -> void:
 # Initializes the loaded plugins
 func _init_plugins() -> void:
 	for name in plugins.keys():
-		var meta = plugins[name]
-		if not "entrypoint" in meta:
-			logger.warning("%s has no entrypoint defined" % name)
-			continue
-		var plugin = load("/".join([LOADED_PLUGINS_DIR, name, meta["entrypoint"]]))
-		if not plugin:
-			logger.warning("Unable to load plugin '{0}'. Is the entrypoint correct?".format([name]))
-			continue
-		var instance: Plugin = plugin.new()
-		instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, name])
-		add_child(instance)
-		plugin_nodes[name] = instance
-		plugin_initialized.emit(name)
+		initialize_plugin(name)
 
 
 # Loads plugin metadata and returns it as a parsed dictionary. Returns null

@@ -26,11 +26,10 @@ var _app_by_category: Dictionary = {}
 var _app_by_tag: Dictionary = {}
 var logger := Log.get_logger("LibraryManager")
 
-@onready var notification_manager: NotificationManager = get_node("../NotificationManager")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	get_node("/root").ready.connect(_on_parent_ready)
+	get_parent().ready.connect(_on_parent_ready)
 
 
 # Called when our parent is ready

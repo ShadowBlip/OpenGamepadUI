@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://1scpld4mevj5"]
+
+[ext_resource type="Script" path="res://core/ui/menu/settings/plugin_settings_content.gd" id="1_p1a73"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_6s6l4"]
+[ext_resource type="Resource" uid="uid://bnwdyr66wnxaw" path="res://assets/state/state_machines/plugin_settings_state_machine.tres" id="3_tkirr"]
+
+[node name="PluginSettingsContent" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_p1a73")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_6s6l4")]
+state_machine = ExtResource("3_tkirr")
+visible_during = []
+
+[node name="ContentLayout" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EnabledContainer" type="HBoxContainer" parent="ContentLayout"]
+layout_mode = 2
+
+[node name="EnabledLabel" type="Label" parent="ContentLayout/EnabledContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enabled"
+vertical_alignment = 1
+
+[node name="EnabledCheckButton" type="CheckButton" parent="ContentLayout/EnabledContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VersionContainer" type="HBoxContainer" parent="ContentLayout"]
+layout_mode = 2
+
+[node name="VersionLabel" type="Label" parent="ContentLayout/VersionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Version"
+vertical_alignment = 1
+
+[node name="VersionValueLabel" type="Label" parent="ContentLayout/VersionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "v0.0.0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ContentLayout"]
+layout_mode = 2
