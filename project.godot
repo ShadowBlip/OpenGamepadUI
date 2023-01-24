@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SettingsManager="*res://core/autoload/settings_manager.gd"
 LibraryManager="*res://core/autoload/library_manager.gd"
 LaunchManager="*res://core/autoload/launch_manager.gd"
 NotificationManager="*res://core/autoload/notification_manager.gd"
