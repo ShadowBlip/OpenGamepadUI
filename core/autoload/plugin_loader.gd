@@ -10,7 +10,9 @@ const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
 
 signal plugin_loaded(name: String)
+signal plugin_unloaded(name: String)
 signal plugin_initialized(name: String)
+signal plugin_uninitialized(name: String)
 signal plugin_installed(id: String, status: int)
 signal plugin_enabled(name: String)
 signal plugin_disabled(name: String)
@@ -26,6 +28,16 @@ func _init() -> void:
 	logger.info("Initializing plugins")
 	_init_plugins()
 	logger.info("Done initializing plugins")
+
+
+# Sets the given plugin to enabled
+func enable_plugin(plugin_id: String) -> void:
+	SettingsManager.set_value("plugins.enabled", plugin_id, true)
+
+
+# Sets the given plugin to disabled
+func disable_plugin(plugin_id: String) -> void:
+	SettingsManager.set_value("plugins.enabled", plugin_id, false)
 
 
 # Returns the parsed dictionary of plugin store items. Returns null if there
@@ -128,6 +140,7 @@ func unload_plugin(plugin_id: String) -> int:
 		return FAILED
 	uninitialize_plugin(plugin_id)
 	plugins.erase(plugin_id)
+	plugin_unloaded.emit(plugin_id)
 	return OK
 
 
@@ -141,6 +154,8 @@ func uninitialize_plugin(plugin_id: String) -> int:
 	remove_child(instance)
 	instance.queue_free()
 	plugin_nodes.erase(plugin_id)
+	logger.info("Uninitialized plugin: " + plugin_id)
+	plugin_uninitialized.emit(plugin_id)
 	return OK
 
 
@@ -159,6 +174,18 @@ func is_loaded(plugin_id: String) -> bool:
 # Returns true if the given plugin is initialized and running
 func is_initialized(plugin_id: String) -> bool:
 	return plugin_id in plugin_nodes
+
+
+# Returns the given plugin instance
+func get_plugin(plugin_id: String) -> Plugin:
+	if not plugin_id in plugin_nodes:
+		return null
+	return plugin_nodes[plugin_id]
+
+
+# Returns the metadata for the given plugin
+func get_plugin_meta(plugin_id: String) -> Dictionary:
+	return plugins[plugin_id]
 
 
 # Returns a list of plugin_ids that were loaded
@@ -244,7 +271,8 @@ func _load_plugins() -> void:
 # Initializes the loaded plugins
 func _init_plugins() -> void:
 	for name in plugins.keys():
-		initialize_plugin(name)
+		if SettingsManager.get_value("plugins.enabled", name, true):
+			initialize_plugin(name)
 
 
 # Loads plugin metadata and returns it as a parsed dictionary. Returns null
