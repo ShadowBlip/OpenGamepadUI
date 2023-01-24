@@ -151,6 +151,29 @@ int Xlib::get_xprop(godot::String display, int window_id, godot::String key) {
   return ERR_XPROP_NOT_FOUND;
 };
 
+// Removes the given X property on the given window.
+int Xlib::remove_xprop(godot::String display, int window_id,
+                       godot::String key) {
+  Window window = (Window)window_id;
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return ERR_XPROP_NOT_FOUND;
+  }
+
+  // Build the atom to remove
+  Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
+
+  // Delete the property
+  int result = XDeleteProperty(dpy, window, atom);
+
+  XCloseDisplay(dpy);
+  return result;
+};
+
 // Returns the values of the given x property on the given window.
 godot::PackedInt32Array
 Xlib::get_xprop_array(godot::String display, int window_id, godot::String key) {
@@ -243,6 +266,9 @@ void Xlib::_bind_methods() {
       "Xlib",
       godot::D_METHOD("set_xprop", "display", "window_id", "key", "value"),
       &Xlib::set_xprop);
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("remove_xprop", "display", "window_id", "key"),
+      &Xlib::remove_xprop);
   godot::ClassDB::bind_static_method(
       "Xlib", godot::D_METHOD("get_xprop", "display", "window_id", "key"),
       &Xlib::get_xprop);

@@ -25,6 +25,11 @@ static func _get_xprop(display: String, window_id: int, key: String) -> int:
 	return Xlib.get_xprop(display, window_id, key)
 
 
+# Removes the given X property for the given window.
+static func _remove_xprop(display: String, window_id: int, key: String) -> int:
+	return Xlib.remove_xprop(display, window_id, key)
+
+
 # Returns an array of values for the given X property for the given window.
 # Returns an empty array if property was not found.
 static func _get_xprop_array(display: String, window_id: int, key: String) -> PackedInt32Array:
@@ -96,6 +101,14 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 		leaves.append_array(get_all_windows(display, child))
 		
 	return leaves
+	
+
+# Returns true if the window with the given window ID exists
+static func is_focusable_app(display: String, window_id: int) -> bool:
+	var focusable := get_focusable_apps(display)
+	if window_id in focusable:
+		return true
+	return false
 
 
 # Returns a list of focusable app window ids
@@ -186,3 +199,9 @@ static func set_allow_tearing(display: String, allow: bool) -> int:
 static func set_baselayer_window(display: String, window_id: int) -> int:
 	var root_id := Xlib.get_root_window_id(display)
 	return _set_xprop(display, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW", window_id)
+
+
+# Removes the baselayer property to un-focus windows
+static func remove_baselayer_window(display: String) -> int:
+	var root_id := Xlib.get_root_window_id(display)
+	return _remove_xprop(display, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW")

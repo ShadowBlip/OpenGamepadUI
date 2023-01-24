@@ -19,7 +19,7 @@ var _all_apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var logger := Log.get_logger("LaunchManager")
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
 
 @onready var overlay_display = OS.get_environment("DISPLAY")
 
@@ -121,11 +121,24 @@ func get_current_app() -> RunningApp:
 
 # Sets the given running app as the current app
 func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
+	if switch_baselayer:
+		if not can_switch_app(app):
+			return
+		Gamescope.set_baselayer_window(overlay_display, app.window_id)
 	var old := _current_app
 	_current_app = app
-	if switch_baselayer and app != null:
-		Gamescope.set_baselayer_window(overlay_display, app.get_window_id())
 	app_switched.emit(old, app)
+
+
+# Returns true if the given app can be switched to via Gamescope
+func can_switch_app(app: RunningApp) -> bool:
+	if app == null:
+		logger.warn("Unable to switch to null app")
+		return false
+	if not app.window_id > 0:
+		logger.warn("No Window ID was found for given app")
+		return false
+	return true
 
 
 # Returns whether the given app is running
@@ -133,6 +146,36 @@ func is_running(name: String) -> bool:
 	if name in _apps_by_name:
 		return true
 	return false
+
+
+# Returns a list of window IDs that don't have a corresponding RunningApp
+func get_orphan_windows() -> Array[int]:
+	var orphans := []
+	var focusable := Gamescope.get_focusable_apps(overlay_display)
+	var windows_with_app := []
+	for app in _running:
+		if app.window_id in focusable:
+			windows_with_app.push_back(app.window_id)
+	for window_id in focusable:
+		if window_id in windows_with_app:
+			continue
+		orphans.push_back(window_id)
+	return orphans
+
+
+# Try to discover the window id of the given app
+func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
+	var window_id := app.get_window_id_from_pid()
+	if window_id > 0:
+		logger.debug("Found window ID for {0} from PID: {1}".format([app.launch_item.name, window_id]))
+		return window_id
+	# Assign the first orphan window to the app
+	# TODO: Any way we can do this better?
+	for window in orphan_windows:
+		logger.debug("Assuming orphan window {0} is {1}".format([window, app.launch_item.name]))
+		return window
+	logger.debug("Unable to discover window for: " + app.launch_item.name)
+	return -1
 
 
 # Updates our list of recently launched apps
@@ -174,6 +217,7 @@ func _remove_running(app: RunningApp):
 
 	# If no more apps are running, clear the in-game state
 	if len(_running) == 0:
+		Gamescope.remove_baselayer_window(overlay_display)
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
 	
@@ -199,10 +243,24 @@ func _get_target_display(exclude_display: String) -> String:
 func _check_running():
 	if len(_running) == 0:
 		return
+		
+	# Get a list of orphaned windows to try and pair windows with running apps
+	var orphan_windows := get_orphan_windows()
 	
 	# Check all running apps
 	var to_remove := []
 	for app in _running:
+		# Try to set the window ID to allow app switching
+		var needs_window_id := false
+		if not app.window_id > 0:
+			needs_window_id = true
+		if app.window_id > 0 and not Gamescope.is_focusable_app(overlay_display, app.window_id):
+			needs_window_id = true
+		if needs_window_id:
+			var discovered := _discover_window_id(app, orphan_windows)
+			if discovered > 0:
+				app.window_id = discovered
+		
 		# If our app is still running, great!
 		if app.is_running():
 			continue

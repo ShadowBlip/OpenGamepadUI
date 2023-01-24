@@ -6,7 +6,8 @@ signal app_killed
 var launch_item: LibraryLaunchItem
 var pid: int
 var display: String
-var logger := Log.get_logger("RunningApp")
+var window_id: int
+var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
@@ -15,7 +16,7 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	display = dsp
 
 
-func get_window_id() -> int:
+func get_window_id_from_pid() -> int:
 	return Gamescope.get_window_id(display, pid)
 
 
@@ -37,7 +38,7 @@ func is_running() -> bool:
 	# app's process group
 	var candidates = Reaper.get_children_with_pgid(gamescope_pid, pid)
 	if len(candidates) > 0:
-		logger.info("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
+		logger.debug("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
 		return true
 
 	return false
