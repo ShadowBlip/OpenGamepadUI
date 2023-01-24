@@ -40,6 +40,8 @@ func _on_state_entered(_from: State) -> void:
 		launch_button.text = "Launch"
 	else:
 		launch_button.text = "Install"
+	if LaunchManager.is_running(library_item.name):
+		launch_button.text = "Resume"
 
 
 func _on_state_exited(to: State) -> void:

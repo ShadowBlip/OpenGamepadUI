@@ -16,11 +16,20 @@ enum LAYOUT {
 @export var provider_id: String
 # Icon for boxart provider
 @export var provider_icon: Texture2D
+@export var logger_name := provider_id
+@export var log_level: Log.LEVEL = Log.LEVEL.INFO
+
+@onready var logger := Log.get_logger(logger_name, log_level)
+
+
+func _init() -> void:
+	ready.connect(add_to_group.bind("boxart_provider"))
+	ready.connect(BoxArtManager.register_provider.bind(self))
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("boxart_provider")
-	BoxArtManager.register_provider(self)
+	pass
 
 
 # To be implemented by a provider

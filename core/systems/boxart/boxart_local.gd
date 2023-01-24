@@ -11,16 +11,16 @@ var layout_map: Dictionary = {
 	LAYOUT.LOGO: "-logo",
 }
 
-var logger := Log.get_logger("LocalBoxArt")
 
 func _init() -> void:
+	super()
 	# Create the data directory if it doesn't exist
 	DirAccess.make_dir_recursive_absolute(_boxart_dir)
 	provider_id = "local"
+	logger_name = "BoxArtLocal"
 
 
 func _ready() -> void:
-	super()
 	logger.info("Local BoxArt provider loaded")
 
 

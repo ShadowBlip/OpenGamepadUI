@@ -1,15 +1,20 @@
 @icon("res://assets/icons/upload.svg")
 extends Node
 
-signal app_launched(app: LibraryLaunchItem, pid: int)
-signal app_stopped(app: LibraryLaunchItem, pid: int)
+signal app_launched(app: RunningApp)
+signal app_stopped(app: RunningApp)
 signal recent_apps_changed()
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
-var apps_running: Dictionary = {}
-var running: PackedInt64Array = []
+var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+
 var target_display: String = OS.get_environment("DISPLAY")
+var _current_app: RunningApp
+var _running: Array[RunningApp] = []
+var _apps_by_pid: Dictionary = {}
+var _apps_by_name: Dictionary = {}
+var _all_apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
@@ -61,7 +66,7 @@ func _save_persist_data():
 
 # Launches the given command on the target xwayland display. Returns a PID
 # of the launched process.
-func launch(app: LibraryLaunchItem) -> int:
+func launch(app: LibraryLaunchItem) -> RunningApp:
 	var cmd: String = app.command
 	var args: PackedStringArray = app.args
 	
@@ -74,18 +79,26 @@ func launch(app: LibraryLaunchItem) -> int:
 	logger.info("Launching game with command: {0}".format([command]))
 	var pid = OS.create_process("sh", ["-c", command])
 	logger.info("Launched with PID: {0}".format([pid]))
-	
+
+	# Create a running app instance
+	if not app.name in _all_apps_by_name:
+		_all_apps_by_name[app.name] = RunningApp.new(app, pid, display)
+	var running_app := _all_apps_by_name[app.name] as RunningApp
+	running_app.launch_item = app
+	running_app.pid = pid
+	running_app.display = display
+
 	# Add the running app to our list and change to the IN_GAME state
-	_add_running(app, pid)
+	_add_running(running_app)
 	state_machine.set_state([in_game_state])
 	_update_recent_apps(app)
-	return pid
+	return running_app
 
 
 # Stops the game and all its children with the given PID
-func stop(pid: int) -> void:
-	Reaper.reap(pid)
-	_remove_running(pid)
+func stop(app: RunningApp) -> void:
+	Reaper.reap(app.pid)
+	_remove_running(app)
 
 
 # Returns a list of apps that have been launched recently
@@ -93,6 +106,23 @@ func get_recent_apps() -> Array:
 	if not "recent" in _persist_data:
 		return []
 	return _persist_data["recent"]
+
+
+# Returns a list of currently running apps
+func get_running() -> Array[RunningApp]:
+	return _running
+
+
+# Returns the currently running app
+func get_current_app() -> RunningApp:
+	return _current_app
+
+
+# Returns whether the given app is running
+func is_running(name: String) -> bool:
+	if name in _apps_by_name:
+		return true
+	return false
 
 
 # Updates our list of recently launched apps
@@ -111,27 +141,30 @@ func _update_recent_apps(app: LibraryLaunchItem) -> void:
 
 
 # Adds the given PID to our list of running apps
-func _add_running(app: LibraryLaunchItem, pid: int):
-	apps_running[pid] = app
-	running.append(pid)
-	app_launched.emit(app, pid)
+func _add_running(app: RunningApp):
+	_apps_by_pid[app.pid] = app
+	_apps_by_name[app.launch_item.name] = app
+	_running.append(app)
+	_current_app = app
+	app_launched.emit(app)
 
 
 # Removes the given PID from our list of running apps
-func _remove_running(pid: int):
-	var i = running.find(pid)
-	if i < 0:
-		return
-	logger.info("Cleaning up pid {0}".format([pid]))
-	var app: LibraryLaunchItem = apps_running[pid]
-	apps_running.erase(pid)
-	running.remove_at(i)
+func _remove_running(app: RunningApp):
+	logger.info("Cleaning up pid {0}".format([app.pid]))
+	if app == _current_app:
+		_current_app = null
+	_running.erase(app)
+	_apps_by_name.erase(app.launch_item.name)
+	_apps_by_pid.erase(app.pid)
 	
 	# If no more apps are running, clear the in-game state
-	if len(running) == 0:
+	if len(_running) == 0:
 		state_machine.remove_state(in_game_state)
+		state_machine.remove_state(in_game_menu_state)
 	
-	app_stopped.emit(app, pid)
+	app_stopped.emit(app)
+	app.app_killed.emit()
 
 
 # Returns the target xwayland display to launch on
@@ -150,32 +183,19 @@ func _get_target_display(exclude_display: String) -> String:
 
 # Checks for running apps and updates our state accordingly
 func _check_running():
-	if len(running) == 0:
+	if len(_running) == 0:
 		return
 	
 	# Check all running apps
-	var to_remove = []
-	for pid in running:
+	var to_remove := []
+	for app in _running:
 		# If our app is still running, great!
-		if OS.is_process_running(pid):
-			continue
-		
-		# If it's not running, let's check to make sure it's REALLY not running
-		# and hasn't re-parented itself
-		var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
-		if not Reaper.is_gamescope_pid(gamescope_pid):
-			logger.warn("OpenGamepadUI wasn't launched with gamescope! Unexpected behavior expected.")
-		
-		# Try checking to see if there are any other processes running with our
-		# app's process group
-		var candidates = Reaper.get_children_with_pgid(gamescope_pid, pid)
-		if len(candidates) > 0:
-			logger.info("{0} is not running, but lives on in {1}".format([pid, ",".join(candidates)]))
+		if app.is_running():
 			continue
 		
 		# If it's not running, make sure we remove it from our list
-		to_remove.push_back(pid)
+		to_remove.push_back(app)
 		
 	# Remove any non-running apps
-	for pid in to_remove:
-		_remove_running(pid)
+	for app in to_remove:
+		_remove_running(app)

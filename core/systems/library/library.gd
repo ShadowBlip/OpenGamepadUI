@@ -17,11 +17,12 @@ class_name Library
 
 func _init() -> void:
 	add_to_group("library")
+	ready.connect(LibraryManager.register_library.bind(self))
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	LibraryManager.register_library(self)
+	pass
 
 
 # Returns an array of available library launch items

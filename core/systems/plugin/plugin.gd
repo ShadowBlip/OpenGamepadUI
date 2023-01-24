@@ -12,9 +12,13 @@ const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 
 
+func _init() -> void:
+	ready.connect(add_to_group.bind("plugin"))
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("plugin")
+	pass
 	
 	
 # To be overridden by plugin implementation. Should unload changes done by

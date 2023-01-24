@@ -28,9 +28,9 @@ func _on_game_state_removed() -> void:
 
 
 func _on_resume_button_button_up() -> void:
-	state_machine.replace_state(in_game_state)
+	state_machine.set_state([in_game_state])
 
 
 func _on_exit_button_button_up() -> void:
 	# TODO: Handle this better
-	LaunchManager.stop(LaunchManager.running[-1])
+	LaunchManager.stop(LaunchManager.get_current_app())
