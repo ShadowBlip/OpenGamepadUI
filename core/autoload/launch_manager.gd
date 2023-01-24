@@ -3,6 +3,7 @@ extends Node
 
 signal app_launched(app: RunningApp)
 signal app_stopped(app: RunningApp)
+signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -118,6 +119,15 @@ func get_current_app() -> RunningApp:
 	return _current_app
 
 
+# Sets the given running app as the current app
+func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
+	var old := _current_app
+	_current_app = app
+	if switch_baselayer and app != null:
+		Gamescope.set_baselayer_window(overlay_display, app.get_window_id())
+	app_switched.emit(old, app)
+
+
 # Returns whether the given app is running
 func is_running(name: String) -> bool:
 	if name in _apps_by_name:
@@ -145,19 +155,23 @@ func _add_running(app: RunningApp):
 	_apps_by_pid[app.pid] = app
 	_apps_by_name[app.launch_item.name] = app
 	_running.append(app)
-	_current_app = app
+	set_current_app(app, false)
 	app_launched.emit(app)
 
 
 # Removes the given PID from our list of running apps
 func _remove_running(app: RunningApp):
 	logger.info("Cleaning up pid {0}".format([app.pid]))
-	if app == _current_app:
-		_current_app = null
 	_running.erase(app)
 	_apps_by_name.erase(app.launch_item.name)
 	_apps_by_pid.erase(app.pid)
-	
+
+	if app == _current_app:
+		if _running.size() > 0:
+			set_current_app(_running[-1])
+		else:
+			set_current_app(null, false)
+
 	# If no more apps are running, clear the in-game state
 	if len(_running) == 0:
 		state_machine.remove_state(in_game_state)

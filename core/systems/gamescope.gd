@@ -98,6 +98,12 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 	return leaves
 
 
+# Returns a list of focusable app window ids
+static func get_focusable_apps(display: String) -> PackedInt32Array:
+	var root_id := Xlib.get_root_window_id(display)
+	return _get_xprop_array(display, root_id, "GAMESCOPE_FOCUSABLE_APPS")
+
+
 # Returns a list of focusable window ids
 static func get_focusable_windows(display: String) -> PackedInt32Array:
 	var root_id := Xlib.get_root_window_id(display)

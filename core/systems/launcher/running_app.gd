@@ -24,6 +24,9 @@ func is_running() -> bool:
 	if OS.is_process_running(pid):
 		return true
 		
+	if launch_item != null:
+		logger._name = "RunningApp-" + launch_item.name
+	
 	# If it's not running, let's check to make sure it's REALLY not running
 	# and hasn't re-parented itself
 	var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
