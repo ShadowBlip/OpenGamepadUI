@@ -8,7 +8,7 @@ var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _library := {}
 var _current_selection := {}
 
-@onready var global_search: SearchBar = get_tree().get_nodes_in_group("global_search_bar")[0]
+@onready var global_search: SearchBar = get_tree().get_first_node_in_group("global_search_bar")
 @onready var tab_container: TabContainer = $TabContainer
 @onready var all_games_grid: HFlowContainer = $"TabContainer/All Games/MarginContainer/HFlowContainer"
 @onready var installed_games_grid: HFlowContainer = $"TabContainer/Installed/MarginContainer/HFlowContainer"
@@ -18,12 +18,25 @@ var _current_selection := {}
 func _ready() -> void:
 	library_state.state_entered.connect(_on_state_entered)
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
-	global_search.search_submitted.connect(_on_search)
+	LibraryManager.library_registered.connect(_on_library_registered)
+	LibraryManager.library_unregistered.connect(_on_library_unregistered)
+	if global_search != null:
+		global_search.search_submitted.connect(_on_search)
 
 
 func _on_state_entered(_from: State):
 	# Focus the first entry on state change
 	_on_tab_container_tab_changed(tab_container.current_tab)
+
+
+func _on_library_unregistered(_library_id: String) -> void:
+	_on_library_reloaded(false)
+
+
+func _on_library_registered(_library: Library) -> void:
+	if not LibraryManager.is_initialized():
+		return
+	_on_library_reloaded(false)
 
 
 # Handle searches
@@ -50,14 +63,14 @@ func _on_search(text: String):
 			item.visible = false
 
 
-func _on_library_reloaded() -> void:
+func _on_library_reloaded(_first_load: bool) -> void:
 	# Clear our old library entries
 	# TODO: Make this better
 	for child in all_games_grid.get_children():
-		all_games_grid.remove_child(child)
+		#all_games_grid.remove_child(child)
 		child.queue_free()
 	for child in installed_games_grid.get_children():
-		all_games_grid.remove_child(child)
+		#all_games_grid.remove_child(child)
 		child.queue_free()
 	
 	# Load our library entries and add them to all games
@@ -95,6 +108,14 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		# Listen for focus changes to keep track of our current selection
 		# between state changes.
 		poster.focus_entered.connect(_on_focus_updated.bind(poster, tab_num))
+		
+		# Listen for library item removed events
+		var on_removed := func():
+			if tab_num in _current_selection and _current_selection[tab_num] == poster:
+				_current_selection.erase(tab_num)
+			poster.queue_free()
+			_library[tab_num].erase(item.name)
+		item.removed_from_library.connect(on_removed)
 		
 		# Add the poster to the grid
 		grid.add_child(poster)

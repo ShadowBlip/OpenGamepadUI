@@ -5,6 +5,7 @@ const boxart_local_provider := preload("res://core/systems/boxart/boxart_local.t
 const REQUIRED_FIELDS: Array = ["provider_id"]
 
 signal provider_registered(boxart: BoxArtProvider)
+signal provider_unregistered(provider_id: String)
 
 var logger := Log.get_logger("BoxArtManager")
 
@@ -30,10 +31,8 @@ func _ready() -> void:
 
 # Called when our parent is ready
 func _on_parent_ready() -> void:
-	var providers = get_tree().get_nodes_in_group("boxart_provider")
-	for provider in providers:
-		_register_provider(provider)
 	# TODO: Load settings and sort by provider priority
+	pass
 
 
 # Returns the boxart of the given kind for the given library item. 
@@ -44,6 +43,7 @@ func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	
 	# Try each provider in order of priority
 	for id in _providers_by_priority:
+		logger.debug("Trying to load boxart for {0} using provider: {1}".format([item.name, id]))
 		var provider: BoxArtProvider = _providers[id]
 		var texture: Texture2D = await provider.get_boxart(item, kind)
 		if texture == null:
@@ -72,14 +72,28 @@ func get_providers() -> Array:
 
 
 # Registers the given boxart provider with the boxart manager.
-func _register_provider(provider: BoxArtProvider) -> void:
+func register_provider(provider: BoxArtProvider) -> void:
 	if not _is_valid_provider(provider):
 		logger.error("Invalid boxart provider defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
+		return
+	if provider.provider_id in _providers:
+		logger.debug("Provider already registered: " + provider.provider_id)
 		return
 	_providers[provider.provider_id] = provider
 	_providers_by_priority.push_back(provider.provider_id)
 	logger.info("Registered boxart provider: " + provider.provider_id)
 	provider_registered.emit(provider)
+
+
+# Unregisters the given boxart provider
+func unregister_provider(provider: BoxArtProvider) -> void:
+	if not provider.provider_id in _providers:
+		logger.warn("BoxArt provider already unregistered")
+		return
+	_providers.erase(provider.provider_id)
+	_providers_by_priority.erase(provider.provider_id)
+	logger.info("Unregistered boxart provider: " + provider.provider_id)
+	provider_unregistered.emit(provider.provider_id)
 
 
 # Validates the given provider and returns true if it has the required properties

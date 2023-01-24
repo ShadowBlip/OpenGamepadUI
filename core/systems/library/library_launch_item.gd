@@ -4,6 +4,9 @@
 extends Resource
 class_name LibraryLaunchItem
 
+signal added_to_library
+signal removed_from_library
+
 @export var _id: String
 @export var _provider_id: String
 @export var provider_app_id: String

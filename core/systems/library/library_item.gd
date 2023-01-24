@@ -3,6 +3,9 @@
 extends Resource
 class_name LibraryItem
 
+signal added_to_library
+signal removed_from_library
+
 @export var _id: String
 @export var name: String
 @export var launch_items: Array = []

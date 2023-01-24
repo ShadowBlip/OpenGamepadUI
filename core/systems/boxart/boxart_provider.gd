@@ -20,8 +20,13 @@ enum LAYOUT {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("boxart_provider")
+	BoxArtManager.register_provider(self)
 
 
 # To be implemented by a provider
 func get_boxart(item: LibraryItem, kind: int) -> Texture2D:
 	return null
+
+
+func _exit_tree() -> void:
+	BoxArtManager.unregister_provider(self)

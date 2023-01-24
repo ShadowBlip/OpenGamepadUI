@@ -24,6 +24,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="NameContainer" type="HBoxContainer" parent="ContentLayout"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="ContentLayout/NameContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Plugin Name"
+vertical_alignment = 1
+
+[node name="NameValueLabel" type="Label" parent="ContentLayout/NameContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="EnabledContainer" type="HBoxContainer" parent="ContentLayout"]
 layout_mode = 2
 

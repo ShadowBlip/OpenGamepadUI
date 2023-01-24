@@ -31,9 +31,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 0
+theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 0
+theme_override_constants/margin_bottom = 5
 
 [node name="PluginSettings" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
 layout_mode = 2

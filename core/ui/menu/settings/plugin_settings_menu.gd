@@ -64,6 +64,10 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 	var visibility := plugin_content_container.get_node("VisibilityManager") as VisibilityManager
 	visibility.state = state
 
+	# Set the plugin name label
+	var name_label := plugin_content_container.get_node("%NameValueLabel") as Label
+	name_label.text = meta["plugin.name"]
+
 	# Set the plugin version in the settings menu
 	var version_label := plugin_content_container.get_node("%VersionValueLabel") as Label
 	version_label.text = meta["plugin.version"]

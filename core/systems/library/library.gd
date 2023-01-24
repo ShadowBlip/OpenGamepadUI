@@ -21,7 +21,7 @@ func _init() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	LibraryManager.register_library(self)
 
 
 # Returns an array of available library launch items
@@ -29,11 +29,17 @@ func get_library_launch_items() -> Array:
 	return []
 	
 
+
 # Installs the given library item
 func install(item: LibraryItem):
 	pass
 	
 
+
 # Uninstalls the given library item
 func uninstall(item: LibraryItem):
 	pass
+
+
+func _exit_tree() -> void:
+	LibraryManager.unregister_library(self)
