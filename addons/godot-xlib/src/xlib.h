@@ -32,6 +32,8 @@ public:
   static int set_xprop(godot::String display, int window_id, godot::String key,
                        int value);
   static int get_xprop(godot::String display, int window_id, godot::String key);
+  static godot::PackedStringArray list_xprops(godot::String display,
+                                              int window_id);
   static godot::PackedInt32Array
   get_xprop_array(godot::String display, int window_id, godot::String key);
   static bool has_xprop(godot::String display, int window_id,
