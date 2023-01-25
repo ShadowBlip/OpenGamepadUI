@@ -104,9 +104,17 @@ func stop(app: RunningApp) -> void:
 
 # Returns a list of apps that have been launched recently
 func get_recent_apps() -> Array:
+	var recent := []
 	if not "recent" in _persist_data:
-		return []
-	return _persist_data["recent"]
+		return recent
+	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
+	var i := 1
+	for app in _persist_data["recent"]:
+		if i > max_recent:
+			break
+		recent.push_back(app)
+		i += 1
+	return recent
 
 
 # Returns a list of currently running apps
@@ -185,8 +193,8 @@ func _update_recent_apps(app: LibraryLaunchItem) -> void:
 	var recent: Array = _persist_data["recent"]
 	recent.erase(app.name)
 	recent.push_front(app.name)
-	# TODO: Make this configurable instead of hard coding at 10
-	if len(recent) > 10:
+
+	if len(recent) > 30:
 		recent.pop_back()
 	_persist_data["recent"] = recent
 	_save_persist_data()

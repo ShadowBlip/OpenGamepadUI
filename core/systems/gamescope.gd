@@ -41,6 +41,11 @@ static func has_xprop(display: String, window_id: int, key: String) -> bool:
 	return Xlib.has_xprop(display, window_id, key)
 
 
+# Returns a list of X properties on the given window
+static func list_xprops(display: String, window_id: int) -> PackedStringArray:
+	return Xlib.list_xprops(display, window_id)
+
+
 # Returns the name of the given window.
 static func get_window_name(display: String, window_id: int) -> String:
 	return Xlib.get_window_name(display, window_id)
@@ -90,6 +95,14 @@ static func get_window_id(display: String, pid: int) -> int:
 	return -1
 
 
+# Returns the child window ids of the given window
+static func get_window_children(display: String, window_id: int) -> PackedInt32Array:
+	var children := Xlib.get_window_children(display, window_id)
+	if len(children) == 0:
+		return PackedInt32Array()
+	return children
+
+
 # Recursively returns all child windows of the given window id
 static func get_all_windows(display: String, window_id: int) -> PackedInt32Array:
 	var children := Xlib.get_window_children(display, window_id)
@@ -109,6 +122,11 @@ static func is_focusable_app(display: String, window_id: int) -> bool:
 	if window_id in focusable:
 		return true
 	return false
+
+
+# Returns the root window ID of the given display
+static func get_root_window_id(display: String) -> int:
+	return Xlib.get_root_window_id(display)
 
 
 # Returns a list of focusable app window ids
@@ -136,7 +154,10 @@ static func get_focusable_window_names(display: String) -> PackedStringArray:
 # Return the currently focused window id.
 static func get_focused_window(display: String) -> int:
 	var root_id := Xlib.get_root_window_id(display)
-	return _get_xprop(display, root_id, "GAMESCOPE_FOCUSED_WINDOW")
+	var results := _get_xprop_array(display, root_id, "GAMESCOPE_FOCUSED_WINDOW")
+	if results.size() == 0:
+		return 0
+	return results[0]
 
 
 # Gamescope is hard-coded to look for appId 769
