@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy2w1ac8n2o7n"]
+
+[ext_resource type="Script" path="res://core/ui/menu/debug/gamescope_inspector.gd" id="1_xsw2j"]
+
+[node name="GamescopeInspector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xsw2j")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="GamescopeProperties" type="Tree" parent="MarginContainer/HSplitContainer/VSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+columns = 2
+column_titles_visible = true
+hide_root = true
+select_mode = 1
+
+[node name="TreeContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/VSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer/VBoxContainer"]
+layout_mode = 2
+text = "Display :2"
+
+[node name="Tree" type="Tree" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Display :2"
+
+[node name="Tree2" type="Tree" parent="MarginContainer/HSplitContainer/VSplitContainer/TreeContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="WindowInspector" type="Tree" parent="MarginContainer/HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+column_titles_visible = true
+hide_root = true
+select_mode = 1
+
+[node name="RefreshTimer" type="Timer" parent="."]
+autostart = true
