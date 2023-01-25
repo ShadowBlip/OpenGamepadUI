@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://duhgqixnyaweh"]
+
+[ext_resource type="Script" path="res://core/ui/components/notification_container.gd" id="1_de1ex"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_rqtss"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_nmje1"]
+
+[node name="NotificationContainer" type="PanelContainer"]
+custom_minimum_size = Vector2(400, 0)
+script = ExtResource("1_de1ex")
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_rqtss")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ContentContainer" type="HFlowContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 5
+
+[node name="IconContainer" type="CenterContainer" parent="MarginContainer/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/ContentContainer/IconContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("2_nmje1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="MarginContainer/ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

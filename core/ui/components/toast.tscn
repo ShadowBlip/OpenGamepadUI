@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bjxpafq4ic16x"]
+[gd_scene load_steps=7 format=3 uid="uid://bjxpafq4ic16x"]
 
 [ext_resource type="Script" path="res://core/ui/components/toast.gd" id="1_7hhey"]
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_rp4sb"]
-[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="3_5ggw4"]
+[ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_tllbf"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_bilxt"]
 
 [sub_resource type="Animation" id="Animation_j5gb0"]
@@ -87,46 +86,8 @@ offset_bottom = 88.0
 grow_horizontal = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="ToastContainer"]
-custom_minimum_size = Vector2(400, 0)
+[node name="NotificationContainer" parent="ToastContainer" instance=ExtResource("2_tllbf")]
 layout_mode = 2
-
-[node name="Panel" type="Panel" parent="ToastContainer/PanelContainer"]
-layout_mode = 2
-theme = ExtResource("1_rp4sb")
-
-[node name="MarginContainer" type="MarginContainer" parent="ToastContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="ContentContainer" type="HFlowContainer" parent="ToastContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/h_separation = 5
-
-[node name="IconContainer" type="CenterContainer" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.0
-
-[node name="Icon" type="TextureRect" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer/IconContainer"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_horizontal = 3
-texture = ExtResource("3_5ggw4")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="ToastContainer/PanelContainer/MarginContainer/ContentContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "this is much shorter notification that can maybe expand downward which is pretty cool I guess, maybe that would be pretty sweet"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
 
 [node name="ProgressBar" type="ProgressBar" parent="ToastContainer"]
 visible = false

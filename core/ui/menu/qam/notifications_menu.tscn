@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://d33h6fl4a0h5g"]
+
+[ext_resource type="Script" path="res://core/ui/menu/qam/notifications_menu.gd" id="1_iomxi"]
+[ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_ak5ln"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
+line_spacing = 0.0
+
+[node name="NotificationsMenu" type="HFlowContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iomxi")
+
+[node name="NotificationContainer" parent="." instance=ExtResource("2_ak5ln")]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+icon_size = Vector2(24, 24)
+label_settings = SubResource("LabelSettings_5o5uh")

@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=15 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="3_1evb4"]
+[ext_resource type="PackedScene" uid="uid://d33h6fl4a0h5g" path="res://core/ui/menu/qam/notifications_menu.tscn" id="3_7mul3"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="4_klkp7"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_kd46h"]
 [ext_resource type="Resource" uid="uid://cycr83vpni1ka" path="res://assets/state/state_machines/qam_state_machine.tres" id="7_6iqch"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="7_oxxrp"]
@@ -14,7 +16,7 @@
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 3
 anchors_preset = 11
 anchor_left = 1.0
@@ -51,10 +53,18 @@ layout_mode = 2
 [node name="Viewport" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
+
+[node name="NotificationsMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("3_7mul3")]
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/NotificationsMenu" instance=ExtResource("4_klkp7")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("8_ktmf6")
+visible_during = []
 
 [node name="IconBar" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 10
 theme_override_constants/separation = 10
 
 [node name="Notifications" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
