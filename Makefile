@@ -41,7 +41,7 @@ clean:
 
 .PHONY: run
 run: addons build/opengamepad-ui.x86_64
-	$(GAMESCOPE) --debug-hud \
+	$(GAMESCOPE) -e --debug-hud \
 		--debug-focus \
 		--debug-layers \
 		--xwayland-count 2 -- ./build/opengamepad-ui.x86_64
@@ -57,4 +57,4 @@ $(EXPORT_TEMPLATE):
 
 .PHONY: debug 
 debug: addons
-	$(GAMESCOPE) --xwayland-count 2 -- $(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 --position 320,140 res://main.tscn
+	$(GAMESCOPE) -e --xwayland-count 2 -- $(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 --position 320,140 res://main.tscn
