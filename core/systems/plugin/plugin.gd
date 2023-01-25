@@ -10,6 +10,7 @@ var logger := Log.get_logger("Plugin")
 
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
+const qam_state_machine := preload("res://assets/state/state_machines/qam_state_machine.tres")
 
 
 func _init() -> void:
@@ -42,18 +43,21 @@ func add_library(library: Library) -> void:
 func add_store(store: Store) -> void:
 	StoreManager.add_child(store)
 	
-	
+
+# Adds the given menu to the Quick Access Menu
 func add_to_qam(qam_item: Control, icon: Texture2D) -> void:
-	var qam_list := get_tree().get_nodes_in_group("qam")
-	var qam: Control
-	for item in qam_list:
-		if item.name != "QuickAccessMenu":
-			continue
-			
-		qam = item
-		break
+	var qam := get_tree().get_first_node_in_group("qam")
 	if not qam:
 		logger.error("Unable to find the Quick Access Menu. Plugin {} can not be loaded.".format(qam_item.name))
 		return
+	
+	# Create a QAM state and VisibilityManager to manage switching to this QAM item.
+	var state := State.new()
+	state.name = qam_item.name
+	var visibility_manager := VisibilityManager.new()
+	visibility_manager.state = state
+	visibility_manager.state_machine = qam_state_machine
+	visibility_manager.visible_during = []
+	qam_item.add_child(visibility_manager)
 	
 	qam.add_child_menu(qam_item, icon)
