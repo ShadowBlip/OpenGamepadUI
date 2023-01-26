@@ -2,6 +2,7 @@ extends Control
 
 const qam_state_machine := preload("res://assets/state/state_machines/qam_state_machine.tres")
 const OGUIButton := preload("res://core/ui/components/button.tscn")
+const transition_fade_in := preload("res://core/ui/components/transition_fade_in.tscn")
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
 @onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
@@ -47,6 +48,13 @@ func add_child_menu(qam_item: Control, icon: Texture2D):
 	state_updater.on_signal = "focus_entered"
 	state_updater.state = state
 	state_updater.action = StateUpdater.ACTION.REPLACE
+	
+	# Create a transition for the menu
+	var transition_container := TransitionContainer.new()
+	transition_container.name = "TransitionContainer"
+	var transition := transition_fade_in.instantiate()
+	transition_container.add_child(transition)
+	qam_item.add_child(transition_container)
 	
 	# Create a visibility manager to turn visibility of the sub-menu on when
 	# it changes to its state.
