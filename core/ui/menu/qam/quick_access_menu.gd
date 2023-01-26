@@ -40,17 +40,19 @@ func add_child_menu(qam_item: Control, icon: Texture2D):
 	qam.icon_bar.add_child(plugin_button)
 	
 	# Replace the QAM state with the state of the QAM plugin
+	var state := State.new()
+	state.name = qam_item.name
 	var state_updater := StateUpdater.new()
 	state_updater.state_machine = qam_state_machine
 	state_updater.on_signal = "focus_entered"
-	state_updater.state = State.new()
+	state_updater.state = state
 	state_updater.action = StateUpdater.ACTION.REPLACE
 	
 	# Create a visibility manager to turn visibility of the sub-menu on when
 	# it changes to its state.
 	var visibility_manager := VisibilityManager.new()
 	visibility_manager.state_machine = qam_state_machine
-	visibility_manager.state = state_updater.state
+	visibility_manager.state = state
 	visibility_manager.visible_during = []
 	qam_item.add_child(visibility_manager)
 	
