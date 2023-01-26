@@ -1,10 +1,10 @@
 
-GODOT_VERSION ?= 4.0.beta14
+GODOT_VERSION ?= 4.0.beta15
 GODOT ?= /usr/bin/godot4
 GAMESCOPE ?= /usr/bin/gamescope
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_VERSION)/linux_debug.x86_64
-EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta14/Godot_v4.0-beta14_export_templates.tpz
+EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta15/Godot_v4.0-beta15_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
