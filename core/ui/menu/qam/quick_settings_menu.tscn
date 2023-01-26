@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cu2w013yn7cic"]
+[gd_scene load_steps=3 format=3 uid="uid://cu2w013yn7cic"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_settings_menu.gd" id="1_gwnsx"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
 
 [node name="QuickSettingsMenu" type="Control"]
 layout_mode = 3
@@ -19,16 +20,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Slider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 1
 text = "Saturation"
-
-[node name="HSlider" type="HSlider" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
+value = 100.0
