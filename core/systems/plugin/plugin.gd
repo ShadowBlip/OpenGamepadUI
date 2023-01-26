@@ -51,13 +51,4 @@ func add_to_qam(qam_item: Control, icon: Texture2D) -> void:
 		logger.error("Unable to find the Quick Access Menu. Plugin {} can not be loaded.".format(qam_item.name))
 		return
 	
-	# Create a QAM state and VisibilityManager to manage switching to this QAM item.
-	var state := State.new()
-	state.name = qam_item.name
-	var visibility_manager := VisibilityManager.new()
-	visibility_manager.state = state
-	visibility_manager.state_machine = qam_state_machine
-	visibility_manager.visible_during = []
-	qam_item.add_child(visibility_manager)
-	
 	qam.add_child_menu(qam_item, icon)
