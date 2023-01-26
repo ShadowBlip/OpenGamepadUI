@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Entrypoint="*res://core/autoload/entrypoint.gd"
 SettingsManager="*res://core/autoload/settings_manager.gd"
 BoxArtManager="*res://core/autoload/boxart_manager.gd"
 LibraryManager="*res://core/autoload/library_manager.gd"

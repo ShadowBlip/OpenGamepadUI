@@ -9,6 +9,7 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	visible = false
 	qam_state.state_entered.connect(_on_state_entered)
 	qam_state.state_exited.connect(_on_state_exited)
 
