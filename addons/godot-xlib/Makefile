@@ -21,3 +21,4 @@ bin/libxlib.linux.template_release.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_
 .PHONY: clean
 clean:
 	rm -rf bin
+	rm -rf ../godot-cpp

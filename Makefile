@@ -38,6 +38,7 @@ edit:
 .PHONY: clean
 clean:
 	rm -rf build
+	cd ./addons/godot-xlib && make clean
 
 .PHONY: run
 run: addons build/opengamepad-ui.x86_64
