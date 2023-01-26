@@ -7,6 +7,12 @@ signal changed()
 signal value_changed(value: float)
 
 @export var text: String = "Setting"
+@export var show_label := true:
+	set(v):
+		show_label = v
+		if hbox:
+			hbox.visible = v
+		notify_property_list_changed()
 
 @export var value: float = 0:
 	set(v):
@@ -25,6 +31,7 @@ signal value_changed(value: float)
 @onready var label := $%Label as Label
 @onready var label_value := $%LabelValue as Label
 @onready var slider := $%HSlider as HSlider
+@onready var hbox := $HBoxContainer as HBoxContainer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
