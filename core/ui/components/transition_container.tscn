@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6p2lrkowintj"]
+
+[ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="1_wk5pc"]
+
+[node name="TransitionContainer" type="Node"]
+script = ExtResource("1_wk5pc")

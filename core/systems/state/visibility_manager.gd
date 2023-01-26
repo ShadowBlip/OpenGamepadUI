@@ -7,6 +7,7 @@ class_name VisibilityManager
 @export var state: Resource
 @export var visible_during: Array[Resource] = []
 
+var logger := Log.get_logger("VisibilityManager")
 @onready var _parent := get_parent()
 
 # Called when the node enters the scene tree for the first time.
@@ -17,6 +18,20 @@ func _ready() -> void:
 
 func _on_state_changed(_from: State, to: State) -> void:
 	if state_machine.has_state(state) and to in visible_during:
-		_parent.visible = true
+		_transition(true)
 		return
-	_parent.visible = false
+	_transition(false)
+
+
+func _transition(visibility: bool) -> void:
+	print(_parent.name, " TRANSITION: ", visibility)
+	if not _parent.has_node("TransitionContainer"):
+		_parent.visible = visibility
+		return
+	
+	# Use transitions if they exist
+	var transition := _parent.get_node("TransitionContainer") as TransitionContainer
+	if visibility:
+		transition.enter()
+		return
+	transition.exit()
