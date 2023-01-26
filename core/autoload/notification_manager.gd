@@ -57,8 +57,14 @@ func _queue_notification(notify: Notification):
 	_queue.push_back(notify)
 	notification_queued.emit(notify)
 	
+	# If no toast exists, process directly
+	if _toast == null:
+		logger.debug("No toast UI available. Processing immediately.")
+		_process_queue()
+		return
+	
 	# If we just queued and no notifications are showing, start processing
-	if _toast != null and _queue.size() == 1:
+	if _queue.size() == 1:
 		if _toast.is_showing():
 			logger.debug("Toast is still showing. Processing after it's finished")
 			return
