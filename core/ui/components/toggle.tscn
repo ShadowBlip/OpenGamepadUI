@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1qb7euwlu7bh"]
+
+[ext_resource type="Script" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
+
+[node name="Toggle" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_pn5mg")
+button_pressed = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Setting"
+
+[node name="CheckButton" type="CheckButton" parent="."]
+layout_mode = 2
+button_pressed = true

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cu2w013yn7cic"]
+[gd_scene load_steps=4 format=3 uid="uid://cu2w013yn7cic"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_settings_menu.gd" id="1_gwnsx"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="3_2eg06"]
 
 [node name="QuickSettingsMenu" type="Control"]
 layout_mode = 3
@@ -10,6 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_gwnsx")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -19,6 +22,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Toggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
+layout_mode = 2
+text = "Per-game Profile"
 
 [node name="Slider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 layout_mode = 2
