@@ -25,6 +25,9 @@ func _init() -> void:
 
 # Lets us run as an overlay in gamescope
 func _setup(window_id: int) -> void:
+	if window_id < 0:
+		logger.error("Unable to configure gamescope atoms")
+		return
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
 	if Gamescope.set_main_app(DISPLAY, window_id) != OK:

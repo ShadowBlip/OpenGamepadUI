@@ -2,6 +2,8 @@
 extends Object
 class_name Gamescope
 
+const level := Log.LEVEL.DEBUG
+
 # Gamescope Blur modes
 enum BLUR_MODE {
 	OFF = 0,
@@ -14,7 +16,7 @@ enum BLUR_MODE {
 # Example:
 #  Gamescope._set_xprop(":0", 1234, "STEAM_INPUT", 1)
 static func _set_xprop(display: String, window_id: int, key: String, value: int) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Setting window {0} key {1} to {2}".format([window_id, key, value]))
 	return Xlib.set_xprop(display, window_id, key, value)
 
@@ -54,8 +56,8 @@ static func get_window_name(display: String, window_id: int) -> String:
 # Returns all gamescope displays
 # TODO: This seems brittle. Is there any other way we can discover Gamescope displays?
 static func discover_gamescope_displays() -> PackedStringArray:
-	var logger := Log.get_logger("Gamescope")
-	logger.info("Discovering xwaylands!")
+	var logger := Log.get_logger("Gamescope", level)
+	logger.debug("Discovering xwaylands!")
 
 	# X11 displays have a corresponding socket in /tmp/.X11-unix
 	# The sockets are named like: X0, X1, X2, etc.
@@ -84,7 +86,7 @@ static func discover_gamescope_displays() -> PackedStringArray:
 # Returns the xwayland window ID for the given process. Returns -1 if no
 # window was found.
 static func get_window_id(display: String, pid: int) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display]))
 	var root_id := Xlib.get_root_window_id(display)
 	var all_windows := get_all_windows(display, root_id)
@@ -107,10 +109,11 @@ static func get_window_children(display: String, window_id: int) -> PackedInt32A
 static func get_all_windows(display: String, window_id: int) -> PackedInt32Array:
 	var children := Xlib.get_window_children(display, window_id)
 	if len(children) == 0:
-		return PackedInt32Array([window_id])
+		return PackedInt32Array([])
 	
 	var leaves := PackedInt32Array()
 	for child in children:
+		leaves.append(child)
 		leaves.append_array(get_all_windows(display, child))
 		
 	return leaves
@@ -177,7 +180,7 @@ static func set_overlay(display: String, window_id: int, value: int) -> int:
 
 # Sets the Gamescope FPS limit
 static func set_fps_limit(display: String, fps: int = 60) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Setting FPS to: {0}".format([fps]))
 	var root_id := Xlib.get_root_window_id(display)
 	return _set_xprop(display, root_id, "GAMESCOPE_FPS_LIMIT", fps)
@@ -191,7 +194,7 @@ static func get_fps_limit(display: String) -> int:
 
 # Sets the Gamescope blur mode
 static func set_blur_mode(display: String, mode: BLUR_MODE = BLUR_MODE.OFF) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Setting blur mode to: {0}".format([mode]))
 	var root_id := Xlib.get_root_window_id(display)
 	return _set_xprop(display, root_id, "GAMESCOPE_BLUR_MODE", mode)
@@ -199,7 +202,7 @@ static func set_blur_mode(display: String, mode: BLUR_MODE = BLUR_MODE.OFF) -> i
 
 # Sets the Gamescope blur radius when blur is active
 static func set_blur_radius(display: String, radius: int) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Setting blur radius to: {0}".format([radius]))
 	var root_id := Xlib.get_root_window_id(display)
 	return _set_xprop(display, root_id, "GAMESCOPE_BLUR_RADIUS", radius)
@@ -207,7 +210,7 @@ static func set_blur_radius(display: String, radius: int) -> int:
 
 # Configures Gamescope to allow tearing or not
 static func set_allow_tearing(display: String, allow: bool) -> int:
-	var logger := Log.get_logger("Gamescope")
+	var logger := Log.get_logger("Gamescope", level)
 	logger.debug("Setting tearing to: {0}".format([allow]))
 	var value := 0
 	if allow:
