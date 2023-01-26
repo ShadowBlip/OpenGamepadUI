@@ -24,12 +24,6 @@ func _on_parent_ready() -> void:
 	if _toast == null:
 		return
 	_toast.toast_finished.connect(_on_toast_finished)
-	show(Notification.new("Notification manager is ready1"))
-	show(Notification.new("Notification manager is ready2"))
-	show(Notification.new("Notification manager is ready3"))
-	show(Notification.new("Notification manager is ready4"))
-	show(Notification.new("Notification manager is ready5"))
-	show(Notification.new("Notification manager is ready6"))
 
 
 # Queues the given notification to be shown
