@@ -4,7 +4,7 @@
 [ext_resource type="Animation" uid="uid://cyb8166vcpqu3" path="res://assets/animations/transitions/fade_out.tres" id="2_spmow"]
 [ext_resource type="Script" path="res://core/ui/components/transition.gd" id="3_rret6"]
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_0alou"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_p28po"]
 _data = {
 "fade_in": ExtResource("1_r2152"),
 "fade_out": ExtResource("2_spmow")
@@ -13,7 +13,7 @@ _data = {
 [node name="TransitionFadeIn" type="AnimationPlayer"]
 root_node = NodePath("")
 libraries = {
-"": SubResource("AnimationLibrary_0alou")
+"": SubResource("AnimationLibrary_p28po")
 }
 script = ExtResource("3_rret6")
 enter_animation = "fade_in"

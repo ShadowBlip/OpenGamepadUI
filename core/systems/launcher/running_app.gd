@@ -2,11 +2,20 @@ extends Resource
 class_name RunningApp
 
 signal app_killed
+signal window_id_changed
+signal app_id_changed
 
 var launch_item: LibraryLaunchItem
 var pid: int
 var display: String
-var window_id: int
+var window_id: int:
+	set(v):
+		window_id = v
+		window_id_changed.emit()
+var app_id: int:
+	set(v):
+		app_id = v
+		app_id_changed.emit()
 var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
