@@ -70,7 +70,6 @@ func _ready() -> void:
 
 
 func _update_displays() -> void:
-	print("UPDATING DISPLAYS")
 	if len(displays) != 0:
 		return
 	displays = Gamescope.discover_gamescope_displays()

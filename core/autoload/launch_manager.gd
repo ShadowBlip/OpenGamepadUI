@@ -258,10 +258,13 @@ func _check_running():
 	
 	# Hacky?
 	# Don't consider windows that come from a process in our blacklist
-	var pid_blacklist := ["steam", "gamescope-wl"]
+	var pid_blacklist := ["steam"] # "gamescope-wl"?
 	for pid in _pid_to_windows.keys():
 		var pid_info := Reaper.get_pid_status(pid)
-		if not pid_info["Name"] in pid_blacklist:
+		var pid_name := ""
+		if "Name" in pid_info:
+			pid_name = pid_info["Name"]
+		if not pid_name in pid_blacklist:
 			continue
 		for window in _pid_to_windows[pid]:
 			orphan_windows.erase(window)
