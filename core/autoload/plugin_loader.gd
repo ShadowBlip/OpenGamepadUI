@@ -212,6 +212,7 @@ func initialize_plugin(plugin_id) -> int:
 		logger.warn("Unable to load plugin '{0}'. Is the entrypoint correct?".format([plugin_id]))
 		return FAILED
 	var instance: Plugin = plugin.new()
+	instance.name = plugin_id
 	instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, plugin_id])
 	add_child(instance)
 	plugin_nodes[plugin_id] = instance

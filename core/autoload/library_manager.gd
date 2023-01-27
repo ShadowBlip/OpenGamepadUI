@@ -2,6 +2,7 @@
 extends Node
 
 const REQUIRED_FIELDS: Array = ["library_id"]
+const desktop_library_scene := preload("res://core/systems/library/library_desktop.tscn")
 
 signal library_registered(library: Library)
 signal library_unregistered(library_id: String)
@@ -36,6 +37,9 @@ var logger := Log.get_logger("LibraryManager")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_parent().ready.connect(_on_parent_ready)
+	
+	# Add built-in libraries
+	add_child(desktop_library_scene.instantiate())
 
 
 # Called when our parent is ready
