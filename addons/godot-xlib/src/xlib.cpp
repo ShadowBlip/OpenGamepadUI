@@ -147,8 +147,6 @@ int Xlib::get_xprop(godot::String display, int window_id, godot::String key) {
   }
 
   // Close the connection to the x server
-  godot::UtilityFunctions::push_error("Property ", key,
-                                      " not found on window: ", window_id);
   XCloseDisplay(dpy);
   return ERR_XPROP_NOT_FOUND;
 };
@@ -253,8 +251,6 @@ Xlib::get_xprop_array(godot::String display, int window_id, godot::String key) {
   }
 
   // Close the connection to the x server
-  godot::UtilityFunctions::push_error("Property ", key,
-                                      " not found on window: ", window_id);
   XCloseDisplay(dpy);
   return results;
 }
