@@ -4,6 +4,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/extensions/XRes.h>
 #include <cstring>
 
 #include "godot_cpp/variant/packed_int32_array.hpp"
@@ -293,6 +294,41 @@ godot::String Xlib::get_window_name(godot::String display, int window_id) {
   return godot::String(text);
 };
 
+// Uses XRes to determine the given Window's PID
+int Xlib::get_window_pid(godot::String display, int window_id) {
+  Window window = (Window)window_id;
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return -1;
+  }
+
+  // Use XRes to determine PID
+  pid_t pid = -1;
+  XResClientIdSpec spec = {
+      .client = window,
+      .mask = XRES_CLIENT_ID_PID_MASK,
+  };
+  long num_ids = 0;
+  XResClientIdValue *client_ids = NULL;
+  XResQueryClientIds(dpy, 1, &spec, &num_ids, &client_ids);
+
+  for (long i = 0; i < num_ids; i++) {
+    pid = XResGetClientPid(&client_ids[i]);
+    if (pid > 0) {
+      break;
+    }
+  }
+  XResClientIdsDestroy(num_ids, client_ids);
+
+  // Close the connection to the x server
+  XCloseDisplay(dpy);
+  return pid;
+};
+
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Static methods
@@ -324,6 +360,9 @@ void Xlib::_bind_methods() {
   godot::ClassDB::bind_static_method(
       "Xlib", godot::D_METHOD("get_window_name", "display", "window_id"),
       &Xlib::get_window_name);
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("get_window_pid", "display", "window_id"),
+      &Xlib::get_window_pid);
 
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);

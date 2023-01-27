@@ -1,7 +1,7 @@
 
 ALL_CPP := $(shell find ./ -name '*.cpp')
 ALL_HEADERS := $(shell find ./src -name '*.h')
-GODOT_CPP_VERSION := 19091138895d35e1ce69742889b8bfd82be57f17
+GODOT_CPP_VERSION := ae1afba8d126e2b577ba358f17b2843787f71ef1
 
 .PHONY: build
 build: bin/libxlib.linux.template_debug.x86_64.so bin/libxlib.linux.template_release.x86_64.so
