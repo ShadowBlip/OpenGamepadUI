@@ -159,7 +159,13 @@ func is_running(name: String) -> bool:
 # Returns a list of window IDs that don't have a corresponding RunningApp
 func get_orphan_windows() -> Array[int]:
 	var orphans := []
-	var focusable := Gamescope.get_focusable_apps(overlay_display)
+	
+	# Get all the window children of root
+	var root_id := Gamescope.get_root_window_id(target_display)
+	if root_id < 0:
+		return orphans
+	var focusable := Gamescope.get_window_children(target_display, root_id)
+
 	var windows_with_app := []
 	for app in _running:
 		if app.window_id in focusable:
@@ -268,6 +274,11 @@ func _check_running():
 			var discovered := _discover_window_id(app, orphan_windows)
 			if discovered > 0:
 				app.window_id = discovered
+				
+				# Set the app ID atom so the app is focusable by Gamescope in Steam mode
+				if app.launch_item.provider_app_id.is_valid_int():
+					Gamescope.set_app_id(app.display, app.window_id, app.launch_item.provider_app_id.to_int())
+				Gamescope.set_app_id(app.display, app.window_id, app.pid * 1000)
 		
 		# If our app is still running, great!
 		if app.is_running():

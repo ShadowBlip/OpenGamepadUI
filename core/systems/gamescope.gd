@@ -187,6 +187,11 @@ static func set_overlay(display: String, window_id: int, value: int) -> int:
 	return _set_xprop(display, window_id, "STEAM_OVERLAY", value)
 
 
+# Sets the app ID on the given window
+static func set_app_id(display: String, window_id: int, app_id: int) -> int:
+	return _set_xprop(display, window_id, "STEAM_GAME", app_id)
+
+
 # Sets the Gamescope FPS limit
 static func set_fps_limit(display: String, fps: int = 60) -> int:
 	var logger := Log.get_logger("Gamescope", level)
