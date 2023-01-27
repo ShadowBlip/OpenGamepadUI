@@ -58,4 +58,10 @@ $(EXPORT_TEMPLATE):
 
 .PHONY: debug 
 debug: addons
-	$(GAMESCOPE) -e --xwayland-count 2 -- $(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 --position 320,140 res://main.tscn
+	$(GAMESCOPE) -e --xwayland-count 2 -- \
+		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
+		--position 320,140 res://main.tscn
+
+.PHONY: inspect
+inspect: addons
+	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
