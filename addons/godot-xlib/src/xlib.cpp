@@ -114,7 +114,8 @@ int Xlib::set_xprop(godot::String display, int window_id, godot::String key,
 
 // Returns the value of the given x property on the given window. Returns -255
 // if no value was found.
-int Xlib::get_xprop(godot::String display, int window_id, godot::String key) {
+__attribute__((__no_sanitize_address__)) int
+Xlib::get_xprop(godot::String display, int window_id, godot::String key) {
   Window window = (Window)window_id;
 
   // Open a connection with the server
@@ -214,7 +215,7 @@ godot::PackedStringArray Xlib::list_xprops(godot::String display,
 };
 
 // Returns the values of the given x property on the given window.
-godot::PackedInt32Array
+__attribute__((__no_sanitize_address__)) godot::PackedInt32Array
 Xlib::get_xprop_array(godot::String display, int window_id, godot::String key) {
   Window window = (Window)window_id;
   godot::PackedInt32Array results = godot::PackedInt32Array();
