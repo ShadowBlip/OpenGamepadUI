@@ -9,6 +9,10 @@ to launch and play games.
 
 ![](docs/media/screenshot01.png)
 
+![](docs/media/screenshot02.png)
+
+![](docs/media/screenshot03.png)
+
 ## Requirements
 
 ### Build Requirements
