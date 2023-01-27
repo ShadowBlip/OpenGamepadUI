@@ -187,6 +187,11 @@ static func set_overlay(display: String, window_id: int, value: int) -> int:
 	return _set_xprop(display, window_id, "STEAM_OVERLAY", value)
 
 
+# Returns the currently set app ID on the given window
+static func get_app_id(display: String, window_id: int) -> int:
+	return _get_xprop(display, window_id, "STEAM_GAME")
+
+
 # Sets the app ID on the given window
 static func set_app_id(display: String, window_id: int, app_id: int) -> int:
 	return _set_xprop(display, window_id, "STEAM_GAME", app_id)

@@ -157,15 +157,9 @@ func is_running(name: String) -> bool:
 
 
 # Returns a list of window IDs that don't have a corresponding RunningApp
-func get_orphan_windows() -> Array[int]:
+func get_orphan_windows(focusable: PackedInt32Array) -> Array[int]:
 	var orphans := []
 	
-	# Get all the window children of root
-	var root_id := Gamescope.get_root_window_id(target_display)
-	if root_id < 0:
-		return orphans
-	var focusable := Gamescope.get_window_children(target_display, root_id)
-
 	var windows_with_app := []
 	for app in _running:
 		if app.window_id in focusable:
@@ -175,21 +169,6 @@ func get_orphan_windows() -> Array[int]:
 			continue
 		orphans.push_back(window_id)
 	return orphans
-
-
-# Try to discover the window id of the given app
-func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
-	var window_id := app.get_window_id_from_pid()
-	if window_id > 0:
-		logger.debug("Found window ID for {0} from PID: {1}".format([app.launch_item.name, window_id]))
-		return window_id
-	# Assign the first orphan window to the app
-	# TODO: Any way we can do this better?
-	for window in orphan_windows:
-		logger.debug("Assuming orphan window {0} is {1}".format([window, app.launch_item.name]))
-		return window
-	logger.debug("Unable to discover window for: " + app.launch_item.name)
-	return -1
 
 
 # Updates our list of recently launched apps
@@ -257,28 +236,22 @@ func _get_target_display(exclude_display: String) -> String:
 func _check_running():
 	if len(_running) == 0:
 		return
-		
+
+	# Get all the window children of root
+	var root_id := Gamescope.get_root_window_id(target_display)
+	if root_id < 0:
+		return
+	var focusable := Gamescope.get_window_children(target_display, root_id)
+
 	# Get a list of orphaned windows to try and pair windows with running apps
-	var orphan_windows := get_orphan_windows()
+	var orphan_windows := get_orphan_windows(focusable)
 	
 	# Check all running apps
 	var to_remove := []
 	for app in _running:
-		# Try to set the window ID to allow app switching
-		var needs_window_id := false
-		if not app.window_id > 0:
-			needs_window_id = true
-		if app.window_id > 0 and not Gamescope.is_focusable_app(overlay_display, app.window_id):
-			needs_window_id = true
-		if needs_window_id:
-			var discovered := _discover_window_id(app, orphan_windows)
-			if discovered > 0:
-				app.window_id = discovered
-				
-				# Set the app ID atom so the app is focusable by Gamescope in Steam mode
-				if app.launch_item.provider_app_id.is_valid_int():
-					Gamescope.set_app_id(app.display, app.window_id, app.launch_item.provider_app_id.to_int())
-				Gamescope.set_app_id(app.display, app.window_id, app.pid * 1000)
+		# Ensure that the running app has a corresponding window ID and app ID
+		_ensure_window_id(app, focusable, orphan_windows)
+		_ensure_app_id(app, focusable)
 		
 		# If our app is still running, great!
 		if app.is_running():
@@ -290,3 +263,69 @@ func _check_running():
 	# Remove any non-running apps
 	for app in to_remove:
 		_remove_running(app)
+
+
+# Ensures that the given app has a window id associated with it
+func _ensure_window_id(app: RunningApp, focusable: Array, orphan_windows: Array) -> void:
+	# Try to set the window ID to allow app switching
+	var needs_window_id := false
+	if app.window_id <= 0:
+		logger.debug(app.launch_item.name + " has a bad window ID: " + str(app.window_id))
+		needs_window_id = true
+	elif not app.window_id in focusable:
+		logger.debug(str(app.window_id) + " is not in the list of focusable windows")
+		needs_window_id = true
+	#elif app.window_id > 0 and not Gamescope.is_focusable_app(overlay_display, app.window_id):
+	#	needs_window_id = true
+	if not needs_window_id:
+		return
+	var discovered := _discover_window_id(app, orphan_windows)
+	if discovered <= 0:
+		return
+	
+	# Set the window ID
+	logger.debug("Setting app '" + app.launch_item.name + "' to window ID: " + str(discovered))
+	app.window_id = discovered
+
+
+func _ensure_app_id(app: RunningApp, focusable: Array):
+	if app.window_id <= 0 or not app.window_id in focusable:
+		logger.debug("No valid window ID to set app ID on")
+		return
+		
+	# Don't worry about games launched via Steam
+	if app.launch_item.command == "steam":
+		return
+	
+	# Set the app ID atom so the app is focusable by Gamescope in Steam mode
+	if app.launch_item.provider_app_id.is_valid_int():
+		Gamescope.set_app_id(app.display, app.window_id, app.launch_item.provider_app_id.to_int())
+	elif Gamescope.get_app_id(app.display, app.window_id) < 0:
+		Gamescope.set_app_id(app.display, app.window_id, app.pid * 1000)
+
+
+# Try to discover the window id of the given app
+func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
+	var window_id := app.get_window_id_from_pid()
+	if window_id > 0:
+		logger.debug("Found window ID for {0} from PID: {1}".format([app.launch_item.name, window_id]))
+		return window_id
+		
+	# Look through orphan windows for a possible match
+	# TODO: Any way we can do this better?
+	var blacklist := ["steam"]
+	for window in orphan_windows:
+		var window_name := Gamescope.get_window_name(app.display, window)
+		if app.launch_item.name.to_lower() == window_name.to_lower():
+			logger.debug("Orphan window name {0} matches {1}".format([window, app.launch_item.name]))
+			return window
+		if window_name == "":
+			continue
+		if window_name.to_lower() in blacklist:
+			continue
+		logger.debug("Assuming orphan window {0} is {1}".format([window, app.launch_item.name]))
+		return window
+		
+	logger.debug("Unable to discover window for: " + app.launch_item.name)
+	return -1
+
