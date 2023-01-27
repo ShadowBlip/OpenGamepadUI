@@ -10,14 +10,14 @@ func _ready() -> void:
 	label_settings.line_spacing = 0
 	NotificationManager.notification_sent.connect(_on_notification_sent)
 	for child in get_children():
-		if child.name == "VisibilityManager":
+		if child.name in ["VisibilityManager", "TransitionContainer"]:
 			continue
 		child.queue_free()
 
 
 func _on_notification_sent(_notify: Notification) -> void:
 	for child in get_children():
-		if child.name == "VisibilityManager":
+		if child.name in ["VisibilityManager", "TransitionContainer"]:
 			continue
 		child.queue_free()
 	var history := NotificationManager.get_notification_history()

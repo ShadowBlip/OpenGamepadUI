@@ -24,7 +24,6 @@ func _on_state_changed(_from: State, to: State) -> void:
 
 
 func _transition(visibility: bool) -> void:
-	print(_parent.name, " TRANSITION: ", visibility)
 	if not _parent.has_node("TransitionContainer"):
 		_parent.visible = visibility
 		return
