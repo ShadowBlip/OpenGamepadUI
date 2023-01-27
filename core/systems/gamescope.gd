@@ -83,6 +83,11 @@ static func discover_gamescope_displays() -> PackedStringArray:
 	return gamescope_displays
 
 
+# Returns the PID of the given window. Returns -1 if no PID was found.
+static func get_window_pid(display: String, window_id: int) -> int:
+	return Xlib.get_window_pid(display, window_id)
+
+
 # Returns the xwayland window ID for the given process. Returns -1 if no
 # window was found.
 static func get_window_id(display: String, pid: int) -> int:
@@ -91,9 +96,13 @@ static func get_window_id(display: String, pid: int) -> int:
 	var root_id := Xlib.get_root_window_id(display)
 	var all_windows := get_all_windows(display, root_id)
 	for window_id in all_windows:
-		var window_pid := Xlib.get_xprop(display, window_id, "_NET_WM_PID")
+		var window_pid := Xlib.get_window_pid(display, window_id)
 		if pid == window_pid:
 			return window_id
+		window_pid = Xlib.get_xprop(display, window_id, "_NET_WM_PID")
+		if pid == window_pid:
+			return window_id
+
 	return -1
 
 
