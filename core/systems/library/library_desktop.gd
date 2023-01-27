@@ -19,7 +19,6 @@ func get_library_launch_items() -> Array:
 			logger.warn("Folder does not exist: " + folder)
 			continue
 		var files := DirAccess.get_files_at(folder)
-		print(files)
 		for file in files:
 			var launch_item := _desktop_file_to_launch_item("/".join([folder, file]))
 			if launch_item:
