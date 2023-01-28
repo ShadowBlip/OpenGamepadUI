@@ -2,9 +2,10 @@ extends HFlowContainer
 
 @export var state_manager_path: NodePath
 
-const plugin_store_state: State = preload("res://assets/state/states/settings_plugin_store.tres")
-const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/plugin_store_item.tscn")
 signal plugin_store_loaded(plugin_items: Dictionary)
+
+const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/plugin_store_item.tscn")
+var plugin_store_state := preload("res://assets/state/states/settings_plugin_store.tres") as State
 
 @onready var http_image := $HTTPImageFetcher
 @onready var settings_menu := $"../../../.." #verbose?
