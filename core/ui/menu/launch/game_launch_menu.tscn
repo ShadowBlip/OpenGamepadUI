@@ -57,7 +57,6 @@ custom_minimum_size = Vector2(0, 440)
 layout_mode = 2
 texture = ExtResource("3_io70p")
 expand_mode = 1
-stretch_mode = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/VBoxContainer/GameBanner"]
 layout_mode = 0
@@ -67,7 +66,10 @@ theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 
 [node name="GameLogo" type="TextureRect" parent="ScrollContainer/VBoxContainer/GameBanner/MarginContainer"]
+custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
+expand_mode = 1
+stretch_mode = 4
 
 [node name="LaunchBarMargin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
