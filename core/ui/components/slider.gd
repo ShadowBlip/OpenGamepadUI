@@ -23,9 +23,34 @@ signal value_changed(value: float)
 			slider.value = v
 		notify_property_list_changed()
 	
-@export var min_value: float = 0
-@export var max_value: float = 100
-@export var step: float = 1
+@export var max_value: float = 100:
+	set(v):
+		max_value = v
+		if slider:
+			slider.max_value = v
+		notify_property_list_changed()
+		
+@export var min_value: float = 0:
+	set(v):
+		min_value = v
+		if slider:
+			slider.min_value = v
+		notify_property_list_changed()
+		
+@export var step: float = 1:
+	set(v):
+		step = v
+		if slider:
+			slider.step = v
+		notify_property_list_changed()
+
+@export var editable: bool = true:
+	set(v):
+		editable = v
+		if slider:
+			slider.editable = v
+		notify_property_list_changed()
+		
 @export var tick_count := 0
 
 @onready var label := $%Label as Label
@@ -43,6 +68,7 @@ func _ready() -> void:
 	slider.max_value = max_value
 	slider.step = step
 	slider.tick_count = tick_count
+	slider.editable = editable
 	
 	# Wire up all slider signals
 	var on_drag_ended := func(changed: bool):
