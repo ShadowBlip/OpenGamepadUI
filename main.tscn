@@ -30,9 +30,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="TopBar" parent="UIContainer" instance=ExtResource("3_4jaod")]
-layout_mode = 2
-
 [node name="Content" type="Control" parent="UIContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -55,6 +52,10 @@ layout_mode = 1
 [node name="SettingsMenu" parent="UIContainer/Content" instance=ExtResource("16_xub48")]
 visible = false
 layout_mode = 1
+
+[node name="TopBar" parent="UIContainer/Content" instance=ExtResource("3_4jaod")]
+layout_mode = 1
+offset_bottom = 40.0
 
 [node name="MainMenuContainer" parent="UIContainer/Content" instance=ExtResource("7_oh5xv")]
 visible = false

@@ -2,7 +2,8 @@ extends Control
 
 var settings_state := preload("res://assets/state/states/settings.tres") as State
 
-@onready var general_button := $MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton
+@onready var setting_buttons_container: VBoxContainer = %SettingButtonsContainer
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -10,4 +11,8 @@ func _ready() -> void:
 	
 
 func _on_state_entered(_from: State) -> void:
-	general_button.grab_focus.call_deferred()
+	for child in setting_buttons_container.get_children():
+		if not child is Button:
+			continue
+		child.grab_focus.call_deferred()
+		break

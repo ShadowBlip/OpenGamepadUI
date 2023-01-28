@@ -43,14 +43,19 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_7txcp")
 
-[node name="MainContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 45
 
-[node name="MenuMarginContainer" type="MarginContainer" parent="MainContainer"]
+[node name="MainContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MenuMarginContainer" type="MarginContainer" parent="MarginContainer/MainContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 20
@@ -58,56 +63,57 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/MenuMarginContainer"]
+[node name="SettingButtonsContainer" type="VBoxContainer" parent="MarginContainer/MainContainer/MenuMarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GeneralButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+[node name="GeneralButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "General"
 
-[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/GeneralButton" instance=ExtResource("11_11xk2")]
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/GeneralButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("13_k0fou")
 action = 2
 on_signal = "focus_entered"
 
-[node name="HSeparator" type="HSeparator" parent="MainContainer/MenuMarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
 
-[node name="PluginsButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+[node name="PluginsButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Plugins"
 
-[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginsButton" instance=ExtResource("11_11xk2")]
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/PluginsButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("14_wrm26")
 action = 2
 on_signal = "focus_entered"
 
-[node name="PluginStoreButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+[node name="PluginStoreButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Plugin Store"
 
-[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/PluginStoreButton" instance=ExtResource("11_11xk2")]
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/PluginStoreButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
 action = 2
 on_signal = "focus_entered"
 
-[node name="HSeparator2" type="HSeparator" parent="MainContainer/MenuMarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
 
-[node name="WindowsButton" parent="MainContainer/MenuMarginContainer/VBoxContainer" instance=ExtResource("3_11sf6")]
+[node name="WindowsButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Windows"
 
-[node name="StateUpdater" parent="MainContainer/MenuMarginContainer/VBoxContainer/WindowsButton" instance=ExtResource("11_11xk2")]
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/WindowsButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
 action = 2
 on_signal = "focus_entered"
 
-[node name="ContentMarginContainer" type="MarginContainer" parent="MainContainer"]
+[node name="ContentMarginContainer" type="MarginContainer" parent="MarginContainer/MainContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
@@ -116,58 +122,58 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="GeneralSettings" parent="MainContainer/ContentMarginContainer" instance=ExtResource("16_jih4y")]
+[node name="GeneralSettings" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("16_jih4y")]
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MainContainer/ContentMarginContainer/GeneralSettings" instance=ExtResource("2_364oy")]
+[node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("13_k0fou")
 visible_during = []
 
-[node name="TransitionContainer" type="Node" parent="MainContainer/ContentMarginContainer/GeneralSettings"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings"]
 script = ExtResource("17_2cktl")
 
-[node name="TransitionFadeIn" parent="MainContainer/ContentMarginContainer/GeneralSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
 
-[node name="PluginSettings" parent="MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
+[node name="PluginSettings" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
 visible = false
 layout_mode = 2
 
-[node name="TransitionContainer" type="Node" parent="MainContainer/ContentMarginContainer/PluginSettings"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/PluginSettings"]
 script = ExtResource("17_2cktl")
 
-[node name="TransitionFadeIn" parent="MainContainer/ContentMarginContainer/PluginSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/PluginSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/ContentMarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/MainContainer/ContentMarginContainer"]
 visible = false
 layout_mode = 2
 follow_focus = true
 
-[node name="VisibilityManager" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("2_364oy")]
+[node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
 visible_during = []
 
-[node name="PluginStore" parent="MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
+[node name="PluginStore" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
 visible = false
 layout_mode = 2
 state_manager_path = NodePath("")
 
-[node name="TransitionContainer" type="Node" parent="MainContainer/ContentMarginContainer/ScrollContainer"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer"]
 script = ExtResource("17_2cktl")
 
-[node name="TransitionFadeIn" parent="MainContainer/ContentMarginContainer/ScrollContainer/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer/TransitionContainer" instance=ExtResource("18_agbuc")]
 
-[node name="GamescopeInspector" parent="MainContainer/ContentMarginContainer" instance=ExtResource("18_qnd5c")]
+[node name="GamescopeInspector" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("18_qnd5c")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MainContainer/ContentMarginContainer/GamescopeInspector" instance=ExtResource("2_364oy")]
+[node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/GamescopeInspector" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
 visible_during = []
 
-[node name="TransitionContainer" type="Node" parent="MainContainer/ContentMarginContainer/GamescopeInspector"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/GamescopeInspector"]
 script = ExtResource("17_2cktl")
 
-[node name="TransitionFadeIn" parent="MainContainer/ContentMarginContainer/GamescopeInspector/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/GamescopeInspector/TransitionContainer" instance=ExtResource("18_agbuc")]

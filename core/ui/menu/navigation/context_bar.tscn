@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://core/ui/menu/navigation/context_bar.gd" id="2_jserv"]
 
 [node name="ContextBar" type="Control" groups=["menu"]]
-custom_minimum_size = Vector2(0, 55)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0

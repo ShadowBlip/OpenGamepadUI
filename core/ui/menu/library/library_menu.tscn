@@ -30,21 +30,27 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_7p3g5")
 
-[node name="TabContainer" type="TabContainer" parent="."]
-layout_mode = 0
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_top = 45
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme = ExtResource("2_7p3g5")
 tab_alignment = 1
 
-[node name="Installed" type="ScrollContainer" parent="TabContainer"]
+[node name="Installed" type="ScrollContainer" parent="MarginContainer/TabContainer"]
 layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Installed"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TabContainer/Installed"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -53,18 +59,20 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Installed/MarginContainer"]
+[node name="InstalledGrid" type="HFlowContainer" parent="MarginContainer/TabContainer/Installed/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
-[node name="All Games" type="ScrollContainer" parent="TabContainer"]
+[node name="All Games" type="ScrollContainer" parent="MarginContainer/TabContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/All Games"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TabContainer/All Games"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -73,18 +81,20 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/All Games/MarginContainer"]
+[node name="AllGamesGrid" type="HFlowContainer" parent="MarginContainer/TabContainer/All Games/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 
-[node name="Collections" type="ScrollContainer" parent="TabContainer"]
+[node name="Collections" type="ScrollContainer" parent="MarginContainer/TabContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Collections"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TabContainer/Collections"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -93,9 +103,7 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Collections/MarginContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer/TabContainer/Collections/MarginContainer"]
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
-
-[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
