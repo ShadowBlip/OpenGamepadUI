@@ -143,20 +143,22 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
-custom_minimum_size = Vector2(143, 215)
+custom_minimum_size = Vector2(200.2, 301)
 layout_mode = 2
 text = "vkCube"
 layout = 1
+layout_scale = 1.4
 
 [node name="Launcher" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/Button" instance=ExtResource("5_0bpdu")]
 library_item = SubResource("Resource_icex7")
 
 [node name="LibraryPoster" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
-custom_minimum_size = Vector2(143, 215)
+custom_minimum_size = Vector2(200.2, 301)
 layout_mode = 2
 texture_normal = null
 text = "Library"
 layout = 1
+layout_scale = 1.4
 
 [node name="TextureContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster"]
 layout_mode = 0

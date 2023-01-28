@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_0ro1r"]
 [ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_rlfl1"]
+[sub_resource type="LabelSettings" id="LabelSettings_r8nqs"]
 shadow_size = 3
 shadow_offset = Vector2(2, 2)
 
@@ -21,18 +21,19 @@ texture_normal = ExtResource("2_0ro1r")
 ignore_texture_size = true
 stretch_mode = 4
 script = ExtResource("2_op5nj")
+layout_scale = null
 
 [node name="EmptyPanel" type="Panel" parent="."]
 modulate = Color(0.956863, 1, 0.760784, 1)
 show_behind_parent = true
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="."]
-anchors_preset = 12
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -40,7 +41,7 @@ offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Empty"
-label_settings = SubResource("LabelSettings_rlfl1")
+label_settings = SubResource("LabelSettings_r8nqs")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -49,7 +50,7 @@ autowrap_mode = 3
 modulate = Color(0, 0, 0, 0.501961)
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 22)
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -60,7 +61,7 @@ theme = ExtResource("1_ekp4a")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 visible = false
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -68,9 +69,6 @@ grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="CenterContainer"]
 custom_minimum_size = Vector2(200, 300)
-offset_left = 540.0
-offset_top = 250.0
-offset_right = 740.0
-offset_bottom = 550.0
+layout_mode = 2
 texture = ExtResource("2_0ro1r")
-ignore_texture_size = true
+expand_mode = 1

@@ -15,6 +15,7 @@ const LAYOUTS: Dictionary = {
 @export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
 @export var layout: LAYOUT_MODE = LAYOUT_MODE.LANDSCAPE
+@export var layout_scale: float = 1
 var library_item: LibraryItem
 var _focus_audio_stream = load(focus_audio)
 var _select_audio_stream = load(select_audio)
@@ -59,5 +60,5 @@ func _play_sound(stream: AudioStream) -> void:
 
 
 func _set_layout(dimensions: Vector2) -> void:
-	custom_minimum_size.x = dimensions.x
-	custom_minimum_size.y = dimensions.y
+	custom_minimum_size.x = dimensions.x * layout_scale
+	custom_minimum_size.y = dimensions.y * layout_scale

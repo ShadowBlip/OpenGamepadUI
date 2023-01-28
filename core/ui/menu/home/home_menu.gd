@@ -4,6 +4,7 @@ var state_machine := preload("res://assets/state/state_machines/global_state_mac
 var home_state := preload("res://assets/state/states/home.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
+var _initialized := false
 
 @onready var container: HBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer
 @onready var banner: TextureRect = $SelectedBanner
@@ -28,7 +29,10 @@ func _ready() -> void:
 	home_state.state_entered.connect(_on_state_entered)
 
 
-func _on_state_entered(_from: State) -> void:
+func _on_state_entered(from: State) -> void:
+	if from == null and not _initialized:
+		_initialized = true
+		return
 	_grab_focus()
 
 
@@ -101,6 +105,7 @@ func _build_poster(item: LibraryItem, portrait: bool) -> TextureButton:
 	else:
 		poster.layout = poster.LAYOUT_MODE.LANDSCAPE
 	poster.text = item.name
+	poster.layout_scale = 1.4
 
 	# Get the boxart for the item
 	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
