@@ -1,5 +1,7 @@
 extends Node
 
+signal setting_changed(section: String, key: String, value: Variant)
+
 const settings_file := "user://settings.cfg"
 
 var _config: ConfigFile = ConfigFile.new()
@@ -33,3 +35,4 @@ func set_value(section: String, key: String, value: Variant, persist: bool = tru
 	_config.set_value(section, key, value)
 	if persist:
 		save()
+	setting_changed.emit(section, key, value)

@@ -33,7 +33,7 @@ func _ready() -> void:
 
 
 # To be implemented by a provider
-func get_boxart(item: LibraryItem, kind: int) -> Texture2D:
+func get_boxart(item: LibraryItem, kind: LAYOUT) -> Texture2D:
 	return null
 
 

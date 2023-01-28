@@ -25,7 +25,7 @@ func _ready() -> void:
 
 
 # Looks for boxart in the local user directory based on the app name
-func get_boxart(item: LibraryItem, kind: int) -> Texture2D:
+func get_boxart(item: LibraryItem, kind: LAYOUT) -> Texture2D:
 	logger.debug("Fetching box art for: " + item.name)
 	if not kind in layout_map:
 		logger.error("Unsupported boxart layout: {0}".format([kind]))

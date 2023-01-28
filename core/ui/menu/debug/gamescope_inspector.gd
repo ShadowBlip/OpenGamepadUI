@@ -107,6 +107,7 @@ func _build_menus() -> void:
 		var tree := Tree.new()
 		tree.item_selected.connect(_on_tree_item_selected.bind(tree, display))
 		tree.select_mode = Tree.SELECT_ROW
+		tree.set("theme_override_font_sizes/font_size", 10)
 		tree.columns = 3
 		tree.column_titles_visible = true
 		tree.set_column_title(0, "Window ID")

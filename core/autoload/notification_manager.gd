@@ -11,6 +11,7 @@ var _max_history := SettingsManager.get_value("general.notification", "max_histo
 var _history := [] as Array[Notification]
 var _queue := [] as Array[Notification]
 var _toast: Toast
+var _parent_ready: bool = false
 var logger := Log.get_logger("NotificationManager")
 
 # Called when the node enters the scene tree for the first time.
@@ -20,10 +21,14 @@ func _ready() -> void:
 
 # Called when our parent is ready
 func _on_parent_ready() -> void:
+	_parent_ready = true
 	_toast = get_tree().get_first_node_in_group("notification_toast")
-	if _toast == null:
-		return
-	_toast.toast_finished.connect(_on_toast_finished)
+	if _toast != null:
+		_toast.toast_finished.connect(_on_toast_finished)
+	
+	# Process the queue if we have messages waiting before parent initialization
+	if _queue.size() > 0:
+		_process_queue()
 
 
 # Queues the given notification to be shown
@@ -56,6 +61,10 @@ func _queue_notification(notify: Notification):
 	logger.debug("Queueing notification: " + notify.text)
 	_queue.push_back(notify)
 	notification_queued.emit(notify)
+	
+	# Don't process unless our parent is done initializing
+	if not _parent_ready:
+		return
 	
 	# If no toast exists, process directly
 	if _toast == null:
