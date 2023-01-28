@@ -66,21 +66,22 @@ _data = {
 "show": SubResource("Animation_0yjse")
 }
 
-[node name="MainMenuContainer" type="HBoxContainer"]
+[node name="MainMenuContainer" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1280.0
-offset_bottom = 800.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 50
+theme_override_constants/margin_top = 40
 script = ExtResource("1_3yu6b")
 
-[node name="MainMenu" parent="." instance=ExtResource("2_pw1ol")]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="InGameMenu" parent="." instance=ExtResource("3_w8b06")]
+[node name="MainMenu" parent="HBoxContainer" instance=ExtResource("2_pw1ol")]
+layout_mode = 2
+
+[node name="InGameMenu" parent="HBoxContainer" instance=ExtResource("3_w8b06")]
 layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

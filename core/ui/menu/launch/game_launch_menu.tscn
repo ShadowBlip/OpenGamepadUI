@@ -63,8 +63,8 @@ expand_mode = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 70
 
 [node name="GameLogo" type="TextureRect" parent="ScrollContainer/VBoxContainer/GameBanner/MarginContainer"]
 custom_minimum_size = Vector2(640, 360)

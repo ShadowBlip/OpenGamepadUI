@@ -9,13 +9,14 @@ var _library := {}
 var _current_selection := {}
 
 @onready var global_search: SearchBar = get_tree().get_first_node_in_group("global_search_bar")
-@onready var tab_container: TabContainer = $TabContainer
-@onready var all_games_grid: HFlowContainer = $"TabContainer/All Games/MarginContainer/HFlowContainer"
-@onready var installed_games_grid: HFlowContainer = $"TabContainer/Installed/MarginContainer/HFlowContainer"
+@onready var tab_container: TabContainer = $%TabContainer
+@onready var all_games_grid: HFlowContainer = $%AllGamesGrid
+@onready var installed_games_grid: HFlowContainer = $%InstalledGrid
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	tab_container.tab_changed.connect(_on_tab_container_tab_changed)
 	library_state.state_entered.connect(_on_state_entered)
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
 	LibraryManager.library_registered.connect(_on_library_registered)

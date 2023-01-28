@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends MarginContainer
 
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
