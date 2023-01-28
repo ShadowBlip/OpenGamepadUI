@@ -1,16 +1,18 @@
 extends Control
 
-@onready var plugin_name_label := $MarginContainer/VBoxContainer/PluginNameLabel
-@onready var plugin_texture := $MarginContainer/VBoxContainer/HBoxContainer/TextureRect
-@onready var author_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AuthorLabel
-@onready var summary_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SummaryLabel
-@onready var install_button := $MarginContainer/HBoxContainer/InstallButton
+const plugin_icon := preload("res://assets/ui/icons/plugin-solid.svg")
 
 var download_url: String
 var project_url: String
 var sha256: String
 var plugin_id: String
 var logger: Log.Logger
+
+@onready var plugin_name_label := $MarginContainer/VBoxContainer/PluginNameLabel
+@onready var plugin_texture := $MarginContainer/VBoxContainer/HBoxContainer/TextureRect
+@onready var author_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AuthorLabel
+@onready var summary_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SummaryLabel
+@onready var install_button := $MarginContainer/HBoxContainer/InstallButton
 
 
 # Called when the node enters the scene tree for the first time.
@@ -34,6 +36,7 @@ func set_logger(logger_name: String) -> void:
 # Handle install/uninstall
 func _on_install_button() -> void:
 	var notify := Notification.new("Installing plugin " + plugin_id)
+	notify.icon = plugin_icon
 	# Handle uninstall
 	if PluginLoader.is_installed(plugin_id):
 		notify.text = "Plugin " + plugin_id + " uninstalled"
@@ -50,4 +53,5 @@ func _on_install_button() -> void:
 	await PluginLoader.plugin_installed
 	_set_installed_state()
 	notify = Notification.new("Plugin " + plugin_id + " installed")
+	notify.icon = plugin_icon
 	NotificationManager.show(notify)
