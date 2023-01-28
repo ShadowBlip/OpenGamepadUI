@@ -8,6 +8,7 @@ var logger := Log.get_logger("GameLaunchMenu")
 @onready var banner: TextureRect = $ScrollContainer/VBoxContainer/GameBanner
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
+@onready var loading: Control = $ScrollContainer/VBoxContainer/GameBanner/CenterContainer/Loading01
 
 
 # Called when the node enters the scene tree for the first time.
@@ -31,10 +32,6 @@ func _on_state_entered(_from: State) -> void:
 	launcher.library_item = library_item
 	logger.info("Configured launcher for game: " + library_item.name)
 
-	# Load the banner for the game
-	banner.texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.BANNER)
-	logo.texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.LOGO)
-	
 	# Check if the app is installed or not
 	if library_item.is_installed():
 		launch_button.text = "Launch"
@@ -42,6 +39,21 @@ func _on_state_entered(_from: State) -> void:
 		launch_button.text = "Install"
 	if LaunchManager.is_running(library_item.name):
 		launch_button.text = "Resume"
+		
+	# Set the launcher art to placeholders while we async load the right ones.
+	banner.texture = BoxArtManager.get_placeholder(BoxArtProvider.LAYOUT.BANNER)
+	logo.texture = BoxArtManager.get_placeholder(BoxArtProvider.LAYOUT.LOGO)
+	
+	# Play a loading animation while the art loads
+	loading.visible = true
+
+	# Load the banner for the game
+	var banner_texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.BANNER)
+	var logo_texture = await BoxArtManager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.LOGO)
+	banner.texture = banner_texture
+	logo.texture = logo_texture
+	
+	loading.visible = false
 
 
 func _on_state_exited(to: State) -> void:

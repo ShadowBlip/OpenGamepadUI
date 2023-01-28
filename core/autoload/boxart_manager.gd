@@ -61,6 +61,11 @@ func get_boxart_or_placeholder(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -
 	return boxart
 
 
+# Returns a boxart placeholder for the given layout
+func get_placeholder(kind:  BoxArtProvider.LAYOUT) -> Texture2D:
+	return _placeholder_map[kind]
+
+
 # Returns the given boxart implementation by id
 func get_provider_by_id(id: String) -> BoxArtProvider:
 	return _providers[id]

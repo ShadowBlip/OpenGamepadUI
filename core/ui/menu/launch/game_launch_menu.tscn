@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bwl2icwgry4l"]
+[gd_scene load_steps=16 format=3 uid="uid://bwl2icwgry4l"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_t3rni"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_2y6wm"]
 [ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
+[ext_resource type="PackedScene" uid="uid://bugbaxcj7rtbq" path="res://core/ui/components/loading01.tscn" id="10_ap4mp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ef1c"]
 bg_color = Color(0.741176, 0.576471, 0.976471, 1)
@@ -70,6 +71,18 @@ custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 4
+
+[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/VBoxContainer/GameBanner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading01" parent="ScrollContainer/VBoxContainer/GameBanner/CenterContainer" instance=ExtResource("10_ap4mp")]
+visible = false
+layout_mode = 2
 
 [node name="LaunchBarMargin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
