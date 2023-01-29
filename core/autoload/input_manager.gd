@@ -88,8 +88,8 @@ func _input(event: InputEvent) -> void:
 			menu_state = in_game_menu_state
 
 		if state_machine.stack_length() > 2:
-				state_machine.pop_state()
-				state = state_machine.current_state()
+			state_machine.pop_state()
+			state = state_machine.current_state()
 
 		if state == menu_state:
 			state_machine.pop_state()

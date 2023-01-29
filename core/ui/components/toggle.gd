@@ -21,6 +21,13 @@ signal toggled(pressed: bool)
 			check_button.button_pressed = v
 		notify_property_list_changed()
 
+@export var disabled := false:
+	set(v):
+		disabled = v
+		if check_button:
+			check_button.disabled = v
+		notify_property_list_changed()
+
 @onready var label := $Label as Label
 @onready var check_button := $CheckButton as CheckButton
 
@@ -28,6 +35,7 @@ signal toggled(pressed: bool)
 func _ready() -> void:
 	label.text = text
 	check_button.button_pressed = button_pressed
+	check_button.disabled = disabled
 	check_button.focus_neighbor_bottom = "../" + str(focus_neighbor_bottom)
 	check_button.focus_neighbor_left = "../" + str(focus_neighbor_left)
 	check_button.focus_neighbor_right = "../" + str(focus_neighbor_right)

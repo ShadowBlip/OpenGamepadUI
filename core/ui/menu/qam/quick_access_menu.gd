@@ -54,7 +54,7 @@ func _input(event: InputEvent) -> void:
 		last_child.grab_focus()
 
 
-func add_child_menu(qam_item: Control, icon: Texture2D):
+func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control):
 	var qam := self
 	
 	var first_qam_item : Node
@@ -131,7 +131,6 @@ func _on_notifications_pressed():
 
 func _on_quick_settings_button_pressed():
 	quick_settings_menu.focus_node.grab_focus()
-	pass # Replace with function body.
 
 
 func _on_performance_button_pressed():

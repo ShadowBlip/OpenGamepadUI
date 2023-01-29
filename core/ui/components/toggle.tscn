@@ -11,6 +11,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_pn5mg")
 button_pressed = true
+disabled = null
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
