@@ -17,6 +17,7 @@ enum STATE {
 	GAME_LAUNCHER,
 	SETTINGS,
 	OSK,
+	QAM_BUTTON_SUBMENU,
 }
 
 const StateMap = {
@@ -31,6 +32,7 @@ const StateMap = {
 	STATE.GAME_LAUNCHER: "game_launcher_menu",
 	STATE.SETTINGS: "settings_menu",
 	STATE.OSK: "osk",
+	STATE.QAM_BUTTON_SUBMENU: "qam_button_submenu",
 }
 
 signal state_changed(from: int, to: int, data: Dictionary)

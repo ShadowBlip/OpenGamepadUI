@@ -112,7 +112,6 @@ expand_icon = true
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/Notifications" instance=ExtResource("6_kd46h")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("8_ktmf6")
-action = 2
 on_signal = "focus_entered"
 
 [node name="QuickSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
@@ -131,7 +130,6 @@ expand_icon = true
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/QuickSettingsButton" instance=ExtResource("6_kd46h")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("9_uygax")
-action = 2
 on_signal = "focus_entered"
 
 [node name="PerformanceButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
@@ -149,7 +147,6 @@ expand_icon = true
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/PerformanceButton" instance=ExtResource("6_kd46h")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("10_ft1gj")
-action = 2
 on_signal = "focus_entered"
 
 [node name="HelpButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]

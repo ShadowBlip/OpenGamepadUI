@@ -87,6 +87,10 @@ func _input(event: InputEvent) -> void:
 		if state_machine.has_state(in_game_state):
 			menu_state = in_game_menu_state
 
+		if state_machine.stack_length() > 2:
+				state_machine.pop_state()
+				state = state_machine.current_state()
+
 		if state == menu_state:
 			state_machine.pop_state()
 		elif state in [qam_state]: #osk_state:
@@ -98,3 +102,8 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ogui_east") and state_machine.stack_length() > 1:
 		if not guide_action:
 			state_machine.pop_state()
+	elif event.is_action_pressed("ogui_east") and state_machine.stack_length() == 1:
+		if not guide_action:
+			if state_machine.has_state(in_game_state):
+				return
+			state_machine.push_state(main_menu_state)
