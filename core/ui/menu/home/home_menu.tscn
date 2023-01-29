@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bj8ej083is2oc"]
+[gd_scene load_steps=24 format=3 uid="uid://bj8ej083is2oc"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_noo0w"]
 [ext_resource type="Script" path="res://core/ui/menu/home/home_menu.gd" id="2_ixi86"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://djeanchdp7u18" path="res://assets/icons/book.svg" id="8_0qlm2"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="8_1ovif"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_8yw4g"]
+[ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="9_adbqg"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_tl8ss"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="11_lws2k"]
 
@@ -89,7 +90,7 @@ script = ExtResource("2_ixi86")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("3_mch0x")]
 state = ExtResource("4_6hnsl")
-visible_during = [ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw"), ExtResource("8_1ovif")]
+visible_during = [ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw"), ExtResource("8_1ovif"), ExtResource("9_adbqg")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

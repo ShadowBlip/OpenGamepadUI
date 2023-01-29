@@ -6,16 +6,19 @@
 [sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
 line_spacing = 0.0
 
-[node name="NotificationsMenu" type="HFlowContainer"]
+[node name="NotificationsMenu" type="HFlowContainer" node_paths=PackedStringArray("focus_node")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_iomxi")
+focus_node = NodePath("NotificationContainer")
 
 [node name="NotificationContainer" parent="." instance=ExtResource("2_ak5ln")]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 icon_size = Vector2(24, 24)
 label_settings = SubResource("LabelSettings_5o5uh")
+
+[connection signal="focus_entered" from="NotificationContainer" to="." method="_on_notification_container_focus_entered"]

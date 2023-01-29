@@ -19,4 +19,12 @@ text = "Setting"
 
 [node name="CheckButton" type="CheckButton" parent="."]
 layout_mode = 2
+focus_neighbor_left = NodePath("..")
+focus_neighbor_top = NodePath("..")
+focus_neighbor_right = NodePath("..")
+focus_neighbor_bottom = NodePath("..")
+focus_next = NodePath("..")
+focus_previous = NodePath("..")
 button_pressed = true
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]

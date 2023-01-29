@@ -58,8 +58,10 @@ signal value_changed(value: float)
 @onready var slider := $%HSlider as HSlider
 @onready var hbox := $HBoxContainer as HBoxContainer
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
 	label.text = text
 	label_value.text = str(slider.value)
 	slider.value_changed.connect(_on_value_changed)
@@ -69,6 +71,12 @@ func _ready() -> void:
 	slider.step = step
 	slider.tick_count = tick_count
 	slider.editable = editable
+	slider.focus_neighbor_bottom = "../" + str(focus_neighbor_bottom)
+	slider.focus_neighbor_left = "../" + str(focus_neighbor_left)
+	slider.focus_neighbor_right = "../" + str(focus_neighbor_right)
+	slider.focus_neighbor_top = "../" + str(focus_neighbor_top)
+	slider.focus_previous = "../" + str(focus_previous)
+	slider.focus_next = "../" + str(focus_next)
 	
 	# Wire up all slider signals
 	var on_drag_ended := func(changed: bool):
@@ -85,3 +93,7 @@ func _ready() -> void:
 func _on_value_changed(v: float) -> void:
 	label_value.text = str(v)
 	value_changed.emit(v)
+
+
+func _on_focus_entered():
+	slider.grab_focus()
