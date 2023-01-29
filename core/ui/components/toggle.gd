@@ -28,6 +28,12 @@ signal toggled(pressed: bool)
 func _ready() -> void:
 	label.text = text
 	check_button.button_pressed = button_pressed
+	check_button.focus_neighbor_bottom = "../" + str(focus_neighbor_bottom)
+	check_button.focus_neighbor_left = "../" + str(focus_neighbor_left)
+	check_button.focus_neighbor_right = "../" + str(focus_neighbor_right)
+	check_button.focus_neighbor_top = "../" + str(focus_neighbor_top)
+	check_button.focus_previous = "../" + str(focus_previous)
+	check_button.focus_next = "../" + str(focus_next)
 	
 	# Wire up the button signals
 	var on_button_down := func():
@@ -42,3 +48,7 @@ func _ready() -> void:
 	var on_toggled := func(changed: bool):
 		toggled.emit(changed)
 	check_button.toggled.connect(on_toggled)
+
+
+func _on_focus_entered():
+	check_button.grab_focus()

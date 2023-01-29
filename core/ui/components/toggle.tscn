@@ -20,3 +20,5 @@ text = "Setting"
 [node name="CheckButton" type="CheckButton" parent="."]
 layout_mode = 2
 button_pressed = true
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]

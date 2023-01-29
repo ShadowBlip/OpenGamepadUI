@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="3_2eg06"]
 
-[node name="QuickSettingsMenu" type="Control"]
+[node name="QuickSettingsMenu" type="Control" node_paths=PackedStringArray("focus_node")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +14,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_gwnsx")
+focus_node = NodePath("VBoxContainer/Toggle")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -25,9 +26,23 @@ grow_vertical = 2
 
 [node name="Toggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../Slider")
+focus_neighbor_top = NodePath("../Slider")
+focus_neighbor_right = NodePath("../Slider")
+focus_neighbor_bottom = NodePath("../Slider")
+focus_next = NodePath("../Slider")
+focus_previous = NodePath("../Slider")
+focus_mode = 2
 text = "Per-game Profile"
 
 [node name="Slider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../Toggle")
+focus_neighbor_top = NodePath("../Toggle")
+focus_neighbor_right = NodePath("../Toggle")
+focus_neighbor_bottom = NodePath("../Toggle")
+focus_next = NodePath("../Toggle")
+focus_previous = NodePath("../Toggle")
+focus_mode = 2
 text = "Saturation"
 value = 100.0

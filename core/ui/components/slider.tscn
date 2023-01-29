@@ -29,3 +29,5 @@ horizontal_alignment = 2
 [node name="HSlider" type="HSlider" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]

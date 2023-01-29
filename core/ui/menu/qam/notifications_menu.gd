@@ -4,6 +4,8 @@ const notification_scene := preload("res://core/ui/components/notification_conta
 
 var label_settings := LabelSettings.new()
 
+@export var focus_node : Node = $NotificationContainer
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	label_settings.font_size = 12
@@ -31,3 +33,9 @@ func _on_notification_sent(_notify: Notification) -> void:
 		notification.custom_minimum_size = Vector2(220, 0)
 		notification.label_settings = label_settings
 		add_child(notification)
+
+
+func _on_notification_container_focus_entered():
+	if focus_node.get_child_count() > 0:
+		focus_node.get_child(0).grab_focus()
+	pass # Replace with function body.

@@ -12,6 +12,7 @@ const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
 const qam_state_machine := preload("res://assets/state/state_machines/qam_state_machine.tres")
 
+@export var focus_node : Node
 
 func _init() -> void:
 	ready.connect(add_to_group.bind("plugin"))
@@ -20,8 +21,7 @@ func _init() -> void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
-	
-	
+
 # To be overridden by plugin implementation. Should unload changes done by
 # the plugin.
 func unload() -> void:

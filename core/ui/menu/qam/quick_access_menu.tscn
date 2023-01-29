@@ -99,6 +99,12 @@ theme_override_constants/separation = 10
 [node name="Notifications" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_neighbor_left = NodePath("../HelpButton")
+focus_neighbor_top = NodePath("../HelpButton")
+focus_neighbor_right = NodePath("../QuickSettingsButton")
+focus_neighbor_bottom = NodePath("../QuickSettingsButton")
+focus_next = NodePath("../QuickSettingsButton")
+focus_previous = NodePath("../HelpButton")
 icon = ExtResource("3_1evb4")
 icon_alignment = 1
 expand_icon = true
@@ -112,6 +118,12 @@ on_signal = "focus_entered"
 [node name="QuickSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_neighbor_left = NodePath("../Notifications")
+focus_neighbor_top = NodePath("../Notifications")
+focus_neighbor_right = NodePath("../PerformanceButton")
+focus_neighbor_bottom = NodePath("../PerformanceButton")
+focus_next = NodePath("../PerformanceButton")
+focus_previous = NodePath("../Notifications")
 icon = ExtResource("7_oxxrp")
 icon_alignment = 1
 expand_icon = true
@@ -125,6 +137,12 @@ on_signal = "focus_entered"
 [node name="PerformanceButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_neighbor_left = NodePath("../QuickSettingsButton")
+focus_neighbor_top = NodePath("../QuickSettingsButton")
+focus_neighbor_right = NodePath("../HelpButton")
+focus_neighbor_bottom = NodePath("../HelpButton")
+focus_next = NodePath("../HelpButton")
+focus_previous = NodePath("../QuickSettingsButton")
 icon = ExtResource("9_ric4q")
 expand_icon = true
 
@@ -137,6 +155,12 @@ on_signal = "focus_entered"
 [node name="HelpButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+focus_neighbor_left = NodePath("../PerformanceButton")
+focus_neighbor_top = NodePath("../PerformanceButton")
+focus_neighbor_right = NodePath("../Notifications")
+focus_neighbor_bottom = NodePath("../Notifications")
+focus_next = NodePath("../Notifications")
+focus_previous = NodePath("../PerformanceButton")
 icon = ExtResource("11_3dgt5")
 expand_icon = true
 
@@ -145,3 +169,8 @@ state_machine = ExtResource("7_6iqch")
 state = ExtResource("11_dhes6")
 action = 2
 on_signal = "focus_entered"
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/Notifications" to="." method="_on_notifications_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/QuickSettingsButton" to="." method="_on_quick_settings_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/PerformanceButton" to="." method="_on_performance_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/HelpButton" to="." method="_on_help_button_pressed"]

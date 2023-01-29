@@ -23,6 +23,11 @@ func _init() -> void:
 	_setup(overlay_window_id)
 
 
+func _on_focus_changed(control:Control) -> void:
+	if control != null:
+		logger.debug("Focus changed to: " + control.get_parent().name + " | " + control.name)
+
+
 # Lets us run as an overlay in gamescope
 func _setup(window_id: int) -> void:
 	if window_id < 0:
@@ -71,6 +76,7 @@ func _ready() -> void:
 			osk.open(context)
 		search_bar.keyboard_requested.connect(on_keyboard_requested)
 
+	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 
 # Always push the home state if we end up with an empty stack.
 func _on_state_changed(from: State, to: State) -> void:
