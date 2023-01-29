@@ -21,6 +21,7 @@ signal value_changed(value: float)
 			label_value.text = str(v)
 		if slider:
 			slider.value = v
+		value_changed.emit(v)
 		notify_property_list_changed()
 	
 @export var max_value: float = 100:
@@ -91,8 +92,7 @@ func _ready() -> void:
 
 
 func _on_value_changed(v: float) -> void:
-	label_value.text = str(v)
-	value_changed.emit(v)
+	value = v
 
 
 func _on_focus_entered():
