@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dwbnofm0oxd2y"]
+[gd_scene load_steps=14 format=3 uid="uid://bexauj4m2rbgm"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_r20uv"]
 [ext_resource type="Script" path="res://core/ui/menu/main-menu/main_menu.gd" id="2_2uoqx"]
@@ -60,6 +60,7 @@ focus_neighbor_right = NodePath("../LibraryButton")
 focus_neighbor_bottom = NodePath("../LibraryButton")
 focus_next = NodePath("../LibraryButton")
 focus_previous = NodePath("../PowerButton")
+mouse_filter = 1
 text = "Home"
 icon = ExtResource("3_vp87l")
 expand_icon = true

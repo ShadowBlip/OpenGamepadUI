@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ckm4bau85l6sg"]
+[gd_scene load_steps=10 format=3 uid="uid://ckm4bau85l6sg"]
 
 [ext_resource type="Script" path="res://core/ui/menu/library/library_menu.gd" id="1_d0j34"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7p3g5"]
@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_vyxy3"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_bgkck"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_3v0bg"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_v4kmx"]
 
 [node name="LibraryMenu" type="Control" groups=["library_menu"]]
 layout_mode = 3
@@ -21,6 +22,9 @@ script = ExtResource("1_d0j34")
 [node name="VisibilityManager" parent="." instance=ExtResource("2_c8beg")]
 state = ExtResource("3_aodg2")
 visible_during = [ExtResource("4_8tmcp"), ExtResource("5_vyxy3"), ExtResource("6_bgkck"), ExtResource("7_3v0bg")]
+
+[node name="BackInputHandler" parent="." instance=ExtResource("8_v4kmx")]
+process_input_during = [ExtResource("3_aodg2")]
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

@@ -5,14 +5,13 @@ const qam_state_machine := preload("res://assets/state/state_machines/qam_state_
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const transition_fade_in := preload("res://core/ui/components/transition_fade_in.tscn")
 
-var qam_button_state := preload("res://assets/state/states/qam_button_submenu.tres") as State
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
 @onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
 @onready var viewport: VBoxContainer = $MarginContainer/HBoxContainer/Viewport
 @onready var notifications_menu: HFlowContainer = $MarginContainer/HBoxContainer/Viewport/NotificationsMenu
 @onready var quick_settings_menu: Node = $MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu
-@onready var last_child : Control = icon_bar.get_child(0)
+@onready var last_icon: Control = icon_bar.get_child(0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,42 +22,49 @@ func _ready() -> void:
 	for child in icon_bar.get_children():
 		if not child is Control:
 			continue
-		child.focus_entered.connect(_on_child_focused.bind(child))
-		child.pressed.connect(_on_child_pressed)
-
-
-func _on_child_focused(child: Control) -> void:
-	last_child = child
-
-
-func _on_child_pressed() -> void:
-	if state_machine.current_state() == qam_button_state:
-		return
-	state_machine.push_state(qam_button_state)
+		child.focus_entered.connect(_on_icon_focused.bind(child))
+		child.gui_input.connect(_on_icon_gui_input)
 
 
 func _on_state_entered(_from: State) -> void:
-	last_child.grab_focus()
+	last_icon.grab_focus()
 	visible = true
+	set_process_input(true)
 
 
-func _on_state_exited(to: State) -> void:
-	if to != qam_button_state:
-		visible = false
+func _on_state_exited(_to: State) -> void:
+	visible = false
+	set_process_input(false)
 
 
+func _on_icon_focused(child: Control) -> void:
+	last_icon = child
+
+
+# gui_input gets processed only when it is focused, and after _input. This will 
+# only be called when an icon is focused and the back button was pressed
+func _on_icon_gui_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ogui_east"):
+		return
+	state_machine.pop_state()
+
+
+# Input always gets processed before gui_input
 func _input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event.is_action_pressed("ogui_east"):
-		last_child.grab_focus()
+	if not event.is_action_pressed("ogui_east"):
+		return
+	last_icon.grab_focus.call_deferred()
 
 
-func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control):
+# Adds the given Control menu to the QAM. A focus node can be given which will
+# be the first node to focus
+func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = null):
 	var qam := self
 	
-	var first_qam_item : Node
-	var last_qam_item : Node
+	var first_qam_item: Control
+	var last_qam_item: Control
 	
 	# Plugin viewport
 	qam_item.visible = false
@@ -76,10 +82,19 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control):
 	plugin_button.custom_minimum_size = Vector2(50, 50)
 	plugin_button.expand_icon = true
 	plugin_button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	plugin_button.pressed.connect(qam_item._on_pressed)
-	plugin_button.focus_entered.connect(_on_child_focused.bind(plugin_button))
-	plugin_button.pressed.connect(_on_child_pressed)
+	plugin_button.focus_entered.connect(_on_icon_focused.bind(plugin_button))
+	plugin_button.gui_input.connect(_on_icon_gui_input)
 	qam.icon_bar.add_child(plugin_button)
+
+	# Try to wire up the node to focus when you press the menu button
+	if focus_node != null:
+		plugin_button.pressed.connect(focus_node.grab_focus)
+	else:
+		for child in qam_item.get_children():
+			if not child is Control:
+				continue
+			plugin_button.pressed.connect(child.grab_focus)
+			break
 	
 	# Set up new button's focus
 	plugin_button.focus_mode = Control.FOCUS_ALL
@@ -130,7 +145,7 @@ func _on_notifications_pressed():
 
 
 func _on_quick_settings_button_pressed():
-	quick_settings_menu.focus_node.grab_focus()
+	quick_settings_menu.focus_node.grab_focus.call_deferred()
 
 
 func _on_performance_button_pressed():
