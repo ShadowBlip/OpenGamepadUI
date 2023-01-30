@@ -1,6 +1,6 @@
 # Open Gamepad UI
 
-Open Gamepad UI is a free and open source game launcher written using the
+Open Gamepad UI is a free and open source game launcher and overlay written using the
 [Godot Game Engine 4](https://godotengine.org/) designed with a gamepad native
 experience in mind. Its goal is to provide an open and extendable foundation
 to launch and play games.
@@ -13,30 +13,15 @@ to launch and play games.
 
 ![](docs/media/screenshot03.png)
 
+## Documentation
+
+You can read documentation about how to use and develop for the project here:
+
+- [User Guide](./docs/USER.md)
+- [Developer Guide](./docs/DEVELOPER.md)
+- [Plugin Guide](./docs/PLUGINS.md)
+
 ## Requirements
-
-### Build Requirements
-
-The following are required to build Open Gamepad UI:
-
-- Godot 4.x
-- GCC 7+ or Clang 6+.
-- Python 3.5+.
-- SCons 3.0+ build system
-- pkg-config (used to detect the dependencies below).
-- X11, Xcursor, Xinerama, Xi and XRandR development libraries.
-- MesaGL development libraries.
-- ALSA development libraries.
-- PulseAudio development libraries.
-- make (optional)
-- unzip (optional)
-- wget (optional)
-
-If you are using ArchLinux, you can run the following:
-
-```bash
-pacman -S --needed scons pkgconf gcc libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib pulseaudio make unzip wget git
-```
 
 ### Runtime Requirements
 
@@ -44,28 +29,22 @@ The following are required to run Open Gamepad UI:
 
 - gamescope
 
-## Building
-
-You can build Open Gamepad UI using the following:
-
-```bash
-make build
-```
-
-Godot imports and converts assets when it builds. If you see
-errors related to failing to load resources. Try running:
-
-```bash
-make import
-```
-
 ## Usage
 
-Open Gamepad UI works in conjunction with [gamescope](https://github.com/Plagman/gamescope/)
-to manage launching games in a seamless way.
+OpenGamepadUI is still in the early stages of development, so expect to
+encounter many bugs. Knowing this, if you still want to try, use the following
+steps below to run OpenGamepadUI:
 
-To run Open Gamepad UI, run the following to launch through gamescope:
+- Download the latest version of OpenGamepadUI from the [releases](https://github.com/ShadowBlip/OpenGamepadUI/releases) page.
+
+- Extract the archive to a folder
 
 ```bash
-make run
+tar xvfz opengamepadui.tar.gz
+```
+
+- Run OpenGamepadUI in Gamescope
+
+```bash
+gamescope -w 1920 -h 1080 -f -e --xwayland-count 2 -- ./opengamepadui/opengamepad-ui.x86_64
 ```
