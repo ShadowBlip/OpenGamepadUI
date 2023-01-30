@@ -1,8 +1,5 @@
 extends Node
 
-var in_game_state := preload("res://assets/state/states/in_game.tres") as State
-var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
-
 @export var state_machine: StateMachine = preload(
 	"res://assets/state/state_machines/global_state_machine.tres"
 )
