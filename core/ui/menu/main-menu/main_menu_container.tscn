@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0p4eo4ny7veo"]
+[gd_scene load_steps=10 format=3 uid="uid://b0p4eo4ny7veo"]
 
 [ext_resource type="Script" path="res://core/ui/menu/main-menu/main_menu_container.gd" id="1_3yu6b"]
-[ext_resource type="PackedScene" uid="uid://dwbnofm0oxd2y" path="res://core/ui/menu/main-menu/main_menu.tscn" id="2_pw1ol"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_7tdhu"]
+[ext_resource type="PackedScene" uid="uid://bexauj4m2rbgm" path="res://core/ui/menu/main-menu/main_menu.tscn" id="2_pw1ol"]
 [ext_resource type="PackedScene" uid="uid://bsh0lhgpd2xuh" path="res://core/ui/menu/main-menu/in-game_menu.tscn" id="3_w8b06"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="3_wuf01"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_7qswo"]
 
 [sub_resource type="Animation" id="Animation_qwelv"]
 resource_name = "hide"
@@ -74,6 +77,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_top = 40
 script = ExtResource("1_3yu6b")
+
+[node name="BackInputHandler" parent="." instance=ExtResource("2_7tdhu")]
+process_input_during = [ExtResource("3_wuf01"), ExtResource("4_7qswo")]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

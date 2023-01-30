@@ -48,4 +48,3 @@ func _on_app_closed(app: RunningApp):
 
 func _on_power_button_pressed() -> void:
 	get_tree().quit()
-
