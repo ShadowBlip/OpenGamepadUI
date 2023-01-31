@@ -13,9 +13,11 @@ signal removed_from_library
 @export var name: String
 @export var command: String
 @export var args: PackedStringArray
+@export var env: Dictionary
 @export var tags: PackedStringArray
 @export var categories: PackedStringArray
 @export var installed: bool
+
 
 # Returns the given launch item as a dictionary for serialization
 func to_dict() -> Dictionary:
@@ -26,10 +28,12 @@ func to_dict() -> Dictionary:
 		"name": name,
 		"command": command,
 		"args": args,
+		"env": env,
 		"tags": tags,
 		"categories": categories,
 		"installed": installed,
 	}
+
 
 # Returns a new LibraryLaunchItem from the given dictionary
 static func from_dict(d: Dictionary) -> LibraryLaunchItem:
@@ -40,6 +44,7 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 	item.name = d["name"]
 	item.command = d["command"]
 	item.args = d["args"]
+	item.env = d["env"]
 	item.tags = d["tags"]
 	item.categories = d["categories"]
 	item.installed = d["installed"]
