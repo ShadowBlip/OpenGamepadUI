@@ -71,15 +71,31 @@ func _save_persist_data():
 func launch(app: LibraryLaunchItem) -> RunningApp:
 	var cmd: String = app.command
 	var args: PackedStringArray = app.args
+	var env: Dictionary = app.env.duplicate()
+	var cwd: String = OS.get_environment("HOME")
+	if app.cwd != "":
+		cwd = app.cwd
 	
-	# Discover the target display to launch on.
-	target_display = _get_target_display(overlay_display)
-	var display = target_display
+	# Set the display environment if one was not set.
+	if not "DISPLAY" in env:
+		env["DISPLAY"] = _get_target_display(overlay_display)
+	var display := env["DISPLAY"] as String
+
+	# Build any environment variables to include in the command
+	var env_vars := PackedStringArray()
+	for key in env.keys():
+		env_vars.append("{0}={1}".format([key, env[key]]))
 	
 	# Build the launch command to run
-	var command = "DISPLAY={0} {1} {2}".format([display, cmd, " ".join(args)])
-	logger.info("Launching game with command: {0}".format([command]))
-	var pid = OS.create_process("sh", ["-c", command])
+	var exec := "env"
+	var command := ["-C", cwd]
+	command.append_array(env_vars)
+	command.append(cmd)
+	command.append_array(args)
+	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
+
+	# Launch the application process
+	var pid = OS.create_process(exec, command)
 	logger.info("Launched with PID: {0}".format([pid]))
 
 	# Create a running app instance
