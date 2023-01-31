@@ -14,6 +14,7 @@ signal removed_from_library
 @export var command: String
 @export var args: PackedStringArray
 @export var env: Dictionary
+@export var cwd: String
 @export var tags: PackedStringArray
 @export var categories: PackedStringArray
 @export var installed: bool
@@ -29,6 +30,7 @@ func to_dict() -> Dictionary:
 		"command": command,
 		"args": args,
 		"env": env,
+		"cwd": cwd,
 		"tags": tags,
 		"categories": categories,
 		"installed": installed,
@@ -45,6 +47,7 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 	item.command = d["command"]
 	item.args = d["args"]
 	item.env = d["env"]
+	item.cwd = d["cwd"]
 	item.tags = d["tags"]
 	item.categories = d["categories"]
 	item.installed = d["installed"]
