@@ -42,6 +42,7 @@ public:
                           godot::String key);
   static godot::String get_window_name(godot::String display, int window_id);
   static int get_window_pid(godot::String display, int window_id);
+  static int set_input_focus(godot::String display, int window_id);
 };
 
 #endif // XLIB_CLASS_H

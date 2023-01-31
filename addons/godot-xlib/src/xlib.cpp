@@ -326,6 +326,25 @@ int Xlib::get_window_pid(godot::String display, int window_id) {
   return pid;
 };
 
+// Set input focus on the given window
+int Xlib::set_input_focus(godot::String display, int window_id) {
+  Window window = (Window)window_id;
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return -1;
+  }
+
+  int ret = XSetInputFocus(dpy, window_id, RevertToNone, CurrentTime);
+
+  // Close the connection to the x server
+  XCloseDisplay(dpy);
+  return ret;
+};
+
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Static methods
@@ -360,6 +379,9 @@ void Xlib::_bind_methods() {
   godot::ClassDB::bind_static_method(
       "Xlib", godot::D_METHOD("get_window_pid", "display", "window_id"),
       &Xlib::get_window_pid);
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("set_input_focus", "display", "window_id"),
+      &Xlib::set_input_focus);
 
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);
