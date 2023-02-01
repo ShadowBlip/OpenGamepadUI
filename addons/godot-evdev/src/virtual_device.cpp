@@ -23,6 +23,7 @@
 
 namespace evdev {
 using godot::D_METHOD;
+using godot::String;
 
 VirtualInputDevice::VirtualInputDevice(){};
 VirtualInputDevice::~VirtualInputDevice() { close(); };
@@ -50,6 +51,20 @@ int VirtualInputDevice::write_event(InputDeviceEvent *event) {
   return err;
 }
 
+String VirtualInputDevice::get_syspath() {
+  if (!is_open()) {
+    return String();
+  }
+  return String(libevdev_uinput_get_syspath(uidev));
+}
+
+String VirtualInputDevice::get_devnode() {
+  if (!is_open()) {
+    return String();
+  }
+  return String(libevdev_uinput_get_devnode(uidev));
+}
+
 // Register the methods with Godot
 void VirtualInputDevice::_bind_methods() {
   // Properties
@@ -60,6 +75,10 @@ void VirtualInputDevice::_bind_methods() {
                               &VirtualInputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("write_event", "event"),
                               &VirtualInputDevice::write_event);
+  godot::ClassDB::bind_method(D_METHOD("get_syspath"),
+                              &VirtualInputDevice::get_syspath);
+  godot::ClassDB::bind_method(D_METHOD("get_devnode"),
+                              &VirtualInputDevice::get_devnode);
   // Static methods
 
   // Constants

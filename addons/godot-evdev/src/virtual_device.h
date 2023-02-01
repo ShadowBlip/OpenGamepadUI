@@ -31,6 +31,8 @@ public:
   int write_event(InputDeviceEvent *event);
   bool is_open();
   int close();
+  godot::String get_syspath();
+  godot::String get_devnode();
 
   // Static functions
 };
