@@ -1,5 +1,6 @@
 #include "device.h"
 #include "event.h"
+#include "virtual_device.h"
 
 #include <fcntl.h>
 #include <iostream>
@@ -36,6 +37,7 @@ InputDevice::~InputDevice() {
 // Opens the given device
 int InputDevice::open(String device) {
   // Certain operations are only possible when opened in read-write mode
+  int fd;
   fd = ::open(device.ascii().get_data(), O_RDWR | O_NONBLOCK);
   if (fd < 0) {
     fd = ::open(device.ascii().get_data(), O_RDONLY | O_NONBLOCK);
@@ -58,6 +60,7 @@ int InputDevice::open(String device) {
 
 // Close the device
 int InputDevice::close() {
+  int fd = get_fd();
   int code = 0;
   if (fd > 0) {
     code = ::close(fd);
@@ -65,10 +68,42 @@ int InputDevice::close() {
   if (code < 0) {
     return godot::ERR_CANT_OPEN;
   }
-  fd = 0;
   libevdev_free(dev);
   return code;
 };
+
+VirtualInputDevice *InputDevice::duplicate() {
+  if (!is_open()) {
+    return nullptr;
+  }
+
+  // Open uinput
+  struct libevdev_uinput *uidev;
+  int uifd = ::open("/dev/uinput", O_RDWR);
+  if (uifd < 0) {
+    return nullptr;
+  }
+
+  // Try to create a new uinput device from the evdev device
+  int err = libevdev_uinput_create_from_device(dev, uifd, &uidev);
+  if (err != 0)
+    return nullptr;
+
+  // Create a virtual uinput device
+  VirtualInputDevice *virt_dev = memnew(VirtualInputDevice());
+  virt_dev->uifd = uifd;
+  virt_dev->uidev = uidev;
+
+  return virt_dev;
+}
+
+// Return the file descriptor of the given device
+int InputDevice::get_fd() {
+  if (dev == NULL) {
+    return 0;
+  }
+  return libevdev_get_fd(dev);
+}
 
 // Grabs the device for exclusive access
 int InputDevice::grab(bool mode) {
@@ -181,7 +216,7 @@ Array InputDevice::get_events() {
 }
 
 // Returns whether the device is currently open
-bool InputDevice::is_open() { return fd > 0; };
+bool InputDevice::is_open() { return libevdev_get_fd(dev) > 0; };
 bool InputDevice::is_grabbed() { return grabbed; };
 
 // Register the methods with Godot
@@ -191,7 +226,9 @@ void InputDevice::_bind_methods() {
   // Methods
   godot::ClassDB::bind_method(D_METHOD("open", "dev"), &InputDevice::open);
   godot::ClassDB::bind_method(D_METHOD("close"), &InputDevice::close);
+  godot::ClassDB::bind_method(D_METHOD("duplicate"), &InputDevice::duplicate);
   godot::ClassDB::bind_method(D_METHOD("grab", "mode"), &InputDevice::grab);
+  godot::ClassDB::bind_method(D_METHOD("get_fd"), &InputDevice::get_fd);
   godot::ClassDB::bind_method(D_METHOD("get_path"), &InputDevice::get_path);
   godot::ClassDB::bind_method(D_METHOD("get_name"), &InputDevice::get_name);
   godot::ClassDB::bind_method(D_METHOD("get_bustype"),

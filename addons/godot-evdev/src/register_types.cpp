@@ -14,6 +14,7 @@ void initialize_evdev_module(godot::ModuleInitializationLevel p_level) {
   }
 
   godot::ClassDB::register_class<evdev::InputDeviceEvent>();
+  godot::ClassDB::register_class<evdev::VirtualInputDevice>();
   godot::ClassDB::register_class<evdev::InputDevice>();
 }
 

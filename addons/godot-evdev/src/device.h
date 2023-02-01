@@ -3,9 +3,11 @@
 
 #include "event.h"
 #include "godot_cpp/variant/string.hpp"
+#include "virtual_device.h"
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
+#include <libevdev/libevdev-uinput.h>
 #include <libevdev/libevdev.h>
 
 namespace evdev {
@@ -14,7 +16,6 @@ class InputDevice : public godot::RefCounted {
   GDCLASS(InputDevice, godot::RefCounted);
 
 private:
-  int fd;
   struct libevdev *dev = NULL;
   bool grabbed = false;
 
@@ -33,11 +34,13 @@ public:
   // Methods
   int open(godot::String dev);
   int close();
+  VirtualInputDevice *duplicate();
   int grab(bool mode);
   bool is_open();
   bool is_grabbed();
   godot::String get_path();
   godot::String get_name();
+  int get_fd();
   int get_bustype();
   int get_vendor();
   int get_product();
