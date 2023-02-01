@@ -14,6 +14,9 @@ var overlay_window_id = Gamescope.get_window_id(display, PID)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
+var input_mutex := Mutex.new()
+var input_exited := false
+var input_thread := Thread.new()
 var devices := [] as Array[InputDevice]
 
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
@@ -22,6 +25,7 @@ var devices := [] as Array[InputDevice]
 func _ready() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
+	in_game_state.state_removed.connect(_on_game_state_removed)
 
 	var gamepads := discover_gamepads()
 	for path in gamepads:
@@ -32,18 +36,37 @@ func _ready() -> void:
 		devices.append(device)
 		logger.debug("Discovered gamepad at: " + path)
 
+	# Create a thread to process gamepad inputs separately
+	input_thread.start(_start_process_input)
 
-func _process(_delta: float) -> void:
+
+# Runs evdev input processing in its own thread
+func _start_process_input():
+	while not input_exited:
+		input_mutex.lock()
+		_process_input()
+		input_mutex.unlock()
+
+
+# Processes all raw gamepad input
+func _process_input() -> void:
+	# Always process events, but only handle the events in certain cases
+	var gamepad_events := [] as Array[Array]
+	for gamepad in devices:
+		if not gamepad.is_open():
+			return
+		var events := gamepad.get_events()
+		gamepad_events.push_back(events)
+
+	# Don't process any input events if we're in-game or don't have an
+	# in-game state.
 	if state_machine.current_state() == in_game_state:
 		return
 	if not state_machine.has_state(in_game_state):
 		return
 
 	# Process gamepad inputs
-	for gamepad in devices:
-		if not gamepad.is_open():
-			return
-		var events := gamepad.get_events()
+	for events in gamepad_events:
 		for event in events:
 			_process_event(event)
 
@@ -54,14 +77,15 @@ func _process_event(event: InputDeviceEvent) -> void:
 	match event.get_code():
 		InputDeviceEvent.BTN_SOUTH:
 			_send_input("ogui_south", event.value == 1, 1)
+			_send_input("ui_accept", event.value == 1, 1)
 		InputDeviceEvent.BTN_NORTH:
 			_send_input("ogui_north", event.value == 1, 1)
 		InputDeviceEvent.BTN_WEST:
 			_send_input("ogui_west", event.value == 1, 1)
+			_send_input("ui_select", event.value == 1, 1)
 		InputDeviceEvent.BTN_EAST:
 			_send_input("ogui_east", event.value == 1, 1)
 		InputDeviceEvent.BTN_MODE:
-			logger.debug("Sending ogui_guide action: " + str(event.value == 1))
 			_send_input("ogui_guide", event.value == 1, 1)
 		InputDeviceEvent.BTN_TRIGGER_HAPPY1:
 			_send_input("ui_left", event.value == 1, 1)
@@ -97,10 +121,19 @@ func _on_game_state_entered(_from: State) -> void:
 
 
 func _on_game_state_exited(_to: State) -> void:
+	_on_game_state_removed()
+
+
+func _on_game_state_removed() -> void:
 	set_focus(true)
 
 	# If no game is running now, don't intercept gamepad inputs
 	if not state_machine.has_state(in_game_state):
+		for device in devices:
+			if not device.is_open():
+				continue
+			logger.debug("Ungrabbing gamepad interception for: " + device.get_path())
+			device.grab(false)
 		return
 	for device in devices:
 		if device.is_open():
@@ -230,3 +263,10 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.pressed = pressed
 	input_action.strength = strength
 	Input.parse_input_event(input_action)
+
+
+func _exit_tree() -> void:
+	input_mutex.lock()
+	input_exited = true
+	input_mutex.unlock()
+	input_thread.wait_to_finish()
