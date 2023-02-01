@@ -1,11 +1,15 @@
 extends Library
 
 var home := OS.get_environment("HOME")
-var desktop_folders := SettingsManager.get_value(
-	"library.desktop", 
-	"folders", 
-	["/".join([home, ".local/share/applications"])]
+var desktop_folders := (
+	SettingsManager
+	. get_value(
+		"library.desktop",
+		"folders",
+		["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
+	)
 )
+
 
 func _ready() -> void:
 	get_library_launch_items()
@@ -31,7 +35,7 @@ func _desktop_file_to_launch_item(file: String) -> LibraryLaunchItem:
 	launch_item.provider_app_id = file
 	launch_item.installed = true
 	launch_item.categories = []
-	
+
 	var f := FileAccess.open(file, FileAccess.READ)
 	var text := f.get_as_text()
 	var lines := text.split("\n")
@@ -47,8 +51,17 @@ func _desktop_file_to_launch_item(file: String) -> LibraryLaunchItem:
 		if line.begins_with("Categories="):
 			launch_item.categories = line.replace("Categories=", "").split(";", false)
 			continue
-	
+		if line.begins_with("Keywords="):
+			launch_item.tags = line.replace("Keywords=", "").split(";", false)
+			continue
+
 	if launch_item.name == "" or launch_item.command == "":
 		return null
-	
+
+	# Only return items that are in the 'Game' category for now
+	# TODO: Return all launch items but default to hidden and give users a
+	# way to unhide them so they show up in their library.
+	if not "Game" in launch_item.categories:
+		return null
+
 	return launch_item

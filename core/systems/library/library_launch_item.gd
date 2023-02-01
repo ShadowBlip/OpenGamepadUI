@@ -18,6 +18,7 @@ signal removed_from_library
 @export var tags: PackedStringArray
 @export var categories: PackedStringArray
 @export var installed: bool
+@export var hidden: bool
 
 
 # Returns the given launch item as a dictionary for serialization
@@ -34,6 +35,7 @@ func to_dict() -> Dictionary:
 		"tags": tags,
 		"categories": categories,
 		"installed": installed,
+		"hidden": hidden,
 	}
 
 
@@ -51,4 +53,5 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 	item.tags = d["tags"]
 	item.categories = d["categories"]
 	item.installed = d["installed"]
+	item.hidden = d["hidden"]
 	return item
