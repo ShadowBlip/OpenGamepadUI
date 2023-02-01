@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=21 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
@@ -12,11 +12,14 @@
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="7_oxxrp"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="8_c20ym"]
 [ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/qam_notifications.tres" id="8_ktmf6"]
+[ext_resource type="PackedScene" uid="uid://cgtqpgne2s116" path="res://core/ui/menu/qam/powertools_menu.tscn" id="9_aug1r"]
 [ext_resource type="Texture2D" uid="uid://btq2ih8opi8i7" path="res://assets/ui/icons/performance-fill.svg" id="9_ric4q"]
 [ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/qam_quick_settings.tres" id="9_uygax"]
+[ext_resource type="Resource" uid="uid://b2ruoxboq5k6e" path="res://assets/state/states/qam_powertools.tres" id="10_4ijxt"]
 [ext_resource type="Resource" uid="uid://xw3l4h1vt0oa" path="res://assets/state/states/qam_performance.tres" id="10_ft1gj"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_3dgt5"]
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
+[ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://assets/ui/icons/powertools_icon.svg" id="15_77afh"]
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 custom_minimum_size = Vector2(350, 0)
@@ -64,6 +67,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="NotificationsMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("3_7mul3")]
+visible = false
 layout_mode = 2
 
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/NotificationsMenu" instance=ExtResource("4_klkp7")]
@@ -75,6 +79,20 @@ visible_during = []
 script = ExtResource("3_tk446")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/NotificationsMenu/TransitionContainer" instance=ExtResource("8_c20ym")]
+
+[node name="PowerToolsMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("9_aug1r")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu" instance=ExtResource("4_klkp7")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("10_4ijxt")
+visible_during = []
+
+[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu"]
+script = ExtResource("3_tk446")
+
+[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu/TransitionContainer" instance=ExtResource("8_c20ym")]
 
 [node name="QuickSettingsMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("7_ilsni")]
 visible = false
@@ -101,9 +119,9 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 focus_neighbor_left = NodePath("../HelpButton")
 focus_neighbor_top = NodePath("../HelpButton")
-focus_neighbor_right = NodePath("../QuickSettingsButton")
-focus_neighbor_bottom = NodePath("../QuickSettingsButton")
-focus_next = NodePath("../QuickSettingsButton")
+focus_neighbor_right = NodePath("../PowerToolsButton")
+focus_neighbor_bottom = NodePath("../PowerToolsButton")
+focus_next = NodePath("../PowerToolsButton")
 focus_previous = NodePath("../HelpButton")
 icon = ExtResource("3_1evb4")
 icon_alignment = 1
@@ -114,15 +132,33 @@ state_machine = ExtResource("7_6iqch")
 state = ExtResource("8_ktmf6")
 on_signal = "focus_entered"
 
-[node name="QuickSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
+[node name="PowerToolsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 focus_neighbor_left = NodePath("../Notifications")
 focus_neighbor_top = NodePath("../Notifications")
+focus_neighbor_right = NodePath("../QuickSettingsButton")
+focus_neighbor_bottom = NodePath("../QuickSettingsButton")
+focus_next = NodePath("../QuickSettingsButton")
+focus_previous = NodePath("../Notifications")
+icon = ExtResource("15_77afh")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/PowerToolsButton" instance=ExtResource("6_kd46h")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("10_4ijxt")
+on_signal = "focus_entered"
+
+[node name="QuickSettingsButton" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+focus_neighbor_left = NodePath("../PowerToolsButton")
+focus_neighbor_top = NodePath("../PowerToolsButton")
 focus_neighbor_right = NodePath("../PerformanceButton")
 focus_neighbor_bottom = NodePath("../PerformanceButton")
 focus_next = NodePath("../PerformanceButton")
-focus_previous = NodePath("../Notifications")
+focus_previous = NodePath("../PowerToolsButton")
 icon = ExtResource("7_oxxrp")
 icon_alignment = 1
 expand_icon = true
@@ -168,6 +204,7 @@ action = 2
 on_signal = "focus_entered"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/Notifications" to="." method="_on_notifications_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/PowerToolsButton" to="." method="_on_power_tools_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/QuickSettingsButton" to="." method="_on_quick_settings_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/PerformanceButton" to="." method="_on_performance_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/IconBar/HelpButton" to="." method="_on_help_button_pressed"]

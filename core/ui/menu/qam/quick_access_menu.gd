@@ -10,7 +10,8 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 @onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
 @onready var viewport: VBoxContainer = $MarginContainer/HBoxContainer/Viewport
 @onready var notifications_menu: HFlowContainer = $MarginContainer/HBoxContainer/Viewport/NotificationsMenu
-@onready var quick_settings_menu: Node = $MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu
+@onready var power_tools_menu: Control = $MarginContainer/HBoxContainer/Viewport/PowerToolsMenu
+@onready var quick_settings_menu: Control = $MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu
 @onready var last_icon: Control = icon_bar.get_child(0)
 
 # Called when the node enters the scene tree for the first time.
@@ -136,7 +137,6 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = nu
 	visibility_manager.state = state
 	visibility_manager.visible_during = []
 	qam_item.add_child(visibility_manager)
-	
 	plugin_button.add_child(state_updater)
 
 
@@ -154,3 +154,7 @@ func _on_performance_button_pressed():
 
 func _on_help_button_pressed():
 	pass # Replace with function body.
+
+
+func _on_power_tools_button_pressed():
+	power_tools_menu.focus_node.grab_focus.call_deferred()
