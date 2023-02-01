@@ -34,7 +34,6 @@ focus_next = NodePath("../Slider")
 focus_previous = NodePath("../Slider")
 focus_mode = 2
 text = "Per-game Profile"
-disabled = false
 
 [node name="Slider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 layout_mode = 2

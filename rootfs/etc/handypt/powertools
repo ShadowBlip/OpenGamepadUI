@@ -1,0 +1,93 @@
+#!/bin/bash
+
+set -eu
+
+if [[ $EUID -ne 0 ]]; then
+  exec pkexec --disable-internal-agent "$0" "$@"
+fi
+
+cpuBoost(){
+  /usr/bin/echo $1 > /sys/devices/system/cpu/cpufreq/boost
+}
+
+cpuPower(){
+  /usr/bin/cpupower $1 $2 $3
+}
+
+gpuClock(){
+  echo "s $1 $2" > /sys/class/drm/card0/device/pp_od_clk_voltage
+}
+intelSetTDPLong(){
+  /usr/bin/echo $1 > /sys/class/powercap/intel-rapl/intel-rapl:0/constraint_0_power_limit_uw
+}
+
+intelSetTDPShort(){
+  /usr/bin/echo $1 > /sys/class/powercap/intel-rapl/intel-rapl:0/constraint_1_power_limit_uw
+}
+
+intelSetTDPPeak(){
+  /usr/bin/echo $1 > /sys/class/powercap/intel-rapl/intel-rapl:0/constraint_2_power_limit_uw
+}
+
+ryzenadj_long(){
+  /usr/bin/ryzenadj $1 $2
+}
+
+ryzenadj_short(){
+  /usr/bin/ryzenadj $1
+}
+
+setPDFPLM() { # set power_dpm_force_performace_level mode
+  echo $1 > /sys/class/drm/card0/device/power_dpm_force_performance_level
+}
+
+setPDFPLW() { # set power_dpm_force_performace_level write
+  /usr/bin/chmod a+w /sys/class/drm/card0/device/power_dpm_force_performance_level
+}
+
+smt(){
+  /usr/bin/echo $1 > /sys/devices/system/cpu/smt/control
+}
+
+toggleCPU(){
+ /usr/bin/echo $2 > /sys/bus/cpu/devices/cpu${1}/online
+}
+
+if [[ $1 == "cpuBoost" ]]; then
+  cpuBoost $2
+
+elif [[ $1 == "cpupower" ]]; then
+  cpuPower $2 $3 $4
+
+elif [[ $1 == "gpuclk" ]]; then
+  gpuClock $2 $3
+
+elif [[ $1 == "constraint_0_power_limit_uw" ]]; then
+  intelSetTDPLong $2
+
+elif [[ $1 == "constraint_1_power_limit_uw" ]]; then
+  intelSetTDPShort $2
+
+elif [[ $1 == "constraint_2_power_limit_uw" ]]; then
+  intelSetTDPPeak $2
+
+elif [[ $1 == "pdfpl" ]]; then
+  if [[ $2 == "write" ]]; then
+    setPDFPLW
+  else
+    setPDFPLM $2
+  fi
+
+elif [[ $1 == "ryzenadj" ]]; then
+  if [[ $# > 2 ]]; then
+    ryzenadj_long $2 $3
+  else
+    ryzenadj_short $2
+  fi
+
+elif [[ $1 == "smt" ]]; then
+  smt $2
+
+elif [[ $1 == "togglecpu" ]]; then
+  toggleCPU $2 $3
+fi
