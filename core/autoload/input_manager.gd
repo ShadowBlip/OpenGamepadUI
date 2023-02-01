@@ -173,6 +173,12 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
+	# Main menu events
+	if event.is_action("ogui_menu"):
+		_main_menu_input(event)
+		get_viewport().set_input_as_handled()
+		return
+
 	# Handle guide action release events
 	if event.is_action_released("ogui_guide_action"):
 		if event.is_action_released("ogui_north"):
@@ -208,6 +214,16 @@ func _guide_input(event: InputEvent) -> void:
 	# end the guide action and do nothing else.
 	if Input.is_action_pressed("ogui_guide_action"):
 		_action_release("ogui_guide_action")
+		return
+
+	# Emit the main menu action if this was not a guide action
+	_action_press("ogui_menu")
+	_action_release("ogui_menu")
+
+
+func _main_menu_input(event: InputEvent) -> void:
+	# Only act on release events
+	if event.is_pressed():
 		return
 
 	# Open the main menu

@@ -2,6 +2,7 @@ extends Control
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
+var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
 var _initialized := false
@@ -27,13 +28,33 @@ func _ready() -> void:
 	LibraryManager.library_unregistered.connect(_on_library_unregistered)
 	LaunchManager.recent_apps_changed.connect(_on_recent_apps_updated)
 	home_state.state_entered.connect(_on_state_entered)
+	home_state.state_exited.connect(_on_state_exited)
 
 
 func _on_state_entered(from: State) -> void:
+	set_process_input(true)
 	if from == null and not _initialized:
 		_initialized = true
 		return
 	_grab_focus()
+
+
+func _on_state_exited(_to: State) -> void:
+	set_process_input(false)
+
+
+# Push the main menu state when the back button is pressed
+func _input(event: InputEvent) -> void:
+	print(event)
+	# Only handle back button pressed and when the guide button is not held
+	if not event.is_action_pressed("ogui_east") or Input.is_action_pressed("ogui_guide"):
+		return
+
+	# Stop the event from propagating
+	get_viewport().set_input_as_handled()
+
+	# Push the main menu state when the back button is pressed
+	state_machine.push_state(main_menu_state)
 
 
 func _on_library_reloaded(_first_load: bool) -> void:

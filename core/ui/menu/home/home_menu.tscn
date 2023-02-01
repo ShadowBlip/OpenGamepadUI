@@ -28,9 +28,12 @@ provider_app_id = null
 name = "vkCube"
 command = "vkcube"
 args = null
+env = null
+cwd = null
 tags = null
 categories = null
 installed = true
+hidden = null
 
 [sub_resource type="Resource" id="Resource_icex7"]
 script = ExtResource("7_7xnh7")
