@@ -90,7 +90,18 @@ layout_mode = 2
 [node name="InGameMenu" parent="HBoxContainer" instance=ExtResource("3_w8b06")]
 layout_mode = 2
 
+[node name="ResumeButton" parent="HBoxContainer/InGameMenu/MarginContainer/VBoxContainer" index="1"]
+focus_neighbor_left = NodePath("../../../../MainMenu/MarginContainer/VBoxContainer/HomeButton")
+focus_neighbor_right = NodePath("")
+
+[node name="ExitButton" parent="HBoxContainer/InGameMenu/MarginContainer/VBoxContainer" index="2"]
+focus_neighbor_left = NodePath("../../../../MainMenu/MarginContainer/VBoxContainer/HomeButton")
+focus_neighbor_right = NodePath("")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_51nek")
 }
+
+[editable path="HBoxContainer/MainMenu"]
+[editable path="HBoxContainer/InGameMenu"]
