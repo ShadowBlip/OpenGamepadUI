@@ -172,9 +172,7 @@ Array InputDevice::get_events() {
     } else {
       rc = libevdev_next_event(dev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
       InputDeviceEvent *event = memnew(InputDeviceEvent());
-      event->code = ev.code;
-      event->type = ev.type;
-      event->value = ev.value;
+      memcpy(&(event->ev), &ev, sizeof(ev));
       events.append(event);
     }
   } while (rc >= 0);

@@ -6,39 +6,60 @@
 
 namespace evdev {
 using godot::D_METHOD;
+using godot::PropertyInfo;
 using godot::String;
 
 InputDeviceEvent::InputDeviceEvent(){};
 InputDeviceEvent::~InputDeviceEvent(){};
 
-unsigned short InputDeviceEvent::get_type() { return type; }
+unsigned short InputDeviceEvent::get_type() { return ev.type; }
+
+void InputDeviceEvent::set_type(int type) { ev.type = type; }
+
 godot::String InputDeviceEvent::get_type_name() {
-  return String(libevdev_event_type_get_name(type));
+  return String(libevdev_event_type_get_name(ev.type));
 }
 
-unsigned short InputDeviceEvent::get_code() { return code; }
+unsigned short InputDeviceEvent::get_code() { return ev.code; }
+
+void InputDeviceEvent::set_code(int code) { ev.code = code; }
+
 godot::String InputDeviceEvent::get_code_name() {
-  return String(libevdev_event_code_get_name(type, code));
+  return String(libevdev_event_code_get_name(ev.type, ev.code));
 }
-int InputDeviceEvent::get_value() { return value; }
+int InputDeviceEvent::get_value() { return ev.value; }
+
+void InputDeviceEvent::set_value(int value) { ev.value = value; }
 
 // Register the methods with Godot
 void InputDeviceEvent::_bind_methods() {
-  // Properties
-
   // Methods
   godot::ClassDB::bind_method(D_METHOD("get_type"),
                               &InputDeviceEvent::get_type);
+  godot::ClassDB::bind_method(D_METHOD("set_type", "type"),
+                              &InputDeviceEvent::set_type);
   godot::ClassDB::bind_method(D_METHOD("get_type_name"),
                               &InputDeviceEvent::get_type_name);
   godot::ClassDB::bind_method(D_METHOD("get_code"),
                               &InputDeviceEvent::get_code);
+  godot::ClassDB::bind_method(D_METHOD("set_code", "code"),
+                              &InputDeviceEvent::set_code);
   godot::ClassDB::bind_method(D_METHOD("get_code_name"),
                               &InputDeviceEvent::get_code_name);
   godot::ClassDB::bind_method(D_METHOD("get_value"),
                               &InputDeviceEvent::get_value);
+  godot::ClassDB::bind_method(D_METHOD("set_value", "value"),
+                              &InputDeviceEvent::set_value);
 
   // Static methods
+
+  // Properties
+  ADD_PROPERTY(PropertyInfo(godot::Variant::INT, "type"), "set_type",
+               "get_type");
+  ADD_PROPERTY(PropertyInfo(godot::Variant::INT, "code"), "set_code",
+               "get_code");
+  ADD_PROPERTY(PropertyInfo(godot::Variant::INT, "value"), "set_value",
+               "get_value");
 
   // Constants
   BIND_CONSTANT(INPUT_PROP_POINTER);
