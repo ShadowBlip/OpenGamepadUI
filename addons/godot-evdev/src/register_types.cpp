@@ -13,6 +13,7 @@ void initialize_evdev_module(godot::ModuleInitializationLevel p_level) {
     return;
   }
 
+  godot::ClassDB::register_class<evdev::InputDeviceEvent>();
   godot::ClassDB::register_class<evdev::InputDevice>();
 }
 
