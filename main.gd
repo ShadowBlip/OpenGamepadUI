@@ -40,6 +40,9 @@ func _setup(window_id: int) -> void:
 	# Sets ourselves to the input focus
 	if Gamescope.set_input_focus(DISPLAY, window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	# Set some WM_HINTS
+	if Xlib.set_wm_hints(DISPLAY, window_id) != OK:
+		logger.error("Unable to set WM_HINTS!")
 
 
 # Called when the node enters the scene tree for the first time.
@@ -86,7 +89,7 @@ func _on_state_changed(from: State, to: State) -> void:
 
 func _on_game_state_entered(_from: State) -> void:
 	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
-	_set_overlay(true)
+	_set_overlay(false)
 	for child in ui_container.get_children():
 		child.visible = false
 

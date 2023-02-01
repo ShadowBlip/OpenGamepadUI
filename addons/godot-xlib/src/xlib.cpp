@@ -345,6 +345,36 @@ int Xlib::set_input_focus(godot::String display, int window_id) {
   return ret;
 };
 
+// Set input focus on the given window
+int Xlib::set_wm_hints(godot::String display, int window_id) {
+  Window window = (Window)window_id;
+
+  // Open a connection with the server
+  Display *dpy;
+  dpy = XOpenDisplay(display.ascii().get_data()); // XOpenDisplay(":0")?
+  if (dpy == NULL) {
+    godot::UtilityFunctions::push_error("Unable to open display!");
+    return -1;
+  }
+
+  // allocate a WM hints structure
+  XWMHints *win_hints;
+  win_hints = XAllocWMHints();
+  win_hints->flags = InputHint | StateHint;
+  win_hints->initial_state = NormalState;
+  win_hints->input = true;
+
+  // pass the hints to the window manager.
+  int ret = XSetWMHints(dpy, window, win_hints);
+
+  // finally, we can free the WM hints structure.
+  XFree(win_hints);
+
+  // Close the connection to the x server
+  XCloseDisplay(dpy);
+  return ret;
+};
+
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Static methods
@@ -382,6 +412,9 @@ void Xlib::_bind_methods() {
   godot::ClassDB::bind_static_method(
       "Xlib", godot::D_METHOD("set_input_focus", "display", "window_id"),
       &Xlib::set_input_focus);
+  godot::ClassDB::bind_static_method(
+      "Xlib", godot::D_METHOD("set_wm_hints", "display", "window_id"),
+      &Xlib::set_wm_hints);
 
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);
