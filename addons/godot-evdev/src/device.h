@@ -3,14 +3,15 @@
 
 #include "event.h"
 #include "godot_cpp/variant/string.hpp"
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
 #include <libevdev/libevdev.h>
 
 namespace evdev {
 // Maybe inherit from Resource?
-class InputDevice : public godot::Object {
-  GDCLASS(InputDevice, Object);
+class InputDevice : public godot::RefCounted {
+  GDCLASS(InputDevice, godot::RefCounted);
 
 private:
   int fd;
@@ -42,7 +43,7 @@ public:
   int get_product();
   int get_version();
   godot::String get_phys();
-  InputDeviceEvent *next_event();
+  godot::Array get_events();
   bool has_event_type(unsigned int event_type);
   bool has_event_code(unsigned int event_type, unsigned int event_code);
 

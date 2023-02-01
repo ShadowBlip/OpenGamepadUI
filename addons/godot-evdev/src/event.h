@@ -2,16 +2,15 @@
 #define INPUT_DEVICE_EVENT_CLASS_H
 
 #include "godot_cpp/variant/string.hpp"
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
 namespace evdev {
 // Maybe inherit from Resource?
-class InputDeviceEvent : public godot::Object {
-  GDCLASS(InputDeviceEvent, Object);
+class InputDeviceEvent : public godot::RefCounted {
+  GDCLASS(InputDeviceEvent, RefCounted);
 
 private:
-  int rc;
-
 protected:
   static void _bind_methods();
 
