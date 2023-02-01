@@ -63,7 +63,7 @@ static func discover_gamescope_displays() -> PackedStringArray:
 	# The sockets are named like: X0, X1, X2, etc.
 	var dir := DirAccess.open("/tmp/.X11-unix")
 	var sockets := dir.get_files()
-	
+
 	# Loop through each socket file and derrive the display number.
 	var displays: PackedInt32Array = []
 	for socket in sockets:
@@ -72,7 +72,7 @@ static func discover_gamescope_displays() -> PackedStringArray:
 			logger.warn("Skipping X11 socket with a weird name: " + socket)
 			continue
 		displays.append(suffix.to_int())
-	
+
 	# Check to see if the root window of these displays has gamescope-specific properties
 	var gamescope_displays := PackedStringArray()
 	for display_num in displays:
@@ -119,14 +119,14 @@ static func get_all_windows(display: String, window_id: int) -> PackedInt32Array
 	var children := Xlib.get_window_children(display, window_id)
 	if len(children) == 0:
 		return PackedInt32Array([])
-	
+
 	var leaves := PackedInt32Array()
 	for child in children:
 		leaves.append(child)
 		leaves.append_array(get_all_windows(display, child))
-		
+
 	return leaves
-	
+
 
 # Returns true if the window with the given window ID exists
 static func is_focusable_app(display: String, window_id: int) -> bool:
@@ -185,6 +185,11 @@ static func set_input_focus(display: String, window_id: int, value: int) -> int:
 # Set the given window as an overlay
 static func set_overlay(display: String, window_id: int, value: int) -> int:
 	return _set_xprop(display, window_id, "STEAM_OVERLAY", value)
+
+
+# Set the given window as an external overlay
+static func set_external_overlay(display: String, window_id: int, value: int) -> int:
+	return _set_xprop(display, window_id, "GAMESCOPE_EXTERNAL_OVERLAY", value)
 
 
 # Returns the currently set app ID on the given window

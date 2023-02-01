@@ -9,3 +9,7 @@ func _ready() -> void:
 	if "--qam-only" in args or "--only-qam" in args:
 		get_tree().get_root().transparent_bg = true
 		get_tree().change_scene_to_file("res://core/ui/menu/qam/quick_access_menu.tscn")
+		var display := OS.get_environment("DISPLAY")
+		var pid := OS.get_process_id()
+		var window_id := Gamescope.get_window_id(display, pid)
+		Gamescope.set_external_overlay(display, window_id, 1)
