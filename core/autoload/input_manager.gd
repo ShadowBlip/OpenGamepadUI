@@ -1,6 +1,13 @@
 @icon("res://assets/icons/navigation.svg")
 extends Node
 
+# Intercept mode defines how we intercept gamepad events
+enum INTERCEPT_MODE {
+	NONE,
+	PASS,  # Pass all inputs to the virtual device
+	ALL,  # Intercept all inputs and send nothing to the virtual device
+}
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -14,10 +21,14 @@ var overlay_window_id = Gamescope.get_window_id(display, PID)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
-var input_mutex := Mutex.new()
 var input_exited := false
+var input_exited_mut := Mutex.new()
+var input_intercept := INTERCEPT_MODE.NONE
+var input_intercept_mut := Mutex.new()
 var input_thread := Thread.new()
-var devices := [] as Array[InputDevice]
+var gamepad_map := {}
+var virt_gamepad_map := {}
+var phys_to_virt_map := {}
 
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
@@ -27,52 +38,71 @@ func _ready() -> void:
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
 
+	# Discover any gamepads and grab exclusive access to them. Create a
+	# duplicate virtual gamepad for each physical one.
 	var gamepads := discover_gamepads()
 	for path in gamepads:
+		# Skip any virtual devices we've already created.
+		if path in phys_to_virt_map:
+			logger.debug("Gamepad appears to be virtual: " + path)
+			continue
+
+		# Open the gamepad and create a virtual gamepad assoiated with it
+		logger.debug("Opening gamepad device: " + path)
 		var device := InputDevice.new()
 		if device.open(path) != OK:
 			logger.warn("Unable to open gamepad: " + path)
 			continue
-		devices.append(device)
+		gamepad_map[path] = device
+		var virt_gamepad := device.duplicate()
+		var devnode := virt_gamepad.get_devnode()
+		phys_to_virt_map[path] = devnode
+		virt_gamepad_map[path] = virt_gamepad
+		device.grab(true)
 		logger.debug("Discovered gamepad at: " + path)
 
 	# Create a thread to process gamepad inputs separately
+	logger.debug("Starting gamepad input thread")
 	input_thread.start(_start_process_input)
+
+
+# Sets the gamepad intercept mode
+func _set_intercept(mode: INTERCEPT_MODE) -> void:
+	input_intercept_mut.lock()
+	input_intercept = mode
+	input_intercept_mut.unlock()
 
 
 # Runs evdev input processing in its own thread
 func _start_process_input():
-	while not input_exited:
-		input_mutex.lock()
+	var exited := false
+	while not exited:
+		input_exited_mut.lock()
+		exited = input_exited
+		input_exited_mut.unlock()
 		_process_input()
-		input_mutex.unlock()
 
 
 # Processes all raw gamepad input
 func _process_input() -> void:
-	# Always process events, but only handle the events in certain cases
-	var gamepad_events := [] as Array[Array]
-	for gamepad in devices:
+	var mode := input_intercept
+	for path in gamepad_map.keys():
+		var gamepad := gamepad_map[path] as InputDevice
+		var virt_gamepad := virt_gamepad_map[path] as VirtualInputDevice
 		if not gamepad.is_open():
-			return
+			continue
 		var events := gamepad.get_events()
-		gamepad_events.push_back(events)
-
-	# Don't process any input events if we're in-game or don't have an
-	# in-game state.
-	if state_machine.current_state() == in_game_state:
-		return
-	if not state_machine.has_state(in_game_state):
-		return
-
-	# Process gamepad inputs
-	for events in gamepad_events:
 		for event in events:
-			_process_event(event)
+			_process_event(virt_gamepad, event, mode)
 
 
-func _process_event(event: InputDeviceEvent) -> void:
-	if event.type == event.EV_SYN:
+# Processes a single input event
+func _process_event(dev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE) -> void:
+	if mode == INTERCEPT_MODE.NONE:
+		dev.write_event(event.get_type(), event.get_code(), event.get_value())
+		return
+	if mode == INTERCEPT_MODE.PASS:
+		dev.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 	match event.get_code():
 		InputDeviceEvent.BTN_SOUTH:
@@ -114,10 +144,8 @@ func discover_gamepads() -> PackedStringArray:
 
 func _on_game_state_entered(_from: State) -> void:
 	set_focus(false)
-	for device in devices:
-		if device.is_open():
-			logger.debug("Ungrabbing gamepad interception for: " + device.get_path())
-			device.grab(false)
+	logger.debug("Ungrabbing gamepad interception")
+	_set_intercept(INTERCEPT_MODE.PASS)
 
 
 func _on_game_state_exited(_to: State) -> void:
@@ -129,16 +157,11 @@ func _on_game_state_removed() -> void:
 
 	# If no game is running now, don't intercept gamepad inputs
 	if not state_machine.has_state(in_game_state):
-		for device in devices:
-			if not device.is_open():
-				continue
-			logger.debug("Ungrabbing gamepad interception for: " + device.get_path())
-			device.grab(false)
+		logger.debug("Ungrabbing gamepad interception")
+		_set_intercept(INTERCEPT_MODE.PASS)
 		return
-	for device in devices:
-		if device.is_open():
-			logger.debug("Grabbing gamepad interception for: " + device.get_path())
-			device.grab(true)
+	logger.debug("Grabbing gamepad interception")
+	_set_intercept(INTERCEPT_MODE.ALL)
 
 
 # Set focus will use Gamescope to focus OpenGamepadUI
@@ -282,7 +305,7 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 
 
 func _exit_tree() -> void:
-	input_mutex.lock()
+	input_exited_mut.lock()
 	input_exited = true
-	input_mutex.unlock()
+	input_exited_mut.unlock()
 	input_thread.wait_to_finish()

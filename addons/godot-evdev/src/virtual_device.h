@@ -28,7 +28,7 @@ public:
   struct libevdev_uinput *uidev = NULL;
 
   // Methods
-  int write_event(InputDeviceEvent *event);
+  int write_event(int type, int code, int value);
   bool is_open();
   int close();
   godot::String get_syspath();

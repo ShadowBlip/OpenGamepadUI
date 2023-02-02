@@ -45,7 +45,6 @@ func _on_state_exited(_to: State) -> void:
 
 # Push the main menu state when the back button is pressed
 func _input(event: InputEvent) -> void:
-	print(event)
 	# Only handle back button pressed and when the guide button is not held
 	if not event.is_action_pressed("ogui_east") or Input.is_action_pressed("ogui_guide"):
 		return

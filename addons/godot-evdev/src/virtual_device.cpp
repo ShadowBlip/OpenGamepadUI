@@ -44,10 +44,9 @@ int VirtualInputDevice::close() {
 bool VirtualInputDevice::is_open() { return (uidev != NULL); };
 
 // Write the given event to the virtual device
-int VirtualInputDevice::write_event(InputDeviceEvent *event) {
+int VirtualInputDevice::write_event(int type, int code, int value) {
   int err = 0;
-  err = libevdev_uinput_write_event(uidev, event->get_type(), event->get_code(),
-                                    event->get_value());
+  err = libevdev_uinput_write_event(uidev, type, code, value);
   return err;
 }
 
