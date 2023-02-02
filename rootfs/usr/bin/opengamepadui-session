@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Script to start the session used by Valve with minor tweaks for OpenGamepadUI.
+
+# Window managers sets this to wayland but apps using Gamescope must use x11
+export XDG_SESSION_TYPE=x11
+
+# Update the enviroment with DESKTOP_SESSION and all XDG variables
+dbus-update-activation-environment --systemd DESKTOP_SESSION `env | grep ^XDG_ | cut -d = -f 1`
+
+# This makes it so that xdg-desktop-portal doesn't find any portal implementations and doesn't start them and makes
+# them crash/exit because the dbus env has no DISPLAY. In turn this causes dbus calls to the portal which don't rely
+# on implementations to hang (such as SDL talking to the real time portal)
+systemctl --user set-environment XDG_DESKTOP_PORTAL_DIR=""
+
+# Remove these as they prevent opengamepadui-session from starting correctly
+systemctl --user unset-environment DISPLAY XAUTHORITY
+
+# If this shell script is killed then stop opengamepadui-session
+trap 'systemctl --user stop opengamepadui-session.service' HUP INT TERM
+
+# Start opengamepadui-session and wait
+systemctl --user --wait start opengamepadui-session.service &
+wait

@@ -1,0 +1,40 @@
+# This file would be sourced by gamescope-session script (meant for
+# ChimeraOS devices).
+
+SYS_ID="$(cat /sys/devices/virtual/dmi/id/product_name)"
+
+# OXP Devices
+OXP_LIST="ONE XPLAYER:ONEXPLAYER 1 T08:ONEXPLAYER 1S A08:ONEXPLAYER 1S T08:ONEXPLAYER mini A07:ONEXPLAYER mini GA72:ONEXPLAYER mini GT72:ONEXPLAYER Mini Pro:ONEXPLAYER GUNDAM GA72:ONEXPLAYER 2 ARP23"
+AOK_LIST="AOKZOE A1 AR07"
+if [[ ":$OXP_LIST:" =~ ":$SYS_ID:"  ]] || [[  ":$AOK_LIST:" =~ ":$SYS_ID:"   ]]; then
+  # Dependent on a special --force-orientation option in gamescope
+  if ( gamescope --help 2>&1 | grep -e "--force-orientation" > /dev/null ) ; then
+    export GAMESCOPECMD="/usr/bin/gamescope \
+      -e \
+      --generate-drm-mode fixed \
+      --xwayland-count 2 \
+      -O *,eDP-1 \
+      --default-touch-mode 4 \
+      --hide-cursor-delay 3000 \
+      --fade-out-duration 200 \
+      --force-orientation left "
+  fi
+  # Set refresh rate range and enable refresh rate switching
+  export STEAM_DISPLAY_REFRESH_LIMITS=40,60
+fi
+
+# AYANEO AIR Devices
+AIR_LIST="AIR:AIR Pro"
+if [[ ":$AIR_LIST:" =~ ":$SYS_ID:"  ]]; then
+  # Dependent on a special --force-orientation option in gamescope
+  if ( gamescope --help 2>&1 | grep -e "--force-orientation" > /dev/null ) ; then
+    export GAMESCOPECMD="/usr/bin/gamescope \
+      -e \
+      --xwayland-count 2 \
+      -O *,eDP-1 \
+      --default-touch-mode 4 \
+      --hide-cursor-delay 3000 \
+      --fade-out-duration 200 \
+      --force-orientation left "
+  fi
+fi
