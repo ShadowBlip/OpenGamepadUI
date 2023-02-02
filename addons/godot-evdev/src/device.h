@@ -49,6 +49,11 @@ public:
   godot::Array get_events();
   bool has_event_type(unsigned int event_type);
   bool has_event_code(unsigned int event_type, unsigned int event_code);
+  int get_abs_min(unsigned int event_code);
+  int get_abs_max(unsigned int event_code);
+  int get_abs_fuzz(unsigned int event_code);
+  int get_abs_flat(unsigned int event_code);
+  int get_abs_resolution(unsigned int event_code);
 
   // Static functions
 };

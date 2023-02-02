@@ -27,6 +27,7 @@ var input_intercept := INTERCEPT_MODE.NONE
 var input_intercept_mut := Mutex.new()
 var input_thread := Thread.new()
 var gamepad_map := {}
+var gamepad_info := {}
 var virt_gamepad_map := {}
 var phys_to_virt_map := {}
 
@@ -53,13 +54,26 @@ func _ready() -> void:
 		if device.open(path) != OK:
 			logger.warn("Unable to open gamepad: " + path)
 			continue
-		gamepad_map[path] = device
+
+		# Query information about the device
+		var info := {}
+		info["ABS_Y_MAX"] = device.get_abs_max(InputDeviceEvent.ABS_Y)
+		info["ABS_Y_MIN"] = device.get_abs_min(InputDeviceEvent.ABS_Y)
+		info["ABS_X_MAX"] = device.get_abs_max(InputDeviceEvent.ABS_X)
+		info["ABS_X_MIN"] = device.get_abs_min(InputDeviceEvent.ABS_X)
+
+		# Create a virtual gamepad from this physical one
 		var virt_gamepad := device.duplicate()
 		var devnode := virt_gamepad.get_devnode()
+
+		# Map the device, its info, and its child virtual device
+		gamepad_map[path] = device
+		gamepad_info[path] = info
 		phys_to_virt_map[path] = devnode
 		virt_gamepad_map[path] = virt_gamepad
 		device.grab(true)
 		logger.debug("Discovered gamepad at: " + path)
+		logger.debug("  Gamepad properties: " + str(info))
 
 	# Create a thread to process gamepad inputs separately
 	logger.debug("Starting gamepad input thread")
@@ -93,11 +107,13 @@ func _process_input() -> void:
 			continue
 		var events := gamepad.get_events()
 		for event in events:
-			_process_event(virt_gamepad, event, mode)
+			_process_event(path, virt_gamepad, event, mode)
 
 
 # Processes a single input event
-func _process_event(dev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE) -> void:
+func _process_event(
+	path: String, dev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE
+) -> void:
 	if mode == INTERCEPT_MODE.NONE:
 		dev.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
@@ -125,6 +141,34 @@ func _process_event(dev: VirtualInputDevice, event: InputDeviceEvent, mode: INTE
 			_send_input("ui_up", event.value == 1, 1)
 		InputDeviceEvent.BTN_TRIGGER_HAPPY4:
 			_send_input("ui_down", event.value == 1, 1)
+		InputDeviceEvent.ABS_Y:
+			var info := gamepad_info[path] as Dictionary
+			if event.value > 0:
+				var maximum := info["ABS_Y_MAX"] as int
+				var value := event.value / float(maximum)
+				if value == 0:
+					return
+				_send_joy_input(JOY_AXIS_LEFT_Y, value)
+			if event.value <= 0:
+				var minimum := info["ABS_Y_MIN"] as int
+				var value := event.value / float(minimum)
+				if value == 0:
+					return
+				_send_joy_input(JOY_AXIS_LEFT_Y, -value)
+		InputDeviceEvent.ABS_X:
+			var info := gamepad_info[path] as Dictionary
+			if event.value > 0:
+				var maximum := info["ABS_X_MAX"] as int
+				var value := event.value / float(maximum)
+				if value == 0:
+					return
+				_send_joy_input(JOY_AXIS_LEFT_X, value)
+			if event.value <= 0:
+				var minimum := info["ABS_X_MIN"] as int
+				var value := event.value / float(minimum)
+				if value == 0:
+					return
+				_send_joy_input(JOY_AXIS_LEFT_X, -value)
 
 
 func discover_gamepads() -> PackedStringArray:
@@ -302,6 +346,14 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.pressed = pressed
 	input_action.strength = strength
 	Input.parse_input_event(input_action)
+
+
+# Sends joy motion input to the event queue
+func _send_joy_input(axis: int, value: float) -> void:
+	var joy_action := InputEventJoypadMotion.new()
+	joy_action.axis = axis
+	joy_action.axis_value = value
+	Input.parse_input_event(joy_action)
 
 
 func _exit_tree() -> void:

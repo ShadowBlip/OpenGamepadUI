@@ -219,6 +219,27 @@ Array InputDevice::get_events() {
 bool InputDevice::is_open() { return libevdev_get_fd(dev) > 0; };
 bool InputDevice::is_grabbed() { return grabbed; };
 
+// ABS info
+int InputDevice::get_abs_min(unsigned int event_code) {
+  return libevdev_get_abs_minimum(dev, event_code);
+};
+
+int InputDevice::get_abs_max(unsigned int event_code) {
+  return libevdev_get_abs_maximum(dev, event_code);
+};
+
+int InputDevice::get_abs_fuzz(unsigned int event_code) {
+  return libevdev_get_abs_fuzz(dev, event_code);
+};
+
+int InputDevice::get_abs_flat(unsigned int event_code) {
+  return libevdev_get_abs_flat(dev, event_code);
+};
+
+int InputDevice::get_abs_resolution(unsigned int event_code) {
+  return libevdev_get_abs_resolution(dev, event_code);
+};
+
 // Register the methods with Godot
 void InputDevice::_bind_methods() {
   // Properties
@@ -247,6 +268,16 @@ void InputDevice::_bind_methods() {
   godot::ClassDB::bind_method(D_METHOD("get_events"), &InputDevice::get_events);
   godot::ClassDB::bind_method(D_METHOD("is_open"), &InputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("is_grabbed"), &InputDevice::is_grabbed);
+  godot::ClassDB::bind_method(D_METHOD("get_abs_min"),
+                              &InputDevice::get_abs_min);
+  godot::ClassDB::bind_method(D_METHOD("get_abs_max"),
+                              &InputDevice::get_abs_max);
+  godot::ClassDB::bind_method(D_METHOD("get_abs_fuzz"),
+                              &InputDevice::get_abs_fuzz);
+  godot::ClassDB::bind_method(D_METHOD("get_abs_flat"),
+                              &InputDevice::get_abs_flat);
+  godot::ClassDB::bind_method(D_METHOD("get_abs_resolution"),
+                              &InputDevice::get_abs_resolution);
 
   // Static methods
 
