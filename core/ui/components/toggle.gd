@@ -58,5 +58,6 @@ func _ready() -> void:
 	check_button.toggled.connect(on_toggled)
 
 
-func _on_focus_entered():
+# Override focus grabbing to grab the child
+func grab_focus() -> void:
 	check_button.grab_focus()

@@ -95,5 +95,6 @@ func _on_value_changed(v: float) -> void:
 	value = v
 
 
-func _on_focus_entered():
+# Override focus grabbing to grab the slider
+func grab_focus() -> void:
 	slider.grab_focus()
