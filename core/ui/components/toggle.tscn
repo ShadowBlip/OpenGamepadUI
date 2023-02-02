@@ -26,5 +26,3 @@ focus_neighbor_bottom = NodePath("..")
 focus_next = NodePath("..")
 focus_previous = NodePath("..")
 button_pressed = true
-
-[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
