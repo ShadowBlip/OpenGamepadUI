@@ -1,0 +1,23 @@
+extends Control
+
+@export var focus_node: Node = $VBoxContainer/MangoAppSlider
+
+@onready var mangoapp_slider := $%MangoAppSlider
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	mangoapp_slider.value_changed.connect(_on_mangoapp_changed)
+
+
+# Set the mangoapp config on slider change
+func _on_mangoapp_changed(value: float) -> void:
+	if value == 0:
+		MangoApp.set_config(MangoApp.CONFIG_NONE)
+		return
+	if value == 1:
+		MangoApp.set_config(MangoApp.CONFIG_FPS)
+		return
+	if value >= 2:
+		MangoApp.set_config(MangoApp.CONFIG_DEFAULT)
+		return
