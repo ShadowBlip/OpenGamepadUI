@@ -1,0 +1,9 @@
+[Unit]
+Description=Open source Quick Access Menu Overlay
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/opengamepadui --only-qam
+
+[Install]
+WantedBy=default.target
