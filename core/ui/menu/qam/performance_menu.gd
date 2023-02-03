@@ -18,6 +18,12 @@ func _on_mangoapp_changed(value: float) -> void:
 	if value == 1:
 		MangoApp.set_config(MangoApp.CONFIG_FPS)
 		return
-	if value >= 2:
+	if value == 2:
+		MangoApp.set_config(MangoApp.CONFIG_MIN)
+		return
+	if value == 3:
 		MangoApp.set_config(MangoApp.CONFIG_DEFAULT)
+		return
+	if value >= 4:
+		MangoApp.set_config(MangoApp.CONFIG_INSANE)
 		return
