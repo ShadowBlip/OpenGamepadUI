@@ -1,10 +1,10 @@
 
-GODOT_VERSION ?= 4.0.beta15
+GODOT_VERSION ?= 4.0.beta17
 GODOT ?= /usr/bin/godot4
 GAMESCOPE ?= /usr/bin/gamescope
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_VERSION)/linux_debug.x86_64
-EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta15/Godot_v4.0-beta15_export_templates.tpz
+EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/beta17/Godot_v4.0-beta17_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
@@ -60,8 +60,9 @@ clean: ## Remove build artifacts
 	rm -rf build
 	cd ./addons/godot-xlib && make clean
 
-.PHONY: run
-run: addons build/opengamepad-ui.x86_64 ## Run the project in gamescope
+.PHONY: run run-force
+run: addons build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
+run-force:
 	$(GAMESCOPE) -w 1920 -h 1080 -f -e \
 		--xwayland-count 2 -- ./build/opengamepad-ui.x86_64
 
