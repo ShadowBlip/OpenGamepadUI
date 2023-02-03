@@ -28,6 +28,16 @@ You can read documentation about how to use and develop for the project here:
 The following are required to run Open Gamepad UI:
 
 - gamescope
+- gcc-libs
+- glibc
+- libx11
+- libxau
+- libxcb
+- libxdmcp
+- libxext
+- libxres
+- ryzenadj (optional)
+- mangoapp (optional)
 
 ## Usage
 
