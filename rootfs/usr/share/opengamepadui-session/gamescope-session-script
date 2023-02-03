@@ -4,10 +4,10 @@
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
 # Enable Mangoapp
-export STEAM_USE_MANGOAPP=1
+#export STEAM_USE_MANGOAPP=1
 export MANGOHUD_CONFIGFILE=$(mktemp /tmp/mangohud.XXXXXXXX)
 
-export STEAM_USE_DYNAMIC_VRS=1
+#export STEAM_USE_DYNAMIC_VRS=1
 export RADV_FORCE_VRS_CONFIG_FILE=$(mktemp /tmp/radv_vrs.XXXXXXXX)
 
 # Plop GAMESCOPE_MODE_SAVE_FILE into $XDG_CONFIG_HOME (defaults to ~/.config).
@@ -16,13 +16,6 @@ export GAMESCOPE_MODE_SAVE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/gamescope/mod
 # Make path to gamescope mode save file.
 mkdir -p "$(dirname "$GAMESCOPE_MODE_SAVE_FILE")"
 touch "$GAMESCOPE_MODE_SAVE_FILE"
-#echo "Making Gamescope Mode Save file at \"$GAMESCOPE_MODE_SAVE_FILE\""
-
-# Support for gamescope tearing with GAMESCOPE_ALLOW_TEARING atom
-export STEAM_GAMESCOPE_HAS_TEARING_SUPPORT=1
-
-# Enable tearing controls in steam
-export STEAM_GAMESCOPE_TEARING_SUPPORTED=1
 
 # There is no way to set a color space for an NV12
 # buffer in Wayland. And the color management protocol that is
@@ -45,52 +38,11 @@ echo "1x1" > "$RADV_FORCE_VRS_CONFIG_FILE"
 # To expose vram info from radv
 export WINEDLLOVERRIDES=dxgi=n
 
-# Workaround for steam getting killed immediatly during reboot
-export STEAMOS_STEAM_REBOOT_SENTINEL="/tmp/steamos-reboot-sentinel"
-
-# Workaround for steam getting killed immediatly during shutdown
-# Same idea as reboot sentinel above
-export STEAMOS_STEAM_SHUTDOWN_SENTINEL="/tmp/steamos-shutdown-sentinel"
-
-# Enable volume key management via steam for this session
-export STEAM_ENABLE_VOLUME_HANDLER=1
-
-# Have SteamRT's xdg-open send http:// and https:// URLs to Steam
-export SRT_URLOPEN_PREFER_STEAM=1
-
 # Disable automatic audio device switching in steam, now handled by wireplumber
 export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
 
-# Enable support for xwayland isolation per-game in Steam
-export STEAM_MULTIPLE_XWAYLANDS=1
-
-# We have the Mesa integration for the fifo-based dynamic fps-limiter
-export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
-
-# We have gamma/degamma exponent support
-export STEAM_GAMESCOPE_COLOR_TOYS=1
-
-# We have NIS support
-export STEAM_GAMESCOPE_NIS_SUPPORTED=1
-
 # Don't wait for buffers to idle on the client side before sending them to gamescope
 export vk_xwayland_wait_ready=false
-
-# Let steam know it can unmount drives without superuser privileges
-export STEAM_ALLOW_DRIVE_UNMOUNT=1
-
-# We no longer need to set GAMESCOPE_EXTERNAL_OVERLAY from steam, mangoapp now does it itself
-export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
-
-# Enable horizontal mangoapp bar
-export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
-
-# Scaling support
-export STEAM_GAMESCOPE_FANCY_SCALING_SUPPORT=1
-
-# Set input method modules for Qt/GTK that will show the Steam keyboard
-export QT_IM_MODULE=steam
-export GTK_IM_MODULE=Steam
 
 # To play nice with the short term callback-based limiter for now
 export GAMESCOPE_LIMITER_FILE=$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
@@ -177,9 +129,6 @@ else
     GAMESCOPECMD+=" -R $socket -T $stats"
 fi
 
-# Workaround for Steam login issue while Steam client change propagates out of Beta
-#touch "${HOME}"/.steam/root/config/SteamAppData.vdf || true
-
 # Log rotate the last session
 if [ -f "${HOME}"/.ogui-stdout.log ]; then
     cp "${HOME}"/.ogui-stdout.log "${HOME}"/.ogui-stdout.log.old
@@ -214,6 +163,8 @@ if command -v mangoapp > /dev/null; then
 fi
 
 # Start OpenGamepadUI
+sleep 5
+echo "Starting OpenGamepadUI with command: $OGUICMD"
 $OGUICMD > "${HOME}"/.ogui-stdout.log 2>&1
 
 # When the client exits, kill gamescope nicely
@@ -222,16 +173,6 @@ kill $gamescope_pid
 # Start a background sleep for five seconds because we don't trust it
 sleep 5 &
 sleep_pid="$!"
-
-# Catch reboot and poweroof sentinels here
-if [[ -e "$STEAMOS_STEAM_REBOOT_SENTINEL" ]]; then
-	rm -f "$STEAMOS_STEAM_REBOOT_SENTINEL"
-	reboot
-fi
-if [[ -e "$STEAMOS_STEAM_SHUTDOWN_SENTINEL" ]]; then
-	rm -f "$STEAMOS_STEAM_SHUTDOWN_SENTINEL"
-	poweroff
-fi
 
 # Wait for gamescope or the sleep to finish for timeout purposes
 ret=0
