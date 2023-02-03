@@ -19,7 +19,7 @@ class Response:
 		if json.parse(body.get_string_from_utf8()) != OK:
 			return null
 		return json.get_data()
-	
+
 	static func from_cached_result(result: Array) -> Response:
 		var res := Response.new()
 		res.result = result[0]
@@ -29,8 +29,13 @@ class Response:
 		return res
 
 
-func request(path: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE, 
-		xtra_headers: PackedStringArray = [], method: HTTPClient.Method = 0, data: String = "") -> Response:
+func request(
+	path: String,
+	caching_flags: int = Cache.FLAGS.LOAD | Cache.FLAGS.SAVE,
+	xtra_headers: PackedStringArray = [],
+	method: HTTPClient.Method = 0,
+	data: String = ""
+) -> Response:
 	# Build the URL and headers
 	if base_url.ends_with("/"):
 		base_url = base_url.trim_suffix("/")
@@ -40,26 +45,26 @@ func request(path: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAV
 	var hdrs := headers.duplicate()
 	hdrs.append_array(xtra_headers)
 	logger.debug(url)
-	
+
 	# Check if this item is already cached
 	var cache_key := path + ",".join(hdrs) + data + str(method)
 	if caching_flags & Cache.FLAGS.LOAD and Cache.is_cached(cache_folder, cache_key):
 		logger.debug("Found cached result")
 		var cached = Cache.get_json(cache_folder, cache_key) as Array
 		return Response.from_cached_result(cached)
-	
+
 	# Make the request
 	var http := HTTPRequest.new()
 	add_child(http)
-	var err := http.request(url, hdrs, true, method, data)
+	var err := http.request(url, hdrs, method, data)
 	if err != OK:
 		logger.warn("Unable to query API: " + str(err))
 		http.queue_free()
 		return null
-	
+
 	# Wait for the response
 	var results := await http.request_completed as Array
-	
+
 	# Build the response
 	var response := Response.new()
 	response.result = results[0]

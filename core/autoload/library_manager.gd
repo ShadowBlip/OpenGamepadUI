@@ -194,7 +194,11 @@ func get_library_by_id(id: String) -> Library:
 
 # Returns a list of all registered libraries
 func get_libraries() -> Array[Library]:
-	return _libraries.values()
+	var libraries: Array[Library] = []
+	libraries.assign(_libraries.values())
+	print("Got libraries: ", libraries)
+
+	return libraries
 
 
 # Registers the given library with the library manager.
