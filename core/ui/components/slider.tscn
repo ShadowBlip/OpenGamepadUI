@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cemxrvvjgm4g"]
+[gd_scene load_steps=4 format=3 uid="uid://cemxrvvjgm4g"]
 
 [ext_resource type="Script" path="res://core/ui/components/slider.gd" id="1_khsna"]
+[ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_otvhp"]
+[ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_q0iwk"]
 
 [node name="Slider" type="VBoxContainer"]
 anchors_preset = 15
@@ -19,12 +21,21 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
+label_settings = ExtResource("2_otvhp")
 
 [node name="LabelValue" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
+label_settings = ExtResource("2_otvhp")
 horizontal_alignment = 2
+
+[node name="DescriptionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Description"
+label_settings = ExtResource("3_q0iwk")
 
 [node name="HSlider" type="HSlider" parent="."]
 unique_name_in_owner = true

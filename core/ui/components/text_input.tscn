@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1rjdfxxrdccf"]
+
+[ext_resource type="Script" path="res://core/ui/components/text_input.gd" id="1_oomlj"]
+[ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_w0wib"]
+[ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_8vwuq"]
+
+[node name="TextInput" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oomlj")
+title = null
+description = null
+text = null
+placeholder_text = null
+editable = null
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Title"
+label_settings = ExtResource("2_w0wib")
+
+[node name="DescriptionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Description"
+label_settings = ExtResource("3_8vwuq")
+
+[node name="LineEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2

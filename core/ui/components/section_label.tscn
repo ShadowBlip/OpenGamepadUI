@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dithv38oqgy58"]
+
+[ext_resource type="LabelSettings" uid="uid://b1jl2mkmbimnx" path="res://assets/label/section_label.tres" id="1_whpnd"]
+
+[node name="SectionLabel" type="Label"]
+text = "Section"
+label_settings = ExtResource("1_whpnd")

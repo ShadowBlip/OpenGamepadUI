@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1qb7euwlu7bh"]
+[gd_scene load_steps=3 format=3 uid="uid://d1qb7euwlu7bh"]
 
 [ext_resource type="Script" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
+[ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_msehc"]
 
 [node name="Toggle" type="HBoxContainer"]
 anchors_preset = 15
@@ -16,6 +17,7 @@ button_pressed = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
+label_settings = ExtResource("2_msehc")
 
 [node name="CheckButton" type="CheckButton" parent="."]
 layout_mode = 2

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0u3rsa5qpj57"]
+
+[ext_resource type="LabelSettings" uid="uid://cu7tqwv34qki0" path="res://assets/label/subsection_label.tres" id="1_88fe2"]
+
+[node name="SubsectionLabel" type="Label"]
+text = "Section"
+label_settings = ExtResource("1_88fe2")

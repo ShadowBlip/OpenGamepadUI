@@ -34,10 +34,10 @@ script = ExtResource("1_olmbp")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_364oy")]
 state = ExtResource("3_5g7v4")
-visible_during = [ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji"), ExtResource("7_jneep")]
+visible_during = Array[Resource]([ExtResource("4_cyj3i"), ExtResource("5_tny5o"), ExtResource("6_fyuji"), ExtResource("7_jneep")])
 
 [node name="BackInputHandler" parent="." instance=ExtResource("8_tshgy")]
-process_input_during = [ExtResource("3_5g7v4")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_5g7v4")])
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
@@ -132,7 +132,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("13_k0fou")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings"]
 script = ExtResource("17_2cktl")
@@ -156,12 +155,10 @@ follow_focus = true
 [node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
-visible_during = []
 
 [node name="PluginStore" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
 visible = false
 layout_mode = 2
-state_manager_path = NodePath("")
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer"]
 script = ExtResource("17_2cktl")
@@ -175,7 +172,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/GamescopeInspector" instance=ExtResource("2_364oy")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/GamescopeInspector"]
 script = ExtResource("17_2cktl")

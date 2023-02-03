@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://xei5afwefxud"]
+
+[ext_resource type="Script" path="res://core/ui/components/dropdown.gd" id="1_k5c4s"]
+[ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_lsmpx"]
+[ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_yy6na"]
+
+[node name="Dropdown" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_k5c4s")
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Setting"
+label_settings = ExtResource("2_lsmpx")
+
+[node name="DescriptionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Description"
+label_settings = ExtResource("3_yy6na")
+
+[node name="OptionButton" type="OptionButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
