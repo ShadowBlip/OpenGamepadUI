@@ -84,3 +84,19 @@ debug: addons ## Run the project in debug mode in gamescope
 .PHONY: inspect
 inspect: addons ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
+
+
+##@ Distribution
+
+.PHONY: dist 
+dist: dist/opengamepadui.tar.gz ## Create an archive distribution of the project
+dist/opengamepadui.tar.gz: build
+	rm -rf opengamepadui
+	mkdir -p opengamepadui
+	cp -r rootfs/* opengamepadui/
+	mkdir -p opengamepadui/usr/share/opengamepadui
+	cp -r build/* opengamepadui/usr/share/opengamepadui
+	tar cvfz opengamepadui.tar.gz opengamepadui
+	mkdir -p dist
+	mv opengamepadui.tar.gz dist
+	rm -rf opengamepadui

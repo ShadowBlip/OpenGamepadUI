@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/share/opengamepadui/opengamepad-ui.x86_64 "$@"
