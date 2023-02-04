@@ -11,11 +11,11 @@ enum ACTION {
 }
 
 # State machine resource to use
-@export var state_machine: Resource
+@export var state_machine: StateMachine
 # Signal on our parent to connect to
 var on_signal: String
 # The state to change to when the given signal is emitted
-@export var state: Resource
+@export var state: State
 @export var action: ACTION = ACTION.PUSH
 
 
@@ -53,12 +53,17 @@ func _get_property_list():
 			parent_signals.push_back(sig["name"])
 
 	var properties := []
-	properties.append({
-		"name": "on_signal",
-		"type": TYPE_STRING,
-		"usage": property_usage, # See above assignment.
-		"hint": PROPERTY_HINT_ENUM,
-		"hint_string": ",".join(parent_signals)
-	})
+	(
+		properties
+		. append(
+			{
+				"name": "on_signal",
+				"type": TYPE_STRING,
+				"usage": property_usage,  # See above assignment.
+				"hint": PROPERTY_HINT_ENUM,
+				"hint_string": ",".join(parent_signals)
+			}
+		)
+	)
 
 	return properties

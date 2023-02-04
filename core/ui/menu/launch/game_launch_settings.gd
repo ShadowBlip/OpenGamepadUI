@@ -81,7 +81,7 @@ func _on_provider_selected(idx: int) -> void:
 	if cmd and cmd is String:
 		cmd_input.text = cmd
 	var args = SettingsManager.get_value(settings_section, ".".join(["args", provider_id]))
-	if args and args is Array:
+	if args and args is PackedStringArray:
 		args_input.text = " ".join(args)
 	var cwd = SettingsManager.get_value(settings_section, ".".join(["cwd", provider_id]))
 	if cwd and cwd is String:
@@ -115,7 +115,7 @@ func _on_input_update(node: Control, subsection: String, update: UPDATE = UPDATE
 
 	# If the text input should be an array, convert it and save it
 	if update == UPDATE.ARRAY:
-		var arr := node.text.split(" ", false) as Array
+		var arr := PackedStringArray(node.text.split(" ", false) as Array)
 		SettingsManager.set_value(settings_section, key, arr)
 		return
 

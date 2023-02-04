@@ -61,7 +61,6 @@ func _load_persist_data():
 # Saves our persistent data
 func _save_persist_data():
 	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.WRITE_READ)
-	var persist_json: String = JSON.stringify(_persist_data)
 	file.store_string(JSON.stringify(_persist_data))
 	file.flush()
 
@@ -75,6 +74,25 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	var cwd: String = OS.get_environment("HOME")
 	if app.cwd != "":
 		cwd = app.cwd
+
+	# Override any parameters that may be in the user's config for this game
+	var section := ".".join(["game", app.name.to_lower()])
+	var cmd_key := ".".join(["command", app._provider_id])
+	var user_cmd = SettingsManager.get_value(section, cmd_key)
+	if user_cmd and user_cmd is String:
+		cmd = user_cmd
+	var args_key := ".".join(["args", app._provider_id])
+	var user_args = SettingsManager.get_value(section, args_key)
+	if user_args and user_args is PackedStringArray:
+		args = user_args
+	var cwd_key := ".".join(["cwd", app._provider_id])
+	var user_cwd = SettingsManager.get_value(section, cwd_key)
+	if user_cwd and user_cwd is String:
+		cwd = user_cwd
+	var env_key := ".".join(["env", app._provider_id])
+	var user_env = SettingsManager.get_value(section, env_key)
+	if user_env and user_env is Dictionary:
+		env = user_env
 	
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
@@ -167,15 +185,15 @@ func can_switch_app(app: RunningApp) -> bool:
 
 
 # Returns whether the given app is running
-func is_running(name: String) -> bool:
-	if name in _apps_by_name:
+func is_running(app_name: String) -> bool:
+	if app_name in _apps_by_name:
 		return true
 	return false
 
 
 # Returns a list of window IDs that don't have a corresponding RunningApp
 func get_orphan_windows(focusable: PackedInt32Array) -> Array[int]:
-	var orphans := []
+	var orphans: Array[int] = []
 	
 	var windows_with_app := []
 	for app in _running:

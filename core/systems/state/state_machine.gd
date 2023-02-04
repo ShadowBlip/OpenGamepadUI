@@ -41,7 +41,7 @@ func current_state() -> State:
 
 
 # Set state will set the entire state stack to the given array of states
-func set_state(stack: Array) -> void:
+func set_state(stack: Array[State]) -> void:
 	var cur := current_state()
 	var old_stack := _state_stack
 	_state_stack = stack
@@ -87,7 +87,7 @@ func replace_state(state: State) -> void:
 # Removes all instances of the given state from the stack
 func remove_state(state: State) -> void:
 	var cur := current_state()
-	var new_state_stack := []
+	var new_state_stack: Array[State] = []
 	for i in range(0, len(_state_stack)):
 		var s := _state_stack[i]
 		if state != s:
