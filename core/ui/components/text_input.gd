@@ -22,12 +22,12 @@ signal text_submitted(new_text: String)
 @export var text: String:
 	set(v):
 		text = v
-		if line_edit:
+		if line_edit and line_edit.text != v:
 			line_edit.text = v
 @export var placeholder_text: String:
 	set(v):
 		placeholder_text = v
-		if line_edit:
+		if line_edit and line_edit.placeholder_text != v:
 			line_edit.placeholder_text = v
 @export var editable := true:
 	set(v):
@@ -59,11 +59,18 @@ func _ready() -> void:
 		text_change_rejected.emit(v)
 	line_edit.text_change_rejected.connect(on_text_change_rejected)
 	var on_text_changed := func(v: String):
+		text = v
 		text_changed.emit(v)
 	line_edit.text_changed.connect(on_text_changed)
 	var on_text_submitted := func(v: String):
 		text_submitted.emit(v)
 	line_edit.text_change_rejected.connect(on_text_submitted)
+	var on_focus_exited := func():
+		focus_exited.emit()
+	line_edit.focus_exited.connect(on_focus_exited)
+	var on_focus_entered := func():
+		focus_entered.emit()
+	line_edit.focus_entered.connect(on_focus_entered)
 	
 
 
