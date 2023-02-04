@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bwl2icwgry4l"]
+[gd_scene load_steps=20 format=3 uid="uid://bwl2icwgry4l"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_hg7ac"]
 [ext_resource type="PackedScene" uid="uid://bugbaxcj7rtbq" path="res://core/ui/components/loading01.tscn" id="10_ap4mp"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="16_d1x8e"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="17_yolrd"]
+[ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="18_x6wsr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ef1c"]
 bg_color = Color(0.741176, 0.576471, 0.976471, 1)
@@ -105,17 +108,21 @@ size_flags_horizontal = 3
 [node name="LaunchButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer" instance=ExtResource("4_7y2kk")]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../SettingsButton")
-focus_neighbor_right = NodePath("../OptionButton")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ef1c")
 text = "Launch"
 
 [node name="Launcher" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton" instance=ExtResource("5_13gqy")]
 
-[node name="OptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer"]
+[node name="LaunchOptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer"]
+unique_name_in_owner = true
+clip_contents = true
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
+size_flags_horizontal = 8
 focus_neighbor_left = NodePath("../LaunchButton")
-focus_neighbor_right = NodePath("../../ControllerButton")
+focus_neighbor_right = NodePath("../../SettingsButton")
+text_overrun_behavior = 2
+clip_text = true
 
 [node name="LastPlayedContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
 layout_mode = 2
@@ -148,7 +155,6 @@ visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 1
-focus_neighbor_left = NodePath("../LaunchButtonContainer/OptionButton")
 focus_neighbor_right = NodePath("../SettingsButton")
 icon = ExtResource("6_hc1fc")
 icon_alignment = 1
@@ -163,6 +169,11 @@ focus_neighbor_right = NodePath("../LaunchButtonContainer/LaunchButton")
 icon = ExtResource("7_qo3p1")
 icon_alignment = 1
 expand_icon = true
+
+[node name="StateUpdater" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/SettingsButton" instance=ExtResource("16_d1x8e")]
+state_machine = ExtResource("17_yolrd")
+state = ExtResource("18_x6wsr")
+on_signal = "button_up"
 
 [node name="HSeparator" type="HSeparator" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2

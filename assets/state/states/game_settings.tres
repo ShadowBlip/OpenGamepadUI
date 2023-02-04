@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://3vw3bk76d88w"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_evw0a"]
+
+[resource]
+script = ExtResource("1_evw0a")
+name = "game_settings"
+data = {}
