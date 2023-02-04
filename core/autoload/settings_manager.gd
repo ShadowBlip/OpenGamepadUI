@@ -36,3 +36,10 @@ func set_value(section: String, key: String, value: Variant, persist: bool = tru
 	if persist:
 		save()
 	setting_changed.emit(section, key, value)
+
+
+func erase_section_key(section: String, key: String, persist: bool = true) -> void:
+	_config.erase_section_key(section, key)
+	if persist:
+		save()
+	setting_changed.emit(section, key, null)
