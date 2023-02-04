@@ -11,6 +11,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k5c4s")
+title = "Setting"
+description = "Description"
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
@@ -27,3 +29,6 @@ label_settings = ExtResource("3_yy6na")
 [node name="OptionButton" type="OptionButton" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
+item_count = 1
+popup/item_0/text = "None"
+popup/item_0/id = 0

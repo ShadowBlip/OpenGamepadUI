@@ -5,13 +5,13 @@ signal item_focused(index: int)
 signal item_selected(index: int)
 
 @export_category("Label Settings")
-@export var title: String = "Setting":
+@export var title: String:
 	set(v):
 		title = v
 		if label:
 			label.text = v
 			label.visible = v != ""
-@export var description: String = "Description":
+@export var description: String:
 	set(v):
 		description = v
 		if description_label:
@@ -25,7 +25,14 @@ signal item_selected(index: int)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass  # Replace with function body.
+	label.text = title
+	description_label.text = description
+
+	# Hide labels if nothing is specified
+	if title == "":
+		label.visible = false
+	if description == "":
+		description_label.visible = false
 
 
 # Override focus grabbing to grab the node
