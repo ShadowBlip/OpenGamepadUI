@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dtqnl1he886r4"]
+[gd_scene load_steps=19 format=3 uid="uid://dtqnl1he886r4"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="PackedScene" uid="uid://b2se1l330qmln" path="res://core/ui/menu/navigation/top_bar.tscn" id="3_4jaod"]
@@ -11,8 +11,50 @@
 [ext_resource type="PackedScene" uid="uid://ckm4bau85l6sg" path="res://core/ui/menu/library/library_menu.tscn" id="10_nynup"]
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="11_llrsu"]
 [ext_resource type="PackedScene" uid="uid://bwl2icwgry4l" path="res://core/ui/menu/launch/game_launch_menu.tscn" id="12_vmyfm"]
+[ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="14_mdrq1"]
 [ext_resource type="PackedScene" uid="uid://ibmgxjl33jn8" path="res://core/ui/menu/settings/settings_menu.tscn" id="16_xub48"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="21_lje1h"]
+
+[sub_resource type="Gradient" id="Gradient_kcjma"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.734982)
+colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_tqc2q"]
+gradient = SubResource("Gradient_kcjma")
+
+[sub_resource type="Animation" id="Animation_qvihi"]
+resource_name = "fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6lkjc"]
+_data = {
+"fade": SubResource("Animation_qvihi")
+}
 
 [node name="Main" type="Control" groups=["main"]]
 layout_mode = 3
@@ -74,9 +116,38 @@ offset_left = 0.0
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("5_t8uiy")]
 layout_mode = 2
 
+[node name="FadeTexture" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_tqc2q")
+
+[node name="FadeTransitionPlayer" type="AnimationPlayer" parent="FadeTexture"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_6lkjc")
+}
+
+[node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("14_mdrq1")
+autoplay = true
+expand = true
+
 [node name="Toast" parent="." instance=ExtResource("11_llrsu")]
 layout_mode = 1
 
 [node name="OnScreenKeyboard" parent="." instance=ExtResource("21_lje1h")]
 visible = false
 layout_mode = 1
+
+[connection signal="finished" from="BootVideoPlayer" to="." method="_on_boot_video_player_finished"]

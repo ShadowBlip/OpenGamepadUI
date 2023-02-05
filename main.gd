@@ -13,6 +13,8 @@ var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var ui_container := $UIContainer
 @onready var osk := $OnScreenKeyboard as OnScreenKeyboard
+@onready var fade_transition := $%FadeTransitionPlayer
+@onready var fade_texture := $FadeTexture
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
@@ -51,6 +53,7 @@ func _ready() -> void:
 	# Set bg to transparent
 	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	get_tree().get_root().transparent_bg = true
+	fade_texture.visible = true
 	
 	# Initialize the state machine with its initial state
 	state_machine.push_state(home_state)
@@ -116,3 +119,8 @@ func _set_overlay(enable: bool) -> void:
 	if enable:
 		overlay_enabled = 1
 	Gamescope.set_overlay(DISPLAY, overlay_window_id, overlay_enabled)
+
+
+func _on_boot_video_player_finished() -> void:
+	fade_transition.play("fade")
+
