@@ -15,15 +15,15 @@
 [ext_resource type="PackedScene" uid="uid://ibmgxjl33jn8" path="res://core/ui/menu/settings/settings_menu.tscn" id="16_xub48"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="21_lje1h"]
 
-[sub_resource type="Gradient" id="Gradient_kcjma"]
+[sub_resource type="Gradient" id="Gradient_fwog1"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.734982)
 colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_tqc2q"]
-gradient = SubResource("Gradient_kcjma")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rjfs4"]
+gradient = SubResource("Gradient_fwog1")
 
-[sub_resource type="Animation" id="Animation_qvihi"]
+[sub_resource type="Animation" id="Animation_rg5nt"]
 resource_name = "fade"
 length = 0.5
 tracks/0/type = "value"
@@ -51,9 +51,9 @@ tracks/1/keys = {
 "values": [true, false]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_6lkjc"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gkaf2"]
 _data = {
-"fade": SubResource("Animation_qvihi")
+"fade": SubResource("Animation_rg5nt")
 }
 
 [node name="Main" type="Control" groups=["main"]]
@@ -124,12 +124,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("GradientTexture1D_tqc2q")
+texture = SubResource("GradientTexture1D_rjfs4")
 
 [node name="FadeTransitionPlayer" type="AnimationPlayer" parent="FadeTexture"]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_6lkjc")
+"": SubResource("AnimationLibrary_gkaf2")
 }
 
 [node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]

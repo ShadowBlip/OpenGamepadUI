@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=27 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -24,6 +24,8 @@
 [ext_resource type="PackedScene" uid="uid://dy2w1ac8n2o7n" path="res://core/ui/menu/debug/gamescope_inspector.tscn" id="18_qnd5c"]
 [ext_resource type="PackedScene" uid="uid://baorkrl7picci" path="res://core/ui/menu/settings/audio_settings_menu.tscn" id="20_jaa1w"]
 [ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="21_514f3"]
+[ext_resource type="PackedScene" uid="uid://dnrqudepej3u" path="res://core/ui/menu/debug/processes_menu.tscn" id="24_sybcu"]
+[ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="25_ibhfw"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -119,6 +121,16 @@ on_signal = "focus_entered"
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
 
+[node name="ProcessesButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
+layout_mode = 2
+text = "Processes"
+
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/ProcessesButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("25_ibhfw")
+action = 2
+on_signal = "focus_entered"
+
 [node name="WindowsButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Windows"
@@ -189,6 +201,19 @@ layout_mode = 2
 script = ExtResource("17_2cktl")
 
 [node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/ScrollContainer/TransitionContainer" instance=ExtResource("18_agbuc")]
+
+[node name="ProcessesMenu" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("24_sybcu")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/ProcessesMenu" instance=ExtResource("2_364oy")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("25_ibhfw")
+
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/ProcessesMenu"]
+script = ExtResource("17_2cktl")
+
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/ProcessesMenu/TransitionContainer" instance=ExtResource("18_agbuc")]
 
 [node name="GamescopeInspector" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("18_qnd5c")]
 visible = false
