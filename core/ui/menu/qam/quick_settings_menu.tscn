@@ -14,7 +14,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_gwnsx")
-focus_node = NodePath("VBoxContainer/Toggle")
+focus_node = NodePath("VBoxContainer/VolumeSlider")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -23,6 +23,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Volume"
 
 [node name="Toggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
 layout_mode = 2

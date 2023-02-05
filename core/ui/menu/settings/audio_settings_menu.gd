@@ -1,4 +1,4 @@
-extends ScrollContainer
+extends Control
 
 @onready var output_volume := $%VolumeSlider
 @onready var output_device := $%OutputDevice

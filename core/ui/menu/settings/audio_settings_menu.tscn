@@ -5,59 +5,55 @@
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_qsi2y"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="3_pixnq"]
 
-[node name="AudioSettingsMenu" type="ScrollContainer"]
+[node name="AudioSettingsMenu" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_hjnkk")
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
+script = ExtResource("1_hjnkk")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AudioLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_x5cm4")]
+[node name="AudioLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 layout_mode = 2
 text = "Audio"
 
-[node name="VolumeSlider" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_qsi2y")]
+[node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_qsi2y")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Volume"
 step = 5.0
 
-[node name="OutputDevice" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_pixnq")]
+[node name="OutputDevice" parent="VBoxContainer" instance=ExtResource("3_pixnq")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Output Device"
 description = ""
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
 
-[node name="MicLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_x5cm4")]
+[node name="MicLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 visible = false
 layout_mode = 2
 text = "Microphone"
 
-[node name="MicVolumeSlider" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_qsi2y")]
+[node name="MicVolumeSlider" parent="VBoxContainer" instance=ExtResource("2_qsi2y")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Volume"
 step = 5.0
 
-[node name="InputDevice" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_pixnq")]
+[node name="InputDevice" parent="VBoxContainer" instance=ExtResource("3_pixnq")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

@@ -73,7 +73,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/NotificationsMenu" instance=ExtResource("4_klkp7")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("8_ktmf6")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/NotificationsMenu"]
 script = ExtResource("3_tk446")
@@ -87,7 +86,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu" instance=ExtResource("4_klkp7")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("10_4ijxt")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu"]
 script = ExtResource("3_tk446")
@@ -101,7 +99,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu" instance=ExtResource("4_klkp7")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("9_uygax")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu"]
 script = ExtResource("3_tk446")
@@ -115,7 +112,6 @@ layout_mode = 2
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/PerformanceMenu" instance=ExtResource("4_klkp7")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("10_ft1gj")
-visible_during = []
 
 [node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/PerformanceMenu"]
 script = ExtResource("3_tk446")

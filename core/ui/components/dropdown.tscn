@@ -30,5 +30,6 @@ label_settings = ExtResource("3_yy6na")
 unique_name_in_owner = true
 layout_mode = 2
 item_count = 1
+fit_to_longest_item = false
 popup/item_0/text = "None"
 popup/item_0/id = 0
