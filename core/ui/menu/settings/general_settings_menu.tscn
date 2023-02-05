@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bimj0mmmy32ju"]
+[gd_scene load_steps=3 format=3 uid="uid://bimj0mmmy32ju"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/general_settings_menu.gd" id="1_e3m8q"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_yfte1"]
 
 [node name="GeneralSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -17,7 +18,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="HomeLabel" parent="VBoxContainer" instance=ExtResource("2_yfte1")]
 layout_mode = 2
 text = "Home"
 
