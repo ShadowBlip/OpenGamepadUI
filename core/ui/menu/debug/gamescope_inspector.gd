@@ -11,7 +11,6 @@ var logger := Log.get_logger("GamescopeInspector")
 @onready var tree_container := $%TreeContainer
 @onready var gamescope_props := $%GamescopeProperties as Tree
 @onready var window_inspector := $%WindowInspector as Tree
-@onready var pid_inspector := $%PIDInspector as Tree
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,7 +20,6 @@ func _ready() -> void:
 	refresh_timer.timeout.connect(_update_gamescope_properties)
 	refresh_timer.timeout.connect(_update_displays)
 	refresh_timer.timeout.connect(_update_window_trees)
-	refresh_timer.timeout.connect(_update_pid_tree)
 	
 	# Pause refresh when the inspector is not visible
 	var on_visible_changed := func():
@@ -30,11 +28,6 @@ func _ready() -> void:
 			return
 		refresh_timer.stop()
 	visibility_changed.connect(on_visible_changed)
-	
-	# Configure the PID inspector
-	pid_inspector.set_column_title(0, "PID")
-	pid_inspector.set_column_title(1, "Window")
-	pid_inspector.create_item()
 	
 	# Configure the window inspector
 	window_inspector.set_column_title(0, "Property")
@@ -139,38 +132,6 @@ func _on_tree_item_selected(tree: Tree, display: String):
 		if val.size() == 0:
 			continue
 		prop.set_text(1, ", ".join(val))
-
-
-func _update_pid_tree() -> void:
-	if len(displays) == 0:
-		return
-	var display := displays[1]
-	var root_id := Gamescope.get_root_window_id(display)
-	var all_windows := Gamescope.get_all_windows(display, root_id)
-	var pids := {}
-	for window in all_windows:
-		var pid := Gamescope.get_window_pid(display, window)
-		if not pid in pids:
-			pids[pid] = []
-		pids[pid].append(window)
-	
-	var tree := pid_inspector
-	var root := tree.get_root()
-	for tree_child in root.get_children():
-		root.remove_child(tree_child)
-		tree_child.free()
-	
-	for pid in pids.keys():
-		var pid_info := Reaper.get_pid_status(pid)
-		var pid_child := tree.create_item(root)
-		var pid_name := ""
-		if "Name" in pid_info:
-			pid_name = pid_info["Name"]
-		pid_child.set_text(0, "{0} ({1})".format([pid, pid_name]))
-		
-		for window in pids[pid]:
-			var window_child := tree.create_item(pid_child)
-			window_child.set_text(0, "Window {0}".format([window]))
 
 
 func _update_window_trees() -> void:

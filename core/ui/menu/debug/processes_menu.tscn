@@ -33,12 +33,7 @@ text = "Processes"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 4.0
-
-[node name="PIDInspector" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer/ScrollContainer"]
+[node name="PIDInspector" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
