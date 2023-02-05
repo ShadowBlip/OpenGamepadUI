@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=25 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -22,6 +22,8 @@
 [ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="17_2cktl"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="18_agbuc"]
 [ext_resource type="PackedScene" uid="uid://dy2w1ac8n2o7n" path="res://core/ui/menu/debug/gamescope_inspector.tscn" id="18_qnd5c"]
+[ext_resource type="PackedScene" uid="uid://baorkrl7picci" path="res://core/ui/menu/settings/audio_settings_menu.tscn" id="20_jaa1w"]
+[ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="21_514f3"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -81,6 +83,16 @@ state = ExtResource("13_k0fou")
 action = 2
 on_signal = "focus_entered"
 
+[node name="AudioButton" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
+layout_mode = 2
+text = "Audio"
+
+[node name="StateUpdater" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer/AudioButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("21_514f3")
+action = 2
+on_signal = "focus_entered"
+
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/MainContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
 
@@ -137,6 +149,19 @@ state = ExtResource("13_k0fou")
 script = ExtResource("17_2cktl")
 
 [node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/GeneralSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+
+[node name="AudioSettingsMenu" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("20_jaa1w")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/MainContainer/ContentMarginContainer/AudioSettingsMenu" instance=ExtResource("2_364oy")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("21_514f3")
+
+[node name="TransitionContainer" type="Node" parent="MarginContainer/MainContainer/ContentMarginContainer/AudioSettingsMenu"]
+script = ExtResource("17_2cktl")
+
+[node name="TransitionFadeIn" parent="MarginContainer/MainContainer/ContentMarginContainer/AudioSettingsMenu/TransitionContainer" instance=ExtResource("18_agbuc")]
 
 [node name="PluginSettings" parent="MarginContainer/MainContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
 visible = false

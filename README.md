@@ -38,6 +38,7 @@ The following are required to run Open Gamepad UI:
 - libxres
 - ryzenadj (optional)
 - mangoapp (optional)
+- wireplumber (optional)
 
 ## Usage
 
