@@ -7,7 +7,9 @@
 #include <libevdev/libevdev-uinput.h>
 #include <libevdev/libevdev.h>
 #include <linux/input.h>
+#include <linux/uinput.h>
 #include <stdio.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include "godot_cpp/classes/global_constants.hpp"
@@ -37,7 +39,6 @@ InputDevice::~InputDevice() {
 // Opens the given device
 int InputDevice::open(String device) {
   // Certain operations are only possible when opened in read-write mode
-  int fd;
   fd = ::open(device.ascii().get_data(), O_RDWR | O_NONBLOCK);
   if (fd < 0) {
     fd = ::open(device.ascii().get_data(), O_RDONLY | O_NONBLOCK);
@@ -60,7 +61,6 @@ int InputDevice::open(String device) {
 
 // Close the device
 int InputDevice::close() {
-  int fd = get_fd();
   int code = 0;
   if (fd > 0) {
     code = ::close(fd);
@@ -79,7 +79,7 @@ VirtualInputDevice *InputDevice::duplicate() {
 
   // Open uinput
   struct libevdev_uinput *uidev;
-  int uifd = ::open("/dev/uinput", O_RDWR);
+  int uifd = ::open("/dev/uinput", O_RDWR | O_NONBLOCK);
   if (uifd < 0) {
     return nullptr;
   }
@@ -175,6 +175,10 @@ String InputDevice::get_phys() {
   return String(phys);
 }
 
+int InputDevice::enable_event_type(unsigned int event_type) {
+  return libevdev_enable_event_type(dev, event_type);
+}
+
 bool InputDevice::has_event_type(unsigned int event_type) {
   if (!is_open()) {
     return false;
@@ -210,6 +214,9 @@ Array InputDevice::get_events() {
       memcpy(&(event->ev), &ev, sizeof(ev));
       events.append(event);
     }
+    if (ev.type == EV_UINPUT) {
+      godot::UtilityFunctions::push_warning("GOT UINPUT EVENT!!");
+    }
     if (events.size() > 1000) {
       godot::UtilityFunctions::push_warning("Large event processing loop: ",
                                             events.size());
@@ -244,6 +251,11 @@ int InputDevice::get_abs_resolution(unsigned int event_code) {
   return libevdev_get_abs_resolution(dev, event_code);
 };
 
+// int InputDevice::upload_effect() {
+//   int ioctl(int file_descriptor, int request, struct ff_effect *effect);
+//   return 0;
+// }
+
 // Register the methods with Godot
 void InputDevice::_bind_methods() {
   // Properties
@@ -264,6 +276,8 @@ void InputDevice::_bind_methods() {
   godot::ClassDB::bind_method(D_METHOD("get_version"),
                               &InputDevice::get_version);
   godot::ClassDB::bind_method(D_METHOD("get_phys"), &InputDevice::get_phys);
+  godot::ClassDB::bind_method(D_METHOD("enable_event_type", "event_type"),
+                              &InputDevice::enable_event_type);
   godot::ClassDB::bind_method(D_METHOD("has_event_type", "event_type"),
                               &InputDevice::has_event_type);
   godot::ClassDB::bind_method(

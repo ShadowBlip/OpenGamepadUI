@@ -8,6 +8,7 @@
 #include <libevdev/libevdev-uinput.h>
 #include <libevdev/libevdev.h>
 #include <linux/input.h>
+#include <linux/uinput.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -22,6 +23,7 @@
 // https://www.freedesktop.org/software/libevdev/doc/latest/group__uinput.html
 
 namespace evdev {
+using godot::Array;
 using godot::D_METHOD;
 using godot::String;
 
@@ -50,6 +52,29 @@ int VirtualInputDevice::write_event(int type, int code, int value) {
   return err;
 }
 
+// Read events from the virtual device. This should be UINPUT events
+Array VirtualInputDevice::get_events() {
+  Array events = Array();
+
+  struct input_event event_arr[64];
+  size_t event_size = sizeof(struct input_event);
+  ssize_t nread = read(uifd, event_arr, event_size * 64);
+
+  // No events to read
+  if (nread < 0) {
+    return events;
+  }
+
+  // Loop through all read events
+  for (unsigned i = 0; i < nread / event_size; i++) {
+    InputDeviceEvent *event = memnew(InputDeviceEvent());
+    memcpy(&(event->ev), &event_arr[i], sizeof(event_arr[i]));
+    events.append(event);
+  }
+
+  return events;
+}
+
 String VirtualInputDevice::get_syspath() {
   if (!is_open()) {
     return String();
@@ -70,6 +95,8 @@ void VirtualInputDevice::_bind_methods() {
 
   // Methods
   godot::ClassDB::bind_method(D_METHOD("close"), &VirtualInputDevice::close);
+  godot::ClassDB::bind_method(D_METHOD("get_events"),
+                              &VirtualInputDevice::get_events);
   godot::ClassDB::bind_method(D_METHOD("is_open"),
                               &VirtualInputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("write_event", "event"),

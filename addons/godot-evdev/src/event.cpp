@@ -3,6 +3,7 @@
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/variant/string.hpp"
 #include <libevdev/libevdev.h>
+#include <linux/uinput.h>
 
 namespace evdev {
 using godot::D_METHOD;
@@ -71,6 +72,9 @@ void InputDeviceEvent::_bind_methods() {
   BIND_CONSTANT(INPUT_PROP_ACCELEROMETER);
   BIND_CONSTANT(INPUT_PROP_MAX);
   BIND_CONSTANT(INPUT_PROP_CNT);
+  BIND_CONSTANT(EV_UINPUT);
+  BIND_CONSTANT(UI_FF_UPLOAD);
+  BIND_CONSTANT(UI_FF_ERASE);
   BIND_CONSTANT(EV_SYN);
   BIND_CONSTANT(EV_KEY);
   BIND_CONSTANT(EV_REL);
