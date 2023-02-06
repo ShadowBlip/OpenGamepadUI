@@ -65,6 +65,11 @@ func _save_persist_data():
 	file.flush()
 
 
+# Returns whether or not we can launch via sandboxing
+func has_sandboxing() -> bool:
+	return OS.execute("which", ["firejail"]) == 0
+
+
 # Launches the given command on the target xwayland display. Returns a PID
 # of the launched process.
 func launch(app: LibraryLaunchItem) -> RunningApp:
@@ -104,10 +109,20 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	for key in env.keys():
 		env_vars.append("{0}={1}".format([key, env[key]]))
 	
+	# If sandboxing is available, launch the game in the sandbox 
+	var sandbox := PackedStringArray()
+	if has_sandboxing():
+		sandbox.append_array(["firejail", "--noprofile"])
+		var blacklist := InputManager.get_managed_gamepads()
+		for device in blacklist:
+			sandbox.append("--blacklist=%s" % device)
+		sandbox.append("--")
+
 	# Build the launch command to run
 	var exec := "env"
 	var command := ["-C", cwd]
 	command.append_array(env_vars)
+	command.append_array(sandbox)
 	command.append(cmd)
 	command.append_array(args)
 	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
@@ -292,7 +307,7 @@ func _check_running():
 	
 	# Hacky?
 	# Don't consider windows that come from a process in our blacklist
-	var pid_blacklist := ["steam"] # "gamescope-wl"?
+	var pid_blacklist := ["steam", "default ime"] # "gamescope-wl"?
 	for pid in _pid_to_windows.keys():
 		var pid_info := Reaper.get_pid_status(pid)
 		var pid_name := ""

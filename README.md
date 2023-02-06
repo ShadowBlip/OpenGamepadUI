@@ -39,6 +39,7 @@ The following are required to run Open Gamepad UI:
 - ryzenadj (optional)
 - mangoapp (optional)
 - wireplumber (optional)
+- firejail (optional)
 
 ## Usage
 
