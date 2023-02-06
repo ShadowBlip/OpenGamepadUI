@@ -210,6 +210,10 @@ Array InputDevice::get_events() {
       memcpy(&(event->ev), &ev, sizeof(ev));
       events.append(event);
     }
+    if (events.size() > 1000) {
+      godot::UtilityFunctions::push_warning("Large event processing loop: ",
+                                            events.size());
+    }
   } while (rc >= 0);
 
   return events;
