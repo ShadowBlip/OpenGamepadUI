@@ -31,7 +31,6 @@ var gamepad_info := {}  # {"/dev/input/event1": {"ABS_Y_MAX": 0, ...}}
 var virt_gamepad_map := {}  # {"/dev/input/event1": <VirtualInputDevice>}
 var phys_to_virt_map := {}  # {"/dev/input/event1": "/dev/input/event2"}
 var virt_to_phys_map := {}  # {"/dev/input/event2": "/dev/input/event1"}
-var virt_device_map := {}  # {"/dev/input/event2": <InputDevice>}
 
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
@@ -68,23 +67,12 @@ func _ready() -> void:
 		var virt_gamepad := device.duplicate()
 		var devnode := virt_gamepad.get_devnode()
 
-		# Wait for the virtual device to get created
-		OS.delay_msec(300)
-
-		# Create an input device for the virtual gamepad to read
-		# force feedback events from it.
-		var virt_device := InputDevice.new()
-		if virt_device.open(devnode) != OK:
-			logger.warn("Unable to open virtual gamepad: " + devnode)
-			continue
-
 		# Map the device, its info, and its child virtual device
 		gamepad_map[path] = device
 		gamepad_info[path] = info
 		phys_to_virt_map[path] = devnode
 		virt_to_phys_map[devnode] = path
 		virt_gamepad_map[path] = virt_gamepad
-		virt_device_map[devnode] = virt_device
 		device.grab(true)
 		logger.debug("Discovered gamepad at: " + path)
 		logger.debug("  Gamepad properties: " + str(info))
@@ -130,16 +118,11 @@ func _process_input() -> void:
 		for event in events:
 			_process_event(path, virt_gamepad, event, mode)
 
-	# Process virtual gamepad -> gamepad input
-	for path in virt_device_map.keys():
-		var phys_path := virt_to_phys_map[path] as String
-		var virt_gamepad := virt_device_map[path] as InputDevice
-		var gamepad := gamepad_map[phys_path] as InputDevice
-		if not virt_gamepad.is_open():
-			continue
-		var events := virt_gamepad.get_events()
-		for event in events:
-			_process_virtual_event(path, gamepad, event, mode)
+		# Handle events written to the virtual gamepad (e.g. rumble events)
+		var virt_events := virt_gamepad.get_events()
+		var devnode := virt_gamepad.get_devnode()
+		for event in virt_events:
+			_process_virtual_event(path, gamepad, virt_gamepad, event)
 
 
 # Processes a single input event
@@ -205,11 +188,15 @@ func _process_event(
 
 # Processes a single virtual input event
 func _process_virtual_event(
-	_path: String, _dev: InputDevice, event: InputDeviceEvent, _mode: INTERCEPT_MODE
+	_path: String,
+	_dev: InputDevice,
+	vdev: VirtualInputDevice,
+	event: InputDeviceEvent,
 ) -> void:
-	if event.get_code() == event.EV_SYN:
+	if event.get_type() != event.EV_UINPUT:
 		return
-	print("Got event: ", event.get_type_name(), " ", event.get_code_name(), " ", event.get_value())
+	if event.get_code() == event.UI_FF_UPLOAD:
+		vdev.begin_upload(event.value)
 
 
 func discover_gamepads() -> PackedStringArray:

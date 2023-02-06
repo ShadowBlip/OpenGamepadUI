@@ -29,6 +29,7 @@ public:
 
   // Methods
   int write_event(int type, int code, int value);
+  void begin_upload(int value);
   godot::Array get_events();
   bool is_open();
   int close();

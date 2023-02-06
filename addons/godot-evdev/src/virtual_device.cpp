@@ -10,6 +10,7 @@
 #include <linux/input.h>
 #include <linux/uinput.h>
 #include <stdio.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include "godot_cpp/classes/global_constants.hpp"
@@ -75,6 +76,32 @@ Array VirtualInputDevice::get_events() {
   return events;
 }
 
+// Begin upload of a force feedback effect
+void VirtualInputDevice::begin_upload(int value) {
+  // 2. Allocate a uinput_ff_upload struct, fill in request_id with
+  //    the 'value' from the EV_UINPUT event.
+  struct uinput_ff_upload upload;
+  upload.request_id = value;
+
+  //   3. Issue a UI_BEGIN_FF_UPLOAD ioctl, giving it the
+  //      uinput_ff_upload struct. It will be filled in with the
+  //      ff_effects passed to upload_effect().
+  int code = ioctl(uifd, UI_BEGIN_FF_UPLOAD, &upload);
+  if (code != 0) {
+    return;
+  }
+
+  //   4. Perform the effect upload, and place a return code back into
+  //      the uinput_ff_upload struct.
+  // TODO: Actually upload this somewhere...?
+  upload.retval = 0;
+
+  //   5. Issue a UI_END_FF_UPLOAD ioctl, also giving it the
+  //      uinput_ff_upload_effect struct. This will complete execution
+  //      of our upload_effect() handler.
+  ioctl(uifd, UI_END_FF_UPLOAD, &upload);
+}
+
 String VirtualInputDevice::get_syspath() {
   if (!is_open()) {
     return String();
@@ -97,6 +124,8 @@ void VirtualInputDevice::_bind_methods() {
   godot::ClassDB::bind_method(D_METHOD("close"), &VirtualInputDevice::close);
   godot::ClassDB::bind_method(D_METHOD("get_events"),
                               &VirtualInputDevice::get_events);
+  godot::ClassDB::bind_method(D_METHOD("begin_upload"),
+                              &VirtualInputDevice::begin_upload);
   godot::ClassDB::bind_method(D_METHOD("is_open"),
                               &VirtualInputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("write_event", "event"),
