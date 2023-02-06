@@ -102,6 +102,30 @@ void VirtualInputDevice::begin_upload(int value) {
   ioctl(uifd, UI_END_FF_UPLOAD, &upload);
 }
 
+void VirtualInputDevice::begin_erase(int value) {
+  //   1. Wait for an event with type == EV_UINPUT and code == UI_FF_ERASE.
+  //      A request ID will be given in 'value'.
+  //   2. Allocate a uinput_ff_erase struct, fill in request_id with
+  //      the 'value' from the EV_UINPUT event.
+  struct uinput_ff_erase erase;
+  erase.request_id = value;
+  //   3. Issue a UI_BEGIN_FF_ERASE ioctl, giving it the
+  //      uinput_ff_erase struct. It will be filled in with the
+  //      effect ID passed to erase_effect().
+  int code = ioctl(uifd, UI_BEGIN_FF_ERASE, &erase);
+  if (code != 0) {
+    return;
+  }
+  //   4. Perform the effect erasure, and place a return code back
+  //      into the uinput_ff_erase struct.
+  // TODO: Actually erase from a device?
+  erase.retval = 0;
+  //   5. Issue a UI_END_FF_ERASE ioctl, also giving it the
+  //      uinput_ff_erase_effect struct. This will complete execution
+  //      of our erase_effect() handler.
+  ioctl(uifd, UI_END_FF_ERASE, &erase);
+}
+
 String VirtualInputDevice::get_syspath() {
   if (!is_open()) {
     return String();
@@ -124,8 +148,10 @@ void VirtualInputDevice::_bind_methods() {
   godot::ClassDB::bind_method(D_METHOD("close"), &VirtualInputDevice::close);
   godot::ClassDB::bind_method(D_METHOD("get_events"),
                               &VirtualInputDevice::get_events);
-  godot::ClassDB::bind_method(D_METHOD("begin_upload"),
+  godot::ClassDB::bind_method(D_METHOD("begin_upload", "value"),
                               &VirtualInputDevice::begin_upload);
+  godot::ClassDB::bind_method(D_METHOD("begin_erase", "value"),
+                              &VirtualInputDevice::begin_erase);
   godot::ClassDB::bind_method(D_METHOD("is_open"),
                               &VirtualInputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("write_event", "event"),

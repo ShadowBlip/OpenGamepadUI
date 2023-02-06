@@ -197,6 +197,10 @@ func _process_virtual_event(
 		return
 	if event.get_code() == event.UI_FF_UPLOAD:
 		vdev.begin_upload(event.value)
+		return
+	if event.get_code() == event.UI_FF_ERASE:
+		vdev.begin_erase(event.value)
+		return
 
 
 func discover_gamepads() -> PackedStringArray:
