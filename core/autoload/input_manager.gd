@@ -203,8 +203,7 @@ func _process_virtual_event(
 ) -> void:
 	if event.get_type() == event.EV_FF:
 		# Write any force feedback events to the physical gamepad
-		var rc := dev.write_event(event.get_type(), event.get_code(), event.get_value())
-		logger.debug("Return value for writing EV_FF: " + str(rc))
+		dev.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 
 	if event.get_type() != event.EV_UINPUT:
@@ -222,12 +221,10 @@ func _process_virtual_event(
 		var effect = upload.get_effect()
 		if not effect.effect_id in ff_effects:
 			effect.effect_id = -1  # set to -1 for kernel to allocate a new id
-		var retval = dev.upload_effect(effect)
+		dev.upload_effect(effect)
 		upload.retval = 0
 
 		ff_effects[effect.effect_id] = true
-		print("GOT A NEW EFFECT ID: ", effect.effect_id)
-		print("GOT RETVAL: " + str(retval))
 
 		vdev.end_upload(upload)
 		return
