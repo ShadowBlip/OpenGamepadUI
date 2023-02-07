@@ -25,6 +25,7 @@ signal item_selected(index: int)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	focus_entered.connect(grab_focus)
 	label.text = title
 	description_label.text = description
 

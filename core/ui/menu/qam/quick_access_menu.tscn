@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=23 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="7_oxxrp"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="8_c20ym"]
 [ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/qam_notifications.tres" id="8_ktmf6"]
-[ext_resource type="PackedScene" uid="uid://cgtqpgne2s116" path="res://plugins/handypt/core/powertools_menu.tscn" id="9_aug1r"]
+[ext_resource type="PackedScene" uid="uid://cgtqpgne2s116" path="res://core/ui/menu/qam/powertools_menu.tscn" id="9_aug1r"]
 [ext_resource type="Texture2D" uid="uid://btq2ih8opi8i7" path="res://assets/ui/icons/performance-fill.svg" id="9_ric4q"]
 [ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/qam_quick_settings.tres" id="9_uygax"]
 [ext_resource type="Resource" uid="uid://b2ruoxboq5k6e" path="res://assets/state/states/qam_powertools.tres" id="10_4ijxt"]
@@ -20,7 +20,8 @@
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_3dgt5"]
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
 [ext_resource type="PackedScene" uid="uid://lr8i2omwm82b" path="res://core/ui/menu/qam/performance_menu.tscn" id="13_gsdkm"]
-[ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://plugins/handypt/assets/powertools_icon.svg" id="15_77afh"]
+[ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://assets/ui/icons/powertools_icon.svg" id="15_77afh"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="22_t3o17"]
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 custom_minimum_size = Vector2(350, 0)
@@ -123,6 +124,8 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 theme_override_constants/separation = 10
+
+[node name="FocusManager" parent="MarginContainer/HBoxContainer/IconBar" instance=ExtResource("22_t3o17")]
 
 [node name="Notifications" type="Button" parent="MarginContainer/HBoxContainer/IconBar"]
 custom_minimum_size = Vector2(50, 50)
