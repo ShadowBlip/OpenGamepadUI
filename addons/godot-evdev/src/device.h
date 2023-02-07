@@ -48,6 +48,7 @@ public:
   int get_version();
   godot::String get_phys();
   godot::Array get_events();
+  int write_event(int type, int code, int value);
   int enable_event_type(unsigned int event_type);
   bool has_event_type(unsigned int event_type);
   bool has_event_code(unsigned int event_type, unsigned int event_code);

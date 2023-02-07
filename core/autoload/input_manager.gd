@@ -108,8 +108,8 @@ func _start_process_input():
 # Processes all raw gamepad input
 func _process_input() -> void:
 	var mode := input_intercept
-	# Process gamepad -> virtual gamepad input
 	for path in gamepad_map.keys():
+		# Process gamepad -> virtual gamepad input
 		var gamepad := gamepad_map[path] as InputDevice
 		var virt_gamepad := virt_gamepad_map[path] as VirtualInputDevice
 		if not gamepad.is_open():
@@ -120,9 +120,8 @@ func _process_input() -> void:
 
 		# Handle events written to the virtual gamepad (e.g. rumble events)
 		var virt_events := virt_gamepad.get_events()
-		var devnode := virt_gamepad.get_devnode()
 		for event in virt_events:
-			_process_virtual_event(path, gamepad, virt_gamepad, event)
+			_process_virtual_event(gamepad, virt_gamepad, event)
 
 
 # Processes a single input event
@@ -186,20 +185,39 @@ func _process_event(
 				_send_joy_input(JOY_AXIS_LEFT_X, -value)
 
 
-# Processes a single virtual input event
+# Sometimes games will send gamepad events to the controller, such as when to
+# rumble the controller. This method handles those by capturing those events
+# and forwarding them to the physical controller.
 func _process_virtual_event(
-	_path: String,
-	_dev: InputDevice,
-	vdev: VirtualInputDevice,
-	event: InputDeviceEvent,
+	_dev: InputDevice, vdev: VirtualInputDevice, event: InputDeviceEvent
 ) -> void:
+	if event.get_type() == event.EV_FF:
+		logger.info("Got EV_FF on the virtual device!")
 	if event.get_type() != event.EV_UINPUT:
 		return
 	if event.get_code() == event.UI_FF_UPLOAD:
-		vdev.begin_upload(event.value)
+		logger.debug("Got UI_FF_UPLOAD for: " + vdev.get_devnode())
+		# NOTE: Don't use a type hint here:
+		# https://github.com/godotengine/godot-cpp/issues/1020
+		var upload = vdev.begin_upload(event.value)
+		if not upload:
+			logger.error("Unable to handle FF_UPLOAD event!")
+			vdev.blackhole_upload(event.value)
+			return
+		upload.retval = 0
+		vdev.end_upload(upload)
 		return
 	if event.get_code() == event.UI_FF_ERASE:
-		vdev.begin_erase(event.value)
+		logger.debug("Got UI_FF_ERASE for: " + vdev.get_devnode())
+		# NOTE: Don't use a type hint here:
+		# https://github.com/godotengine/godot-cpp/issues/1020
+		var erase = vdev.begin_erase(event.value)
+		if not erase:
+			logger.error("Unable to handle FF_ERASE event!")
+			vdev.blackhole_erase(event.value)
+			return
+		erase.retval = 0
+		vdev.end_erase(erase)
 		return
 
 

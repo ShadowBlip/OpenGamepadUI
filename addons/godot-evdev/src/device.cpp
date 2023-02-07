@@ -214,9 +214,6 @@ Array InputDevice::get_events() {
       memcpy(&(event->ev), &ev, sizeof(ev));
       events.append(event);
     }
-    if (ev.type == EV_UINPUT) {
-      godot::UtilityFunctions::push_warning("GOT UINPUT EVENT!!");
-    }
     if (events.size() > 1000) {
       godot::UtilityFunctions::push_warning("Large event processing loop: ",
                                             events.size());
@@ -224,6 +221,24 @@ Array InputDevice::get_events() {
   } while (rc >= 0);
 
   return events;
+}
+
+// Write the given event to the device
+int InputDevice::write_event(int type, int code, int value) {
+  if (!is_open()) {
+    return -1;
+  }
+  struct input_event ev;
+  struct timeval tval;
+  memset(&ev, 0, sizeof(ev));
+  gettimeofday(&tval, 0);
+  ev.input_event_usec = tval.tv_usec;
+  ev.input_event_sec = tval.tv_sec;
+  ev.type = type;
+  ev.code = code;
+  ev.value = value;
+
+  return ::write(fd, &ev, sizeof(ev));
 }
 
 // Returns whether the device is currently open
@@ -250,11 +265,6 @@ int InputDevice::get_abs_flat(unsigned int event_code) {
 int InputDevice::get_abs_resolution(unsigned int event_code) {
   return libevdev_get_abs_resolution(dev, event_code);
 };
-
-// int InputDevice::upload_effect() {
-//   int ioctl(int file_descriptor, int request, struct ff_effect *effect);
-//   return 0;
-// }
 
 // Register the methods with Godot
 void InputDevice::_bind_methods() {
@@ -284,6 +294,8 @@ void InputDevice::_bind_methods() {
       D_METHOD("has_event_code", "event_type", "event_code"),
       &InputDevice::has_event_code);
   godot::ClassDB::bind_method(D_METHOD("get_events"), &InputDevice::get_events);
+  godot::ClassDB::bind_method(D_METHOD("write_event", "type", "code", "value"),
+                              &InputDevice::write_event);
   godot::ClassDB::bind_method(D_METHOD("is_open"), &InputDevice::is_open);
   godot::ClassDB::bind_method(D_METHOD("is_grabbed"), &InputDevice::is_grabbed);
   godot::ClassDB::bind_method(D_METHOD("get_abs_min"),

@@ -16,6 +16,9 @@ void initialize_evdev_module(godot::ModuleInitializationLevel p_level) {
   godot::ClassDB::register_class<evdev::InputDeviceEvent>();
   godot::ClassDB::register_class<evdev::VirtualInputDevice>();
   godot::ClassDB::register_class<evdev::InputDevice>();
+  godot::ClassDB::register_class<evdev::ForceFeedbackEffect>();
+  godot::ClassDB::register_class<evdev::ForceFeedbackUpload>();
+  godot::ClassDB::register_class<evdev::ForceFeedbackErase>();
 }
 
 void uninitialize_evdev_module(godot::ModuleInitializationLevel p_level) {
