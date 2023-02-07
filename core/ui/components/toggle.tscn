@@ -10,6 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+focus_mode = 2
 script = ExtResource("1_pn5mg")
 button_pressed = true
 
@@ -21,10 +22,4 @@ label_settings = ExtResource("2_msehc")
 
 [node name="CheckButton" type="CheckButton" parent="."]
 layout_mode = 2
-focus_neighbor_left = NodePath("..")
-focus_neighbor_top = NodePath("..")
-focus_neighbor_right = NodePath("..")
-focus_neighbor_bottom = NodePath("..")
-focus_next = NodePath("..")
-focus_previous = NodePath("..")
 button_pressed = true
