@@ -26,10 +26,12 @@ var input_exited_mut := Mutex.new()
 var input_intercept := INTERCEPT_MODE.NONE
 var input_intercept_mut := Mutex.new()
 var input_thread := Thread.new()
-var gamepad_map := {}
-var gamepad_info := {}
-var virt_gamepad_map := {}
-var phys_to_virt_map := {}
+var gamepad_map := {}  # {"/dev/input/event1": <InputDevice>}
+var gamepad_info := {}  # {"/dev/input/event1": {"ABS_Y_MAX": 0, ...}}
+var virt_gamepad_map := {}  # {"/dev/input/event1": <VirtualInputDevice>}
+var phys_to_virt_map := {}  # {"/dev/input/event1": "/dev/input/event2"}
+var virt_to_phys_map := {}  # {"/dev/input/event2": "/dev/input/event1"}
+var ff_effects := {}  # Current force feedback effect ids
 
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
@@ -70,14 +72,21 @@ func _ready() -> void:
 		gamepad_map[path] = device
 		gamepad_info[path] = info
 		phys_to_virt_map[path] = devnode
+		virt_to_phys_map[devnode] = path
 		virt_gamepad_map[path] = virt_gamepad
 		device.grab(true)
 		logger.debug("Discovered gamepad at: " + path)
 		logger.debug("  Gamepad properties: " + str(info))
+		logger.debug("Created virtual gamepad at: " + devnode)
 
 	# Create a thread to process gamepad inputs separately
 	logger.debug("Starting gamepad input thread")
 	input_thread.start(_start_process_input)
+
+
+# Returns a list of gamepad devices that are being exclusively managed.
+func get_managed_gamepads() -> Array:
+	return gamepad_map.keys()
 
 
 # Sets the gamepad intercept mode
@@ -101,6 +110,7 @@ func _start_process_input():
 func _process_input() -> void:
 	var mode := input_intercept
 	for path in gamepad_map.keys():
+		# Process gamepad -> virtual gamepad input
 		var gamepad := gamepad_map[path] as InputDevice
 		var virt_gamepad := virt_gamepad_map[path] as VirtualInputDevice
 		if not gamepad.is_open():
@@ -109,17 +119,31 @@ func _process_input() -> void:
 		for event in events:
 			_process_event(path, virt_gamepad, event, mode)
 
+		# Handle events written to the virtual gamepad (e.g. rumble events)
+		var virt_events := virt_gamepad.get_events()
+		for event in virt_events:
+			_process_virtual_event(gamepad, virt_gamepad, event)
+
 
 # Processes a single input event
 func _process_event(
-	path: String, dev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE
+	path: String, vdev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE
 ) -> void:
+	# Always skip passing FF events to the virtual gamepad
+	if event.get_type() == event.EV_FF:
+		return
+
+	# Intercept mode NONE will pass all input to the virtual gamepad
 	if mode == INTERCEPT_MODE.NONE:
-		dev.write_event(event.get_type(), event.get_code(), event.get_value())
+		vdev.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
+	# Intercept mode PASS will pass all input to the virtual gamepad except
+	# for guide button presses.
 	if mode == INTERCEPT_MODE.PASS:
-		dev.write_event(event.get_type(), event.get_code(), event.get_value())
+		vdev.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
+
+	# Intercept mode ALL will not send *any* input to the virtual gamepad
 	match event.get_code():
 		InputDeviceEvent.BTN_SOUTH:
 			_send_input("ogui_south", event.value == 1, 1)
@@ -169,6 +193,59 @@ func _process_event(
 				if value == 0:
 					return
 				_send_joy_input(JOY_AXIS_LEFT_X, -value)
+
+
+# Sometimes games will send gamepad events to the controller, such as when to
+# rumble the controller. This method handles those by capturing those events
+# and forwarding them to the physical controller.
+func _process_virtual_event(
+	dev: InputDevice, vdev: VirtualInputDevice, event: InputDeviceEvent
+) -> void:
+	if event.get_type() == event.EV_FF:
+		# Write any force feedback events to the physical gamepad
+		var rc := dev.write_event(event.get_type(), event.get_code(), event.get_value())
+		logger.debug("Return value for writing EV_FF: " + str(rc))
+		return
+
+	if event.get_type() != event.EV_UINPUT:
+		return
+
+	if event.get_code() == event.UI_FF_UPLOAD:
+		# NOTE: Don't use a type hint here:
+		# https://github.com/godotengine/godot-cpp/issues/1020
+		var upload = vdev.begin_upload(event.value)
+		if not upload:
+			logger.error("Unable to handle FF_UPLOAD event!")
+			return
+
+		# Upload the effect to the physical gamepad
+		var effect = upload.get_effect()
+		if not effect.effect_id in ff_effects:
+			effect.effect_id = -1  # set to -1 for kernel to allocate a new id
+		var retval = dev.upload_effect(effect)
+		upload.retval = 0
+
+		ff_effects[effect.effect_id] = true
+		print("GOT A NEW EFFECT ID: ", effect.effect_id)
+		print("GOT RETVAL: " + str(retval))
+
+		vdev.end_upload(upload)
+		return
+
+	if event.get_code() == event.UI_FF_ERASE:
+		# NOTE: Don't use a type hint here:
+		# https://github.com/godotengine/godot-cpp/issues/1020
+		var erase = vdev.begin_erase(event.value)
+		if not erase:
+			logger.error("Unable to handle FF_ERASE event!")
+			return
+
+		# Erase the effect from the physical controller
+		var effect_id := erase.get_effect_id()
+		erase.retval = dev.erase_effect(effect_id)
+
+		vdev.end_erase(erase)
+		return
 
 
 func discover_gamepads() -> PackedStringArray:

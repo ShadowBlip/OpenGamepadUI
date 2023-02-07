@@ -30,6 +30,7 @@ public:
   ~InputDevice();
 
   // Properties
+  int fd;
 
   // Methods
   int open(godot::String dev);
@@ -47,6 +48,10 @@ public:
   int get_version();
   godot::String get_phys();
   godot::Array get_events();
+  int write_event(int type, int code, int value);
+  int upload_effect(ForceFeedbackEffect *effect);
+  int erase_effect(int effect_id);
+  int enable_event_type(unsigned int event_type);
   bool has_event_type(unsigned int event_type);
   bool has_event_code(unsigned int event_type, unsigned int event_code);
   int get_abs_min(unsigned int event_code);

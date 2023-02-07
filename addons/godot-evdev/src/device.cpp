@@ -7,7 +7,9 @@
 #include <libevdev/libevdev-uinput.h>
 #include <libevdev/libevdev.h>
 #include <linux/input.h>
+#include <linux/uinput.h>
 #include <stdio.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include "godot_cpp/classes/global_constants.hpp"
@@ -23,6 +25,7 @@
 
 namespace evdev {
 using godot::Array;
+using godot::ClassDB;
 using godot::D_METHOD;
 using godot::ERR_CANT_OPEN;
 using godot::ERR_DOES_NOT_EXIST;
@@ -37,9 +40,10 @@ InputDevice::~InputDevice() {
 // Opens the given device
 int InputDevice::open(String device) {
   // Certain operations are only possible when opened in read-write mode
-  int fd;
   fd = ::open(device.ascii().get_data(), O_RDWR | O_NONBLOCK);
   if (fd < 0) {
+    godot::UtilityFunctions::push_warning("Unable to open input device as RW: ",
+                                          device);
     fd = ::open(device.ascii().get_data(), O_RDONLY | O_NONBLOCK);
     if (fd < 0) {
       godot::UtilityFunctions::push_error("Unable to open input device: ",
@@ -60,7 +64,6 @@ int InputDevice::open(String device) {
 
 // Close the device
 int InputDevice::close() {
-  int fd = get_fd();
   int code = 0;
   if (fd > 0) {
     code = ::close(fd);
@@ -79,7 +82,7 @@ VirtualInputDevice *InputDevice::duplicate() {
 
   // Open uinput
   struct libevdev_uinput *uidev;
-  int uifd = ::open("/dev/uinput", O_RDWR);
+  int uifd = ::open("/dev/uinput", O_RDWR | O_NONBLOCK);
   if (uifd < 0) {
     return nullptr;
   }
@@ -175,6 +178,10 @@ String InputDevice::get_phys() {
   return String(phys);
 }
 
+int InputDevice::enable_event_type(unsigned int event_type) {
+  return libevdev_enable_event_type(dev, event_type);
+}
+
 bool InputDevice::has_event_type(unsigned int event_type) {
   if (!is_open()) {
     return false;
@@ -210,9 +217,41 @@ Array InputDevice::get_events() {
       memcpy(&(event->ev), &ev, sizeof(ev));
       events.append(event);
     }
+    if (events.size() > 1000) {
+      godot::UtilityFunctions::push_warning("Large event processing loop: ",
+                                            events.size());
+    }
   } while (rc >= 0);
 
   return events;
+}
+
+// Write the given event to the device
+int InputDevice::write_event(int type, int code, int value) {
+  if (!is_open()) {
+    return -1;
+  }
+  struct input_event ev;
+  struct timeval tval;
+  memset(&ev, 0, sizeof(ev));
+  gettimeofday(&tval, 0);
+  ev.input_event_usec = tval.tv_usec;
+  ev.input_event_sec = tval.tv_sec;
+  ev.type = type;
+  ev.code = code;
+  ev.value = value;
+
+  return ::write(fd, &ev, sizeof(ev));
+}
+
+// Uploads the given force feedback effect to the device
+int InputDevice::upload_effect(ForceFeedbackEffect *effect) {
+  return ioctl(fd, EVIOCSFF, &(effect->effect));
+}
+
+// Erases the effect with the given id from the device
+int InputDevice::erase_effect(int effect_id) {
+  return ioctl(fd, EVIOCRMFF, effect_id);
 }
 
 // Returns whether the device is currently open
@@ -245,39 +284,39 @@ void InputDevice::_bind_methods() {
   // Properties
 
   // Methods
-  godot::ClassDB::bind_method(D_METHOD("open", "dev"), &InputDevice::open);
-  godot::ClassDB::bind_method(D_METHOD("close"), &InputDevice::close);
-  godot::ClassDB::bind_method(D_METHOD("duplicate"), &InputDevice::duplicate);
-  godot::ClassDB::bind_method(D_METHOD("grab", "mode"), &InputDevice::grab);
-  godot::ClassDB::bind_method(D_METHOD("get_fd"), &InputDevice::get_fd);
-  godot::ClassDB::bind_method(D_METHOD("get_path"), &InputDevice::get_path);
-  godot::ClassDB::bind_method(D_METHOD("get_name"), &InputDevice::get_name);
-  godot::ClassDB::bind_method(D_METHOD("get_bustype"),
-                              &InputDevice::get_bustype);
-  godot::ClassDB::bind_method(D_METHOD("get_vendor"), &InputDevice::get_vendor);
-  godot::ClassDB::bind_method(D_METHOD("get_product"),
-                              &InputDevice::get_product);
-  godot::ClassDB::bind_method(D_METHOD("get_version"),
-                              &InputDevice::get_version);
-  godot::ClassDB::bind_method(D_METHOD("get_phys"), &InputDevice::get_phys);
-  godot::ClassDB::bind_method(D_METHOD("has_event_type", "event_type"),
-                              &InputDevice::has_event_type);
-  godot::ClassDB::bind_method(
-      D_METHOD("has_event_code", "event_type", "event_code"),
-      &InputDevice::has_event_code);
-  godot::ClassDB::bind_method(D_METHOD("get_events"), &InputDevice::get_events);
-  godot::ClassDB::bind_method(D_METHOD("is_open"), &InputDevice::is_open);
-  godot::ClassDB::bind_method(D_METHOD("is_grabbed"), &InputDevice::is_grabbed);
-  godot::ClassDB::bind_method(D_METHOD("get_abs_min"),
-                              &InputDevice::get_abs_min);
-  godot::ClassDB::bind_method(D_METHOD("get_abs_max"),
-                              &InputDevice::get_abs_max);
-  godot::ClassDB::bind_method(D_METHOD("get_abs_fuzz"),
-                              &InputDevice::get_abs_fuzz);
-  godot::ClassDB::bind_method(D_METHOD("get_abs_flat"),
-                              &InputDevice::get_abs_flat);
-  godot::ClassDB::bind_method(D_METHOD("get_abs_resolution"),
-                              &InputDevice::get_abs_resolution);
+  ClassDB::bind_method(D_METHOD("open", "dev"), &InputDevice::open);
+  ClassDB::bind_method(D_METHOD("close"), &InputDevice::close);
+  ClassDB::bind_method(D_METHOD("duplicate"), &InputDevice::duplicate);
+  ClassDB::bind_method(D_METHOD("grab", "mode"), &InputDevice::grab);
+  ClassDB::bind_method(D_METHOD("get_fd"), &InputDevice::get_fd);
+  ClassDB::bind_method(D_METHOD("get_path"), &InputDevice::get_path);
+  ClassDB::bind_method(D_METHOD("get_name"), &InputDevice::get_name);
+  ClassDB::bind_method(D_METHOD("get_bustype"), &InputDevice::get_bustype);
+  ClassDB::bind_method(D_METHOD("get_vendor"), &InputDevice::get_vendor);
+  ClassDB::bind_method(D_METHOD("get_product"), &InputDevice::get_product);
+  ClassDB::bind_method(D_METHOD("get_version"), &InputDevice::get_version);
+  ClassDB::bind_method(D_METHOD("get_phys"), &InputDevice::get_phys);
+  ClassDB::bind_method(D_METHOD("enable_event_type", "event_type"),
+                       &InputDevice::enable_event_type);
+  ClassDB::bind_method(D_METHOD("has_event_type", "event_type"),
+                       &InputDevice::has_event_type);
+  ClassDB::bind_method(D_METHOD("has_event_code", "event_type", "event_code"),
+                       &InputDevice::has_event_code);
+  ClassDB::bind_method(D_METHOD("get_events"), &InputDevice::get_events);
+  ClassDB::bind_method(D_METHOD("write_event", "type", "code", "value"),
+                       &InputDevice::write_event);
+  ClassDB::bind_method(D_METHOD("upload_effect", "effect"),
+                       &InputDevice::upload_effect);
+  ClassDB::bind_method(D_METHOD("erase_effect", "effect_id"),
+                       &InputDevice::erase_effect);
+  ClassDB::bind_method(D_METHOD("is_open"), &InputDevice::is_open);
+  ClassDB::bind_method(D_METHOD("is_grabbed"), &InputDevice::is_grabbed);
+  ClassDB::bind_method(D_METHOD("get_abs_min"), &InputDevice::get_abs_min);
+  ClassDB::bind_method(D_METHOD("get_abs_max"), &InputDevice::get_abs_max);
+  ClassDB::bind_method(D_METHOD("get_abs_fuzz"), &InputDevice::get_abs_fuzz);
+  ClassDB::bind_method(D_METHOD("get_abs_flat"), &InputDevice::get_abs_flat);
+  ClassDB::bind_method(D_METHOD("get_abs_resolution"),
+                       &InputDevice::get_abs_resolution);
 
   // Static methods
 

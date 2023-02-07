@@ -2,6 +2,7 @@
 #define VIRTUAL_INPUT_DEVICE_CLASS_H
 
 #include "event.h"
+#include "ff.h"
 #include "godot_cpp/variant/string.hpp"
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/core/binder_common.hpp>
@@ -29,6 +30,13 @@ public:
 
   // Methods
   int write_event(int type, int code, int value);
+  int blackhole_upload(int value);
+  int blackhole_erase(int value);
+  ForceFeedbackUpload *begin_upload(int value);
+  int end_upload(ForceFeedbackUpload *upload);
+  ForceFeedbackErase *begin_erase(int value);
+  int end_erase(ForceFeedbackErase *erase);
+  godot::Array get_events();
   bool is_open();
   int close();
   godot::String get_syspath();
