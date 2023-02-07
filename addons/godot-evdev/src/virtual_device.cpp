@@ -96,8 +96,7 @@ ForceFeedbackUpload *VirtualInputDevice::begin_upload(int value) {
 
 // Finished the upload of the given FF event. The return code must be set.
 int VirtualInputDevice::end_upload(ForceFeedbackUpload *upload) {
-  struct uinput_ff_upload upl = upload->upload;
-  return ioctl(uifd, UI_END_FF_UPLOAD, &upl);
+  return ioctl(uifd, UI_END_FF_UPLOAD, &(upload->upload));
 }
 
 // Starts the FF erase operation on the given device

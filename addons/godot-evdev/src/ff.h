@@ -26,6 +26,8 @@ public:
   struct ff_effect effect;
 
   // Methods
+  int get_effect_id();
+  void set_effect_id(int id);
 
   // Static functions
 };
