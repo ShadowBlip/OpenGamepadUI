@@ -71,7 +71,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.0470588)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.27451)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8ibrx"]
@@ -94,10 +94,10 @@ script = ExtResource("2_ixi86")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("3_mch0x")]
 state = ExtResource("4_6hnsl")
-visible_during = [ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw"), ExtResource("8_1ovif"), ExtResource("9_adbqg")]
+visible_during = Array[Resource]([ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw"), ExtResource("8_1ovif"), ExtResource("9_adbqg")])
 
 [node name="BackInputHandler" parent="." instance=ExtResource("10_ogy5n")]
-process_input_during = [ExtResource("4_6hnsl")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_6hnsl")])
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
