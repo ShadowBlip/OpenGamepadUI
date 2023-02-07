@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cu2w013yn7cic"]
+[gd_scene load_steps=5 format=3 uid="uid://cu2w013yn7cic"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_settings_menu.gd" id="1_gwnsx"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_6j2qt"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="3_2eg06"]
 
@@ -23,6 +24,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_6j2qt")]
 
 [node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true

@@ -16,7 +16,7 @@ var notifications_menu: HFlowContainer = $MarginContainer/HBoxContainer/Viewport
 @onready var power_tools_menu: Control = $MarginContainer/HBoxContainer/Viewport/PowerToolsMenu
 @onready var quick_settings_menu: Control = $MarginContainer/HBoxContainer/Viewport/QuickSettingsMenu
 @onready var performance_menu: Control = $MarginContainer/HBoxContainer/Viewport/PerformanceMenu
-@onready var last_icon: Control = icon_bar.get_child(0)
+@onready var last_icon: Node = icon_bar.get_child(1)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -76,11 +76,7 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = nu
 	qam_item.visible = false
 	qam.viewport.add_child(qam_item)
 
-	# Get existing children so we can manage focus
-	var qam_children := qam.icon_bar.get_child_count()
-	if qam_children > 0:
-		first_qam_item = qam.icon_bar.get_child(0)
-		last_qam_item = qam.icon_bar.get_child(qam_children - 1)
+	
 
 	## Plugin menu button
 	var plugin_button := OGUIButton.instantiate()

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://d33h6fl4a0h5g"]
+[gd_scene load_steps=5 format=3 uid="uid://d33h6fl4a0h5g"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/notifications_menu.gd" id="1_iomxi"]
 [ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_ak5ln"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_n42yi"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
 line_spacing = 0.0
@@ -14,6 +15,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_iomxi")
 focus_node = NodePath("NotificationContainer")
+
+[node name="FocusManager" parent="." instance=ExtResource("2_n42yi")]
 
 [node name="NotificationContainer" parent="." instance=ExtResource("2_ak5ln")]
 custom_minimum_size = Vector2(200, 0)

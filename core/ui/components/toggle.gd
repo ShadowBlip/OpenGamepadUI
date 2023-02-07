@@ -33,16 +33,18 @@ signal toggled(pressed: bool)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	focus_entered.connect(grab_focus)
+	
 	label.text = text
 	check_button.button_pressed = button_pressed
 	check_button.disabled = disabled
-	check_button.focus_neighbor_bottom = "../" + str(focus_neighbor_bottom)
-	check_button.focus_neighbor_left = "../" + str(focus_neighbor_left)
-	check_button.focus_neighbor_right = "../" + str(focus_neighbor_right)
-	check_button.focus_neighbor_top = "../" + str(focus_neighbor_top)
-	check_button.focus_previous = "../" + str(focus_previous)
-	check_button.focus_next = "../" + str(focus_next)
-	
+	check_button.focus_neighbor_bottom = focus_neighbor_bottom
+	check_button.focus_neighbor_left = focus_neighbor_left
+	check_button.focus_neighbor_right = focus_neighbor_right
+	check_button.focus_neighbor_top = focus_neighbor_top
+	check_button.focus_previous = focus_previous
+	check_button.focus_next = focus_next
+
 	# Wire up the button signals
 	var on_button_down := func():
 		button_down.emit()

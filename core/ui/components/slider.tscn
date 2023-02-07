@@ -40,9 +40,3 @@ label_settings = ExtResource("3_q0iwk")
 [node name="HSlider" type="HSlider" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("..")
-focus_neighbor_top = NodePath("..")
-focus_neighbor_right = NodePath("..")
-focus_neighbor_bottom = NodePath("..")
-focus_next = NodePath("..")
-focus_previous = NodePath("..")
