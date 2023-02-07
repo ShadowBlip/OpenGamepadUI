@@ -1,13 +1,6 @@
 @icon("res://assets/icons/navigation.svg")
 extends Node
 
-# Intercept mode defines how we intercept gamepad events
-enum INTERCEPT_MODE {
-	NONE,
-	PASS,  # Pass all inputs to the virtual device
-	ALL,  # Intercept all inputs and send nothing to the virtual device
-}
-
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -22,16 +15,10 @@ var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
 var input_exited := false
-var input_exited_mut := Mutex.new()
-var input_intercept := INTERCEPT_MODE.NONE
-var input_intercept_mut := Mutex.new()
 var input_thread := Thread.new()
-var gamepad_map := {}  # {"/dev/input/event1": <InputDevice>}
-var gamepad_info := {}  # {"/dev/input/event1": {"ABS_Y_MAX": 0, ...}}
-var virt_gamepad_map := {}  # {"/dev/input/event1": <VirtualInputDevice>}
-var phys_to_virt_map := {}  # {"/dev/input/event1": "/dev/input/event2"}
-var virt_to_phys_map := {}  # {"/dev/input/event2": "/dev/input/event1"}
-var ff_effects := {}  # Current force feedback effect ids
+var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
+var virtual_gamepads := []  # ["/dev/input/event2"]
+var gamepad_mutex := Mutex.new()
 
 @onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
@@ -40,44 +27,11 @@ func _ready() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
+	Input.joy_connection_changed.connect(_on_gamepad_change)
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
-	var gamepads := discover_gamepads()
-	for path in gamepads:
-		# Skip any virtual devices we've already created.
-		if path in phys_to_virt_map:
-			logger.debug("Gamepad appears to be virtual: " + path)
-			continue
-
-		# Open the gamepad and create a virtual gamepad assoiated with it
-		logger.debug("Opening gamepad device: " + path)
-		var device := InputDevice.new()
-		if device.open(path) != OK:
-			logger.warn("Unable to open gamepad: " + path)
-			continue
-
-		# Query information about the device
-		var info := {}
-		info["ABS_Y_MAX"] = device.get_abs_max(InputDeviceEvent.ABS_Y)
-		info["ABS_Y_MIN"] = device.get_abs_min(InputDeviceEvent.ABS_Y)
-		info["ABS_X_MAX"] = device.get_abs_max(InputDeviceEvent.ABS_X)
-		info["ABS_X_MIN"] = device.get_abs_min(InputDeviceEvent.ABS_X)
-
-		# Create a virtual gamepad from this physical one
-		var virt_gamepad := device.duplicate()
-		var devnode := virt_gamepad.get_devnode()
-
-		# Map the device, its info, and its child virtual device
-		gamepad_map[path] = device
-		gamepad_info[path] = info
-		phys_to_virt_map[path] = devnode
-		virt_to_phys_map[devnode] = path
-		virt_gamepad_map[path] = virt_gamepad
-		device.grab(true)
-		logger.debug("Discovered gamepad at: " + path)
-		logger.debug("  Gamepad properties: " + str(info))
-		logger.debug("Created virtual gamepad at: " + devnode)
+	_on_gamepad_change(0, false)
 
 	# Create a thread to process gamepad inputs separately
 	logger.debug("Starting gamepad input thread")
@@ -86,184 +40,76 @@ func _ready() -> void:
 
 # Returns a list of gamepad devices that are being exclusively managed.
 func get_managed_gamepads() -> Array:
-	return gamepad_map.keys()
+	return managed_gamepads.keys()
 
 
 # Sets the gamepad intercept mode
-func _set_intercept(mode: INTERCEPT_MODE) -> void:
-	input_intercept_mut.lock()
-	input_intercept = mode
-	input_intercept_mut.unlock()
+func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
+	gamepad_mutex.lock()
+	for gamepad in managed_gamepads.values():
+		gamepad.mode = mode
+	gamepad_mutex.unlock()
 
 
-# Runs evdev input processing in its own thread
+# Runs evdev input processing in its own thread. We use mutexes to safely
+# access variables from the main thread
 func _start_process_input():
 	var exited := false
 	while not exited:
-		input_exited_mut.lock()
+		gamepad_mutex.lock()
 		exited = input_exited
-		input_exited_mut.unlock()
 		_process_input()
+		gamepad_mutex.unlock()
 
 
 # Processes all raw gamepad input
 func _process_input() -> void:
-	var mode := input_intercept
-	for path in gamepad_map.keys():
-		# Process gamepad -> virtual gamepad input
-		var gamepad := gamepad_map[path] as InputDevice
-		var virt_gamepad := virt_gamepad_map[path] as VirtualInputDevice
-		if not gamepad.is_open():
+	for gamepad in managed_gamepads.values():
+		gamepad.process_input()
+
+
+# Triggers whenever we detect any gamepad connect/disconnect events
+func _on_gamepad_change(_device: int, _connected: bool) -> void:
+	logger.info("Gamepad was changed")
+	# Lock the gamepad mappings so we can alter them.
+	gamepad_mutex.lock()
+
+	# Discover any new gamepads
+	var discovered_paths := discover_gamepads()
+
+	# Remove all gamepads that no longer exist
+	for gamepad in managed_gamepads.values():
+		if gamepad.phys_path in discovered_paths:
 			continue
-		var events := gamepad.get_events()
-		for event in events:
-			_process_event(path, virt_gamepad, event, mode)
+		logger.debug("Gamepad no longer exists: " + gamepad.phys_path)
+		gamepad.virt_device.close()
+		managed_gamepads.erase(gamepad.phys_path)
+		virtual_gamepads.erase(gamepad.virt_path)
 
-		# Handle events written to the virtual gamepad (e.g. rumble events)
-		var virt_events := virt_gamepad.get_events()
-		for event in virt_events:
-			_process_virtual_event(gamepad, virt_gamepad, event)
-
-
-# Processes a single input event
-func _process_event(
-	path: String, vdev: VirtualInputDevice, event: InputDeviceEvent, mode: INTERCEPT_MODE
-) -> void:
-	# Always skip passing FF events to the virtual gamepad
-	if event.get_type() == event.EV_FF:
-		return
-
-	# Intercept mode NONE will pass all input to the virtual gamepad
-	if mode == INTERCEPT_MODE.NONE:
-		vdev.write_event(event.get_type(), event.get_code(), event.get_value())
-		return
-	# Intercept mode PASS will pass all input to the virtual gamepad except
-	# for guide button presses.
-	if mode == INTERCEPT_MODE.PASS:
-		vdev.write_event(event.get_type(), event.get_code(), event.get_value())
-		return
-
-	# Intercept mode ALL will not send *any* input to the virtual gamepad
-	match event.get_code():
-		InputDeviceEvent.BTN_SOUTH:
-			_send_input("ogui_south", event.value == 1, 1)
-			_send_input("ui_accept", event.value == 1, 1)
-		InputDeviceEvent.BTN_NORTH:
-			_send_input("ogui_north", event.value == 1, 1)
-		InputDeviceEvent.BTN_WEST:
-			_send_input("ogui_west", event.value == 1, 1)
-			_send_input("ui_select", event.value == 1, 1)
-		InputDeviceEvent.BTN_EAST:
-			_send_input("ogui_east", event.value == 1, 1)
-		InputDeviceEvent.BTN_MODE:
-			_send_input("ogui_guide", event.value == 1, 1)
-		InputDeviceEvent.BTN_TRIGGER_HAPPY1:
-			_send_input("ui_left", event.value == 1, 1)
-		InputDeviceEvent.BTN_TRIGGER_HAPPY2:
-			_send_input("ui_right", event.value == 1, 1)
-		InputDeviceEvent.BTN_TRIGGER_HAPPY3:
-			_send_input("ui_up", event.value == 1, 1)
-		InputDeviceEvent.BTN_TRIGGER_HAPPY4:
-			_send_input("ui_down", event.value == 1, 1)
-		InputDeviceEvent.ABS_Y:
-			var info := gamepad_info[path] as Dictionary
-			if event.value > 0:
-				var maximum := info["ABS_Y_MAX"] as int
-				var value := event.value / float(maximum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_Y, value)
-			if event.value <= 0:
-				var minimum := info["ABS_Y_MIN"] as int
-				var value := event.value / float(minimum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_Y, -value)
-		InputDeviceEvent.ABS_X:
-			var info := gamepad_info[path] as Dictionary
-			if event.value > 0:
-				var maximum := info["ABS_X_MAX"] as int
-				var value := event.value / float(maximum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_X, value)
-			if event.value <= 0:
-				var minimum := info["ABS_X_MIN"] as int
-				var value := event.value / float(minimum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_X, -value)
-
-
-# Sometimes games will send gamepad events to the controller, such as when to
-# rumble the controller. This method handles those by capturing those events
-# and forwarding them to the physical controller.
-func _process_virtual_event(
-	dev: InputDevice, vdev: VirtualInputDevice, event: InputDeviceEvent
-) -> void:
-	if event.get_type() == event.EV_FF:
-		# Write any force feedback events to the physical gamepad
-		dev.write_event(event.get_type(), event.get_code(), event.get_value())
-		return
-
-	if event.get_type() != event.EV_UINPUT:
-		return
-
-	if event.get_code() == event.UI_FF_UPLOAD:
-		# NOTE: Don't use a type hint here:
-		# https://github.com/godotengine/godot-cpp/issues/1020
-		var upload = vdev.begin_upload(event.value)
-		if not upload:
-			logger.error("Unable to handle FF_UPLOAD event!")
-			return
-
-		# Upload the effect to the physical gamepad
-		var effect = upload.get_effect()
-		if not effect.effect_id in ff_effects:
-			effect.effect_id = -1  # set to -1 for kernel to allocate a new id
-		dev.upload_effect(effect)
-		upload.retval = 0
-
-		ff_effects[effect.effect_id] = true
-
-		vdev.end_upload(upload)
-		return
-
-	if event.get_code() == event.UI_FF_ERASE:
-		# NOTE: Don't use a type hint here:
-		# https://github.com/godotengine/godot-cpp/issues/1020
-		var erase = vdev.begin_erase(event.value)
-		if not erase:
-			logger.error("Unable to handle FF_ERASE event!")
-			return
-
-		# Erase the effect from the physical controller
-		var effect_id := erase.get_effect_id()
-		erase.retval = dev.erase_effect(effect_id)
-
-		vdev.end_erase(erase)
-		return
-
-
-func discover_gamepads() -> PackedStringArray:
-	var gamepads := PackedStringArray()
-	var input_path := "/dev/input"
-	var files := DirAccess.get_files_at(input_path)
-	for file in files:
-		var path := "/".join([input_path, file])
-		var dev := InputDevice.new()
-		if dev.open(path) != OK:
-			logger.debug("Unable to open event device: " + path)
+	# Add any newly found gamepads
+	for path in discovered_paths:
+		if path in managed_gamepads:
+			logger.debug("Gamepad is already being managed: " + path)
 			continue
-		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
-			gamepads.append(path)
-	return gamepads
+		if path in virtual_gamepads:
+			logger.debug("Gamepad appears to be virtual: " + path)
+			continue
+
+		var gamepad := ManagedGamepad.new()
+		if gamepad.open(path) != OK:
+			logger.warn("Unable to create managed gamepad for: " + path)
+			continue
+		managed_gamepads[path] = gamepad
+		virtual_gamepads.append(gamepad.virt_path)
+		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
+		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
+	gamepad_mutex.unlock()
 
 
 func _on_game_state_entered(_from: State) -> void:
 	set_focus(false)
 	logger.debug("Ungrabbing gamepad interception")
-	_set_intercept(INTERCEPT_MODE.PASS)
+	_set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
 
 
 func _on_game_state_exited(_to: State) -> void:
@@ -276,10 +122,10 @@ func _on_game_state_removed() -> void:
 	# If no game is running now, don't intercept gamepad inputs
 	if not state_machine.has_state(in_game_state):
 		logger.debug("Ungrabbing gamepad interception")
-		_set_intercept(INTERCEPT_MODE.PASS)
+		_set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
 		return
 	logger.debug("Grabbing gamepad interception")
-	_set_intercept(INTERCEPT_MODE.ALL)
+	_set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
 
 
 # Set focus will use Gamescope to focus OpenGamepadUI
@@ -292,6 +138,22 @@ func set_focus(focused: bool) -> void:
 		return
 	logger.debug("Un-focusing overlay")
 	Gamescope.set_input_focus(display, window_id, 0)
+
+
+# Returns an array of device paths
+func discover_gamepads() -> PackedStringArray:
+	var paths := PackedStringArray()
+	var input_path := "/dev/input"
+	var files := DirAccess.get_files_at(input_path)
+	for file in files:
+		var path := "/".join([input_path, file])
+		var dev := InputDevice.new()
+		if dev.open(path) != OK:
+			logger.debug("Unable to open event device: " + path)
+			continue
+		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
+			paths.append(path)
+	return paths
 
 
 # https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
@@ -431,7 +293,7 @@ func _send_joy_input(axis: int, value: float) -> void:
 
 
 func _exit_tree() -> void:
-	input_exited_mut.lock()
+	gamepad_mutex.lock()
 	input_exited = true
-	input_exited_mut.unlock()
+	gamepad_mutex.unlock()
 	input_thread.wait_to_finish()
