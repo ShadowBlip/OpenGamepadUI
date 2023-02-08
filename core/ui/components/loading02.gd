@@ -7,7 +7,20 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	animation_player.play("play")
+	if visible:
+		animation_player.play("play")
+	visibility_changed.connect(_on_visibility_changed)
+
+
+func _on_visibility_changed() -> void:
+	if not animation_player:
+		return
+	if visible:
+		set_process(true)
+		animation_player.play("play")
+		return
+	animation_player.stop()
+	set_process(false)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

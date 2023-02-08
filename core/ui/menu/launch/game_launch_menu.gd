@@ -12,7 +12,7 @@ var logger := Log.get_logger("GameLaunchMenu")
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready
 var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
-@onready var loading: Control = $ScrollContainer/VBoxContainer/GameBanner/CenterContainer/Loading01
+@onready var loading: Control = $ScrollContainer/VBoxContainer/GameBanner/CenterContainer/Loading02
 
 
 # Called when the node enters the scene tree for the first time.
