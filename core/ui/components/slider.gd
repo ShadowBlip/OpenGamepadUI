@@ -62,7 +62,7 @@ signal value_changed(value: float)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(grab_focus)
+	focus_entered.connect(_grab_focus)
 	label.text = text
 	label_value.text = str(slider.value)
 	slider.value_changed.connect(_on_value_changed)
@@ -96,5 +96,5 @@ func _on_value_changed(v: float) -> void:
 
 
 # Override focus grabbing to grab the slider
-func grab_focus() -> void:
+func _grab_focus() -> void:
 	slider.grab_focus()

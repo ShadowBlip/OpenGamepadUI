@@ -103,8 +103,7 @@ func _dict_to_string(d: Dictionary, key_delim: String = "=", delim: String = " "
 # Updates our settings when a user has possibly changed launch settings
 func _on_input_update(node: Control, subsection: String, update: UPDATE = UPDATE.STRING) -> void:
 	var key := ".".join([subsection, provider_id])
-	var setting := SettingsManager.get_value(settings_section, key)
-	print(node.text)
+	var setting = SettingsManager.get_value(settings_section, key)
 
 	# Delete the setting from the config if one is set and the user set
 	# the text to empty

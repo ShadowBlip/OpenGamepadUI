@@ -2,12 +2,15 @@ extends Library
 
 var home := OS.get_environment("HOME")
 var desktop_folders := (
-	SettingsManager
-	. get_value(
-		"library.desktop",
-		"folders",
-		["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
+	(
+		SettingsManager
+		. get_value(
+			"library.desktop",
+			"folders",
+			["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
+		)
 	)
+	as Array
 )
 
 

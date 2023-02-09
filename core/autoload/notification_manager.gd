@@ -7,7 +7,7 @@ signal notification_queued(notify: Notification)
 const Toast := preload("res://core/ui/components/toast.gd")
 
 # Keep around a history of notifications
-var _max_history := SettingsManager.get_value("general.notification", "max_history", 5)
+var _max_history := SettingsManager.get_value("general.notification", "max_history", 5) as int
 var _history := [] as Array[Notification]
 var _queue := [] as Array[Notification]
 var _toast: Toast
@@ -87,7 +87,7 @@ func _process_queue():
 		logger.debug("Queue is empty. Nothing to process.")
 		return
 	logger.debug("Processing notification queue")
-	var notify := _queue.pop_front()
+	var notify := _queue.pop_front() as Notification
 	
 	# Add the notification to our history
 	_history.push_back(notify)

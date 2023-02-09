@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_v2y4s"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_ygeel"]
 
-[node name="PowerTools" type="VBoxContainer" node_paths=PackedStringArray("focus_node")]
+[node name="PowerTools" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,7 +16,6 @@ offset_bottom = -116.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8v1ke")
-focus_node = NodePath("CPUBoostButton")
 
 [node name="FocusManager" parent="." instance=ExtResource("2_v2y4s")]
 
@@ -34,7 +33,6 @@ focus_neighbor_right = NodePath("../SMTButton")
 focus_neighbor_bottom = NodePath("../SMTButton")
 focus_next = NodePath("../SMTButton")
 focus_previous = NodePath("../GPUTempSlider")
-focus_mode = 2
 button_pressed = false
 
 [node name="SMTButton" parent="." instance=ExtResource("2_nb5h3")]
@@ -46,7 +44,6 @@ focus_neighbor_right = NodePath("../CPUCoresSlider")
 focus_neighbor_bottom = NodePath("../CPUCoresSlider")
 focus_next = NodePath("../CPUCoresSlider")
 focus_previous = NodePath("../CPUBoostButton")
-focus_mode = 2
 text = "SMT Enabled"
 button_pressed = false
 
@@ -59,7 +56,6 @@ focus_neighbor_right = NodePath("../TDPSlider")
 focus_neighbor_bottom = NodePath("../TDPSlider")
 focus_next = NodePath("../TDPSlider")
 focus_previous = NodePath("../SMTButton")
-focus_mode = 2
 text = "CPU Cores"
 value = 1.0
 max_value = 1.0
@@ -79,7 +75,6 @@ focus_neighbor_right = NodePath("../TDPBoostSlider")
 focus_neighbor_bottom = NodePath("../TDPBoostSlider")
 focus_next = NodePath("../TDPBoostSlider")
 focus_previous = NodePath("../CPUCoresSlider")
-focus_mode = 2
 text = "TDP"
 max_value = 0.0
 
@@ -92,7 +87,6 @@ focus_neighbor_right = NodePath("../GPUFreqButton")
 focus_neighbor_bottom = NodePath("../GPUFreqButton")
 focus_next = NodePath("../GPUFreqButton")
 focus_previous = NodePath("../TDPSlider")
-focus_mode = 2
 text = "TDP Boost"
 max_value = 0.0
 
@@ -105,7 +99,6 @@ focus_neighbor_right = NodePath("../GPUFreqMinSlider")
 focus_neighbor_bottom = NodePath("../GPUFreqMinSlider")
 focus_next = NodePath("../GPUFreqMinSlider")
 focus_previous = NodePath("../TDPBoostSlider")
-focus_mode = 2
 text = "Manual Freq"
 button_pressed = false
 
@@ -118,7 +111,6 @@ focus_neighbor_right = NodePath("../GPUFreqMaxSlider")
 focus_neighbor_bottom = NodePath("../GPUFreqMaxSlider")
 focus_next = NodePath("../GPUFreqMaxSlider")
 focus_previous = NodePath("../GPUFreqButton")
-focus_mode = 2
 text = "Min Freq"
 max_value = 0.0
 step = 100.0
@@ -132,7 +124,6 @@ focus_neighbor_right = NodePath("../GPUTempSlider")
 focus_neighbor_bottom = NodePath("../GPUTempSlider")
 focus_next = NodePath("../GPUTempSlider")
 focus_previous = NodePath("../GPUFreqMinSlider")
-focus_mode = 2
 text = "Max Freq"
 max_value = 0.0
 step = 100.0
@@ -146,7 +137,6 @@ focus_neighbor_right = NodePath("../CPUBoostButton")
 focus_neighbor_bottom = NodePath("../CPUBoostButton")
 focus_next = NodePath("../CPUBoostButton")
 focus_previous = NodePath("../GPUFreqMaxSlider")
-focus_mode = 2
 text = "GPU Temp Limit"
 value = 70.0
 max_value = 105.0

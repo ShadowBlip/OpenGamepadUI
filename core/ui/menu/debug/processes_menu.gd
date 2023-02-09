@@ -37,7 +37,7 @@ func _ready() -> void:
 # Triggers when a user selects an item in the PID inspector
 func _on_pid_selected() -> void:
 	var selected := pid_inspector.get_selected()
-	var metadata := selected.get_metadata(0)
+	var metadata = selected.get_metadata(0)
 	if not metadata:
 		selected_pid = -1
 		kill_button.disabled = true

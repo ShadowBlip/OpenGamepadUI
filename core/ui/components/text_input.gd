@@ -42,6 +42,7 @@ signal text_submitted(new_text: String)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	focus_entered.connect(_grab_focus)
 	label.text = title
 	description_label.text = description
 	line_edit.text = text
@@ -75,5 +76,5 @@ func _ready() -> void:
 
 
 # Override focus grabbing to grab the node
-func grab_focus() -> void:
+func _grab_focus() -> void:
 	line_edit.grab_focus()

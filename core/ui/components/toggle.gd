@@ -33,7 +33,7 @@ signal toggled(pressed: bool)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(grab_focus)
+	focus_entered.connect(_grab_focus)
 	
 	label.text = text
 	check_button.button_pressed = button_pressed
@@ -61,5 +61,5 @@ func _ready() -> void:
 
 
 # Override focus grabbing to grab the child
-func grab_focus() -> void:
+func _grab_focus() -> void:
 	check_button.grab_focus()

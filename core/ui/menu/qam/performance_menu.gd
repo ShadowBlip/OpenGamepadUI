@@ -1,7 +1,5 @@
 extends Control
 
-@export var focus_node: Node = $VBoxContainer/MangoAppSlider
-
 @onready var mangoapp_slider := $%MangoAppSlider
 
 

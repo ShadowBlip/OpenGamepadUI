@@ -77,7 +77,7 @@ func pop_state() -> State:
 
 # Replaces the current state at the end of the stack with the given state
 func replace_state(state: State) -> void:
-	var popped := _state_stack.pop_back()
+	var popped := _state_stack.pop_back() as State
 	_push_unique(state)
 	if popped != null:
 		popped.state_removed.emit()

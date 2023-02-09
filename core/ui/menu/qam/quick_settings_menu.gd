@@ -1,7 +1,5 @@
 extends Control
 
-@export var focus_node: Node = $%VolumeSlider
-
 @onready var output_volume := $%VolumeSlider
 
 
