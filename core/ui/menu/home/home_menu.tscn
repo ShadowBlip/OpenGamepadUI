@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://ck052d0xl3cag"]
+[gd_scene load_steps=24 format=3 uid="uid://ck052d0xl3cag"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_noo0w"]
 [ext_resource type="Script" path="res://core/ui/menu/home/home_menu.gd" id="2_ixi86"]
@@ -16,24 +16,23 @@
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="8_1ovif"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_8yw4g"]
 [ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="9_adbqg"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="10_ogy5n"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_tl8ss"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="11_lws2k"]
 
 [sub_resource type="Resource" id="Resource_gsruu"]
 script = ExtResource("6_cepwl")
-_id = null
-_provider_id = null
-provider_app_id = null
+_id = ""
+_provider_id = ""
+provider_app_id = ""
 name = "vkCube"
 command = "vkcube"
-args = null
-env = null
-cwd = null
-tags = null
-categories = null
+args = PackedStringArray()
+env = {}
+cwd = ""
+tags = PackedStringArray()
+categories = PackedStringArray()
 installed = true
-hidden = null
+hidden = false
 
 [sub_resource type="Resource" id="Resource_icex7"]
 script = ExtResource("7_7xnh7")
@@ -95,9 +94,6 @@ script = ExtResource("2_ixi86")
 [node name="VisibilityManager" parent="." instance=ExtResource("3_mch0x")]
 state = ExtResource("4_6hnsl")
 visible_during = Array[Resource]([ExtResource("5_0kgam"), ExtResource("6_sx5hr"), ExtResource("7_51dxw"), ExtResource("8_1ovif"), ExtResource("9_adbqg")])
-
-[node name="BackInputHandler" parent="." instance=ExtResource("10_ogy5n")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_6hnsl")])
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0

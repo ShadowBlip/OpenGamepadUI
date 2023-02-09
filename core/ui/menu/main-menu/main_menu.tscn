@@ -54,12 +54,6 @@ layout_mode = 2
 [node name="HomeButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-focus_neighbor_left = NodePath("../PowerButton")
-focus_neighbor_top = NodePath("../PowerButton")
-focus_neighbor_right = NodePath("../LibraryButton")
-focus_neighbor_bottom = NodePath("../LibraryButton")
-focus_next = NodePath("../LibraryButton")
-focus_previous = NodePath("../PowerButton")
 mouse_filter = 1
 text = "Home"
 icon = ExtResource("3_vp87l")
@@ -68,18 +62,12 @@ expand_icon = true
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/HomeButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
 state = ExtResource("6_ys5hq")
-action = 2
+action = 3
 on_signal = "button_up"
 
 [node name="LibraryButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-focus_neighbor_left = NodePath("../HomeButton")
-focus_neighbor_top = NodePath("../HomeButton")
-focus_neighbor_right = NodePath("../StoreButton")
-focus_neighbor_bottom = NodePath("../StoreButton")
-focus_next = NodePath("../StoreButton")
-focus_previous = NodePath("../HomeButton")
 text = "Library"
 icon = ExtResource("7_6h5ya")
 expand_icon = true
@@ -93,12 +81,6 @@ on_signal = "button_up"
 [node name="StoreButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-focus_neighbor_left = NodePath("../LibraryButton")
-focus_neighbor_top = NodePath("../LibraryButton")
-focus_neighbor_right = NodePath("../SettingsButton")
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_next = NodePath("../SettingsButton")
-focus_previous = NodePath("../LibraryButton")
 text = "Store"
 icon = ExtResource("9_pnig0")
 expand_icon = true
@@ -112,12 +94,6 @@ on_signal = "button_up"
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-focus_neighbor_left = NodePath("../StoreButton")
-focus_neighbor_top = NodePath("../StoreButton")
-focus_neighbor_right = NodePath("../PowerButton")
-focus_neighbor_bottom = NodePath("../PowerButton")
-focus_next = NodePath("../PowerButton")
-focus_previous = NodePath("../StoreButton")
 text = "Settings"
 icon = ExtResource("11_u0355")
 expand_icon = true
@@ -131,12 +107,6 @@ on_signal = "button_up"
 [node name="PowerButton" type="Button" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-focus_neighbor_left = NodePath("../SettingsButton")
-focus_neighbor_top = NodePath("../SettingsButton")
-focus_neighbor_right = NodePath("../HomeButton")
-focus_neighbor_bottom = NodePath("../HomeButton")
-focus_next = NodePath("../HomeButton")
-focus_previous = NodePath("../SettingsButton")
 text = "Power"
 icon = ExtResource("13_q3e8j")
 expand_icon = true

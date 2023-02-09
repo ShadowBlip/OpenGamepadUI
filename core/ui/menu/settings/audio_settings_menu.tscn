@@ -23,6 +23,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_e1vvx")]
+process_input = false
 
 [node name="AudioLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 layout_mode = 2

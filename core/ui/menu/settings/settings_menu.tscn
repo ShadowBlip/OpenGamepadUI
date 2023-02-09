@@ -82,6 +82,7 @@ layout_mode = 2
 [node name="FocusManager" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_losdq")]
 unique_name_in_owner = true
 current_focus = NodePath("../GeneralButton")
+process_input = true
 
 [node name="GeneralButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2

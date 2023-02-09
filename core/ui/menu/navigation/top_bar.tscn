@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="4_lv4ws"]
 
 [node name="TopBar" type="Control" groups=["menu", "top_bar"]]
+z_index = 20
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 3
 anchors_preset = 10

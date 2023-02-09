@@ -102,6 +102,11 @@ func stack_length() -> int:
 	return len(_state_stack)
 
 
+# Returns the current state stack
+func stack() -> Array[State]:
+	return _state_stack.duplicate()
+
+
 # Returns true if the given state exists anywhere in the state stack
 func has_state(state: State) -> bool:
 	if _state_stack.find(state) != -1:

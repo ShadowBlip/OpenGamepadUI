@@ -2,6 +2,8 @@
 extends Node
 class_name StateUpdater
 
+const in_game := preload("res://assets/state/states/in_game.tres")
+
 # Possible state actions to take
 enum ACTION {
 	PUSH,
@@ -37,7 +39,11 @@ func _on_signal():
 		ACTION.REPLACE:
 			sm.replace_state(state)
 		ACTION.SET:
-			sm.set_state([state])
+			var states := [state] as Array[State]
+			# Never get rid of the in-game state if it's running
+			if sm.has_state(in_game):
+				states.push_front(in_game)
+			sm.set_state(states)
 
 
 # Customize editor properties that we expose. Here we dynamically look up

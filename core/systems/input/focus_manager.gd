@@ -4,7 +4,7 @@ class_name FocusManager
 @export_category("Focus Control")
 @export var current_focus: Control
 @export_category("Refocus on input")
-@export var process_input := true
+@export var process_input := false
 @export var refocus_on := "ogui_east"
 
 var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)

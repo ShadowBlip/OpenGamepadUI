@@ -24,9 +24,9 @@ func _on_signal():
 		return
 
 	# If the target has 'focus_node' defined, use that.
-	if target.get("focus_node"):
-		target.focus_node.grab_focus.call_deferred()
-		return
+	if target.get("focus_node") and target.focus_node:
+		if target.is_inside_tree():
+			target.focus_node.grab_focus.call_deferred()
 
 	# Otherwise, discover the first focusable node
 	var focus_node := _find_focusable([target])

@@ -27,7 +27,6 @@ func _ready() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
-	Input.joy_connection_changed.connect(_on_gamepad_change)
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
@@ -36,6 +35,7 @@ func _ready() -> void:
 	# Create a thread to process gamepad inputs separately
 	logger.debug("Starting gamepad input thread")
 	input_thread.start(_start_process_input)
+	Input.joy_connection_changed.connect(_on_gamepad_change)
 
 
 # Returns a list of gamepad devices that are being exclusively managed.
@@ -45,6 +45,7 @@ func get_managed_gamepads() -> Array:
 
 # Sets the gamepad intercept mode
 func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
+	logger.debug("Setting gamepad intercept mode: " + str(mode))
 	gamepad_mutex.lock()
 	for gamepad in managed_gamepads.values():
 		gamepad.mode = mode
@@ -56,7 +57,7 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 func _start_process_input():
 	var exited := false
 	while not exited:
-		OS.delay_msec(1)  # Throttle to execute every 1ms, to save CPU
+		OS.delay_usec(1)  # Throttle to execute every 1us, to save CPU
 		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()
@@ -104,6 +105,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		virtual_gamepads.append(gamepad.virt_path)
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
+	logger.debug("Finished configuring gamepads")
 	gamepad_mutex.unlock()
 
 
@@ -237,10 +239,6 @@ func _main_menu_input(event: InputEvent) -> void:
 	# Handle cases where a game is running
 	if state_machine.has_state(in_game_state):
 		menu_state = in_game_menu_state
-
-	if state_machine.stack_length() > 2:
-		state_machine.pop_state()
-		state = state_machine.current_state()
 
 	if state == menu_state:
 		state_machine.pop_state()

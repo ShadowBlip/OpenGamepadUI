@@ -67,6 +67,7 @@ _data = {
 }
 
 [node name="Toast" type="Control" groups=["notification_toast"]]
+z_index = 20
 layout_mode = 3
 anchors_preset = 5
 anchor_left = 0.5

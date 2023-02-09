@@ -43,22 +43,10 @@ stretch_mode = 4
 
 [node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-focus_neighbor_left = NodePath("../ExitButton")
-focus_neighbor_top = NodePath("../ExitButton")
-focus_neighbor_right = NodePath("../ExitButton")
-focus_neighbor_bottom = NodePath("../ExitButton")
-focus_next = NodePath("../ExitButton")
-focus_previous = NodePath("../ExitButton")
 text = "Resume Game"
 
 [node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-focus_neighbor_left = NodePath("../ResumeButton")
-focus_neighbor_top = NodePath("../ResumeButton")
-focus_neighbor_right = NodePath("../ResumeButton")
-focus_neighbor_bottom = NodePath("../ResumeButton")
-focus_next = NodePath("../ResumeButton")
-focus_previous = NodePath("../ResumeButton")
 text = "Exit Game"
 
 [connection signal="button_up" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_button_up"]

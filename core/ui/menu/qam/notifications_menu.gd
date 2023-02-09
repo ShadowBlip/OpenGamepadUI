@@ -4,8 +4,6 @@ const notification_scene := preload("res://core/ui/components/notification_conta
 
 var label_settings := LabelSettings.new()
 
-@export var focus_node : Node = $NotificationContainer
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,7 +23,7 @@ func _on_notification_sent(_notify: Notification) -> void:
 		child.queue_free()
 	var history := NotificationManager.get_notification_history()
 	for i in range(history.size(), 0, -1):
-		var notify := history[i-1] as Notification
+		var notify := history[i - 1] as Notification
 		var notification := notification_scene.instantiate() as NotificationContainer
 		notification.text = notify.text
 		if notify.icon:
@@ -34,8 +32,3 @@ func _on_notification_sent(_notify: Notification) -> void:
 		notification.custom_minimum_size = Vector2(220, 0)
 		notification.label_settings = label_settings
 		add_child(notification)
-
-
-func _on_notification_container_focus_entered():
-	if focus_node.get_child_count() > 0:
-		focus_node.get_child(0).grab_focus()
