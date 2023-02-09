@@ -30,7 +30,6 @@ grow_vertical = 2
 [node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_mode = 2
 text = "Volume"
 
 [node name="PerGameToggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
@@ -41,7 +40,6 @@ focus_neighbor_right = NodePath("../SaturationSlider")
 focus_neighbor_bottom = NodePath("../SaturationSlider")
 focus_next = NodePath("../SaturationSlider")
 focus_previous = NodePath("../SaturationSlider")
-focus_mode = 2
 text = "Per-game Profile"
 
 [node name="SaturationSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
@@ -52,6 +50,5 @@ focus_neighbor_right = NodePath("../PerGameToggle")
 focus_neighbor_bottom = NodePath("../PerGameToggle")
 focus_next = NodePath("../PerGameToggle")
 focus_previous = NodePath("../PerGameToggle")
-focus_mode = 2
 text = "Saturation"
 value = 100.0

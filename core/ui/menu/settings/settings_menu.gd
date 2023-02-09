@@ -8,7 +8,7 @@ var settings_state := preload("res://assets/state/states/settings.tres") as Stat
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	settings_state.state_entered.connect(_on_state_entered)
-	
+
 
 func _on_state_entered(_from: State) -> void:
 	for child in setting_buttons_container.get_children():

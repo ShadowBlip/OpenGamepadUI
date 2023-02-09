@@ -48,10 +48,13 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 	item.name = d["name"]
 	item.command = d["command"]
 	item.args = d["args"]
-	item.env = d["env"]
-	item.cwd = d["cwd"]
 	item.tags = d["tags"]
 	item.categories = d["categories"]
 	item.installed = d["installed"]
-	item.hidden = d["hidden"]
+	if "env" in d:
+		item.env = d["env"]
+	if "cwd" in d:
+		item.cwd = d["cwd"]
+	if "hidden" in d:
+		item.hidden = d["hidden"]
 	return item

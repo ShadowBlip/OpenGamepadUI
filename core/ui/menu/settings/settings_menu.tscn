@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=29 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -12,11 +12,13 @@
 [ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="6_tmsre"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_jneep"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_tshgy"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="10_losdq"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="11_11xk2"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="12_q442d"]
 [ext_resource type="Resource" uid="uid://4n3376qdy3y3" path="res://assets/state/states/settings_general.tres" id="13_k0fou"]
 [ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="14_wrm26"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="15_bra7i"]
+[ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="15_mgpko"]
 [ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="15_s8u5h"]
 [ext_resource type="PackedScene" uid="uid://bimj0mmmy32ju" path="res://core/ui/menu/settings/general_settings_menu.tscn" id="16_jih4y"]
 [ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="17_2cktl"]
@@ -77,6 +79,8 @@ theme_override_constants/margin_bottom = 20
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="FocusManager" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("10_losdq")]
+
 [node name="GeneralButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "General"
@@ -87,6 +91,10 @@ state = ExtResource("13_k0fou")
 action = 2
 on_signal = "focus_entered"
 
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/GeneralSettings")
+on_signal = "pressed"
+
 [node name="AudioButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Audio"
@@ -96,6 +104,10 @@ state_machine = ExtResource("12_q442d")
 state = ExtResource("21_514f3")
 action = 2
 on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/AudioButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/AudioSettingsMenu")
+on_signal = "pressed"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -110,6 +122,10 @@ state = ExtResource("14_wrm26")
 action = 2
 on_signal = "focus_entered"
 
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/PluginSettings")
+on_signal = "pressed"
+
 [node name="PluginStoreButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Plugin Store"
@@ -119,6 +135,10 @@ state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
 action = 2
 on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginStoreButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/ScrollContainer/PluginStore")
+on_signal = "pressed"
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -133,6 +153,10 @@ state = ExtResource("25_ibhfw")
 action = 2
 on_signal = "focus_entered"
 
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/ProcessesButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/ProcessesMenu")
+on_signal = "pressed"
+
 [node name="WindowsButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
 text = "Windows"
@@ -142,6 +166,10 @@ state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
 action = 2
 on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/WindowsButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/GamescopeInspector")
+on_signal = "pressed"
 
 [node name="ContentContainer" type="PanelContainer" parent="VBoxContainer/MainContainer"]
 layout_mode = 2
