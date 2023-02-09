@@ -56,6 +56,7 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 func _start_process_input():
 	var exited := false
 	while not exited:
+		OS.delay_msec(1)  # Throttle to execute every 1ms, to save CPU
 		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()
