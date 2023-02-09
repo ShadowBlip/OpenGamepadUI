@@ -7,12 +7,12 @@ GODOT_CPP_VERSION := f2b97528c1369a6c40f3749817d00e4633afc43e
 build: bin/libxlib.linux.template_debug.x86_64.so bin/libxlib.linux.template_release.x86_64.so
 
 bin/libxlib.linux.template_debug.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
-	rm $@
+	rm -rf $@
 	scons -Q compiledb
 	scons target=template_debug
 
 bin/libxlib.linux.template_release.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
-	rm $@
+	rm -rf $@
 	scons -Q compiledb
 	scons target=template_release
 
