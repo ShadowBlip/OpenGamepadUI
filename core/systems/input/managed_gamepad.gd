@@ -60,16 +60,16 @@ func process_input() -> void:
 		return
 
 	# Process all physical input events
-	var events := phys_device.get_events()
+	var events = phys_device.get_events()
 	for event in events:
-		if not event:
+		if not event or not event is InputDeviceEvent:
 			continue
 		_process_phys_event(event)
 
 	# Process all virtual input events
 	events = virt_device.get_events()
 	for event in events:
-		if not event:
+		if not event or not event is InputDeviceEvent:
 			continue
 		_process_virt_event(event)
 
