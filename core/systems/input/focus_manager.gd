@@ -1,6 +1,15 @@
 extends Node
+class_name FocusManager
 
-@onready var parent := get_parent()
+@export_category("Focus Control")
+@export var current_focus: Control
+@export_category("Refocus on input")
+@export var process_input := true
+@export var refocus_on := "ogui_east"
+
+var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)
+
+@onready var parent := get_parent() as Control
 
 
 # Called when the node enters the scene tree for the first time.
@@ -8,9 +17,11 @@ func _ready():
 	parent.child_entered_tree.connect(_on_child_tree_changed)
 	parent.child_exiting_tree.connect(_on_child_tree_changed)
 	_on_child_tree_changed(null)
+	set_process_input(process_input)
+	if process_input:
+		parent.visibility_changed.connect(_on_visibility_changed)
 
 
-#TODO: Don't assume vbox
 func _on_child_tree_changed(_node) -> void:
 	# Get existing children so we can manage focus
 	if parent.get_child_count() == 0:
@@ -21,6 +32,7 @@ func _on_child_tree_changed(_node) -> void:
 		if not child is Control:
 			continue
 		control_children.append(child)
+		child.focus_entered.connect(_on_child_focused.bind(child))
 
 	if control_children.size() == 0:
 		return
@@ -83,3 +95,40 @@ func _vbox_set_focus_tree(control_children: Array[Control]) -> void:
 		child.focus_neighbor_left = control_children[i].get_path()
 		child.focus_neighbor_right = control_children[i].get_path()
 		i += 1
+
+
+func _on_child_focused(child: Control) -> void:
+	current_focus = child
+
+
+func _on_visibility_changed() -> void:
+	if parent.is_visible_in_tree():
+		set_process_input(true)
+		return
+	set_process_input(false)
+
+
+func _input(event: InputEvent) -> void:
+	# Only process input if our parent is visible
+	if not parent or not parent.is_visible_in_tree():
+		return
+
+	# Only handle back button pressed and when the guide button is not held
+	if not event.is_action_pressed(refocus_on) or Input.is_action_pressed("ogui_guide"):
+		return
+
+	# Can't process what we don't have
+	if not current_focus:
+		return
+
+	# If our focus children already have focus, let someone else handle this
+	# input.
+	if current_focus.has_focus():
+		return
+
+	# Stop the event from propagating
+	logger.debug("Processing back input!")
+	get_viewport().set_input_as_handled()
+
+	# Grab focus on the current child
+	current_focus.grab_focus.call_deferred()

@@ -79,7 +79,9 @@ theme_override_constants/margin_bottom = 20
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FocusManager" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("10_losdq")]
+[node name="FocusManager" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_losdq")]
+unique_name_in_owner = true
+current_focus = NodePath("../GeneralButton")
 
 [node name="GeneralButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
 layout_mode = 2
@@ -88,7 +90,7 @@ text = "General"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/GeneralButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("13_k0fou")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
@@ -102,7 +104,7 @@ text = "Audio"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/AudioButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("21_514f3")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/AudioButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
@@ -119,7 +121,7 @@ text = "Plugins"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginsButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("14_wrm26")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
@@ -133,7 +135,7 @@ text = "Plugin Store"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginStoreButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/PluginStoreButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
@@ -150,7 +152,7 @@ text = "Processes"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/ProcessesButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("25_ibhfw")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/ProcessesButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
@@ -164,7 +166,7 @@ text = "Windows"
 [node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/WindowsButton" instance=ExtResource("11_11xk2")]
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
-action = 2
+action = 3
 on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/WindowsButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]

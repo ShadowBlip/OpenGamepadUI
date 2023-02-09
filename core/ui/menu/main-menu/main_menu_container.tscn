@@ -79,7 +79,7 @@ theme_override_constants/margin_top = 40
 script = ExtResource("1_3yu6b")
 
 [node name="BackInputHandler" parent="." instance=ExtResource("2_7tdhu")]
-process_input_during = [ExtResource("3_wuf01"), ExtResource("4_7qswo")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wuf01"), ExtResource("4_7qswo")])
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

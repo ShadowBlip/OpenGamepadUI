@@ -21,10 +21,10 @@ script = ExtResource("1_d0j34")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_c8beg")]
 state = ExtResource("3_aodg2")
-visible_during = [ExtResource("4_8tmcp"), ExtResource("5_vyxy3"), ExtResource("6_bgkck"), ExtResource("7_3v0bg")]
+visible_during = Array[Resource]([ExtResource("4_8tmcp"), ExtResource("5_vyxy3"), ExtResource("6_bgkck"), ExtResource("7_3v0bg")])
 
 [node name="BackInputHandler" parent="." instance=ExtResource("8_v4kmx")]
-process_input_during = [ExtResource("3_aodg2")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_aodg2")])
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
