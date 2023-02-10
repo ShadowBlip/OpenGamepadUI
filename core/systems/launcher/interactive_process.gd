@@ -95,11 +95,11 @@ func send(input: String) -> void:
 	stdin = null
 
 
-func read() -> String:
+func read(chunk_size: int = 4096) -> String:
 	if not stdout or not stdout.is_open() or _stdin_path == "":
 		logger.debug("No stdin/stdout are defined")
 		return ""
-	return stdout.get_line()
+	return stdout.get_buffer(chunk_size)
 
 
 # Stop the given process

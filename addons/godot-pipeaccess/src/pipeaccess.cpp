@@ -88,7 +88,6 @@ godot::String PipeAccess::get_buffer(int size_bytes) {
 }
 
 int PipeAccess::close() {
-  godot::UtilityFunctions::push_warning("Closing FD");
   int code = 0;
   if (stream) {
     code = ::fclose(stream);
