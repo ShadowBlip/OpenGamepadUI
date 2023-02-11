@@ -3,6 +3,7 @@ extends ScrollContainer
 const button_scene := preload("res://core/ui/components/button.tscn")
 const settings_content := preload("res://core/ui/menu/settings/plugin_settings_content.tscn")
 
+var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var state_machine := preload("res://assets/state/state_machines/plugin_settings_state_machine.tres")
 var _plugin_containers := {}
 var _plugin_content := {}

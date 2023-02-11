@@ -2,7 +2,9 @@
 extends Node
 class_name Launcher
 
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var state_machine := (
+	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+)
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
 # The library item to launch
@@ -14,11 +16,13 @@ var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
 @onready var parent: Node = get_parent()
 
+
 func _ready() -> void:
 	parent.connect(signal_name, _on_launch)
 
 
 func _on_launch():
+	var LaunchManager := load("res://core/global/launch_manager.tres")
 	# Resume if the game is running already
 	if LaunchManager.is_running(library_item.name):
 		state_machine.set_state([in_game_state])

@@ -12,6 +12,8 @@ enum LAYOUT {
 	LOGO,
 }
 
+var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+
 # Unique identifier for the boxart provider
 @export var provider_id: String
 # Icon for boxart provider

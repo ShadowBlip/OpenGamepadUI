@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="BoxArtManager" load_steps=2 format=3 uid="uid://brt3go2hmrkft"]
+
+[ext_resource type="Script" path="res://core/global/boxart_manager.gd" id="1_ned4d"]
+
+[resource]
+script = ExtResource("1_ned4d")

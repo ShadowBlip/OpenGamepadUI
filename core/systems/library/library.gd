@@ -14,6 +14,8 @@ signal update_completed(item: LibraryItem)
 @export var logger_name := library_id
 @export var log_level: Log.LEVEL = Log.LEVEL.INFO
 
+var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
+
 @onready var _cache_dir := "/".join(["library", library_id])
 @onready var logger := Log.get_logger(logger_name, log_level)
 

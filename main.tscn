@@ -1,11 +1,16 @@
-[gd_scene load_steps=20 format=3 uid="uid://dtqnl1he886r4"]
+[gd_scene load_steps=25 format=3 uid="uid://dtqnl1he886r4"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_5p6yg"]
 [ext_resource type="PackedScene" uid="uid://b2se1l330qmln" path="res://core/ui/menu/navigation/top_bar.tscn" id="3_4jaod"]
+[ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="3_fewus"]
+[ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="3_yv7ot"]
 [ext_resource type="PackedScene" uid="uid://ck052d0xl3cag" path="res://core/ui/menu/home/home_menu.tscn" id="4_cej3c"]
+[ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="4_vkcvn"]
 [ext_resource type="PackedScene" uid="uid://dpajbxrv14ehk" path="res://core/ui/menu/navigation/context_bar.tscn" id="5_t8uiy"]
+[ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="5_wjtxt"]
 [ext_resource type="PackedScene" uid="uid://b5wlfsvqqluwa" path="res://core/ui/menu/launch/game_settings.tscn" id="6_lhea2"]
+[ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="7_mifqo"]
 [ext_resource type="PackedScene" uid="uid://b0p4eo4ny7veo" path="res://core/ui/menu/main-menu/main_menu_container.tscn" id="7_oh5xv"]
 [ext_resource type="PackedScene" uid="uid://hg2schw8qdvn" path="res://core/ui/menu/store/store_menu.tscn" id="8_cx1y5"]
 [ext_resource type="PackedScene" uid="uid://bv45as7q2lrwt" path="res://core/ui/menu/qam/quick_access_menu.tscn" id="9_8xlqm"]
@@ -66,6 +71,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_5p6yg")
 script = ExtResource("1_4l3sd")
+
+[node name="InputManager" parent="." instance=ExtResource("3_yv7ot")]
+
+[node name="BoxArtLocal" parent="." instance=ExtResource("3_fewus")]
+
+[node name="DesktopLibrary" parent="." instance=ExtResource("4_vkcvn")]
+
+[node name="LaunchManager" parent="." instance=ExtResource("5_wjtxt")]
+
+[node name="PluginManager" parent="." instance=ExtResource("7_mifqo")]
 
 [node name="UIContainer" type="VBoxContainer" parent="."]
 layout_mode = 0

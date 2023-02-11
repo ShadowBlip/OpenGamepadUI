@@ -1,5 +1,6 @@
 extends Control
 
+var StoreManager := load("res://core/global/store_manager.tres") as StoreManager
 var store_state := preload("res://assets/state/states/store.tres") as State
 var poster_scene: PackedScene = preload("res://core/ui/components/poster.tscn")
 var _current_store: String
@@ -13,7 +14,7 @@ func _ready() -> void:
 	for child in grid.get_children():
 		grid.remove_child(child)
 		child.queue_free()
-	
+
 	# Listen for stores that register
 	StoreManager.store_registered.connect(_on_store_registered)
 	store_state.state_entered.connect(_on_state_entered)
@@ -43,7 +44,7 @@ func _on_state_exited(_to: State):
 # When a store is registered, add an entry to the stores menu
 func _on_store_registered(store: Store) -> void:
 	var grid: HFlowContainer = $StoresContent/ScrollContainer/HFlowContainer
-	
+
 	# Build the poster to display
 	var poster: TextureButton = poster_scene.instantiate()
 	poster.layout = poster.LAYOUT_MODE.LANDSCAPE
@@ -56,26 +57,26 @@ func _on_store_registered(store: Store) -> void:
 
 
 func _reset_store():
-		_current_store = ""
-		$StoresContent.visible = true 
-		$HomeContent.visible = false
-		var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
-		for child in grid.get_children():
-			grid.remove_child(child)
-			child.queue_free()
+	_current_store = ""
+	$StoresContent.visible = true
+	$HomeContent.visible = false
+	var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
+	for child in grid.get_children():
+		grid.remove_child(child)
+		child.queue_free()
 
 
 func _launch_store(store: Store):
 	# Hide the stores content and show the store
-	$StoresContent.visible = false 
+	$StoresContent.visible = false
 	$HomeContent.visible = true
-	
+
 	# Call the store's load_home method and wait for a response
 	logger.info("Launching store: " + store.store_id)
 	_current_store = store.store_id
 	store.home_loaded.connect(_on_home_loaded, CONNECT_ONE_SHOT)
 	store.load_home()
-	
+
 	# Show the loading animation while we wait for the store home.
 	$Loading01.visible = true
 
@@ -83,7 +84,7 @@ func _launch_store(store: Store):
 func _on_home_loaded(results: Array):
 	# Hide the loading animation
 	$Loading01.visible = false
-	
+
 	# Populate our home content grid with store items
 	var grid: HFlowContainer = $HomeContent/ScrollContainer/HFlowContainer
 	for i in results:

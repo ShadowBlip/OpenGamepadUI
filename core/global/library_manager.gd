@@ -1,8 +1,8 @@
 @icon("res://assets/icons/trello.svg")
-extends Node
+extends Resource
+class_name LibraryManager
 
 const REQUIRED_FIELDS: Array = ["library_id"]
-const desktop_library_scene := preload("res://core/systems/library/library_desktop.tscn")
 
 signal library_registered(library: Library)
 signal library_unregistered(library_id: String)
@@ -32,20 +32,6 @@ var _app_by_tag: Dictionary = {}
 var _app_by_library: Dictionary = {}
 var _initialized := false
 var logger := Log.get_logger("LibraryManager")
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	get_parent().ready.connect(_on_parent_ready)
-	
-	# Add built-in libraries
-	add_child(desktop_library_scene.instantiate())
-
-
-# Called when our parent is ready
-func _on_parent_ready() -> void:
-	# Load the library items from each library provider
-	reload_library()
 
 
 # Returns a dictionary of all installed apps

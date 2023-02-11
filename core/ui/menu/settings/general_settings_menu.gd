@@ -1,5 +1,6 @@
 extends Control
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 @onready var max_recent_slider := $%MaxRecentAppsSlider
 
 

@@ -1,5 +1,8 @@
 extends Control
 
+var LaunchManager := preload("res://core/global/launch_manager.tres") as LaunchManager
+var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
@@ -10,7 +13,7 @@ var _initialized := false
 @onready var container: HBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer
 @onready var banner: TextureRect = $SelectedBanner
 @onready var player: AnimationPlayer = $AnimationPlayer
-@onready var recent_apps: Array = LaunchManager.get_recent_apps()
+var recent_apps: Array
 
 
 # Called when the node enters the scene tree for the first time.
@@ -26,9 +29,10 @@ func _ready() -> void:
 	LibraryManager.library_item_added.connect(_on_library_item_added)
 	LibraryManager.library_registered.connect(_on_library_registered)
 	LibraryManager.library_unregistered.connect(_on_library_unregistered)
-	LaunchManager.recent_apps_changed.connect(_on_recent_apps_updated)
 	home_state.state_entered.connect(_on_state_entered)
 	home_state.state_exited.connect(_on_state_exited)
+	recent_apps = LaunchManager.get_recent_apps()
+	LaunchManager.recent_apps_changed.connect(_on_recent_apps_updated)
 
 
 func _on_state_entered(from: State) -> void:

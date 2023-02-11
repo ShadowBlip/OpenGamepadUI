@@ -2,6 +2,9 @@ extends Control
 
 const notification_scene := preload("res://core/ui/components/notification_container.tscn")
 
+var NotificationManager := (
+	load("res://core/global/notification_manager.tres") as NotificationManager
+)
 var label_settings := LabelSettings.new()
 
 

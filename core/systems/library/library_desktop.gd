@@ -1,5 +1,6 @@
 extends Library
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var home := OS.get_environment("HOME")
 var desktop_folders := (
 	(

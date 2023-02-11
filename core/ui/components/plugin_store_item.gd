@@ -2,6 +2,10 @@ extends Control
 
 const plugin_icon := preload("res://assets/ui/icons/plugin-solid.svg")
 
+var NotificationManager := (
+	load("res://core/global/notification_manager.tres") as NotificationManager
+)
+var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var download_url: String
 var project_url: String
 var sha256: String

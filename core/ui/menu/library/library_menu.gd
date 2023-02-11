@@ -1,5 +1,7 @@
 extends Control
 
+var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var library_state := preload("res://assets/state/states/library.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State

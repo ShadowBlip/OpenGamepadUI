@@ -1,15 +1,19 @@
 @icon("res://assets/icons/upload.svg")
-extends Node
+extends Resource
+class_name LaunchManager
 
 signal app_launched(app: RunningApp)
 signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
+var InputManager := load("res://core/global/input_manager.tres") as InputManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 
+var overlay_display := OS.get_environment("DISPLAY")
 var target_display: String = OS.get_environment("DISPLAY")
 var _current_app: RunningApp
 var _pid_to_windows := {}
@@ -21,25 +25,6 @@ var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/director
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
-
-@onready var overlay_display = OS.get_environment("DISPLAY")
-
-
-func _init() -> void:
-	_load_persist_data()
-
-
-func _ready() -> void:
-	# Get the target xwayland display to launch on
-	target_display = _get_target_display(overlay_display)
-	
-	# Set a timer that will update our state based on if anything is running.
-	var running_timer = Timer.new()
-	running_timer.timeout.connect(_check_running)
-	running_timer.wait_time = 1
-	add_child(running_timer)
-	running_timer.start()
-
 
 # Loads persistent data like recent games launched, etc.
 func _load_persist_data():

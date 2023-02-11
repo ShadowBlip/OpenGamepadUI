@@ -1,7 +1,7 @@
 @icon("res://assets/icons/image.svg")
-extends Node
+extends Resource
+class_name BoxArtManager
 
-const boxart_local_provider := preload("res://core/systems/boxart/boxart_local.tscn")
 const REQUIRED_FIELDS: Array = ["provider_id"]
 
 signal provider_registered(boxart: BoxArtProvider)
@@ -20,19 +20,6 @@ const _placeholder_map = {
 # Dictionary of registered boxart providers
 var _providers: Dictionary = {}
 var _providers_by_priority: Array = []
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	var boxart_local := boxart_local_provider.instantiate()
-	add_child(boxart_local)
-	get_parent().ready.connect(_on_parent_ready)
-
-
-# Called when our parent is ready
-func _on_parent_ready() -> void:
-	# TODO: Load settings and sort by provider priority
-	pass
 
 
 # Returns the boxart of the given kind for the given library item. 
