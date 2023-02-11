@@ -79,7 +79,7 @@ $(EXPORT_TEMPLATE):
 debug: addons ## Run the project in debug mode in gamescope
 	$(GAMESCOPE) -e --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
-		--position 320,140 res://main.tscn
+		--position 320,140 res://entrypoint.tscn
 
 .PHONY: inspect
 inspect: addons ## Launch Gamescope inspector
