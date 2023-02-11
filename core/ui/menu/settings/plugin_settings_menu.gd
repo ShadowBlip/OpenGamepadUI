@@ -65,15 +65,15 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 	visibility.state = state
 
 	# Set the plugin name label
-	var name_label := plugin_content_container.get_node("%NameValueLabel") as Label
+	var name_label := plugin_content_container.get_node("%PluginNameText")
 	name_label.text = meta["plugin.name"]
 
 	# Set the plugin version in the settings menu
-	var version_label := plugin_content_container.get_node("%VersionValueLabel") as Label
+	var version_label := plugin_content_container.get_node("%PluginVersionText")
 	version_label.text = meta["plugin.version"]
 	
 	# Wire up the enable toggle button to enable/disable the plugin
-	var enable_button := plugin_content_container.get_node("%EnabledCheckButton") as CheckButton
+	var enable_button := plugin_content_container.get_node("%PluginEnabledToggle")
 	enable_button.button_pressed = PluginLoader.is_initialized(plugin_id)
 	var on_enable_toggle := func(toggled: bool):
 		if toggled:

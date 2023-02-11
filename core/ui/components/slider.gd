@@ -90,6 +90,10 @@ func _ready() -> void:
 		changed.emit()
 	slider.changed.connect(on_changed)
 
+	# Set color based on theme
+	if theme:
+		slider.modulate = theme.get_color("color", "Slider")
+
 
 func _on_value_changed(v: float) -> void:
 	value = v

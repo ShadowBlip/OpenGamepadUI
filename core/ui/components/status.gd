@@ -53,5 +53,6 @@ var color: String = "green":
 func _ready() -> void:
 	label.text = title
 	description_label.text = description
+	description_label.visible = description != ""
 	texture_rect.texture = status_texture_map[status]
 	texture_rect.modulate = theme.get_color(color, "Status")

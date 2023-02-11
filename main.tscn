@@ -1,6 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://dtqnl1he886r4"]
+[gd_scene load_steps=20 format=3 uid="uid://dtqnl1he886r4"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4l3sd"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_5p6yg"]
 [ext_resource type="PackedScene" uid="uid://b2se1l330qmln" path="res://core/ui/menu/navigation/top_bar.tscn" id="3_4jaod"]
 [ext_resource type="PackedScene" uid="uid://ck052d0xl3cag" path="res://core/ui/menu/home/home_menu.tscn" id="4_cej3c"]
 [ext_resource type="PackedScene" uid="uid://dpajbxrv14ehk" path="res://core/ui/menu/navigation/context_bar.tscn" id="5_t8uiy"]
@@ -63,6 +64,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_5p6yg")
 script = ExtResource("1_4l3sd")
 
 [node name="UIContainer" type="VBoxContainer" parent="."]

@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmjjyqx1pl23d"]
+
+[ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="1_i3fb3"]
+[ext_resource type="Script" path="res://core/ui/components/text.gd" id="1_lo12x"]
+[ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="2_mq5ej"]
+
+[node name="Text" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+script = ExtResource("1_lo12x")
+
+[node name="LabelContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LabelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Setting"
+label_settings = ExtResource("1_i3fb3")
+
+[node name="LabelValue" type="Label" parent="LabelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Value"
+label_settings = ExtResource("1_i3fb3")
+horizontal_alignment = 2
+
+[node name="DescriptionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Description"
+label_settings = ExtResource("2_mq5ej")

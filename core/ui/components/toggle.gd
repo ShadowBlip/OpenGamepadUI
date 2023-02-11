@@ -1,11 +1,12 @@
 @tool
-extends HBoxContainer
+extends BoxContainer
 
 signal button_down
 signal button_up
 signal pressed
 signal toggled(pressed: bool)
 
+@export_category("Label Settings")
 @export var text: String = "Setting"
 @export var show_label := true:
 	set(v):
@@ -13,7 +14,14 @@ signal toggled(pressed: bool)
 		if label:
 			label.visible = v
 		notify_property_list_changed()
+@export var description: String = "":
+	set(v):
+		description = v
+		if description_label:
+			description_label.text = v
+			description_label.visible = v != ""
 
+@export_category("Toggle Settings")
 @export var button_pressed := false:
 	set(v):
 		button_pressed = v
@@ -28,14 +36,17 @@ signal toggled(pressed: bool)
 			check_button.disabled = v
 		notify_property_list_changed()
 
-@onready var label := $Label as Label
-@onready var check_button := $CheckButton as CheckButton
+@onready var label := $%Label as Label
+@onready var description_label := $%DescriptionLabel as Label
+@onready var check_button := $%CheckButton as CheckButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	focus_entered.connect(_grab_focus)
 	
 	label.text = text
+	description_label.text = description
+	description_label.visible = description != ""
 	check_button.button_pressed = button_pressed
 	check_button.disabled = disabled
 	check_button.focus_neighbor_bottom = focus_neighbor_bottom
@@ -59,6 +70,9 @@ func _ready() -> void:
 		toggled.emit(changed)
 	check_button.toggled.connect(on_toggled)
 
+	# Set color based on theme
+	if theme:
+		check_button.modulate = theme.get_color("color", "Toggle")
 
 # Override focus grabbing to grab the child
 func _grab_focus() -> void:
