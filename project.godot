@@ -17,17 +17,13 @@ cache/directory="user://cache"
 [application]
 
 config/name="Open Gamepad UI"
-run/main_scene="res://main.tscn"
+run/main_scene="res://entrypoint.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="opengamepadui"
 config/features=PackedStringArray("4.0", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/show_image=false
 config/icon="res://icon.svg"
-
-[autoload]
-
-Entrypoint="*res://core/autoload/entrypoint.gd"
 
 [display]
 
