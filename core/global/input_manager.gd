@@ -1,6 +1,8 @@
 @icon("res://assets/icons/navigation.svg")
-extends Node
+extends Resource
+class_name InputManager
 
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -20,10 +22,8 @@ var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
 var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
 
-@onready var launch_manager: LaunchManager = get_node("../LaunchManager")
 
-
-func _ready() -> void:
+func _init() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
@@ -159,42 +159,37 @@ func discover_gamepads() -> PackedStringArray:
 	return paths
 
 
+# Returns whether or not get_viewport().set_input_as_handled() should be called
 # https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
-func _input(event: InputEvent) -> void:
+func input(event: InputEvent) -> bool:
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
 		_guide_input(event)
-		get_viewport().set_input_as_handled()
-		return
+		return true
 
 	# QAM Events
 	if event.is_action("ogui_qam"):
 		_qam_input(event)
-		get_viewport().set_input_as_handled()
-		return
+		return true
 
 	# OSK Events
 	if event.is_action("ogui_osk"):
 		_osk_input(event)
-		get_viewport().set_input_as_handled()
-		return
+		return true
 
 	# Main menu events
 	if event.is_action("ogui_menu"):
 		_main_menu_input(event)
-		get_viewport().set_input_as_handled()
-		return
+		return true
 
 	# Handle guide action release events
 	if event.is_action_released("ogui_guide_action"):
 		if event.is_action_released("ogui_north"):
 			_action_release("ogui_osk")
-			get_viewport().set_input_as_handled()
-			return
+			return true
 		if event.is_action_released("ogui_south"):
 			_action_release("ogui_qam")
-			get_viewport().set_input_as_handled()
-			return
+			return true
 
 	# Handle inputs when the guide button is being held
 	if Input.is_action_pressed("ogui_guide"):
@@ -208,7 +203,9 @@ func _input(event: InputEvent) -> void:
 			_action_press("ogui_guide_action")
 
 		# Prevent ALL input from propagating if guide is held!
-		get_viewport().set_input_as_handled()
+		return true
+
+	return false
 
 
 func _guide_input(event: InputEvent) -> void:
@@ -291,7 +288,7 @@ func _send_joy_input(axis: int, value: float) -> void:
 	Input.parse_input_event(joy_action)
 
 
-func _exit_tree() -> void:
+func exit() -> void:
 	gamepad_mutex.lock()
 	input_exited = true
 	gamepad_mutex.unlock()

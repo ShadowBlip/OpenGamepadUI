@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="LaunchManager" load_steps=2 format=3 uid="uid://dhoqlgl8kdf1u"]
+
+[ext_resource type="Script" path="res://core/global/launch_manager.gd" id="1_n37ot"]
+
+[resource]
+script = ExtResource("1_n37ot")

@@ -1,7 +1,8 @@
 # Based on the mod loader by Harry Giel
 # https://gitlab.com/Delta-V-Modding/Mods/-/blob/main/game/ModLoader.gd
 @icon("res://assets/icons/codesandbox.svg")
-extends Node
+extends Resource
+class_name PluginLoader
 
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
 const PLUGIN_API_VERSION = "1.0.0"
@@ -17,11 +18,16 @@ signal plugin_installed(id: String, status: int)
 signal plugin_enabled(name: String)
 signal plugin_disabled(name: String)
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
+var parent: PluginManager
 var logger := Log.get_logger("PluginLoader")
 var plugins := {}
 var plugin_nodes := {}
 
-func _init() -> void:
+# Initializes the plugin loader. Loaded plugins will be added to the given 
+# manager node.
+func init(manager: PluginManager) -> void:
+	parent = manager
 	logger.info("Loading plugins")
 	_load_plugins()
 	logger.info("Done loading plugins")
@@ -43,11 +49,14 @@ func disable_plugin(plugin_id: String) -> void:
 # Returns the parsed dictionary of plugin store items. Returns null if there
 # is a failure.
 func get_plugin_store_items() -> Variant:
+	if not parent:
+		logger.error("Plugin loader has not been initialized!")
+		return
 	var http: HTTPRequest = HTTPRequest.new()
-	add_child(http)
+	parent.add_child(http)
 	if http.request(PLUGIN_STORE_URL) != OK:
 		logger.error("Error making http request to plugin store")
-		remove_child(http)
+		parent.remove_child(http)
 		http.queue_free()
 		return null
 	
@@ -60,7 +69,7 @@ func get_plugin_store_items() -> Variant:
 
 	if result != HTTPRequest.RESULT_SUCCESS:
 		logger.error("Plugin store http request failed")
-		remove_child(http)
+		parent.remove_child(http)
 		http.queue_free()
 		return null
 	
@@ -72,12 +81,15 @@ func get_plugin_store_items() -> Variant:
 
 # Downloads and installs the given plugin
 func install_plugin(plugin_id: String, download_url: String, sha256: String) -> void:
+	if not parent:
+		logger.error("Plugin loader has not been initialized!")
+		return
 	# Build the request
 	var http: HTTPRequest = HTTPRequest.new()
-	add_child(http)
+	parent.add_child(http)
 	if http.request(download_url) != OK:
 		logger.error("Error making http request for plugin package: " + download_url)
-		remove_child(http)
+		parent.remove_child(http)
 		http.queue_free()
 		plugin_installed.emit(plugin_id, FAILED)
 		return
@@ -89,7 +101,7 @@ func install_plugin(plugin_id: String, download_url: String, sha256: String) -> 
 	var response_code: int = args[1]
 	var headers: PackedStringArray = args[2]
 	var body: PackedByteArray = args[3]
-	remove_child(http)
+	parent.remove_child(http)
 	http.queue_free()
 	
 	if result != HTTPRequest.RESULT_SUCCESS:
@@ -146,12 +158,15 @@ func unload_plugin(plugin_id: String) -> int:
 
 # Uninitializes a plugin and calls its "unload" method
 func uninitialize_plugin(plugin_id: String) -> int:
+	if not parent:
+		logger.error("Plugin loader has not been initialized!")
+		return FAILED
 	if not plugin_id in plugin_nodes:
 		logger.error("Cannot uninitialize plugin {0} as it does not appear to be initialized".format([plugin_id]))
 		return FAILED
 	var instance: Plugin = plugin_nodes[plugin_id]
 	instance.unload()
-	remove_child(instance)
+	parent.remove_child(instance)
 	instance.queue_free()
 	plugin_nodes.erase(plugin_id)
 	logger.info("Uninitialized plugin: " + plugin_id)
@@ -200,6 +215,9 @@ func get_initialized_plugins() -> Array:
 
 # Instances the given plugin and adds it to the scene tree
 func initialize_plugin(plugin_id) -> int:
+	if not parent:
+		logger.error("PluginLoader has not been initialized!")
+		return FAILED
 	if not plugin_id in plugins:
 		logger.warn("Unable to initialize %s as it has not been loaded" % plugin_id)
 		return FAILED
@@ -214,7 +232,7 @@ func initialize_plugin(plugin_id) -> int:
 	var instance: Plugin = plugin.new()
 	instance.name = plugin_id
 	instance.plugin_base = "/".join([LOADED_PLUGINS_DIR, plugin_id])
-	add_child(instance)
+	parent.add_child(instance)
 	plugin_nodes[plugin_id] = instance
 	plugin_initialized.emit(plugin_id)
 	logger.info("Initialized plugin: " + plugin_id)

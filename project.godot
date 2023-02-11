@@ -28,14 +28,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 Entrypoint="*res://core/autoload/entrypoint.gd"
-SettingsManager="*res://core/autoload/settings_manager.gd"
-BoxArtManager="*res://core/autoload/boxart_manager.gd"
-LibraryManager="*res://core/autoload/library_manager.gd"
-LaunchManager="*res://core/autoload/launch_manager.gd"
-NotificationManager="*res://core/autoload/notification_manager.gd"
-InputManager="*res://core/autoload/input_manager.gd"
-StoreManager="*res://core/autoload/store_manager.gd"
-PluginLoader="*res://core/autoload/plugin_loader.gd"
 
 [display]
 

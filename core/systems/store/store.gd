@@ -15,11 +15,14 @@ signal search_completed(results: Array)
 @export var logger_name := store_id
 @export var log_level: Log.LEVEL = Log.LEVEL.INFO
 
+var StoreManager := load("res://core/global/store_manager.tres") as StoreManager
+
 @onready var logger := Log.get_logger(logger_name, log_level)
 
 
 func _init() -> void:
 	ready.connect(add_to_group.bind("store"))
+	ready.connect(StoreManager.register_store.bind(self))
 
 
 # Called when the node enters the scene tree for the first time.
@@ -41,3 +44,7 @@ func load_details(id: String):
 
 func search(str: String):
 	pass
+
+
+func _exit_tree() -> void:
+	StoreManager.unregister_store(self)

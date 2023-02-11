@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PluginLoader" load_steps=2 format=3 uid="uid://dq0hxuxr4jdhs"]
+
+[ext_resource type="Script" path="res://core/global/plugin_loader.gd" id="1_bflyd"]
+
+[resource]
+script = ExtResource("1_bflyd")

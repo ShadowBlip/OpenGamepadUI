@@ -7,6 +7,7 @@ enum UPDATE {
 	DICT,
 }
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
 var library_item: LibraryItem
 var settings_section: String

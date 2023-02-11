@@ -1,8 +1,7 @@
 extends Control
 
+var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var default_icon := preload("res://icon.svg")
-
-signal toast_finished
 
 @onready var notification_container := $ToastContainer/NotificationContainer
 @onready var progress_bar := $ToastContainer/ProgressBar
@@ -17,6 +16,10 @@ func _ready() -> void:
 	animation_player.animation_finished.connect(_on_animation_finished)
 	dismiss_button.pressed.connect(dismiss)
 
+	# Subscribe to any notifications
+	NotificationManager.notification_queued.connect(_on_notification_queued)
+	_on_notification_queued(null)
+
 
 # Handle when the dismiss button is pressed
 func dismiss() -> void:
@@ -24,10 +27,21 @@ func dismiss() -> void:
 	animation_player.play("hide")
 
 
+# Show notifications when they are queued
+func _on_notification_queued(_notify: Notification) -> void:
+	if is_showing():
+		return
+	var notify := NotificationManager.next()
+	if not notify:
+		return
+	show_toast(notify.text, notify.icon, notify.timeout, notify.action_text != "")
+
+
 func _on_animation_finished(anim_name: String):
 	if anim_name != "hide":
 		return
-	toast_finished.emit()
+	if NotificationManager.has_next():
+		_on_notification_queued(null)
 
 
 # Does literally nothing
@@ -49,9 +63,9 @@ func show_toast(text: String, icon: Texture2D = null, timeout_sec: float = 5.0, 
 		notification_container.icon_texture = icon
 	
 	# Setup and start the timer to dismiss the toast
-	var hide := func ():
+	var hide_toast := func ():
 		animation_player.play("hide")
-	timer.timeout.connect(hide, CONNECT_ONE_SHOT)
+	timer.timeout.connect(hide_toast, CONNECT_ONE_SHOT)
 	timer.start(timeout_sec)
 	
 	# Show/hide the action button

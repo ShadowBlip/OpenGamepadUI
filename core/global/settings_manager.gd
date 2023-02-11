@@ -1,8 +1,9 @@
-extends Node
+extends Resource
+class_name SettingsManager
 
 signal setting_changed(section: String, key: String, value: Variant)
 
-const settings_file := "user://settings.cfg"
+@export var settings_file := "user://settings.cfg"
 
 var _config: ConfigFile = ConfigFile.new()
 var logger := Log.get_logger("SettingsManager")

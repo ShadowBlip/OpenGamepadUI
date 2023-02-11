@@ -1,32 +1,29 @@
 @icon("res://assets/icons/tag.svg")
-extends Node
+extends Resource
+class_name StoreManager
 
 const REQUIRED_FIELDS: Array = ["store_id", "store_name", "store_image"]
 
 signal store_registered(store: Store)
+signal store_unregistered(store_id: String)
 
 var _stores: Dictionary = {}
 var logger := Log.get_logger("StoreManager")
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	get_parent().ready.connect(_on_parent_ready)
-
-
-# Called when our parent is ready
-func _on_parent_ready() -> void:
-	var stores = get_tree().get_nodes_in_group("store")
-	for store in stores:
-		_register_store(store)
-
 
 # Registers the given store with the store manager.
-func _register_store(store: Store) -> void:
+func register_store(store: Store) -> void:
 	if not _is_valid_store(store):
 		logger.error("Invalid store defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
 		return
 	_stores[store.store_id] = store
 	store_registered.emit(store)
+
+
+# Unregisters the store with the store manager
+func unregister_store(store: Store) -> void:
+	_stores.erase(store.store_id)
+	store_unregistered.emit()
 
 
 # Validates the given store and returns true if it has the required properties

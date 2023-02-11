@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="SettingsManager" load_steps=2 format=3 uid="uid://dq6yga6xj1wia"]
+
+[ext_resource type="Script" path="res://core/global/settings_manager.gd" id="1_il0j0"]
+
+[resource]
+script = ExtResource("1_il0j0")
+settings_file = "user://settings.cfg"

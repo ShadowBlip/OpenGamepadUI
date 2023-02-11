@@ -1,6 +1,7 @@
 extends Control
 class_name Main
 
+var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
 var overlay_display = DISPLAY
@@ -83,6 +84,8 @@ func _ready() -> void:
 		search_bar.keyboard_requested.connect(on_keyboard_requested)
 
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
+	LibraryManager.reload_library()
+
 
 # Always push the home state if we end up with an empty stack.
 func _on_state_changed(from: State, to: State) -> void:

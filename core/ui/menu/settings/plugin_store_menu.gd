@@ -5,6 +5,7 @@ extends HFlowContainer
 signal plugin_store_loaded(plugin_items: Dictionary)
 
 const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/plugin_store_item.tscn")
+var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var plugin_store_state := preload("res://assets/state/states/settings_plugin_store.tres") as State
 
 @onready var http_image := $HTTPImageFetcher

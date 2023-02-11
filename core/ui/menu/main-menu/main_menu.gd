@@ -1,5 +1,6 @@
 extends Control
 
+var LaunchManager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State

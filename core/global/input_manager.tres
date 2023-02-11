@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="InputManager" load_steps=2 format=3 uid="uid://ewyfsxbj8p0v"]
+
+[ext_resource type="Script" path="res://core/global/input_manager.gd" id="1_8u4tk"]
+
+[resource]
+script = ExtResource("1_8u4tk")

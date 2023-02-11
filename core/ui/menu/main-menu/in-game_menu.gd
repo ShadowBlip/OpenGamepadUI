@@ -1,6 +1,11 @@
 extends Control
 
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var LaunchManager := load("res://core/global/launch_manager.tres") as LaunchManager
+var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
+var state_machine := (
+	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+)
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
@@ -17,7 +22,7 @@ func _ready() -> void:
 	LaunchManager.app_launched.connect(_on_app_launched)
 	LaunchManager.app_stopped.connect(_on_app_closed)
 	LaunchManager.app_switched.connect(_on_app_switched)
-	
+
 
 func _on_game_menu_entered(_from: State) -> void:
 	resume_button.grab_focus.call_deferred()
@@ -25,8 +30,8 @@ func _on_game_menu_entered(_from: State) -> void:
 
 func _on_game_state_entered(_from: State) -> void:
 	visible = true
-	
-	
+
+
 func _on_game_state_removed() -> void:
 	visible = false
 
@@ -52,7 +57,7 @@ func _on_app_launched(app: RunningApp):
 	print("Found boxart: ", logo)
 	game_logo.texture = logo
 	game_logo.visible = true
-	
+
 
 func _on_app_closed(app: RunningApp):
 	print("App was CLOSED! ", app.launch_item.name)
