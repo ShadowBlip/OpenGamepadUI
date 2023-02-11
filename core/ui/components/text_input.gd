@@ -20,6 +20,10 @@ signal text_submitted(new_text: String)
 			description_label.visible = v != ""
 @export_category("LineEdit Settings")
 @export var text: String:
+	get:
+		if line_edit:
+			return line_edit.text
+		return ""
 	set(v):
 		text = v
 		if line_edit and line_edit.text != v:
@@ -34,6 +38,11 @@ signal text_submitted(new_text: String)
 		editable = v
 		if line_edit:
 			line_edit.editable = v
+@export var secret := false:
+	set(v):
+		secret = v
+		if line_edit:
+			line_edit.secret = v
 
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
@@ -48,6 +57,7 @@ func _ready() -> void:
 	line_edit.text = text
 	line_edit.placeholder_text = placeholder_text
 	line_edit.editable = editable
+	line_edit.secret = secret
 
 	# Hide labels if nothing is specified
 	if title == "":

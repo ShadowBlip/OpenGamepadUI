@@ -2,6 +2,9 @@
 extends Node
 class_name Library
 
+signal install_completed(item: LibraryItem)
+signal update_completed(item: LibraryItem)
+
 # Unique identifier for the library
 @export var library_id: String
 # Optional store that this library is linked to
@@ -26,20 +29,23 @@ func _ready() -> void:
 
 
 # Returns an array of available library launch items
-func get_library_launch_items() -> Array:
+func get_library_launch_items() -> Array[LibraryLaunchItem]:
 	return []
-	
 
 
 # Installs the given library item
-func install(item: LibraryItem):
+func install(item: LibraryItem) -> void:
 	pass
-	
 
 
 # Uninstalls the given library item
-func uninstall(item: LibraryItem):
+func uninstall(item: LibraryItem) -> void:
 	pass
+
+
+# Returns true if the given library item has an update available
+func has_update(item: LibraryItem) -> bool:
+	return false
 
 
 func _exit_tree() -> void:
