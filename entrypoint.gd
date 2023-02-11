@@ -22,6 +22,11 @@ func _ready() -> void:
 
 
 func _setup_qam_only() -> void:
+	# Setup input manager
+	var input_scene := load("res://core/systems/input/input_manager.tscn") as PackedScene
+	add_child(input_scene.instantiate())
+
+	# Add the QAM
 	var qam_scene := load("res://core/ui/menu/qam/quick_access_menu.tscn") as PackedScene
 	add_child(qam_scene.instantiate())
 
