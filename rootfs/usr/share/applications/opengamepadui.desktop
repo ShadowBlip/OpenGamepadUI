@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=OpenGamepadUI
+GenericName=Game launcher and overlay
+Type=Application
+Comment=Game launcher and overlay
+Icon=opengamepadui
+Exec=opengamepadui
+Terminal=false
+StartupNotify=false
