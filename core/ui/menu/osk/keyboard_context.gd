@@ -1,4 +1,4 @@
-extends Object
+extends Resource
 class_name KeyboardContext
 
 enum TYPE {
@@ -6,17 +6,16 @@ enum TYPE {
 	X11,
 }
 
+signal submitted
+signal entered
+signal exited
+
 var type: TYPE
 var target: Control
-var submit: Callable
-var close_on_submit: bool = false
+var close_on_submit: bool = true
 
-func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, sbmt: Callable = _on_submit, close_after_submit: bool = true) -> void:
+
+func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, close_after_submit: bool = true) -> void:
 	type = t
 	target = tgt
-	submit = sbmt
 	close_on_submit = close_after_submit
-
-
-func _on_submit(_text: String):
-	pass

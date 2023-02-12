@@ -2,7 +2,10 @@ extends TextEdit
 class_name SearchBar
 
 signal search_submitted(text: String)
-signal keyboard_requested()
+
+@export var keyboard: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
+var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.GODOT, self)
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -18,4 +21,4 @@ func _gui_input(event: InputEvent) -> void:
 	if not has_focus():
 		return
 	if event.is_action_released("ogui_south"):
-		keyboard_requested.emit()
+		keyboard.open(keyboard_context)

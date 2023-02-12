@@ -1,5 +1,6 @@
 @tool
 extends BoxContainer
+class_name ComponentTextInput
 
 signal text_change_rejected(rejected_substring: String)
 signal text_changed(new_text: String)
@@ -44,9 +45,14 @@ signal text_submitted(new_text: String)
 		if line_edit:
 			line_edit.secret = v
 
+@export_category("On-Screen Keyboard Instance")
+@export var enable_osk := true
+@export var keyboard: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
+
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
 @onready var line_edit := $%LineEdit as LineEdit
+@onready var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.GODOT, line_edit)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -82,7 +88,27 @@ func _ready() -> void:
 	var on_focus_entered := func():
 		focus_entered.emit()
 	line_edit.focus_entered.connect(on_focus_entered)
+
+	# Listen for GUI events on the line edit to bring up the OSK 
+	if line_edit and enable_osk:
+		line_edit.gui_input.connect(_on_gui_input)
+
+	# Set the caret visibility when our keyboard context is being used
+	var on_keyboard_entered := func():
+		line_edit.caret_blink = true 
+		line_edit.caret_force_displayed = true
+	keyboard_context.entered.connect(on_keyboard_entered)
+	var on_keyboard_exited := func():
+		line_edit.caret_blink = false
+		line_edit.caret_force_displayed = false
+	keyboard_context.exited.connect(on_keyboard_exited)
 	
+
+func _on_gui_input(event: InputEvent) -> void:
+	if not line_edit.has_focus():
+		return
+	if event.is_action_released("ogui_south"):
+		keyboard.open(keyboard_context)
 
 
 # Override focus grabbing to grab the node

@@ -10,17 +10,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 2
 script = ExtResource("1_oomlj")
-title = null
-description = null
-text = null
-placeholder_text = null
-editable = null
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Title"
+text = "Setting"
 label_settings = ExtResource("2_w0wib")
 
 [node name="DescriptionLabel" type="Label" parent="."]

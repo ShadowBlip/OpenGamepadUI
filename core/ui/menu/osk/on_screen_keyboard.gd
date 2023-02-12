@@ -3,11 +3,7 @@
 extends Control
 class_name OnScreenKeyboard
 
-signal keyboard_opened
-signal keyboard_closed
-signal keyboard_populated
 signal layout_changed
-signal context_changed(ctx: KeyboardContext)
 signal mode_shifted(mode: MODE_SHIFT)
 
 const key_scene := preload("res://core/ui/components/button.tscn")
@@ -20,7 +16,7 @@ enum MODE_SHIFT {
 }
 
 @export var layout: KeyboardLayout = KeyboardLayout.new()
-var _context: KeyboardContext
+@export var instance: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
 var _mode_shift: MODE_SHIFT = MODE_SHIFT.OFF
 var logger := Log.get_logger("OSK")
 
@@ -31,6 +27,8 @@ func _ready() -> void:
 	if not layout:
 		logger.warn("No keyboard layout was defined")
 		return
+	instance.keyboard_opened.connect(open)
+	instance.keyboard_closed.connect(close)
 	populate_keyboard()
 
 
@@ -74,13 +72,12 @@ func populate_keyboard() -> void:
 			
 			container.add_child(button)
 		
-	keyboard_populated.emit()
+	instance.keyboard_populated.emit()
 
 
 # Opens the OSK with the given context. The keyboard context determines where
 # keyboard inputs should go, and how to handle submits.
-func open(ctx: KeyboardContext) -> void:
-	set_context(ctx)
+func open() -> void:
 	visible = true
 	
 	# Grab focus on the first key in the first row
@@ -91,14 +88,11 @@ func open(ctx: KeyboardContext) -> void:
 			key.grab_focus.call_deferred()
 			break
 		break
-	
-	keyboard_opened.emit()
 
 
 # Closes the OSK
 func close() -> void:
 	visible = false
-	keyboard_closed.emit()
 
 
 # Sets the given keyboard layout and re-populates the keyboard
@@ -106,30 +100,6 @@ func set_layout(key_layout: KeyboardLayout) -> void:
 	layout = key_layout
 	populate_keyboard()
 	layout_changed.emit()
-
-
-# Returns the currently set keyboard context
-func get_context() -> KeyboardContext:
-	return _context
-
-
-# Configure the keyboard to use the given context. The keyboard context determines where
-# keyboard inputs should go, and how to handle submits.
-func set_context(ctx: KeyboardContext) -> void:
-	# If the target is a Godot TextEdit, update the caret position on context change
-	if ctx.target != null and ctx.target is TextEdit:
-		var text_edit := ctx.target as TextEdit
-		var lines := text_edit.get_line_count()
-		text_edit.set_caret_line(lines-1)
-		var current_line := text_edit.get_line(lines-1)
-		text_edit.set_caret_column(current_line.length())
-		#text_edit.clear()
-		
-	# Update our internal keyboard context
-	if _context == ctx:
-		return
-	_context = ctx
-	context_changed.emit(ctx)
 
 
 # Sets the keyboard mode shift (i.e. pressing the "shift" key)
@@ -142,13 +112,15 @@ func _input(event: InputEvent) -> void:
 	if not visible:
 		return
 	if event.is_action_released("ogui_east"):
-		close()
+		instance.close()
+		get_viewport().set_input_as_handled()
+
 
 # Handle input when the keyboard is open and focused
 func _gui_input(event: InputEvent) -> void:
-	print(event)
 	if event.is_action_released("ogui_east"):
-		close()
+		instance.close()
+		get_viewport().set_input_as_handled()
 
 
 # Handle all kinds of key presses. Key inputs get processed depending on the
@@ -162,33 +134,44 @@ func _on_key_pressed(key: KeyboardKeyConfig) -> void:
 
 # Handles normal character inputs
 func _handle_key_char(key: KeyboardKeyConfig) -> void:
-	if _context == null:
+	if instance.context == null:
 		logger.warn("Keyboard context not set, nowhere to send key input.")
 		return
 	
-	if _context.type == KeyboardContext.TYPE.X11:
+	if instance.context.type == KeyboardContext.TYPE.X11:
 		return
 	
-	if _context.target == null:
+	if instance.context.target == null:
 		logger.warn("Keyboard target not set, nowhere to send key input.")
 		return
-		
-	if not _context.target is TextEdit:
-		logger.warn("Non-TextEdit nodes are not currently supported")
-		return
-	
-	# Update the target text with the given character
-	var text_edit := _context.target as TextEdit
-	var char := key.output
+	var target = instance.context.target
+
+	# Get the character to send to the target
+	var character := key.output
 	if _mode_shift > MODE_SHIFT.OFF:
-		char = key.output_uppercase
+		character = key.output_uppercase
 		if _mode_shift == MODE_SHIFT.ONE_SHOT:
 			set_mode_shift(MODE_SHIFT.OFF)
-	text_edit.insert_text_at_caret(char)
+	
+	# Update the target text with the given character
+	if target is TextEdit:
+		var text_edit := instance.context.target as TextEdit
+		text_edit.insert_text_at_caret(character)
+		return
+	
+	if target is LineEdit:
+		var line_edit := instance.context.target as LineEdit
+		line_edit.insert_text_at_caret(character)
+		return
+
+	logger.warn("Keyboard target is not a supported type. Can't send key input.")
 
 
 # Handles special key inputs like shift, alt, ctrl, etc.
 func _handle_key_special(key: KeyboardKeyConfig) -> void:
+	if not instance.context:
+		return
+	var target = instance.context.target
 	match key.action:
 		KeyboardKeyConfig.ACTION.SHIFT:
 			if _mode_shift > MODE_SHIFT.OFF:
@@ -203,17 +186,18 @@ func _handle_key_special(key: KeyboardKeyConfig) -> void:
 			set_mode_shift(MODE_SHIFT.ON)
 			return
 		KeyboardKeyConfig.ACTION.CLOSE_KEYBOARD:
-			close()
+			instance.close()
 			return
 		KeyboardKeyConfig.ACTION.BKSP:
-			if _context.target != null and _context.target is TextEdit:
-				var text_edit := _context.target as TextEdit
+			if target != null and target is TextEdit:
+				var text_edit := target as TextEdit
 				text_edit.backspace()
+			if target != null and target is LineEdit:
+				var line_edit := target as LineEdit
+				line_edit.delete_char_at_caret()
 			return
 		KeyboardKeyConfig.ACTION.ENTER:
-			if _context.target != null and _context.target is TextEdit:
-				var text_edit := _context.target as TextEdit
-				_context.submit.call(text_edit.text)
-			if _context.close_on_submit:
-				close()
+			instance.context.submitted.emit()
+			if instance.context.close_on_submit:
+				instance.close()
 			return
