@@ -33,6 +33,7 @@ focus_neighbor_right = NodePath("../SMTButton")
 focus_neighbor_bottom = NodePath("../SMTButton")
 focus_next = NodePath("../SMTButton")
 focus_previous = NodePath("../GPUTempSlider")
+text = "CPU Boost"
 button_pressed = false
 
 [node name="SMTButton" parent="." instance=ExtResource("2_nb5h3")]
