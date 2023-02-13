@@ -5,7 +5,7 @@ community created plugins. This list of plugins is maintained in the
 [OpenGamepadUI-plugins](https://github.com/ShadowBlip/OpenGamepadUI-plugins)
 repository.
 
-To have your plugin considered for inclusion in the plugin store, ccreate a
+To have your plugin considered for inclusion in the plugin store, create a
 pull request to the plugins repository with an entry for your plugin.
 
 > :warning: Please be aware that we do not allow private repositories, "black-box"
