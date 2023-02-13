@@ -192,6 +192,8 @@ With registered box art providers, other systems can request box art from the
 BoxArtManager, and it will use all available sources to return the best artwork:
 
 ```gdscript
+const BoxArtManager := preload("res://core/global/boxart_manager.tres")
+...
 var boxart := BoxArtManager.get_boxart(library_item, BoxArtProvider.LAYOUT.LOGO)
 ```
 
@@ -240,6 +242,8 @@ attention.
 Example:
 
 ```gdscript
+const LaunchManager := preload("res://core/global/launch_manager.tres")
+...
 # Create a LibraryLaunchItem to run something
 var item := LibraryLaunchItem.new()
 item.command = "vkcube"
@@ -270,6 +274,8 @@ LibraryManager, and it will use all available sources to return a unified librar
 item:
 
 ```gdscript
+const LibraryManager := preload("res://core/global/library_manager.tres")
+...
 # Return a dictionary of all installed games from every library provider
 var installed_games := LibraryManager.get_installed()
 ```
@@ -300,6 +306,8 @@ a queue of notifications so only one notification shows at a time.
 Notifications can be sent with:
 
 ```gdscript
+const NotificationManager := preload("res://core/global/notification_manager.tres")
+...
 var notify := Notification.new("Hello world!")
 notify.icon = load("res://assets/icons/critical.png")
 NotificationManager.show(notify)
@@ -327,6 +335,8 @@ These settings are stored in a single file at `user://settings.cfg`. User
 customizable settings can be used with:
 
 ```gdscript
+const SettingsManager := preload("res://core/global/settings_manager.tres")
+...
 # Get a value from the settings file
 var value := SettingsManager.get_value("general.home", "max_home_items")
 
