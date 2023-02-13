@@ -2,7 +2,6 @@
 extends Resource
 class_name InputManager
 
-var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -23,7 +22,7 @@ var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
 
 
-func _init() -> void:
+func init() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)

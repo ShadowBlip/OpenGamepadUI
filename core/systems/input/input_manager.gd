@@ -4,6 +4,10 @@ extends Node
 const InputManager := preload("res://core/global/input_manager.tres")
 
 
+func _ready() -> void:
+	InputManager.init()
+
+
 func _input(event: InputEvent) -> void:
 	if not InputManager.input(event):
 		return

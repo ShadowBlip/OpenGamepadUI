@@ -7,8 +7,9 @@ signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
-var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
-var InputManager := load("res://core/global/input_manager.tres") as InputManager
+const SettingsManager := preload("res://core/global/settings_manager.tres")
+const InputManager := preload("res://core/global/input_manager.tres")
+
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
