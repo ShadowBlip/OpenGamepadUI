@@ -149,6 +149,8 @@ func discover_gamepads() -> PackedStringArray:
 	var input_path := "/dev/input"
 	var files := DirAccess.get_files_at(input_path)
 	for file in files:
+		if not file.begins_with("event"):
+			continue
 		var path := "/".join([input_path, file])
 		var dev := InputDevice.new()
 		if dev.open(path) != OK:
@@ -293,3 +295,9 @@ func exit() -> void:
 	input_exited = true
 	gamepad_mutex.unlock()
 	input_thread.wait_to_finish()
+	Input.joy_connection_changed.disconnect(_on_gamepad_change)
+	for gamepad in managed_gamepads.values():
+		logger.debug("Cleaning up gamepad: " + gamepad.phys_path)
+		gamepad.phys_device.grab(false)
+		gamepad.virt_device.close()
+		gamepad.phys_device.close()

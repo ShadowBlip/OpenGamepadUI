@@ -1,7 +1,7 @@
 @icon("res://assets/icons/navigation.svg")
 extends Node
 
-var InputManager := load("res://core/global/input_manager.tres") as InputManager
+const InputManager := preload("res://core/global/input_manager.tres")
 
 
 func _input(event: InputEvent) -> void:
