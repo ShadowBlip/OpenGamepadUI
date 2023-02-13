@@ -42,18 +42,18 @@ It looks like this:
 
 ```yaml
 {
-  "plugin.id": "template",              # Unique ID of the plugin, lowercase
-  "plugin.name": "Template Plugin",     # Display name of the plugin
-  "plugin.version": "1.0.0",            # Plugin version
-  "plugin.min-api-version": "1.0.0",    # Minimum OpenGamepadUI API version
-  "plugin.link": "",                    # Link to your plugin's website
-  "plugin.source": "",                  # Link to the plugin source code
-  "plugin.description": "",             # Short description of your plugin
-  "store.tags": [],                     # List of tags that describe your plugin
-  "store.images": [],                   # Optional list of images that show your plugin
-  "author.name": "First Last",          # Author of the plugin
+  "plugin.id": "template", # Unique ID of the plugin, lowercase
+  "plugin.name": "Template Plugin", # Display name of the plugin
+  "plugin.version": "1.0.0", # Plugin version
+  "plugin.min-api-version": "1.0.0", # Minimum OpenGamepadUI API version
+  "plugin.link": "", # Link to your plugin's website
+  "plugin.source": "", # Link to the plugin source code
+  "plugin.description": "", # Short description of your plugin
+  "store.tags": [], # List of tags that describe your plugin
+  "store.images": [], # Optional list of images that show your plugin
+  "author.name": "First Last", # Author of the plugin
   "author.email": "person@example.com", # Email address of the plugin author
-  "entrypoint": "plugin.gd",            # Script to run when your plugin is loaded
+  "entrypoint": "plugin.gd", # Script to run when your plugin is loaded
 }
 ```
 
@@ -87,3 +87,4 @@ directory and run `make edit` to start working on your plugin!
 
 Depending on your plugin, you may want to consider looking at the number
 of [Global Systems](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/docs/DEVELOPER.md#global-systems)
+or [plugin tutorials](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/docs/plugins/TUTORIALS.md)
