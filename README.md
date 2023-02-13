@@ -123,10 +123,19 @@ https://aur.archlinux.org/packages/ogui-git
 
 ## Usage
 
-Once OpenGamepadUI is installed, you can run it inside gamescope with:
+Once OpenGamepadUI is installed, it should show up as an application you can
+launch from your desktop environment.
+
+Alternatively you can launch it from the command line with:
 
 ```bash
 opengamepadui
+```
+
+or, if installed in the local user directory:
+
+```bash
+~/.local/bin/opengamepadui
 ```
 
 ## License
