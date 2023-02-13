@@ -1,10 +1,14 @@
 
-GODOT_VERSION ?= 4.0.rc1
+PREFIX ?= $(HOME)/.local
+ROOTFS ?= .rootfs
+GODOT_VERSION ?= 4.0
+GODOT_RELEASE ?= rc1
+GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot4
 GAMESCOPE ?= /usr/bin/gamescope
 
-EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_VERSION)/linux_debug.x86_64
-EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/4.0/rc1/Godot_v4.0-rc1_export_templates.tpz
+EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
+EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
@@ -25,6 +29,14 @@ ALL_SCENES := $(shell find ./ -name '*.tscn')
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+.PHONY: install 
+install: rootfs ## Install OpenGamepadUI (default: ~/.local)
+	cd $(ROOTFS) && make install PREFIX=$(PREFIX)
+
+.PHONY: uninstall
+uninstall: ## Uninstall OpenGamepadUI
+	cd $(ROOTFS) && make uninstall PREFIX=$(PREFIX)
 
 ##@ Development
 
@@ -58,7 +70,10 @@ edit: ## Open the project in the Godot editor
 .PHONY: clean
 clean: ## Remove build artifacts
 	rm -rf build
+	rm -rf $(ROOTFS)
+	rm -rf dist
 	cd ./addons/godot-xlib && make clean
+	cd ./addons/godot-evdev && make clean
 
 .PHONY: run run-force
 run: addons build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
@@ -88,15 +103,22 @@ inspect: addons ## Launch Gamescope inspector
 
 ##@ Distribution
 
+.PHONY: rootfs
+rootfs: ## Build the archive structure
+	rm -rf $(ROOTFS)
+	mkdir -p $(ROOTFS)
+	cp -r rootfs/* $(ROOTFS)
+	mkdir -p $(ROOTFS)/usr/share/opengamepadui
+	cp -r build/*.so $(ROOTFS)/usr/share/opengamepadui
+	cp -r build/opengamepad-ui.x86_64 $(ROOTFS)/usr/share/opengamepadui
+	touch $(ROOTFS)/.gdignore
+
+
 .PHONY: dist 
 dist: dist/opengamepadui.tar.gz ## Create an archive distribution of the project
-dist/opengamepadui.tar.gz: build
-	rm -rf opengamepadui
-	mkdir -p opengamepadui
-	cp -r rootfs/* opengamepadui/
-	mkdir -p opengamepadui/usr/share/opengamepadui
-	cp -r build/* opengamepadui/usr/share/opengamepadui
+dist/opengamepadui.tar.gz: build rootfs
+	mv $(ROOTFS) opengamepadui
 	tar cvfz opengamepadui.tar.gz opengamepadui
 	mkdir -p dist
 	mv opengamepadui.tar.gz dist
-	rm -rf opengamepadui
+	mv opengamepadui $(ROOTFS)

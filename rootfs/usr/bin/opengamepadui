@@ -1,5 +1,8 @@
 #!/bin/bash
-OGUI_BIN=${OGUI_BIN:-"/usr/share/opengamepadui/opengamepad-ui.x86_64"}
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PREFIX=$(dirname -- "${SCRIPT_DIR}")
+
+OGUI_BIN=${OGUI_BIN:-"${PREFIX}/share/opengamepadui/opengamepad-ui.x86_64"}
 GAMESCOPE_CMD=${GAMESCOPE_CMD:-gamescope -w 1920 -h 1080 -f -e --xwayland-count 2}
 
 # Launch normally if gamescope is not running

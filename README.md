@@ -52,20 +52,44 @@ The following are required to run Open Gamepad UI:
 
 ## Installation
 
-OpenGamepadUI is still in the early stages of development, so expect to
-encounter many bugs. Knowing this, if you still want to try, use the following
-steps below to install and run OpenGamepadUI:
+> :warning: OpenGamepadUI is still in the early stages of development, so expect to
+> encounter many bugs.
 
-#### ArchLinux
+Knowing this, if you still want to try, use the following steps below to install
+and run OpenGamepadUI:
 
-If you are using ArchLinux, you can install OpenGamepadUI from the AUR:
+#### From source
 
-https://aur.archlinux.org/packages/ogui-bin
+- Ensure that you have the build dependencies from the [developer guide](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/docs/DEVELOPER.md#build-requirements) installed.
 
+- Clone this repository locally
 
-#### Other distributions
+```bash
+git clone https://github.com/ShadowBlip/OpenGamepadUI.git
+```
 
-- Ensure you have the dependencies listed above installed.
+- Build the project with `make`
+
+```bash
+cd OpenGamepadUI
+make build
+```
+
+- Install OpenGamepadUI to your user directory (default: `~/.local`)
+
+```bash
+make install
+```
+
+If you wish to install OpenGamepadUI system-wide, you can do the following:
+
+```bash
+sudo make install PREFIX=/usr
+```
+
+#### From pre-built binary
+
+- Ensure you have the runtime dependencies listed above installed.
 
 - Download the latest version of OpenGamepadUI from the [releases](https://github.com/ShadowBlip/OpenGamepadUI/releases) page.
 
@@ -75,12 +99,26 @@ https://aur.archlinux.org/packages/ogui-bin
 tar xvfz opengamepadui.tar.gz
 ```
 
-- Copy the files from the archive to your system
+- Install OpenGamepadUI (default: `~/.local`)
 
 ```bash
-sudo cp -r ./opengamepadui/usr/share/opengamepadui /usr/share
-sudo cp ./opengamepadui/usr/bin/opengamepadui /usr/bin
+cd opengamepadui
+make install
 ```
+
+If you wish to install OpenGamepadUI system-wide, you can do the following:
+
+```bash
+sudo make install PREFIX=/usr
+```
+
+#### ArchLinux
+
+If you are using ArchLinux, you can install OpenGamepadUI from the AUR:
+
+https://aur.archlinux.org/packages/ogui-bin
+
+https://aur.archlinux.org/packages/ogui-git
 
 ## Usage
 
