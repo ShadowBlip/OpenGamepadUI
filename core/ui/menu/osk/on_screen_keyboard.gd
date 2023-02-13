@@ -114,6 +114,30 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("ogui_east"):
 		instance.close()
 		get_viewport().set_input_as_handled()
+		return 
+	if event.is_action_released("ogui_north"):
+		var key := KeyboardKeyConfig.new()
+		key.type = key.TYPE.SPECIAL
+		key.action = key.ACTION.BKSP
+		_on_key_pressed(key)
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action("ogui_left_trigger"):
+		if event.get_action_strength("ogui_left_trigger") > 0.5:
+			if _mode_shift != MODE_SHIFT.ON:
+				set_mode_shift(MODE_SHIFT.ON)
+		else:
+			if _mode_shift != MODE_SHIFT.OFF:
+				set_mode_shift(MODE_SHIFT.OFF)
+		return
+	if event.is_action("ogui_right_trigger"):
+		if event.get_action_strength("ogui_right_trigger") < 0.5:
+			return
+		var key := KeyboardKeyConfig.new()
+		key.type = key.TYPE.SPECIAL
+		key.action = key.ACTION.ENTER
+		_on_key_pressed(key)
+		return
 
 
 # Handle input when the keyboard is open and focused
