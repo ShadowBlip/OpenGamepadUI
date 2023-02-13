@@ -90,6 +90,7 @@ The following are required to build Open Gamepad UI:
 - MesaGL development libraries.
 - ALSA development libraries.
 - PulseAudio development libraries.
+- Evdev development libraries
 - make (optional)
 - unzip (optional)
 - wget (optional)
@@ -97,7 +98,7 @@ The following are required to build Open Gamepad UI:
 If you are using ArchLinux, you can run the following:
 
 ```bash
-pacman -S --needed scons pkgconf gcc libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib make unzip wget git
+pacman -S --needed scons pkgconf gcc gcc-libs libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib make unzip wget git libevdev libxau libxcb libxdmcp libxext libxres
 ```
 
 ### Building
@@ -171,12 +172,15 @@ provides an overview of the architecture and systems that it uses.
 ### Global Systems
 
 OpenGamepadUI has several global systems that are typically implemented as
-an always running [global singleton](https://docs.godotengine.org/en/latest/tutorials/scripting/singletons_autoload.html).
-This section describes some of those systems and what they do.
+a [custom resource](https://docs.godotengine.org/en/latest/tutorials/scripting/resources.html#creating-your-own-resources).
+Resources in Godot are unique in that they are only ever loaded once by the
+engine. This allows nodes to access their functionality regardless of where
+they are in the scene tree. This section describes some of those systems and
+what they do.
 
 #### BoxArtManager
 
-The [BoxArtManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/boxart_manager.gd)
+The [BoxArtManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/boxart_manager.gd)
 is responsible for managing any number of [BoxArtProviders](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/systems/boxart/boxart_provider.gd)
 and providing a unified way to provide box art from multiple sources to any
 systems that might need them. New box art sources can be created in the core
@@ -212,16 +216,19 @@ that exposes Xlib methods to Godot.
 
 #### InputManager
 
-The [InputManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/input_manager.gd)
+The [InputManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/input_manager.gd)
 class is responsible for handling global input that should happen everywhere in
-the application. This usually means processing input for when the guide button
-is pressed to bring up the overlay or main menu. It is also responsible for
-setting some Gamescope atoms to redirect input focus to either a running game
-or the OpenGamepadUI overlay.
+the application. The input manager discovers gamepads and interepts their input
+so OpenGamepadUI can control what inputs should get passed on to the game and
+what only OpenGamepadUI should process. This works by grabbing exclusive access
+to the physical gamepads and creating a virtual gamepad that games can see.
+
+It is also responsible for setting some Gamescope atoms to redirect input focus
+to either a running game or the OpenGamepadUI overlay.
 
 #### LaunchManager
 
-The [LaunchManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/launch_manager.gd)
+The [LaunchManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/launch_manager.gd)
 class is responsible starting and managing the lifecycle of games and is one
 of the most complex systems in OpenGamepadUI. Using gamescope, it manages
 what games start, if their process is still running, and fascilitates window
@@ -250,7 +257,7 @@ LaunchManager.stop(running_app)
 
 #### LibraryManager
 
-The [LibraryManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/library_manager.gd)
+The [LibraryManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/library_manager.gd)
 is responsible for managing any number of [Library](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/systems/library/library.gd)
 providers and offers a unified interface to manage games from multiple sources.
 New game library sources can be created in the core code base or in plugins by
@@ -285,7 +292,7 @@ for launch_item in library_item.launch_items:
 
 #### NotificationManager
 
-The [NotificationManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/notification_manager.gd)
+The [NotificationManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/notification_manager.gd)
 is responsible for providing an API to display arbitrary notifications
 to the user and maintain a history of those notifications. It also manages
 a queue of notifications so only one notification shows at a time.
@@ -300,7 +307,7 @@ NotificationManager.show(notify)
 
 #### PluginLoader
 
-The [PluginLoader](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/plugin_loader.gd)
+The [PluginLoader](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/plugin_loader.gd)
 is responsible for downloading, loading, and initializing OpenGamepadUI plugins.
 The plugin system for OpenGamepadUI is heavily based upon the modding system
 implemented by [Delta-V](https://gitlab.com/Delta-V-Modding/Mods/-/blob/main/game/ModLoader.gd).
@@ -314,7 +321,7 @@ loader loads the zip as a resource pack.
 
 #### SettingsManager
 
-The [SettingsManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/autoload/settings_manager.gd)
+The [SettingsManager](https://github.com/ShadowBlip/OpenGamepadUI/blob/main/core/global/settings_manager.gd)
 is a simple class responsible for getting and setting user-specific settings.
 These settings are stored in a single file at `user://settings.cfg`. User
 customizable settings can be used with:

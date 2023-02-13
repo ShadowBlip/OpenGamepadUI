@@ -39,6 +39,7 @@ The following are required to run Open Gamepad UI:
 - gamescope
 - gcc-libs
 - glibc
+- libevdev
 - libx11
 - libxau
 - libxcb
