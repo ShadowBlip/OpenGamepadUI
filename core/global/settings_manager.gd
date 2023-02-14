@@ -1,6 +1,12 @@
 extends Resource
 class_name SettingsManager
 
+## Get and set user settings
+##
+## The SettingsManager is a simple class responsible for getting and setting 
+## user-specific settings. These settings are stored in a single file at 
+## user://settings.cfg.
+
 signal setting_changed(section: String, key: String, value: Variant)
 
 @export var settings_file := "user://settings.cfg"

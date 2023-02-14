@@ -2,9 +2,29 @@
 extends Resource
 class_name BoxArtManager
 
+## Fetch and manage artwork from registered [BoxArtProvider] nodes
+## 
+## The BoxArtManager is responsible for managing any number of [BoxArtProvider]
+## nodes and providing a unified way to fetch box art from multiple sources to 
+## any systems that might need them. New box art sources can be created in the 
+## core code base or in plugins by implementing/extending the [BoxArtProvider]
+## class and adding them to the scene.[br][br]
+## 
+## With registered box art providers, other systems can request box art from the 
+## BoxArtManager, and it will use all available sources to return the best 
+## artwork:
+##     [codeblock]
+##     const BoxArtManager := preload("res://core/global/boxart_manager.tres")
+##     ...
+##     var boxart := BoxArtManager.get_boxart(library_item, BoxArtProvider.LAYOUT.LOGO)
+##     [/codeblock]
+
+## Fields required to be set by [BoxArtProvider] implementations
 const REQUIRED_FIELDS: Array = ["provider_id"]
 
+## Emitted when a boxart provider is added to the scene tree and registers
 signal provider_registered(boxart: BoxArtProvider)
+## Emitted when a boxart provider is removed from the scene tree
 signal provider_unregistered(provider_id: String)
 
 var logger := Log.get_logger("BoxArtManager")
@@ -22,7 +42,7 @@ var _providers: Dictionary = {}
 var _providers_by_priority: Array = []
 
 
-# Returns the boxart of the given kind for the given library item. 
+## Returns the boxart of the given kind for the given library item. 
 func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	if _providers.is_empty():
 		logger.error("No box art providers were found!")
@@ -39,8 +59,8 @@ func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	return null
 
 
-# Returns the boxart of the given kind for the given library item. If one is not
-# found, a placeholder texture will be returned
+## Returns the boxart of the given kind for the given library item. If one is not
+## found, a placeholder texture will be returned
 func get_boxart_or_placeholder(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	var boxart: Texture2D = await get_boxart(item, kind)
 	if boxart == null:
@@ -48,22 +68,22 @@ func get_boxart_or_placeholder(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -
 	return boxart
 
 
-# Returns a boxart placeholder for the given layout
+## Returns a boxart placeholder for the given layout
 func get_placeholder(kind:  BoxArtProvider.LAYOUT) -> Texture2D:
 	return _placeholder_map[kind]
 
 
-# Returns the given boxart implementation by id
+## Returns the given boxart implementation by id
 func get_provider_by_id(id: String) -> BoxArtProvider:
 	return _providers[id]
 
 
-# Returns a list of all registered boxart providers
+## Returns a list of all registered boxart providers
 func get_providers() -> Array:
 	return _providers.values()
 
 
-# Registers the given boxart provider with the boxart manager.
+## Registers the given boxart provider with the boxart manager.
 func register_provider(provider: BoxArtProvider) -> void:
 	if not _is_valid_provider(provider):
 		logger.error("Invalid boxart provider defined! Ensure you have all required properties set: " + ",".join(REQUIRED_FIELDS))
@@ -77,7 +97,7 @@ func register_provider(provider: BoxArtProvider) -> void:
 	provider_registered.emit(provider)
 
 
-# Unregisters the given boxart provider
+## Unregisters the given boxart provider
 func unregister_provider(provider: BoxArtProvider) -> void:
 	if not provider.provider_id in _providers:
 		logger.warn("BoxArt provider already unregistered")

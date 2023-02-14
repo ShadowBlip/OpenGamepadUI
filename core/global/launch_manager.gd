@@ -2,6 +2,33 @@
 extends Resource
 class_name LaunchManager
 
+## Launch and manage the lifecycle of subprocesses
+##
+## The LaunchManager class is responsible starting and managing the lifecycle of 
+## games and is one of the most complex systems in OpenGamepadUI. Using 
+## gamescope, it manages what games start, if their process is still running, 
+## and fascilitates window switching between games. It also provides a mechanism 
+## to kill running games and discover child processes. It uses a timer to 
+## periodically check on launched games to see if they have exited, or are 
+## opening new windows that might need attention. Example:
+##     [codeblock]
+##     const LaunchManager := preload("res://core/global/launch_manager.tres")
+##     ...
+##     # Create a LibraryLaunchItem to run something
+##     var item := LibraryLaunchItem.new()
+##     item.command = "vkcube"
+##     
+##     # Launch the app with LaunchManager
+##     var running_app := LaunchManager.launch(item)
+##     
+##     # Get a list of running apps
+##     var running := LaunchManager.get_running()
+##     print(running)
+##     
+##     # Stop an app with LaunchManager
+##     LaunchManager.stop(running_app)
+##     [/codeblock]
+
 signal app_launched(app: RunningApp)
 signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
@@ -51,13 +78,13 @@ func _save_persist_data():
 	file.flush()
 
 
-# Returns whether or not we can launch via sandboxing
+## Returns whether or not we can launch via sandboxing
 func has_sandboxing() -> bool:
 	return OS.execute("which", ["firejail"]) == 0
 
 
-# Launches the given command on the target xwayland display. Returns a PID
-# of the launched process.
+## Launches the given command on the target xwayland display. Returns a PID
+## of the launched process.
 func launch(app: LibraryLaunchItem) -> RunningApp:
 	var cmd: String = app.command
 	var args: PackedStringArray = app.args
@@ -132,13 +159,13 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	return running_app
 
 
-# Stops the game and all its children with the given PID
+## Stops the game and all its children with the given PID
 func stop(app: RunningApp) -> void:
 	Reaper.reap(app.pid)
 	_remove_running(app)
 
 
-# Returns a list of apps that have been launched recently
+## Returns a list of apps that have been launched recently
 func get_recent_apps() -> Array:
 	var recent := []
 	if not "recent" in _persist_data:
@@ -153,17 +180,17 @@ func get_recent_apps() -> Array:
 	return recent
 
 
-# Returns a list of currently running apps
+## Returns a list of currently running apps
 func get_running() -> Array[RunningApp]:
 	return _running
 
 
-# Returns the currently running app
+## Returns the currently running app
 func get_current_app() -> RunningApp:
 	return _current_app
 
 
-# Sets the given running app as the current app
+## Sets the given running app as the current app
 func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 	if switch_baselayer:
 		if not can_switch_app(app):
@@ -174,7 +201,7 @@ func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 	app_switched.emit(old, app)
 
 
-# Returns true if the given app can be switched to via Gamescope
+## Returns true if the given app can be switched to via Gamescope
 func can_switch_app(app: RunningApp) -> bool:
 	if app == null:
 		logger.warn("Unable to switch to null app")
@@ -185,14 +212,14 @@ func can_switch_app(app: RunningApp) -> bool:
 	return true
 
 
-# Returns whether the given app is running
+## Returns whether the given app is running
 func is_running(app_name: String) -> bool:
 	if app_name in _apps_by_name:
 		return true
 	return false
 
 
-# Returns a list of window IDs that don't have a corresponding RunningApp
+## Returns a list of window IDs that don't have a corresponding RunningApp
 func get_orphan_windows(focusable: PackedInt32Array) -> Array[int]:
 	var orphans: Array[int] = []
 	

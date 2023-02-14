@@ -2,6 +2,32 @@
 extends Resource
 class_name InputManager
 
+## Manages global input and virtual controllers
+##
+## The InputManager class is responsible for handling global input that should
+## happen everywhere in the application. The input manager discovers gamepads
+## and interepts their input so OpenGamepadUI can control what inputs should get
+## passed on to the game and what only OpenGamepadUI should process. This works
+## by grabbing exclusive access to the physical gamepads and creating a virtual
+## gamepad that games can see.[br][br]
+##
+## This class should be loaded and managed by a single node in the scene tree.
+## It requires to be initialized and passed input events:
+##     [codeblock]
+##     const InputManager := preload("res://core/global/input_manager.tres")
+##
+##     func _ready() -> void:
+##         InputManager.init()
+##
+##     func _input(event: InputEvent) -> void:
+##     	   if not InputManager.input(event):
+##     	       return
+##     	   get_viewport().set_input_as_handled()
+##
+##     func _exit_tree() -> void:
+##     	   InputManager.exit()
+##     [/codeblock]
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -22,6 +48,9 @@ var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
 
 
+## Initializes the input manager and starts the gamepad interecpt thread. A
+## node should initialize the InputManager resource and call [method input]
+## in their _input() method to process input events.
 func init() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
@@ -37,12 +66,12 @@ func init() -> void:
 	Input.joy_connection_changed.connect(_on_gamepad_change)
 
 
-# Returns a list of gamepad devices that are being exclusively managed.
+## Returns a list of gamepad devices that are being exclusively managed.
 func get_managed_gamepads() -> Array:
 	return managed_gamepads.keys()
 
 
-# Sets the gamepad intercept mode
+## Sets the gamepad intercept mode
 func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	logger.debug("Setting gamepad intercept mode: " + str(mode))
 	gamepad_mutex.lock()
@@ -51,8 +80,8 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	gamepad_mutex.unlock()
 
 
-# Runs evdev input processing in its own thread. We use mutexes to safely
-# access variables from the main thread
+## Runs evdev input processing in its own thread. We use mutexes to safely
+## access variables from the main thread
 func _start_process_input():
 	var exited := false
 	while not exited:
@@ -63,13 +92,13 @@ func _start_process_input():
 		gamepad_mutex.unlock()
 
 
-# Processes all raw gamepad input
+## Processes all raw gamepad input
 func _process_input() -> void:
 	for gamepad in managed_gamepads.values():
 		gamepad.process_input()
 
 
-# Triggers whenever we detect any gamepad connect/disconnect events
+## Triggers whenever we detect any gamepad connect/disconnect events
 func _on_gamepad_change(_device: int, _connected: bool) -> void:
 	logger.info("Gamepad was changed")
 	# Lock the gamepad mappings so we can alter them.
@@ -130,7 +159,7 @@ func _on_game_state_removed() -> void:
 	_set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
 
 
-# Set focus will use Gamescope to focus OpenGamepadUI
+## Set focus will use Gamescope to focus OpenGamepadUI
 func set_focus(focused: bool) -> void:
 	# Sets ourselves to the input focus
 	var window_id = overlay_window_id
@@ -142,7 +171,7 @@ func set_focus(focused: bool) -> void:
 	Gamescope.set_input_focus(display, window_id, 0)
 
 
-# Returns an array of device paths
+## Returns an array of device paths
 func discover_gamepads() -> PackedStringArray:
 	var paths := PackedStringArray()
 	var input_path := "/dev/input"
@@ -160,8 +189,8 @@ func discover_gamepads() -> PackedStringArray:
 	return paths
 
 
-# Returns whether or not get_viewport().set_input_as_handled() should be called
-# https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
+## Returns whether or not get_viewport().set_input_as_handled() should be called
+## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func input(event: InputEvent) -> bool:
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
@@ -272,7 +301,7 @@ func _action_press(action: String, strength: float = 1.0) -> void:
 	_send_input(action, true, strength)
 
 
-# Sends an input action to the event queue
+## Sends an input action to the event queue
 func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	var input_action := InputEventAction.new()
 	input_action.action = action
@@ -281,7 +310,7 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	Input.parse_input_event(input_action)
 
 
-# Sends joy motion input to the event queue
+## Sends joy motion input to the event queue
 func _send_joy_input(axis: int, value: float) -> void:
 	var joy_action := InputEventJoypadMotion.new()
 	joy_action.axis = axis

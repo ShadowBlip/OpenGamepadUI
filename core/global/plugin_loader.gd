@@ -4,6 +4,19 @@
 extends Resource
 class_name PluginLoader
 
+## Manage and load plugins 
+##
+## The PluginLoader is responsible for downloading, loading, and initializing 
+## OpenGamepadUI plugins. The plugin system for OpenGamepadUI is inspired by 
+## the modding system implemented by Delta-V. [br][br]
+##
+## The PluginLoader works by taking advantage of Godot's 
+## [method ProjectSettings.load_resource_pack] method, which can allow us to 
+## load Godot scripts and scenes from a zip file. The PluginLoader looks for zip 
+## files in user://plugins, and parses the plugin.json file contained within 
+## them. If the plugin metadata is valid, the loader loads the zip as a resource 
+## pack.
+
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
 const PLUGIN_API_VERSION = "1.0.0"
 const PLUGINS_DIR = "user://plugins"
@@ -24,8 +37,8 @@ var logger := Log.get_logger("PluginLoader")
 var plugins := {}
 var plugin_nodes := {}
 
-# Initializes the plugin loader. Loaded plugins will be added to the given 
-# manager node.
+## Initializes the plugin loader. Loaded plugins will be added to the given 
+## manager node.
 func init(manager: PluginManager) -> void:
 	parent = manager
 	logger.info("Loading plugins")
@@ -36,18 +49,18 @@ func init(manager: PluginManager) -> void:
 	logger.info("Done initializing plugins")
 
 
-# Sets the given plugin to enabled
+## Sets the given plugin to enabled
 func enable_plugin(plugin_id: String) -> void:
 	SettingsManager.set_value("plugins.enabled", plugin_id, true)
 
 
-# Sets the given plugin to disabled
+## Sets the given plugin to disabled
 func disable_plugin(plugin_id: String) -> void:
 	SettingsManager.set_value("plugins.enabled", plugin_id, false)
 
 
-# Returns the parsed dictionary of plugin store items. Returns null if there
-# is a failure.
+## Returns the parsed dictionary of plugin store items. Returns null if there
+## is a failure.
 func get_plugin_store_items() -> Variant:
 	if not parent:
 		logger.error("Plugin loader has not been initialized!")
@@ -79,7 +92,7 @@ func get_plugin_store_items() -> Variant:
 	return items
 
 
-# Downloads and installs the given plugin
+## Downloads and installs the given plugin
 func install_plugin(plugin_id: String, download_url: String, sha256: String) -> void:
 	if not parent:
 		logger.error("Plugin loader has not been initialized!")
@@ -134,7 +147,7 @@ func install_plugin(plugin_id: String, download_url: String, sha256: String) -> 
 	plugin_installed.emit(plugin_id, OK)
 
 
-# Unloads and uninstalls the given plugin. Returns OK if removed successfully.
+## Unloads and uninstalls the given plugin. Returns OK if removed successfully.
 func uninstall_plugin(plugin_id: String) -> int:
 	# Unload the plugin
 	unload_plugin(plugin_id)
@@ -145,7 +158,7 @@ func uninstall_plugin(plugin_id: String) -> int:
 	return DirAccess.remove_absolute(filename)
 
 
-# Unloads the given plugin. Returns OK if successful.
+## Unloads the given plugin. Returns OK if successful.
 func unload_plugin(plugin_id: String) -> int:
 	if not plugin_id in plugins:
 		logger.error("Cannot unload plugin {0} as it does not appear to be loaded".format([plugin_id]))
@@ -156,7 +169,7 @@ func unload_plugin(plugin_id: String) -> int:
 	return OK
 
 
-# Uninitializes a plugin and calls its "unload" method
+## Uninitializes a plugin and calls its "unload" method
 func uninitialize_plugin(plugin_id: String) -> int:
 	if not parent:
 		logger.error("Plugin loader has not been initialized!")
@@ -174,46 +187,46 @@ func uninitialize_plugin(plugin_id: String) -> int:
 	return OK
 
 
-# Returns true if the given plugin is installed.
+## Returns true if the given plugin is installed.
 func is_installed(plugin_id: String) -> bool:
 	var plugin_dir: String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
 	var filename: String = "/".join([plugin_dir, plugin_id + ".zip"])
 	return FileAccess.file_exists(filename)
 	
 
-# Returns true if the given plugin is loaded.
+## Returns true if the given plugin is loaded.
 func is_loaded(plugin_id: String) -> bool:
 	return plugin_id in plugins
 
 
-# Returns true if the given plugin is initialized and running
+## Returns true if the given plugin is initialized and running
 func is_initialized(plugin_id: String) -> bool:
 	return plugin_id in plugin_nodes
 
 
-# Returns the given plugin instance
+## Returns the given plugin instance
 func get_plugin(plugin_id: String) -> Plugin:
 	if not plugin_id in plugin_nodes:
 		return null
 	return plugin_nodes[plugin_id]
 
 
-# Returns the metadata for the given plugin
+## Returns the metadata for the given plugin
 func get_plugin_meta(plugin_id: String) -> Dictionary:
 	return plugins[plugin_id]
 
 
-# Returns a list of plugin_ids that were loaded
+## Returns a list of plugin_ids that were loaded
 func get_loaded_plugins() -> Array:
 	return plugins.keys()
 
 
-# Returns a list of plugin_ids that are initialized and running
+## Returns a list of plugin_ids that are initialized and running
 func get_initialized_plugins() -> Array:
 	return plugin_nodes.keys()
 
 
-# Instances the given plugin and adds it to the scene tree
+## Instances the given plugin and adds it to the scene tree
 func initialize_plugin(plugin_id) -> int:
 	if not parent:
 		logger.error("PluginLoader has not been initialized!")

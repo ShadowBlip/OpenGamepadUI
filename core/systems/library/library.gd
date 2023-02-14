@@ -2,19 +2,32 @@
 extends Node
 class_name Library
 
+## Base class for Library implementations
+## 
+## The Library class provides an interface for creating new library 
+## implementations. To create a new library, simply extend this class and 
+## implement its methods. When a Library node is added to the scene tree, it 
+## will automatically register itself with the global [LibraryManager].
+##
+## @tutorial:            https://github.com/ShadowBlip/OpenGamepadUI/blob/main/docs/plugins/TUTORIALS.md#writing-a-library-plugin
+
+## Should be emitted when a library item is installed
 signal install_completed(item: LibraryItem)
+## Should be emitted when a library item is updated
 signal update_completed(item: LibraryItem)
 
-# Unique identifier for the library
-@export var library_id: String
-# Optional store that this library is linked to
-@export var store_id: String
-# Icon for library provider
-@export var library_icon: Texture2D
-@export var logger_name := library_id
-@export var log_level: Log.LEVEL = Log.LEVEL.INFO
-
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
+
+## Unique identifier for the library
+@export var library_id: String
+## Optional store that this library is linked to
+@export var store_id: String
+## Icon for library provider
+@export var library_icon: Texture2D
+## Logger name used for debug messages
+@export var logger_name := library_id
+## Log level of the logger.
+@export var log_level: Log.LEVEL = Log.LEVEL.INFO
 
 @onready var _cache_dir := "/".join(["library", library_id])
 @onready var logger := Log.get_logger(logger_name, log_level)
@@ -30,22 +43,37 @@ func _ready() -> void:
 	pass
 
 
-# Returns an array of available library launch items
+## Returns an array of available library launch items that this library provides.
+## This method should be overriden in the child class.
+## Example:
+##     [codeblock]
+##     func get_library_launch_items() -> Array[LibraryLaunchItem]:
+##             var item: LibraryLaunchItem = LibraryLaunchItem.new()
+##             item.name = "vkCube"
+##             item.command = "vkcube"
+##             item.args = []
+##             item.tags = ["vkcube"]
+##             item.installed = true
+##     
+##             return [item]
+##     [/codeblock]
 func get_library_launch_items() -> Array[LibraryLaunchItem]:
 	return []
 
 
-# Installs the given library item
+## Installs the given library item. This method should be overriden in the 
+## child class, if it supports it.
 func install(item: LibraryItem) -> void:
 	pass
 
 
-# Uninstalls the given library item
+## Uninstalls the given library item. This method should be overriden in the 
+## child class if it supports it.
 func uninstall(item: LibraryItem) -> void:
 	pass
 
 
-# Returns true if the given library item has an update available
+## Should returns true if the given library item has an update available
 func has_update(item: LibraryItem) -> bool:
 	return false
 

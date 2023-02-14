@@ -2,7 +2,24 @@
 extends Resource
 class_name NotificationManager
 
+## Resource API for displaying arbitrary notifications
+##
+## The NotificationManager is responsible for providing an API to display 
+## arbitrary notifications to the user and maintain a history of those 
+## notifications. It also manages a queue of notifications so only one 
+## notification shows at a time.[br][br]
+##
+##     [codeblock]
+##     const NotificationManager := preload("res://core/global/notification_manager.tres")
+##     ...
+##     var notify := Notification.new("Hello world!")
+##     notify.icon = load("res://assets/icons/critical.png")
+##     NotificationManager.show(notify)
+##     [/codeblock]
+
+## Emitted when a notification is shown to the user
 signal notification_sent(notify: Notification)
+## Emitted when a notification has been queued
 signal notification_queued(notify: Notification)
 
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
@@ -15,12 +32,12 @@ var ready := false
 var logger := Log.get_logger("NotificationManager")
 
 
-# Queues the given notification to be shown
+## Queues the given notification to be shown
 func show(notify: Notification):
 	_queue_notification(notify)
 
 
-# Returns a list of notifications
+## Returns a list of notifications
 func get_notification_history() -> Array[Notification]:
 	return _history.duplicate()
 
@@ -34,12 +51,12 @@ func show_notification(text: String, icon: Texture2D = null, timeout_sec: float 
 	show(notify)
 
 
-# Returns whether there are notifiations waiting in the queue
+## Returns whether there are notifiations waiting in the queue
 func has_next() -> bool:
 	return _queue.size() > 0
 
 
-# Returns the next notifiation waiting in the queue
+## Returns the next notifiation waiting in the queue
 func next() -> Notification:
 	if _queue.size() == 0:
 		logger.debug("Queue is empty. Nothing to process.")
