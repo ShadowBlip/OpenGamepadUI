@@ -71,6 +71,7 @@ int InputDevice::close() {
   if (code < 0) {
     return godot::ERR_CANT_OPEN;
   }
+  fd = -1;
   libevdev_free(dev);
   return code;
 };

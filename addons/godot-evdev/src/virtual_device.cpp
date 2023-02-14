@@ -40,6 +40,7 @@ int VirtualInputDevice::close() {
   libevdev_uinput_destroy(uidev);
   int code = ::close(uifd);
   uidev = NULL;
+  uifd = -1;
 
   return code;
 };
