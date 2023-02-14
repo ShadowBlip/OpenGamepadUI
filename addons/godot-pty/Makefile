@@ -4,14 +4,14 @@ ALL_HEADERS := $(shell find ./src -name '*.h')
 GODOT_CPP_VERSION := 516fad14e45d341211121832bb3daa172aebd6e1
 
 .PHONY: build
-build: bin/libpipeaccess.linux.template_debug.x86_64.so bin/libpipeaccess.linux.template_release.x86_64.so
+build: bin/libpty.linux.template_debug.x86_64.so bin/libpty.linux.template_release.x86_64.so
 
-bin/libpipeaccess.linux.template_debug.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
+bin/libpty.linux.template_debug.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
 	rm -rf $@
 	#scons -Q compiledb
 	scons target=template_debug
 
-bin/libpipeaccess.linux.template_release.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
+bin/libpty.linux.template_release.x86_64.so: ../godot-cpp $(ALL_HEADERS) $(ALL_CPP)
 	rm -rf $@
 	#scons -Q compiledb
 	scons target=template_release
