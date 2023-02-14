@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "godot_cpp/variant/packed_byte_array.hpp"
 #include "pipeaccess.h"
 
 #include "godot_cpp/variant/string.hpp"
@@ -63,27 +64,17 @@ godot::String PipeAccess::get_buffer(int size_bytes) {
     return godot::String();
   }
 
-  char buff[size_bytes];
-  int code = ::read(fd, &buff, sizeof(buff));
-  // -1 is err, 0 is EOF
-  if (code <= 0) {
-    return godot::String();
+  godot::PackedByteArray bytes;
+  int bytes_read;
+  char buffr[size_bytes];
+
+  while ((bytes_read = ::read(fd, &buffr, size_bytes)) > 0) {
+    for (int i = 0; i < bytes_read; i++) {
+      bytes.append(buffr[i]);
+    }
   }
-  godot::String output = godot::String(buff);
 
-  // char *line = NULL;
-  // size_t len = 0;
-  // ssize_t nread;
-  // nread = getline(&line, &len, stream);
-  // if (nread == -1) {
-  //   ::free(line);
-  //   return godot::String();
-  // }
-
-  // godot::String output = godot::String(line);
-  //::free(line);
-  // godot::UtilityFunctions::print("Got stdout line: ", output);
-
+  godot::String output = bytes.get_string_from_utf8();
   return output;
 }
 
