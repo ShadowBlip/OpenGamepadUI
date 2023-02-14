@@ -7,6 +7,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "pipeaccess.h"
+#include "pty.h"
 
 void initialize_pipeaccess_module(godot::ModuleInitializationLevel p_level) {
   if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
@@ -14,6 +15,7 @@ void initialize_pipeaccess_module(godot::ModuleInitializationLevel p_level) {
   }
 
   godot::ClassDB::register_class<PipeAccess>();
+  godot::ClassDB::register_class<PTY>();
 }
 
 void uninitialize_pipeaccess_module(godot::ModuleInitializationLevel p_level) {
