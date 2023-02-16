@@ -1,0 +1,454 @@
+[gd_scene load_steps=22 format=3 uid="uid://cmopiwmgjwjb8"]
+
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="1"]
+[ext_resource type="Script" path="res://addons/controller_icons/example/IconRemapper.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="2_518mb"]
+[ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="4_4ab0g"]
+[ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="5_nfuy6"]
+[ext_resource type="Texture2D" uid="uid://bva4iswwvta5d" path="res://addons/controller_icons/assets/xbox360/y.png" id="6_8iybr"]
+[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="7_dhavb"]
+[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="8_hoxxr"]
+[ext_resource type="Texture2D" uid="uid://dhhjoq01cc2oh" path="res://addons/controller_icons/assets/xbox360/lt.png" id="9_3s3cu"]
+[ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="10_82tca"]
+[ext_resource type="Texture2D" uid="uid://mh6if65g6eob" path="res://addons/controller_icons/assets/xbox360/l_stick_click.png" id="11_3rx8a"]
+[ext_resource type="Texture2D" uid="uid://db7d0vqnfyuin" path="res://addons/controller_icons/assets/xbox360/r_stick_click.png" id="12_fw7j3"]
+[ext_resource type="Texture2D" uid="uid://cdjnpcxgnxrxb" path="res://addons/controller_icons/assets/xbox360/back.png" id="13_rkxrv"]
+[ext_resource type="Texture2D" uid="uid://coxp4sapp4g8n" path="res://addons/controller_icons/assets/xbox360/start.png" id="14_pejnt"]
+[ext_resource type="Texture2D" uid="uid://cuds8v7pvi4tj" path="res://addons/controller_icons/assets/xbox360/dpad.png" id="15_u7uri"]
+[ext_resource type="Texture2D" uid="uid://bh66fibu352gl" path="res://addons/controller_icons/assets/xbox360/dpad_up.png" id="16_8pfh4"]
+[ext_resource type="Texture2D" uid="uid://dt4m6u4nau82r" path="res://addons/controller_icons/assets/xbox360/dpad_down.png" id="17_2wsg3"]
+[ext_resource type="Texture2D" uid="uid://7r70kxgen0mv" path="res://addons/controller_icons/assets/xbox360/dpad_left.png" id="18_s5fk2"]
+[ext_resource type="Texture2D" uid="uid://7qkn2dva6jv" path="res://addons/controller_icons/assets/xbox360/dpad_right.png" id="19_3qb24"]
+[ext_resource type="Texture2D" uid="uid://fxgoiilpipsd" path="res://addons/controller_icons/assets/xbox360/l_stick.png" id="20_yio6b"]
+[ext_resource type="Texture2D" uid="uid://d6jwqg6mq8dk" path="res://addons/controller_icons/assets/xbox360/r_stick.png" id="21_wowfx"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = 60.0
+offset_right = -695.0
+offset_bottom = -108.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2")
+
+[node name="Controls" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Controls"]
+layout_mode = 0
+offset_right = 435.0
+offset_bottom = 1140.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="A" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/A"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_518mb")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/a"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/A"]
+layout_mode = 2
+text = " A"
+
+[node name="B" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/B"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("4_4ab0g")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/b"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/B"]
+layout_mode = 2
+text = " B"
+
+[node name="X" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/X"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("5_nfuy6")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/x"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/X"]
+layout_mode = 2
+text = " X"
+
+[node name="Y" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/Y"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("6_8iybr")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/y"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/Y"]
+layout_mode = 2
+text = " Y"
+
+[node name="LB" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/LB"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("7_dhavb")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/lb"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/LB"]
+layout_mode = 2
+text = " Left Button"
+
+[node name="RB" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/RB"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("8_hoxxr")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/rb"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/RB"]
+layout_mode = 2
+text = " Right Button"
+
+[node name="LT" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/LT"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("9_3s3cu")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/lt"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/LT"]
+layout_mode = 2
+text = " Left Trigger"
+
+[node name="RT" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/RT"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("10_82tca")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/rt"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/RT"]
+layout_mode = 2
+text = " Right Trigger"
+
+[node name="L_Stick_Click" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/L_Stick_Click"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("11_3rx8a")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/l_stick_click"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/L_Stick_Click"]
+layout_mode = 2
+text = " Left Stick Click"
+
+[node name="R_Stick_Click" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/R_Stick_Click"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("12_fw7j3")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/r_stick_click"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/R_Stick_Click"]
+layout_mode = 2
+text = " Right Stick Click"
+
+[node name="Select" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer/Select"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("13_rkxrv")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/select"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer/Select"]
+layout_mode = 2
+text = " Select"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Controls/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Start" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/Start"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("14_pejnt")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/start"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/Start"]
+layout_mode = 2
+text = " Start"
+
+[node name="DPAD" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/DPAD"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("15_u7uri")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/dpad"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/DPAD"]
+layout_mode = 2
+text = " DPAD"
+
+[node name="DPAD_Up" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Up"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("16_8pfh4")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/dpad_up"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Up"]
+layout_mode = 2
+text = " DPAD Up"
+
+[node name="DPAD_Down" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Down"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("17_2wsg3")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/dpad_down"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Down"]
+layout_mode = 2
+text = " DPAD Down"
+
+[node name="DPAD_Left" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Left"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("18_s5fk2")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/dpad_left"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Left"]
+layout_mode = 2
+text = " DPAD Left"
+
+[node name="DPAD_Right" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Right"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("19_3qb24")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/dpad_right"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/DPAD_Right"]
+layout_mode = 2
+text = " DPAD Right"
+
+[node name="Home" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/Home"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/home"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/Home"]
+layout_mode = 2
+text = " Home"
+
+[node name="Share" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/Share"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/share"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/Share"]
+layout_mode = 2
+text = " Share"
+
+[node name="L-Stick" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/L-Stick"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("20_yio6b")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/l_stick"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/L-Stick"]
+layout_mode = 2
+text = " Left Stick"
+
+[node name="R-Stick" type="HBoxContainer" parent="Controls/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="Controls/HBoxContainer/VBoxContainer2/R-Stick"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("21_wowfx")
+expand_mode = 1
+script = ExtResource("1")
+path = "joypad/r_stick"
+
+[node name="Label" type="Label" parent="Controls/HBoxContainer/VBoxContainer2/R-Stick"]
+layout_mode = 2
+text = " Right Stick"
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 414.0
+offset_right = 866.0
+offset_bottom = 467.0
+
+[node name="Auto" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "[ Set to automatic ]"
+
+[node name="Luna" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Amazon Luna"
+
+[node name="PS3" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "PlayStation 3"
+
+[node name="PS4" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "PlayStation 4"
+
+[node name="PS5" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "PlayStation 5"
+
+[node name="Stadia" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Google Stadia"
+
+[node name="Steam" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Steam Controller"
+
+[node name="SteamDeck" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Steam Deck"
+
+[node name="Switch" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Nintendo Switch Controller"
+
+[node name="Joycon" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Nintendo Switch JoyCon"
+
+[node name="Xbox360" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Xbox 360"
+
+[node name="XboxOne" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Xbox One"
+
+[node name="XboxSeries" type="Button" parent="Buttons"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Xbox Series"
+
+[connection signal="pressed" from="Buttons/Auto" to="." method="_on_Auto_pressed"]
+[connection signal="pressed" from="Buttons/Luna" to="." method="_on_Luna_pressed"]
+[connection signal="pressed" from="Buttons/PS3" to="." method="_on_PS3_pressed"]
+[connection signal="pressed" from="Buttons/PS4" to="." method="_on_PS4_pressed"]
+[connection signal="pressed" from="Buttons/PS5" to="." method="_on_PS5_pressed"]
+[connection signal="pressed" from="Buttons/Stadia" to="." method="_on_Stadia_pressed"]
+[connection signal="pressed" from="Buttons/Steam" to="." method="_on_Steam_pressed"]
+[connection signal="pressed" from="Buttons/SteamDeck" to="." method="_on_SteamDeck_pressed"]
+[connection signal="pressed" from="Buttons/Switch" to="." method="_on_Switch_pressed"]
+[connection signal="pressed" from="Buttons/Joycon" to="." method="_on_Joycon_pressed"]
+[connection signal="pressed" from="Buttons/Xbox360" to="." method="_on_Xbox360_pressed"]
+[connection signal="pressed" from="Buttons/XboxOne" to="." method="_on_XboxOne_pressed"]
+[connection signal="pressed" from="Buttons/XboxSeries" to="." method="_on_XboxSeries_pressed"]

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dolsrvh5w47et"]
+
+[ext_resource type="Script" path="res://addons/controller_icons/Settings.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+joypad_fallback = 12
+joypad_deadzone = 0.5
+allow_mouse_remap = true
+mouse_min_movement = 200
+custom_asset_dir = "res://resources"

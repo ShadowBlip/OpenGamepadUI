@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://dpajbxrv14ehk"]
+[gd_scene load_steps=7 format=3 uid="uid://dpajbxrv14ehk"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
 [ext_resource type="Script" path="res://core/ui/menu/navigation/context_bar.gd" id="2_jserv"]
+[ext_resource type="Texture2D" uid="uid://cnghdqiitl0fu" path="res://addons/controller_icons/assets/key/esc.png" id="3_pwpba"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="3_vjpxr"]
+[ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="5_wisqw"]
+[ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="6_lel3f"]
 
 [node name="ContextBar" type="Control" groups=["menu"]]
 custom_minimum_size = Vector2(0, 40)
@@ -38,4 +42,58 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 
 [node name="DebugLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AcceptLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Accept"
+
+[node name="AcceptButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("5_wisqw")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ui_accept"
+
+[node name="BackLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="BackButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_pwpba")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ogui_east"
+
+[node name="QAMLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quick Access Menu"
+horizontal_alignment = 2
+
+[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("6_lel3f")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "joypad/home"
+force_type = 2
+
+[node name="PlusLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "+"
+
+[node name="QAMButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ogui_guide_action_qam"
