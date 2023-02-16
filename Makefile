@@ -62,6 +62,7 @@ addons: ## Build GDExtension add-ons
 	@echo "Building gdnative addons"
 	cd ./addons/godot-xlib && make build
 	cd ./addons/godot-evdev && make build
+	cd ./addons/godot-pty && make build
 
 .PHONY: edit
 edit: ## Open the project in the Godot editor
