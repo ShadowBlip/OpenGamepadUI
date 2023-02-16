@@ -12,9 +12,13 @@ class_name Library
 ## @tutorial:            https://github.com/ShadowBlip/OpenGamepadUI/blob/main/docs/plugins/TUTORIALS.md#writing-a-library-plugin
 
 ## Should be emitted when a library item is installed
-signal install_completed(item: LibraryItem)
+signal install_completed(item: LibraryLaunchItem, success: bool)
 ## Should be emitted when a library item is updated
-signal update_completed(item: LibraryItem)
+signal update_completed(item: LibraryLaunchItem, success: bool)
+## Should be emitted when a library item is uninstalled
+signal uninstall_completed(item: LibraryLaunchItem, success: bool)
+## Should be emitted when a library item install is progressing
+signal install_progressed(item: LibraryLaunchItem, percent_completed: float)
 
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 
@@ -63,18 +67,24 @@ func get_library_launch_items() -> Array[LibraryLaunchItem]:
 
 ## Installs the given library item. This method should be overriden in the 
 ## child class, if it supports it.
-func install(item: LibraryItem) -> void:
+func install(item: LibraryLaunchItem) -> void:
+	pass
+
+
+## Updates the given library item. This method should be overriden in the 
+## child class, if it supports it.
+func update(item: LibraryLaunchItem) -> void:
 	pass
 
 
 ## Uninstalls the given library item. This method should be overriden in the 
 ## child class if it supports it.
-func uninstall(item: LibraryItem) -> void:
+func uninstall(item: LibraryLaunchItem) -> void:
 	pass
 
 
-## Should returns true if the given library item has an update available
-func has_update(item: LibraryItem) -> bool:
+## Should return true if the given library item has an update available
+func has_update(item: LibraryLaunchItem) -> bool:
 	return false
 
 

@@ -1,26 +1,35 @@
 extends Control
 
-var LaunchManager := load("res://core/global/launch_manager.tres") as LaunchManager
-var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+const SettingsManager := preload("res://core/global/settings_manager.tres")
+const LaunchManager := preload("res://core/global/launch_manager.tres")
+const LibraryManager := preload("res://core/global/library_manager.tres")
+const NotificationManager := preload("res://core/global/notification_manager.tres")
+const BoxArtManager := preload("res://core/global/boxart_manager.tres")
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
+var installing := {}
 var logger := Log.get_logger("GameLaunchMenu")
+
+@export var launch_item: LibraryLaunchItem
 
 @onready var banner: TextureRect = $ScrollContainer/VBoxContainer/GameBanner
 @onready var logo: TextureRect = $ScrollContainer/VBoxContainer/GameBanner/MarginContainer/GameLogo
 @onready
 var launch_button: Button = $ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer/LaunchButton
 @onready var loading: Control = $ScrollContainer/VBoxContainer/GameBanner/CenterContainer/Loading02
+@onready var progress_bar: ProgressBar = $%ProgressBar
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	launcher_state.state_entered.connect(_on_state_entered)
 	launcher_state.state_exited.connect(_on_state_exited)
+	launch_button.button_up.connect(_on_launch)
 
 
 func _on_state_entered(_from: State) -> void:
@@ -32,10 +41,16 @@ func _on_state_entered(_from: State) -> void:
 		logger.error("No library item found to configure launcher!")
 		return
 
-	# Configure the game launch menu based on the library item
+	# Configure the game launch menu based on the library item provider
 	var library_item: LibraryItem = launcher_state.data["item"]
-	var launcher: Launcher = launch_button.get_node("Launcher")
-	launcher.library_item = library_item
+	var provider := library_item.launch_items[0] as LibraryLaunchItem
+	var section := "game.{0}".format([library_item.name.to_lower()])
+	var provider_id = SettingsManager.get_value(section, "provider", "")
+	if provider_id != "":
+		var p := library_item.get_launch_item(provider_id)
+		if p != null:
+			provider = p
+	launch_item = provider
 	logger.info("Configured launcher for game: " + library_item.name)
 
 	# Configure the game settings state with this game
@@ -72,3 +87,55 @@ func _on_state_entered(_from: State) -> void:
 func _on_state_exited(to: State) -> void:
 	if to == in_game_state:
 		state_machine.remove_state(launcher_state)
+
+
+func _on_launch() -> void:
+	# Resume if the game is running already
+	if LaunchManager.is_running(launch_item.name):
+		state_machine.set_state([in_game_state])
+		return
+
+	# If the app isn't installed, install it.
+	if not launch_item.installed:
+		_on_install()
+		return
+
+	# Launch the game using launch manager
+	LaunchManager.launch(launch_item)
+
+
+func _on_install() -> void:
+	# Do nothing if we're already installing
+	if launch_item.name in installing and installing[launch_item.name]:
+		return
+	var notify := Notification.new("Installing " + launch_item.name)
+	NotificationManager.show(notify)
+
+	# Start the install
+	LibraryManager.install(launch_item)
+	installing[launch_item.name] = true
+	launch_button.disabled = true
+
+	# Update the progress bar with install progress
+	progress_bar.visible = true
+	var on_progress := func(item: LibraryLaunchItem, progress: float):
+		progress_bar.value = progress * 100
+	LibraryManager.item_progressed.connect(on_progress)
+
+	# Show a notification when install completes
+	var on_installed := func(item: LibraryLaunchItem, success: bool):
+		launch_button.disabled = false
+		var verb: String
+		if success:
+			verb = "completed"
+			item.installed = true
+			launch_button.text = "Launch"
+		else:
+			verb = "failed"
+		var install_msg := Notification.new("Install " + verb + " for " + item.name)
+		NotificationManager.show(install_msg)
+		installing[launch_item.name] = false
+		progress_bar.visible = false
+		LibraryManager.item_progressed.disconnect(on_progress)
+	LibraryManager.item_installed.connect(on_installed, CONNECT_ONE_SHOT)
+

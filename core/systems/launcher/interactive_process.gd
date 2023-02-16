@@ -9,7 +9,7 @@ var pty: PTY
 var cmd: String
 var args: PackedStringArray = []
 var pid: int
-var logger := Log.get_logger("InteractiveProcess", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InteractiveProcess", Log.LEVEL.INFO)
 
 
 func _init(command: String, cmd_args: PackedStringArray = []) -> void:

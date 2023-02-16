@@ -1,7 +1,8 @@
 extends Control
 class_name Main
 
-var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
+const LibraryManager := preload("res://core/global/library_manager.tres")
+
 var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
 var overlay_display = DISPLAY

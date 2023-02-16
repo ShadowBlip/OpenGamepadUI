@@ -33,6 +33,7 @@ tags = PackedStringArray()
 categories = PackedStringArray()
 installed = true
 hidden = false
+metadata = {}
 
 [sub_resource type="Resource" id="Resource_icex7"]
 script = ExtResource("7_7xnh7")

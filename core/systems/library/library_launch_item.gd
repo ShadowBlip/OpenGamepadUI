@@ -1,8 +1,11 @@
-# LibraryLaunchItem is a library-specific structure that describes how to launch
-# a game.
 @icon("res://assets/icons/box.svg")
 extends Resource
 class_name LibraryLaunchItem
+
+## LibraryLaunchItem is a library provider-specific structure that describes how to launch a game.
+##
+## A LibraryLaunchItem is a provider-specific resource that describes a library
+## item and how to launch it. It is always tied to a [LibraryItem].
 
 signal added_to_library
 signal removed_from_library
@@ -19,6 +22,7 @@ signal removed_from_library
 @export var categories: PackedStringArray
 @export var installed: bool
 @export var hidden: bool
+@export var metadata: Dictionary
 
 
 # Returns the given launch item as a dictionary for serialization
@@ -36,6 +40,7 @@ func to_dict() -> Dictionary:
 		"categories": categories,
 		"installed": installed,
 		"hidden": hidden,
+		"metadata": metadata,
 	}
 
 
@@ -57,4 +62,6 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 		item.cwd = d["cwd"]
 	if "hidden" in d:
 		item.hidden = d["hidden"]
+	if "metadata" in d:
+		item.metadata = d["metadata"]
 	return item
