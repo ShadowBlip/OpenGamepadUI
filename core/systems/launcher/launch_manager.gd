@@ -11,9 +11,6 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	# Get the target xwayland display to launch on
-	launch_manager.target_display = launch_manager._get_target_display(overlay_display)
-
 	# Set a timer that will update our state based on if anything is running.
 	var running_timer = Timer.new()
 	running_timer.timeout.connect(launch_manager._check_running)

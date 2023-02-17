@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Gamescope" load_steps=2 format=3 uid="uid://blr55dcwc05m1"]
+
+[ext_resource type="Script" path="res://core/global/gamescope.gd" id="1_ipl5o"]
+
+[resource]
+script = ExtResource("1_ipl5o")
+log_level = 4

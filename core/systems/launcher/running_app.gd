@@ -1,6 +1,8 @@
 extends Resource
 class_name RunningApp
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 signal app_killed
 signal window_id_changed
 signal app_id_changed
@@ -26,23 +28,24 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 
 
 func get_window_id_from_pid() -> int:
-	return Gamescope.get_window_id(display, pid)
+	var display_type := Gamescope.get_display_type(display)
+	return Gamescope.get_window_id(pid, display_type)
 
 
 func is_running() -> bool:
 	# If the app is still running, great!
 	if OS.is_process_running(pid):
 		return true
-		
+
 	if launch_item != null:
 		logger._name = "RunningApp-" + launch_item.name
-	
+
 	# If it's not running, let's check to make sure it's REALLY not running
 	# and hasn't re-parented itself
 	var gamescope_pid: int = Reaper.get_parent_pid(OS.get_process_id())
 	if not Reaper.is_gamescope_pid(gamescope_pid):
 		logger.warn("OpenGamepadUI wasn't launched with gamescope! Unexpected behavior expected.")
-	
+
 	# Try checking to see if there are any other processes running with our
 	# app's process group
 	var candidates = Reaper.get_children_with_pgid(gamescope_pid, pid)

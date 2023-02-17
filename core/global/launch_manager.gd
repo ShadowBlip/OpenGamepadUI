@@ -36,13 +36,12 @@ signal recent_apps_changed()
 
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
+const Gamescope := preload("res://core/global/gamescope.tres")
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 
-var overlay_display := OS.get_environment("DISPLAY")
-var target_display: String = OS.get_environment("DISPLAY")
 var _current_app: RunningApp
 var _pid_to_windows := {}
 var _running: Array[RunningApp] = []
@@ -114,7 +113,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
-		env["DISPLAY"] = _get_target_display(overlay_display)
+		env["DISPLAY"] = Gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
 	var display := env["DISPLAY"] as String
 
 	# Build any environment variables to include in the command
@@ -195,7 +194,7 @@ func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 	if switch_baselayer:
 		if not can_switch_app(app):
 			return
-		Gamescope.set_baselayer_window(overlay_display, app.window_id)
+		Gamescope.set_baselayer_window(app.window_id)
 	var old := _current_app
 	_current_app = app
 	app_switched.emit(old, app)
@@ -273,7 +272,7 @@ func _remove_running(app: RunningApp):
 
 	# If no more apps are running, clear the in-game state
 	if len(_running) == 0:
-		Gamescope.remove_baselayer_window(overlay_display)
+		Gamescope.remove_baselayer_window()
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
 	
@@ -281,24 +280,10 @@ func _remove_running(app: RunningApp):
 	app.app_killed.emit()
 
 
-# Returns the target xwayland display to launch on
-func _get_target_display(exclude_display: String) -> String:
-	# Get all gamescope xwayland displays
-	var all_displays := Gamescope.discover_gamescope_displays()
-	logger.info("Found xwayland displays: " + ",".join(all_displays))
-	# Return the xwayland display that doesn't match our excluded display
-	for display in all_displays:
-		if display == exclude_display:
-			continue
-		return display
-	# If we can't find any other displays, use the one given
-	return exclude_display
-
-
 # Checks for running apps and updates our state accordingly
 func _check_running():
 	# Find the root window
-	var root_id := Gamescope.get_root_window_id(target_display)
+	var root_id := Gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
 	if root_id < 0:
 		return
 	
@@ -312,8 +297,8 @@ func _check_running():
 	# TODO: Maybe start a timer for any apps that haven't produced a window
 	# in a certain timeframe? If the timer ends, kill everything.
 
-	var focusable_windows := Gamescope.get_window_children(target_display, root_id)
-	var focusable_apps := Gamescope.get_focusable_apps(target_display)
+	var focusable_windows := Gamescope.get_window_children(root_id, Gamescope.XWAYLAND.GAME)
+	var focusable_apps := Gamescope.get_focusable_apps()
 
 	# Get a list of orphaned windows to try and pair windows with running apps
 	var orphan_windows := get_orphan_windows(focusable_windows) as Array
@@ -354,9 +339,9 @@ func _check_running():
 # processes are running, and what windows they have.
 func _update_pids(root_id: int):
 	var pids := {}
-	var all_windows := Gamescope.get_all_windows(target_display, root_id)
+	var all_windows := Gamescope.get_all_windows(root_id, Gamescope.XWAYLAND.GAME)
 	for window in all_windows:
-		var pid := Gamescope.get_window_pid(target_display, window)
+		var pid := Gamescope.get_window_pid(window, Gamescope.XWAYLAND.GAME)
 		if not pid in pids:
 			pids[pid] = []
 		pids[pid].append(window)
@@ -396,7 +381,7 @@ func _ensure_app_id(app: RunningApp, focusable_windows: Array, focusable_apps: A
 	if app.app_id > 0 and app.app_id in focusable_apps:
 		logger.debug("App ID already exists in focusable apps")
 		return
-	var app_id := Gamescope.get_app_id(app.display, app.window_id)
+	var app_id := Gamescope.get_app_id(app.window_id)
 	if app_id > 0:
 		if app.app_id == app_id:
 			return
@@ -409,12 +394,12 @@ func _ensure_app_id(app: RunningApp, focusable_windows: Array, focusable_apps: A
 		app.app_id = app.launch_item.provider_app_id.to_int()
 		logger.debug("Setting window {0} to use provider app ID: {1}".format([app.window_id, app.app_id]))
 
-	elif Gamescope.get_app_id(app.display, app.window_id) < 0:
+	elif Gamescope.get_app_id(app.window_id) < 0:
 		app.app_id = app.window_id
 		logger.debug("Setting window {0} to use window app ID: {1}".format([app.window_id, app.app_id]))
 		
 	if app.app_id > 0:
-		Gamescope.set_app_id(app.display, app.window_id, app.app_id)
+		Gamescope.set_app_id(app.window_id, app.app_id)
 
 
 # Try to discover the window id of the given app
@@ -430,14 +415,14 @@ func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
 	var candidates := [[], [], [], []]  # High, medium, low, garbage chance window candidates
 	for window in orphan_windows:
 		# Find by app ID atom (High chance match)
-		var app_id := Gamescope.get_app_id(app.display, window)
+		var app_id := Gamescope.get_app_id(window)
 		if app_id > 0:
 			logger.debug("Orphan window {0} has an app id set: {1}".format([window, app_id]))
 			candidates[0].append(window)
 			continue
 			
 		# Find by window name (Medium chance match)
-		var window_name := Gamescope.get_window_name(app.display, window)
+		var window_name := Gamescope.get_window_name(window)
 		if app.launch_item.name.to_lower() == window_name.to_lower():
 			logger.debug("Orphan window name {0} matches {1}".format([window, app.launch_item.name]))
 			candidates[1].append(window)
@@ -459,7 +444,7 @@ func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
 	for windows in candidates:
 		if windows.size() > 0:
 			var window: int = windows[0]
-			var window_name := Gamescope.get_window_name(app.display, window)
+			var window_name := Gamescope.get_window_name(window)
 			logger.debug("Found {0} chance that window '{1}' ({2}) is {3}".format([
 				chance_map[i], window_name, window, app.launch_item.name
 			]))

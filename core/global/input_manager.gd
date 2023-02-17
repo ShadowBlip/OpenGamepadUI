@@ -28,6 +28,8 @@ class_name InputManager
 ##     	   InputManager.exit()
 ##     [/codeblock]
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -36,8 +38,7 @@ var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 var PID: int = OS.get_process_id()
-var display = OS.get_environment("DISPLAY")
-var overlay_window_id = Gamescope.get_window_id(display, PID)
+var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
@@ -165,10 +166,10 @@ func set_focus(focused: bool) -> void:
 	var window_id = overlay_window_id
 	if focused:
 		logger.debug("Focusing overlay")
-		Gamescope.set_input_focus(display, window_id, 1)
+		Gamescope.set_input_focus(window_id, 1)
 		return
 	logger.debug("Un-focusing overlay")
-	Gamescope.set_input_focus(display, window_id, 0)
+	Gamescope.set_input_focus(window_id, 0)
 
 
 ## Returns an array of device paths
