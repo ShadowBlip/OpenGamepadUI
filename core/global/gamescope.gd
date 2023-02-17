@@ -67,6 +67,8 @@ func _init() -> void:
 		if _is_gamescope_xwayland_primary(xwayland):
 			logger.debug("Display " + display + " is the primary gamescope instance")
 			xwayland_primary = xwayland
+		if xwayland_primary != xwayland:
+			xwayland_game = xwayland
 		xwaylands.append(xwayland)
 
 	# If we haven't discovered any gamescope displays, set everything to use
@@ -76,6 +78,10 @@ func _init() -> void:
 		xwayland_primary = xwayland_ogui
 	if not xwayland_game:
 		xwayland_game = xwayland_ogui
+
+	logger.debug("Primary xwayland is " + xwayland_primary.get_name())
+	logger.debug("OGUI xwayland is " + xwayland_ogui.get_name())
+	logger.debug("Game xwayland is " + xwayland_game.get_name())
 
 
 ## Returns all gamescope xwayland names (E.g. [":0", ":1"])
@@ -107,7 +113,7 @@ func discover_gamescope_displays() -> PackedStringArray:
 			continue
 		if _is_gamescope_xwayland(xwayland):
 			gamescope_displays.append(display)
-			logger.debug("Disovered X server display: " + display)
+			logger.debug("Discovered X server display: " + display)
 		xwayland.close()
 	return gamescope_displays
 
