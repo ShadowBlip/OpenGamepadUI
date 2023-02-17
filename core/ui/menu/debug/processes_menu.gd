@@ -1,5 +1,7 @@
 extends Control
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 signal displays_updated
 
 var selected_pid := -1
@@ -92,14 +94,15 @@ func _update_pid_tree() -> void:
 
 
 # Updates the given tree for the given display
-func _update_tree_for_display(display: String, tree: Tree, root: TreeItem) -> void:
+func _update_tree_for_display(display_name: String, tree: Tree, root: TreeItem) -> void:
+	var display := Gamescope.get_display_type(display_name)
 
 	# Get all windows for the given Gamescope display
 	var windows_root := Gamescope.get_root_window_id(display)
-	var windows_all := Gamescope.get_all_windows(display, windows_root)
+	var windows_all := Gamescope.get_all_windows(windows_root, display)
 	var pids := {}
 	for window in windows_all:
-		var pid := Gamescope.get_window_pid(display, window)
+		var pid := Gamescope.get_window_pid(window, display)
 		if not pid in pids:
 			pids[pid] = []
 		pids[pid].append(window)
@@ -139,7 +142,7 @@ func _update_tree_for_display(display: String, tree: Tree, root: TreeItem) -> vo
 		# Create a tree node for each window associated with the PID
 		for window in pids[pid]:
 			var window_child := tree.create_item(pid_child)
-			var window_name := Gamescope.get_window_name(display, window)
+			var window_name := Gamescope.get_window_name(window, display)
 			window_child.set_text(0, "Window {0} ({1})".format([window, window_name]))
 			window_child.set_metadata(0, pid)
 

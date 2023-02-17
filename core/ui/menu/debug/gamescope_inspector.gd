@@ -1,5 +1,7 @@
 extends Control
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 signal displays_updated
 
 var trees: Array[Tree] = []
@@ -36,14 +38,17 @@ func _ready() -> void:
 	
 	# Configure the columns of our gamescope properties
 	var update_properties := {
-		"GAMESCOPE_FOCUSED_WINDOW": func(display: String) -> String:
+		"GAMESCOPE_FOCUSED_WINDOW": func(display_name: String) -> String:
+			var display := Gamescope.get_display_type(display_name)
 			focused_window = Gamescope.get_focused_window(display)
 			#var window_name := Gamescope.get_window_name(display, focused_window)
 			return "{0}".format([focused_window]),
-		"GAMESCOPE_FOCUSABLE_APPS": func(display: String) -> String:
+		"GAMESCOPE_FOCUSABLE_APPS": func(display_name: String) -> String:
+			var display := Gamescope.get_display_type(display_name)
 			var apps := Array(Gamescope.get_focusable_apps(display))
 			return ", ".join(apps),
-		"GAMESCOPE_FOCUSABLE_WINDOWS": func(display: String) -> String:
+		"GAMESCOPE_FOCUSABLE_WINDOWS": func(display_name: String) -> String:
+			var display := Gamescope.get_display_type(display_name)
 			var apps := Array(Gamescope.get_focusable_windows(display))
 			return ", ".join(apps),
 		#"GAMESCOPE_FPS_LIMIT": func(display: String) -> String:
@@ -75,7 +80,6 @@ func _update_gamescope_properties() -> void:
 	var gamescope_display := displays[0]
 	var root := gamescope_props.get_root()
 	for prop in root.get_children():
-		var foo := prop.get_text(0)
 		var get_prop := prop.get_metadata(0) as Callable
 		var value = get_prop.call(gamescope_display)
 		if not value is String:
@@ -115,20 +119,22 @@ func _build_menus() -> void:
 	_update_window_trees()
 
 
-func _on_tree_item_selected(tree: Tree, display: String):
+func _on_tree_item_selected(tree: Tree, display_name: String):
+	var display := Gamescope.get_display_type(display_name)
 	var selected := tree.get_selected()
 	var window_id := selected.get_metadata(0) as int
-	var properties := Gamescope.list_xprops(display, window_id)
+	var properties := Gamescope.list_xprops(window_id, display)
 	
 	var root := window_inspector.get_root()
 	for child in root.get_children():
 		root.remove_child(child)
 		child.free()
 	
+	var xwayland := Gamescope._get_xwayland(display)
 	for prop_name in properties:
 		var prop := window_inspector.create_item(root)
 		prop.set_text(0, prop_name)
-		var val := Array(Gamescope._get_xprop_array(display, window_id, prop_name))
+		var val := Array(Gamescope._get_xprop_array(xwayland, window_id, prop_name))
 		if val.size() == 0:
 			continue
 		prop.set_text(1, ", ".join(val))
@@ -142,18 +148,20 @@ func _update_window_trees() -> void:
 		i += 1
 
 
-func _update_tree(tree: Tree, display: String) -> void:
+func _update_tree(tree: Tree, display_name: String) -> void:
+	var display := Gamescope.get_display_type(display_name)
 	var root := tree.get_root()
 	var root_id := Gamescope.get_root_window_id(display)
 	root.set_text(0, "({0})".format([root_id]))
 	root.set_text(1, "Root")
 	root.set_metadata(0, root_id)
-	_update_leaves(tree, root, display)
+	_update_leaves(tree, root, display_name)
 
 
-func _update_leaves(tree: Tree, tree_parent: TreeItem, display: String):
+func _update_leaves(tree: Tree, tree_parent: TreeItem, display_name: String):
+	var display := Gamescope.get_display_type(display_name)
 	var window_id: int = tree_parent.get_metadata(0)
-	var window_children := Gamescope.get_window_children(display, window_id)
+	var window_children := Gamescope.get_window_children(window_id, display)
 	
 	# Get the window ids of the children
 	var tree_children_windows := []
@@ -181,11 +189,11 @@ func _update_leaves(tree: Tree, tree_parent: TreeItem, display: String):
 	# Recursively update children
 	for tree_child in tree_parent.get_children():
 		var child_window_id := tree_child.get_metadata(0) as int
-		var window_name := Gamescope.get_window_name(display, child_window_id)
+		var window_name := Gamescope.get_window_name(child_window_id, display)
 		tree_child.set_text(0, "({0})".format([child_window_id]))
 		tree_child.set_text(1, window_name)
 		if child_window_id == focused_window:
 			tree_child.set_text(2, "focused")
 		else:
 			tree_child.set_text(2, "")
-		_update_leaves(tree, tree_child, display)
+		_update_leaves(tree, tree_child, display_name)

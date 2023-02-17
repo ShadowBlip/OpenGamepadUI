@@ -1,12 +1,11 @@
 extends Control
 class_name Main
 
+const Gamescope := preload("res://core/global/gamescope.tres")
 const LibraryManager := preload("res://core/global/library_manager.tres")
 
-var DISPLAY: String = OS.get_environment("DISPLAY")
 var PID: int = OS.get_process_id()
-var overlay_display = DISPLAY
-var overlay_window_id = Gamescope.get_window_id(DISPLAY, PID)
+var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -23,7 +22,6 @@ func _init() -> void:
 	# Tell gamescope that we're an overlay
 	if overlay_window_id < 0:
 		logger.error("Unable to detect Window ID. Overlay is not going to work!")
-	logger.debug("Found primary X display: " + DISPLAY)
 	logger.debug("Found primary window id: {0}".format([overlay_window_id]))
 	_setup(overlay_window_id)
 
@@ -35,10 +33,10 @@ func _setup(window_id: int) -> void:
 		return
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	if Gamescope.set_main_app(DISPLAY, window_id) != OK:
+	if Gamescope.set_main_app(window_id) != OK:
 		logger.error("Unable to set STEAM_GAME atom!")
 	# Sets ourselves to the input focus
-	if Gamescope.set_input_focus(DISPLAY, window_id, 1) != OK:
+	if Gamescope.set_input_focus(window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 
@@ -46,7 +44,6 @@ func _setup(window_id: int) -> void:
 # gamescope --xwayland-count 2 -- build/opengamepad-ui.x86_64
 func _ready() -> void:
 	# Set bg to transparent
-	logger.debug("ID: {0}".format([Gamescope.get_window_id(DISPLAY, PID)]))
 	get_tree().get_root().transparent_bg = true
 	fade_texture.visible = true
 
@@ -75,7 +72,7 @@ func _on_state_changed(_from: State, _to: State) -> void:
 
 
 func _on_game_state_entered(_from: State) -> void:
-	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	Gamescope.set_blur_mode(Gamescope.BLUR_MODE.OFF)
 	_set_overlay(false)
 	for child in ui_container.get_children():
 		child.visible = false
@@ -83,7 +80,7 @@ func _on_game_state_entered(_from: State) -> void:
 
 func _on_game_state_exited(_to: State) -> void:
 	if state_machine.has_state(in_game_state):
-		Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.ALWAYS)
+		Gamescope.set_blur_mode(Gamescope.BLUR_MODE.ALWAYS)
 		_set_overlay(true)
 	else:
 		_on_game_state_removed()
@@ -92,7 +89,7 @@ func _on_game_state_exited(_to: State) -> void:
 
 
 func _on_game_state_removed() -> void:
-	Gamescope.set_blur_mode(DISPLAY, Gamescope.BLUR_MODE.OFF)
+	Gamescope.set_blur_mode(Gamescope.BLUR_MODE.OFF)
 	_set_overlay(false)
 
 
@@ -102,7 +99,7 @@ func _set_overlay(enable: bool) -> void:
 	var overlay_enabled = 0
 	if enable:
 		overlay_enabled = 1
-	Gamescope.set_overlay(DISPLAY, overlay_window_id, overlay_enabled)
+	Gamescope.set_overlay(overlay_window_id, overlay_enabled)
 
 
 func _on_boot_video_player_finished() -> void:

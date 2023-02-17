@@ -1,8 +1,10 @@
 extends Node
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 var qam_state = load("res://assets/state/states/quick_access_menu.tres")
 
-var display: String
+var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
 var steam_window_id: int
@@ -30,17 +32,16 @@ func _setup_qam_only() -> void:
 	var qam_scene := load("res://core/ui/menu/qam/quick_access_menu.tscn") as PackedScene
 	add_child(qam_scene.instantiate())
 
-	display = OS.get_environment("DISPLAY")
 	pid = OS.get_process_id()
-	qam_window_id = Gamescope.get_window_id(display, pid)
+	qam_window_id = Gamescope.get_window_id(pid, display)
 
 	# Find Steam in the display tree
 	var root_win_id := Gamescope.get_root_window_id(display)
-	var all_windows := Gamescope.get_all_windows(display, root_win_id)
+	var all_windows := Gamescope.get_all_windows(root_win_id, display)
 	for window in all_windows:
 		if window == qam_window_id:
 			continue
-		if Gamescope.has_xprop(display, window, "STEAM_OVERLAY"):
+		if Gamescope.has_xprop(window, "STEAM_OVERLAY", display):
 			steam_window_id = window
 			break
 
@@ -49,14 +50,14 @@ func _setup_qam_only() -> void:
 
 
 func _on_qam_open(_from: State) -> void:
-	Gamescope.set_overlay(display, qam_window_id, 1)
-	Gamescope.set_app_id(display, qam_window_id, 769)
-	Gamescope.set_overlay(display, steam_window_id, 0)
-	Gamescope.set_app_id(display, steam_window_id, 7420)
+	Gamescope.set_overlay(qam_window_id, 1, display)
+	Gamescope.set_app_id(qam_window_id, 769, display)
+	Gamescope.set_overlay(steam_window_id, 0, display)
+	Gamescope.set_app_id(steam_window_id, 7420, display)
 
 
 func _on_qam_closed(_to: State) -> void:
-	Gamescope.set_overlay(display, qam_window_id, 0)
-	Gamescope.set_app_id(display, qam_window_id, 7420)
-	Gamescope.set_overlay(display, steam_window_id, 1)
-	Gamescope.set_app_id(display, steam_window_id, 769)
+	Gamescope.set_overlay(qam_window_id, 0, display)
+	Gamescope.set_app_id(qam_window_id, 7420, display)
+	Gamescope.set_overlay(steam_window_id, 1, display)
+	Gamescope.set_app_id(steam_window_id, 769, display)
