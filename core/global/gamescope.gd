@@ -161,12 +161,9 @@ func get_window_id(pid: int, display: XWAYLAND) -> int:
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
-	print("Goot root id: ", root_id)
 	var all_windows := get_all_windows(root_id, display)
-	print("Got all windows: ", all_windows)
 	for window_id in all_windows:
 		var window_pid := xwayland.get_window_pid(window_id)
-		print("Got pid: ", window_pid)
 		if pid == window_pid:
 			return window_id
 		window_pid = xwayland.get_xprop(window_id, "_NET_WM_PID")
@@ -199,7 +196,7 @@ func get_all_windows(window_id: int, display: XWAYLAND) -> PackedInt32Array:
 	var leaves := PackedInt32Array()
 	for child in children:
 		leaves.append(child)
-		leaves.append_array(get_all_windows(display, child))
+		leaves.append_array(get_all_windows(child, display))
 
 	return leaves
 
