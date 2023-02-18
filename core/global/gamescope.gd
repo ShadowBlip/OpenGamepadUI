@@ -280,6 +280,14 @@ func set_input_focus(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OG
 	return _set_xprop(xwayland, window_id, "STEAM_INPUT_FOCUS", value)
 
 
+## Get the overlay status for the given window
+func get_overlay(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
+	var xwayland := _get_xwayland(display)
+	if not xwayland:
+		return -1
+	return _get_xprop(xwayland, window_id, "STEAM_OVERLAY")
+
+
 ## Set the given window as an overlay
 func set_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 	var xwayland := _get_xwayland(display)
@@ -329,6 +337,15 @@ func get_fps_limit(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 		return -1
 	var root_id := xwayland.get_root_window_id()
 	return _get_xprop(xwayland, root_id, "GAMESCOPE_FPS_LIMIT")
+
+
+## Returns the current Gamescope blur mode
+func get_blur_mode(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := _get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	return _get_xprop(xwayland, root_id, "GAMESCOPE_BLUR_MODE")
 
 
 ## Sets the Gamescope blur mode
@@ -432,7 +449,8 @@ func _is_gamescope_xwayland(xwayland: Xlib) -> bool:
 ##     Gamescope._set_xprop(":0", 1234, "STEAM_INPUT", 1)
 ##     [/codeblock]
 func _set_xprop(xwayland: Xlib, window_id: int, key: String, value: int) -> int:
-	logger.debug("Setting window {0} key {1} to {2}".format([window_id, key, value]))
+	var msg_args := [window_id, key, value, xwayland.get_name()]
+	logger.debug("Setting window {0} key {1} to {2} on display {3}".format(msg_args))
 	return xwayland.set_xprop(window_id, key, value)
 
 
