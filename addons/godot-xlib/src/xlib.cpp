@@ -10,6 +10,7 @@
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/packed_string_array.hpp"
 #include "godot_cpp/variant/string.hpp"
+#include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -295,6 +296,88 @@ int Xlib::set_wm_hints(int window_id) {
   return ret;
 };
 
+// Keyboard/mouse emulation
+godot::Vector2 Xlib::get_mouse_position() {
+  XEvent event;
+  XQueryPointer(dpy, DefaultRootWindow(dpy), &event.xbutton.root,
+                &event.xbutton.window, &event.xbutton.x_root,
+                &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y,
+                &event.xbutton.state);
+  Vector2 position = Vector2();
+  position.x = event.xbutton.x;
+  position.y = event.xbutton.y;
+
+  return position;
+}
+
+// Move the mouse pointer (relative)
+int Xlib::move_mouse(godot::Vector2 position) {
+  int rc = 1;
+  rc = XWarpPointer(dpy, None, None, 0, 0, 0, 0, position.x, position.y);
+  if (rc > 1) {
+    return rc;
+  }
+  return XFlush(dpy);
+}
+
+// Move the mouse pointer (absolute)
+int Xlib::move_mouse_to(Vector2 position) {
+  int rc = 1;
+  Vector2 current = get_mouse_position();
+  rc = XWarpPointer(dpy, None, None, 0, 0, 0, 0, -current.x, -current.y);
+  if (rc > 1) {
+    return rc;
+  }
+  return move_mouse(position);
+}
+
+// Sends a mouse click of the given mouse button
+int Xlib::send_mouse_click(godot::MouseButton button, bool pressed) {
+  // Map godot constants to xlib constants
+  int xbutton;
+  if (button == godot::MOUSE_BUTTON_LEFT)
+    xbutton = Button1;
+  if (button == godot::MOUSE_BUTTON_MIDDLE)
+    xbutton = Button2;
+  if (button == godot::MOUSE_BUTTON_RIGHT)
+    xbutton = Button3;
+  if (button == godot::MOUSE_BUTTON_WHEEL_UP)
+    xbutton = Button4;
+  if (button == godot::MOUSE_BUTTON_WHEEL_DOWN)
+    xbutton = Button5;
+
+  // Create and setup the event
+  XEvent event;
+  memset(&event, 0, sizeof(event));
+  event.xbutton.button = xbutton;
+  event.xbutton.same_screen = True;
+  event.xbutton.subwindow = DefaultRootWindow(dpy);
+  while (event.xbutton.subwindow) {
+    event.xbutton.window = event.xbutton.subwindow;
+    XQueryPointer(dpy, event.xbutton.window, &event.xbutton.root,
+                  &event.xbutton.subwindow, &event.xbutton.x_root,
+                  &event.xbutton.y_root, &event.xbutton.x, &event.xbutton.y,
+                  &event.xbutton.state);
+  }
+
+  // Send the press/release event
+  long mask;
+  if (pressed) {
+    event.type = ButtonPress;
+    mask = ButtonPressMask;
+  } else {
+    event.type = ButtonRelease;
+    mask = ButtonReleaseMask;
+  }
+  int rc;
+  rc = XSendEvent(dpy, PointerWindow, True, mask, &event);
+  XFlush(dpy);
+  if (rc == 0) {
+    return -1;
+  }
+  return 0;
+}
+
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Methods
@@ -326,6 +409,13 @@ void Xlib::_bind_methods() {
   ClassDB::bind_method(D_METHOD("set_wm_hints", "window_id"),
                        &Xlib::set_wm_hints);
 
+  ClassDB::bind_method(D_METHOD("get_mouse_position"),
+                       &Xlib::get_mouse_position);
+  ClassDB::bind_method(D_METHOD("move_mouse", "position"), &Xlib::move_mouse);
+  ClassDB::bind_method(D_METHOD("move_mouse_to", "position"),
+                       &Xlib::move_mouse_to);
+  ClassDB::bind_method(D_METHOD("send_mouse_click", "button", "pressed"),
+                       &Xlib::send_mouse_click);
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);
   BIND_CONSTANT(ERR_X_DISPLAY_NOT_FOUND);
