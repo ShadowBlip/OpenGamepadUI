@@ -17,7 +17,7 @@ env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
 # Include dependency libraries for xlib
-env.Append(LIBS=["X11", "XRes"])
+env.Append(LIBS=["X11", "XRes", "Xtst"])
 
 
 # Generating the compilation DB (`compile_commands.json`) requires SCons 4.0.0 or later.
