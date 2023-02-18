@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/zap.svg-81f42f3ab74f64cef12b5e463594c6bb.ctex
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

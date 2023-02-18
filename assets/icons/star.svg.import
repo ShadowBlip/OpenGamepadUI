@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/star.svg-f3dde1db508da8d86b33a4f2c9f37e62.cte
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

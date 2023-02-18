@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/mouse-pointer.svg-09c5714f4b0e48b21f6979de9a7
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

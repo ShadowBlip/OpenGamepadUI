@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/git-branch.svg-c7351123feff10870ce417c9fe11ce
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

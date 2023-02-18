@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/log-out.svg-45dc8049a7580da7cdb28a4afa370e88.
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

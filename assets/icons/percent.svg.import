@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/percent.svg-ecb4fd1b9c1b765f14d2f8613d1f2b7d.
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

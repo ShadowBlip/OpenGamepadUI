@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/bell-off.svg-bd9b45f9aee7856f16236b683b63861e
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

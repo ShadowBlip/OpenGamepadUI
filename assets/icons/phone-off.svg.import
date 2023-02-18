@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/phone-off.svg-4404bd28aa866d2e1b85def28502087
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
