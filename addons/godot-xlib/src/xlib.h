@@ -1,7 +1,9 @@
 #ifndef XLIB_CLASS_H
 #define XLIB_CLASS_H
 
+#include <X11/X.h>
 #include <X11/Xutil.h>
+#include <map>
 
 #include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
@@ -9,6 +11,7 @@
 #include "godot_cpp/variant/vector2.hpp"
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/templates/hash_map.hpp>
 
 #include <godot_cpp/core/binder_common.hpp>
 
@@ -26,6 +29,9 @@ protected:
 private:
   Display *dpy = NULL;
   String name = String();
+  std::map<godot::Key, KeySym> keymap;
+
+  void initialize_keymap();
 
 public:
   // Constants
@@ -60,6 +66,8 @@ public:
   int move_mouse(Vector2 position);
   int move_mouse_to(Vector2 position);
   int send_mouse_click(godot::MouseButton button, bool pressed);
+  int send_char_key(String key, bool pressed);
+  int send_key(godot::Key key, bool pressed);
 };
 
 #endif // XLIB_CLASS_H

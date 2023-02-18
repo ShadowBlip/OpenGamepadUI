@@ -5,6 +5,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/XRes.h>
+#include <X11/extensions/XTest.h>
 #include <cstring>
 
 #include "godot_cpp/variant/packed_int32_array.hpp"
@@ -16,6 +17,7 @@
 
 using godot::ClassDB;
 using godot::D_METHOD;
+using godot::Key;
 using godot::String;
 
 static int error(Display *dpy, XErrorEvent *ev) {
@@ -23,7 +25,10 @@ static int error(Display *dpy, XErrorEvent *ev) {
   return 0;
 }
 
-Xlib::Xlib() { XSetErrorHandler(error); };
+Xlib::Xlib() {
+  XSetErrorHandler(error);
+  initialize_keymap();
+};
 Xlib::~Xlib() { close(); };
 
 // Open a connection with the given X server display. E.g. ":0"
@@ -378,6 +383,37 @@ int Xlib::send_mouse_click(godot::MouseButton button, bool pressed) {
   return 0;
 }
 
+// Send the given character as a key press
+int Xlib::send_char_key(String key, bool pressed) {
+  int is_pressed = False;
+  if (pressed)
+    is_pressed = True;
+  KeyCode keycode = 0;
+  keycode = XKeysymToKeycode(dpy, XStringToKeysym(key.utf8().get_data()));
+  int rc = XTestFakeKeyEvent(dpy, keycode, is_pressed, 0);
+  XFlush(dpy);
+  return rc;
+}
+
+// Send key input like CTRL, Enter, etc.
+int Xlib::send_key(Key key, bool pressed) {
+  KeySym keysym = 0;
+  if (keymap.find(key) == keymap.end()) {
+    // Not in keymap
+    godot::UtilityFunctions::push_warning("Key was not found in map");
+    return -1;
+  }
+  keysym = keymap[key];
+  KeyCode keycode = XKeysymToKeycode(dpy, keysym);
+
+  int is_pressed = False;
+  if (pressed)
+    is_pressed = True;
+  int rc = XTestFakeKeyEvent(dpy, keycode, is_pressed, 0);
+  XFlush(dpy);
+  return rc;
+}
+
 // Register the methods with Godot
 void Xlib::_bind_methods() {
   // Methods
@@ -416,7 +452,22 @@ void Xlib::_bind_methods() {
                        &Xlib::move_mouse_to);
   ClassDB::bind_method(D_METHOD("send_mouse_click", "button", "pressed"),
                        &Xlib::send_mouse_click);
+  ClassDB::bind_method(D_METHOD("send_char_key", "key", "pressed"),
+                       &Xlib::send_char_key);
+  ClassDB::bind_method(D_METHOD("send_key", "key", "pressed"), &Xlib::send_key);
+
   // Constants
   BIND_CONSTANT(ERR_XPROP_NOT_FOUND);
   BIND_CONSTANT(ERR_X_DISPLAY_NOT_FOUND);
 };
+
+void Xlib::initialize_keymap() {
+  keymap[Key::KEY_ENTER] = XK_KP_Enter;
+  keymap[Key::KEY_TAB] = XK_KP_Tab;
+  keymap[Key::KEY_CAPSLOCK] = XK_Caps_Lock;
+  keymap[Key::KEY_SHIFT] = XK_Shift_L;
+  keymap[Key::KEY_CTRL] = XK_Control_L;
+  keymap[Key::KEY_ALT] = XK_Alt_L;
+  keymap[Key::KEY_META] = XK_Meta_L;
+  keymap[Key::KEY_ESCAPE] = XK_Escape;
+}
