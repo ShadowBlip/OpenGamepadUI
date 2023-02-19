@@ -1,13 +1,20 @@
 extends Resource
 class_name ManagedGamepad
 
-# Intercept mode defines how we intercept gamepad events
+## A ManagedGamepad is a physical/virtual gamepad pair for processing input
+##
+## ManagedGamepad will convert physical gamepad input into virtual gamepad input.
+
+## Intercept mode defines how we intercept gamepad events
 enum INTERCEPT_MODE {
-	NONE,
-	PASS,  # Pass all inputs to the virtual device
-	ALL,  # Intercept all inputs and send nothing to the virtual device
+	NONE,  ## Don't intercept ANY input
+	PASS,  ## Pass all inputs to the virtual device
+	ALL,  ## Intercept all inputs and send nothing to the virtual device
 }
 
+var profile: GamepadProfile
+var xwayland: Xlib
+var event_map := {}
 var mode := INTERCEPT_MODE.NONE
 var phys_path: String
 var virt_path: String
@@ -18,11 +25,11 @@ var abs_y_min: int
 var abs_x_max: int
 var abs_x_min: int
 var _ff_effects := {}  # Current force feedback effect ids
-var logger := Log.get_logger("ManagedGamepad")
+var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 
-# Opens the given physical gamepad with exclusive access and creates a virtual
-# gamepad.
+## Opens the given physical gamepad with exclusive access and creates a virtual
+## gamepad.
 func open(path: String) -> int:
 	# Create a physical device
 	phys_path = path
@@ -52,8 +59,24 @@ func open(path: String) -> int:
 	return OK
 
 
-# Processes all physical and virtual inputs for this controller. This should be
-# called in a tight loop to process input events.
+## Set the managed gamepad to use the given gamepad profile for translating
+## input events into other input events
+func set_profile(gamepad_profile: GamepadProfile) -> void:
+	profile = gamepad_profile
+	event_map = {}
+	if not profile:
+		return
+
+	logger.info("Setting gamepad profile: " + profile.name)
+	# Map the profile mappings with the events to translate
+	for mapping in profile.mapping:
+		if not mapping.source_event in event_map:
+			event_map[mapping.source_event] = []
+		event_map[mapping.source_event].append(mapping)
+
+
+## Processes all physical and virtual inputs for this controller. This should be
+## called in a tight loop to process input events.
 func process_input() -> void:
 	# Only process input if we have a valid handle
 	if not phys_device or not phys_device.is_open():
@@ -74,10 +97,10 @@ func process_input() -> void:
 		_process_virt_event(event)
 
 
-# Processes a single physical gamepad event. Depending on the intercept mode,
-# this usually means forwarding events from the physical gamepad to the
-# virtual gamepad. In other cases we want to translate physical input into
-# Godot events that only OGUI will respond to.
+## Processes a single physical gamepad event. Depending on the intercept mode,
+## this usually means forwarding events from the physical gamepad to the
+## virtual gamepad. In other cases we want to translate physical input into
+## Godot events that only OGUI will respond to.
 func _process_phys_event(event: InputDeviceEvent) -> void:
 	# Always skip passing FF events to the virtual gamepad
 	if event.get_type() == event.EV_FF:
@@ -91,6 +114,7 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 	# Intercept mode PASS will pass all input to the virtual gamepad except
 	# for guide button presses.
 	if mode == INTERCEPT_MODE.PASS:
+		# Intercept guide button presses so the game doesn't see them
 		if event.get_code() == event.BTN_MODE:
 			if event.value == 1:
 				mode = INTERCEPT_MODE.ALL
@@ -98,6 +122,13 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 				mode = INTERCEPT_MODE.PASS
 			_send_input("ogui_guide", event.value == 1, 1)
 			return
+
+		# If a profile is set, and this event needs translation, do that
+		# instead.
+		if profile and event.get_code() in event_map:
+			_translate_event(event)
+			return
+
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 
@@ -151,9 +182,9 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 				_send_joy_input(JOY_AXIS_LEFT_X, -value)
 
 
-# Sometimes games will send gamepad events to the controller, such as when to
-# rumble the controller. This method handles those by capturing those events
-# and forwarding them to the physical controller.
+## Sometimes games will send gamepad events to the controller, such as when to
+## rumble the controller. This method handles those by capturing those events
+## and forwarding them to the physical controller.
 func _process_virt_event(event: InputDeviceEvent) -> void:
 	if event.get_type() == event.EV_FF:
 		# Write any force feedback events to the physical gamepad
@@ -197,6 +228,82 @@ func _process_virt_event(event: InputDeviceEvent) -> void:
 
 		virt_device.end_erase(erase)
 		return
+
+
+## Translates the given event based on the gamepad profile.
+func _translate_event(event: InputDeviceEvent) -> void:
+	var mappings := event_map[event.get_code()] as Array
+
+	# Loop through the translation mappings for this event
+	for m in mappings:
+		var mapping := m as GamepadMapping
+
+		# Handle keyboard event translation targets
+		if mapping.target is InputEventKey:
+			var target_event := mapping.target as InputEventKey
+			var pressed := false
+
+			# Check to see if the event source is an ABS axis event
+			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
+				var is_positive := mapping.axis == mapping.AXIS.POSITIVE
+				pressed = _is_axis_pressed(event, is_positive)
+
+			# Translate gamepad button events
+			else:
+				if event.get_value() == 1:
+					pressed = true
+
+			#logger.debug("Sending key: " + OS.get_keycode_string(target_event.keycode))
+			xwayland.send_key(target_event.keycode, pressed)
+			continue
+
+
+# Tries to determine if an axis is "pressed" enough to send a key press event
+func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
+	var threshold := 0.35
+	var value: float
+	match event.get_code():
+		event.ABS_Y:
+			if event.value > 0:
+				var maximum := abs_y_max
+				value = event.value / float(maximum)
+			if event.value <= 0:
+				var minimum := abs_y_min
+				value = event.value / float(minimum)
+				value = -value
+		event.ABS_X:
+			if event.value > 0:
+				var maximum := abs_x_max
+				value = event.value / float(maximum)
+			if event.value <= 0:
+				var minimum := abs_x_min
+				value = event.value / float(minimum)
+				value = -value
+		event.ABS_RY:
+			if event.value > 0:
+				var maximum := abs_y_max
+				value = event.value / float(maximum)
+			if event.value <= 0:
+				var minimum := abs_y_min
+				value = event.value / float(minimum)
+				value = -value
+		event.ABS_RX:
+			if event.value > 0:
+				var maximum := abs_x_max
+				value = event.value / float(maximum)
+			if event.value <= 0:
+				var minimum := abs_x_min
+				value = event.value / float(minimum)
+				value = -value
+
+	if is_positive:
+		if value > threshold:
+			return true
+	else:
+		if value < -threshold:
+			return true
+
+	return false
 
 
 # Sends an input action to the event queue

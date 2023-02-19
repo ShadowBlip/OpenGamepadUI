@@ -72,6 +72,18 @@ func get_managed_gamepads() -> Array:
 	return managed_gamepads.keys()
 
 
+## Sets the given gamepad profile on the given managed gamepad.
+func set_gamepad_profile(device: String, profile: GamepadProfile) -> void:
+	gamepad_mutex.lock()
+	if not device in managed_gamepads:
+		logger.warn("Unable to set profile on non-managed device: " + device)
+		gamepad_mutex.unlock()
+		return
+	var gamepad := managed_gamepads[device] as ManagedGamepad
+	gamepad.set_profile(profile)
+	gamepad_mutex.unlock()
+
+
 ## Sets the gamepad intercept mode
 func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	logger.debug("Setting gamepad intercept mode: " + str(mode))
@@ -130,6 +142,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if gamepad.open(path) != OK:
 			logger.warn("Unable to create managed gamepad for: " + path)
 			continue
+		gamepad.xwayland = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 		managed_gamepads[path] = gamepad
 		virtual_gamepads.append(gamepad.virt_path)
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
