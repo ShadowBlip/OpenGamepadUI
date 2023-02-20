@@ -4,7 +4,8 @@ class_name ManagedGamepad
 # Intercept mode defines how we intercept gamepad events
 enum INTERCEPT_MODE {
 	NONE,
-	PASS,  # Pass all inputs to the virtual device
+	PASS,  # Pass all inputs to the virtual device except guide
+	PASS_QAM, # Pass all inputs to the virtual device except guide + south
 	ALL,  # Intercept all inputs and send nothing to the virtual device
 }
 
@@ -19,7 +20,7 @@ var abs_x_max: int
 var abs_x_min: int
 var _ff_effects := {}  # Current force feedback effect ids
 var logger := Log.get_logger("ManagedGamepad")
-
+var mode_pressed: bool = false
 
 # Opens the given physical gamepad with exclusive access and creates a virtual
 # gamepad.
@@ -64,7 +65,7 @@ func process_input() -> void:
 	for event in events:
 		if not event or not event is InputDeviceEvent:
 			continue
-		_process_phys_event(event)
+		_process_phys_event(phys_device, event)
 
 	# Process all virtual input events
 	events = virt_device.get_events()
@@ -78,7 +79,7 @@ func process_input() -> void:
 # this usually means forwarding events from the physical gamepad to the
 # virtual gamepad. In other cases we want to translate physical input into
 # Godot events that only OGUI will respond to.
-func _process_phys_event(event: InputDeviceEvent) -> void:
+func _process_phys_event(phys_device: InputDevice, event: InputDeviceEvent) -> void:
 	# Always skip passing FF events to the virtual gamepad
 	if event.get_type() == event.EV_FF:
 		return
@@ -98,6 +99,25 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 				mode = INTERCEPT_MODE.PASS
 			_send_input("ogui_guide", event.value == 1, 1)
 			return
+		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
+		return
+
+	# Intercept mode PASS_QAM will pass all input to the virtual gamepad except
+	# for guide + south button combo presses.
+	if mode == INTERCEPT_MODE.PASS_QAM:
+		if event.get_code() == event.BTN_MODE:
+			if event.value == 1:
+				mode_pressed = true
+			else:
+				mode_pressed = false
+				
+		if event.get_code() == event.BTN_EAST and mode_pressed:
+			if event.value == 1:
+				mode = INTERCEPT_MODE.ALL
+			_send_input("ogui_qam", event.value == 1, 1)
+			mode_pressed = false
+			return
+		
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 
