@@ -130,7 +130,7 @@ func _on_tree_item_selected(tree: Tree, display_name: String):
 		root.remove_child(child)
 		child.free()
 	
-	var xwayland := Gamescope._get_xwayland(display)
+	var xwayland := Gamescope.get_xwayland(display)
 	for prop_name in properties:
 		var prop := window_inspector.create_item(root)
 		prop.set_text(0, prop_name)

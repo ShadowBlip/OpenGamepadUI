@@ -75,6 +75,7 @@ clean: ## Remove build artifacts
 	rm -rf dist
 	cd ./addons/godot-xlib && make clean
 	cd ./addons/godot-evdev && make clean
+	cd ./addons/godot-pty && make clean
 
 .PHONY: run run-force
 run: addons build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

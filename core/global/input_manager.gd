@@ -42,6 +42,8 @@ var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
+## Number of "input frames" per second to process gamepad inputs (i.e. HrZ)
+@export var input_framerate := 600
 var input_exited := false
 var input_thread := Thread.new()
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
@@ -72,6 +74,18 @@ func get_managed_gamepads() -> Array:
 	return managed_gamepads.keys()
 
 
+## Sets the given gamepad profile on the given managed gamepad.
+func set_gamepad_profile(device: String, profile: GamepadProfile) -> void:
+	gamepad_mutex.lock()
+	if not device in managed_gamepads:
+		logger.warn("Unable to set profile on non-managed device: " + device)
+		gamepad_mutex.unlock()
+		return
+	var gamepad := managed_gamepads[device] as ManagedGamepad
+	gamepad.set_profile(profile)
+	gamepad_mutex.unlock()
+
+
 ## Sets the gamepad intercept mode
 func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	logger.debug("Setting gamepad intercept mode: " + str(mode))
@@ -85,12 +99,32 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _start_process_input():
 	var exited := false
+	var target_frame_time_us := int((1.0 / input_framerate) * 1000000.0)
 	while not exited:
-		OS.delay_usec(1)  # Throttle to execute every 1us, to save CPU
+		# Start timing how long this input frame takes
+		var start_time := Time.get_ticks_usec()
+
+		# Process the gamepad inputs
 		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()
 		gamepad_mutex.unlock()
+
+		# Calculate how long this frame took
+		var end_time := Time.get_ticks_usec()
+		var delta_us := end_time - start_time  # Time in microseconds since last input frame
+
+		# If the last input frame took less time than our target frame
+		# rate, sleep for the difference.
+		var sleep_time_us := target_frame_time_us - delta_us
+		if delta_us < target_frame_time_us:
+			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
+		else:
+			var msg := (
+				"Missed target frame time {0}us. Got: {1}us"
+				. format([target_frame_time_us, delta_us])
+			)
+			logger.debug(msg)
 
 
 ## Processes all raw gamepad input
@@ -130,6 +164,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if gamepad.open(path) != OK:
 			logger.warn("Unable to create managed gamepad for: " + path)
 			continue
+		gamepad.xwayland = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 		managed_gamepads[path] = gamepad
 		virtual_gamepads.append(gamepad.virt_path)
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)

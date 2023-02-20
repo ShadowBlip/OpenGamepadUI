@@ -120,7 +120,7 @@ func discover_gamescope_displays() -> PackedStringArray:
 
 ## Returns the name of the given xwayland display (e.g. ":1")
 func get_display_name(display: XWAYLAND) -> String:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return ""
 	return xwayland.get_name()
@@ -128,7 +128,7 @@ func get_display_name(display: XWAYLAND) -> String:
 
 ## Returns true if the given X property exists on the given window.
 func has_xprop(window_id: int, key: String, display: XWAYLAND) -> bool:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return false
 	return xwayland.has_xprop(window_id, key)
@@ -136,7 +136,7 @@ func has_xprop(window_id: int, key: String, display: XWAYLAND) -> bool:
 
 ## Returns a list of X properties on the given window
 func list_xprops(window_id: int, display: XWAYLAND) -> PackedStringArray:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return []
 	return xwayland.list_xprops(window_id)
@@ -144,7 +144,7 @@ func list_xprops(window_id: int, display: XWAYLAND) -> PackedStringArray:
 
 ## Returns the name of the given window.
 func get_window_name(window_id: int, display: XWAYLAND = XWAYLAND.GAME) -> String:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return ""
 	return xwayland.get_window_name(window_id)
@@ -152,7 +152,7 @@ func get_window_name(window_id: int, display: XWAYLAND = XWAYLAND.GAME) -> Strin
 
 ## Returns the PID of the given window. Returns -1 if no PID was found.
 func get_window_pid(window_id: int, display: XWAYLAND) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return xwayland.get_window_pid(window_id)
@@ -163,7 +163,7 @@ func get_window_pid(window_id: int, display: XWAYLAND) -> int:
 func get_window_id(pid: int, display: XWAYLAND) -> int:
 	var display_name := get_display_name(display)
 	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display_name]))
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -181,7 +181,7 @@ func get_window_id(pid: int, display: XWAYLAND) -> int:
 
 ## Returns the child window ids of the given window
 func get_window_children(window_id: int, display: XWAYLAND) -> PackedInt32Array:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return PackedInt32Array()
 	var children := xwayland.get_window_children(window_id)
@@ -192,7 +192,7 @@ func get_window_children(window_id: int, display: XWAYLAND) -> PackedInt32Array:
 
 ## Recursively returns all child windows of the given window id
 func get_all_windows(window_id: int, display: XWAYLAND) -> PackedInt32Array:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return PackedInt32Array()
 	var children := xwayland.get_window_children(window_id)
@@ -217,7 +217,7 @@ func is_focusable_app(window_id: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> b
 
 ## Returns the root window ID of the given display
 func get_root_window_id(display: XWAYLAND) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return xwayland.get_root_window_id()
@@ -225,7 +225,7 @@ func get_root_window_id(display: XWAYLAND) -> int:
 
 ## Returns a list of focusable app window ids
 func get_focusable_apps(display: XWAYLAND = XWAYLAND.PRIMARY) -> PackedInt32Array:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return PackedInt32Array()
 	var root_id := xwayland.get_root_window_id()
@@ -234,7 +234,7 @@ func get_focusable_apps(display: XWAYLAND = XWAYLAND.PRIMARY) -> PackedInt32Arra
 
 ## Returns a list of focusable window ids
 func get_focusable_windows(display: XWAYLAND = XWAYLAND.PRIMARY) -> PackedInt32Array:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return PackedInt32Array()
 	var root_id := xwayland.get_root_window_id()
@@ -253,7 +253,7 @@ func get_focusable_window_names(display: XWAYLAND = XWAYLAND.PRIMARY) -> PackedS
 
 ## Return the currently focused window id.
 func get_focused_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -266,7 +266,7 @@ func get_focused_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 ## Sets the given window as the main launcher app.
 ## Gamescope is hard-coded to look for appId 769
 func set_main_app(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_GAME", 769)
@@ -274,7 +274,7 @@ func set_main_app(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 
 ## Set the given window as the primary overlay input focus
 func set_input_focus(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_INPUT_FOCUS", value)
@@ -282,7 +282,7 @@ func set_input_focus(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OG
 
 ## Get the overlay status for the given window
 func get_overlay(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _get_xprop(xwayland, window_id, "STEAM_OVERLAY")
@@ -290,7 +290,7 @@ func get_overlay(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 
 ## Set the given window as an overlay
 func set_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_OVERLAY", value)
@@ -298,7 +298,7 @@ func set_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) 
 
 ## Set the given window as an external overlay
 func set_external_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "GAMESCOPE_EXTERNAL_OVERLAY", value)
@@ -306,7 +306,7 @@ func set_external_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLA
 
 ## Returns the currently set app ID on the given window
 func get_app_id(window_id: int, display: XWAYLAND = XWAYLAND.GAME) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _get_xprop(xwayland, window_id, "STEAM_GAME")
@@ -314,7 +314,7 @@ func get_app_id(window_id: int, display: XWAYLAND = XWAYLAND.GAME) -> int:
 
 ## Sets the app ID on the given window
 func set_app_id(window_id: int, app_id: int, display: XWAYLAND = XWAYLAND.GAME) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_GAME", app_id)
@@ -323,7 +323,7 @@ func set_app_id(window_id: int, app_id: int, display: XWAYLAND = XWAYLAND.GAME) 
 ## Sets the Gamescope FPS limit
 func set_fps_limit(fps: int = 60, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	logger.debug("Setting FPS to: {0}".format([fps]))
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -332,7 +332,7 @@ func set_fps_limit(fps: int = 60, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 
 ## Returns the Gamescope FPS limit
 func get_fps_limit(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -341,7 +341,7 @@ func get_fps_limit(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 
 ## Returns the current Gamescope blur mode
 func get_blur_mode(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -351,7 +351,7 @@ func get_blur_mode(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 ## Sets the Gamescope blur mode
 func set_blur_mode(mode: BLUR_MODE = BLUR_MODE.OFF, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	logger.debug("Setting blur mode to: {0}".format([mode]))
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -361,7 +361,7 @@ func set_blur_mode(mode: BLUR_MODE = BLUR_MODE.OFF, display: XWAYLAND = XWAYLAND
 ## Sets the Gamescope blur radius when blur is active
 func set_blur_radius(radius: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	logger.debug("Setting blur radius to: {0}".format([radius]))
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -371,7 +371,7 @@ func set_blur_radius(radius: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 ## Configures Gamescope to allow tearing or not
 func set_allow_tearing(allow: bool, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	logger.debug("Setting tearing to: {0}".format([allow]))
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var value := 0
@@ -383,7 +383,7 @@ func set_allow_tearing(allow: bool, display: XWAYLAND = XWAYLAND.PRIMARY) -> int
 
 ## Focuses the given window
 func set_baselayer_window(window_id: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
@@ -392,14 +392,14 @@ func set_baselayer_window(window_id: int, display: XWAYLAND = XWAYLAND.PRIMARY) 
 
 ## Removes the baselayer property to un-focus windows
 func remove_baselayer_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
-	var xwayland := _get_xwayland(display)
+	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
 	return _remove_xprop(xwayland, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW")
 
 
-# Returns the display type for the given display name
+## Returns the display type for the given display name
 func get_display_type(name: String) -> XWAYLAND:
 	if xwayland_primary.get_name() == name:
 		return XWAYLAND.PRIMARY
@@ -408,8 +408,8 @@ func get_display_type(name: String) -> XWAYLAND:
 	return XWAYLAND.GAME
 
 
-# Returns the xwayland instance for the given display type
-func _get_xwayland(display: XWAYLAND) -> Xlib:
+## Returns the xwayland instance for the given display type
+func get_xwayland(display: XWAYLAND) -> Xlib:
 	if xwaylands.size() == 0:
 		return null
 	if display == XWAYLAND.PRIMARY:

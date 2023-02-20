@@ -36,6 +36,7 @@ signal recent_apps_changed()
 
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
+const NotificationManager := preload("res://core/global/notification_manager.tres")
 const Gamescope := preload("res://core/global/gamescope.tres")
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -52,6 +53,7 @@ var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/director
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
+
 
 # Loads persistent data like recent games launched, etc.
 func _load_persist_data():
@@ -151,11 +153,36 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	running_app.pid = pid
 	running_app.display = display
 
+	# Check to see if this game has any gamepad profiles. If so, set our 
+	# gamepads to use them.
+	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
+	set_gamepad_profile(profile_path)
+
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
 	_update_recent_apps(app)
 	return running_app
+
+
+## Sets the gamepad profile for the running app with the given profile
+func set_gamepad_profile(path: String) -> void:
+	# If no profile was specified, unset the gamepad profiles
+	if path == "":
+		for gamepad in InputManager.get_managed_gamepads():
+			InputManager.set_gamepad_profile(gamepad, null)
+	
+	# Try to load the profile and set it
+	var profile := load(path)
+
+	# TODO: Save profiles for individual controllers?
+	for gamepad in InputManager.get_managed_gamepads():
+		InputManager.set_gamepad_profile(gamepad, profile)
+	if not profile:
+		logger.warn("Gamepad profile not found: " + path)
+		return
+	var notify := Notification.new("Using gamepad profile: " + profile.name)
+	NotificationManager.show(notify)
 
 
 ## Stops the game and all its children with the given PID
@@ -198,6 +225,12 @@ func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 	var old := _current_app
 	_current_app = app
 	app_switched.emit(old, app)
+
+	# Check to see if this game has any gamepad profiles. If so, set our 
+	# gamepads to use them.
+	var section := ".".join(["game", app.name.to_lower()])
+	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
+	set_gamepad_profile(profile_path)
 
 
 ## Returns true if the given app can be switched to via Gamescope
