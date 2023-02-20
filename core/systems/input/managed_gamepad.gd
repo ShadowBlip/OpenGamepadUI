@@ -316,16 +316,12 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 
 			# Handle mousewheel events
 			if target_event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-				print("Got mousewheel!")
 				if not pressed:
-					print("Not pressed!")
 					continue
 				if target_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-					print("Sending up wheel!")
 					virt_device.write_event(event.EV_REL, event.REL_WHEEL, 1)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				if target_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-					print("Sending down wheel!")
 					virt_device.write_event(event.EV_REL, event.REL_WHEEL, -1)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				continue
