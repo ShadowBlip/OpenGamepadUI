@@ -1,0 +1,416 @@
+[gd_scene load_steps=32 format=3 uid="uid://bvsnvsby3isxr"]
+
+[ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_settings.gd" id="1_8xl7t"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
+[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox360/XboxOne_Diagram.png" id="2_cwn10"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_wi2wh"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_wim8p"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_du3xc"]
+[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="4_0dob8"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_2q6j7"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_o1jae"]
+[ext_resource type="Texture2D" uid="uid://dhhjoq01cc2oh" path="res://addons/controller_icons/assets/xbox360/lt.png" id="5_4eke6"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="5_4mdii"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_x46c2"]
+[ext_resource type="Texture2D" uid="uid://de4v68g8x5ygf" path="res://addons/controller_icons/assets/xbox360/back_alt.png" id="6_30dtu"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_faybn"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_61xd2"]
+[ext_resource type="Texture2D" uid="uid://dq0eirc22li66" path="res://addons/controller_icons/assets/xbox360/start_alt.png" id="7_rrebb"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_1ol5d"]
+[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="9_y2e1p"]
+[ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="10_xi71t"]
+[ext_resource type="Texture2D" uid="uid://bh66fibu352gl" path="res://addons/controller_icons/assets/xbox360/dpad_up.png" id="12_mbuja"]
+[ext_resource type="Texture2D" uid="uid://dt4m6u4nau82r" path="res://addons/controller_icons/assets/xbox360/dpad_down.png" id="13_gwg5i"]
+[ext_resource type="Texture2D" uid="uid://7r70kxgen0mv" path="res://addons/controller_icons/assets/xbox360/dpad_left.png" id="14_l7ks8"]
+[ext_resource type="Texture2D" uid="uid://7qkn2dva6jv" path="res://addons/controller_icons/assets/xbox360/dpad_right.png" id="15_ehvkp"]
+[ext_resource type="Texture2D" uid="uid://fxgoiilpipsd" path="res://addons/controller_icons/assets/xbox360/l_stick.png" id="16_kqgr1"]
+[ext_resource type="Texture2D" uid="uid://mh6if65g6eob" path="res://addons/controller_icons/assets/xbox360/l_stick_click.png" id="17_po3ol"]
+[ext_resource type="Texture2D" uid="uid://d6jwqg6mq8dk" path="res://addons/controller_icons/assets/xbox360/r_stick.png" id="18_hbd0p"]
+[ext_resource type="Texture2D" uid="uid://db7d0vqnfyuin" path="res://addons/controller_icons/assets/xbox360/r_stick_click.png" id="19_quxs0"]
+[ext_resource type="Texture2D" uid="uid://bva4iswwvta5d" path="res://addons/controller_icons/assets/xbox360/y.png" id="20_krow2"]
+[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="21_w70ku"]
+[ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="22_s4o5a"]
+[ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="23_3ml07"]
+
+[node name="GamepadSettings" type="Control" node_paths=PackedStringArray("focus_node")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8xl7t")
+focus_node = NodePath("MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer/BTN_TL")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_wi2wh")]
+state = ExtResource("3_du3xc")
+visible_during = Array[Resource]([ExtResource("4_2q6j7"), ExtResource("5_4mdii"), ExtResource("6_faybn"), ExtResource("7_61xd2")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("8_1ol5d")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_du3xc")])
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_wim8p")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="TopLevelContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TopLevelContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+
+[node name="ProfileNameContainer" type="CenterContainer" parent="MarginContainer/TopLevelContainer"]
+layout_mode = 2
+
+[node name="ProfileNameLabel" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("4_o1jae")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Profile Name"
+
+[node name="GamepadContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+
+[node name="MarginContainerLeft" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LeftGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft"]
+layout_mode = 2
+
+[node name="BTN_TL" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Left Bumper"
+icon = ExtResource("4_0dob8")
+flat = true
+alignment = 0
+expand_icon = true
+metadata/event = "BTN_TL"
+
+[node name="ABS_Z_POSITIVE" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Left Trigger	"
+icon = ExtResource("5_4eke6")
+flat = true
+alignment = 0
+expand_icon = true
+metadata/event = "ABS_Z"
+
+[node name="MarginContainerCenter" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="CenterGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="CenterButtonsContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer"]
+layout_mode = 2
+
+[node name="BTN_SELECT" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select Key"
+icon = ExtResource("6_30dtu")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="BTN_START" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Key"
+icon = ExtResource("7_rrebb")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="DiagramTextureRect" type="TextureRect" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_cwn10")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MarginContainerRight" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight"]
+layout_mode = 2
+
+[node name="BTN_TR" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Right Bumper"
+icon = ExtResource("9_y2e1p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ABS_RZ_POSITIVE" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Right Trigger	"
+icon = ExtResource("10_xi71t")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="DPadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" instance=ExtResource("5_x46c2")]
+layout_mode = 2
+text = "Directional Pad"
+
+[node name="BTN_TRIGGER_HAPPY3" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Up"
+icon = ExtResource("12_mbuja")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="BTN_TRIGGER_HAPPY4" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Down"
+icon = ExtResource("13_gwg5i")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="BTN_TRIGGER_HAPPY1" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Left"
+icon = ExtResource("14_l7ks8")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="BTN_TRIGGER_HAPPY2" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Right"
+icon = ExtResource("15_ehvkp")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="LJoyContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" instance=ExtResource("5_x46c2")]
+layout_mode = 2
+text = "Left Analog Stick"
+
+[node name="ABS_Y" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Up"
+icon = ExtResource("16_kqgr1")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="ABS_Y_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Up"
+icon = ExtResource("16_kqgr1")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="ABS_Y_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Down"
+icon = ExtResource("16_kqgr1")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="ABS_X_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Left"
+icon = ExtResource("16_kqgr1")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="ABS_X_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Right"
+icon = ExtResource("16_kqgr1")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="BTN_THUMBL" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Click"
+icon = ExtResource("17_po3ol")
+flat = true
+alignment = 0
+expand_icon = true
+
+[node name="RJoyContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" instance=ExtResource("5_x46c2")]
+layout_mode = 2
+text = "Right Analog Stick"
+horizontal_alignment = 2
+
+[node name="ABS_RY" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Up"
+icon = ExtResource("18_hbd0p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ABS_RY_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Up"
+icon = ExtResource("18_hbd0p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ABS_RY_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Down"
+icon = ExtResource("18_hbd0p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ABS_RX_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Left"
+icon = ExtResource("18_hbd0p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ABS_RX_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Right"
+icon = ExtResource("18_hbd0p")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="BTN_THUMBR" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Click"
+icon = ExtResource("19_quxs0")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" instance=ExtResource("5_x46c2")]
+layout_mode = 2
+text = "Buttons"
+horizontal_alignment = 2
+
+[node name="BTN_WEST" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "West"
+icon = ExtResource("20_krow2")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="BTN_SOUTH" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "South"
+icon = ExtResource("21_w70ku")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="BTN_EAST" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "East"
+icon = ExtResource("22_s4o5a")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true
+
+[node name="BTN_NORTH" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "North"
+icon = ExtResource("23_3ml07")
+flat = true
+alignment = 2
+icon_alignment = 2
+expand_icon = true

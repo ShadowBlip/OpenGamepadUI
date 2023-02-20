@@ -12,6 +12,7 @@ var state_machine := (
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
+var gamepad_settings_state := preload("res://assets/state/states/gamepad_settings.tres") as State
 var installing := {}
 var logger := Log.get_logger("GameLaunchMenu")
 
@@ -55,6 +56,9 @@ func _on_state_entered(_from: State) -> void:
 
 	# Configure the game settings state with this game
 	game_settings_state.data = launcher_state.data
+
+	# Configure the controller settings state with this game 
+	gamepad_settings_state.data = launcher_state.data
 
 	# Check if the app is installed or not
 	if library_item.is_installed():
