@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=15 format=3 uid="uid://bneeynjk41y33"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=23 format=3 uid="uid://bneeynjk41y33"]
 
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_sic6g"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_w1gcb"]
@@ -65,8 +65,8 @@ source = 35
 
 [sub_resource type="InputEventKey" id="InputEventKey_l8iyg"]
 device = -1
-keycode = 69
-unicode = 101
+keycode = 82
+unicode = 114
 
 [sub_resource type="Resource" id="Resource_fbq04"]
 script = ExtResource("1_sic6g")
@@ -75,7 +75,49 @@ axis = 0
 target = SubResource("InputEventKey_l8iyg")
 source = 40
 
+[sub_resource type="InputEventKey" id="InputEventKey_dt6yk"]
+device = -1
+keycode = 70
+unicode = 102
+
+[sub_resource type="Resource" id="Resource_gym5j"]
+script = ExtResource("1_sic6g")
+source_event = 308
+axis = 0
+target = SubResource("InputEventKey_dt6yk")
+source = 42
+
+[sub_resource type="InputEventKey" id="InputEventKey_3lcy5"]
+device = -1
+keycode = 69
+unicode = 101
+
+[sub_resource type="Resource" id="Resource_n84h4"]
+script = ExtResource("1_sic6g")
+source_event = 305
+axis = 0
+target = SubResource("InputEventKey_3lcy5")
+source = 37
+
+[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_432qt"]
+
+[sub_resource type="Resource" id="Resource_c6yk8"]
+script = ExtResource("1_sic6g")
+source_event = 3
+axis = 3
+target = SubResource("InputEventMouseMotion_432qt")
+source = 137
+
+[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_0x5pl"]
+
+[sub_resource type="Resource" id="Resource_ytybu"]
+script = ExtResource("1_sic6g")
+source_event = 4
+axis = 3
+target = SubResource("InputEventMouseMotion_0x5pl")
+source = 138
+
 [resource]
 script = ExtResource("1_w1gcb")
 name = "Mouse and Keyboard  (WASD)"
-mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04")])
+mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu")])

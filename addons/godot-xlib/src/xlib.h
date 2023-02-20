@@ -30,6 +30,7 @@ private:
   Display *dpy = NULL;
   String name = String();
   std::map<godot::Key, KeySym> keymap;
+  Vector2 rel_mouse_pos = Vector2();
 
   void initialize_keymap();
 

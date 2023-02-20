@@ -204,7 +204,7 @@ void VirtualInputDevice::_bind_methods() {
   ClassDB::bind_method(D_METHOD("end_erase", "erase"),
                        &VirtualInputDevice::end_erase);
   ClassDB::bind_method(D_METHOD("is_open"), &VirtualInputDevice::is_open);
-  ClassDB::bind_method(D_METHOD("write_event", "event"),
+  ClassDB::bind_method(D_METHOD("write_event", "type", "code", "value"),
                        &VirtualInputDevice::write_event);
   ClassDB::bind_method(D_METHOD("get_syspath"),
                        &VirtualInputDevice::get_syspath);

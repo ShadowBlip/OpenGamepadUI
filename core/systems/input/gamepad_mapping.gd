@@ -12,6 +12,7 @@ enum AXIS {
 	NONE,  ## Is not an axis event
 	POSITIVE,  ## Apply mapping only to positive axis values
 	NEGATIVE,  ## Apply mapping only to negative axis values
+	BOTH,  ## Apply mapping to both halfs of the axis (i.e. for mouse)
 }
 
 ## An evdev event source to translate

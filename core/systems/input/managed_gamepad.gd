@@ -24,7 +24,18 @@ var abs_y_max: int
 var abs_y_min: int
 var abs_x_max: int
 var abs_x_min: int
+var abs_ry_max: int
+var abs_ry_min: int
+var abs_rx_max: int
+var abs_rx_min: int
+var cur_x: float
+var cur_y: float
+var cur_rx: float
+var cur_ry: float
+var mouse_remainder := Vector2()
+var should_process_mouse := false
 var _ff_effects := {}  # Current force feedback effect ids
+var _last_time := 0
 var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 
@@ -43,6 +54,10 @@ func open(path: String) -> int:
 	abs_y_min = phys_device.get_abs_min(InputDeviceEvent.ABS_Y)
 	abs_x_max = phys_device.get_abs_max(InputDeviceEvent.ABS_X)
 	abs_x_min = phys_device.get_abs_min(InputDeviceEvent.ABS_X)
+	abs_ry_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RY)
+	abs_ry_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RY)
+	abs_rx_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RX)
+	abs_rx_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RX)
 
 	# Create a virtual gamepad from this physical one
 	virt_device = phys_device.duplicate()
@@ -64,20 +79,33 @@ func open(path: String) -> int:
 func set_profile(gamepad_profile: GamepadProfile) -> void:
 	profile = gamepad_profile
 	event_map = {}
+	should_process_mouse = false
 	if not profile:
 		return
 
 	logger.info("Setting gamepad profile: " + profile.name)
 	# Map the profile mappings with the events to translate
-	for mapping in profile.mapping:
+	for m in profile.mapping:
+		var mapping := m as GamepadMapping
 		if not mapping.source_event in event_map:
 			event_map[mapping.source_event] = []
 		event_map[mapping.source_event].append(mapping)
+
+		# If there is a mapping that does mouse motion, enable
+		# processing of mouse motion in process_input()
+		if mapping.target is InputEventMouseMotion:
+			should_process_mouse = true
 
 
 ## Processes all physical and virtual inputs for this controller. This should be
 ## called in a tight loop to process input events.
 func process_input() -> void:
+	# Calculate the amount of time that has passed since last invocation
+	var current_time := Time.get_ticks_usec()
+	var delta_us := current_time - _last_time
+	_last_time = current_time
+	var delta := delta_us / 1000000.0  # Convert to seconds
+
 	# Only process input if we have a valid handle
 	if not phys_device or not phys_device.is_open():
 		return
@@ -87,7 +115,7 @@ func process_input() -> void:
 	for event in events:
 		if not event or not event is InputDeviceEvent:
 			continue
-		_process_phys_event(event)
+		_process_phys_event(event, delta)
 
 	# Process all virtual input events
 	events = virt_device.get_events()
@@ -96,12 +124,16 @@ func process_input() -> void:
 			continue
 		_process_virt_event(event)
 
+	# If we need to process mouse movement, do it
+	if should_process_mouse:
+		_move_mouse(delta)
+
 
 ## Processes a single physical gamepad event. Depending on the intercept mode,
 ## this usually means forwarding events from the physical gamepad to the
 ## virtual gamepad. In other cases we want to translate physical input into
 ## Godot events that only OGUI will respond to.
-func _process_phys_event(event: InputDeviceEvent) -> void:
+func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 	# Always skip passing FF events to the virtual gamepad
 	if event.get_type() == event.EV_FF:
 		return
@@ -126,7 +158,7 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 		# If a profile is set, and this event needs translation, do that
 		# instead.
 		if profile and event.get_code() in event_map:
-			_translate_event(event)
+			_translate_event(event, delta)
 			return
 
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
@@ -155,31 +187,15 @@ func _process_phys_event(event: InputDeviceEvent) -> void:
 		event.BTN_TRIGGER_HAPPY4:
 			_send_input("ui_down", event.value == 1, 1)
 		event.ABS_Y:
-			if event.value > 0:
-				var maximum := abs_y_max
-				var value := event.value / float(maximum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_Y, value)
-			if event.value <= 0:
-				var minimum := abs_y_min
-				var value := event.value / float(minimum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_Y, -value)
+			var value := _normalize_axis(event)
+			if value == 0:
+				return
+			_send_joy_input(JOY_AXIS_LEFT_Y, value)
 		event.ABS_X:
-			if event.value > 0:
-				var maximum := abs_x_max
-				var value := event.value / float(maximum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_X, value)
-			if event.value <= 0:
-				var minimum := abs_x_min
-				var value := event.value / float(minimum)
-				if value == 0:
-					return
-				_send_joy_input(JOY_AXIS_LEFT_X, -value)
+			var value := _normalize_axis(event)
+			if value == 0:
+				return
+			_send_joy_input(JOY_AXIS_LEFT_X, value)
 
 
 ## Sometimes games will send gamepad events to the controller, such as when to
@@ -231,7 +247,7 @@ func _process_virt_event(event: InputDeviceEvent) -> void:
 
 
 ## Translates the given event based on the gamepad profile.
-func _translate_event(event: InputDeviceEvent) -> void:
+func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 	var mappings := event_map[event.get_code()] as Array
 
 	# Loop through the translation mappings for this event
@@ -257,44 +273,18 @@ func _translate_event(event: InputDeviceEvent) -> void:
 			xwayland.send_key(target_event.keycode, pressed)
 			continue
 
+		# Handle mouse motion event translation targets
+		if mapping.target is InputEventMouseMotion:
+			var target_event := mapping.target as InputEventMouseMotion
+			_set_current_axis_value(event)
+			#_move_mouse(event, target_event, delta)
+			continue
+
 
 # Tries to determine if an axis is "pressed" enough to send a key press event
 func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 	var threshold := 0.35
-	var value: float
-	match event.get_code():
-		event.ABS_Y:
-			if event.value > 0:
-				var maximum := abs_y_max
-				value = event.value / float(maximum)
-			if event.value <= 0:
-				var minimum := abs_y_min
-				value = event.value / float(minimum)
-				value = -value
-		event.ABS_X:
-			if event.value > 0:
-				var maximum := abs_x_max
-				value = event.value / float(maximum)
-			if event.value <= 0:
-				var minimum := abs_x_min
-				value = event.value / float(minimum)
-				value = -value
-		event.ABS_RY:
-			if event.value > 0:
-				var maximum := abs_y_max
-				value = event.value / float(maximum)
-			if event.value <= 0:
-				var minimum := abs_y_min
-				value = event.value / float(minimum)
-				value = -value
-		event.ABS_RX:
-			if event.value > 0:
-				var maximum := abs_x_max
-				value = event.value / float(maximum)
-			if event.value <= 0:
-				var minimum := abs_x_min
-				value = event.value / float(minimum)
-				value = -value
+	var value := _normalize_axis(event)
 
 	if is_positive:
 		if value > threshold:
@@ -304,6 +294,117 @@ func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 			return true
 
 	return false
+
+
+# Updates the current axis values
+func _set_current_axis_value(event: InputDeviceEvent) -> void:
+	var value := _normalize_axis(event)
+	match event.get_code():
+		event.ABS_X:
+			cur_x = value
+		event.ABS_Y:
+			cur_y = value
+		event.ABS_RX:
+			cur_rx = value
+		event.ABS_RY:
+			cur_ry = value
+
+
+# Move the mouse based on the given input event translation
+# TODO: Don't assume the source is a joystick
+func _move_mouse(delta: float) -> void:
+	var pixels_to_move := Vector2()
+
+	var lx := _calculate_mouse_move(delta, cur_x)
+	var ly := _calculate_mouse_move(delta, cur_y)
+	var rx := _calculate_mouse_move(delta, cur_rx)
+	var ry := _calculate_mouse_move(delta, cur_ry)
+
+	# Add the left and right joystick inputs
+	pixels_to_move.x = lx + rx
+	pixels_to_move.y = ly + ry
+
+	# Get the fractional value of the position so we can accumulate them
+	# in between invocations
+	var x: int = pixels_to_move.x  # E.g. 3.14 -> 3
+	var y: int = pixels_to_move.y
+	var remainder_x: float = pixels_to_move.x - float(x)
+	var remainder_y: float = pixels_to_move.y - float(y)
+
+	# Keep track of relative mouse movements to keep around fractional values
+	mouse_remainder.x += remainder_x
+	if mouse_remainder.x >= 1:
+		x += 1
+		mouse_remainder.x -= 1
+	if mouse_remainder.x <= -1:
+		x -= 1
+		mouse_remainder.x += 1
+	mouse_remainder.y += remainder_y
+	if mouse_remainder.y >= 1:
+		y += 1
+		mouse_remainder.y -= 1
+	if mouse_remainder.y <= -1:
+		y -= 1
+		mouse_remainder.y += 1
+
+	# TODO: Keep track of fractional values so we can accumulate them
+	var event := InputDeviceEvent.new()
+	virt_device.write_event(event.EV_REL, event.REL_X, x)
+	virt_device.write_event(event.EV_REL, event.REL_Y, y)
+
+
+# Calculate how much the mouse should move based on the current axis value
+func _calculate_mouse_move(delta: float, value: float) -> float:
+	var threshold := 0.20
+	if abs(value) < threshold:
+		return 0
+	var mouse_speed_pps := 200
+	var pixels_to_move := mouse_speed_pps * value * delta
+
+	return pixels_to_move
+
+
+# Uses the axis minimum and maximum values to return a value from -1.0 - 1.0
+# reflecting how far the axis has been pushed from the center
+func _normalize_axis(event: InputDeviceEvent) -> float:
+	match event.get_code():
+		event.ABS_Y:
+			if event.value > 0:
+				var maximum := abs_y_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_y_min
+				var value := event.value / float(minimum)
+				return -value
+		event.ABS_X:
+			if event.value > 0:
+				var maximum := abs_x_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_x_min
+				var value := event.value / float(minimum)
+				return -value
+		event.ABS_RY:
+			if event.value > 0:
+				var maximum := abs_ry_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_ry_min
+				var value := event.value / float(minimum)
+				return -value
+		event.ABS_RX:
+			if event.value > 0:
+				var maximum := abs_rx_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_rx_min
+				var value := event.value / float(minimum)
+				return -value
+	return 0
 
 
 # Sends an input action to the event queue
