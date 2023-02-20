@@ -125,7 +125,7 @@ func process_input() -> void:
 		_process_virt_event(event)
 
 	# If we need to process mouse movement, do it
-	if should_process_mouse:
+	if mode == INTERCEPT_MODE.PASS and should_process_mouse:
 		_move_mouse(delta)
 
 
@@ -347,10 +347,18 @@ func _move_mouse(delta: float) -> void:
 		y -= 1
 		mouse_remainder.y += 1
 
-	# TODO: Keep track of fractional values so we can accumulate them
-	var event := InputDeviceEvent.new()
-	virt_device.write_event(event.EV_REL, event.REL_X, x)
-	virt_device.write_event(event.EV_REL, event.REL_Y, y)
+	# Write the mouse motion event to the virtual device
+	var EV_REL := InputDeviceEvent.EV_REL
+	var EV_SYN := InputDeviceEvent.EV_SYN
+	var REL_X := InputDeviceEvent.REL_X
+	var REL_Y := InputDeviceEvent.REL_Y
+	var SYN_REPORT := InputDeviceEvent.SYN_REPORT
+	if x != 0:
+		virt_device.write_event(EV_REL, REL_X, x)
+		virt_device.write_event(EV_SYN, SYN_REPORT, 0)
+	if y != 0:
+		virt_device.write_event(EV_REL, REL_Y, y)
+		virt_device.write_event(EV_SYN, SYN_REPORT, 0)
 
 
 # Calculate how much the mouse should move based on the current axis value
@@ -358,7 +366,7 @@ func _calculate_mouse_move(delta: float, value: float) -> float:
 	var threshold := 0.20
 	if abs(value) < threshold:
 		return 0
-	var mouse_speed_pps := 200
+	var mouse_speed_pps := 800
 	var pixels_to_move := mouse_speed_pps * value * delta
 
 	return pixels_to_move
