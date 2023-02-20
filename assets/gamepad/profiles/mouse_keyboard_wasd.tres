@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=23 format=3 uid="uid://bneeynjk41y33"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=27 format=3 uid="uid://bneeynjk41y33"]
 
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_sic6g"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_w1gcb"]
@@ -117,7 +117,27 @@ axis = 3
 target = SubResource("InputEventMouseMotion_0x5pl")
 source = 138
 
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_f222n"]
+button_index = 1
+
+[sub_resource type="Resource" id="Resource_23cvb"]
+script = ExtResource("1_sic6g")
+source_event = 5
+axis = 1
+target = SubResource("InputEventMouseButton_f222n")
+source = 139
+
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_pf6qo"]
+button_index = 2
+
+[sub_resource type="Resource" id="Resource_wv4u8"]
+script = ExtResource("1_sic6g")
+source_event = 2
+axis = 1
+target = SubResource("InputEventMouseButton_pf6qo")
+source = 136
+
 [resource]
 script = ExtResource("1_w1gcb")
 name = "Mouse and Keyboard  (WASD)"
-mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu")])
+mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8")])
