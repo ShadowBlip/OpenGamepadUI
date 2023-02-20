@@ -579,7 +579,7 @@ void Xlib::initialize_keymap() {
   keymap[Key::KEY_SCROLLLOCK] = XK_Scroll_Lock;
   keymap[Key::KEY_SECTION] = XK_section;
   keymap[Key::KEY_SHIFT] = XK_Shift_L;
-  keymap[Key::KEY_SPACE] = XK_KP_Space;
+  keymap[Key::KEY_SPACE] = XK_space;
   keymap[Key::KEY_TAB] = XK_Tab;
   keymap[Key::KEY_YEN] = XK_yen;
 
