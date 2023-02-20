@@ -42,6 +42,8 @@ var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
+## Number of "input frames" per second to process gamepad inputs
+@export var input_framerate := 120
 var input_exited := false
 var input_thread := Thread.new()
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
@@ -97,8 +99,23 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _start_process_input():
 	var exited := false
+	var last_time := Time.get_ticks_usec()
+	var target_frame_time_us := int((1.0 / input_framerate) * 1000000.0)
 	while not exited:
-		OS.delay_usec(1)  # Throttle to execute every 1us, to save CPU
+		# Calculate the amount of time that has passed since last invocation
+		var current_time := Time.get_ticks_usec()
+		var delta_us := current_time - last_time  # Time in microseconds since last input frame
+		last_time = current_time
+
+		# If the last input frame took less time than our target frame
+		# rate, sleep for the difference.
+		var sleep_time_us := target_frame_time_us - delta_us
+		if sleep_time_us > 0:
+			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
+		#else:
+		#	logger.debug("Missed our target input frame time. Got: " + str(delta_us))
+
+		# Process the gamepad inputs
 		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()

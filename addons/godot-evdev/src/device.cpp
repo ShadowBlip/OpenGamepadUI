@@ -6,6 +6,7 @@
 #include <iostream>
 #include <libevdev/libevdev-uinput.h>
 #include <libevdev/libevdev.h>
+#include <linux/input-event-codes.h>
 #include <linux/input.h>
 #include <linux/uinput.h>
 #include <stdio.h>
@@ -87,6 +88,15 @@ VirtualInputDevice *InputDevice::duplicate() {
   if (uifd < 0) {
     return nullptr;
   }
+
+  // Add extra capabilities to emulate mouse (and maybe kb?)
+  libevdev_enable_event_type(dev, EV_REL);
+  libevdev_enable_event_code(dev, EV_REL, REL_X, NULL);
+  libevdev_enable_event_code(dev, EV_REL, REL_Y, NULL);
+  libevdev_enable_event_type(dev, EV_KEY);
+  libevdev_enable_event_code(dev, EV_KEY, BTN_LEFT, NULL);
+  libevdev_enable_event_code(dev, EV_KEY, BTN_RIGHT, NULL);
+  libevdev_enable_property(dev, INPUT_PROP_POINTER);
 
   // Try to create a new uinput device from the evdev device
   int err = libevdev_uinput_create_from_device(dev, uifd, &uidev);

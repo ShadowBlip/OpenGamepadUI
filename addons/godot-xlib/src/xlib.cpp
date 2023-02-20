@@ -8,6 +8,7 @@
 #include <X11/extensions/XTest.h>
 #include <cstring>
 
+#include "godot_cpp/core/defs.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/packed_string_array.hpp"
 #include "godot_cpp/variant/string.hpp"
@@ -317,8 +318,38 @@ godot::Vector2 Xlib::get_mouse_position() {
 
 // Move the mouse pointer (relative)
 int Xlib::move_mouse(godot::Vector2 position) {
+  // Get the fractional value of the position, so we can accumulate them
+  // between invocations
+  int x = position.x; // E.g. 3.14 -> 3
+  int y = position.y;
+  real_t remainder_x = position.x - x; // E.g. 3.14 - 3 = 0.14
+  real_t remainder_y = position.y - y;
+
+  // Keep track of relative mouse movements between invocations to keep
+  // around fractional values
+  rel_mouse_pos.x += remainder_x;
+  if (rel_mouse_pos.x >= 1) {
+    x++;
+    rel_mouse_pos.x--;
+  }
+  if (rel_mouse_pos.x <= -1) {
+    x--;
+    rel_mouse_pos.x++;
+  }
+
+  rel_mouse_pos.y += remainder_y;
+  if (rel_mouse_pos.y >= 1) {
+    y++;
+    rel_mouse_pos.y--;
+  }
+  if (rel_mouse_pos.y <= -1) {
+    y--;
+    rel_mouse_pos.y++;
+  }
+
+  // Warp the pointer based on position
   int rc = 1;
-  rc = XWarpPointer(dpy, None, None, 0, 0, 0, 0, position.x, position.y);
+  rc = XWarpPointer(dpy, None, None, 0, 0, 0, 0, x, y);
   if (rc > 1) {
     return rc;
   }
@@ -327,6 +358,11 @@ int Xlib::move_mouse(godot::Vector2 position) {
 
 // Move the mouse pointer (absolute)
 int Xlib::move_mouse_to(Vector2 position) {
+  // Reset relative mouse position
+  rel_mouse_pos.x = 0;
+  rel_mouse_pos.y = 0;
+
+  // Get the current position and set the cursor to 0, 0
   int rc = 1;
   Vector2 current = get_mouse_position();
   rc = XWarpPointer(dpy, None, None, 0, 0, 0, 0, -current.x, -current.y);
