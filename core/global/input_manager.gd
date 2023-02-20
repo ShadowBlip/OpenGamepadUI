@@ -42,8 +42,8 @@ var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
-## Number of "input frames" per second to process gamepad inputs
-@export var input_framerate := 120
+## Number of "input frames" per second to process gamepad inputs (i.e. HrZ)
+@export var input_framerate := 600
 var input_exited := false
 var input_thread := Thread.new()
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
