@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://si46nqof206"]
+[gd_scene load_steps=26 format=3 uid="uid://si46nqof206"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_vl16i"]
 [ext_resource type="Script" path="res://core/main.gd" id="2_gwx84"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://hg2schw8qdvn" path="res://core/ui/menu/store/store_menu.tscn" id="10_ethl4"]
 [ext_resource type="PackedScene" uid="uid://bwl2icwgry4l" path="res://core/ui/menu/launch/game_launch_menu.tscn" id="11_4ea7a"]
 [ext_resource type="PackedScene" uid="uid://b5wlfsvqqluwa" path="res://core/ui/menu/launch/game_settings.tscn" id="12_soqxq"]
+[ext_resource type="PackedScene" uid="uid://bvsnvsby3isxr" path="res://core/ui/menu/gamepad/gamepad_settings.tscn" id="13_vrgc7"]
 [ext_resource type="PackedScene" uid="uid://ibmgxjl33jn8" path="res://core/ui/menu/settings/settings_menu.tscn" id="13_vxtul"]
 [ext_resource type="PackedScene" uid="uid://b2se1l330qmln" path="res://core/ui/menu/navigation/top_bar.tscn" id="14_gncx1"]
 [ext_resource type="PackedScene" uid="uid://b0p4eo4ny7veo" path="res://core/ui/menu/main-menu/main_menu_container.tscn" id="15_n7egu"]
@@ -110,6 +111,10 @@ visible = false
 layout_mode = 1
 
 [node name="GameSettingsMenu" parent="UIContainer/Content" instance=ExtResource("12_soqxq")]
+visible = false
+layout_mode = 1
+
+[node name="GamepadSettings" parent="UIContainer/Content" instance=ExtResource("13_vrgc7")]
 visible = false
 layout_mode = 1
 

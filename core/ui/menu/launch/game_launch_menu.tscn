@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bwl2icwgry4l"]
+[gd_scene load_steps=20 format=3 uid="uid://bwl2icwgry4l"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_hg7ac"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="11_8fkuv"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="16_0i4he"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="16_d1x8e"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="17_yolrd"]
 [ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="18_x6wsr"]
@@ -108,6 +109,11 @@ size_flags_horizontal = 3
 [node name="LaunchButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer" instance=ExtResource("4_7y2kk")]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../SettingsButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../LaunchOptionButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../LaunchOptionButton")
+focus_previous = NodePath("../../SettingsButton")
 theme_override_styles/normal = SubResource("StyleBoxFlat_1ef1c")
 text = "Launch"
 
@@ -118,7 +124,11 @@ custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 focus_neighbor_left = NodePath("../LaunchButton")
-focus_neighbor_right = NodePath("../../SettingsButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../../ControllerButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../../ControllerButton")
+focus_previous = NodePath("../LaunchButton")
 text_overrun_behavior = 2
 clip_text = true
 
@@ -142,28 +152,41 @@ text = "PLAY TIME"
 
 [node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
 layout_mode = 2
-text = "Nov 21"
+text = "0h"
 
 [node name="Spacer" type="Control" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ControllerButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
-visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 1
+focus_neighbor_left = NodePath("../LaunchButtonContainer/LaunchOptionButton")
+focus_neighbor_top = NodePath(".")
 focus_neighbor_right = NodePath("../SettingsButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../SettingsButton")
+focus_previous = NodePath("../LaunchButtonContainer/LaunchOptionButton")
 icon = ExtResource("6_hc1fc")
 icon_alignment = 1
 expand_icon = true
+
+[node name="StateUpdater" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/ControllerButton" instance=ExtResource("16_d1x8e")]
+state_machine = ExtResource("17_yolrd")
+state = ExtResource("16_0i4he")
+on_signal = "button_up"
 
 [node name="SettingsButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 1
 focus_neighbor_left = NodePath("../ControllerButton")
+focus_neighbor_top = NodePath(".")
 focus_neighbor_right = NodePath("../LaunchButtonContainer/LaunchButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../LaunchButtonContainer/LaunchButton")
+focus_previous = NodePath("../ControllerButton")
 icon = ExtResource("7_qo3p1")
 icon_alignment = 1
 expand_icon = true
