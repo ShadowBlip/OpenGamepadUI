@@ -3,6 +3,9 @@ extends Control
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
+const user_templates := "user://data/gamepad/templates"
+const user_profiles := "user://data/gamepad/profiles"
+
 var gamepad_settings_state := preload("res://assets/state/states/gamepad_settings.tres") as State
 var library_item: LibraryItem
 var profile: GamepadProfile
@@ -12,17 +15,27 @@ var logger := Log.get_logger("GamepadSettings")
 
 @onready var profile_label := $%ProfileNameLabel as Label
 @onready var diagram := $%DiagramTextureRect as TextureRect
+@onready var new_button := $%NewButton as Button
+@onready var delete_button := $%DeleteButton as Button
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	gamepad_settings_state.state_entered.connect(_on_state_entered)
 	gamepad_settings_state.state_exited.connect(_on_state_exited)
+	new_button.pressed.connect(_create_profile)
+	delete_button.pressed.connect(_clear_profile)
 
 
 func _on_state_entered(_from: State) -> void:
 	# Focus the first entry on state change
 	focus_node.grab_focus.call_deferred()
+
+	# Clear all the current mappings
+	_clear_mappings()
+
+	# Disable all mappings unless we load or create a new profile
+	_set_enable_mappings(false)
 
 	library_item = null
 	profile = null
@@ -46,6 +59,8 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_state_exited(_to: State) -> void:
+	if profile and library_item:
+		_save_profile()
 	library_item = null
 	profile = null
 
@@ -64,6 +79,36 @@ func _update_diagram() -> void:
 	diagram.texture = load("res://assets/images/gamepad/xbox360/XboxOne_Diagram.png")
 
 
+# Enables/Disables all mapping buttons
+func _set_enable_mappings(enabled: bool) -> void:
+	var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
+	for node in mapping_nodes:
+		var button := node as Button
+		button.disabled = !enabled
+
+
+# Sets all of the Button nodes to have empty text
+func _clear_mappings() -> void:
+	# Reset all mappings
+	var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
+	for node in mapping_nodes:
+		var button := node as Button
+		button.text = "-"
+
+
+# Removes the current profile from the current library item
+func _clear_profile() -> void:
+	if not library_item:
+		logger.debug("No library item to clear gamepad profile")
+		return
+	profile = null
+	_clear_mappings()
+	_set_enable_mappings(false)
+	var section := "game.{0}".format([library_item.name.to_lower()])
+	SettingsManager.erase_section_key(section, "gamepad_profile")
+	profile_label.text = "No profile"
+
+
 # Load the given gamepad profile and update the UI
 func _load_profile(profile_path: String) -> void:
 	# Try to load the profile
@@ -75,12 +120,10 @@ func _load_profile(profile_path: String) -> void:
 
 	profile = load(profile_path) as GamepadProfile
 	profile_label.text = profile.name
+	_set_enable_mappings(true)
 
 	# Reset all mappings
-	var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
-	for node in mapping_nodes:
-		var button := node as Button
-		button.text = "-"
+	_clear_mappings()
 
 	# Loop through all mappings and update each UI component
 	for m in profile.mapping:
@@ -132,3 +175,39 @@ func _load_profile(profile_path: String) -> void:
 						button.text = "Mouse Wheel Up"
 					MOUSE_BUTTON_WHEEL_DOWN:
 						button.text = "Mouse Wheel Down"
+
+
+# Save the current profile to a file
+func _save_profile() -> void:
+	if not profile:
+		logger.debug("No profile loaded to save")
+		return
+	if not library_item:
+		logger.debug("No library item loaded to associate profile with")
+		return
+
+	# Try to save the profile
+	if DirAccess.make_dir_recursive_absolute(user_profiles) != OK:
+		logger.debug("Unable to create gamepad profiles directory")
+		return
+	var filename := library_item.name.sha256_text() + ".tres"
+	var path := "/".join([user_profiles, filename])
+	if ResourceSaver.save(profile, path) != OK:
+		logger.error("Failed to save gamepad profile to: " + path)
+		return
+
+	# Update the game settings to use this gamepad profile
+	var section := "game.{0}".format([library_item.name.to_lower()])
+	SettingsManager.set_value(section, "gamepad_profile", path)
+	logger.debug("Saved gamepad profile to: " + path)
+
+
+# Creates a new empty gamepad profile for the current library item
+func _create_profile() -> void:
+	if not library_item:
+		logger.debug("No library item loaded to create profile for")
+		return
+	profile = GamepadProfile.new()
+	profile.name = library_item.name
+	profile_label.text = profile.name
+	_set_enable_mappings(true)

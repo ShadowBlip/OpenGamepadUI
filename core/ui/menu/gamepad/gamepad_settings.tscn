@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bvsnvsby3isxr"]
+[gd_scene load_steps=35 format=3 uid="uid://bvsnvsby3isxr"]
 
 [ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_settings.gd" id="1_8xl7t"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
@@ -19,8 +19,11 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_1ol5d"]
 [ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="9_y2e1p"]
 [ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="10_xi71t"]
+[ext_resource type="Texture2D" uid="uid://bfkjkvs3n12cu" path="res://assets/ui/icons/page-template.svg" id="11_vtwuu"]
 [ext_resource type="Texture2D" uid="uid://bh66fibu352gl" path="res://addons/controller_icons/assets/xbox360/dpad_up.png" id="12_mbuja"]
+[ext_resource type="Texture2D" uid="uid://x6dny0j4ow2n" path="res://assets/ui/icons/plus-circle.svg" id="12_voeef"]
 [ext_resource type="Texture2D" uid="uid://dt4m6u4nau82r" path="res://addons/controller_icons/assets/xbox360/dpad_down.png" id="13_gwg5i"]
+[ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="13_jrmrp"]
 [ext_resource type="Texture2D" uid="uid://7r70kxgen0mv" path="res://addons/controller_icons/assets/xbox360/dpad_left.png" id="14_l7ks8"]
 [ext_resource type="Texture2D" uid="uid://7qkn2dva6jv" path="res://addons/controller_icons/assets/xbox360/dpad_right.png" id="15_ehvkp"]
 [ext_resource type="Texture2D" uid="uid://fxgoiilpipsd" path="res://addons/controller_icons/assets/xbox360/l_stick.png" id="16_kqgr1"]
@@ -40,7 +43,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8xl7t")
-focus_node = NodePath("MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer/BTN_TL")
+focus_node = NodePath("MarginContainer/TopLevelContainer/ProfileNameContainer/NewButton")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_wi2wh")]
 state = ExtResource("3_du3xc")
@@ -78,13 +81,57 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_constants/margin_top = 10
 
-[node name="ProfileNameContainer" type="CenterContainer" parent="MarginContainer/TopLevelContainer"]
+[node name="ProfileNameContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
 layout_mode = 2
+
+[node name="NewButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 25)
+layout_mode = 2
+size_flags_horizontal = 1
+icon = ExtResource("12_voeef")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="TemplateButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 25)
+layout_mode = 2
+size_flags_horizontal = 1
+icon = ExtResource("11_vtwuu")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="DeleteButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 25)
+layout_mode = 2
+size_flags_horizontal = 1
+icon = ExtResource("13_jrmrp")
+flat = true
+icon_alignment = 1
+expand_icon = true
 
 [node name="ProfileNameLabel" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("4_o1jae")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Profile Name"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="Spacer2" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="Spacer3" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
 
 [node name="GamepadContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
 layout_mode = 2
