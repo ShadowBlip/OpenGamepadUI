@@ -99,27 +99,32 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _start_process_input():
 	var exited := false
-	var last_time := Time.get_ticks_usec()
 	var target_frame_time_us := int((1.0 / input_framerate) * 1000000.0)
 	while not exited:
-		# Calculate the amount of time that has passed since last invocation
-		var current_time := Time.get_ticks_usec()
-		var delta_us := current_time - last_time  # Time in microseconds since last input frame
-		last_time = current_time
-
-		# If the last input frame took less time than our target frame
-		# rate, sleep for the difference.
-		var sleep_time_us := target_frame_time_us - delta_us
-		if sleep_time_us > 0:
-			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
-		#else:
-		#	logger.debug("Missed our target input frame time. Got: " + str(delta_us))
+		# Start timing how long this input frame takes
+		var start_time := Time.get_ticks_usec()
 
 		# Process the gamepad inputs
 		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()
 		gamepad_mutex.unlock()
+
+		# Calculate how long this frame took
+		var end_time := Time.get_ticks_usec()
+		var delta_us := end_time - start_time  # Time in microseconds since last input frame
+
+		# If the last input frame took less time than our target frame
+		# rate, sleep for the difference.
+		var sleep_time_us := target_frame_time_us - delta_us
+		if delta_us < target_frame_time_us:
+			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
+		else:
+			var msg := (
+				"Missed target frame time {0}us. Got: {1}us"
+				. format([target_frame_time_us, delta_us])
+			)
+			logger.debug(msg)
 
 
 ## Processes all raw gamepad input
