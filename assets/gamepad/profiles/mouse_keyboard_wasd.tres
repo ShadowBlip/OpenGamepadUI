@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=31 format=3 uid="uid://bneeynjk41y33"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=47 format=3 uid="uid://bneeynjk41y33"]
 
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_sic6g"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_w1gcb"]
@@ -157,7 +157,94 @@ axis = 0
 target = SubResource("InputEventMouseButton_885g1")
 source = 45
 
+[sub_resource type="InputEventKey" id="InputEventKey_1i3ge"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Resource" id="Resource_dhr82"]
+script = ExtResource("1_sic6g")
+source_event = 315
+axis = 0
+target = SubResource("InputEventKey_1i3ge")
+source = 50
+
+[sub_resource type="InputEventKey" id="InputEventKey_3i4p2"]
+device = -1
+keycode = 4194306
+
+[sub_resource type="Resource" id="Resource_2v2n7"]
+script = ExtResource("1_sic6g")
+source_event = 314
+axis = 0
+target = SubResource("InputEventKey_3i4p2")
+source = 49
+
+[sub_resource type="InputEventKey" id="InputEventKey_comin"]
+device = -1
+keycode = 4194320
+
+[sub_resource type="Resource" id="Resource_cue5u"]
+script = ExtResource("1_sic6g")
+source_event = 706
+axis = 0
+target = SubResource("InputEventKey_comin")
+source = 81
+
+[sub_resource type="InputEventKey" id="InputEventKey_0uv8o"]
+device = -1
+keycode = 4194322
+
+[sub_resource type="Resource" id="Resource_6unb4"]
+script = ExtResource("1_sic6g")
+source_event = 707
+axis = 0
+target = SubResource("InputEventKey_0uv8o")
+source = 82
+
+[sub_resource type="InputEventKey" id="InputEventKey_0j6q2"]
+device = -1
+keycode = 4194319
+
+[sub_resource type="Resource" id="Resource_wv6ie"]
+script = ExtResource("1_sic6g")
+source_event = 704
+axis = 0
+target = SubResource("InputEventKey_0j6q2")
+source = 79
+
+[sub_resource type="InputEventKey" id="InputEventKey_vcb4o"]
+device = -1
+keycode = 4194321
+
+[sub_resource type="Resource" id="Resource_cmov8"]
+script = ExtResource("1_sic6g")
+source_event = 705
+axis = 0
+target = SubResource("InputEventKey_vcb4o")
+source = 80
+
+[sub_resource type="InputEventKey" id="InputEventKey_2qfk8"]
+device = -1
+keycode = 4194325
+
+[sub_resource type="Resource" id="Resource_67nhw"]
+script = ExtResource("1_sic6g")
+source_event = 317
+axis = 0
+target = SubResource("InputEventKey_2qfk8")
+source = 52
+
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_vwg4i"]
+button_index = 1
+
+[sub_resource type="Resource" id="Resource_kkqqs"]
+script = ExtResource("1_sic6g")
+source_event = 318
+axis = 0
+target = SubResource("InputEventMouseButton_vwg4i")
+source = 53
+
 [resource]
 script = ExtResource("1_w1gcb")
 name = "Mouse and Keyboard  (WASD)"
-mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8"), SubResource("Resource_s5v1a"), SubResource("Resource_6brqr")])
+mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8"), SubResource("Resource_s5v1a"), SubResource("Resource_6brqr"), SubResource("Resource_dhr82"), SubResource("Resource_2v2n7"), SubResource("Resource_cue5u"), SubResource("Resource_6unb4"), SubResource("Resource_wv6ie"), SubResource("Resource_cmov8"), SubResource("Resource_67nhw"), SubResource("Resource_kkqqs")])
