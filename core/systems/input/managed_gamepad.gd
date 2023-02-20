@@ -24,10 +24,14 @@ var abs_y_max: int
 var abs_y_min: int
 var abs_x_max: int
 var abs_x_min: int
+var abs_z_max: int
+var abs_z_min: int
 var abs_ry_max: int
 var abs_ry_min: int
 var abs_rx_max: int
 var abs_rx_min: int
+var abs_rz_max: int
+var abs_rz_min: int
 var cur_x: float
 var cur_y: float
 var cur_rx: float
@@ -54,10 +58,14 @@ func open(path: String) -> int:
 	abs_y_min = phys_device.get_abs_min(InputDeviceEvent.ABS_Y)
 	abs_x_max = phys_device.get_abs_max(InputDeviceEvent.ABS_X)
 	abs_x_min = phys_device.get_abs_min(InputDeviceEvent.ABS_X)
+	abs_z_max = phys_device.get_abs_max(InputDeviceEvent.ABS_Z)
+	abs_z_min = phys_device.get_abs_min(InputDeviceEvent.ABS_Z)
 	abs_ry_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RY)
 	abs_ry_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RY)
 	abs_rx_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RX)
 	abs_rx_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RX)
+	abs_rz_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RZ)
+	abs_rz_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RZ)
 
 	# Create a virtual gamepad from this physical one
 	virt_device = phys_device.duplicate()
@@ -273,11 +281,45 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 			xwayland.send_key(target_event.keycode, pressed)
 			continue
 
+		# Handle mouse button event translations
+		if mapping.target is InputEventMouseButton:
+			var target_event := mapping.target as InputEventMouseButton
+			var pressed := false
+
+			# Check to see if the event source is an ABS axis event
+			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
+				var is_positive := mapping.axis == mapping.AXIS.POSITIVE
+				pressed = _is_axis_pressed(event, is_positive)
+
+			# Translate gamepad button events
+			else:
+				if event.get_value() == 1:
+					pressed = true
+
+			# Set the button pressed value
+			var value := 0
+			if pressed:
+				value = 1
+
+			# Set the button to send
+			var button := -1
+			match target_event.button_index:
+				MOUSE_BUTTON_LEFT:
+					button = event.BTN_LEFT
+				MOUSE_BUTTON_RIGHT:
+					button = event.BTN_RIGHT
+				MOUSE_BUTTON_MIDDLE:
+					button = event.BTN_MIDDLE
+
+			virt_device.write_event(event.EV_KEY, button, value)
+			virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+			continue
+
 		# Handle mouse motion event translation targets
 		if mapping.target is InputEventMouseMotion:
+			# TODO: Get mouse speed from mapping target
 			var target_event := mapping.target as InputEventMouseMotion
 			_set_current_axis_value(event)
-			#_move_mouse(event, target_event, delta)
 			continue
 
 
@@ -394,6 +436,15 @@ func _normalize_axis(event: InputDeviceEvent) -> float:
 				var minimum := abs_x_min
 				var value := event.value / float(minimum)
 				return -value
+		event.ABS_Z:
+			if event.value > 0:
+				var maximum := abs_z_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_z_min
+				var value := event.value / float(minimum)
+				return -value
 		event.ABS_RY:
 			if event.value > 0:
 				var maximum := abs_ry_max
@@ -412,6 +463,16 @@ func _normalize_axis(event: InputDeviceEvent) -> float:
 				var minimum := abs_rx_min
 				var value := event.value / float(minimum)
 				return -value
+		event.ABS_RZ:
+			if event.value > 0:
+				var maximum := abs_rz_max
+				var value := event.value / float(maximum)
+				return value
+			if event.value <= 0:
+				var minimum := abs_rz_min
+				var value := event.value / float(minimum)
+				return -value
+
 	return 0
 
 
