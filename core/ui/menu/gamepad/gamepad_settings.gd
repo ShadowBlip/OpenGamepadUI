@@ -55,7 +55,7 @@ func _on_state_entered(_from: State) -> void:
 		return
 
 	# If the profile exists, load er' up
-	_load_profile(profile_path)
+	_load_profile_from_file(profile_path)
 
 
 func _on_state_exited(_to: State) -> void:
@@ -110,7 +110,7 @@ func _clear_profile() -> void:
 
 
 # Load the given gamepad profile and update the UI
-func _load_profile(profile_path: String) -> void:
+func _load_profile_from_file(profile_path: String) -> void:
 	# Try to load the profile
 	if not FileAccess.file_exists(profile_path):
 		var notify := Notification.new("Profile not found: " + profile_path)
@@ -119,6 +119,17 @@ func _load_profile(profile_path: String) -> void:
 		return
 
 	profile = load(profile_path) as GamepadProfile
+	_load_profile()
+
+
+# Syncs the UI to the given profile
+func _load_profile() -> void:
+	if not profile:
+		_set_enable_mappings(false)
+		_clear_mappings()
+		profile_label.text = "No profile"
+		return
+
 	profile_label.text = profile.name
 	_set_enable_mappings(true)
 
