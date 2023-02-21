@@ -1,0 +1,232 @@
+[gd_scene load_steps=14 format=3 uid="uid://dxbbrk5v5hbkm"]
+
+[ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_mapper.gd" id="1_6ge0n"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_nu8xj"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_00y43"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="3_tbnud"]
+[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="4_ouf0q"]
+[ext_resource type="Texture2D" uid="uid://p3lsljjgjnv7" path="res://assets/ui/icons/keyboard-rounded.svg" id="4_slhni"]
+[ext_resource type="Texture2D" uid="uid://lvshyo57c5tr" path="res://assets/ui/icons/mouse.svg" id="5_4bepm"]
+[ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="6_b8a7c"]
+[ext_resource type="Texture2D" uid="uid://ciij2ysnubdv7" path="res://addons/controller_icons/assets/key/Mouse_Simple_Key_Dark.png" id="77_1bq3c"]
+[ext_resource type="Texture2D" uid="uid://br1jb8stgoucn" path="res://addons/controller_icons/assets/key/Mouse_Left_Key_Dark.png" id="78_onqab"]
+[ext_resource type="Texture2D" uid="uid://gexca1lofuac" path="res://assets/ui/icons/arrows-counter-clockwise-fill.svg" id="78_q3cep"]
+[ext_resource type="Texture2D" uid="uid://bctbscdb1xk0k" path="res://addons/controller_icons/assets/key/Mouse_Middle_Key_Dark.png" id="79_xnv4x"]
+[ext_resource type="Texture2D" uid="uid://dq6ojsfee1hsx" path="res://addons/controller_icons/assets/key/Mouse_Right_Key_Dark.png" id="80_cg5ms"]
+
+[node name="GamepadMapper" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6ge0n")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="ChangeInputContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_nu8xj")
+theme_type_variation = &"LightPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ChangeInputContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ChangeInputContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="SubsectionLabel" parent="VBoxContainer/ChangeInputContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_tbnud")]
+layout_mode = 2
+text = "Change Input"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/ChangeInputContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("4_ouf0q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InputTypeContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_nu8xj")
+theme_type_variation = &"LightPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InputTypeContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ButtonContainer" type="VBoxContainer" parent="VBoxContainer/InputTypeContainer/MarginContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="KeyboardButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../GamepadButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../MouseButton")
+focus_next = NodePath("../MouseButton")
+focus_previous = NodePath("../GamepadButton")
+text = "Keyboard"
+icon = ExtResource("4_slhni")
+
+[node name="MouseButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../KeyboardButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../GamepadButton")
+focus_next = NodePath("../GamepadButton")
+focus_previous = NodePath("../KeyboardButton")
+text = "Mouse"
+icon = ExtResource("5_4bepm")
+
+[node name="GamepadButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../MouseButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../KeyboardButton")
+focus_next = NodePath("../KeyboardButton")
+focus_previous = NodePath("../MouseButton")
+disabled = true
+text = "Gamepad"
+icon = ExtResource("6_b8a7c")
+
+[node name="MouseContainer" type="PanelContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("2_nu8xj")
+theme_type_variation = &"LightPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MouseContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LeftClickContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftClickContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("78_onqab")
+flat = true
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftClickContainer"]
+layout_mode = 2
+text = "Left Click"
+horizontal_alignment = 1
+
+[node name="MouseMotionContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("77_1bq3c")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer/Button"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("78_q3cep")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer"]
+layout_mode = 2
+text = "Mouse Motion"
+horizontal_alignment = 1
+
+[node name="RightClickContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/RightClickContainer" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("80_cg5ms")
+flat = true
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/RightClickContainer"]
+layout_mode = 2
+text = "Right Click"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer3" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("79_xnv4x")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+text = "Wheel Up"
+horizontal_alignment = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer4" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("79_xnv4x")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer4"]
+layout_mode = 2
+text = "Middle Click"
+horizontal_alignment = 1
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Button" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer5" instance=ExtResource("3_00y43")]
+layout_mode = 2
+icon = ExtResource("79_xnv4x")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer5"]
+layout_mode = 2
+text = "Wheel Down"
+horizontal_alignment = 1

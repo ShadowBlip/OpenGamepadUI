@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bvsnvsby3isxr"]
+[gd_scene load_steps=36 format=3 uid="uid://bvsnvsby3isxr"]
 
 [ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_settings.gd" id="1_8xl7t"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
@@ -34,6 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="21_w70ku"]
 [ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="22_s4o5a"]
 [ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="23_3ml07"]
+[ext_resource type="PackedScene" uid="uid://dxbbrk5v5hbkm" path="res://core/ui/menu/gamepad/gamepad_mapper.tscn" id="35_m3mp8"]
 
 [node name="GamepadSettings" type="Control" node_paths=PackedStringArray("focus_node")]
 layout_mode = 3
@@ -461,3 +462,15 @@ flat = true
 alignment = 2
 icon_alignment = 2
 expand_icon = true
+
+[node name="MapperContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GamepadMapper" parent="MapperContainer" instance=ExtResource("35_m3mp8")]
+visible = false
+layout_mode = 2
