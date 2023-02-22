@@ -61,6 +61,7 @@ public:
   int get_abs_resolution(unsigned int event_code);
 
   // Static functions
+  static VirtualInputDevice *create_mouse();
 };
 } // namespace evdev
 #endif // INPUT_DEVICE_CLASS_H

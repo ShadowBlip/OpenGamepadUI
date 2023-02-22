@@ -89,7 +89,33 @@ VirtualInputDevice *InputDevice::duplicate() {
     return nullptr;
   }
 
-  // Add extra capabilities to emulate mouse (and maybe kb?)
+  // Try to create a new uinput device from the evdev device
+  int err = libevdev_uinput_create_from_device(dev, uifd, &uidev);
+  if (err != 0)
+    return nullptr;
+
+  // Create a virtual uinput device
+  VirtualInputDevice *virt_dev = memnew(VirtualInputDevice());
+  virt_dev->uifd = uifd;
+  virt_dev->uidev = uidev;
+
+  return virt_dev;
+}
+
+VirtualInputDevice *InputDevice::create_mouse() {
+  // Open uinput
+  struct libevdev_uinput *uidev;
+  int uifd = ::open("/dev/uinput", O_RDWR | O_NONBLOCK);
+  if (uifd < 0) {
+    return nullptr;
+  }
+
+  // Create a new libevdev struct
+  struct libevdev *dev;
+  dev = libevdev_new();
+  libevdev_set_name(dev, "OpenGamepadUI Mouse");
+
+  // Add capabilities to emulate mouse
   libevdev_enable_event_type(dev, EV_REL);
   libevdev_enable_event_code(dev, EV_REL, REL_X, NULL);
   libevdev_enable_event_code(dev, EV_REL, REL_Y, NULL);
@@ -98,7 +124,6 @@ VirtualInputDevice *InputDevice::duplicate() {
   libevdev_enable_event_code(dev, EV_KEY, BTN_LEFT, NULL);
   libevdev_enable_event_code(dev, EV_KEY, BTN_MIDDLE, NULL);
   libevdev_enable_event_code(dev, EV_KEY, BTN_RIGHT, NULL);
-  libevdev_enable_property(dev, INPUT_PROP_POINTER);
 
   // Try to create a new uinput device from the evdev device
   int err = libevdev_uinput_create_from_device(dev, uifd, &uidev);
@@ -332,6 +357,8 @@ void InputDevice::_bind_methods() {
                        &InputDevice::get_abs_resolution);
 
   // Static methods
+  ClassDB::bind_static_method("InputDevice", D_METHOD("create_mouse"),
+                              &InputDevice::create_mouse);
 
   // Constants
 };

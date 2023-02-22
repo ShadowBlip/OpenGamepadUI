@@ -19,8 +19,10 @@ var event_map := {}
 var mode := INTERCEPT_MODE.ALL
 var phys_path: String
 var virt_path: String
+var mouse_path: String
 var phys_device: InputDevice
 var virt_device: VirtualInputDevice
+var virt_mouse: VirtualInputDevice
 var abs_y_max: int
 var abs_y_min: int
 var abs_x_max: int
@@ -96,6 +98,15 @@ func open(path: String) -> int:
 
 	# Set the path to the virtual gamepad
 	virt_path = virt_device.get_devnode()
+
+	# Create a virtual mouse associated with this gamepad
+	virt_mouse = InputDevice.create_mouse()
+	if not virt_mouse:
+		logger.warn("Unable to create virtual mouse for: " + phys_path)
+		return ERR_CANT_CREATE
+
+	# Set the path to the virtual mouse
+	mouse_path = virt_mouse.get_devnode()
 
 	# Grab exclusive access over the physical device
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
@@ -179,8 +190,11 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		# Intercept guide button presses so the game doesn't see them
 		if event.get_code() == event.BTN_MODE:
 			if event.value == 1:
+				logger.debug("Intercepted guide button press")
+				logger.debug("Setting intercept mode to ALL")
 				mode = INTERCEPT_MODE.ALL
 			else:
+				logger.debug("Setting intercept mode to PASS")
 				mode = INTERCEPT_MODE.PASS
 			_send_input("ogui_guide", event.value == 1, 1)
 			return
@@ -367,19 +381,19 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 				MOUSE_BUTTON_MIDDLE:
 					button = event.BTN_MIDDLE
 			if button > 0:
-				virt_device.write_event(event.EV_KEY, button, value)
-				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+				virt_mouse.write_event(event.EV_KEY, button, value)
+				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 
 			# Handle mousewheel events
 			if target_event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 				if not pressed:
 					continue
 				if target_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-					virt_device.write_event(event.EV_REL, event.REL_WHEEL, 1)
-					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+					virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, 1)
+					virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				if target_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-					virt_device.write_event(event.EV_REL, event.REL_WHEEL, -1)
-					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+					virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, -1)
+					virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				continue
 
 			continue
@@ -465,11 +479,11 @@ func _move_mouse(delta: float) -> void:
 	var REL_Y := InputDeviceEvent.REL_Y
 	var SYN_REPORT := InputDeviceEvent.SYN_REPORT
 	if x != 0:
-		virt_device.write_event(EV_REL, REL_X, x)
-		virt_device.write_event(EV_SYN, SYN_REPORT, 0)
+		virt_mouse.write_event(EV_REL, REL_X, x)
+		virt_mouse.write_event(EV_SYN, SYN_REPORT, 0)
 	if y != 0:
-		virt_device.write_event(EV_REL, REL_Y, y)
-		virt_device.write_event(EV_SYN, SYN_REPORT, 0)
+		virt_mouse.write_event(EV_REL, REL_Y, y)
+		virt_mouse.write_event(EV_SYN, SYN_REPORT, 0)
 
 
 # Calculate how much the mouse should move based on the current axis value
