@@ -171,6 +171,7 @@ func set_gamepad_profile(path: String) -> void:
 	if path == "":
 		for gamepad in InputManager.get_managed_gamepads():
 			InputManager.set_gamepad_profile(gamepad, null)
+		return
 	
 	# Try to load the profile and set it
 	var profile := load(path)
@@ -228,7 +229,7 @@ func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
-	var section := ".".join(["game", app.name.to_lower()])
+	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
 	set_gamepad_profile(profile_path)
 
