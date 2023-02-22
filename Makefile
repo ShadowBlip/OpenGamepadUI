@@ -13,6 +13,12 @@ EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSI
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
 
+# Remote debugging variables 
+SSH_USER ?= deck
+SSH_HOST ?= 192.168.0.65
+SSH_MOUNT_PATH ?= /tmp/remote
+SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
+
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
@@ -102,6 +108,24 @@ debug: addons ## Run the project in debug mode in gamescope
 inspect: addons ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
 
+
+##@ Remote Debugging
+
+.PHONY: deploy
+deploy: dist $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote device
+	cp dist/opengamepadui.tar.gz $(SSH_MOUNT_PATH)
+	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui.tar.gz
+
+.PHONY: tunnel
+tunnel: ## Create an SSH tunnel to allow remote debugging
+	ssh $(SSH_USER)@$(SSH_HOST) -N -f -R 6007:localhost:6007
+
+# Mounts the remote device and creates an SSH tunnel for remote debugging
+$(SSH_MOUNT_PATH)/.mounted:
+	mkdir -p $(SSH_MOUNT_PATH)
+	sshfs -o default_permissions $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH) $(SSH_MOUNT_PATH)
+	$(MAKE) tunnel
+	touch $(SSH_MOUNT_PATH)/.mounted
 
 ##@ Distribution
 
