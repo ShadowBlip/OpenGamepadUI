@@ -19,6 +19,9 @@ SSH_HOST ?= 192.168.0.65
 SSH_MOUNT_PATH ?= /tmp/remote
 SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 
+# Include any user defined settings
+-include settings.mk
+
 ##@ General
 
 # The help target prints out all targets with their descriptions organized
