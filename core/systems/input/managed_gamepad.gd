@@ -9,7 +9,7 @@ class_name ManagedGamepad
 enum INTERCEPT_MODE {
 	NONE,
 	PASS,  # Pass all inputs to the virtual device except guide
-	PASS_QAM, # Pass all inputs to the virtual device except guide + south
+	PASS_QAM,  # Pass all inputs to the virtual device except guide + south
 	ALL,  # Intercept all inputs and send nothing to the virtual device
 }
 
@@ -47,12 +47,22 @@ var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 # List of events to consume the BTN_MODE event in PASS_QAM mode. This enables the
 # use of default button combo's in Steam.
-var use_mode_list: Array = [InputDeviceEvent.BTN_WEST, InputDeviceEvent.BTN_NORTH,
-	InputDeviceEvent.BTN_SOUTH, InputDeviceEvent.BTN_TRIGGER_HAPPY1,
-	InputDeviceEvent.BTN_TRIGGER_HAPPY2, InputDeviceEvent.BTN_TRIGGER_HAPPY3,
-	InputDeviceEvent.BTN_TRIGGER_HAPPY4, InputDeviceEvent.ABS_HAT0X,
-	InputDeviceEvent.ABS_HAT0Y, InputDeviceEvent.BTN_TL, InputDeviceEvent.BTN_TR,
-	InputDeviceEvent.BTN_SELECT, InputDeviceEvent.BTN_START]
+var use_mode_list: Array = [
+	InputDeviceEvent.BTN_WEST,
+	InputDeviceEvent.BTN_NORTH,
+	InputDeviceEvent.BTN_SOUTH,
+	InputDeviceEvent.BTN_TRIGGER_HAPPY1,
+	InputDeviceEvent.BTN_TRIGGER_HAPPY2,
+	InputDeviceEvent.BTN_TRIGGER_HAPPY3,
+	InputDeviceEvent.BTN_TRIGGER_HAPPY4,
+	InputDeviceEvent.ABS_HAT0X,
+	InputDeviceEvent.ABS_HAT0Y,
+	InputDeviceEvent.BTN_TL,
+	InputDeviceEvent.BTN_TR,
+	InputDeviceEvent.BTN_SELECT,
+	InputDeviceEvent.BTN_START
+]
+
 
 ## Opens the given physical gamepad with exclusive access and creates a virtual
 ## gamepad.
@@ -88,7 +98,8 @@ func open(path: String) -> int:
 	virt_path = virt_device.get_devnode()
 
 	# Grab exclusive access over the physical device
-	phys_device.grab(true)
+	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
+		phys_device.grab(true)
 
 	return OK
 
@@ -194,27 +205,26 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 				if mode_event:
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-					OS.delay_msec(80) # Give steam time to accept the input
+					OS.delay_msec(80)  # Give steam time to accept the input
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 0)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					mode_event = null
-					
-				
+
 		if event.get_code() == event.BTN_EAST and mode_event:
 			if event.value == 1:
 				mode = INTERCEPT_MODE.ALL
 			_send_input("ogui_qam", event.value == 1, 1)
 			mode_event = null
 			return
-		
+
 		# Process button combos that use BTN_MODE and another button
 		if event.get_code() in use_mode_list and mode_event:
 			if event.value == 1:
 				virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
 				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-				OS.delay_msec(80) # Give steam time to accept the input
+				OS.delay_msec(80)  # Give steam time to accept the input
 				mode_event = null
-				
+
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 
