@@ -2,7 +2,7 @@
 PREFIX ?= $(HOME)/.local
 ROOTFS ?= .rootfs
 GODOT_VERSION ?= 4.0
-GODOT_RELEASE ?= rc2
+GODOT_RELEASE ?= rc3
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot4
 GAMESCOPE ?= /usr/bin/gamescope
