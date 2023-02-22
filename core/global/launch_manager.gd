@@ -227,6 +227,10 @@ func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
 	_current_app = app
 	app_switched.emit(old, app)
 
+	# Return if we are switching to null
+	if not app:
+		return
+
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
