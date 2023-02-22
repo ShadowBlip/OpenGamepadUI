@@ -16,7 +16,7 @@ enum INTERCEPT_MODE {
 var profile: GamepadProfile
 var xwayland: Xlib
 var event_map := {}
-var mode := INTERCEPT_MODE.NONE
+var mode := INTERCEPT_MODE.ALL
 var phys_path: String
 var virt_path: String
 var phys_device: InputDevice
