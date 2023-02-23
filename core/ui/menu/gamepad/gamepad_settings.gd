@@ -3,28 +3,58 @@ extends Control
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
+const state_machine := preload(
+	"res://assets/state/state_machines/gamepad_settings_state_machine.tres"
+)
+
 const user_templates := "user://data/gamepad/templates"
 const user_profiles := "user://data/gamepad/profiles"
 
 var gamepad_settings_state := preload("res://assets/state/states/gamepad_settings.tres") as State
+var change_input_state := preload("res://assets/state/states/gamepad_change_input.tres") as State
 var library_item: LibraryItem
 var profile: GamepadProfile
+var last_focus: Control
 var logger := Log.get_logger("GamepadSettings")
 
-@export var focus_node: Control
+@onready var focus_node: Control = $%NewButton
 
 @onready var profile_label := $%ProfileNameLabel as Label
 @onready var diagram := $%DiagramTextureRect as TextureRect
 @onready var new_button := $%NewButton as Button
 @onready var delete_button := $%DeleteButton as Button
+@onready var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
+@onready var gamepad_mapper := $%GamepadMapper
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	last_focus = focus_node
 	gamepad_settings_state.state_entered.connect(_on_state_entered)
 	gamepad_settings_state.state_exited.connect(_on_state_exited)
 	new_button.pressed.connect(_create_profile)
 	delete_button.pressed.connect(_clear_profile)
+
+	# Connect all mapping buttons to the open mapping window method
+	for node in mapping_nodes:
+		var button := node as Button
+		button.pressed.connect(_open_mapping_window.bind(button))
+		var on_focus := func():
+			last_focus = button
+		button.focus_entered.connect(on_focus)
+
+	# Grab focus if we have no more child states 
+	var on_state_changed := func(_from: State, _to: State):
+		if state_machine.stack_length() == 0:
+			last_focus.grab_focus.call_deferred()
+	state_machine.state_changed.connect(on_state_changed)
+
+	# Listen to see if a mapping was selected 
+	var on_mapping_selected := func(mapping: GamepadMapping):
+		# TODO: Remove old mappings
+		profile.mappings.append(mapping)
+		_load_profile()
+	gamepad_mapper.mapping_selected.connect(on_mapping_selected)
 
 
 func _on_state_entered(_from: State) -> void:
@@ -65,6 +95,28 @@ func _on_state_exited(_to: State) -> void:
 	profile = null
 
 
+# Opens the mapping window when a button is selected
+func _open_mapping_window(button: Button) -> void:
+	# Get the texture icon the button used
+	var input_texture := button.icon
+	gamepad_mapper.input_texture = input_texture
+
+	# Create a new mapping item based on the button name and provide it
+	# to the mapping window
+	var mapping := GamepadMapping.new()
+	var event_name := button.name
+	if event_name.ends_with("_POSITIVE"):
+		event_name = event_name.replace("_POSITIVE", "")
+		mapping.axis = mapping.AXIS.POSITIVE
+	if event_name.ends_with("_NEGATIVE"):
+		event_name = event_name.replace("_NEGATIVE", "")
+		mapping.axis = mapping.AXIS.NEGATIVE
+	mapping.set_source_event(event_name)
+	gamepad_mapper.mapping = mapping
+
+	state_machine.push_state(change_input_state)
+
+
 # Updates the center controller diagram with the appropriate texture
 func _update_diagram() -> void:
 	var mapper := ControllerMapper.new()
@@ -81,7 +133,6 @@ func _update_diagram() -> void:
 
 # Enables/Disables all mapping buttons
 func _set_enable_mappings(enabled: bool) -> void:
-	var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
 	for node in mapping_nodes:
 		var button := node as Button
 		button.disabled = !enabled
@@ -90,7 +141,6 @@ func _set_enable_mappings(enabled: bool) -> void:
 # Sets all of the Button nodes to have empty text
 func _clear_mappings() -> void:
 	# Reset all mappings
-	var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
 	for node in mapping_nodes:
 		var button := node as Button
 		button.text = "-"

@@ -36,7 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="23_3ml07"]
 [ext_resource type="PackedScene" uid="uid://dxbbrk5v5hbkm" path="res://core/ui/menu/gamepad/gamepad_mapper.tscn" id="35_m3mp8"]
 
-[node name="GamepadSettings" type="Control" node_paths=PackedStringArray("focus_node")]
+[node name="GamepadSettings" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,7 +44,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8xl7t")
-focus_node = NodePath("MarginContainer/TopLevelContainer/ProfileNameContainer/NewButton")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_wi2wh")]
 state = ExtResource("3_du3xc")
@@ -472,5 +471,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="GamepadMapper" parent="MapperContainer" instance=ExtResource("35_m3mp8")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
