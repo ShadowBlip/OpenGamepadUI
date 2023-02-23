@@ -4,6 +4,7 @@ extends Node
 	"res://assets/state/state_machines/global_state_machine.tres"
 )
 @export var process_input_during: Array[State] = []
+@export var minimum_states := 1
 
 
 func _ready() -> void:
@@ -31,6 +32,6 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 	# Pop the state machine stack to go back
-	if state_machine.stack_length() > 1:
+	if state_machine.stack_length() > minimum_states:
 		state_machine.pop_state()
 		return

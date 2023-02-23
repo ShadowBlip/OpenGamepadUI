@@ -34,6 +34,18 @@ var source: int:
 @export var target: InputEvent
 
 
+# Get the current source event name
+func get_source_event_name() -> String:
+	return SOURCE_EVENTS[source]
+
+
+# Set the source event by name
+func set_source_event(name: String) -> void:
+	var idx := SOURCE_EVENTS.find(name)
+	if idx >= 0:
+		source = idx
+
+
 # Customize editor properties that we expose.
 func _get_property_list():
 	var property_usage := PROPERTY_USAGE_DEFAULT
