@@ -22,6 +22,7 @@
 #ifndef __CMAKE_VARS_HPP__
 #define __CMAKE_VARS_HPP__
 
+#include "common/xdg.hpp"
 #include <string>
 
 namespace CMakeVar {
@@ -32,10 +33,16 @@ const int MAJOR_VER = 0;
 const int MINOR_VER = 48;
 
 // Paths
-const std::string INSTALL_DATA_DIR = "/usr/local/share/opensd/";
-const std::string INSTALL_DATA_CONFIG_DIR = "/usr/local/share/opensd//config/";
-const std::string INSTALL_DATA_PROFILE_DIR =
-    "/usr/local/share/opensd//profiles/";
+// const std::string INSTALL_DATA_DIR = "/usr/local/share/opensd/";
+const std::string INSTALL_DATA_DIR =
+    Xdg::UserHome().string() +
+    "/.local/share/opengamepadui/data/gamepad/opensd/";
+// const std::string INSTALL_DATA_CONFIG_DIR =
+// "/usr/local/share/opensd//config/";
+const std::string INSTALL_DATA_CONFIG_DIR = INSTALL_DATA_DIR + "config/";
+// const std::string INSTALL_DATA_PROFILE_DIR =
+//     "/usr/local/share/opensd//profiles/";
+const std::string INSTALL_DATA_PROFILE_DIR = INSTALL_DATA_DIR + "profiles/";
 const std::string SYSTEM_CONFIG_DIR = "/etc/opensd/";
 const std::string SYSTEM_PROFILE_DIR = "/etc/opensd//profiles/";
 

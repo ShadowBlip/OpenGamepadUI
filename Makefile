@@ -103,6 +103,7 @@ addons: ## Build GDExtension add-ons
 	cd ./addons/godot-xlib && make build
 	cd ./addons/godot-evdev && make build
 	cd ./addons/godot-pty && make build
+	cd ./addons/godot-opensd && make build
 
 .PHONY: edit
 edit: ## Open the project in the Godot editor
@@ -116,6 +117,7 @@ clean: ## Remove build artifacts
 	cd ./addons/godot-xlib && make clean
 	cd ./addons/godot-evdev && make clean
 	cd ./addons/godot-pty && make clean
+	cd ./addons/godot-opensd && make clean
 
 .PHONY: run run-force
 run: addons build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

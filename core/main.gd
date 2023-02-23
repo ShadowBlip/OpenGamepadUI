@@ -1,6 +1,7 @@
 extends Control
 class_name Main
 
+const Platform := preload("res://core/global/platform.tres")
 const Gamescope := preload("res://core/global/gamescope.tres")
 const LibraryManager := preload("res://core/global/library_manager.tres")
 
