@@ -39,8 +39,11 @@ func populate_keyboard() -> void:
 		rows_container.remove_child(child)
 	
 	# Populate the keyboard keys based on the given layout
+	var idx := 0
+	var button_rows: Array[Array] = []
 	for r in (layout as KeyboardLayout).rows:
 		var row := r as KeyboardRow
+		button_rows.append([])
 		
 		# Create an HBox Container for the row
 		var container := HBoxContainer.new()
@@ -73,7 +76,40 @@ func populate_keyboard() -> void:
 			mode_shifted.connect(on_mode_shift)
 			
 			container.add_child(button)
+			button_rows[idx].append(button)
+		idx += 1
 		
+	# Loop through all created buttons and setup focus
+	for y in range(button_rows.size()):
+		for x in range(button_rows[y].size()):
+			var button := button_rows[y][x] as Button
+			# LEFT
+			button.focus_neighbor_left = button_rows[y][x-1].get_path()
+
+			# UP
+			var top := x
+			if top >= button_rows[y-1].size():
+				top = -1
+			button.focus_neighbor_top = button_rows[y-1][top].get_path()
+
+			# RIGHT
+			var right := x+1
+			if right >= button_rows[y].size():
+				right = 0
+			button.focus_neighbor_right = button_rows[y][right].get_path()
+
+			# BOTTOM
+			var bottom_y := y+1
+			if bottom_y >= button_rows.size():
+				bottom_y = 0
+			var bottom_x := x
+			if bottom_x >= button_rows[bottom_y].size():
+				bottom_x = -1
+			button.focus_neighbor_bottom = button_rows[bottom_y][bottom_x].get_path()
+
+			button.focus_next = button.focus_neighbor_right
+			button.focus_previous = button.focus_neighbor_left
+
 	instance.keyboard_populated.emit()
 
 
