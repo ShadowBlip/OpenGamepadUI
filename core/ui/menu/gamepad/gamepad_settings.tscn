@@ -94,22 +94,23 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
-[node name="TemplateButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 25)
-layout_mode = 2
-size_flags_horizontal = 1
-icon = ExtResource("11_vtwuu")
-flat = true
-icon_alignment = 1
-expand_icon = true
-
 [node name="DeleteButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 25)
 layout_mode = 2
 size_flags_horizontal = 1
 icon = ExtResource("13_jrmrp")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="TemplateButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("2_4hsmo")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 25)
+layout_mode = 2
+size_flags_horizontal = 1
+disabled = true
+icon = ExtResource("11_vtwuu")
 flat = true
 icon_alignment = 1
 expand_icon = true

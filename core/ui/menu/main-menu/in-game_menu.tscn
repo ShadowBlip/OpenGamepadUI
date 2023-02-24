@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bsh0lhgpd2xuh"]
+[gd_scene load_steps=6 format=3 uid="uid://bsh0lhgpd2xuh"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_qltg0"]
 [ext_resource type="Script" path="res://core/ui/menu/main-menu/in-game_menu.gd" id="2_7lx20"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_km1gp"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="4_jw2ts"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="5_7skbk"]
 
 [node name="InGameMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)
@@ -44,6 +47,15 @@ stretch_mode = 4
 [node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Resume Game"
+
+[node name="GamepadButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Gamepad Settings"
+
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/GamepadButton" instance=ExtResource("3_km1gp")]
+state_machine = ExtResource("4_jw2ts")
+state = ExtResource("5_7skbk")
+on_signal = "pressed"
 
 [node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

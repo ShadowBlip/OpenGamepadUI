@@ -2,6 +2,7 @@ extends Control
 
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
+const LaunchManager := preload("res://core/global/launch_manager.tres")
 
 const state_machine := preload(
 	"res://assets/state/state_machines/gamepad_settings_state_machine.tres"
@@ -15,7 +16,7 @@ var change_input_state := preload("res://assets/state/states/gamepad_change_inpu
 var library_item: LibraryItem
 var profile: GamepadProfile
 var last_focus: Control
-var logger := Log.get_logger("GamepadSettings")
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
 
 @onready var focus_node: Control = $%NewButton
 
@@ -51,10 +52,22 @@ func _ready() -> void:
 
 	# Listen to see if a mapping was selected 
 	var on_mapping_selected := func(mapping: GamepadMapping):
-		# TODO: Remove old mappings
-		print("Adding mapping: ", mapping.get_source_event_name())
+		var source_event := mapping.get_source_event_name()
+		# Remove old mappings
+		var to_remove := []
+		for m in profile.mapping:
+			# TODO: Handle cases where ABS events are specified. 
+			# We could have from 2-4 of these
+			if source_event.begins_with("ABS"):
+				continue
+			if m.get_source_event_name() == source_event:
+				to_remove.append(m)
+		for m in to_remove:
+			logger.debug("Removing old mapping: " + str(m.target))
+			profile.mapping.erase(m)
+		logger.debug("Adding mapping: " + mapping.get_source_event_name())
 		profile.mapping.append(mapping)
-		print("Reloading profile")
+		logger.debug("Reloading profile")
 		_load_profile()
 	gamepad_mapper.mapping_selected.connect(on_mapping_selected)
 
@@ -263,6 +276,15 @@ func _save_profile() -> void:
 	var section := "game.{0}".format([library_item.name.to_lower()])
 	SettingsManager.set_value(section, "gamepad_profile", path)
 	logger.debug("Saved gamepad profile to: " + path)
+
+	# Update/reload the saved profile
+	#profile = ResourceLoader.load(path, "GamepadProfile", ResourceLoader.CACHE_MODE_IGNORE)
+	var running_app := LaunchManager.get_current_app()
+	if running_app:
+		if running_app.launch_item.name != library_item.name:
+			pass
+		logger.debug("Reloading gamepad profile for running game")
+		LaunchManager.set_gamepad_profile(path)
 
 
 # Creates a new empty gamepad profile for the current library item

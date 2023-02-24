@@ -185,14 +185,16 @@ func _on_game_state_exited(_to: State) -> void:
 
 func _on_game_state_removed() -> void:
 	set_focus(true)
-
-	# If no game is running now, don't intercept gamepad inputs
-	if not state_machine.has_state(in_game_state):
-		logger.debug("Ungrabbing gamepad interception")
-		_set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
-		return
-	logger.debug("Grabbing gamepad interception")
 	_set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+
+	# If no game is running now, don't mess with gamepad profiles
+	if state_machine.has_state(in_game_state):
+		return
+
+	# Clear any gamepad profiles when no games are running
+	logger.debug("Resetting gamepad profiles")
+	for gamepad in get_managed_gamepads():
+		set_gamepad_profile(gamepad, null)
 
 
 ## Set focus will use Gamescope to focus OpenGamepadUI
