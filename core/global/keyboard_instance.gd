@@ -1,6 +1,13 @@
 extends Resource
 class_name KeyboardInstance
 
+## Globally accessible reference to an on-screen keyboard
+##
+## A KeyboardInstance provides a custom resource that any node can load 
+## regardless of where it is in the scene tree to control an on-screen keyboard.
+## Nodes that want to open the keyboard can load this resource and call 'open()'
+## with a keyboard context that defines where inputs should go.
+
 signal keyboard_opened
 signal keyboard_closed
 signal keyboard_populated

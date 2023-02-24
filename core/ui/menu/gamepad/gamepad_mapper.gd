@@ -8,11 +8,14 @@ var change_input_state := preload("res://assets/state/states/gamepad_change_inpu
 signal mapping_selected(mapping: GamepadMapping)
 
 @export var focus_node: Control
+@export var keyboard: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
 
 var input_texture: Texture2D
 var mapping: GamepadMapping
+var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.INPUT_MAPPER)
 
 @onready var input_texture_node := $%InputTexture
+@onready var keyboard_button := $%KeyboardButton
 @onready var mouse_button := $%MouseButton
 @onready var mouse_container := $%MouseContainer
 @onready var mouse_left_button := $%LeftButton
@@ -27,6 +30,12 @@ var mapping: GamepadMapping
 func _ready() -> void:
 	change_input_state.state_entered.connect(_on_state_entered)
 	change_input_state.state_exited.connect(_on_state_exited)
+
+	# Setup the keyboard input select
+	var on_keyboard_button := func():
+		keyboard_context.mapping = mapping
+		keyboard.open(keyboard_context)
+	keyboard_button.pressed.connect(on_keyboard_button)
 
 	# Setup the mouse input select
 	var on_mouse_button := func():
@@ -45,6 +54,9 @@ func _ready() -> void:
 	mouse_wheel_down_button.pressed.connect(_on_mouse_button.bind(MOUSE_BUTTON_WHEEL_DOWN))
 	mouse_motion_button.pressed.connect(_on_mouse_motion)
 
+	# Handle selecting a key input 
+	keyboard_context.exited.connect(_on_key_selected)
+
 
 func _on_state_entered(_from: State) -> void:
 	input_texture_node.texture = input_texture
@@ -61,6 +73,7 @@ func _on_mouse_button(button: MouseButton) -> void:
 	var input_event := InputEventMouseButton.new()
 	input_event.button_index = button
 	mapping.target = input_event
+	mapping_selected.emit(mapping)
 	state_machine.pop_state()
 
 
@@ -68,4 +81,10 @@ func _on_mouse_motion() -> void:
 	var input_event := InputEventMouseMotion.new()
 	mapping.target = input_event
 	mapping.axis = mapping.AXIS.BOTH
+	mapping_selected.emit(mapping)
+	state_machine.pop_state()
+
+
+func _on_key_selected() -> void:
+	mapping_selected.emit(mapping)
 	state_machine.pop_state()

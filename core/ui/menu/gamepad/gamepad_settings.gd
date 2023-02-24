@@ -52,7 +52,9 @@ func _ready() -> void:
 	# Listen to see if a mapping was selected 
 	var on_mapping_selected := func(mapping: GamepadMapping):
 		# TODO: Remove old mappings
-		profile.mappings.append(mapping)
+		print("Adding mapping: ", mapping.get_source_event_name())
+		profile.mapping.append(mapping)
+		print("Reloading profile")
 		_load_profile()
 	gamepad_mapper.mapping_selected.connect(on_mapping_selected)
 

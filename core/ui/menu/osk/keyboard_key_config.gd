@@ -1,47 +1,46 @@
 extends Resource
 class_name KeyboardKeyConfig
 
-# Defines the key type
+## Defines a single key configuration for the on-screen keyboard
+##
+## A key configuration is one key that is part of a [KeyboardLayout] which
+## defines the type of key it is.
+
+## Defines the key type
 enum TYPE {
-	CHAR,
-	SPECIAL,
+	NORMAL,  ## Normal keyboard key input
+	SPECIAL,  ## Special key input that does not exist on physical keyboards
 }
 
+## Actions for TYPE.SPECIAL keys
 enum ACTION {
 	NONE,
-	ENTER,
-	TAB,
-	CAPS,
-	SHIFT,
-	CTRL,
-	ALT,
-	SUPER,
-	BKSP,
-	ESC,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN,
 	CLOSE_KEYBOARD,
 }
 
-@export var type: TYPE = TYPE.CHAR
-@export var output: String
-@export var output_uppercase: String
-@export var display: String
-@export var display_uppercase: String
+## Whether this is a normal key or special key
+@export var type: TYPE = TYPE.NORMAL
+## The keyboard event associated with this key
+@export var input: InputEventKey
+## The keyboard event associated with this key when SHIFT is being held
+@export var mode_shift_input: InputEventKey
+## An icon to display for this key on the on-screen keyboard
 @export var icon: Texture2D
+## How much space relative to other keys in the row to take up
 @export var stretch_ratio: float = 1
+## An action for TYPE.SPECIAL keys to take
 @export var action: ACTION = ACTION.NONE
 
-func _init(out: String = "", out_upper: String = "", disp: String = out, 
-		disp_upper: String = out_upper, t: TYPE = TYPE.CHAR, a: ACTION = ACTION.NONE,
-		ico: Texture2D = null, str_ratio: float = 1) -> void:
-	type = t
-	action = a
-	output = out
-	output_uppercase = out_upper
-	display = disp
-	display_uppercase = disp_upper
-	icon = ico
-	stretch_ratio = str_ratio
+
+# Returns the text representation of this key
+func get_text(mode_shifted: bool = false) -> String:
+	var event := input
+	if mode_shifted and mode_shift_input:
+		event = mode_shift_input
+
+	var display: String
+	display = String.chr(event.unicode)
+	if display == "":
+		display = event.as_text()
+
+	return display
