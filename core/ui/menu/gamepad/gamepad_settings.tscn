@@ -288,17 +288,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Left Analog Stick"
 
-[node name="ABS_Y" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
-unique_name_in_owner = true
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
 layout_mode = 2
-text = "Up"
-icon = ExtResource("16_kqgr1")
-flat = true
-alignment = 0
-expand_icon = true
 
-[node name="ABS_Y_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="ABS_Y_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Up"
@@ -307,7 +300,15 @@ flat = true
 alignment = 0
 expand_icon = true
 
-[node name="ABS_Y_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Up)"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
+layout_mode = 2
+
+[node name="ABS_Y_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer2" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Down"
@@ -316,7 +317,15 @@ flat = true
 alignment = 0
 expand_icon = true
 
-[node name="ABS_X_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Down)"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
+layout_mode = 2
+
+[node name="ABS_X_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer3" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Left"
@@ -325,7 +334,15 @@ flat = true
 alignment = 0
 expand_icon = true
 
-[node name="ABS_X_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Left)"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
+layout_mode = 2
+
+[node name="ABS_X_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer4" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Right"
@@ -333,6 +350,11 @@ icon = ExtResource("16_kqgr1")
 flat = true
 alignment = 0
 expand_icon = true
+
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Right)"
 
 [node name="BTN_THUMBL" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
@@ -352,18 +374,16 @@ layout_mode = 2
 text = "Right Analog Stick"
 horizontal_alignment = 2
 
-[node name="ABS_RY" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
-unique_name_in_owner = true
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
 layout_mode = 2
-text = "Up"
-icon = ExtResource("18_hbd0p")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
 
-[node name="ABS_RY_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Up)"
+horizontal_alignment = 2
+
+[node name="ABS_RY_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Up"
@@ -373,7 +393,16 @@ alignment = 2
 icon_alignment = 2
 expand_icon = true
 
-[node name="ABS_RY_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Down)"
+horizontal_alignment = 2
+
+[node name="ABS_RY_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer2" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Down"
@@ -383,7 +412,16 @@ alignment = 2
 icon_alignment = 2
 expand_icon = true
 
-[node name="ABS_RX_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Left)"
+horizontal_alignment = 2
+
+[node name="ABS_RX_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer3" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Left"
@@ -393,7 +431,16 @@ alignment = 2
 icon_alignment = 2
 expand_icon = true
 
-[node name="ABS_RX_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "(Right)"
+horizontal_alignment = 2
+
+[node name="ABS_RX_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer4" groups=["gamepad_mapping"] instance=ExtResource("2_4hsmo")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Right"
