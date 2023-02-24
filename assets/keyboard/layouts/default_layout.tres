@@ -1,8 +1,1077 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cvb8fmo2i7avd"]
+[gd_resource type="Resource" script_class="KeyboardLayout" load_steps=178 format=3 uid="uid://buk31tqxhhw1m"]
 
-[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_layout.gd" id="1_00glt"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_key_config.gd" id="1_h6s00"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_row.gd" id="2_yof6w"]
+[ext_resource type="Script" path="res://core/ui/menu/osk/keyboard_layout.gd" id="3_f5dtc"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_1o2u5"]
+device = -1
+keycode = 96
+unicode = 96
+
+[sub_resource type="InputEventKey" id="InputEventKey_5t6xo"]
+device = -1
+shift_pressed = true
+keycode = 96
+unicode = 126
+
+[sub_resource type="Resource" id="Resource_t4vmo"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_1o2u5")
+mode_shift_input = SubResource("InputEventKey_5t6xo")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_50884"]
+device = -1
+keycode = 49
+unicode = 49
+
+[sub_resource type="InputEventKey" id="InputEventKey_2qxgs"]
+device = -1
+shift_pressed = true
+keycode = 49
+unicode = 33
+
+[sub_resource type="Resource" id="Resource_wbw1r"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_50884")
+mode_shift_input = SubResource("InputEventKey_2qxgs")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_li0ya"]
+device = -1
+keycode = 50
+unicode = 50
+
+[sub_resource type="InputEventKey" id="InputEventKey_qvn4y"]
+device = -1
+shift_pressed = true
+keycode = 50
+unicode = 64
+
+[sub_resource type="Resource" id="Resource_1sjxk"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_li0ya")
+mode_shift_input = SubResource("InputEventKey_qvn4y")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_k80sq"]
+device = -1
+keycode = 51
+unicode = 51
+
+[sub_resource type="InputEventKey" id="InputEventKey_0q3od"]
+device = -1
+shift_pressed = true
+keycode = 51
+unicode = 35
+
+[sub_resource type="Resource" id="Resource_k6vqk"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_k80sq")
+mode_shift_input = SubResource("InputEventKey_0q3od")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_oft8y"]
+device = -1
+keycode = 52
+unicode = 52
+
+[sub_resource type="InputEventKey" id="InputEventKey_7n731"]
+device = -1
+shift_pressed = true
+keycode = 52
+unicode = 36
+
+[sub_resource type="Resource" id="Resource_8docp"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_oft8y")
+mode_shift_input = SubResource("InputEventKey_7n731")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_4qcrv"]
+device = -1
+keycode = 53
+unicode = 53
+
+[sub_resource type="InputEventKey" id="InputEventKey_6omvp"]
+device = -1
+shift_pressed = true
+keycode = 53
+unicode = 37
+
+[sub_resource type="Resource" id="Resource_7eqsd"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_4qcrv")
+mode_shift_input = SubResource("InputEventKey_6omvp")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_qdt3l"]
+device = -1
+keycode = 54
+unicode = 54
+
+[sub_resource type="InputEventKey" id="InputEventKey_wpto5"]
+device = -1
+shift_pressed = true
+keycode = 54
+unicode = 94
+
+[sub_resource type="Resource" id="Resource_b5xo3"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_qdt3l")
+mode_shift_input = SubResource("InputEventKey_wpto5")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_f67xy"]
+device = -1
+keycode = 55
+unicode = 55
+
+[sub_resource type="InputEventKey" id="InputEventKey_6mxdb"]
+device = -1
+shift_pressed = true
+keycode = 55
+unicode = 38
+
+[sub_resource type="Resource" id="Resource_t7jrj"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_f67xy")
+mode_shift_input = SubResource("InputEventKey_6mxdb")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_y8cpd"]
+device = -1
+keycode = 56
+unicode = 56
+
+[sub_resource type="InputEventKey" id="InputEventKey_utjyg"]
+device = -1
+shift_pressed = true
+keycode = 56
+unicode = 42
+
+[sub_resource type="Resource" id="Resource_a1hlb"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_y8cpd")
+mode_shift_input = SubResource("InputEventKey_utjyg")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_805lk"]
+device = -1
+keycode = 57
+unicode = 57
+
+[sub_resource type="InputEventKey" id="InputEventKey_nf0ji"]
+device = -1
+shift_pressed = true
+keycode = 57
+unicode = 40
+
+[sub_resource type="Resource" id="Resource_y0n7r"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_805lk")
+mode_shift_input = SubResource("InputEventKey_nf0ji")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_g5f8q"]
+device = -1
+keycode = 48
+unicode = 48
+
+[sub_resource type="InputEventKey" id="InputEventKey_anldr"]
+device = -1
+shift_pressed = true
+keycode = 48
+unicode = 41
+
+[sub_resource type="Resource" id="Resource_88pg8"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_g5f8q")
+mode_shift_input = SubResource("InputEventKey_anldr")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_e8xrn"]
+device = -1
+keycode = 45
+unicode = 45
+
+[sub_resource type="InputEventKey" id="InputEventKey_g0xof"]
+device = -1
+shift_pressed = true
+keycode = 45
+unicode = 95
+
+[sub_resource type="Resource" id="Resource_g2b03"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_e8xrn")
+mode_shift_input = SubResource("InputEventKey_g0xof")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_c0jcf"]
+device = -1
+keycode = 61
+unicode = 61
+
+[sub_resource type="InputEventKey" id="InputEventKey_8qd0b"]
+device = -1
+shift_pressed = true
+keycode = 61
+unicode = 43
+
+[sub_resource type="Resource" id="Resource_1mgme"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_c0jcf")
+mode_shift_input = SubResource("InputEventKey_8qd0b")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ycana"]
+device = -1
+keycode = 4194308
+
+[sub_resource type="Resource" id="Resource_plh2w"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_ycana")
+stretch_ratio = 2.0
+action = 0
+
+[sub_resource type="Resource" id="Resource_261on"]
+script = ExtResource("2_yof6w")
+entries = Array[ExtResource("1_h6s00")]([SubResource("Resource_t4vmo"), SubResource("Resource_wbw1r"), SubResource("Resource_1sjxk"), SubResource("Resource_k6vqk"), SubResource("Resource_8docp"), SubResource("Resource_7eqsd"), SubResource("Resource_b5xo3"), SubResource("Resource_t7jrj"), SubResource("Resource_a1hlb"), SubResource("Resource_y0n7r"), SubResource("Resource_88pg8"), SubResource("Resource_g2b03"), SubResource("Resource_1mgme"), SubResource("Resource_plh2w")])
+
+[sub_resource type="InputEventKey" id="InputEventKey_qkp1u"]
+device = -1
+keycode = 4194306
+
+[sub_resource type="Resource" id="Resource_yt740"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_qkp1u")
+stretch_ratio = 1.5
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_cu6u2"]
+device = -1
+keycode = 81
+unicode = 113
+
+[sub_resource type="InputEventKey" id="InputEventKey_uwx63"]
+device = -1
+shift_pressed = true
+keycode = 81
+unicode = 81
+
+[sub_resource type="Resource" id="Resource_a0q6r"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_cu6u2")
+mode_shift_input = SubResource("InputEventKey_uwx63")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_2ggld"]
+device = -1
+keycode = 87
+unicode = 119
+
+[sub_resource type="InputEventKey" id="InputEventKey_vqyel"]
+device = -1
+shift_pressed = true
+keycode = 87
+unicode = 87
+
+[sub_resource type="Resource" id="Resource_035td"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_2ggld")
+mode_shift_input = SubResource("InputEventKey_vqyel")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_fiee8"]
+device = -1
+keycode = 69
+unicode = 101
+
+[sub_resource type="InputEventKey" id="InputEventKey_ruyre"]
+device = -1
+shift_pressed = true
+keycode = 69
+unicode = 69
+
+[sub_resource type="Resource" id="Resource_pb3oc"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_fiee8")
+mode_shift_input = SubResource("InputEventKey_ruyre")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_rvm62"]
+device = -1
+keycode = 82
+unicode = 114
+
+[sub_resource type="InputEventKey" id="InputEventKey_reshg"]
+device = -1
+shift_pressed = true
+keycode = 82
+unicode = 82
+
+[sub_resource type="Resource" id="Resource_1f7ue"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_rvm62")
+mode_shift_input = SubResource("InputEventKey_reshg")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_lg2yv"]
+device = -1
+keycode = 84
+unicode = 116
+
+[sub_resource type="InputEventKey" id="InputEventKey_xx305"]
+device = -1
+shift_pressed = true
+keycode = 84
+unicode = 84
+
+[sub_resource type="Resource" id="Resource_r2y76"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_lg2yv")
+mode_shift_input = SubResource("InputEventKey_xx305")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_1t47d"]
+device = -1
+keycode = 89
+unicode = 121
+
+[sub_resource type="InputEventKey" id="InputEventKey_njurq"]
+device = -1
+shift_pressed = true
+keycode = 89
+unicode = 89
+
+[sub_resource type="Resource" id="Resource_yw2bi"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_1t47d")
+mode_shift_input = SubResource("InputEventKey_njurq")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_1ytfc"]
+device = -1
+keycode = 85
+unicode = 117
+
+[sub_resource type="InputEventKey" id="InputEventKey_ptg0b"]
+device = -1
+shift_pressed = true
+keycode = 85
+unicode = 85
+
+[sub_resource type="Resource" id="Resource_r68pu"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_1ytfc")
+mode_shift_input = SubResource("InputEventKey_ptg0b")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_d0p1e"]
+device = -1
+keycode = 73
+unicode = 105
+
+[sub_resource type="InputEventKey" id="InputEventKey_yum4u"]
+device = -1
+shift_pressed = true
+keycode = 73
+unicode = 73
+
+[sub_resource type="Resource" id="Resource_yaqmc"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_d0p1e")
+mode_shift_input = SubResource("InputEventKey_yum4u")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ahp1p"]
+device = -1
+keycode = 79
+unicode = 111
+
+[sub_resource type="InputEventKey" id="InputEventKey_dia4x"]
+device = -1
+shift_pressed = true
+keycode = 79
+unicode = 79
+
+[sub_resource type="Resource" id="Resource_3unbc"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_ahp1p")
+mode_shift_input = SubResource("InputEventKey_dia4x")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_365a8"]
+device = -1
+keycode = 80
+unicode = 112
+
+[sub_resource type="InputEventKey" id="InputEventKey_h5h2w"]
+device = -1
+shift_pressed = true
+keycode = 80
+unicode = 80
+
+[sub_resource type="Resource" id="Resource_rxbs6"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_365a8")
+mode_shift_input = SubResource("InputEventKey_h5h2w")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_quijs"]
+device = -1
+keycode = 91
+unicode = 91
+
+[sub_resource type="InputEventKey" id="InputEventKey_up1kh"]
+device = -1
+shift_pressed = true
+keycode = 91
+unicode = 123
+
+[sub_resource type="Resource" id="Resource_xv8qp"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_quijs")
+mode_shift_input = SubResource("InputEventKey_up1kh")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_k4vky"]
+device = -1
+keycode = 93
+unicode = 93
+
+[sub_resource type="InputEventKey" id="InputEventKey_mgtor"]
+device = -1
+shift_pressed = true
+keycode = 93
+unicode = 125
+
+[sub_resource type="Resource" id="Resource_04w8m"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_k4vky")
+mode_shift_input = SubResource("InputEventKey_mgtor")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_nng5p"]
+device = -1
+keycode = 92
+unicode = 92
+
+[sub_resource type="InputEventKey" id="InputEventKey_2kw7u"]
+device = -1
+shift_pressed = true
+keycode = 92
+unicode = 124
+
+[sub_resource type="Resource" id="Resource_vj6e0"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_nng5p")
+mode_shift_input = SubResource("InputEventKey_2kw7u")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="Resource" id="Resource_ufoa7"]
+script = ExtResource("2_yof6w")
+entries = Array[ExtResource("1_h6s00")]([SubResource("Resource_yt740"), SubResource("Resource_a0q6r"), SubResource("Resource_035td"), SubResource("Resource_pb3oc"), SubResource("Resource_1f7ue"), SubResource("Resource_r2y76"), SubResource("Resource_yw2bi"), SubResource("Resource_r68pu"), SubResource("Resource_yaqmc"), SubResource("Resource_3unbc"), SubResource("Resource_rxbs6"), SubResource("Resource_xv8qp"), SubResource("Resource_04w8m"), SubResource("Resource_vj6e0")])
+
+[sub_resource type="InputEventKey" id="InputEventKey_nlqr8"]
+device = -1
+keycode = 4194329
+
+[sub_resource type="Resource" id="Resource_h50je"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_nlqr8")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_dygq7"]
+device = -1
+keycode = 65
+unicode = 97
+
+[sub_resource type="InputEventKey" id="InputEventKey_bcwa3"]
+device = -1
+shift_pressed = true
+keycode = 65
+unicode = 65
+
+[sub_resource type="Resource" id="Resource_aa05x"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_dygq7")
+mode_shift_input = SubResource("InputEventKey_bcwa3")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_diia8"]
+device = -1
+keycode = 83
+unicode = 115
+
+[sub_resource type="InputEventKey" id="InputEventKey_ctux8"]
+device = -1
+shift_pressed = true
+keycode = 83
+unicode = 83
+
+[sub_resource type="Resource" id="Resource_0a8ty"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_diia8")
+mode_shift_input = SubResource("InputEventKey_ctux8")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_lors7"]
+device = -1
+keycode = 68
+unicode = 100
+
+[sub_resource type="InputEventKey" id="InputEventKey_8cps0"]
+device = -1
+shift_pressed = true
+keycode = 68
+unicode = 68
+
+[sub_resource type="Resource" id="Resource_n3jcv"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_lors7")
+mode_shift_input = SubResource("InputEventKey_8cps0")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_5yqmh"]
+device = -1
+keycode = 70
+unicode = 102
+
+[sub_resource type="InputEventKey" id="InputEventKey_txmp4"]
+device = -1
+shift_pressed = true
+keycode = 70
+unicode = 70
+
+[sub_resource type="Resource" id="Resource_eir2n"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_5yqmh")
+mode_shift_input = SubResource("InputEventKey_txmp4")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_25you"]
+device = -1
+keycode = 71
+unicode = 103
+
+[sub_resource type="InputEventKey" id="InputEventKey_c3j26"]
+device = -1
+shift_pressed = true
+keycode = 71
+unicode = 71
+
+[sub_resource type="Resource" id="Resource_6v2fg"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_25you")
+mode_shift_input = SubResource("InputEventKey_c3j26")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ns10a"]
+device = -1
+keycode = 72
+unicode = 104
+
+[sub_resource type="InputEventKey" id="InputEventKey_claq7"]
+device = -1
+shift_pressed = true
+keycode = 72
+unicode = 72
+
+[sub_resource type="Resource" id="Resource_v06hx"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_ns10a")
+mode_shift_input = SubResource("InputEventKey_claq7")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_y255p"]
+device = -1
+keycode = 74
+unicode = 106
+
+[sub_resource type="InputEventKey" id="InputEventKey_1hxa8"]
+device = -1
+shift_pressed = true
+keycode = 74
+unicode = 74
+
+[sub_resource type="Resource" id="Resource_ut3vq"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_y255p")
+mode_shift_input = SubResource("InputEventKey_1hxa8")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_4137n"]
+device = -1
+keycode = 75
+unicode = 107
+
+[sub_resource type="InputEventKey" id="InputEventKey_wjncp"]
+device = -1
+shift_pressed = true
+keycode = 75
+unicode = 75
+
+[sub_resource type="Resource" id="Resource_y13ws"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_4137n")
+mode_shift_input = SubResource("InputEventKey_wjncp")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_kp668"]
+device = -1
+keycode = 76
+unicode = 108
+
+[sub_resource type="InputEventKey" id="InputEventKey_rstc6"]
+device = -1
+shift_pressed = true
+keycode = 76
+unicode = 76
+
+[sub_resource type="Resource" id="Resource_efxjg"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_kp668")
+mode_shift_input = SubResource("InputEventKey_rstc6")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_8avyu"]
+device = -1
+keycode = 59
+unicode = 59
+
+[sub_resource type="InputEventKey" id="InputEventKey_28b3b"]
+device = -1
+shift_pressed = true
+keycode = 59
+unicode = 58
+
+[sub_resource type="Resource" id="Resource_2t403"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_8avyu")
+mode_shift_input = SubResource("InputEventKey_28b3b")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_udaco"]
+device = -1
+keycode = 39
+unicode = 39
+
+[sub_resource type="InputEventKey" id="InputEventKey_m54to"]
+device = -1
+shift_pressed = true
+keycode = 39
+unicode = 34
+
+[sub_resource type="Resource" id="Resource_nbiex"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_udaco")
+mode_shift_input = SubResource("InputEventKey_m54to")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_418lc"]
+device = -1
+keycode = 4194309
+
+[sub_resource type="Resource" id="Resource_2dti2"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_418lc")
+stretch_ratio = 2.0
+action = 0
+
+[sub_resource type="Resource" id="Resource_g78mf"]
+script = ExtResource("2_yof6w")
+entries = Array[ExtResource("1_h6s00")]([SubResource("Resource_h50je"), SubResource("Resource_aa05x"), SubResource("Resource_0a8ty"), SubResource("Resource_n3jcv"), SubResource("Resource_eir2n"), SubResource("Resource_6v2fg"), SubResource("Resource_v06hx"), SubResource("Resource_ut3vq"), SubResource("Resource_y13ws"), SubResource("Resource_efxjg"), SubResource("Resource_2t403"), SubResource("Resource_nbiex"), SubResource("Resource_2dti2")])
+
+[sub_resource type="InputEventKey" id="InputEventKey_q6p70"]
+device = -1
+keycode = 4194325
+
+[sub_resource type="Resource" id="Resource_wtw65"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_q6p70")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_xh213"]
+device = -1
+keycode = 90
+unicode = 122
+
+[sub_resource type="InputEventKey" id="InputEventKey_5lbj5"]
+device = -1
+shift_pressed = true
+keycode = 90
+unicode = 90
+
+[sub_resource type="Resource" id="Resource_l3w0e"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_xh213")
+mode_shift_input = SubResource("InputEventKey_5lbj5")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_mun60"]
+device = -1
+keycode = 88
+unicode = 120
+
+[sub_resource type="InputEventKey" id="InputEventKey_aqia5"]
+device = -1
+shift_pressed = true
+keycode = 88
+unicode = 88
+
+[sub_resource type="Resource" id="Resource_dils7"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_mun60")
+mode_shift_input = SubResource("InputEventKey_aqia5")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_i3yqg"]
+device = -1
+keycode = 67
+unicode = 99
+
+[sub_resource type="InputEventKey" id="InputEventKey_84ypj"]
+device = -1
+shift_pressed = true
+keycode = 67
+unicode = 67
+
+[sub_resource type="Resource" id="Resource_1r3ss"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_i3yqg")
+mode_shift_input = SubResource("InputEventKey_84ypj")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_16rru"]
+device = -1
+keycode = 86
+unicode = 118
+
+[sub_resource type="InputEventKey" id="InputEventKey_38e1x"]
+device = -1
+shift_pressed = true
+keycode = 86
+unicode = 86
+
+[sub_resource type="Resource" id="Resource_j63iv"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_16rru")
+mode_shift_input = SubResource("InputEventKey_38e1x")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_tptto"]
+device = -1
+keycode = 66
+unicode = 98
+
+[sub_resource type="InputEventKey" id="InputEventKey_w7654"]
+device = -1
+shift_pressed = true
+keycode = 66
+unicode = 66
+
+[sub_resource type="Resource" id="Resource_6vyup"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_tptto")
+mode_shift_input = SubResource("InputEventKey_w7654")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_bgq8k"]
+device = -1
+keycode = 78
+unicode = 110
+
+[sub_resource type="InputEventKey" id="InputEventKey_pcew1"]
+device = -1
+shift_pressed = true
+keycode = 78
+unicode = 78
+
+[sub_resource type="Resource" id="Resource_dntiq"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_bgq8k")
+mode_shift_input = SubResource("InputEventKey_pcew1")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_6g28a"]
+device = -1
+keycode = 77
+unicode = 109
+
+[sub_resource type="InputEventKey" id="InputEventKey_gm4ng"]
+device = -1
+shift_pressed = true
+keycode = 77
+unicode = 77
+
+[sub_resource type="Resource" id="Resource_qmu5r"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_6g28a")
+mode_shift_input = SubResource("InputEventKey_gm4ng")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_msl4q"]
+device = -1
+keycode = 44
+unicode = 44
+
+[sub_resource type="InputEventKey" id="InputEventKey_13mfv"]
+device = -1
+shift_pressed = true
+keycode = 44
+unicode = 60
+
+[sub_resource type="Resource" id="Resource_6x5lo"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_msl4q")
+mode_shift_input = SubResource("InputEventKey_13mfv")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_7ea01"]
+device = -1
+keycode = 46
+unicode = 46
+
+[sub_resource type="InputEventKey" id="InputEventKey_mjaas"]
+device = -1
+shift_pressed = true
+keycode = 46
+unicode = 62
+
+[sub_resource type="Resource" id="Resource_2f7tt"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_7ea01")
+mode_shift_input = SubResource("InputEventKey_mjaas")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_guejv"]
+device = -1
+keycode = 47
+unicode = 47
+
+[sub_resource type="InputEventKey" id="InputEventKey_02r5h"]
+device = -1
+shift_pressed = true
+keycode = 47
+unicode = 63
+
+[sub_resource type="Resource" id="Resource_sjwi1"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_guejv")
+mode_shift_input = SubResource("InputEventKey_02r5h")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_pyvdl"]
+device = -1
+keycode = 4194325
+
+[sub_resource type="Resource" id="Resource_ui2gc"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_pyvdl")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="Resource" id="Resource_42dwg"]
+script = ExtResource("2_yof6w")
+entries = Array[ExtResource("1_h6s00")]([SubResource("Resource_wtw65"), SubResource("Resource_l3w0e"), SubResource("Resource_dils7"), SubResource("Resource_1r3ss"), SubResource("Resource_j63iv"), SubResource("Resource_6vyup"), SubResource("Resource_dntiq"), SubResource("Resource_qmu5r"), SubResource("Resource_6x5lo"), SubResource("Resource_2f7tt"), SubResource("Resource_sjwi1"), SubResource("Resource_ui2gc")])
+
+[sub_resource type="InputEventKey" id="InputEventKey_8oqql"]
+device = -1
+keycode = 4194326
+
+[sub_resource type="Resource" id="Resource_lv8mc"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_8oqql")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_h8idm"]
+keycode = 4194327
+
+[sub_resource type="Resource" id="Resource_88ens"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_h8idm")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_7d5f6"]
+device = -1
+keycode = 4194328
+
+[sub_resource type="Resource" id="Resource_luh5q"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_7d5f6")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_qms4d"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Resource" id="Resource_siwvh"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_qms4d")
+stretch_ratio = 8.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_5gxm2"]
+device = -1
+keycode = 4194328
+
+[sub_resource type="Resource" id="Resource_ptpig"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_5gxm2")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_o6xhi"]
+device = -1
+keycode = 4194326
+
+[sub_resource type="Resource" id="Resource_7084f"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_o6xhi")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_tm4mk"]
+device = -1
+keycode = 4194319
+
+[sub_resource type="Resource" id="Resource_hpvmn"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_tm4mk")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ub85h"]
+device = -1
+keycode = 4194321
+
+[sub_resource type="Resource" id="Resource_v2b8g"]
+script = ExtResource("1_h6s00")
+type = 0
+input = SubResource("InputEventKey_ub85h")
+stretch_ratio = 1.0
+action = 0
+
+[sub_resource type="Resource" id="Resource_6wgcu"]
+script = ExtResource("2_yof6w")
+entries = Array[ExtResource("1_h6s00")]([SubResource("Resource_lv8mc"), SubResource("Resource_88ens"), SubResource("Resource_luh5q"), SubResource("Resource_siwvh"), SubResource("Resource_ptpig"), SubResource("Resource_7084f"), SubResource("Resource_hpvmn"), SubResource("Resource_v2b8g")])
 
 [resource]
-script = ExtResource("1_00glt")
-name = "Default"
-rows = null
+script = ExtResource("3_f5dtc")
+name = "Full"
+rows = Array[ExtResource("2_yof6w")]([SubResource("Resource_261on"), SubResource("Resource_ufoa7"), SubResource("Resource_g78mf"), SubResource("Resource_42dwg"), SubResource("Resource_6wgcu")])
