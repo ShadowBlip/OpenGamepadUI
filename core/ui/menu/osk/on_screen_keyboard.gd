@@ -82,35 +82,48 @@ func populate_keyboard() -> void:
 	# Loop through all created buttons and setup focus
 	for y in range(button_rows.size()):
 		for x in range(button_rows[y].size()):
+			var row := button_rows[y]
 			var button := button_rows[y][x] as Button
+
 			# LEFT
-			button.focus_neighbor_left = button_rows[y][x-1].get_path()
+			button.focus_neighbor_left = row[x-1].get_path()
 
 			# UP
-			var top := x
-			if top >= button_rows[y-1].size():
-				top = -1
-			button.focus_neighbor_top = button_rows[y-1][top].get_path()
+			var row_above := button_rows[y-1]
+			var top := _nearest_neighbor(x, row.size(), row_above.size())
+			button.focus_neighbor_top = row_above[top].get_path()
 
 			# RIGHT
 			var right := x+1
 			if right >= button_rows[y].size():
 				right = 0
-			button.focus_neighbor_right = button_rows[y][right].get_path()
+			button.focus_neighbor_right = row[right].get_path()
 
 			# BOTTOM
 			var bottom_y := y+1
 			if bottom_y >= button_rows.size():
 				bottom_y = 0
-			var bottom_x := x
-			if bottom_x >= button_rows[bottom_y].size():
-				bottom_x = -1
-			button.focus_neighbor_bottom = button_rows[bottom_y][bottom_x].get_path()
+			var row_below := button_rows[bottom_y]
+			var bottom := _nearest_neighbor(x, row.size(), row_below.size())
+			button.focus_neighbor_bottom = row_below[bottom].get_path()
 
 			button.focus_next = button.focus_neighbor_right
 			button.focus_previous = button.focus_neighbor_left
 
 	instance.keyboard_populated.emit()
+
+
+
+# Returns the index that closest matches how far the given index is in an array 
+# of the given size in comparision to the given 'to_size'. 
+# E.g. 
+#   var a := [1, 2, 3]
+#   var b := [1, 2, 3, 4, 5, 6]
+#   _nearest_neighbor(2, a.size(), b.size())
+# Returns index in 'b' array: 4
+func _nearest_neighbor(idx: int, from_size: int, to_size: int) -> int:
+	var factor := float(to_size) / float(from_size)
+	return int(round(idx * factor))
 
 
 # Opens the OSK with the given context. The keyboard context determines where
