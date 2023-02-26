@@ -3,7 +3,6 @@ extends ScrollContainer
 const button_scene := preload("res://core/ui/components/button.tscn")
 const settings_content := preload("res://core/ui/menu/settings/plugin_settings_content.tscn")
 
-var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var state_machine := preload("res://assets/state/state_machines/plugin_settings_state_machine.tres")
 var _plugin_containers := {}
@@ -28,7 +27,6 @@ func _ready() -> void:
 	add_child(update_timer)
 	update_timer.start()
 
-	PluginLoader.plugin_upgradable.connect(_on_plugin_upgradable)
 
 func _on_plugins_reloaded() -> void:
 	_populate_plugins()
@@ -144,13 +142,3 @@ func _on_plugin_uninitialized(plugin_id: String) -> void:
 	var parent := plugin_settings.get_parent()
 	plugin_settings.queue_free()
 	_plugin_content.erase(plugin_id)
-
-func _on_plugin_upgradable(plugin_id: String, update_type: int) -> void:
-	var notify := Notification.new("")
-	if update_type == PluginLoader.update_type.NEW:
-		notify.text=("New plugin available: {0}".format([plugin_id]))
-
-	if update_type == PluginLoader.update_type.UPDATE:
-		notify.text=("Plugin upgrade available: {0}".format([plugin_id]))
-
-	NotificationManager.show(notify)
