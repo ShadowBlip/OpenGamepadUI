@@ -13,6 +13,3 @@ func _ready() -> void:
 
 	# Launch the main interface
 	get_tree().change_scene_to_file("res://core/main.tscn")
-
-
-

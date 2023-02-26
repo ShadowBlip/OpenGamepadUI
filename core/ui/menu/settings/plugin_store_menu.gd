@@ -7,6 +7,7 @@ signal plugin_store_loaded(plugin_items: Dictionary)
 const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/plugin_store_item.tscn")
 var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var plugin_store_state := preload("res://assets/state/states/settings_plugin_store.tres") as State
+var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 
 @onready var http_image := $HTTPImageFetcher
 @onready var settings_menu := $"../../../.." #verbose?
@@ -15,6 +16,7 @@ var plugin_store_state := preload("res://assets/state/states/settings_plugin_sto
 func _ready() -> void:
 	plugin_store_loaded.connect(_on_plugin_store_loaded)
 	plugin_store_state.state_entered.connect(_on_state_entered)
+	PluginLoader.plugin_upgradable.connect(_on_plugin_upgradable)
 	load_plugin_store_items()
 
 
@@ -67,4 +69,14 @@ func _populate_plugin_store_items(grid: Container, plugin_items: Dictionary):
 		
 		# Add the store item
 		store_item.visible = true
-		
+
+
+func _on_plugin_upgradable(plugin_id: String, update_type: int) -> void:
+	var notify := Notification.new("")
+	if update_type == PluginLoader.update_type.NEW:
+		notify.text=("New plugin available: {0}".format([plugin_id]))
+
+	if update_type == PluginLoader.update_type.UPDATE:
+		notify.text=("Plugin upgrade available: {0}".format([plugin_id]))
+
+	NotificationManager.show(notify)
