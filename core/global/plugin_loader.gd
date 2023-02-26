@@ -40,6 +40,7 @@ var logger := Log.get_logger("PluginLoader")
 var plugins := {}
 var plugin_nodes := {}
 var plugin_store_items := {}
+var plugins_upgradable := []
 
 enum update_type{
 	NEW,
@@ -232,6 +233,11 @@ func is_initialized(plugin_id: String) -> bool:
 	return plugin_id in plugin_nodes
 
 
+## Returns true if the given plugin is upgradable.
+func is_upgradable(plugin_id: String) -> bool:
+	return plugin_id in plugins_upgradable
+
+
 ## Returns the given plugin instance
 func get_plugin(plugin_id: String) -> Plugin:
 	if not plugin_id in plugin_nodes:
@@ -252,6 +258,15 @@ func get_loaded_plugins() -> Array:
 ## Returns a list of plugin_ids that are initialized and running
 func get_initialized_plugins() -> Array:
 	return plugin_nodes.keys()
+
+
+## Removes the upgradable flag from the given plugin, or returns
+# false if no upgrade was available.
+func set_plugin_upgraded(plugin_id: String) -> bool:
+	if plugin_id in plugins_upgradable:
+		plugins_upgradable.erase(plugin_id)
+		return true
+	return false
 
 
 ## Instances the given plugin and adds it to the scene tree
@@ -449,7 +464,7 @@ func _is_valid_semver(version: Array) -> bool:
 func on_update_timeout() -> void:
 	var new_store_items: Variant = await get_plugin_store_items()
 
-#	# First run, set the database
+	# First run, set the database
 	if plugin_store_items == {}:
 		plugin_store_items = new_store_items
 		# Check if there are updates for installed plugins
@@ -482,6 +497,7 @@ func _is_plugin_upgradable(plugin_id: String, store_db: Dictionary) -> bool:
 	if _is_greater_version(new_version, current_version):
 		logger.info("Plugin update available: {0}.".format([plugin_id]))
 		plugin_upgradable.emit(plugin_id, update_type.UPDATE)
+		plugins_upgradable.append(plugin_id)
 		return true
 	return false
 

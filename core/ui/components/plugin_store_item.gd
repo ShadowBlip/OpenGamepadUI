@@ -17,11 +17,14 @@ var logger: Log.Logger
 @onready var author_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AuthorLabel
 @onready var summary_label := $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/SummaryLabel
 @onready var install_button := $MarginContainer/HBoxContainer/InstallButton
-
+@onready var update_button := $MarginContainer/HBoxContainer/UpdateButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	update_button.visible = PluginLoader.is_upgradable(plugin_id)
 	install_button.button_up.connect(_on_install_button)
+	update_button.button_up.connect(_on_update_button)
+	PluginLoader.plugin_upgradable.connect(_on_update_available)
 	_set_installed_state()
 
 
@@ -59,3 +62,32 @@ func _on_install_button() -> void:
 	notify = Notification.new("Plugin " + plugin_id + " installed")
 	notify.icon = plugin_icon
 	NotificationManager.show(notify)
+
+
+# Shows in the store item if an update is available
+func _on_update_available(name: String, type: int) -> void:
+	# Ignore other plugins
+	if name != plugin_id:
+		return
+
+	if type != PluginLoader.update_type.UPDATE:
+		return
+
+	print("Update: ", name, plugin_id)
+	update_button.visible = true
+	print(update_button.visible)
+
+
+# Handle updates
+func _on_update_button() -> void:
+	var notify := Notification.new("Updating plugin " + plugin_id)
+	notify.icon = plugin_icon
+	NotificationManager.show(notify)
+	PluginLoader.install_plugin(plugin_id, download_url, sha256)
+	await PluginLoader.plugin_installed
+	notify = Notification.new("Plugin " + plugin_id + " updated")
+	notify.icon = plugin_icon
+	NotificationManager.show(notify)
+	PluginLoader.set_plugin_upgraded(plugin_id)
+	update_button.visible = false
+

@@ -22,7 +22,7 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 	var http: HTTPRequest = HTTPRequest.new()
 	add_child(http)
 	if http.request(url) != OK:
-		logger.warn("Error making http request for image: " + url)
+		logger.debug("Error making http request for image: " + url)
 		_remove(http)
 		return null
 
@@ -35,7 +35,7 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 	var body: PackedByteArray = args[3]
 
 	if result != HTTPRequest.RESULT_SUCCESS:
-		logger.warn("Image couldn't be downloaded: " + url)
+		logger.debug("Image couldn't be downloaded: " + url)
 		_remove(http)
 		return null
 
@@ -48,7 +48,7 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 	elif ext == "png":
 		error = image.load_png_from_buffer(body)
 	if error != OK:
-		logger.warn("Couldn't load the image: " + url)
+		logger.debug("Couldn't load the image: " + url)
 		_remove(http)
 		return null
 

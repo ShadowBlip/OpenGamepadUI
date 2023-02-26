@@ -82,6 +82,12 @@ size_flags_vertical = 8
 size_flags_stretch_ratio = 2.0
 text = "Install"
 
+[node name="UpdateButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_nlpc7")]
+layout_mode = 2
+size_flags_vertical = 8
+size_flags_stretch_ratio = 2.0
+text = "Update"
+
 [node name="DetailsButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_nlpc7")]
 layout_mode = 2
 size_flags_vertical = 8
