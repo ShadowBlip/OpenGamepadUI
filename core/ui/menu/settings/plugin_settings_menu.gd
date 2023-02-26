@@ -16,28 +16,31 @@ var _plugin_content := {}
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_populate_plugins()
-	PluginLoader.plugin_initialized.connect(_on_plugin_initialized)
-	PluginLoader.plugin_uninitialized.connect(_on_plugin_uninitialized)
+	PluginLoader.plugins_reloaded.connect(_on_plugins_reloaded)
+
+
+func _on_plugins_reloaded() -> void:
+	_populate_plugins()
 
 
 # Populates the menu with plugins
 func _populate_plugins():
 	# Clear any existing plugin menus
 	for node in plugin_menu_container.get_children():
-		plugin_menu_container.remove_child(node)
 		node.queue_free()
 	
 	# Clear any plugin content menus
 	for node in plugins_content_container.get_children():
 		if node == no_plugins_label:
 			continue
-		remove_child(node)
 		node.queue_free()
-	
+	_plugin_content = {}
+	_plugin_containers = {}
+
 	# Build the plugin settings content and menu button for each plugin
 	for plugin_id in PluginLoader.get_loaded_plugins():
 		_on_plugin_initialized(plugin_id)
-	
+
 	# If no plugins are available, display a message that there are no plugin
 	# settings.
 	if plugins_content_container.get_child_count() == 1:
@@ -120,13 +123,13 @@ func _on_plugin_initialized(plugin_id: String) -> void:
 	var content_layout := plugin_content_container.get_node("%ContentLayout")
 	content_layout.add_child(plugin_settings)
 	_plugin_content[plugin_id] = plugin_settings
-	
+
 
 func _on_plugin_uninitialized(plugin_id: String) -> void:
 	if not plugin_id in _plugin_content:
 		return
+	
 	var plugin_settings: Node = _plugin_content[plugin_id]
 	var parent := plugin_settings.get_parent()
-	parent.remove_child(plugin_settings)
 	plugin_settings.queue_free()
 	_plugin_content.erase(plugin_id)

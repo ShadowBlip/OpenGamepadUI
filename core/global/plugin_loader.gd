@@ -28,8 +28,10 @@ signal plugin_unloaded(name: String)
 signal plugin_initialized(name: String)
 signal plugin_uninitialized(name: String)
 signal plugin_installed(id: String, status: int)
+signal plugin_uninstalled(id: String, status: int)
 signal plugin_enabled(name: String)
 signal plugin_disabled(name: String)
+signal plugins_reloaded()
 
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var parent: PluginManager
@@ -41,12 +43,26 @@ var plugin_nodes := {}
 ## manager node.
 func init(manager: PluginManager) -> void:
 	parent = manager
+	plugin_installed.connect(_on_install_plugin)
+	plugin_uninstalled.connect(_on_install_plugin)
+	_load_and_init_plugins()
+	
+
+func _on_install_plugin(_plugin_id: String, status: int) -> void:
+	# ignore failures, nothing will have changed.
+	if status != OK:
+		return
+	_load_and_init_plugins()
+
+
+func _load_and_init_plugins() -> void:
 	logger.info("Loading plugins")
 	_load_plugins()
 	logger.info("Done loading plugins")
 	logger.info("Initializing plugins")
 	_init_plugins()
 	logger.info("Done initializing plugins")
+	plugins_reloaded.emit()
 
 
 ## Sets the given plugin to enabled
@@ -143,7 +159,7 @@ func install_plugin(plugin_id: String, download_url: String, sha256: String) -> 
 	DirAccess.make_dir_recursive_absolute(plugin_dir)
 	var file := FileAccess.open("/".join([plugin_dir, plugin_id + ".zip"]), FileAccess.WRITE_READ)
 	file.store_buffer(body)
-	
+	file.close()
 	plugin_installed.emit(plugin_id, OK)
 
 
@@ -155,7 +171,10 @@ func uninstall_plugin(plugin_id: String) -> int:
 	# Remove the plugin archive
 	var plugin_dir: String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
 	var filename: String = "/".join([plugin_dir, plugin_id + ".zip"])
-	return DirAccess.remove_absolute(filename)
+	var result := DirAccess.remove_absolute(filename)
+	plugin_uninstalled.emit(plugin_id, result)
+	# Backwards compatibility
+	return result
 
 
 ## Unloads the given plugin. Returns OK if successful.
@@ -231,10 +250,13 @@ func initialize_plugin(plugin_id) -> int:
 	if not parent:
 		logger.error("PluginLoader has not been initialized!")
 		return FAILED
+	if is_initialized(plugin_id):
+		return ERR_ALREADY_EXISTS
 	if not plugin_id in plugins:
 		logger.warn("Unable to initialize %s as it has not been loaded" % plugin_id)
 		return FAILED
 	var meta = plugins[plugin_id]
+	
 	if not "entrypoint" in meta:
 		logger.warn("%s has no entrypoint defined" % plugin_id)
 		return FAILED
@@ -275,7 +297,7 @@ func _load_plugins() -> void:
 			logger.warning("%s failed to load" % file_name)
 			file_name = dir.get_next()
 			continue
-		
+
 		# Validate the plugin metadata
 		if not _is_valid_plugin_meta(meta):
 			logger.warning("%s has invalid plugin JSON" % file_name)
@@ -288,6 +310,18 @@ func _load_plugins() -> void:
 			file_name = dir.get_next()
 			continue
 		
+		# Check if the plugin is already loaded
+		if is_loaded(meta["plugin.id"]):
+			
+			# Check if we need to upgrade
+			var existing = get_plugin_meta(meta["plugin.id"])
+			if not _is_greater_version(meta["plugin.version"], existing["plugin.version"]):
+				file_name = dir.get_next()
+				continue
+			
+			# Uninitialize and unload old version
+			unload_plugin(meta["plugin.id"])
+		
 		# Load the plugin
 		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, file_name])):
 			logger.warning("%s failed to load" % file_name)
@@ -296,7 +330,6 @@ func _load_plugins() -> void:
 		var plugin_name: String = meta["plugin.id"]
 		plugins[plugin_name] = meta
 		plugin_loaded.emit(plugin_name)
-
 		file_name = dir.get_next()
 
 
@@ -310,10 +343,14 @@ func _init_plugins() -> void:
 # Loads plugin metadata and returns it as a parsed dictionary. Returns null
 # if there was an error parsing.
 func _load_plugin_meta(path: String) -> Variant:
+	
 	# Open the archive
 	var reader: ZIPReader = ZIPReader.new()
-	reader.open(path)
-	
+	var error := reader.open(path)
+	if error != OK:
+		logger.error("PluginLoader: Failed to open {0} with result {1}".format([path, error]))
+		return null
+
 	# Look for plugin.json
 	var plugin_meta_file: String = ""
 	var files: PackedStringArray = reader.get_files()
@@ -321,7 +358,7 @@ func _load_plugin_meta(path: String) -> Variant:
 		if file.begins_with("plugins/") and file.ends_with("/plugin.json"):
 			plugin_meta_file = file
 			break
-
+	
 	# Error if no plugin.json was found in the archive
 	if plugin_meta_file == "":
 		logger.error("PluginLoader: No plugin.json found in %s" % path)
@@ -367,6 +404,25 @@ func _is_compatible_version(version: String, target: String) -> bool:
 	
 	return true
 
+
+# Returns whether or not the given semantic version string is greater than or
+# equal to the target semantic version string.  This is usefull to determine if
+# an updated plugin needs to be reloaded.
+func _is_greater_version(version: String, target: String) -> bool:
+	print("_is_greater_version")
+	var version_list = version.split(".")
+	var target_list = target.split(".")
+	
+	# Ensure the given versions are valid semver
+	if not _is_valid_semver(version_list) or not _is_valid_semver(target_list):
+		return false
+	
+	# Compare minor versions
+	if int(version_list[0]) <= int(target_list[0]):
+		return false
+	
+	return true
+	
 
 # Returns whether or not the given version array is a valid semver
 func _is_valid_semver(version: Array) -> bool:
