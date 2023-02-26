@@ -491,6 +491,9 @@ func _is_plugin_upgradable(plugin_id: String, store_db: Dictionary) -> bool:
 	# Check if we've installed this before
 	if plugin_id not in plugins:
 		return false
+	# Check if we've already found this is upgradable
+	if plugin_id in plugins_upgradable:
+		return false
 	var current_version = plugins[plugin_id]["plugin.version"]
 	var new_version = store_db[plugin_id]["plugin.version"]
 	if _is_greater_version(new_version, current_version):
