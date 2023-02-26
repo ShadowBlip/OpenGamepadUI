@@ -434,7 +434,6 @@ func _is_compatible_version(version: String, target: String) -> bool:
 # equal to the target semantic version string.  This is usefull to determine if
 # an updated plugin needs to be reloaded.
 func _is_greater_version(version: String, target: String) -> bool:
-	print("_is_greater_version")
 	var version_list = version.split(".")
 	var target_list = target.split(".")
 
