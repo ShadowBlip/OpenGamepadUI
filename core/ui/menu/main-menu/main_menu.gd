@@ -7,8 +7,9 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 var running_apps := {}
 var running_buttons := {}
 
-@onready var container := $MarginContainer/VBoxContainer
-@onready var separator := $MarginContainer/VBoxContainer/HSeparator
+@onready var focus_node := $%HomeButton
+@onready var button_container := $%ButtonContainer
+@onready var separator := $%HSeparator
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -20,8 +21,7 @@ func _ready() -> void:
 	
 func _on_state_entered(_from: State) -> void:
 	if state_machine.current_state() == main_menu_state:
-		var button: Button = $MarginContainer/VBoxContainer/HomeButton
-		button.grab_focus.call_deferred()
+		focus_node.grab_focus.call_deferred()
 
 
 func _on_app_launched(app: RunningApp):
@@ -34,8 +34,8 @@ func _on_app_launched(app: RunningApp):
 		LaunchManager.set_current_app(app)
 	button.button_up.connect(on_button_up)
 	running_buttons[app.launch_item.name] = button
-	container.add_child(button)
-	container.move_child(button, 0)
+	button_container.add_child(button)
+	button_container.move_child(button, 0)
 	
 
 func _on_app_closed(app: RunningApp):

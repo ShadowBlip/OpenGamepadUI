@@ -44,14 +44,17 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="ButtonContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="HomeButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="HomeButton" type="Button" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 mouse_filter = 1
@@ -59,56 +62,56 @@ text = "Home"
 icon = ExtResource("3_vp87l")
 expand_icon = true
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/HomeButton" instance=ExtResource("4_v7rk2")]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/HomeButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
 state = ExtResource("6_ys5hq")
 action = 3
 on_signal = "button_up"
 
-[node name="LibraryButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="LibraryButton" type="Button" parent="MarginContainer/ButtonContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Library"
 icon = ExtResource("7_6h5ya")
 expand_icon = true
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/LibraryButton" instance=ExtResource("4_v7rk2")]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/LibraryButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
 state = ExtResource("6_beem7")
 action = 2
 on_signal = "button_up"
 
-[node name="StoreButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="StoreButton" type="Button" parent="MarginContainer/ButtonContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Store"
 icon = ExtResource("9_pnig0")
 expand_icon = true
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/StoreButton" instance=ExtResource("4_v7rk2")]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/StoreButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
 state = ExtResource("8_xc5xh")
 action = 2
 on_signal = "button_up"
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/ButtonContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Settings"
 icon = ExtResource("11_u0355")
 expand_icon = true
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/SettingsButton" instance=ExtResource("4_v7rk2")]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/SettingsButton" instance=ExtResource("4_v7rk2")]
 state_machine = ExtResource("5_anbat")
 state = ExtResource("8_d7x2w")
 action = 2
 on_signal = "button_up"
 
-[node name="PowerButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="PowerButton" type="Button" parent="MarginContainer/ButtonContainer"]
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Power"
 icon = ExtResource("13_q3e8j")
 expand_icon = true
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/PowerButton" to="." method="_on_power_button_pressed"]
+[connection signal="pressed" from="MarginContainer/ButtonContainer/PowerButton" to="." method="_on_power_button_pressed"]

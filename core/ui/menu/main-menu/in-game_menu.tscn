@@ -34,32 +34,37 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="ButtonContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="GameLogo" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+[node name="GameLogo" type="TextureRect" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 expand_mode = 5
 stretch_mode = 4
 
-[node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Resume Game"
 
-[node name="GamepadButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="GamepadButton" type="Button" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Gamepad Settings"
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/GamepadButton" instance=ExtResource("3_km1gp")]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/GamepadButton" instance=ExtResource("3_km1gp")]
 state_machine = ExtResource("4_jw2ts")
 state = ExtResource("5_7skbk")
 on_signal = "pressed"
 
-[node name="ExitButton" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="ExitButton" type="Button" parent="MarginContainer/ButtonContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Exit Game"
 
-[connection signal="button_up" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_button_up"]
-[connection signal="button_up" from="MarginContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_button_up"]
+[connection signal="button_up" from="MarginContainer/ButtonContainer/ResumeButton" to="." method="_on_resume_button_button_up"]
+[connection signal="button_up" from="MarginContainer/ButtonContainer/ExitButton" to="." method="_on_exit_button_button_up"]
