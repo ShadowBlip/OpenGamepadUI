@@ -171,7 +171,8 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 	
 	# Iterate backwards over the launch items and remove any matches
 	var app := get_app_by_name(name)
-	for i in range(app.launch_items.size(), 0, -1):
+	var i := app.launch_items.size()
+	while i > 0:
 		var launch_item: LibraryLaunchItem = app.launch_items[i-1]
 		if launch_item._provider_id == library_id:
 			app.launch_items.remove_at(i-1)
@@ -179,6 +180,7 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 				(_app_by_library[library_id] as Array).erase(name)
 			library_launch_item_removed.emit(launch_item)
 			launch_item.removed_from_library.emit()
+		i -= 1
 	
 	# Remove the library item if no launch items exist for it
 	if app.launch_items.size() == 0:

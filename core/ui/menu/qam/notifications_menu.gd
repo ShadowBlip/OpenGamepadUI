@@ -25,7 +25,9 @@ func _on_notification_sent(_notify: Notification) -> void:
 			continue
 		child.queue_free()
 	var history := NotificationManager.get_notification_history()
-	for i in range(history.size(), 0, -1):
+
+	var i := history.size()
+	while i > 0:
 		var notify := history[i - 1] as Notification
 		var notification := notification_scene.instantiate() as NotificationContainer
 		notification.text = notify.text
@@ -35,3 +37,4 @@ func _on_notification_sent(_notify: Notification) -> void:
 		notification.custom_minimum_size = Vector2(220, 0)
 		notification.label_settings = label_settings
 		add_child(notification)
+		i -= 1
