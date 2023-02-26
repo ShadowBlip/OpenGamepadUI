@@ -3,6 +3,7 @@ extends ScrollContainer
 const button_scene := preload("res://core/ui/components/button.tscn")
 const settings_content := preload("res://core/ui/menu/settings/plugin_settings_content.tscn")
 
+var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var state_machine := preload("res://assets/state/state_machines/plugin_settings_state_machine.tres")
 var _plugin_containers := {}
@@ -18,6 +19,16 @@ func _ready() -> void:
 	_populate_plugins()
 	PluginLoader.plugins_reloaded.connect(_on_plugins_reloaded)
 
+	# Create and start an update timer
+	var update_timer := Timer.new()
+	update_timer.one_shot = false
+	update_timer.process_callback = Timer.TIMER_PROCESS_IDLE
+	update_timer.timeout.connect(PluginLoader.on_update_timeout)
+	update_timer.wait_time = 300 # Five minutes seems reasonable
+	add_child(update_timer)
+	update_timer.start()
+
+	PluginLoader.plugin_upgradable.connect(_on_plugin_upgradable)
 
 func _on_plugins_reloaded() -> void:
 	_populate_plugins()
@@ -28,7 +39,7 @@ func _populate_plugins():
 	# Clear any existing plugin menus
 	for node in plugin_menu_container.get_children():
 		node.queue_free()
-	
+
 	# Clear any plugin content menus
 	for node in plugins_content_container.get_children():
 		if node == no_plugins_label:
@@ -52,7 +63,7 @@ func _populate_plugins():
 # Creates a menu button and adds the settings menu for the given plugin.
 func _populate_menu_for_plugin(plugin_id: String) -> void:
 	var meta := PluginLoader.get_plugin_meta(plugin_id)
-	
+
 	# Build a content container for each plugin
 	var plugin_content_container := settings_content.instantiate()
 	plugin_content_container.name = plugin_id
@@ -63,7 +74,7 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 	# when it is in focus
 	var state := State.new()
 	state.name = plugin_id
-	
+
 	# Connect the visibility manager for this plugin to the state
 	var visibility := plugin_content_container.get_node("VisibilityManager") as VisibilityManager
 	visibility.state = state
@@ -75,7 +86,7 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 	# Set the plugin version in the settings menu
 	var version_label := plugin_content_container.get_node("%PluginVersionText")
 	version_label.text = meta["plugin.version"]
-	
+
 	# Wire up the enable toggle button to enable/disable the plugin
 	var enable_button := plugin_content_container.get_node("%PluginEnabledToggle")
 	enable_button.button_pressed = PluginLoader.is_initialized(plugin_id)
@@ -87,12 +98,12 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 		PluginLoader.uninitialize_plugin(plugin_id)
 		PluginLoader.disable_plugin(plugin_id)
 	enable_button.toggled.connect(on_enable_toggle)
-	
+
 	# Callback method for menu button focus to switch to the plugin state and
 	# show the plugin settings
 	var on_focus := func ():
 		state_machine.replace_state(state)
-	
+
 	# Build the menu button
 	var button := button_scene.instantiate()
 	button.text = meta["plugin.name"]
@@ -107,11 +118,11 @@ func _on_plugin_initialized(plugin_id: String) -> void:
 	# If a menu for the plugin hasn't been populated yet, populate it.
 	if not plugin_id in _plugin_containers:
 		_populate_menu_for_plugin(plugin_id)
-	
+
 	# No need to populate the plugin-specific settings menu if it's disabled
 	if not PluginLoader.is_initialized(plugin_id):
 		return
-	
+
 	# Get the populated menu and add the plugin settings content to it.
 	var plugin_content_container: Node = _plugin_containers[plugin_id]
 	var plugin := PluginLoader.get_plugin(plugin_id)
@@ -128,8 +139,18 @@ func _on_plugin_initialized(plugin_id: String) -> void:
 func _on_plugin_uninitialized(plugin_id: String) -> void:
 	if not plugin_id in _plugin_content:
 		return
-	
+
 	var plugin_settings: Node = _plugin_content[plugin_id]
 	var parent := plugin_settings.get_parent()
 	plugin_settings.queue_free()
 	_plugin_content.erase(plugin_id)
+
+func _on_plugin_upgradable(plugin_id: String, update_type: int) -> void:
+	var notify := Notification.new("")
+	if update_type == PluginLoader.update_type.NEW:
+		notify.text=("New plugin available: {0}".format([plugin_id]))
+
+	if update_type == PluginLoader.update_type.UPDATE:
+		notify.text=("Plugin upgrade available: {0}".format([plugin_id]))
+
+	NotificationManager.show(notify)
