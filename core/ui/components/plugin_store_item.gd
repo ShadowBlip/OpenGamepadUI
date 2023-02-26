@@ -69,13 +69,9 @@ func _on_update_available(name: String, type: int) -> void:
 	# Ignore other plugins
 	if name != plugin_id:
 		return
-
 	if type != PluginLoader.update_type.UPDATE:
 		return
-
-	print("Update: ", name, plugin_id)
 	update_button.visible = true
-	print(update_button.visible)
 
 
 # Handle updates
@@ -90,4 +86,3 @@ func _on_update_button() -> void:
 	NotificationManager.show(notify)
 	PluginLoader.set_plugin_upgraded(plugin_id)
 	update_button.visible = false
-
