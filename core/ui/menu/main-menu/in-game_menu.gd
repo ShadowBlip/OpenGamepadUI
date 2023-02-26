@@ -9,8 +9,9 @@ var state_machine := (
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
-@onready var resume_button := $MarginContainer/VBoxContainer/ResumeButton
-@onready var game_logo: TextureRect = $MarginContainer/VBoxContainer/GameLogo
+@onready var resume_button := $%ResumeButton
+@onready var game_logo: TextureRect = $%GameLogo
+@onready var button_container := $%ButtonContainer
 
 
 # Called when the node enters the scene tree for the first time.

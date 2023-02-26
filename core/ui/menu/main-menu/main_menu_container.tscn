@@ -86,16 +86,12 @@ process_input_during = Array[Resource("res://core/systems/state/state.gd")]([Ext
 layout_mode = 2
 
 [node name="MainMenu" parent="HBoxContainer" instance=ExtResource("2_pw1ol")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="InGameMenu" parent="HBoxContainer" instance=ExtResource("3_w8b06")]
+unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ResumeButton" parent="HBoxContainer/InGameMenu/MarginContainer/VBoxContainer" index="1"]
-focus_neighbor_left = NodePath("../../../../MainMenu/MarginContainer/VBoxContainer/HomeButton")
-
-[node name="ExitButton" parent="HBoxContainer/InGameMenu/MarginContainer/VBoxContainer" index="2"]
-focus_neighbor_left = NodePath("../../../../MainMenu/MarginContainer/VBoxContainer/HomeButton")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
