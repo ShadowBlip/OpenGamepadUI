@@ -134,8 +134,7 @@ func _process(delta: float) -> void:
 	# Call any one-shot thread methods
 	var to_remove := []
 	for method in process_methods:
-		var ret = await method.call()
-		emit_signal.call_deferred("exec_completed", method, ret)
+		_async_call(method)
 		to_remove.append(method)
 	
 	# Lock when mutating our list
@@ -143,6 +142,11 @@ func _process(delta: float) -> void:
 	for method in to_remove:
 		one_shots.erase(method)
 	mutex.unlock()
+
+
+func _async_call(method: Callable) -> void:
+	var ret = await method.call()
+	emit_signal.call_deferred("exec_completed", method, ret)
 
 
 ## Returns the target frame time in microseconds of the ThreadGroup
