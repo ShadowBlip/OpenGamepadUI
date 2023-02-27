@@ -6,10 +6,13 @@ class_name ThreadGroup
 ## NodeThreads can belong to a ThreadGroup which will run their _thread_process
 ## method in the given thread
 
+signal exec_completed(method: Callable)
+
 var thread: Thread
 var mutex := Mutex.new()
 var running := false
 var nodes: Array[NodeThread] = []
+var one_shots: Array[Callable] = []
 var logger := Log.get_logger("ThreadGroup", Log.LEVEL.DEBUG)
 
 ## Name of the thread group
@@ -63,6 +66,16 @@ func remove_node(node: NodeThread, stop_on_empty: bool = true) -> void:
 		stop()
 
 
+## Queues the given method to get called by the thread during the process loop
+func exec(method: Callable) -> void:
+	mutex.lock()
+	one_shots.append(method)
+	mutex.unlock()
+	var out: Callable
+	while out != method:
+		out = await exec_completed
+
+
 func _run() -> void:
 	var exited := false
 	var current_tick_rate = target_tick_rate
@@ -83,10 +96,8 @@ func _run() -> void:
 		var delta := last_delta_us / 1000000.0
 
 		# Process everything in the thread group
-		mutex.lock()
 		exited = not running
 		_process(delta)
-		mutex.unlock()
 
 		# Calculate how long this frame took
 		var end_time := Time.get_ticks_usec()
@@ -106,8 +117,28 @@ func _run() -> void:
 
 
 func _process(delta: float) -> void:
-	for node in nodes:
+	# Only lock our mutex fetching data, not during processing
+	mutex.lock()
+	var process_nodes := nodes.duplicate()
+	var process_methods := one_shots.duplicate()
+	mutex.unlock()
+
+	# Process nodes with _thread_process
+	for node in process_nodes:
 		node._thread_process(delta)
+	
+	# Call any one-shot thread methods
+	var to_remove := []
+	for method in process_methods:
+		method.call()
+		emit_signal.call_deferred("exec_completed", method)
+		to_remove.append(method)
+	
+	# Lock when mutating our list
+	mutex.lock()
+	for method in to_remove:
+		one_shots.erase(method)
+	mutex.unlock()
 
 
 ## Returns the target frame time in microseconds of the ThreadGroup

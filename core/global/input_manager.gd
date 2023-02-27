@@ -105,10 +105,8 @@ func _start_process_input():
 		var start_time := Time.get_ticks_usec()
 
 		# Process the gamepad inputs
-		gamepad_mutex.lock()
 		exited = input_exited
 		_process_input()
-		gamepad_mutex.unlock()
 
 		# Calculate how long this frame took
 		var end_time := Time.get_ticks_usec()
@@ -129,7 +127,10 @@ func _start_process_input():
 
 ## Processes all raw gamepad input
 func _process_input() -> void:
-	for gamepad in managed_gamepads.values():
+	gamepad_mutex.lock()
+	var gamepads := managed_gamepads.values()
+	gamepad_mutex.unlock()
+	for gamepad in gamepads:
 		gamepad.process_input()
 
 
