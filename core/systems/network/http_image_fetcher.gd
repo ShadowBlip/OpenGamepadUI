@@ -11,7 +11,7 @@ var logger := Log.get_logger("HTTPImageFetcher")
 # determine caching behavior.
 # Example:
 #   fetch(url, Cache.FLAGS.LOAD|Cache.FLAGS.SAVE)
-func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) -> Texture2D:
+func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD | Cache.FLAGS.SAVE) -> Texture2D:
 	# Check to see if the given image is already cached
 	if caching_flags & Cache.FLAGS.LOAD and Cache.is_cached(CACHE_DIR, url):
 		var texture = Cache.get_image(CACHE_DIR, url)
@@ -34,7 +34,7 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 	var headers: PackedStringArray = args[2]
 	var body: PackedByteArray = args[3]
 
-	if result != HTTPRequest.RESULT_SUCCESS:
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		logger.debug("Image couldn't be downloaded: " + url)
 		_remove(http)
 		return null
@@ -55,12 +55,13 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD|Cache.FLAGS.SAVE) 
 	# Load the texture
 	var texture: Texture2D = ImageTexture.create_from_image(image)
 	_remove(http)
-	
+
 	# Cache the result
 	if caching_flags & Cache.FLAGS.SAVE:
 		Cache.save_image(CACHE_DIR, url, texture)
 
 	return texture
+
 
 func _remove(child: Node):
 	remove_child(child)
