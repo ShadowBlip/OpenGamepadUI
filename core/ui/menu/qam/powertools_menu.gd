@@ -22,12 +22,12 @@ var tj_temp_capable := false
 @onready var smt_button := $SMTButton
 @onready var tdp_boost_slider := $TDPBoostSlider
 @onready var tdp_slider := $TDPSlider
-
+@onready var thread_group := ThreadGroup.new()
 
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready():
-
+	thread_group.start()
 	_get_system_components()
 
 	# Set UI capabilities from system capabilities
@@ -47,7 +47,7 @@ func _ready():
 
 	if gpu_clk_capable:
 		_get_gpu_clk_limits()
-		if read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level") == "manual":
+		if await read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level") == "manual":
 			gpu_freq_enable.button_pressed = true
 			gpu_freq_max_slider.visible = true
 			gpu_freq_min_slider.visible = true
@@ -56,18 +56,17 @@ func _ready():
 		gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
 
 		# Set write mode for power_dpm_force_performance_level
-		var output = []
-		var exit_code := OS.execute(powertools_path, ["pdfpl", "write"], output)
+		var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["pdfpl", "write"]))
 
 	if ht_capable:
-		if read_sys("/sys/devices/system/cpu/smt/control") == "on":
+		if await read_sys("/sys/devices/system/cpu/smt/control") == "on":
 			smt_button.button_pressed = true
 		_get_cpu_count()
 		cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
 		smt_button.toggled.connect(_on_toggle_smt)
 
 	if boost_capable:
-		if read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
+		if await read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
 			cpu_boost_button.button_pressed = true
 		cpu_boost_button.toggled.connect(_on_toggle_cpu_boost)
 
@@ -81,24 +80,23 @@ func _process(delta):
 
 
 func read_sys(path: String) -> String:
-	var output = []
-	var exit_code := OS.execute("cat", [path], output)
-	return output[0].strip_escapes()
+	var output: Array = await thread_group.exec(_do_exec.bind("cat", [path]))
+	return output[0][0].strip_escapes()
 
 
 func _get_cpu_count() -> bool:
 	var args = ["-c", "ls /sys/bus/cpu/devices/ | wc -l"]
-	var output := []
-	var exit_code := OS.execute("bash", args, output)
+	var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
-	var result := output[0].split("\n") as Array
+	var result := output[0][0].split("\n") as Array
 	core_count = int(result[0])
 	if smt_button.button_pressed:
 		cpu_cores_slider.max_value = core_count
 	else:
 		cpu_cores_slider.max_value = core_count / 2
-	cpu_cores_slider.value = _get_cpus_enabled()
+	cpu_cores_slider.value = await _get_cpus_enabled()
 	return true
 
 
@@ -107,18 +105,16 @@ func _get_cpus_enabled() -> int:
 	var active_cpus := 1
 	for i in range(1, core_count):
 		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
-		var output := []
-		var exit_code := OS.execute("bash", args, output)
-		active_cpus += int(output[0].strip_edges())
+		var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+		active_cpus += int(output[0][0].strip_edges())
 
 	return active_cpus
 
 
 func _get_gpu_clk_limits() -> bool:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
-	var output := []
-	var exit_code := OS.execute("cat", args, output)
-	var result := output[0].split("\n") as Array
+	var output: Array = await thread_group.exec(_do_exec.bind("cat", args))
+	var result := output[0][0].split("\n") as Array
 	var current_max := 0
 	var current_min := 0
 	var max_value := 0
@@ -148,12 +144,11 @@ func _get_gpu_clk_limits() -> bool:
 
 
 func _get_current_tdp_settings() -> bool:
-	var output := []
-	var exit_code := OS.execute(powertools_path, ["ryzenadj", "-i"], output)
-	var result := output[0].split("\n") as Array
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-i"]))
+	var exit_code = output[1]
 	if exit_code:
 		return false
-
+	var result := output[0][0].split("\n") as Array
 	var current_fastppt := 0.0
 	for setting in result:
 		var parts := setting.split("|") as Array
@@ -183,12 +178,12 @@ func _get_current_tdp_settings() -> bool:
 
 
 func _get_system_components() -> bool:
-	var output = []
 	var args = ["-c", "lscpu"]
-	var exit_code := OS.execute("bash", args, output)
+	var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
-	var result := output[0].split("\n") as Array
+	var result := output[0][0].split("\n") as Array
 	for param in result:
 		var parts := param.split(" ", false) as Array
 		if parts.is_empty():
@@ -248,24 +243,23 @@ func _on_change_cpu_cores(value: float):
 		for cpu_no in range(1, core_count):
 			var output := []
 			if cpu_no > cpu_cores_slider.value - 1:
-				var exit_code := OS.execute(powertools_path, ["togglecpu", str(cpu_no), "0"], output)
+				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "0"]))
 			else:
-				var exit_code := OS.execute(powertools_path, ["togglecpu", str(cpu_no), "1"], output)
-			
+				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "1"]))
+
 	else:
 		for i in range(1, core_count/2):
 			var cpu_no := i * 2
 			var output := []
 			if cpu_no > cpu_cores_slider.value * 2 - 1:
-				
-				var exit_code := OS.execute(powertools_path, ["togglecpu", str(cpu_no), "0"], output)
+				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "0"]))
 			else:
-				var exit_code := OS.execute(powertools_path, ["togglecpu", str(cpu_no), "1"], output)
+				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "1"]))
 
 
 func _on_gpu_temp_limit_changed(value: float) -> bool:
-	var output = []
-	var exit_code := OS.execute(powertools_path, ["ryzenadj", "-f", str(value)], output)
+	var output = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-f", str(value)]))
+	var exit_code = output[1]
 	if exit_code:
 		return false
 	return true
@@ -274,9 +268,9 @@ func _on_gpu_temp_limit_changed(value: float) -> bool:
 func _on_max_gpu_freq_changed(value: float) -> bool:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
-	var output = []
 	var args = ["gpuclk", "1", str(value)]
-	var exit_code := OS.execute(powertools_path, args, output)
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
 	return true
@@ -285,39 +279,43 @@ func _on_max_gpu_freq_changed(value: float) -> bool:
 func _on_min_gpu_freq_changed(value: float) -> bool:
 	if value > gpu_freq_max_slider.value:
 		gpu_freq_max_slider.value = value
-	var output = []
 	var args = ["gpuclk", "0", str(value)]
-	var exit_code := OS.execute(powertools_path, args, output)
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
 	return true
 
 
 func _on_tdp_boost_value_changed(value: float) -> bool:
+	var success: bool = true
 	var slowPPT: float = (floor(value/2) + tdp_slider.value) * 1000
 	var fastPPT: float = (value + tdp_slider.value) * 1000
-	var output = []
-	var exit_code := OS.execute(powertools_path, ["ryzenadj", "-b", str(fastPPT)], output)
-	exit_code = OS.execute(powertools_path, ["ryzenadj", "-c", str(slowPPT)], output)
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-b", str(fastPPT)]))
+	var exit_code = output[1]
 	if exit_code:
-		return false
-	return true
+		success = false
+	output = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-c", str(fastPPT)]))
+	exit_code = output[1]
+	if exit_code:
+		success = false
+	return success
 
 
 func _on_tdp_value_changed(value: float) -> bool:
-	var output = []
-	var exit_code := OS.execute(powertools_path, ["ryzenadj", "-a", str(value * 1000)], output)
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-a", str(value)]))
+	var exit_code = output[1]
 	if exit_code:
 		return false
-	return _on_tdp_boost_value_changed(tdp_boost_slider.value)
+	return await _on_tdp_boost_value_changed(tdp_boost_slider.value)
 
 
 func _on_toggle_cpu_boost(state: bool) -> bool:
 	var args := ["cpuBoost", "0"]
 	if state:
 		args = ["cpuBoost", "1"]
-	var output = []
-	var exit_code := OS.execute(powertools_path, args, output)
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
 	return true
@@ -325,14 +323,16 @@ func _on_toggle_cpu_boost(state: bool) -> bool:
 func _on_toggle_gpu_freq(state: bool):
 	var output = []
 	if state:
-		var exit_code := OS.execute(powertools_path, ["pdfpl", "manual"], output)
+		output = await thread_group.exec(_do_exec.bind(powertools_path, ["pdfpl", "manual"]))
+		var exit_code = output[1]
 		if exit_code:
 			return false
 		gpu_freq_max_slider.visible = true
 		gpu_freq_min_slider.visible = true
 		_get_gpu_clk_limits()
 		return true
-	var exit_code := OS.execute(powertools_path, ["pdfpl", "auto"], output)
+	output = await thread_group.exec(_do_exec.bind(powertools_path, ["pdfpl", "auto"]))
+	var exit_code = output[1]
 	if exit_code:
 		return false
 	gpu_freq_max_slider.visible = false
@@ -348,15 +348,19 @@ func _on_toggle_smt(state: bool):
 	else:
 		args = ["smt", "off"]
 		cpu_cores_slider.max_value = core_count / 2
-
-	var output = []
-	var exit_code := OS.execute(powertools_path, args, output)
-	
+	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var exit_code = output[1]
 	if exit_code:
 		return false
-		
-	cpu_cores_slider.value = _get_cpus_enabled()
+	cpu_cores_slider.value = await _get_cpus_enabled()
 	return true
+
+
+# Thread safe method of calling OS.execute
+func _do_exec(command: String, args: Array)-> Array:
+	var output = []
+	var exit_code := OS.execute(command, args, output)
+	return [output, exit_code]
 
 
 var amd_apu_database := {'AMD Athlon Silver 3020e with Radeon Graphics': { 
