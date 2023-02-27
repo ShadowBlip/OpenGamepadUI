@@ -101,7 +101,7 @@ func _run() -> void:
 
 		# Process everything in the thread group
 		exited = not running
-		_process(delta)
+		await _process(delta)
 
 		# Calculate how long this frame took
 		var end_time := Time.get_ticks_usec()
