@@ -6,7 +6,7 @@ class_name ThreadGroup
 ## NodeThreads can belong to a ThreadGroup which will run their _thread_process
 ## method in the given thread
 
-signal exec_completed(method: Callable)
+signal exec_completed(method: Callable, ret: Variant)
 
 var thread: Thread
 var mutex := Mutex.new()
@@ -66,14 +66,18 @@ func remove_node(node: NodeThread, stop_on_empty: bool = true) -> void:
 		stop()
 
 
-## Queues the given method to get called by the thread during the process loop
-func exec(method: Callable) -> void:
+## Calls the given method from the thread. Internally, this queues the given 
+## method and awaits it to be called during the process loop. You should await 
+## this method if your method returns something. 
+## E.g. [code]var result = await thread_group.exec(myfund.bind("myarg"))[/code]
+func exec(method: Callable) -> Variant:
 	mutex.lock()
 	one_shots.append(method)
 	mutex.unlock()
-	var out: Callable
-	while out != method:
+	var out: Array = [null]
+	while out[0] != method:
 		out = await exec_completed
+	return out[1]
 
 
 func _run() -> void:
@@ -130,8 +134,8 @@ func _process(delta: float) -> void:
 	# Call any one-shot thread methods
 	var to_remove := []
 	for method in process_methods:
-		method.call()
-		emit_signal.call_deferred("exec_completed", method)
+		var ret = await method.call()
+		emit_signal.call_deferred("exec_completed", method, ret)
 		to_remove.append(method)
 	
 	# Lock when mutating our list
