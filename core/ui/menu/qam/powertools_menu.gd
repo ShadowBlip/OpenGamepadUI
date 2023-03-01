@@ -12,6 +12,7 @@ var gpu_vendor := ""
 var ht_capable := false
 var tdp_capable := false
 var tj_temp_capable := false
+var smt := false
 
 @onready var cpu_boost_button := $CPUBoostButton
 @onready var cpu_cores_slider := $CPUCoresSlider
@@ -56,6 +57,7 @@ func _ready():
 	if ht_capable:
 		if await read_sys("/sys/devices/system/cpu/smt/control") == "on":
 			smt_button.button_pressed = true
+			smt = true
 		await _get_cpu_count()
 		cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
 		smt_button.toggled.connect(_on_toggle_smt)
@@ -249,22 +251,22 @@ func _get_tdp_range_amd_apu() -> bool:
 
 # Called to disable/enable cores by count as specified by value. 
 func _on_change_cpu_cores(value: float):
-	if smt_button.button_pressed:
-		for cpu_no in range(1, core_count):
-			var output := []
-			if cpu_no > cpu_cores_slider.value - 1:
-				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "0"]))
+	for cpu_no in range(1, core_count+1):
+		var args := []
+		if smt:
+			if cpu_no > cpu_cores_slider.value:
+				args = ["togglecpu", str(cpu_no), "0"]
 			else:
-				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "1"]))
-
-	else:
-		for i in range(1, core_count/2):
-			var cpu_no := i * 2
-			var output := []
-			if cpu_no > cpu_cores_slider.value * 2 - 1:
-				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "0"]))
+				args = ["togglecpu", str(cpu_no), "1"]
+		if not smt:
+			if cpu_no > cpu_cores_slider.value * 2:
+				args = ["togglecpu", str(cpu_no), "0"]
 			else:
-				output = await thread_group.exec(_do_exec.bind(powertools_path, ["togglecpu", str(cpu_no), "1"]))
+				args = ["togglecpu", str(cpu_no), "1"]
+			# Ignore disabled CPU's
+			if cpu_no % 2 == 1:
+				continue
+		var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
 
 
 # Sets the tjunction temp using ryzenadj.
@@ -361,8 +363,9 @@ func _on_toggle_gpu_freq(state: bool):
 
 # Called to toggle SMT
 func _on_toggle_smt(state: bool):
+	smt = state
 	var args := []
-	if state:
+	if smt:
 		args = ["smt", "on"]
 		cpu_cores_slider.max_value = core_count
 	else:
