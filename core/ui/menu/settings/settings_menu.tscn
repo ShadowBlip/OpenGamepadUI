@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=31 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -20,6 +20,7 @@
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="15_bra7i"]
 [ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="15_mgpko"]
 [ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="15_s8u5h"]
+[ext_resource type="Resource" uid="uid://bfx7p4n4fhjwd" path="res://assets/state/states/settings_display.tres" id="16_fqpn6"]
 [ext_resource type="PackedScene" uid="uid://bimj0mmmy32ju" path="res://core/ui/menu/settings/general_settings_menu.tscn" id="16_jih4y"]
 [ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="17_2cktl"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="18_agbuc"]
@@ -27,6 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://baorkrl7picci" path="res://core/ui/menu/settings/audio_settings_menu.tscn" id="20_jaa1w"]
 [ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="21_514f3"]
 [ext_resource type="PackedScene" uid="uid://dnrqudepej3u" path="res://core/ui/menu/debug/processes_menu.tscn" id="24_sybcu"]
+[ext_resource type="PackedScene" uid="uid://dy338pcid4l4q" path="res://core/ui/menu/settings/display_settings_menu.tscn" id="25_bpujy"]
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="25_ibhfw"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
@@ -96,6 +98,20 @@ on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
 target = NodePath("../../../../../ContentContainer/ContentMarginContainer/GeneralSettings")
+on_signal = "pressed"
+
+[node name="DisplayButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
+layout_mode = 2
+text = "Display"
+
+[node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/DisplayButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("16_fqpn6")
+action = 3
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/DisplayButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/DisplaySettings")
 on_signal = "pressed"
 
 [node name="AudioButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
@@ -200,6 +216,19 @@ state = ExtResource("13_k0fou")
 script = ExtResource("17_2cktl")
 
 [node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GeneralSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+
+[node name="DisplaySettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("25_bpujy")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings" instance=ExtResource("2_364oy")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("16_fqpn6")
+
+[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings"]
+script = ExtResource("17_2cktl")
+
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings/TransitionContainer" instance=ExtResource("18_agbuc")]
 
 [node name="AudioSettingsMenu" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("20_jaa1w")]
 visible = false
