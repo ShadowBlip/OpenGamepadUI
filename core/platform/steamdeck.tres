@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PlatformSteamDeck" load_steps=2 format=3 uid="uid://8kkimqhi846o"]
+
+[ext_resource type="Script" path="res://core/platform/steamdeck.gd" id="1_aisxu"]
+
+[resource]
+script = ExtResource("1_aisxu")
