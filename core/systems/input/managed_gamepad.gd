@@ -256,6 +256,10 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			_send_input("ogui_east", event.value == 1, 1)
 		event.BTN_MODE:
 			_send_input("ogui_guide", event.value == 1, 1)
+		event.BTN_TR:
+			_send_input("ogui_tab_right", event.value == 1, 1)
+		event.BTN_TL:
+			_send_input("ogui_tab_left", event.value == 1, 1)
 		event.BTN_TRIGGER_HAPPY1:
 			_send_input("ui_left", event.value == 1, 1)
 		event.BTN_TRIGGER_HAPPY2:
