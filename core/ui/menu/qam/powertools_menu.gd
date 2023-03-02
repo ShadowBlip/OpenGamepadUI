@@ -251,25 +251,24 @@ func _get_tdp_range_amd_apu() -> bool:
 
 # Called to disable/enable cores by count as specified by value. 
 func _on_change_cpu_cores(value: float):
-	for cpu_no in range(1, core_count+1):
-		var args := []
-		if smt:
-			if cpu_no > cpu_cores_slider.value:
+	var args := []
+	if smt:
+		for cpu_no in range(1, core_count):
+			if cpu_no >= cpu_cores_slider.value:
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-		if not smt:
-			if cpu_no > cpu_cores_slider.value * 2:
+			var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	if not smt:
+		for cpu_no in range(2, core_count, 2):
+			if cpu_no >= cpu_cores_slider.value * 2:
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			# Ignore disabled CPU's
-			if cpu_no % 2 == 1:
-				continue
-		var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+			var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
 
 
-# Sets the tjunction temp using ryzenadj.
+# Sets the T-junction temp using ryzenadj.
 # TODO: Support more than AMD APU's
 func _on_gpu_temp_limit_changed(value: float) -> bool:
 	var output = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-f", str(value)]))

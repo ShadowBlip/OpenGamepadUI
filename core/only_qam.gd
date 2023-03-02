@@ -11,18 +11,25 @@ var qam_window_id: int
 var pid: int
 var steam_window_id: int
 
+
 func _ready() -> void:
+	# Set window sizeto native resolution
+	var screen_size : Vector2i = DisplayServer.screen_get_size()
+	var window : Window = get_window()
+	window.set_size(screen_size)
+	# Get arguments, remove "--only-qam"
 	var args := OS.get_cmdline_args()
 	args.remove_at(0)
 	_setup_qam_only(args)
 
+
 func _setup_qam_only(args: Array) -> void:
 	# Setup input manager
-	var input_scene := load("res://core/systems/input/qam_input_manager.tscn") as PackedScene
+	var input_scene := load("res://core/systems/input/only_qam_input_manager.tscn") as PackedScene
 	add_child(input_scene.instantiate())
 
 	# Add the QAM
-	var qam_scene := load("res://core/ui/menu/qam/quick_access_menu.tscn") as PackedScene
+	var qam_scene := load("res://core/ui/menu/qam/only_quick_access_menu.tscn") as PackedScene
 	var qam := qam_scene.instantiate()
 	add_child(qam)
 	qam.remove_child(qam.get_node("BackInputHandler"))
@@ -35,7 +42,11 @@ func _setup_qam_only(args: Array) -> void:
 	
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
 	
-	# Launch Steam in the sandbox 
+	# Don't crash if we're not launching another program.
+	if args == []:
+		print("Nothing to do")
+		return
+	# Launch underlay in the sandbox 
 	var sandbox := PackedStringArray()
 	sandbox.append_array(["firejail", "--noprofile"])
 	var blacklist := InputManager.get_managed_gamepads()
@@ -48,6 +59,9 @@ func _setup_qam_only(args: Array) -> void:
 	print("Sandbox cmd: ", sandbox_cmd)
 	OS.create_process("bash", ["-c", sandbox_cmd])
 	
+	if not "steam" in args:
+		return
+		
 	# Look for steam
 	while not steam_window_id:
 		
