@@ -137,8 +137,6 @@ func _process_input() -> void:
 ## Triggers whenever we detect any gamepad connect/disconnect events
 func _on_gamepad_change(_device: int, _connected: bool) -> void:
 	logger.info("Gamepad was changed")
-	# Lock the gamepad mappings so we can alter them.
-	gamepad_mutex.lock()
 
 	# Discover any new gamepads
 	var discovered_paths := discover_gamepads()
@@ -149,8 +147,11 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			continue
 		logger.debug("Gamepad no longer exists: " + gamepad.phys_path)
 		gamepad.virt_device.close()
+		# Lock the gamepad mappings so we can alter them.
+		gamepad_mutex.lock()
 		managed_gamepads.erase(gamepad.phys_path)
 		virtual_gamepads.erase(gamepad.virt_path)
+		gamepad_mutex.unlock()
 
 	# Add any newly found gamepads
 	for path in discovered_paths:
@@ -166,12 +167,13 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			logger.warn("Unable to create managed gamepad for: " + path)
 			continue
 		gamepad.xwayland = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
+		gamepad_mutex.lock()
 		managed_gamepads[path] = gamepad
 		virtual_gamepads.append(gamepad.virt_path)
+		gamepad_mutex.unlock()
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
 	logger.debug("Finished configuring gamepads")
-	gamepad_mutex.unlock()
 
 
 func _on_game_state_entered(_from: State) -> void:
