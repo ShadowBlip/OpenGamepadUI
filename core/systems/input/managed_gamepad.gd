@@ -13,6 +13,14 @@ enum INTERCEPT_MODE {
 	ALL,  # Intercept all inputs and send nothing to the virtual device
 }
 
+enum AXIS_PRESSED {
+	NONE = 0,
+	UP = 1,
+	DOWN = 2,
+	LEFT = 4,
+	RIGHT = 8,
+}
+
 var profile: GamepadProfile
 var xwayland: Xlib
 var event_map := {}
@@ -39,6 +47,7 @@ var cur_x: float
 var cur_y: float
 var cur_rx: float
 var cur_ry: float
+var axis_pressed: int
 var mouse_remainder := Vector2()
 var should_process_mouse := false
 var _ff_effects := {}  # Current force feedback effect ids
@@ -269,15 +278,67 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		event.BTN_TRIGGER_HAPPY4:
 			_send_input("ui_down", event.value == 1, 1)
 		event.ABS_Y:
-			var value := _normalize_axis(event)
+			var value := event.value
+			var pressed := _is_axis_pressed(event, value > 0)
 			if value == 0:
 				return
-			_send_joy_input(JOY_AXIS_LEFT_Y, value)
+
+			# Handle button up
+			if not pressed:
+				if Bitwise.has_flag(axis_pressed, AXIS_PRESSED.DOWN):
+					_send_input("ui_down", false)
+					axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.DOWN)
+					return
+				if Bitwise.has_flag(axis_pressed, AXIS_PRESSED.UP):
+					_send_input("ui_up", false)
+					axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.UP)
+					return
+				return
+
+			# If a direction is already pressed, do nothing
+			if axis_pressed > 0:
+				return
+
+			# Handle button down
+			if value > 0:
+				_send_input("ui_down", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.DOWN)
+				return
+			if value <= 0:
+				_send_input("ui_up", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.UP)
+				return
 		event.ABS_X:
-			var value := _normalize_axis(event)
+			var value := event.value
+			var pressed := _is_axis_pressed(event, value > 0)
 			if value == 0:
 				return
-			_send_joy_input(JOY_AXIS_LEFT_X, value)
+
+			# Handle button up
+			if not pressed:
+				if Bitwise.has_flag(axis_pressed, AXIS_PRESSED.RIGHT):
+					_send_input("ui_right", false)
+					axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.RIGHT)
+					return
+				if Bitwise.has_flag(axis_pressed, AXIS_PRESSED.LEFT):
+					_send_input("ui_left", false)
+					axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.LEFT)
+					return
+				return
+
+			# If a direction is already pressed, do nothing
+			if axis_pressed > 0:
+				return
+
+			# Handle button down
+			if value > 0:
+				_send_input("ui_right", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.RIGHT)
+				return
+			if value <= 0:
+				_send_input("ui_left", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.LEFT)
+				return
 
 
 ## Sometimes games will send gamepad events to the controller, such as when to
