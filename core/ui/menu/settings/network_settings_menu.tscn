@@ -60,8 +60,13 @@ custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="WiredLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
+visible = false
 layout_mode = 2
 text = "Wired Network"
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="PopupContainer" type="CenterContainer" parent="MarginContainer"]
 layout_mode = 2

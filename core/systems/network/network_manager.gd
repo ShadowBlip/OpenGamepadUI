@@ -6,6 +6,11 @@ class_name NetworkManager
 ## Allows network management through nmcli
 ## Reference: https://developer-old.gnome.org/NetworkManager/stable/nmcli.html
 
+const bar_0 := preload("res://assets/ui/icons/wifi-none.svg")
+const bar_1 := preload("res://assets/ui/icons/wifi-low.svg")
+const bar_2 := preload("res://assets/ui/icons/wifi-medium.svg")
+const bar_3 := preload("res://assets/ui/icons/wifi-high.svg")
+
 const common_args := ["--terse", "--color", "no"]
 
 
@@ -77,6 +82,15 @@ static func get_access_points() -> Array[WifiAP]:
 	return result
 
 
+## Returns the currently connected access point
+static func get_current_access_point() -> WifiAP:
+	var access_points := get_access_points()
+	for ap in access_points:
+		if ap.in_use:
+			return ap
+	return null
+
+
 ## Connect to the given wifi access point
 static func connect_access_point(ssid: String, password: String = "") -> int:
 	var args := ["dev", "wifi", "connect", ssid]
@@ -87,6 +101,17 @@ static func connect_access_point(ssid: String, password: String = "") -> int:
 	if code != OK:
 		push_warning("Unable to connect to ", ssid, ": ", output[0])
 	return code
+
+
+## Returns the texture reflecting the given wifi strength
+static func get_strength_texture(strength: int) -> Texture2D:
+	if strength >= 80:
+		return bar_3
+	if strength >= 60:
+		return bar_2
+	if strength >= 40:
+		return bar_1
+	return bar_0
 
 
 # Run nmcli with the given arguments. Returns the parsed output.

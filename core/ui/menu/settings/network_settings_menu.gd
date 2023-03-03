@@ -81,7 +81,7 @@ func _refresh_networks() -> void:
 		else:
 			item = tree.create_item(root)
 		item.set_metadata(0, ap.bssid)
-		item.set_icon(0, _get_strength_texture(ap.strength))
+		item.set_icon(0, NetworkManager.get_strength_texture(ap.strength))
 		item.set_text(1, ap.ssid)
 		item.set_text(2, ap.security)
 		item.set_text(3, ap.rate)
