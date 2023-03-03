@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7gtaqrauwj6i"]
+[gd_scene load_steps=8 format=3 uid="uid://b7gtaqrauwj6i"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/network_settings_menu.gd" id="1_2qdps"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_hmwjv"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_ddyy1"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="4_t7br0"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="5_round"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="6_i7u1a"]
+[ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="7_qx5i7"]
 
 [node name="NetworkSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -69,4 +71,34 @@ visible = false
 layout_mode = 2
 
 [node name="PopupContainer" type="CenterContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/PopupContainer"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+theme = ExtResource("6_i7u1a")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PopupContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="WifiPasswordTextInput" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_qx5i7")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+title = "Password"
+description = "Enter the password for this network"
+secret = true
+
+[node name="WifiPasswordButton" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("5_round")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Submit"

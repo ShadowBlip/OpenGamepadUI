@@ -9,6 +9,9 @@ const bar_3 := preload("res://assets/ui/icons/wifi-high.svg")
 var connecting := false
 @onready var wifi_tree := $%WifiNetworkTree as Tree
 @onready var refresh_button := $%RefreshButton as Button
+@onready var password_button := $%WifiPasswordButton
+@onready var password_input := $%WifiPasswordTextInput
+@onready var password_popup := $%PopupContainer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -42,8 +45,36 @@ func _on_wifi_selected() -> void:
 	if code == OK:
 		_refresh_networks()
 		return
-	# TODO: Open prompt for password
-	item.set_text(4, "Failed to connect")
+
+	# If we fail to connect, open the wifi challenge
+	_on_wifi_challenge(item, ssid)
+
+
+func _on_wifi_challenge(item: TreeItem, ssid: String) -> void:
+	password_popup.visible = true
+	password_input.grab_focus.call_deferred()
+
+	var on_pass_submit := func():
+		connecting = true
+		refresh_button.disabled = true
+		password_popup.visible = false
+		refresh_button.grab_focus.call_deferred()
+		var password := password_input.text as String
+
+		var connect_ap := func() -> int:
+			return NetworkManager.connect_access_point(ssid, password)
+		item.set_text(4, "Connecting")
+		var code := await system_thread.exec(connect_ap) as int
+
+		connecting = false
+		refresh_button.disabled = false
+		if code == OK:
+			_refresh_networks()
+			return
+
+		item.set_text(4, "Failed to connect")
+
+	password_button.pressed.connect(on_pass_submit, CONNECT_ONE_SHOT)
 
 
 func _refresh_networks() -> void:
