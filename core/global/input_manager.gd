@@ -29,6 +29,7 @@ class_name InputManager
 ##     [/codeblock]
 
 const Gamescope := preload("res://core/global/gamescope.tres")
+const osk := preload("res://core/global/keyboard_instance.tres")
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -37,6 +38,7 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
@@ -310,7 +312,7 @@ func _main_menu_input(event: InputEvent) -> void:
 
 	if state == menu_state:
 		state_machine.pop_state()
-	elif state in [qam_state]:  #osk_state:
+	elif state in [qam_state, osk_state]:
 		state_machine.replace_state(menu_state)
 	else:
 		state_machine.push_state(menu_state)
@@ -324,14 +326,28 @@ func _qam_input(event: InputEvent) -> void:
 	var state := state_machine.current_state()
 	if state == qam_state:
 		state_machine.pop_state()
-	elif state in [main_menu_state, in_game_menu_state]:  #, osk_state:
+	elif state in [main_menu_state, in_game_menu_state, osk_state]:
 		state_machine.replace_state(qam_state)
 	else:
 		state_machine.push_state(qam_state)
 
 
-func _osk_input(_event: InputEvent) -> void:
-	pass
+func _osk_input(event: InputEvent) -> void:
+	# Only act on press events
+	if not event.is_pressed():
+		return
+
+	var context := KeyboardContext.new()
+	context.type = KeyboardContext.TYPE.X11
+	osk.open(context)
+
+	var state := state_machine.current_state()
+	if state == osk_state:
+		state_machine.pop_state()
+	elif state in [main_menu_state, in_game_menu_state, qam_state]:
+		state_machine.replace_state(osk_state)
+	else:
+		state_machine.push_state(osk_state)
 
 
 func _action_release(action: String, strength: float = 1.0) -> void:

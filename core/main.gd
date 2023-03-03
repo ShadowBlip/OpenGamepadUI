@@ -11,6 +11,7 @@ var state_machine := (
 )
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var ui_container := $UIContainer
@@ -78,10 +79,11 @@ func _on_game_state_entered(_from: State) -> void:
 		child.visible = false
 
 
-func _on_game_state_exited(_to: State) -> void:
+func _on_game_state_exited(to: State) -> void:
 	if state_machine.has_state(in_game_state):
 		_set_overlay(true)
-		_set_blur(Gamescope.BLUR_MODE.ALWAYS)
+		if to != osk_state:
+			_set_blur(Gamescope.BLUR_MODE.ALWAYS)
 	else:
 		_on_game_state_removed()
 	for child in ui_container.get_children():

@@ -6,6 +6,7 @@ class_name OnScreenKeyboard
 signal layout_changed
 signal mode_shifted(mode: MODE_SHIFT)
 
+const Gamescope := preload("res://core/global/gamescope.tres")
 const key_scene := preload("res://core/ui/components/button.tscn")
 
 # Different states of mode shift (i.e. when the user presses "shift" or "caps")
@@ -214,7 +215,37 @@ func _on_key_pressed(key: KeyboardKeyConfig) -> void:
 			_handle_input_map(key)
 			return
 		KeyboardContext.TYPE.X11:
+			_handle_x11(key)
 			return
+
+
+# Handle sending key presses to an xwayland instance
+func _handle_x11(key: KeyboardKeyConfig) -> void:
+	var xwayland := Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
+
+	# Check for shift or capslock inputs 
+	if key.input.keycode in [KEY_SHIFT, KEY_CAPSLOCK]:
+		_handle_native_action(key)
+		return
+
+	# Get the input event based on mode shift
+	var event := key.input
+	if _mode_shift > MODE_SHIFT.OFF and key.mode_shift_input:
+		event = key.mode_shift_input
+
+	# Send a shift keypress if mode shifted
+	if _mode_shift > MODE_SHIFT.OFF:
+		xwayland.send_key(KEY_SHIFT, true)
+
+	xwayland.send_key(event.keycode, true)
+	xwayland.send_key(event.keycode, false)
+
+	if _mode_shift > MODE_SHIFT.OFF:
+		xwayland.send_key(KEY_SHIFT, false)
+
+	# Reset the modeshift if this was a one shot
+	if _mode_shift == MODE_SHIFT.ONE_SHOT:
+		set_mode_shift(MODE_SHIFT.OFF)
 
 
 # Handles normal character inputs
