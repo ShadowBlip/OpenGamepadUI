@@ -62,8 +62,8 @@ static func get_devices() -> Array[NetworkDevice]:
 
 ## Returns a list of available wifi access points
 #$ nmcli --terse --color no dev wifi
-# :14\:59\:C0\:83\:82\:DC:Chronenberg 5GHz:Infra:120:405 Mbit/s:94:▂▄▆█:WPA2
-#*:14\:59\:C0\:83\:82\:DB:Chonenberg:Infra:11:195 Mbit/s:83:▂▄▆█:WPA2
+# :AA\:BB\:CC\:83\:82\:FF:Chronenberg 5GHz:Infra:120:405 Mbit/s:94:▂▄▆█:WPA2
+#*:AA\:BB\:CC\:83\:82\:FB:Chonenberg:Infra:11:195 Mbit/s:83:▂▄▆█:WPA2
 static func get_access_points() -> Array[WifiAP]:
 	var result: Array[WifiAP] = []
 	var output := _run_nmcli(["dev", "wifi"])
@@ -128,8 +128,8 @@ static func _run_nmcli(args: PackedStringArray) -> Array[PackedStringArray]:
 
 # Parses the terse output of nmcli, which is separated by ':'
 #$ nmcli --terse --color no dev wifi
-# :14\:59\:C0\:83\:82\:DC:Chronenberg 5GHz:Infra:120:405 Mbit/s:94:▂▄▆█:WPA2
-#*:14\:59\:C0\:83\:82\:DB:Chonenberg:Infra:11:195 Mbit/s:83:▂▄▆█:WPA2
+# :AA\:BB\:CC\:83\:82\:FF:Chronenberg 5GHz:Infra:120:405 Mbit/s:94:▂▄▆█:WPA2
+#*:AA\:BB\:CC\:83\:82\:FB:Chonenberg:Infra:11:195 Mbit/s:83:▂▄▆█:WPA2
 static func _parse_nmcli(output: String) -> Array[PackedStringArray]:
 	var parsed: Array[PackedStringArray] = []
 	var lines := output.split("\n")

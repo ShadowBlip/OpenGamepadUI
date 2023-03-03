@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_mhuqq")
 name = "SystemThread"
-target_tick_rate = 60
+target_tick_rate = 20

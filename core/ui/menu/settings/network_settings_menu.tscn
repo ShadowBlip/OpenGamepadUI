@@ -31,7 +31,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FocusManager" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_hmwjv")]
-current_focus = NodePath("")
+current_focus = NodePath("../RefreshButton")
 
 [node name="DisplayLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
 layout_mode = 2

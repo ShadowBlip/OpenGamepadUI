@@ -30,18 +30,18 @@ func _ready() -> void:
 	qam_state.state_entered.connect(_on_game_menu_entered)
 	qam_state.state_exited.connect(_on_game_menu_exited)
 
-	# Create a timer to update the time and battery percent
+	# Create a timer to update the time
 	var time_timer: Timer = Timer.new()
 	time_timer.timeout.connect(_on_update_time)
-	time_timer.timeout.connect(_on_update_battery)
 	time_timer.autostart = true
 	add_child(time_timer)
 	_on_update_time()
 	_on_update_battery()
 
-	# Create a timer to check wifi signal strength
+	# Create a timer to check wifi signal strength and battery percent
 	var wifi_timer := Timer.new()
 	wifi_timer.timeout.connect(_on_wifi_update)
+	wifi_timer.timeout.connect(_on_update_battery)
 	wifi_timer.wait_time = 60
 	wifi_timer.autostart = true
 	add_child(wifi_timer)

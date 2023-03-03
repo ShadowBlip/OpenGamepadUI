@@ -22,6 +22,13 @@ func _ready() -> void:
 	wifi_tree.item_activated.connect(_on_wifi_selected)
 	wifi_tree.create_item()
 
+	# Configure the OSK with the password input box
+	var password_context := password_input.keyboard_context as KeyboardContext
+	var on_submit := func():
+		password_button.pressed.emit()
+	password_context.submitted.connect(on_submit)
+	password_context.close_on_submit = true
+
 
 func _on_visible_changed() -> void:
 	_refresh_networks()
