@@ -1,0 +1,2 @@
+extends PlatformProvider
+class_name PlatformAyaneo2021
