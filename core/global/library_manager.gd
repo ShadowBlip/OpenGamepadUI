@@ -55,6 +55,7 @@ var _libraries: Dictionary = {}
 var _available_apps: Dictionary = {}
 # Array of apps that are currently installed
 var _installed_apps: PackedStringArray = []
+var _sorted_apps_by_name: PackedStringArray = []
 var _app_by_category: Dictionary = {}
 var _app_by_tag: Dictionary = {}
 var _app_by_library: Dictionary = {}
@@ -102,7 +103,7 @@ func get_installed() -> Dictionary:
 
 ## Returns a dictionary of all available apps
 func get_available() -> Dictionary:
-	return _available_apps
+	return _available_apps.duplicate()
 
 
 ## Returns whether or not the library has loaded for the first time
@@ -143,14 +144,34 @@ func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> voi
 
 	# Sort apps by installed
 	if item.installed and not item.name in _installed_apps:
-		_installed_apps.append(item.name)
+		var idx := _installed_apps.bsearch(item.name)
+		_installed_apps.insert(idx, item.name)
+
+	# Sort apps alphabetically 
+	if is_new:
+		var idx := _sorted_apps_by_name.bsearch(item.name)
+		_sorted_apps_by_name.insert(idx, item.name)
 
 	# Sort apps by provider
 	if not library_id in _app_by_library:
 		_app_by_library[library_id] = []
 	_app_by_library[library_id].push_back(item.name)
 	
-	# TODO: Sort by tags and category
+	# Sort by category
+	for category in item.categories:
+		if not category in _app_by_category:
+			_app_by_category[category] = []
+		if is_new:
+			var idx := _app_by_category[category].bsearch(item.name) as int
+			_app_by_category[category].insert(idx, item.name)
+
+	# Sort by tag
+	for tag in item.tags:
+		if not tag in _app_by_tag:
+			_app_by_tag[tag] = []
+		if is_new:
+			var idx := _app_by_tag[tag].bsearch(item.name) as int
+			_app_by_tag[tag].insert(idx, item.name)
 
 	# Send signals to inform about library item
 	if is_new:
@@ -184,10 +205,31 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 	
 	# Remove the library item if no launch items exist for it
 	if app.launch_items.size() == 0:
+		# Erase from available apps
 		_available_apps.erase(app.name)
+
+		# Erase from installed apps
 		var idx := _installed_apps.find(app.name)
 		if idx != -1:
 			_installed_apps.remove_at(idx)
+
+		# Erase from sorted apps
+		idx = _sorted_apps_by_name.find(app.name)
+		if idx != -1:
+			_sorted_apps_by_name.remove_at(idx)
+
+		# Erase from categories
+		for category in _app_by_category:
+			idx = category.find(app.name)
+			if idx != -1:
+				category.remove_at(idx)
+
+		# Erase from tags
+		for tag in _app_by_tag:
+			idx = tag.find(app.name)
+			if idx != -1:
+				tag.remove_at(idx)
+
 		library_item_removed.emit(app)
 		app.removed_from_library.emit()
 
