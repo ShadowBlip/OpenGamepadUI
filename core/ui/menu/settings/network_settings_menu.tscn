@@ -33,6 +33,13 @@ size_flags_vertical = 3
 [node name="FocusManager" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_hmwjv")]
 current_focus = NodePath("../RefreshButton")
 
+[node name="NoNetworkLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_t7br0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Network dependencies not found"
+horizontal_alignment = 1
+
 [node name="DisplayLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
 layout_mode = 2
 text = "Wireless Network"

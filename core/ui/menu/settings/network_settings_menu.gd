@@ -7,6 +7,7 @@ const bar_2 := preload("res://assets/ui/icons/wifi-medium.svg")
 const bar_3 := preload("res://assets/ui/icons/wifi-high.svg")
 
 var connecting := false
+@onready var no_net_label := $%NoNetworkLabel
 @onready var wifi_tree := $%WifiNetworkTree as Tree
 @onready var refresh_button := $%RefreshButton as Button
 @onready var password_button := $%WifiPasswordButton
@@ -16,6 +17,10 @@ var connecting := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if not NetworkManager.supports_network():
+		no_net_label.visible = true
+		return
+
 	system_thread.start()
 	visibility_changed.connect(_on_visible_changed)
 	refresh_button.pressed.connect(_refresh_networks)
@@ -32,6 +37,7 @@ func _ready() -> void:
 
 func _on_visible_changed() -> void:
 	_refresh_networks()
+	password_popup.visible = false
 
 
 func _on_wifi_selected() -> void:
@@ -139,3 +145,15 @@ func _get_strength_texture(strength: int) -> Texture2D:
 	if strength >= 40:
 		return bar_1
 	return bar_0
+
+
+# Intercept back input when the password dialog is open
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if not password_popup.visible:
+		return
+	if not event.is_action("ogui_east"):
+		return
+	password_input.grab_focus.call_deferred()
+	get_viewport().set_input_as_handled()
