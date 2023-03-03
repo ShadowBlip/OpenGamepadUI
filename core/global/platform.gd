@@ -123,7 +123,7 @@ func _read_dmi() -> PLATFORM:
 	elif product_name == "ONE XPLAYER" and vendor_name.begins_with("ONE"):
 		logger.debug("Detected OneXPlayer GEN 1 platform")
 		return PLATFORM.ONEXPLAYER_GEN1
-	elif product_name == "ONEXPLAYER Mini Pro" and vendor_name == "ONE":
+	elif product_name == "ONEXPLAYER Mini Pro" and vendor_name.begins_with("ONE"):
 		logger.debug("Detected OneXPlayer Mini Proplatform")
 		return PLATFORM.ONEXPLAYER_MINI_PRO
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
