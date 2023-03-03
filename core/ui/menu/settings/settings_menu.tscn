@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=33 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -30,6 +30,8 @@
 [ext_resource type="PackedScene" uid="uid://dnrqudepej3u" path="res://core/ui/menu/debug/processes_menu.tscn" id="24_sybcu"]
 [ext_resource type="PackedScene" uid="uid://dy338pcid4l4q" path="res://core/ui/menu/settings/display_settings_menu.tscn" id="25_bpujy"]
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="25_ibhfw"]
+[ext_resource type="PackedScene" uid="uid://b7gtaqrauwj6i" path="res://core/ui/menu/settings/network_settings_menu.tscn" id="26_w065c"]
+[ext_resource type="Resource" uid="uid://2efht48q7i6v" path="res://assets/state/states/settings_network.tres" id="27_jgdpx"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -112,6 +114,20 @@ on_signal = "focus_entered"
 
 [node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/DisplayButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
 target = NodePath("../../../../../ContentContainer/ContentMarginContainer/DisplaySettings")
+on_signal = "pressed"
+
+[node name="NetworkButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
+layout_mode = 2
+text = "Network"
+
+[node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/NetworkButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("27_jgdpx")
+action = 3
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/NetworkButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/NetworkSettings")
 on_signal = "pressed"
 
 [node name="AudioButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
@@ -229,6 +245,19 @@ state = ExtResource("16_fqpn6")
 script = ExtResource("17_2cktl")
 
 [node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+
+[node name="NetworkSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("26_w065c")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings" instance=ExtResource("2_364oy")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("27_jgdpx")
+
+[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings"]
+script = ExtResource("17_2cktl")
+
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
 
 [node name="AudioSettingsMenu" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("20_jaa1w")]
 visible = false
