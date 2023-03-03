@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PlatformGPDWinMax2" load_steps=2 format=3 uid="uid://dks7wvgoco7dh"]
+
+[ext_resource type="Script" path="res://core/platform/gpd_winmax2.gd" id="1_3enna"]
+
+[resource]
+script = ExtResource("1_3enna")

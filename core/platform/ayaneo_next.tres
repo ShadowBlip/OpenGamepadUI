@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PlatformAyaneoNext" load_steps=2 format=3 uid="uid://dks7wvgoco7dh"]
+
+[ext_resource type="Script" path="res://core/platform/ayaneo_next.gd" id="1_3enna"]
+
+[resource]
+script = ExtResource("1_3enna")
