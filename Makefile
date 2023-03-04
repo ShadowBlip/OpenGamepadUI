@@ -151,3 +151,4 @@ dist/opengamepadui.tar.gz: build rootfs
 	mkdir -p dist
 	mv opengamepadui.tar.gz dist
 	mv opengamepadui $(ROOTFS)
+	cd dist && sha256sum opengamepadui.tar.gz > sha256sum.txt
