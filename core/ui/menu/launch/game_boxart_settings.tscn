@@ -1,0 +1,155 @@
+[gd_scene load_steps=10 format=3 uid="uid://bru0c6cp30bb4"]
+
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="1_kwdmv"]
+[ext_resource type="Script" path="res://core/ui/menu/launch/game_boxart_settings.gd" id="1_m5rij"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_gm4na"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="2_y7541"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="4_c3pe5"]
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="5_nvn2v"]
+[ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="6_qrlwo"]
+[ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="6_yhqaw"]
+[ext_resource type="Texture2D" uid="uid://bffr56hkrqb4h" path="res://assets/images/placeholder-grid-landscape.png" id="7_hrbc6"]
+
+[node name="BoxArtSettings" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+script = ExtResource("1_m5rij")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FocusManager" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_gm4na")]
+current_focus = NodePath("../BoxartProviderDropdown")
+
+[node name="BoxartProviderLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_kwdmv")]
+layout_mode = 2
+text = "Boxart Provider"
+
+[node name="BoxartProviderDropdown" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_y7541")]
+unique_name_in_owner = true
+layout_mode = 2
+title = ""
+description = "Provider to fetch artwork for this game"
+
+[node name="ImagesLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_kwdmv")]
+layout_mode = 2
+text = "Images"
+
+[node name="BannerLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_c3pe5")]
+layout_mode = 2
+text = "Banner"
+horizontal_alignment = 1
+
+[node name="BannerTexture" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+focus_mode = 2
+texture = ExtResource("5_nvn2v")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/BannerTexture"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading02" parent="MarginContainer/VBoxContainer/BannerTexture/CenterContainer" instance=ExtResource("6_yhqaw")]
+layout_mode = 2
+
+[node name="LogoLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_c3pe5")]
+layout_mode = 2
+text = "Logo"
+horizontal_alignment = 1
+
+[node name="LogoTexture" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+focus_mode = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/LogoTexture"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading02" parent="MarginContainer/VBoxContainer/LogoTexture/CenterContainer" instance=ExtResource("6_yhqaw")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="GridsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_c3pe5")]
+layout_mode = 2
+text = "Grids"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="PortraitTexture" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+texture = ExtResource("6_qrlwo")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PortraitTexture"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading02" parent="MarginContainer/VBoxContainer/HBoxContainer/PortraitTexture/CenterContainer" instance=ExtResource("6_yhqaw")]
+layout_mode = 2
+
+[node name="LandscapeTexture" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+focus_mode = 2
+texture = ExtResource("7_hrbc6")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/LandscapeTexture"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading02" parent="MarginContainer/VBoxContainer/HBoxContainer/LandscapeTexture/CenterContainer" instance=ExtResource("6_yhqaw")]
+layout_mode = 2

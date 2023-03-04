@@ -139,7 +139,6 @@ offset_left = 0.0
 layout_mode = 2
 
 [node name="FadeTexture" type="TextureRect" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -155,6 +154,7 @@ libraries = {
 }
 
 [node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
+unique_name_in_owner = true
 z_index = 20
 layout_mode = 1
 anchors_preset = 15

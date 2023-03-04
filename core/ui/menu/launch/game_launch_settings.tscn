@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgiipiayfvm02"]
+[gd_scene load_steps=6 format=3 uid="uid://bgiipiayfvm02"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_settings.gd" id="1_36god"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_qhraa"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_m05uu"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="4_nd0jr"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="5_wwn8p"]
@@ -25,6 +26,9 @@ theme_override_constants/margin_bottom = 4
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="FocusManager" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_qhraa")]
+current_focus = NodePath("../LaunchProviderDropdown")
 
 [node name="LaunchProviderLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
 layout_mode = 2
