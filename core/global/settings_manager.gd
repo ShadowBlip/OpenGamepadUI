@@ -38,6 +38,11 @@ func get_value(section: String, key: String, default: Variant = null) -> Variant
 	return _config.get_value(section, key, default)
 
 
+func get_library_value(item: LibraryItem, key: String, default: Variant = null) -> Variant:
+	var section := ".".join(["game", item.name.to_lower()])
+	return get_value(section, key, default)
+
+
 func set_value(section: String, key: String, value: Variant, persist: bool = true) -> void:
 	_config.set_value(section, key, value)
 	if persist:
@@ -45,8 +50,18 @@ func set_value(section: String, key: String, value: Variant, persist: bool = tru
 	setting_changed.emit(section, key, value)
 
 
+func set_library_value(item: LibraryItem, key: String, value: Variant, persist: bool = true) -> void:
+	var section := ".".join(["game", item.name.to_lower()])
+	set_value(section, key, value, persist)
+
+
 func erase_section_key(section: String, key: String, persist: bool = true) -> void:
 	_config.erase_section_key(section, key)
 	if persist:
 		save()
 	setting_changed.emit(section, key, null)
+
+
+func erase_library_key(item: LibraryItem, key: String, persist: bool = true) -> void:
+	var section := ".".join(["game", item.name.to_lower()])
+	erase_section_key(section, key, persist)

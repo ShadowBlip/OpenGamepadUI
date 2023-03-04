@@ -17,6 +17,7 @@ var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 @onready var ui_container := $UIContainer
 @onready var fade_transition := $%FadeTransitionPlayer
 @onready var fade_texture := $FadeTexture
+@onready var boot_video := $%BootVideoPlayer
 
 
 func _init() -> void:
@@ -127,3 +128,4 @@ func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 
 func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
+	boot_video.visible = false

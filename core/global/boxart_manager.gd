@@ -19,6 +19,8 @@ class_name BoxArtManager
 ##     var boxart := BoxArtManager.get_boxart(library_item, BoxArtProvider.LAYOUT.LOGO)
 ##     [/codeblock]
 
+const SettingsManager := preload("res://core/global/settings_manager.tres")
+
 ## Fields required to be set by [BoxArtProvider] implementations
 const REQUIRED_FIELDS: Array = ["provider_id"]
 
@@ -47,6 +49,13 @@ func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	if _providers.is_empty():
 		logger.error("No box art providers were found!")
 		return null
+
+	# Check to see if the given library item has a provider set
+	var provider_id := SettingsManager.get_library_value(item, "boxart_provider", "") as String
+	if provider_id != "" and provider_id in _providers:
+		var provider: BoxArtProvider = _providers[provider_id]
+		var texture: Texture2D = await provider.get_boxart(item, kind)
+		return texture
 	
 	# Try each provider in order of priority
 	for id in _providers_by_priority:
@@ -81,6 +90,11 @@ func get_provider_by_id(id: String) -> BoxArtProvider:
 ## Returns a list of all registered boxart providers
 func get_providers() -> Array:
 	return _providers.values()
+
+
+## Returns a list of all registered boxart provider ids
+func get_provider_ids() -> Array:
+	return _providers.keys()
 
 
 ## Registers the given boxart provider with the boxart manager.
