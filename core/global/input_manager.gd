@@ -30,7 +30,7 @@ class_name InputManager
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 const osk := preload("res://core/global/keyboard_instance.tres")
-
+const Platform := preload("res://core/global/platform.tres")
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -48,6 +48,7 @@ var guide_action := false
 @export var input_framerate := 600
 var input_exited := false
 var input_thread := Thread.new()
+var handheld_gamepad: HandheldGamepad
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
 var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
@@ -60,6 +61,10 @@ func init() -> void:
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
+
+	# If running on a platform with a built-in gamepad, get the device
+	# to process input on it.
+	handheld_gamepad = Platform.get_handheld_gamepad()
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
@@ -102,9 +107,14 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 func _start_process_input():
 	var exited := false
 	var target_frame_time_us := int((1.0 / input_framerate) * 1000000.0)
+	var last_time_us := 0
 	while not exited:
 		# Start timing how long this input frame takes
 		var start_time := Time.get_ticks_usec()
+
+		# If there is a handheld gamepad, process its inputs
+		if handheld_gamepad:
+			handheld_gamepad.process()
 
 		# Process the gamepad inputs
 		exited = input_exited
@@ -112,17 +122,17 @@ func _start_process_input():
 
 		# Calculate how long this frame took
 		var end_time := Time.get_ticks_usec()
-		var delta_us := end_time - start_time  # Time in microseconds since last input frame
+		var frame_time_us := end_time - start_time  # Time in microseconds since last input frame
 
 		# If the last input frame took less time than our target frame
 		# rate, sleep for the difference.
-		var sleep_time_us := target_frame_time_us - delta_us
-		if delta_us < target_frame_time_us:
+		var sleep_time_us := target_frame_time_us - frame_time_us
+		if frame_time_us < target_frame_time_us:
 			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
 		else:
 			var msg := (
 				"Missed target frame time {0}us. Got: {1}us"
-				. format([target_frame_time_us, delta_us])
+				. format([target_frame_time_us, frame_time_us])
 			)
 			logger.debug(msg)
 
