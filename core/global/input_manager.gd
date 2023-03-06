@@ -49,6 +49,7 @@ var guide_action := false
 var input_exited := false
 var input_thread := Thread.new()
 var handheld_gamepad: HandheldGamepad
+var handheld_kb_path: String # "/dev/input/event3"
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
 var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
@@ -114,7 +115,7 @@ func _start_process_input():
 
 		# If there is a handheld gamepad, process its inputs
 		if handheld_gamepad:
-			handheld_gamepad.process()
+			handheld_gamepad.process_input()
 
 		# Process the gamepad inputs
 		exited = input_exited
@@ -185,7 +186,20 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		gamepad_mutex.unlock()
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
-	logger.debug("Finished configuring gamepads")
+		# Check if we're using a known handheld
+		if not handheld_gamepad:
+			continue
+		# Link this device to the handheld gamepad so we can send events to the
+		# correct virtual controller.
+		if gamepad.get_phys() == handheld_gamepad.gamepad_phys_path and gamepad.get_name() == handheld_gamepad.gamepad_phys_name:
+			handheld_gamepad.gamepad_device = gamepad
+	logger.debug("Finished configuring detected controllers")
+
+	# If we're using a known handheld, open the additional input device.
+	if handheld_kb_path:
+		if handheld_gamepad.open(handheld_kb_path) != OK:
+			logger.warn("Unable to open extra handheld buttons device")
+		logger.debug("Configured extra handheld buttons device")
 
 
 func _on_game_state_entered(_from: State) -> void:
@@ -239,6 +253,10 @@ func discover_gamepads() -> PackedStringArray:
 			continue
 		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
 			paths.append(path)
+		if not handheld_gamepad:
+			continue
+		if dev.get_phys() == handheld_gamepad.kb_phys_path and dev.get_name() == handheld_gamepad.kb_phys_name:
+			handheld_kb_path = path
 	return paths
 
 
