@@ -13,7 +13,6 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 @onready var viewport: VBoxContainer = $MarginContainer/HBoxContainer/Viewport
 @onready var focus_manager := $%FocusManager as FocusManager
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	visible = false

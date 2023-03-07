@@ -1,0 +1,117 @@
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=22 format=3 uid="uid://qourj1hpsrqf"]
+
+[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_3pddg"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_c5b64"]
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_xow7q"]
+type = 1
+code = 1
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6gavd"]
+type = 4
+code = 4
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_21fb2"]
+type = 1
+code = 1
+value = 1
+
+[sub_resource type="Resource" id="Resource_wf0fn"]
+script = ExtResource("1_3pddg")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_xow7q")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6gavd"), SubResource("InputDeviceEvent_21fb2")])
+ogui_event = ""
+on_release = true
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_xtmd1"]
+type = 1
+code = 1
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_wuow4"]
+type = 1
+code = 1
+value = 2
+
+[sub_resource type="Resource" id="Resource_6gsbb"]
+script = ExtResource("1_3pddg")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_xtmd1"), SubResource("InputDeviceEvent_wuow4")])
+event_list = Array[InputDeviceEvent]([null])
+ogui_event = "ogui_back"
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_qdn20"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_mn5qm"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_f8hkh"]
+type = 1
+code = 311
+value = 1
+
+[sub_resource type="Resource" id="Resource_ak7g1"]
+script = ExtResource("1_3pddg")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_qdn20")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_mn5qm"), SubResource("InputDeviceEvent_f8hkh")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_nt0js"]
+type = 1
+code = 91
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_hf666"]
+type = 1
+code = 100
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5hvbt"]
+type = 1
+code = 111
+value = 1
+
+[sub_resource type="Resource" id="Resource_3ja1i"]
+script = ExtResource("1_3pddg")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_nt0js"), SubResource("InputDeviceEvent_hf666"), SubResource("InputDeviceEvent_5hvbt")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_qam"
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_eqgea"]
+type = 1
+code = 24
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_dbwex"]
+type = 1
+code = 97
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_b6j6b"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="Resource" id="Resource_0y0xq"]
+script = ExtResource("1_3pddg")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_eqgea"), SubResource("InputDeviceEvent_dbwex"), SubResource("InputDeviceEvent_b6j6b")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_osk"
+on_release = false
+
+[resource]
+script = ExtResource("2_c5b64")
+mapped_events = Array[ExtResource("1_3pddg")]([SubResource("Resource_wf0fn"), SubResource("Resource_6gsbb"), SubResource("Resource_ak7g1"), SubResource("Resource_3ja1i"), SubResource("Resource_0y0xq")])
+kb_phys_path = "isa0060/serio0/input0"
+kb_phys_name = "AT Translated Set 2 keyboard"
+gamepad_phys_path = "usb-0000:03:00.3-4/input0"
+gamepad_phys_name = "Microsoft X-Box 360 pad"
