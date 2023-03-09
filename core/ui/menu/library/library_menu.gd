@@ -77,12 +77,15 @@ func _on_library_reloaded(_first_load: bool) -> void:
 		child.queue_free()
 	
 	# Load our library entries and add them to all games
-	# TODO: Handle launching from multiple providers
-	var available: Dictionary = LibraryManager.get_available()
-	_populate_grid(all_games_grid, available.values(), 1)
+	var available := LibraryManager.get_library_items()
+	_populate_grid(all_games_grid, available, 1)
 
-	var installed: Dictionary = LibraryManager.get_installed()
-	_populate_grid(installed_games_grid, installed.values(), 0)
+	var modifiers: Array[Callable] = [
+		LibraryManager.filter_installed,
+		LibraryManager.sort_by_name,
+	]
+	var installed := LibraryManager.get_library_items(modifiers)
+	_populate_grid(installed_games_grid, installed, 0)
 
 
 # Populates the given grid with library items
