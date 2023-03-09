@@ -1,8 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://dy11p1f1avde"]
+[gd_scene load_steps=7 format=3 uid="uid://dy11p1f1avde"]
 
+[ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="1_42mcm"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ekp4a"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_0ro1r"]
 [ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0cnk5"]
+resource_local_to_scene = true
+shader = ExtResource("1_42mcm")
+shader_parameter/on = true
+shader_parameter/color = Color(0.741176, 0.576471, 0.976471, 1)
+shader_parameter/width = 2.0
+shader_parameter/pattern = 2
+shader_parameter/inside = false
+shader_parameter/add_margins = true
+shader_parameter/width_speed = 3.0
+shader_parameter/Smooth = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_x4gc0"]
 shadow_size = 3
@@ -10,6 +23,7 @@ shadow_offset = Vector2(2, 2)
 
 [node name="Poster" type="TextureButton"]
 self_modulate = Color(0.85, 0.85, 0.85, 1)
+material = SubResource("ShaderMaterial_0cnk5")
 custom_minimum_size = Vector2(460, 215)
 anchors_preset = 15
 anchor_right = 1.0

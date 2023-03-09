@@ -48,12 +48,14 @@ func _highlight(focused: bool) -> void:
 		self_modulate.r = 1.15
 		self_modulate.g = 1.15
 		self_modulate.b = 1.15
+		material.set_shader_parameter("on", true)
 		return
 
 	_panel.modulate.a8 = _panel_alpha
 	self_modulate.r = 0.85
 	self_modulate.g = 0.85
 	self_modulate.b = 0.85
+	material.set_shader_parameter("on", false)
 
 
 func _play_sound(stream: AudioStream) -> void:
