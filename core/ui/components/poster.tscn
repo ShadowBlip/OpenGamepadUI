@@ -16,6 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 theme = ExtResource("1_ekp4a")
 texture_normal = ExtResource("2_0ro1r")
 ignore_texture_size = true
@@ -30,6 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
@@ -54,6 +56,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_ekp4a")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
