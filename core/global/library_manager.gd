@@ -93,6 +93,46 @@ func uninstall(item: LibraryLaunchItem) -> void:
 	provider.uninstall(item)
 
 
+## Returns library items based on the given modifiers. A modifier is a [Callable]
+## that takes an array of [LibraryItem] objects and returns an array of those 
+## items that may be sorted or filtered out.[br][br]
+##
+##     [codeblock]
+##     const LibraryManager := preload("res://core/global/library_manager.tres")
+##     ...
+##     var filter := func(apps: Array[LibraryItem]) -> Array[LibraryItem]:
+##         return apps.filter(func(item: LibraryItem): not item.is_installed())
+##     
+##     # Return non-installed games
+##     var not_installed := LibraryManager.get_library_items([filter])
+##     [/codeblock]
+##
+func get_library_items(modifiers: Array[Callable] = [sort_by_name]) -> Array[LibraryItem]:
+	var available_apps := get_available()
+	var sorted: Array[LibraryItem] = []
+	sorted.assign(available_apps.values())
+
+	for modify in modifiers:
+		sorted = modify.call(sorted)
+
+	return sorted
+
+
+## Sorts the given array of apps by name
+func sort_by_name(apps: Array[LibraryItem]) -> Array[LibraryItem]:
+	var sorter := func(a: LibraryItem, b: LibraryItem): return b.name > a.name
+	var sorted := apps.duplicate()
+	sorted.sort_custom(sorter)
+
+	return sorted
+
+
+## Filters the given array of apps by installed status
+func filter_installed(apps: Array[LibraryItem]) -> Array[LibraryItem]:
+	var filter := func(item: LibraryItem): return item.is_installed()
+	return apps.filter(filter)
+
+
 ## Returns a dictionary of all installed apps
 func get_installed() -> Dictionary:
 	var installed: Dictionary = {}
@@ -101,7 +141,7 @@ func get_installed() -> Dictionary:
 	return installed
 	
 
-## Returns a dictionary of all available apps
+## Returns an dictionary of all available apps
 func get_available() -> Dictionary:
 	return _available_apps.duplicate()
 
