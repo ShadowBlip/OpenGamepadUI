@@ -173,7 +173,13 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if path in virtual_gamepads:
 			logger.debug("Gamepad appears to be virtual: " + path)
 			continue
-
+		var input_device := InputDevice.new()
+		if input_device.open(path) != OK:
+			logger.warn("Unable to create managed gamepad for: " + path)
+			continue
+		if input_device.get_phys() == "":
+			logger.debug("Device appears to be virtual, skipping " + path)
+			continue
 		var gamepad := ManagedGamepad.new()
 		if gamepad.open(path) != OK:
 			logger.warn("Unable to create managed gamepad for: " + path)
@@ -226,7 +232,6 @@ func set_focus(focused: bool) -> void:
 		return
 	logger.debug("Un-focusing overlay")
 	Gamescope.set_input_focus(window_id, 0)
-
 
 ## Returns an array of device paths
 func discover_gamepads() -> PackedStringArray:

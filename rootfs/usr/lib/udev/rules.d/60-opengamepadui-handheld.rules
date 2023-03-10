@@ -2,17 +2,18 @@
 # they can be manged. Devices are typically detected as a keyboard or mouse and
 # provide macro events that are triggered when one of the face buttons.
 
-## Abernic Devices
-ENV{DMI_VENDOR}=="Abernic", KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", ATTRS{phys}=="isa0060/serio0/input0" MODE="0660", TAG+="uaccess"
+# Filter to only when adding input event devices.
+ACTION!="add", GOTO="end"
+KERNEL!="event*", GOTO="end"
+SUBSYSTEM!="input", GOTO="end"
 
-## AOKZOE Devices
-ENV{DMI_VENDOR}=="AOKZOE", KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", ATTRS{phys}=="isa0060/serio0/input0" MODE="0660", TAG+="uaccess"
+# Search for compatible/tested devices.
+ATTRS{name}=="  Mouse for Windows", ATTRS{phys}=="usb-0000:73:00.4-2/input1|usb-0000:74:00.3-4/input1", ENV{ID_INPUT_JOYSTICK}==1,  GOTO="assign_mode"
+ATTRS{name}=="AT Translated Set 2 keyboard", ATTRS{phys}=="isa0060/serio0/input0", ENV{ID_INPUT_JOYSTICK}==1, GOTO="assign_mode"
+GOTO="end"
 
-## AYANEO Devices
-ENV{DMI_VENDOR}=="AYA NEO|AYANEO" KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", ATTRS{phys}=="isa0060/serio0/input0" MODE="0660", TAG+="uaccess"
+# Add desired attribute
+LABEL="assign_mode"
+MODE="0660"
 
-## GPD Devices
-ENV{DMI_VENDOR}=="GPD", ATTR{[dmi/id]product_name}=="G1618-03|G1618-04|G1619-04" KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="  Mouse for Windows", ATTRS{phys}=="usb-0000:73:00.4-2/input1|usb-0000:74:00.3-4/input1" MODE="0660", TAG+="uaccess"
-
-## OneXPlayer Devices
-ENV{DMI_VENDOR}=="ONE-NETBOOK", ATTR{[dmi/id]product_name}=="ONE XPLAYER|ONEXPLAYER*" KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", ATTRS{phys}=="isa0060/serio0/input0" MODE="0660", TAG+="uaccess"
+LABEL="end"
