@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="PlatformOneXPlayerMiniPro" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="PlatformOneXPlayerGen2" load_steps=2 format=3 uid="uid://ccof7ecqrcf54"]
 
-[ext_resource type="Script" path="res://core/platform/onexplayer_gen2.gd" id="1_3enna"]
+[ext_resource type="Script" path="res://core/platform/onexplayer_gen2.gd" id="1_vo3hd"]
 
 [resource]
-script = ExtResource("1_3enna")
+script = ExtResource("1_vo3hd")
+name = ""

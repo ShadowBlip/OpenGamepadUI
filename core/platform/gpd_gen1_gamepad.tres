@@ -1,0 +1,97 @@
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=18 format=3 uid="uid://c6gbdw2cfypqt"]
+
+[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_02kf6"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_mpkra"]
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_7ntlu"]
+type = 1
+code = 114
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_ctp52"]
+type = 1
+code = 114
+value = 1
+
+[sub_resource type="Resource" id="Resource_3n1cn"]
+script = ExtResource("1_02kf6")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_7ntlu")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_ctp52")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_d0pqo"]
+type = 1
+code = 115
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_7m3fw"]
+type = 1
+code = 115
+value = 1
+
+[sub_resource type="Resource" id="Resource_b6u2y"]
+script = ExtResource("1_02kf6")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_d0pqo")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_7m3fw")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_03tti"]
+type = 1
+code = 10
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_l5jor"]
+type = 2
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_iwyk7"]
+type = 1
+code = 304
+value = 1
+
+[sub_resource type="Resource" id="Resource_b6vim"]
+script = ExtResource("1_02kf6")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_03tti")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_l5jor"), SubResource("InputDeviceEvent_iwyk7")])
+ogui_event = ""
+on_release = true
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_kvcdx"]
+type = 1
+code = 11
+value = 1
+
+[sub_resource type="Resource" id="Resource_rxeat"]
+script = ExtResource("1_02kf6")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_kvcdx")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_qam"
+on_release = true
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_enofc"]
+type = 1
+code = 10
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_tqi38"]
+type = 1
+code = 11
+value = 1
+
+[sub_resource type="Resource" id="Resource_b7uql"]
+script = ExtResource("1_02kf6")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_enofc"), SubResource("InputDeviceEvent_tqi38")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_none"
+on_release = false
+
+[resource]
+script = ExtResource("2_mpkra")
+mapped_events = Array[ExtResource("1_02kf6")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_b6vim"), SubResource("Resource_rxeat"), SubResource("Resource_b7uql")])
+kb_phys_path = "usb-0000:74:00.3-4/input1"
+kb_phys_name = "  Mouse for Windows"
+gamepad_phys_path = "usb-0000:74:00.3-3/input0"
+gamepad_phys_name = "Microsoft X-Box 360 pad"
