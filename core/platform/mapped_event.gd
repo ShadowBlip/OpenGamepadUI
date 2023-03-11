@@ -14,32 +14,37 @@ var logger := Log.get_logger("MappedEvent", Log.LEVEL.DEBUG)
 
 
 ## Checks if the given Array of InputDeviceEvent's matches the event_list array.
-func effect_matches (active_event: Array[InputDeviceEvent]) -> bool:
-	logger.debug("Checking active keys against key activators")
-	var i := 0
+func output_events_match(active_event: Array[InputDeviceEvent]) -> bool:
+	logger.debug("Checking active events against event list.")
 	if active_event.size() != event_list.size() or active_event.size() == 0:
 		logger.debug("Event list too short")
 		return false
 	for key in active_event:
-		if not _is_same_event(active_event[i], event_list[i]):
+		if not _contains_event(event_list, key):
+			logger.debug("Event list doesn't contain all keys")
 			return false
-		i +=1
 	return true
 
 
 ## Checks if the given Array of InputDeviceEvent's matches the activation_keys array.
-func activate_matches(active_keys: Array[InputDeviceEvent]) -> bool:
-	logger.debug("Checking active keys against key activators")
-	var i := 0
+func trigger_events_match(active_keys: Array[InputDeviceEvent]) -> bool:
+	logger.debug("Checking active keys against key actvation keys.")
 	if active_keys.size() != activation_keys.size() or active_keys.size() == 0:
 		logger.debug("Event list too short")
 		return false
 	for key in active_keys:
-		if not _is_same_event(active_keys[i], activation_keys[i]):
+		if not _contains_event(activation_keys, key):
+			logger.debug("Activation list doesn't contain all keys.")
 			return false
-		i +=1
 	return true
 
+
+
+func _contains_event(events: Array[InputDeviceEvent], check_event: InputDeviceEvent) -> bool:
+	for event in events:
+		if _is_same_event(event, check_event):
+			return true
+	return false
 
 ## Checks if event1 matches event2
 func _is_same_event(event1: InputDeviceEvent, event2: InputDeviceEvent) -> bool:
