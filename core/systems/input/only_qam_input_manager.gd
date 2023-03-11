@@ -24,7 +24,6 @@ func _on_state_changed(_from: State, to: State) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	print(event)
 	var valid_events: Array = [event.is_action_pressed("ogui_qam"), event.is_action_pressed("ogui_east")]
 	if not true in valid_events:
 		return
