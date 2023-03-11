@@ -1,5 +1,5 @@
 extends PlatformProvider
-class_name PlatformAyaneo2021
+class_name PlatformAyaneoGen1
 
 
 func get_handheld_gamepad() -> HandheldGamepad:

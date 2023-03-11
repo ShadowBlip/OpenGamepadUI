@@ -66,6 +66,7 @@ func init() -> void:
 	# to process input on it.
 	handheld_gamepad = Platform.get_handheld_gamepad()
 
+
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
 	_on_gamepad_change(0, false)
@@ -248,7 +249,11 @@ func discover_gamepads() -> PackedStringArray:
 			continue
 		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
 			paths.append(path)
-		if handheld_gamepad and handheld_gamepad.is_found_kb(dev):
+			continue
+		if not handheld_gamepad:
+			continue
+		logger.info("Able to test for handheld...")
+		if handheld_gamepad.is_found_kb(dev):
 			handheld_gamepad.set_kb_event_path(path)
 	return paths
 

@@ -1,2 +1,0 @@
-extends PlatformProvider
-class_name PlatformGPDWinMax2
