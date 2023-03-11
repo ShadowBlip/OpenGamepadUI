@@ -1,0 +1,2 @@
+extends PlatformProvider
+class_name PlatformAbernicGen1

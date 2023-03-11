@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=27 format=3 uid="uid://c7fdbhfpao3g"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=25 format=3 uid="uid://c7fdbhfpao3g"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_xnmxl"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_2nxm6"]
@@ -39,7 +39,7 @@ value = 1
 script = ExtResource("1_xnmxl")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_vc761"), SubResource("InputDeviceEvent_ao1il")])
 event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui-qam"
+ogui_event = "ogui_qam"
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5ctcb"]
@@ -57,21 +57,11 @@ type = 1
 code = 125
 value = 1
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_k08yw"]
-type = 1
-code = 316
-value = 1
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_l84rd"]
-type = 1
-code = 307
-value = 1
-
 [sub_resource type="Resource" id="Resource_10i1v"]
 script = ExtResource("1_xnmxl")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5ctcb"), SubResource("InputDeviceEvent_1rgfv"), SubResource("InputDeviceEvent_lsc4n")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_k08yw"), SubResource("InputDeviceEvent_l84rd")])
-ogui_event = ""
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_osk"
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_v7xis"]
