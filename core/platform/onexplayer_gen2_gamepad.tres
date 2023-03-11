@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=33 format=3 uid="uid://c7fdbhfpao3g"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=33 format=3 uid="uid://bmr5judtlo3om"]
 
-[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_xnmxl"]
-[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_2nxm6"]
+[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_161dy"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_mt7iv"]
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_cog26"]
 type = 1
@@ -24,7 +24,7 @@ code = 304
 value = 1
 
 [sub_resource type="Resource" id="Resource_obsvw"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_cog26"), SubResource("InputDeviceEvent_72vfc")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_8ssot"), SubResource("InputDeviceEvent_badu2")])
 ogui_event = ""
@@ -46,7 +46,7 @@ code = 316
 value = 1
 
 [sub_resource type="Resource" id="Resource_41xpa"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_vc761"), SubResource("InputDeviceEvent_ao1il")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_x5vvi")])
 ogui_event = ""
@@ -78,7 +78,7 @@ code = 307
 value = 1
 
 [sub_resource type="Resource" id="Resource_10i1v"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5ctcb"), SubResource("InputDeviceEvent_1rgfv"), SubResource("InputDeviceEvent_lsc4n")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_m23md"), SubResource("InputDeviceEvent_p6uib")])
 ogui_event = "ogui_qam"
@@ -110,7 +110,7 @@ code = 307
 value = 1
 
 [sub_resource type="Resource" id="Resource_5ly0u"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_v7xis"), SubResource("InputDeviceEvent_w5r5v"), SubResource("InputDeviceEvent_s0r7f")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_y4ef7"), SubResource("InputDeviceEvent_2h1td")])
 ogui_event = ""
@@ -127,7 +127,7 @@ code = 125
 value = 1
 
 [sub_resource type="Resource" id="Resource_empj6"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f4okv"), SubResource("InputDeviceEvent_nuj00")])
 event_list = Array[InputDeviceEvent]([])
 ogui_event = "ogui_osk"
@@ -144,7 +144,7 @@ code = 114
 value = 1
 
 [sub_resource type="Resource" id="Resource_tlos7"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_hbwe5")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_ien4p")])
 ogui_event = ""
@@ -161,16 +161,16 @@ code = 115
 value = 1
 
 [sub_resource type="Resource" id="Resource_d8xax"]
-script = ExtResource("1_xnmxl")
+script = ExtResource("1_161dy")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5l0fr")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_s854p")])
 ogui_event = ""
 on_release = false
 
 [resource]
-script = ExtResource("2_2nxm6")
-mapped_events = Array[ExtResource("1_xnmxl")]([SubResource("Resource_obsvw"), SubResource("Resource_41xpa"), SubResource("Resource_10i1v"), SubResource("Resource_5ly0u"), SubResource("Resource_empj6"), SubResource("Resource_tlos7"), SubResource("Resource_d8xax")])
+script = ExtResource("2_mt7iv")
+mapped_events = Array[ExtResource("1_161dy")]([SubResource("Resource_obsvw"), SubResource("Resource_41xpa"), SubResource("Resource_10i1v"), SubResource("Resource_5ly0u"), SubResource("Resource_empj6"), SubResource("Resource_tlos7"), SubResource("Resource_d8xax")])
 kb_phys_path = "isa0060/serio0/input0"
 kb_phys_name = "AT Translated Set 2 keyboard"
-gamepad_phys_path = "usb-0000:00:14.0-9/input0"
+gamepad_phys_path = "usb-0000:03:00.3-4/input0"
 gamepad_phys_name = "Microsoft X-Box 360 pad"

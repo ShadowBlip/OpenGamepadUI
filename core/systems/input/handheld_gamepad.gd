@@ -52,8 +52,12 @@ func process_input() -> void:
 ## Called to handle an individual event. Sets the active keys.
 func _process_event(event: InputDeviceEvent) -> void:
 	# Always skip anything thats not a button
-	if event.get_type() != event.EV_KEY:
+	if event.get_type() not in [event.EV_KEY, event.EV_MSC]:
 		return
+	# AYANEO 2 and Geek use these codes for different buttons.
+	if event.get_type() == event.EV_MSC and \
+		event.get_code() not in [102, 103, 140]:
+			return
 	# release event, remove active keys
 	logger.debug("event: code " + str(event.code) + " value " + str(event.value))
 	if event.value == 0:
@@ -88,20 +92,12 @@ func _on_release_event() -> void:
 		if not sent_ogui_events.size() == 0:
 			sent_ogui_events.clear()
 		return
-	for active_event in active_events:
-		# Send release events for active events and queue thier removal
-		_emit_event(active_event.get_type(), active_event.get_code(), 0)
-		if active_events.size() > 1:
-			OS.delay_msec(60)
-		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+	_emit_events(active_events, true)
 	active_events.clear()
 	# Any events that were queued as "on release" should now be activated.
 	# Clear events will hit on next loop
-	for queued_event in queued_events:
-		_emit_event(queued_event.get_type(), queued_event.get_code(), queued_event.get_value())
-		if queued_events.size() > 1:
-			OS.delay_msec(60)
-	_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+	
+	_emit_events(queued_events, true)
 	active_events = queued_events.duplicate()
 	queued_events.clear()
 
@@ -154,20 +150,32 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 		logger.warn("No events list or ogui_event mapping for active keys. Verify configuration of gamepad.")
 		return
 	# Finally, send events to virtual device.
-	for event in mapped_event.event_list:
-		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(event.value))
-		_emit_event(event.get_type(), event.get_code(), event.get_value())
-		if mapped_event.event_list.size() > 1:
-			OS.delay_msec(60)
-		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+	_emit_events(mapped_event.event_list)
 	active_events = mapped_event.event_list.duplicate()
 	logger.debug("Active events: " + str(active_events))
 	# Clear and queued events because we overrode it with an on_press event
 	queued_events.clear()
 
+## Loops through the given events list and emits the events. If do-release = true,
+## all events will be release/key up events.
+func _emit_events(event_list: Array[InputDeviceEvent], do_release = false) -> void:
+	for event in event_list:
+		var value = event.get_value()
+		if do_release:
+			value = 0
+		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
+		_emit_event(event.get_type(), event.get_code(), value)
+		if event_list.size() > 1:
+			OS.delay_msec(60)
+		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 ## Emits a virtual device event.
 func _emit_event(type: int, code: int, value: int) -> void:
+	if not gamepad_device.phys_device.has_event_code(type, code):
+		logger.debug("Virtual gamepad does not have event " + str(type) + ":" + str(code) +
+		". Sending xinput event instead.")
+		logger.warn("Function Not Implemented.")
+		return
 	gamepad_device.virt_device.write_event(type, code, value)
 
 
