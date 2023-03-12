@@ -40,75 +40,107 @@ func process_input() -> void:
 		return
 	# Process all physical input events
 	var events = kb_device.get_events()
+	# Prevents multi-button combos from firing/queuing an event if the first
+	# released leaves an active_keys array that matches a trigger event.
+	# Any time a key is pressed there is always an EV_KEY with code 0 and value 0.
+	if events.size() <= 1:
+		return
+	var stop_after_process := false
+	# Loop through events and check if we need to do anything, then do it.
 	for event in events:
 		if not event or not event is InputDeviceEvent:
 			continue
-		_process_event(event)
-	if active_keys.size() == 0 and active_events.size() == 0 and queued_events.size() == 0:
+		if not _process_event(event):
+			stop_after_process = true
+	# If no keys are active we can stop here.
+	if stop_after_process:
+		return
+	if active_keys.size() == 0:
 		return
 	_check_mapped_events()
 
 
 ## Called to handle an individual event. Sets the active keys.
-func _process_event(event: InputDeviceEvent) -> void:
+func _process_event(event: InputDeviceEvent) -> bool:
 	# Always skip anything thats not a button
 	if event.get_type() not in [event.EV_KEY, event.EV_MSC]:
-		return
+		return true
 	# AYANEO 2 and Geek use these codes for different buttons.
 	if event.get_type() == event.EV_MSC and \
 		event.get_code() not in [102, 103, 140]:
-			return
+			return true
+	# Ignore this code, its linux kernel reserved and causes issues.
+	if event.get_code() == 0:
+		return true
 	# release event, remove active keys
 	logger.debug("event: code " + str(event.code) + " value " + str(event.value))
 	if event.value == 0:
-		logger.debug("Key up event")
-		var index := _find_active_key(event)
-		if index >= 0:
-			active_keys.remove_at(index)
+		# Ignore if the active keys list is empty.
+		if active_keys.size() == 0:
+			return false
+		logger.debug("------ Key --UP-- event ------")
+		# Some keys might be active with two values, clear them all.
+		_clear_active_key(event)
 		_on_release_event()
 		logger.debug("Active keys: " + str(active_keys))
-		return
+		return false
 	# Block adding the same active event twice
 	if _find_active_key(event) >= 0:
-		return
-	logger.debug("Key down event")
-	active_keys.append(event)
+		return false
+	logger.debug("______ Key __DOWN__ event ______")
+	active_keys.insert(active_keys.bsearch_custom(event, _sort_events), event)
 	logger.debug("Active keys: " + str(active_keys))
+	return true
+
+
+# Clears all instances of a given key code from the active keys list.
+func _clear_active_key(event: InputDeviceEvent) -> void:
+	var remove_list :=[]
+	for i in active_keys.size():
+		if active_keys[i].code == event.code:
+			remove_list.append(i)
+	if remove_list.size() == 0:
+		return
+	for index in remove_list:
+		active_keys.remove_at(index)
 
 
 ## Returns the index of an active key.
 func _find_active_key(event: InputDeviceEvent) -> int:
-	var i := 0
-	for active_key in active_keys:
-		if active_key.code == event.code:
+	for i in active_keys.size():
+		if active_keys[i].code == event.code:
 			return i
-		i += 1
 	return -1
 
 
 ## Runs on any event with value 0, handles key up/release events.
 func _on_release_event() -> void:
-	if active_events.size() == 0:
-		if not sent_ogui_events.size() == 0:
-			sent_ogui_events.clear()
+	# Clear any ogui events
+	if active_events.size() == 0 and not sent_ogui_events.size() == 0:
+		sent_ogui_events.clear()
 		return
-	_emit_events(active_events, true)
-	active_events.clear()
+	#Any events that were activated by on press or by queue should now be deactivated.
+	if not active_events.size() == 0:
+		logger.debug("Clearing active events with key_up")
+		_emit_events(active_events, true)
+		active_events.clear()
 	# Any events that were queued as "on release" should now be activated.
-	# Clear events will hit on next loop
-	
-	_emit_events(queued_events, true)
-	active_events = queued_events.duplicate()
-	queued_events.clear()
+	# Events will be "key_up" on next loop ext loop
+	if not queued_events.size() == 0:
+		logger.debug("Clearing queued events with key_down")
+		_emit_events(queued_events)
+		active_events = queued_events.duplicate()
+		queued_events.clear()
 
 
 ## Called after processing all events in the event loop. Checks if our current
 ## active_keys matches any of our mapped events.
 func _check_mapped_events() -> void:
-	logger.debug("Mapped events: " + str(mapped_events))
+	logger.debug("Checking events for matches")
 	for mapped_event in mapped_events:
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
+		logger.debug("Found a matching event")
 		_handle_mapped_event(mapped_event)
 		return
 
@@ -116,21 +148,13 @@ func _check_mapped_events() -> void:
 ## Checks if a given mapped event needs to be ignored, queued, or emited.
 func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 	# Check if the event has already been handled
-	if mapped_event.output_events_match(active_events):
-		logger.debug("Matching event already activated")
-		return
-	if mapped_event.output_events_match(queued_events):
-		logger.debug("Matching event already queued.")
-		return
 	if mapped_event.ogui_event in sent_ogui_events:
-		logger.debug("Matching ogui event already sent.")
 		return
-	logger.debug("Event has not been handled")
-	# Queue events that should activate only on release of the button
-	if mapped_event.on_release == true:
-		logger.debug("queue events!")
-		queued_events = mapped_event.event_list.duplicate()
-		logger.debug("Queued events: " + str(queued_events))
+	if mapped_event.on_release == false and \
+	mapped_event.output_events_match(active_events):
+		return
+	if mapped_event.on_release == true and \
+	mapped_event.output_events_match(queued_events):
 		return
 	# Check if there is an ogui_event mapped to this MappedEvent. This superceeds
 	# the event_list.
@@ -140,19 +164,28 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 		if not input_action.is_action(mapped_event.ogui_event):
 			logger.warn("Listed ogui_event \"" + mapped_event.ogui_event +
 			"\" does not correlate to a known event. Verify configuration of gamepad.")
+			# Clear any queued events because we overrode it with an on_press event
+			queued_events.clear()
 			return
-		logger.debug("emit ogui_event!")
+		logger.debug("Emit ogui_event!")
 		_send_input(input_action, mapped_event.ogui_event, true)
 		sent_ogui_events.append(mapped_event.ogui_event)
+		# Clear any queued events because we overrode it with an on_press event
+		queued_events.clear()
+		return
+	# Queue events that should activate only on release of the button
+	if mapped_event.on_release == true:
+		logger.debug("Queue events.")
+		queued_events = mapped_event.event_list.duplicate()
 		return
 	# Don't crash if the event_list is incomplete. Warn user.
 	if mapped_event.event_list.size() == 0:
 		logger.warn("No events list or ogui_event mapping for active keys. Verify configuration of gamepad.")
 		return
 	# Finally, send events to virtual device.
+	logger.debug("Emit mapped events!")
 	_emit_events(mapped_event.event_list)
 	active_events = mapped_event.event_list.duplicate()
-	logger.debug("Active events: " + str(active_events))
 	# Clear and queued events because we overrode it with an on_press event
 	queued_events.clear()
 
@@ -163,10 +196,10 @@ func _emit_events(event_list: Array[InputDeviceEvent], do_release = false) -> vo
 		var value = event.get_value()
 		if do_release:
 			value = 0
-		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
+#		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
 		_emit_event(event.get_type(), event.get_code(), value)
 		if event_list.size() > 1:
-			OS.delay_msec(60)
+			OS.delay_msec(80)
 		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 ## Emits a virtual device event.
@@ -187,11 +220,9 @@ func open() -> int:
 	if result != OK:
 		logger.warn("Unable to open event device: " + kb_event_path)
 		return result
-
 	# Grab exclusive access over the physical device
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
 		kb_device.grab(true)
-
 	return result
 
 
@@ -215,7 +246,6 @@ func is_found_gamepad(gamepad: ManagedGamepad) -> bool:
 ## Check if the given InputDevice matches the parameters of the defined
 ## keyboard/mouse device as specified in the device implementation.
 func is_found_kb(device: InputDevice) -> bool:
-	logger.debug("Checking input device: " + device.get_name())
 	if device.get_phys() == kb_phys_path and device.get_name() == kb_phys_name:
 		logger.info("Found handheld input device: " + device.get_name())
 		return true
@@ -229,9 +259,16 @@ func set_kb_event_path(path: String) -> void:
 
 ## Sets the associated ManagedGamepad so it can recieve virtual device events
 ## that are mapped via the mapped_events Array.
-func set_gamepad_device(gamepad: ManagedGamepad) -> void:
+func set_gamepad_device(gamepad: ManagedGamepad) -> bool:
 	gamepad_device = gamepad
 	if open() != OK:
-		logger.warn("Unable to open extra handheld buttons device")
-		return
-	logger.debug("Configured extra handheld buttons device")
+		logger.warn("Unable to configure handheld gamepad device")
+		return false
+	logger.info("Configured handeheld gamepad device")
+	return true
+
+
+func _sort_events(event1: InputDeviceEvent, event2: InputDeviceEvent) -> bool:
+	if event1.get_code() != event2.get_code():
+		return event1.get_code() < event2.get_code()
+	return event1.get_value() < event2.get_value()
