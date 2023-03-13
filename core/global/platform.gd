@@ -137,17 +137,14 @@ func _read_dmi() -> PLATFORM:
 	elif product_name in ["G1618-03", "G1618-04", "G1619-04"] and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen1 platform")
 		return PLATFORM.GPD_GEN1
+	elif product_name == "ONE XPLAYER" and vendor_name == ("ONE-NETBOOK TECHNOLOGY CO., LTD."):
+		logger.debug("Detected OneXPlayer Intel platform")
+		return PLATFORM.ONEXPLAYER_GEN1
 	elif product_name == "ONE XPLAYER" and vendor_name == ("ONE-NETBOOK"):
-		if cpu_vendor == "GenuineIntel":
-			logger.debug("Detected OneXPlayer GEN 1 platform")
-			return PLATFORM.ONEXPLAYER_GEN1
-		logger.debug("Detected OneXPlayer GEN 2 platform")
+		logger.debug("Detected OneXPlayer AMD platform")
 		return PLATFORM.ONEXPLAYER_GEN2
 	elif product_name.contains("ONEXPLAYER") and vendor_name == ("ONE-NETBOOK"):
-		if cpu_vendor == "GenuineIntel":
-			logger.debug("Detected OneXPlayer GEN 1 platform")
-			return PLATFORM.ONEXPLAYER_GEN1
-		logger.debug("Detected OneXPlayer GEN 2 platform")
+		logger.debug("Detected OneXPlayer AMD platform")
 		return PLATFORM.ONEXPLAYER_GEN2
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")

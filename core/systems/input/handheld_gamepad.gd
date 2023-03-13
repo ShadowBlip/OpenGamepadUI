@@ -204,10 +204,13 @@ func _emit_events(event_list: Array[InputDeviceEvent], do_release = false) -> vo
 
 ## Emits a virtual device event.
 func _emit_event(type: int, code: int, value: int) -> void:
+	if type == null or code == null or value == null:
+		logger.warn("Got malformed event. Verify controller configuration")
+		return
 	if not gamepad_device.phys_device.has_event_code(type, code):
-		logger.debug("Virtual gamepad does not have event " + str(type) + ":" + str(code) +
+		logger.debug("Virtual gamepad does not have event type: " + str(type) + " code: " + str(code) +
 		". Sending xinput event instead.")
-		logger.warn("Function Not Implemented.")
+		_send_xinput(code, value)
 		return
 	gamepad_device.virt_device.write_event(type, code, value)
 
@@ -232,6 +235,16 @@ func _send_input(input_action: InputEventAction, action: String, pressed: bool, 
 	input_action.pressed = pressed
 	input_action.strength = strength
 	Input.parse_input_event(input_action)
+
+
+func _send_xinput(code: int, value: int) -> void:
+	logger.warn("Function not implemented.")
+	return
+#	var pressed := true
+#	if value == 0:
+#		pressed = false
+#	logger.debug("Sending key: " + OS.get_keycode_string(code) + " as code: " + str(code))
+#	gamepad_device.xwayland.send_key(code, pressed)
 
 
 ## Check if the given ManagedGamepad matches the parameters of the defined
