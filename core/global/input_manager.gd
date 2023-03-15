@@ -183,6 +183,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if input_device.get_phys() == "":
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
+		# TODO: Use SettingsManager to configure a default blacklist instead.
 		if "Receiver" in input_device.get_name():
 			logger.debug("Device is a receiver, skipping " + path)
 			continue
