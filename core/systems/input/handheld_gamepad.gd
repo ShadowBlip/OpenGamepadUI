@@ -167,7 +167,7 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 			# Clear any queued events because we overrode it with an on_press event
 			queued_events.clear()
 			return
-		logger.debug("Emit ogui_event!")
+		logger.debug("Emit " + mapped_event.ogui_event)
 		_send_input(input_action, mapped_event.ogui_event, true)
 		sent_ogui_events.append(mapped_event.ogui_event)
 		# Clear any queued events because we overrode it with an on_press event

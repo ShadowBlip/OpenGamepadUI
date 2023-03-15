@@ -50,6 +50,7 @@ var input_exited := false
 var input_thread := Thread.new()
 var handheld_gamepad: HandheldGamepad
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
+var orphaned_gamepads := {} # {<gamepad.phys_char> : <ManagedGamepad>}
 var virtual_gamepads := []  # ["/dev/input/event2"]
 var gamepad_mutex := Mutex.new()
 
@@ -158,21 +159,22 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 	for gamepad in managed_gamepads.values():
 		if gamepad.phys_path in discovered_paths:
 			continue
-		logger.debug("Gamepad no longer exists: " + gamepad.phys_path)
-		gamepad.virt_device.close()
+
+		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		# Lock the gamepad mappings so we can alter them.
 		gamepad_mutex.lock()
+		orphaned_gamepads[gamepad.phys] = gamepad
 		managed_gamepads.erase(gamepad.phys_path)
-		virtual_gamepads.erase(gamepad.virt_path)
 		gamepad_mutex.unlock()
 
 	# Add any newly found gamepads
 	for path in discovered_paths:
+		# Reject managed and virtual devices
 		if path in managed_gamepads:
 			logger.debug("Gamepad is already being managed: " + path)
 			continue
 		if path in virtual_gamepads:
-			logger.debug("Gamepad appears to be virtual: " + path)
+			logger.debug("Virtual gamepad is already being managed: " + path)
 			continue
 		var input_device := InputDevice.new()
 		if input_device.open(path) != OK:
@@ -180,6 +182,15 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			continue
 		if input_device.get_phys() == "":
 			logger.debug("Device appears to be virtual, skipping " + path)
+			continue
+		# Reconfigure disconnected gamepads
+		if orphaned_gamepads.has(input_device.get_phys()):
+			var gamepad: ManagedGamepad = orphaned_gamepads[input_device.get_phys()]
+			gamepad_mutex.lock()
+			managed_gamepads[path] = gamepad
+			orphaned_gamepads.erase(input_device.get_phys())
+			gamepad_mutex.unlock()
+			logger.debug("Reconnected gamepad at: " + gamepad.phys_path)
 			continue
 		var gamepad := ManagedGamepad.new()
 		if gamepad.open(path) != OK:

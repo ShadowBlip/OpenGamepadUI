@@ -25,6 +25,7 @@ var profile: GamepadProfile
 var xwayland: Xlib
 var event_map := {}
 var mode := INTERCEPT_MODE.ALL
+var phys: String
 var phys_path: String
 var virt_path: String
 var mouse_path: String
@@ -121,6 +122,8 @@ func open(path: String) -> int:
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
 		phys_device.grab(true)
 
+	# Store value of get_phys() so this can be reidentified if disconnected.
+	phys = phys_device.get_phys()
 	return OK
 
 
