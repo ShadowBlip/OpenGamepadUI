@@ -183,6 +183,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if input_device.get_phys() == "":
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
+		if "Receiver" in input_device.get_name():
+			logger.debug("Device is a receiver, skipping " + path)
+			continue
 		# Reconfigure disconnected gamepads
 		if orphaned_gamepads.has(input_device.get_phys()):
 			var gamepad: ManagedGamepad = orphaned_gamepads[input_device.get_phys()]

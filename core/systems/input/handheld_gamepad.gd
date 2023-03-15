@@ -1,20 +1,20 @@
 extends Resource
 class_name HandheldGamepad
 
-## List of keys and their values that are currently pressed.
-var active_keys: Array[InputDeviceEvent]
 ## List of virtual events that are currently held.
 var active_events: Array[InputDeviceEvent]
-## List of vitural events that will be emitted upon release of the held key.
-var queued_events: Array[InputDeviceEvent]
-## List of ogui events that are currently held.
-var sent_ogui_events: PackedStringArray
-## The physical keyboard/mouse device we are mapping input from.
-var kb_device: InputDevice
+## List of keys and their values that are currently pressed.
+var active_keys: Array[InputDeviceEvent]
 ## The physical controller we want to associate input with
 var gamepad_device: ManagedGamepad
 ## evdev character file path for the keybaord/mouse device
 var kb_event_path: String
+## The physical keyboard/mouse device we are mapping input from.
+var kb_device: InputDevice
+## List of vitural events that will be emitted upon release of the held key.
+var queued_events: Array[InputDeviceEvent]
+## List of ogui events that are currently held.
+var sent_ogui_events: PackedStringArray
 
 # Override below in device specific implementation
 ## List of MappedEvent's that are activated by a specific Array[InputDeviceEvent].
@@ -218,10 +218,14 @@ func _emit_event(type: int, code: int, value: int) -> void:
 ## Opens the given physical device with exclusive access. Requres a UDEV rule
 ## that provides uaccess for input devices that detect as keyboard/mouse.
 func open() -> int:
+	# Don't reconfigure if called by another gamepad reconnecting.
+	if kb_device and kb_device.is_open():
+		return OK
 	kb_device = InputDevice.new()
 	var result: int = kb_device.open(kb_event_path)
 	if result != OK:
 		logger.warn("Unable to open event device: " + kb_event_path)
+		kb_device = null
 		return result
 	# Grab exclusive access over the physical device
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
