@@ -52,6 +52,7 @@ public:
   int get_root_window_id();
   PackedInt32Array get_window_children(int window_id);
   int set_xprop(int window_id, String key, int value);
+  int set_xprop_array(int window_id, String key, PackedInt32Array values);
   int get_xprop(int window_id, String key);
   PackedStringArray list_xprops(int window_id);
   PackedInt32Array get_xprop_array(int window_id, String key);

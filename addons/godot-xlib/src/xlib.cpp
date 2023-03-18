@@ -19,6 +19,7 @@
 using godot::ClassDB;
 using godot::D_METHOD;
 using godot::Key;
+using godot::PackedInt32Array;
 using godot::String;
 
 static int error(Display *dpy, XErrorEvent *ev) {
@@ -116,6 +117,34 @@ int Xlib::set_xprop(int window_id, String key, int value) {
   unsigned char *data;
   int result = XChangeProperty(dpy, window, atom, XA_CARDINAL, 32,
                                PropModeReplace, (unsigned char *)&value, 1);
+  if (result > 1) {
+    return result;
+  }
+
+  return 0;
+};
+
+// Sets the given x window property values on the given window. Returns 0 if
+// successful.
+int Xlib::set_xprop_array(int window_id, String key, PackedInt32Array values) {
+  Window window = (Window)window_id;
+
+  // Build the atom to set
+  Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
+  if (atom == None) {
+    godot::UtilityFunctions::push_error("Failed to create atom with name: ",
+                                        key);
+    return BadAtom;
+  }
+
+  // Fetch the actual property
+  Atom actual;
+  int format;
+  unsigned long n, left;
+  unsigned char *data;
+  int result =
+      XChangeProperty(dpy, window, atom, XA_CARDINAL, 32, PropModeReplace,
+                      (unsigned char *)values.ptr(), values.size());
   if (result > 1) {
     return result;
   }
@@ -462,6 +491,9 @@ void Xlib::_bind_methods() {
                        &Xlib::get_window_children);
   ClassDB::bind_method(D_METHOD("set_xprop", "window_id", "key", "value"),
                        &Xlib::set_xprop);
+  ClassDB::bind_method(
+      D_METHOD("set_xprop_array", "window_id", "key", "values"),
+      &Xlib::set_xprop_array);
   ClassDB::bind_method(D_METHOD("remove_xprop", "window_id", "key"),
                        &Xlib::remove_xprop);
   ClassDB::bind_method(D_METHOD("get_xprop", "window_id", "key"),

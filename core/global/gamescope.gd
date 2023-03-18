@@ -399,6 +399,76 @@ func remove_baselayer_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	return _remove_xprop(xwayland, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW")
 
 
+## Returns the currently set gamescope saturation
+# Based on vibrantDeck by Scrumplex
+func get_saturation(display: XWAYLAND = XWAYLAND.PRIMARY) -> float:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	
+	var matrix := _get_xprop_array(xwayland, root_id, "GAMESCOPE_COLOR_MATRIX")
+	if matrix.size() < 2:
+		return -1
+	
+	# [1065353216, 0, 0, 0, 1065353216, 0, 0, 0, 1065353216]
+	var matrix_arr: Array[int] = Array(matrix)
+	# Convert the array of longs to floats
+	# [1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0]
+	var coeffs := matrix_arr.map(_long_to_float)
+	var saturation := snappedf(coeffs[0] - coeffs[1], 0.01)
+	
+	return saturation
+
+
+## Set the gamescope saturation
+# Based on vibrantDeck by Scrumplex
+func set_saturation(saturation: float, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	saturation = maxf(saturation, 0.0)
+	saturation = minf(saturation, 4.0)
+
+	# Generate color transformation matrix
+	var coeffs := _saturation_to_coeffs(saturation)
+	
+	# Represent floats as integars (long)
+	var long_coeffs := coeffs.map(_float_to_long)
+	
+	# Get the xwayland to set the property on
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	
+	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_COLOR_MATRIX", long_coeffs)
+
+
+func _saturation_to_coeffs(saturation: float) -> Array[float]:
+	var coeff := (1.0 - saturation) / 3.0
+	
+	var coeffs: Array[float] = []
+	coeffs.resize(9)
+	coeffs.fill(coeff)
+	coeffs[0] += saturation
+	coeffs[4] += saturation
+	coeffs[8] += saturation
+	
+	return coeffs
+
+
+func _float_to_long(x: float) -> int:
+	var bytes := PackedByteArray()
+	bytes.resize(4)
+	bytes.encode_float(0, x)
+	return bytes.decode_u32(0)
+
+
+func _long_to_float(x: int) -> float:
+	var bytes := PackedByteArray()
+	bytes.resize(4)
+	bytes.encode_u32(0, x)
+	return bytes.decode_float(0)
+
+
 ## Returns the display type for the given display name
 func get_display_type(name: String) -> XWAYLAND:
 	if xwayland_primary.get_name() == name:
@@ -452,6 +522,13 @@ func _set_xprop(xwayland: Xlib, window_id: int, key: String, value: int) -> int:
 	var msg_args := [window_id, key, value, xwayland.get_name()]
 	logger.debug("Setting window {0} key {1} to {2} on display {3}".format(msg_args))
 	return xwayland.set_xprop(window_id, key, value)
+
+
+## Sets the given X property with the given array of values
+func _set_xprop_array(xwayland: Xlib, window_id: int, key: String, values: PackedInt32Array) -> int:
+	var msg_args := [window_id, key, str(values), xwayland.get_name()]
+	logger.debug("Setting window {0} key {1} to {2} on display {3}".format(msg_args))
+	return xwayland.set_xprop_array(window_id, key, values)
 
 
 ## Returns the value of the given X property for the given window. Returns
