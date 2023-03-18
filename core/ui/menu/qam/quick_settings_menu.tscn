@@ -53,7 +53,7 @@ focus_previous = NodePath("../SaturationSlider")
 text = "Per-game Profile"
 
 [node name="SaturationSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
-visible = false
+unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_left = NodePath("../PerGameToggle")
 focus_neighbor_top = NodePath("../PerGameToggle")
@@ -63,3 +63,4 @@ focus_next = NodePath("../PerGameToggle")
 focus_previous = NodePath("../PerGameToggle")
 text = "Saturation"
 value = 100.0
+max_value = 400.0
