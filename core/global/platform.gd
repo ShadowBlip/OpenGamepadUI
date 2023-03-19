@@ -41,7 +41,7 @@ func _init() -> void:
 		platform = load("res://core/platform/ayaneo_gen3.tres")
 		return
 	if PLATFORM.AYANEO_GEN4 in flags:
-		platform = load("res://core/platform/ayaneo_gen3.tres")
+		platform = load("res://core/platform/ayaneo_gen4.tres")
 		return
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
@@ -75,16 +75,27 @@ func get_platform_flags() -> Array[PLATFORM]:
 
 ## Returns the hardware product name
 func get_product_name() -> String:
-	var product_name := FileAccess.get_file_as_string("/sys/devices/virtual/dmi/id/product_name")
-	product_name = product_name.strip_edges()
+	var product_name := _read_sys("/sys/devices/virtual/dmi/id/product_name")
 	return product_name
 
 
 ## Returns the hardware vendor name
 func get_vendor_name() -> String:
-	var vendor_name := FileAccess.get_file_as_string("/sys/devices/virtual/dmi/id/sys_vendor")
-	vendor_name = vendor_name.strip_edges()
+	var vendor_name := _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
 	return vendor_name
+
+
+## Used to read values from sysfs
+func _read_sys(path: String) -> String:
+	var output: Array = _do_exec("cat", [path])
+	return output[0][0].strip_escapes()
+
+
+## returns result of OS.Execute in a reliable data structure
+func _do_exec(command: String, args: Array)-> Array:
+	var output = []
+	var exit_code := OS.execute(command, args, output)
+	return [output, exit_code]
 
 
 # Reads DMI vendor and product name strings and returns an enumerated PLATFORM
@@ -100,15 +111,15 @@ func _read_dmi() -> PLATFORM:
 	if product_name == "AOKZOE A1 AR07" and vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE A1 platform")
 		return PLATFORM.ONEXPLAYER_GEN2
-#	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
-#		logger.debug("Detected AYANEO 2 platform")
-#		return PLATFORM.AYANEO_GEN4
-#	elif (
-#		(product_name.contains("2021") or product_name.contains("FOUNDER"))
-#		and vendor_name.begins_with("AYA")
-#	):
-#		logger.debug("Detected AYANEO 2021 platform")
-#		return PLATFORM.AYANEO_GEN1
+	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO 2 platform")
+		return PLATFORM.AYANEO_GEN4
+	elif (
+		(product_name.contains("2021") or product_name.contains("FOUNDER"))
+		and vendor_name.begins_with("AYA")
+	):
+		logger.debug("Detected AYANEO 2021 platform")
+		return PLATFORM.AYANEO_GEN1
 	elif product_name.contains("AIR") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO AIR platform")
 		return PLATFORM.AYANEO_GEN3

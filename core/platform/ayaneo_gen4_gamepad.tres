@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=20 format=3 uid="uid://v65na51xsiip"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=29 format=3 uid="uid://v65na51xsiip"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_4ua16"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_0sdih"]
@@ -37,75 +37,118 @@ event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_7m3fw")])
 ogui_event = ""
 on_release = false
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_f7s0s"]
-type = 1
-code = 97
-value = 1
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_0xqio"]
-type = 1
-code = 125
-value = 1
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_errha"]
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_vgumo"]
 type = 1
 code = 32
 value = 1
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_f4bc3"]
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_iecsn"]
 type = 1
-code = 316
+code = 125
 value = 1
 
-[sub_resource type="Resource" id="Resource_82nd1"]
+[sub_resource type="Resource" id="Resource_f5833"]
 script = ExtResource("1_4ua16")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f7s0s"), SubResource("InputDeviceEvent_0xqio"), SubResource("InputDeviceEvent_errha")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f4bc3")])
-ogui_event = ""
-on_release = false
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6mge5"]
-type = 1
-code = 307
-value = 1
-
-[sub_resource type="Resource" id="Resource_uxugm"]
-script = ExtResource("1_4ua16")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f7s0s"), SubResource("InputDeviceEvent_0xqio"), SubResource("InputDeviceEvent_errha")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f4bc3"), SubResource("InputDeviceEvent_6mge5")])
-ogui_event = ""
-on_release = false
-
-[sub_resource type="Resource" id="Resource_7war5"]
-script = ExtResource("1_4ua16")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f7s0s"), SubResource("InputDeviceEvent_0xqio"), SubResource("InputDeviceEvent_errha")])
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_vgumo"), SubResource("InputDeviceEvent_iecsn")])
 event_list = Array[InputDeviceEvent]([])
 ogui_event = "ogui_qam"
 on_release = false
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_vj1y3"]
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_wndon"]
+type = 1
+code = 97
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_np2c4"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_torpv"]
 type = 4
 code = 4
 value = 104
 
-[sub_resource type="Resource" id="Resource_a2ae8"]
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_psh4t"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="Resource" id="Resource_qkv5s"]
 script = ExtResource("1_4ua16")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f7s0s"), SubResource("InputDeviceEvent_0xqio"), SubResource("InputDeviceEvent_errha"), SubResource("InputDeviceEvent_vj1y3")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f4bc3"), SubResource("InputDeviceEvent_6mge5")])
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_wndon"), SubResource("InputDeviceEvent_np2c4"), SubResource("InputDeviceEvent_torpv")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_psh4t")])
 ogui_event = ""
 on_release = false
 
-[sub_resource type="Resource" id="Resource_wcmgo"]
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_p5xrd"]
+type = 1
+code = 97
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_tajgs"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_xelwr"]
+type = 4
+code = 4
+value = 103
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_huymq"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_q7kfm"]
+type = 1
+code = 307
+value = 1
+
+[sub_resource type="Resource" id="Resource_6i4kl"]
 script = ExtResource("1_4ua16")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_f7s0s"), SubResource("InputDeviceEvent_0xqio"), SubResource("InputDeviceEvent_errha"), SubResource("InputDeviceEvent_vj1y3")])
-event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui_none"
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_p5xrd"), SubResource("InputDeviceEvent_tajgs"), SubResource("InputDeviceEvent_xelwr")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_huymq"), SubResource("InputDeviceEvent_q7kfm")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6r30j"]
+type = 1
+code = 97
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_csotb"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_3udha"]
+type = 4
+code = 4
+value = 102
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_67pq3"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_todc8"]
+type = 1
+code = 304
+value = 1
+
+[sub_resource type="Resource" id="Resource_2sm2m"]
+script = ExtResource("1_4ua16")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6r30j"), SubResource("InputDeviceEvent_csotb"), SubResource("InputDeviceEvent_3udha")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_67pq3"), SubResource("InputDeviceEvent_todc8")])
+ogui_event = ""
 on_release = false
 
 [resource]
 script = ExtResource("2_0sdih")
-mapped_events = Array[ExtResource("1_4ua16")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_82nd1"), SubResource("Resource_uxugm"), SubResource("Resource_7war5"), SubResource("Resource_a2ae8"), SubResource("Resource_wcmgo")])
+mapped_events = Array[ExtResource("1_4ua16")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_f5833"), SubResource("Resource_qkv5s"), SubResource("Resource_6i4kl"), SubResource("Resource_2sm2m")])
 kb_phys_path = "isa0060/serio0/input0"
 kb_phys_name = "AT Translated Set 2 keyboard"
-gamepad_phys_path = "usb-0000:04:00.3-4/input0"
+gamepad_phys_path = "usb-0000:e4:00.3-4/input0"
 gamepad_phys_name = "Microsoft X-Box 360 pad"
