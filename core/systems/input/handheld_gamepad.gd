@@ -30,7 +30,7 @@ var _last_time := 0
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
 
 
 ## Main process thread for input translation from one device to another.
@@ -202,16 +202,12 @@ func _emit_events(event_list: Array[InputDeviceEvent], delta: float, do_release 
 			value = 0
 #		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
 		if _emit_event(event.get_type(), event.get_code(), value) == ERR_PARAMETER_RANGE_ERROR:
-			_translate_event(event, delta)
+			gamepad_device.translate_event(event, delta)
 		if event_list.size() > 1:
 			OS.delay_msec(80)
 		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 
-## Translates the given event based on the gamepad profile.
-func _translate_event(event: InputDeviceEvent, delta: float) -> void:
-	pass
-z
 ## Emits a virtual device event.
 func _emit_event(type: int, code: int, value: int) -> int:
 	if type == null or code == null or value == null:
