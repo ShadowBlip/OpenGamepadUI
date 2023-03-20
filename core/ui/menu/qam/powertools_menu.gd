@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 const powertools_path : String = "/etc/handypt/powertools"
+const ThreadGroup := preload("res://core/systems/threading/system_thread.tres")
 
 var boost_capable := false
 var core_count := 0
@@ -23,9 +24,8 @@ var smt := false
 @onready var smt_button := $SMTButton
 @onready var tdp_boost_slider := $TDPBoostSlider
 @onready var tdp_slider := $TDPSlider
-@onready var thread_group := ThreadGroup.new()
 
-var logger := Log.get_logger("PowerTools", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
 var command_timer: Timer
 
@@ -37,7 +37,6 @@ func _ready():
 	command_timer.set_one_shot(true)
 	add_child(command_timer)
 
-	thread_group.start()
 	_get_system_components()
 
 	# Set UI capabilities from system capabilities
@@ -83,7 +82,7 @@ func _ready():
 
 # Thread safe method of calling _do_exec
 func _async_do_exec(command: String, args: Array)-> Array:
-	return await thread_group.exec(_do_exec.bind(command, args))
+	return await ThreadGroup.exec(_do_exec.bind(command, args))
 
 
 func _do_callback(command: String, args: Array)-> void:
