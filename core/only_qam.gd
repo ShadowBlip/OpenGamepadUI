@@ -10,19 +10,26 @@ var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
 var steam_window_id: int
+var root_id: int
+var xwayland : Xlib
 
+var logger := Log.get_logger("OQMain", Log.LEVEL.DEBUG)
 
+## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
-	# Set window sizeto native resolution
+	xwayland = Gamescope.get_xwayland(display)
+	root_id = xwayland.get_root_window_id()
+	# Set window size to native resolution
 	var screen_size : Vector2i = DisplayServer.screen_get_size()
 	var window : Window = get_window()
 	window.set_size(screen_size)
-	# Get arguments, remove "--only-qam"
-	var args := OS.get_cmdline_args()
-	args.remove_at(0)
+
+	# Get user arguments
+	var args := OS.get_cmdline_user_args()
 	_setup_qam_only(args)
 
 
+## Creates teh input manager, qam scene, and starts teh user defined program (steam) in firejail.
 func _setup_qam_only(args: Array) -> void:
 	# Setup input manager
 	var input_scene := load("res://core/systems/input/only_qam_input_manager.tscn") as PackedScene
@@ -36,12 +43,12 @@ func _setup_qam_only(args: Array) -> void:
 
 	pid = OS.get_process_id()
 	qam_window_id = Gamescope.get_window_id(pid, display)
-
 	qam_state.state_entered.connect(_on_qam_open)
 	qam_state.state_exited.connect(_on_qam_closed)
 	
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
-	
+
+
 	# Don't crash if we're not launching another program.
 	if args == []:
 		print("Nothing to do")
@@ -58,10 +65,10 @@ func _setup_qam_only(args: Array) -> void:
 	var sandbox_cmd = " ".join(sandbox)
 	print("Sandbox cmd: ", sandbox_cmd)
 	OS.create_process("bash", ["-c", sandbox_cmd])
-	
+
 	if not "steam" in args:
 		return
-		
+
 	# Look for steam
 	while not steam_window_id:
 		
@@ -77,7 +84,6 @@ func _setup_qam_only(args: Array) -> void:
 				break
 		# Wait a bit to reduce cpu load.
 		OS.delay_msec(1000)
-
 	var exit_timer := Timer.new()
 	exit_timer.set_one_shot(false)
 	exit_timer.set_timer_process_callback(Timer.TIMER_PROCESS_IDLE)
@@ -86,18 +92,20 @@ func _setup_qam_only(args: Array) -> void:
 	exit_timer.start()
 
 
+## Called when "qam_state" is entered. Makes the QAM visible.
 func _on_qam_open(_from: State) -> void:
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
-	Gamescope.set_external_overlay(qam_window_id, 1, display)
-	Gamescope.set_app_id(qam_window_id, 769, display)
+	Gamescope.set_overlay(qam_window_id, 1, display)
+	Gamescope.set_overlay(steam_window_id, 0, display)
 
 
+## Called when "qam_state" is exited. Makes the QAM invisible.
 func _on_qam_closed(_to: State) -> void:
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
-	Gamescope.set_external_overlay(qam_window_id, 0, display)
-	Gamescope.set_app_id(qam_window_id, 7420, display)
+	Gamescope.set_overlay(qam_window_id, 0, display)
+	Gamescope.set_overlay(steam_window_id, 1, display)
 
-
+## Verifies steam is still running by checking for the steam overlay, closes otherwise.
 func _check_exit() -> void:
 	if Gamescope.has_xprop(steam_window_id, "STEAM_OVERLAY", display):
 		return
