@@ -51,19 +51,32 @@ install: rootfs ## Install OpenGamepadUI (default: ~/.local)
 uninstall: ## Uninstall OpenGamepadUI
 	cd $(ROOTFS) && make uninstall PREFIX=$(PREFIX)
 
-.PHONY: install-ext
-install-ext: systemd-sysext ## Install OpenGamepadUI as a systemd extension
+##@ Systemd Extension
+
+.PHONY: enable-ext
+enable-ext: ## Enable systemd extensions
 	mkdir -p $(HOME)/.var/lib/extensions
 	sudo ln -s $(HOME)/.var/lib/extensions /var/lib/extensions
 	sudo systemctl enable systemd-sysext
 	sudo systemctl start systemd-sysext
 	systemd-sysext status
 
+.PHONY: disable-ext
+disable-ext: ## Disable systemd extensions
+	sudo systemctl stop systemd-sysext
+	sudo systemctl disable systemd-sysext
+
+.PHONY: install-ext
+install-ext: systemd-sysext ## Install OpenGamepadUI as a systemd extension
+	cp dist/opengamepadui.raw $(HOME)/.var/lib/extensions
+	sudo systemd-sysext refresh
+	systemd-sysext status
+
 .PHONY: uninstall-ext
 uninstall-ext: ## Uninstall the OpenGamepadUI systemd extension
-	sudo systemctl stop systemd-sysext 
-	sudo systemctl disable systemd-sysext
 	rm -rf $(HOME)/.var/lib/extensions
+	sudo systemd-sysext refresh
+	systemd-sysext status
 
 ##@ Development
 
@@ -141,6 +154,15 @@ deploy: dist $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote
 deploy-ext: systemd-sysext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/extensions
 	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/extensions
+	ssh -t $(SSH_USER)@$(SSH_HOST) sudo systemd-sysext refresh
+	ssh $(SSH_USER)@$(SSH_HOST) systemd-sysext status
+
+.PHONY: enable-debug
+enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
+	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .config/environment.d
+	echo 'OGUICMD="opengamepadui --remote-debug tcp://127.0.0.1:6007"' | \
+		ssh $(SSH_USER)@$(SSH_HOST) bash -c \
+		'cat > .config/environment.d/opengamepadui-session.conf'
 
 .PHONY: tunnel
 tunnel: ## Create an SSH tunnel to allow remote debugging
