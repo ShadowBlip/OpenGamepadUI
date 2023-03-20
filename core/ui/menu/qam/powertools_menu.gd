@@ -85,11 +85,14 @@ func _async_do_exec(command: String, args: Array)-> Array:
 	return await ThreadGroup.exec(_do_exec.bind(command, args))
 
 
+# Bindable function to be called when command_timer.timeout signal is emmitted
+# that executes _async_do_exec with the passed command and args.
 func _do_callback(command: String, args: Array)-> void:
 	logger.debug("Doing callback")
 	await _async_do_exec(command, args)
 
 
+# Overrides or sets the _do_callback binding and (re)starts the timer.
 func _setup_callback_exec(command: String, args: Array) -> void:
 	logger.debug("Setting callback exec")
 	_clear_callbacks()
@@ -97,6 +100,8 @@ func _setup_callback_exec(command: String, args: Array) -> void:
 	command_timer.start(.5)
 
 
+# Overrides or sets the command_timer.timeout signal connection function and 
+# (re)starts the timer.
 func _setup_callback_func(callable: Callable) -> void:
 	logger.debug("Setting callback func")
 	_clear_callbacks()
@@ -104,6 +109,7 @@ func _setup_callback_func(callable: Callable) -> void:
 	command_timer.start(.5)
 
 
+# Removes any existing signal connections to command_timer.timeout.
 func _clear_callbacks() -> void:
 	for connection in command_timer.timeout.get_connections():
 		var callable := connection["callable"] as Callable
