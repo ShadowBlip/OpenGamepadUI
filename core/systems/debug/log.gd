@@ -30,6 +30,9 @@ class Logger:
 		var prefix := "[{0}] [{1}] {2}:{3}: ".format([level, self._name, file, line])
 		return prefix
 		
+	func set_name(name: String) -> void:
+		_name = name
+		
 	func debug(message: Variant):
 		if self._level < LEVEL.DEBUG:
 			return

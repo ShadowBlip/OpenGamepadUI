@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_settings.gd" id="1_8xl7t"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
-[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox360/XboxOne_Diagram.png" id="2_cwn10"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_wi2wh"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_wim8p"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_du3xc"]
@@ -29,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://fxgoiilpipsd" path="res://addons/controller_icons/assets/xbox360/l_stick.png" id="16_kqgr1"]
 [ext_resource type="Texture2D" uid="uid://mh6if65g6eob" path="res://addons/controller_icons/assets/xbox360/l_stick_click.png" id="17_po3ol"]
 [ext_resource type="Texture2D" uid="uid://d6jwqg6mq8dk" path="res://addons/controller_icons/assets/xbox360/r_stick.png" id="18_hbd0p"]
+[ext_resource type="Texture2D" uid="uid://cvyo2q5qjpamv" path="res://assets/images/gamepad/steamdeck/diagram.png" id="19_kmguc"]
 [ext_resource type="Texture2D" uid="uid://db7d0vqnfyuin" path="res://addons/controller_icons/assets/xbox360/r_stick_click.png" id="19_quxs0"]
 [ext_resource type="Texture2D" uid="uid://bva4iswwvta5d" path="res://addons/controller_icons/assets/xbox360/y.png" id="20_krow2"]
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="21_w70ku"]
@@ -201,7 +201,7 @@ expand_icon = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("2_cwn10")
+texture = ExtResource("19_kmguc")
 expand_mode = 1
 stretch_mode = 5
 
