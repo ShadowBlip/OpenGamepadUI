@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 const powertools_path : String = "/etc/handypt/powertools"
+const ThreadGroup := preload("res://core/systems/threading/system_thread.tres")
 
 var boost_capable := false
 var core_count := 0
@@ -23,13 +24,20 @@ var smt := false
 @onready var smt_button := $SMTButton
 @onready var tdp_boost_slider := $TDPBoostSlider
 @onready var tdp_slider := $TDPSlider
-@onready var thread_group := ThreadGroup.new()
+
+var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
+
+var command_timer: Timer
 
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready():
-	thread_group.start()
-	await _get_system_components()
+	command_timer = Timer.new()
+	command_timer.set_autostart(false)
+	command_timer.set_one_shot(true)
+	add_child(command_timer)
+
+	_get_system_components()
 
 	# Set UI capabilities from system capabilities
 	cpu_boost_button.visible = boost_capable
@@ -41,29 +49,30 @@ func _ready():
 	tdp_slider.visible = tdp_capable
 
 	if tdp_capable:
-		await _get_tdp_range()
-		await _get_current_tdp_settings()
+		_get_tdp_range()
+		_get_current_tdp_settings()
 		tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_changed)
 		tdp_slider.value_changed.connect(_on_tdp_value_changed)
 
 	if gpu_clk_capable:
-		await _get_gpu_perf_level()
+		_get_gpu_perf_level()
 		gpu_freq_enable.toggled.connect(_on_toggle_gpu_freq)
 		gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_changed)
 		gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
 		# Set write mode for power_dpm_force_performance_level
-		var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["pdfpl", "write"]))
+		_setup_callback_exec(powertools_path, ["pdfpl", "write"])
+
 
 	if ht_capable:
-		if await read_sys("/sys/devices/system/cpu/smt/control") == "on":
+		if _read_sys("/sys/devices/system/cpu/smt/control") == "on":
 			smt_button.button_pressed = true
 			smt = true
-		await _get_cpu_count()
+		_get_cpu_count()
 		cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
 		smt_button.toggled.connect(_on_toggle_smt)
 
 	if boost_capable:
-		if await read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
+		if _read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
 			cpu_boost_button.button_pressed = true
 		cpu_boost_button.toggled.connect(_on_toggle_cpu_boost)
 
@@ -71,12 +80,44 @@ func _ready():
 		gpu_temp_slider.value_changed.connect(_on_gpu_temp_limit_changed)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+# Thread safe method of calling _do_exec
+func _async_do_exec(command: String, args: Array)-> Array:
+	return await ThreadGroup.exec(_do_exec.bind(command, args))
 
 
-# Thread safe method of calling OS.execute
+# Bindable function to be called when command_timer.timeout signal is emmitted
+# that executes _async_do_exec with the passed command and args.
+func _do_callback(command: String, args: Array)-> void:
+	logger.debug("Doing callback")
+	await _async_do_exec(command, args)
+
+
+# Overrides or sets the _do_callback binding and (re)starts the timer.
+func _setup_callback_exec(command: String, args: Array) -> void:
+	logger.debug("Setting callback exec")
+	_clear_callbacks()
+	command_timer.timeout.connect(_do_callback.bind(command, args), CONNECT_ONE_SHOT)
+	command_timer.start(.5)
+
+
+# Overrides or sets the command_timer.timeout signal connection function and 
+# (re)starts the timer.
+func _setup_callback_func(callable: Callable) -> void:
+	logger.debug("Setting callback func")
+	_clear_callbacks()
+	command_timer.timeout.connect(callable, CONNECT_ONE_SHOT)
+	command_timer.start(.5)
+
+
+# Removes any existing signal connections to command_timer.timeout.
+func _clear_callbacks() -> void:
+	for connection in command_timer.timeout.get_connections():
+		var callable := connection["callable"] as Callable
+		command_timer.timeout.disconnect(callable)
+
+
+# Calls OS.execute with the provided command and args and returns an array with
+# the results and exit code to catch errors.
 func _do_exec(command: String, args: Array)-> Array:
 	var output = []
 	var exit_code := OS.execute(command, args, output)
@@ -86,7 +127,7 @@ func _do_exec(command: String, args: Array)-> Array:
 # Gets the total number of cores. If SMT is disabled that value is halved.
 func _get_cpu_count() -> bool:
 	var args = ["-c", "ls /sys/bus/cpu/devices/ | wc -l"]
-	var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+	var output: Array = _do_exec("bash", args)
 	var exit_code = output[1]
 	if exit_code:
 		return false
@@ -95,7 +136,8 @@ func _get_cpu_count() -> bool:
 	cpu_cores_slider.max_value = core_count
 	if not smt_button.button_pressed:
 		cpu_cores_slider.max_value = core_count / 2
-	cpu_cores_slider.value = await _get_cpus_enabled()
+	cpu_cores_slider.value = _get_cpus_enabled()
+	logger.debug("Total CPU's: " + str(cpu_cores_slider.value))
 	return true
 
 
@@ -105,8 +147,9 @@ func _get_cpus_enabled() -> int:
 	var active_cpus := 1
 	for i in range(1, core_count):
 		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
-		var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+		var output: Array = _do_exec("bash", args)
 		active_cpus += int(output[0][0].strip_edges())
+	logger.debug("Active CPU's: " + str(active_cpus))
 	return active_cpus
 
 
@@ -114,7 +157,7 @@ func _get_cpus_enabled() -> int:
 # be empty if not in "manual" for pp_od_performance_level.
 func _get_gpu_clk_limits() -> bool:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
-	var output: Array = await thread_group.exec(_do_exec.bind("cat", args))
+	var output: Array = _do_exec("cat", args)
 	var result := output[0][0].split("\n") as Array
 	var current_max := 0
 	var current_min := 0
@@ -141,13 +184,14 @@ func _get_gpu_clk_limits() -> bool:
 	gpu_freq_min_slider.max_value = max_value
 	gpu_freq_min_slider.min_value = min_value
 	gpu_freq_min_slider.value = current_min
+	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
 	return true
 
 
 # Retrieves the current TDP from ryzenadj.
 # TODO: make APU's a separate function, and add Intel and AMD GPU methods.
 func _get_current_tdp_settings() -> bool:
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-i"]))
+	var output: Array = _do_exec(powertools_path, ["ryzenadj", "-i"])
 	var exit_code = output[1]
 	if exit_code:
 		return false
@@ -180,19 +224,20 @@ func _get_current_tdp_settings() -> bool:
 
 # Called to get the current performance level and set the UI as needed.
 func _get_gpu_perf_level() -> void:
-	var performace_level: String = await read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
+	var performace_level: String = _read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
+	logger.debug("GPU Mode set to: " + performace_level)
 	if performace_level == "manual":
 		gpu_freq_enable.button_pressed = true
 		gpu_freq_max_slider.visible = true
 		gpu_freq_min_slider.visible = true
-		await _get_gpu_clk_limits()
+		_get_gpu_clk_limits()
 
 
 # Reads the hardware. Only supports AMD APU's currently.
 # TODO: Support more than AMD APU's
 func _get_system_components() -> bool:
 	var args = ["-c", "lscpu"]
-	var output: Array = await thread_group.exec(_do_exec.bind("bash", args))
+	var output: Array = _do_exec("bash", args)
 	var exit_code = output[1]
 	if exit_code:
 		return false
@@ -216,9 +261,10 @@ func _get_system_components() -> bool:
 			parts.remove_at(1)
 			parts.remove_at(0)
 			cpu_model = str(" ".join(parts))
-	# TODO: We can get min/max CPU freq here.
+			# TODO: We can get min/max CPU freq here.
 	if cpu_model == "" or cpu_vendor == "":
 		return false
+	logger.debug("Found CPU: " + cpu_model)
 	# TODO: This is lazy and doesn't support dedicated graphics paired with APU's.
 	if cpu_model in amd_apu_database:
 		gpu_model = cpu_model
@@ -228,6 +274,7 @@ func _get_system_components() -> bool:
 		gpu_clk_capable = true
 	if gpu_model == "" or gpu_vendor == "":
 		return false
+	logger.debug("Found GPU: " + gpu_model)
 	return true
 
 
@@ -246,6 +293,7 @@ func _get_tdp_range_amd_apu() -> bool:
 	tdp_boost_slider.max_value = apu_data["max_boost"]
 	tdp_slider.max_value = apu_data["max_tdp"]
 	tdp_slider.min_value = apu_data["min_tdp"]
+	logger.debug("Found TDP Limits: " + str(apu_data["min_tdp"]) + " - " + str(apu_data["max_tdp"]))
 	return true
 
 
@@ -258,110 +306,92 @@ func _on_change_cpu_cores(value: float):
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+			_setup_callback_exec(powertools_path, args)
 	if not smt:
 		for cpu_no in range(2, core_count, 2):
 			if cpu_no >= cpu_cores_slider.value * 2:
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+			_setup_callback_exec(powertools_path, args)
 
 
 # Sets the T-junction temp using ryzenadj.
 # TODO: Support more than AMD APU's
-func _on_gpu_temp_limit_changed(value: float) -> bool:
-	var output = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-f", str(value)]))
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	return true
+func _on_gpu_temp_limit_changed(value: float) -> void:
+	_setup_callback_exec(powertools_path, ["ryzenadj", "-f", str(value)])
 
 
 # Called to set the max GPU freq
 # TODO: Support more than AMD APU's
-func _on_max_gpu_freq_changed(value: float) -> bool:
+func _on_max_gpu_freq_changed(value: float) -> void:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
-	var args = ["gpuclk", "1", str(value)]
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	return true
+	_setup_callback_exec(powertools_path, ["gpuclk", "1", str(value)])
 
 
 # Called to set the min GPU freq
 # TODO: Support more than AMD APU's
-func _on_min_gpu_freq_changed(value: float) -> bool:
+func _on_min_gpu_freq_changed(value: float) -> void:
 	if value > gpu_freq_max_slider.value:
 		gpu_freq_max_slider.value = value
-	var args = ["gpuclk", "0", str(value)]
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	return true
+	_setup_callback_exec(powertools_path, ["gpuclk", "0", str(value)])
 
 
 # Called to set the slow/fastPPT in ryzenadj
 # TODO: Support more than AMD APU's
-func _on_tdp_boost_value_changed(value: float) -> bool:
-	var success: bool = true
+func _on_tdp_boost_value_changed(_value: float) -> void:
+	_setup_callback_func(_do_tdp_boost_change)
+
+
+func _do_tdp_boost_change() -> void:
+	logger.debug("Doing callback func _do_tdp_boost_change")
+	var value: int = tdp_boost_slider.value
 	var slowPPT: float = (floor(value/2) + tdp_slider.value) * 1000
 	var fastPPT: float = (value + tdp_slider.value) * 1000
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-b", str(fastPPT)]))
-	var exit_code = output[1]
-	if exit_code:
-		success = false
-	output = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-c", str(fastPPT)]))
-	exit_code = output[1]
-	if exit_code:
-		success = false
-	return success
+	await _async_do_exec(powertools_path, ["ryzenadj", "-b", str(fastPPT)])
+	await _async_do_exec(powertools_path, ["ryzenadj", "-c", str(slowPPT)])
+
+
+func _do_tdp_change() -> void:
+	logger.debug("Doing callback func _do_tdp_change")
+	var value: int = tdp_slider.value
+	await _async_do_exec(powertools_path, ["ryzenadj", "-a", str(value * 1000)])
+	_do_tdp_boost_change()
 
 
 # Called to set the STAPM in ryzenadj
 # TODO: Support more than AMD APU's
-func _on_tdp_value_changed(value: float) -> bool:
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, ["ryzenadj", "-a", str(value * 1000)]))
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	return await _on_tdp_boost_value_changed(tdp_boost_slider.value)
+func _on_tdp_value_changed(value: float) -> void:
+	_setup_callback_func(_do_tdp_change)
 
 
 # Called to toggle cpu boost
-func _on_toggle_cpu_boost(state: bool) -> bool:
+func _on_toggle_cpu_boost(state: bool) -> void:
 	var args := ["cpuBoost", "0"]
 	if state:
 		args = ["cpuBoost", "1"]
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	return true
+	_setup_callback_exec(powertools_path, args)
 
 
 # Called to toggle auo/manual gpu clocking
 # TODO: Support more than AMD APU's
-func _on_toggle_gpu_freq(state: bool):
+func _on_toggle_gpu_freq(state: bool) -> void:
 	var args := ["pdfpl", "auto"]
 	if state:
 		args = ["pdfpl", "manual"]
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var output: Array = _do_exec(powertools_path, args)
 	var exit_code = output[1]
 	if exit_code:
-		return false
+		logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
 	gpu_freq_max_slider.visible = state
 	gpu_freq_min_slider.visible = state
 	if state:
-		await _get_gpu_clk_limits()
-	return true
+		_get_gpu_clk_limits()
 
 
 # Called to toggle SMT
-func _on_toggle_smt(state: bool):
+func _on_toggle_smt(state: bool) -> void:
 	smt = state
 	var args := []
 	if smt:
@@ -370,17 +400,16 @@ func _on_toggle_smt(state: bool):
 	else:
 		args = ["smt", "off"]
 		cpu_cores_slider.max_value = core_count / 2
-	var output: Array = await thread_group.exec(_do_exec.bind(powertools_path, args))
+	var output: Array = _do_exec(powertools_path, args)
 	var exit_code = output[1]
 	if exit_code:
-		return false
-	cpu_cores_slider.value = await _get_cpus_enabled()
-	return true
+		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
+	cpu_cores_slider.value = _get_cpus_enabled()
 
 
 # Used to read values from sysfs
-func read_sys(path: String) -> String:
-	var output: Array = await thread_group.exec(_do_exec.bind("cat", [path]))
+func _read_sys(path: String) -> String:
+	var output: Array = _do_exec("cat", [path])
 	return output[0][0].strip_escapes()
 
 
