@@ -1,6 +1,8 @@
 extends Node
 class_name ControllerMapper
 
+var logger := Log.get_logger("ControllerMapper", Log.LEVEL.DEBUG)
+
 func _convert_joypad_path(path: String, fallback) -> String:
 	match _get_joypad_type(fallback):
 		ControllerSettings.Devices.LUNA:
@@ -59,6 +61,8 @@ func _get_joypad_type(fallback):
 		return ControllerSettings.Devices.XBOXSERIES
 	elif "Steam Deck" in controller_name or \
 		"Steam Virtual Gamepad" in controller_name:
+		return ControllerSettings.Devices.STEAM_DECK
+	elif "OpenSD" in controller_name:
 		return ControllerSettings.Devices.STEAM_DECK
 	else:
 		return fallback

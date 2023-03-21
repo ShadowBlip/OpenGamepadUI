@@ -141,6 +141,9 @@ func _update_diagram() -> void:
 		ControllerSettings.Devices.XBOX360:
 			diagram.texture = load("res://assets/images/gamepad/xbox360/XboxOne_Diagram.png")
 			return
+		ControllerSettings.Devices.STEAM_DECK:
+			diagram.texture = load("res://assets/images/gamepad/steamdeck/diagram.png")
+			return
 
 	# Fallback if we have no diagram
 	diagram.texture = load("res://assets/images/gamepad/xbox360/XboxOne_Diagram.png")

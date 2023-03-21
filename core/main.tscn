@@ -164,7 +164,6 @@ grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("18_ycfam")
 autoplay = true
-expand = true
 
 [node name="Toast" parent="." instance=ExtResource("19_ruxfl")]
 layout_mode = 1
