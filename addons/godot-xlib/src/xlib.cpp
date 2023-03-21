@@ -4,6 +4,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/XF86keysym.h>
 #include <X11/extensions/XRes.h>
 #include <X11/extensions/XTest.h>
 #include <cstring>
@@ -582,6 +583,9 @@ void Xlib::initialize_keymap() {
   keymap[Key::KEY_SPACE] = XK_space;
   keymap[Key::KEY_TAB] = XK_Tab;
   keymap[Key::KEY_YEN] = XK_yen;
+  keymap[Key::KEY_VOLUMEMUTE] = XF86XK_AudioMute;
+  keymap[Key::KEY_VOLUMEDOWN] = XF86XK_AudioLowerVolume;
+  keymap[Key::KEY_VOLUMEUP] = XF86XK_AudioRaiseVolume;
 
   keymap[Key::KEY_MINUS] = XK_minus;
   keymap[Key::KEY_EQUAL] = XK_equal;

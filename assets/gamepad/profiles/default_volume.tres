@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=9 format=3 uid="uid://bneeynjk41y33"]
+
+[ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_3a5ef"]
+[ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="2_fiol5"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_0j6q2"]
+device = -1
+keycode = 4194381
+
+[sub_resource type="Resource" id="Resource_wv6ie"]
+script = ExtResource("1_3a5ef")
+source_event = 113
+axis = 0
+target = SubResource("InputEventKey_0j6q2")
+source = 195
+
+[sub_resource type="InputEventKey" id="InputEventKey_nb2p2"]
+device = -1
+keycode = 4194380
+
+[sub_resource type="Resource" id="Resource_iwef0"]
+script = ExtResource("1_3a5ef")
+source_event = 114
+axis = 0
+target = SubResource("InputEventKey_nb2p2")
+source = 196
+
+[sub_resource type="InputEventKey" id="InputEventKey_2l1kq"]
+device = -1
+keycode = 4194382
+
+[sub_resource type="Resource" id="Resource_o41db"]
+script = ExtResource("1_3a5ef")
+source_event = 115
+axis = 0
+target = SubResource("InputEventKey_2l1kq")
+source = 197
+
+[resource]
+script = ExtResource("2_fiol5")
+name = "Only Volume Controls"
+mapping = Array[Resource]([SubResource("Resource_wv6ie"), SubResource("Resource_iwef0"), SubResource("Resource_o41db")])

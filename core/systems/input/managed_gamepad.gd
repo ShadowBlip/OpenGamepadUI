@@ -392,6 +392,10 @@ func _process_virt_event(event: InputDeviceEvent) -> void:
 		return
 
 
+func translate_external_event(event: InputDeviceEvent, delta: float) -> void:
+	_translate_event(event, delta)
+
+
 ## Translates the given event based on the gamepad profile.
 func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 	var mappings := event_map[event.get_code()] as Array
