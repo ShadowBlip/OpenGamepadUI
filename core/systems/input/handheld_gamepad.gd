@@ -305,7 +305,6 @@ func set_gamepad_device(gamepad: ManagedGamepad) -> bool:
 	if open() != OK:
 		logger.warn("Unable to configure handheld gamepad device")
 		return false
-	gamepad_device.xwayland
 	logger.info("Configured handeheld gamepad device")
 	return true
 
