@@ -213,22 +213,18 @@ func _emit_events(event_list: Array[InputDeviceEvent], delta: float, do_release 
 ## Translates the given event to an AudioManager event.
 func _do_audio_event(event: InputDeviceEvent, delta: float) -> void:
 	var current_volume := AudioManager.get_current_volume()
-	logger.debug("Current volume: " +str(current_volume))
 	match event.get_code():
-		113:
-			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Muting.")
+		113: # EV_KEY KEY_MUTE
 			if current_volume == 0:
 				AudioManager.set_volume(_last_volume)
 				return
 			_last_volume = current_volume
 			AudioManager.set_volume(0)
-		114:
-			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Decreasing volume.")
+		114: # EV_KEY KEY_VOLUMEDOWN
 			if current_volume == 0:
 				return
 			AudioManager.set_volume(current_volume - .01)
-		115:
-			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Increasing volume.")
+		115: # EV_KEY KEY_VOLUMEUP
 			if current_volume == 1:
 				return
 			AudioManager.set_volume(current_volume + .01)
