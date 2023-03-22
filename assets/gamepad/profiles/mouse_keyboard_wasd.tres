@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=53 format=3 uid="uid://b4q245bedg0xu"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=47 format=3 uid="uid://b4q245bedg0xu"]
 
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_sic6g"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_w1gcb"]
@@ -244,40 +244,7 @@ axis = 0
 target = SubResource("InputEventMouseButton_vwg4i")
 source = 53
 
-[sub_resource type="InputEventKey" id="InputEventKey_7ff7r"]
-device = -1
-keycode = 4194381
-
-[sub_resource type="Resource" id="Resource_317gs"]
-script = ExtResource("1_sic6g")
-source_event = 113
-axis = 0
-target = SubResource("InputEventKey_7ff7r")
-source = 195
-
-[sub_resource type="InputEventKey" id="InputEventKey_nb2p2"]
-device = -1
-keycode = 4194380
-
-[sub_resource type="Resource" id="Resource_iwef0"]
-script = ExtResource("1_sic6g")
-source_event = 114
-axis = 0
-target = SubResource("InputEventKey_nb2p2")
-source = 196
-
-[sub_resource type="InputEventKey" id="InputEventKey_2l1kq"]
-device = -1
-keycode = 4194382
-
-[sub_resource type="Resource" id="Resource_o41db"]
-script = ExtResource("1_sic6g")
-source_event = 115
-axis = 0
-target = SubResource("InputEventKey_2l1kq")
-source = 197
-
 [resource]
 script = ExtResource("1_w1gcb")
 name = "Mouse and Keyboard  (WASD)"
-mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8"), SubResource("Resource_s5v1a"), SubResource("Resource_6brqr"), SubResource("Resource_dhr82"), SubResource("Resource_2v2n7"), SubResource("Resource_cue5u"), SubResource("Resource_6unb4"), SubResource("Resource_wv6ie"), SubResource("Resource_cmov8"), SubResource("Resource_67nhw"), SubResource("Resource_kkqqs"), SubResource("Resource_317gs"), SubResource("Resource_iwef0"), SubResource("Resource_o41db")])
+mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8"), SubResource("Resource_s5v1a"), SubResource("Resource_6brqr"), SubResource("Resource_dhr82"), SubResource("Resource_2v2n7"), SubResource("Resource_cue5u"), SubResource("Resource_6unb4"), SubResource("Resource_wv6ie"), SubResource("Resource_cmov8"), SubResource("Resource_67nhw"), SubResource("Resource_kkqqs")])

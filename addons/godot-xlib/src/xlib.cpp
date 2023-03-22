@@ -4,7 +4,6 @@
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/XF86keysym.h>
 #include <X11/extensions/XRes.h>
 #include <X11/extensions/XTest.h>
 #include <cstring>
