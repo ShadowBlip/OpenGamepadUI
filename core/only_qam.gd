@@ -10,15 +10,11 @@ var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
 var steam_window_id: int
-var root_id: int
-var xwayland : Xlib
 
 var logger := Log.get_logger("OQMain", Log.LEVEL.DEBUG)
 
 ## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
-	xwayland = Gamescope.get_xwayland(display)
-	root_id = xwayland.get_root_window_id()
 	# Set window size to native resolution
 	var screen_size : Vector2i = DisplayServer.screen_get_size()
 	var window : Window = get_window()
@@ -47,7 +43,6 @@ func _setup_qam_only(args: Array) -> void:
 	qam_state.state_exited.connect(_on_qam_closed)
 	
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
-
 
 	# Don't crash if we're not launching another program.
 	if args == []:
