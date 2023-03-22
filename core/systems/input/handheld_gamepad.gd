@@ -24,7 +24,7 @@ var _last_volume := 0
 @export var mapped_events: Array[MappedEvent]
 ## Path of the device in sysfs ATTR{phys}
 @export var kb_phys_path: String
-## Name of the device in sysfs ATTR{name}z
+## Name of the device in sysfs ATTR{name}
 @export var kb_phys_name: String
 ## Path of the device in sysfs ATTR{phys}
 @export var gamepad_phys_path: String
