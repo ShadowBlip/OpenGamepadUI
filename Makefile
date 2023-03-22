@@ -138,6 +138,12 @@ debug: addons ## Run the project in debug mode in gamescope
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
+.PHONY: debug-qam
+debug-qam: addons ## Run the project in debug mode in gamescope with --only-qam
+	$(GAMESCOPE) -e --xwayland-count 2 -- \
+		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
+		--position 320,140 res://entrypoint.tscn --only-qam -- steam -gamepadui -steamos3 -steampal -steamdeck
+
 .PHONY: inspect
 inspect: addons ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn

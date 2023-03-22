@@ -1,13 +1,6 @@
 extends Resource
 class_name HandheldGamepad
 
-# Map of EV_KEY codes to godot InputEventKey codes.
-# TODO: Make a resource and complete.
-const cheese_input: Dictionary = {
-	113: KEY_VOLUMEMUTE,
-	114: KEY_VOLUMEDOWN,
-	115: KEY_VOLUMEUP,
-}
 ## List of virtual events that are currently held.
 var active_events: Array[InputDeviceEvent]
 ## List of keys and their values that are currently pressed.
@@ -23,6 +16,7 @@ var queued_events: Array[InputDeviceEvent]
 ## List of ogui events that are currently held.
 var sent_ogui_events: PackedStringArray
 var _last_time := 0
+var _last_volume := 0
 
 # Override below in device specific implementation
 ## List of MappedEvent's that are activated by a specific Array[InputDeviceEvent].
@@ -37,10 +31,8 @@ var _last_time := 0
 ## Name of the device in sysfs ATTR{name}
 @export var gamepad_phys_name: String
 
-const gamepad_profile_volume := preload("res://assets/gamepad/profiles/default_volume.tres") as GamepadProfile
-
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
 
 
 ## Main process thread for input translation from one device to another.
@@ -212,24 +204,36 @@ func _emit_events(event_list: Array[InputDeviceEvent], delta: float, do_release 
 			value = 0
 #		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
 		if _emit_event(event.get_type(), event.get_code(), value) == ERR_PARAMETER_RANGE_ERROR:
-			_translate_event(event, delta)
+			_do_audio_event(event, delta)
 		if event_list.size() > 1:
 			OS.delay_msec(80)
 		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 
-## Translates the given event based on the gamepad profile.
-func _translate_event(event: InputDeviceEvent, delta: float) -> void:
-	var keycode: int
-	var pressed = true
-	if cheese_input.has(event.get_code()):
-		keycode = cheese_input[event.get_code()]
-	if not keycode:
-		logger.warn("HandheldController button mapping includes event that is not mapped to xinput. Verify configuration.")
-	if event.get_value() == 0:
-		pressed = false
-	logger.debug("Sending godot event: " +str(keycode) + " pressed: " +str(pressed))
-	gamepad_device.xwayland.send_key(keycode, pressed)
+## Translates the given event to an AudioManager event.
+func _do_audio_event(event: InputDeviceEvent, delta: float) -> void:
+	var current_volume := AudioManager.get_current_volume()
+	logger.debug("Current volume: " +str(current_volume))
+	match event.get_code():
+		113:
+			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Muting.")
+			if current_volume == 0:
+				AudioManager.set_volume(_last_volume)
+				return
+			_last_volume = current_volume
+			AudioManager.set_volume(0)
+		114:
+			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Decreasing volume.")
+			if current_volume == 0:
+				return
+			AudioManager.set_volume(current_volume - .01)
+		115:
+			logger.debug("Got event:" + str(event.get_type()) + " : " + str(event.get_code) + ". Increasing volume.")
+			if current_volume == 1:
+				return
+			AudioManager.set_volume(current_volume + .01)
+		_:
+			logger.warn("Event with type" + str(event.get_type()) + " and code: " + str(event.get_code) + " is not supported.")
 
 
 ## Emits a virtual device event.
@@ -303,7 +307,6 @@ func set_gamepad_device(gamepad: ManagedGamepad) -> bool:
 		return false
 	gamepad_device.xwayland
 	logger.info("Configured handeheld gamepad device")
-	gamepad_device.set_profile(gamepad_profile_volume)
 	return true
 
 
