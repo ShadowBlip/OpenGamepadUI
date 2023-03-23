@@ -17,6 +17,12 @@ static func set_volume(value: float) -> int:
 	return code
 
 
+# Toggles mute on the current audio device
+static func toggle_mute() -> int:
+	var code := OS.execute("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
+	return code
+
+
 # Sets the current output device to the given device
 static func set_output_device(device: String) -> int:
 	var ids := PackedStringArray()

@@ -15,7 +15,7 @@ var kb_device: InputDevice
 var queued_events: Array[InputDeviceEvent]
 ## List of ogui events that are currently held.
 var sent_ogui_events: PackedStringArray
-var _last_time := 0
+
 # Override below in device specific implementation
 ## List of MappedEvent's that are activated by a specific Array[InputDeviceEvent].
 ## that activates either an ogui_event or another Array[InputDeviceEvent]
@@ -30,16 +30,11 @@ var _last_time := 0
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
 
 
 ## Main process thread for input translation from one device to another.
 func process_input() -> void:
-	# Calculate the amount of time that has passed since last invocation
-	var current_time := Time.get_ticks_usec()
-	var delta_us := current_time - _last_time
-	_last_time = current_time
-	var delta := delta_us / 1000000.0  # Convert to seconds
 
 	# Only process input if we have a valid handle
 	if not kb_device or not kb_device.is_open():
@@ -56,18 +51,18 @@ func process_input() -> void:
 	for event in events:
 		if not event or not event is InputDeviceEvent:
 			continue
-		if not _process_event(event, delta):
+		if not _process_event(event):
 			stop_after_process = true
 	# If no keys are active we can stop here.
 	if stop_after_process:
 		return
 	if active_keys.size() == 0:
 		return
-	_check_mapped_events(delta)
+	_check_mapped_events()
 
 
 ## Called to handle an individual event. Sets the active keys.
-func _process_event(event: InputDeviceEvent, delta: float) -> bool:
+func _process_event(event: InputDeviceEvent) -> bool:
 	# Always skip anything thats not a button
 	if event.get_type() not in [event.EV_KEY, event.EV_MSC]:
 		return true
@@ -81,23 +76,18 @@ func _process_event(event: InputDeviceEvent, delta: float) -> bool:
 	# release event, remove active keys
 	logger.debug("event: type " + str(event.type) + " event: code " + str(event.code) + " value " + str(event.value))
 	if event.value == 0:
-		# Ignore if the active keys list is empty.
-		if active_keys.size() == 0:
-			return false
-		logger.debug("------ Key --UP-- event ------")
-		# Some keys might be active with two values, clear them all.
-		active_keys.clear()
-		_on_release_event(delta)
-		logger.debug("Active keys:")
-		for key in active_keys:
-			logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
-		return false
+		return _on_key_up(event)
 	# Block adding the same active event twice
 	if _find_active_key(event) >= 0:
 		logger.debug("Already Active! Keys:")
 		for key in active_keys:
 			logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
 		return false
+	return _on_key_down(event)
+
+
+## Called for key down events.
+func _on_key_down(event: InputDeviceEvent) -> bool:
 	logger.debug("______ Key __DOWN__ event ______")
 	active_keys.insert(active_keys.bsearch_custom(event, _sort_events), event)
 	logger.debug("Active keys:")
@@ -106,18 +96,23 @@ func _process_event(event: InputDeviceEvent, delta: float) -> bool:
 	return true
 
 
-## Returns the index of an active key.
-func _find_active_key(event: InputDeviceEvent) -> int:
-	for i in active_keys.size():
-		if active_keys[i].type == event.type and \
-		active_keys[i].code == event.code and \
-		active_keys[i].value == event.value:
-			return i
-	return -1
+## Called for key up events.
+func _on_key_up(event: InputDeviceEvent) -> bool:
+	# Ignore if the active keys list is empty.
+	if active_keys.size() == 0:
+		return false
+	logger.debug("------ Key --UP-- event ------")
+	# Some keys might be active with two values, clear them all.
+	active_keys.clear()
+	_on_release_event()
+	logger.debug("Active keys:")
+	for key in active_keys:
+		logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
+	return false
 
 
 ## Runs on any event with value 0, handles key up/release events.
-func _on_release_event(delta: float) -> void:
+func _on_release_event() -> void:
 	# Clear any ogui events
 	if active_events.size() == 0 and not sent_ogui_events.size() == 0:
 		sent_ogui_events.clear()
@@ -125,31 +120,86 @@ func _on_release_event(delta: float) -> void:
 	#Any events that were activated by on press or by queue should now be deactivated.
 	if not active_events.size() == 0:
 		logger.debug("Clearing active events with key_up")
-		_emit_events(active_events, delta, true)
+		_emit_events(active_events, true)
 		active_events.clear()
 	# Any events that were queued as "on release" should now be activated.
 	# Events will be "key_up" on next loop ext loop
 	if not queued_events.size() == 0:
 		logger.debug("Clearing queued events with key_down")
-		_emit_events(queued_events, delta)
+		_emit_events(queued_events)
 		active_events = queued_events.duplicate()
 		queued_events.clear()
 
 
+## Loops through the given events list and emits the events. If do-release = true,
+## all events will be release/key up events.
+func _emit_events(event_list: Array[InputDeviceEvent], do_release = false) -> void:
+	for event in event_list:
+		var value = event.get_value()
+		if do_release:
+			value = 0
+#		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
+		if _emit_event(event.get_type(), event.get_code(), value) == ERR_PARAMETER_RANGE_ERROR:
+			_do_audio_event(event.get_type(), event.get_code(), value)
+		if event_list.size() > 1:
+			OS.delay_msec(80)
+		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+
+
+## Emits a virtual device event.
+func _emit_event(type: int, code: int, value: int) -> int:
+	if type == null or code == null or value == null:
+		logger.warn("Got malformed event. Verify controller configuration.")
+		return ERR_UNCONFIGURED
+	if not gamepad_device.phys_device.has_event_code(type, code):
+		logger.debug("Virtual gamepad does not have event type: " + str(type) + " code: " + str(code) +
+		". Sending audio event instead.")
+		return ERR_PARAMETER_RANGE_ERROR
+	gamepad_device.virt_device.write_event(type, code, value)
+	return OK
+
+
+## Translates the given event to an AudioManager event.
+func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void:
+	# Ignore key up events.
+	if event_value == 0:
+		logger.debug("Got key_up event for audio_event")
+		return
+	var current_volume := AudioManager.get_current_volume()
+	logger.debug("Got audio event: " + str(event_code) + str(event_value))
+	var return_code: int
+	match event_code:
+		InputDeviceEvent.KEY_MUTE:
+			return_code = AudioManager.toggle_mute()
+			logger.debug("return code: " + str(return_code))
+		InputDeviceEvent.KEY_VOLUMEDOWN:
+			if current_volume == 0:
+				return
+			return_code = AudioManager.set_volume(current_volume - .01)
+			logger.debug("return code: " + str(return_code))
+		InputDeviceEvent.KEY_VOLUMEUP:
+			if current_volume == 1:
+				return
+			return_code = AudioManager.set_volume(current_volume + .01)
+			logger.debug("return code: " + str(return_code))
+		_:
+			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")
+
+
 ## Called after processing all events in the event loop. Checks if our current
 ## active_keys matches any of our mapped events.
-func _check_mapped_events(delta: float) -> void:
+func _check_mapped_events() -> void:
 	logger.debug("Checking events for matches")
 	for mapped_event in mapped_events:
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
 		logger.debug("Found a matching event")
-		_handle_mapped_event(mapped_event, delta)
+		_handle_mapped_event(mapped_event)
 		return
 
 
 ## Checks if a given mapped event needs to be ignored, queued, or emited.
-func _handle_mapped_event(mapped_event: MappedEvent, delta: float) -> void:
+func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 	# Check if the event has already been handled
 	if mapped_event.ogui_event in sent_ogui_events:
 		return
@@ -187,38 +237,28 @@ func _handle_mapped_event(mapped_event: MappedEvent, delta: float) -> void:
 		return
 	# Finally, send events to virtual device.
 	logger.debug("Emit mapped events!")
-	_emit_events(mapped_event.event_list, delta)
+	_emit_events(mapped_event.event_list)
 	active_events = mapped_event.event_list.duplicate()
 	# Clear and queued events because we overrode it with an on_press event
 	queued_events.clear()
 
 
-## Loops through the given events list and emits the events. If do-release = true,
-## all events will be release/key up events.
-func _emit_events(event_list: Array[InputDeviceEvent], delta: float, do_release = false) -> void:
-	for event in event_list:
-		var value = event.get_value()
-		if do_release:
-			value = 0
-#		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
-		if _emit_event(event.get_type(), event.get_code(), value) == ERR_PARAMETER_RANGE_ERROR:
-			gamepad_device.translate_event(event, delta)
-		if event_list.size() > 1:
-			OS.delay_msec(80)
-		_emit_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+# Sends an ogui_event input action to the event queue
+func _send_input(input_action: InputEventAction, action: String, pressed: bool, strength: float = 1.0) -> void:
+	input_action.action = action
+	input_action.pressed = pressed
+	input_action.strength = strength
+	Input.parse_input_event(input_action)
 
 
-## Emits a virtual device event.
-func _emit_event(type: int, code: int, value: int) -> int:
-	if type == null or code == null or value == null:
-		logger.warn("Got malformed event. Verify controller configuration.")
-		return ERR_UNCONFIGURED
-	if not gamepad_device.phys_device.has_event_code(type, code):
-		logger.debug("Virtual gamepad does not have event type: " + str(type) + " code: " + str(code) +
-		". Sending xinput event instead.")
-		return ERR_PARAMETER_RANGE_ERROR
-	gamepad_device.virt_device.write_event(type, code, value)
-	return OK
+## Returns the index of an active key.
+func _find_active_key(event: InputDeviceEvent) -> int:
+	for i in active_keys.size():
+		if active_keys[i].type == event.type and \
+		active_keys[i].code == event.code and \
+		active_keys[i].value == event.value:
+			return i
+	return -1
 
 
 ## Opens the given physical device with exclusive access. Requres a UDEV rule
@@ -237,14 +277,6 @@ func open() -> int:
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
 		kb_device.grab(true)
 	return result
-
-
-# Sends an input action to the event queue
-func _send_input(input_action: InputEventAction, action: String, pressed: bool, strength: float = 1.0) -> void:
-	input_action.action = action
-	input_action.pressed = pressed
-	input_action.strength = strength
-	Input.parse_input_event(input_action)
 
 
 ## Check if the given ManagedGamepad matches the parameters of the defined
