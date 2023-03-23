@@ -1,7 +1,7 @@
 extends VBoxContainer
 
 const powertools_path : String = "/etc/handypt/powertools"
-const ThreadGroup := preload("res://core/systems/threading/system_thread.tres")
+const SharedThread := preload("res://core/systems/threading/system_thread.tres")
 
 var boost_capable := false
 var core_count := 0
@@ -82,7 +82,7 @@ func _ready():
 
 # Thread safe method of calling _do_exec
 func _async_do_exec(command: String, args: Array)-> Array:
-	return await ThreadGroup.exec(_do_exec.bind(command, args))
+	return await SharedThread.exec(_do_exec.bind(command, args))
 
 
 # Bindable function to be called when command_timer.timeout signal is emmitted

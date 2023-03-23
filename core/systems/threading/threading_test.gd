@@ -3,7 +3,7 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var thread_group := ThreadGroup.new()
+	var thread_group := SharedThread.new()
 	thread_group.start()
 	var result = await thread_group.exec(long_method.bind(1))
 	print("Got result: ", result)

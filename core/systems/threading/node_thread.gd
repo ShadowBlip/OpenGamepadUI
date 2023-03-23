@@ -7,8 +7,8 @@ class_name NodeThread
 ## a separate running thread. When emitting signals from _thread_process, be sure
 ## to use signal_name.emit.call_deferred
 
-## The [ThreadGroup] thread that this node should run on.
-@export var thread_group: ThreadGroup
+## The [SharedThread] thread that this node should run on.
+@export var thread_group: SharedThread
 ## Whether or not to automatically start the thread on ready
 @export var autostart := true
 
