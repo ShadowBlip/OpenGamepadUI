@@ -5,7 +5,7 @@ var home := OS.get_environment("HOME")
 var desktop_folders := (
 	(
 		SettingsManager
-		. get_value(
+		.get_value(
 			"library.desktop",
 			"folders",
 			["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
@@ -68,4 +68,31 @@ func _desktop_file_to_launch_item(file: String) -> LibraryLaunchItem:
 	if not "Game" in launch_item.categories:
 		return null
 
+	# Apply any launch quirks if applicable
+	_apply_quirks(launch_item)
+
 	return launch_item
+
+
+func _apply_quirks(launch_item: LibraryLaunchItem) -> void:
+	if launch_item.command != "steam":
+		return
+	if launch_item.args.size() == 0:
+		return
+	if "-silent" in launch_item.args:
+		return
+	if not _contains_string(launch_item.args, "steam://rungameid"):
+		return
+		
+	# If the desktop shortcut is for Steam, add the '-silent' argument so it
+	# doesn't launch into the Steam interface
+	var args := PackedStringArray(["-silent"])
+	args.append_array(launch_item.args)
+	launch_item.args = args
+
+
+func _contains_string(arr: PackedStringArray, string: String) -> bool:
+	for item in arr:
+		if string in item:
+			return true
+	return false
