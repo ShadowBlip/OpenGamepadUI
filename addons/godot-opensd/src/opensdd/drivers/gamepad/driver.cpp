@@ -945,11 +945,11 @@ int Drivers::Gamepad::Driver::Poll()
                         case UI_FF_UPLOAD:
                         {
                             // TODO: FF uploads
-                            //uinput_ff_upload    data;
+                            uinput_ff_upload    data;
                             
-                            //gLog.Write( Log::VERB, "UI_FF_UPLOAD" );
+                            gLog.Write( Log::VERB, "UI_FF_UPLOAD" );
                             
-                            //mpGamepad->GetFFEffect( ev.value, data );
+                            mpGamepad->GetFFEffect( ev.value, data );
                         }
                         break;
                         
@@ -957,11 +957,11 @@ int Drivers::Gamepad::Driver::Poll()
                         case UI_FF_ERASE:
                         {
                             // TODO: FF Erase
-                            //uinput_ff_erase     data;
+                            uinput_ff_erase     data;
                             
-                            //gLog.Write( Log::VERB, ">>> UI_FF_ERASE" );
+                            gLog.Write( Log::VERB, ">>> UI_FF_ERASE" );
                             
-                            //mpGamepad->EraseFFEffect( ev.value, data );
+                            mpGamepad->EraseFFEffect( ev.value, data );
                         }   
                         break;
                         
