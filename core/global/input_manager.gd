@@ -31,6 +31,8 @@ class_name InputManager
 const Gamescope := preload("res://core/global/gamescope.tres")
 const osk := preload("res://core/global/keyboard_instance.tres")
 const Platform := preload("res://core/global/platform.tres")
+const input_thread := preload("res://core/systems/threading/input_thread.tres")
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -44,10 +46,6 @@ var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
-## Number of "input frames" per second to process gamepad inputs (i.e. HrZ)
-@export var input_framerate := 600
-var input_exited := false
-var input_thread := Thread.new()
 var handheld_gamepad: HandheldGamepad
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
 var orphaned_gamepads := {} # {<gamepad.phys_char> : <ManagedGamepad>}
@@ -67,14 +65,14 @@ func init() -> void:
 	# to process input on it.
 	handheld_gamepad = Platform.get_handheld_gamepad()
 
-
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
 	_on_gamepad_change(0, false)
 
 	# Create a thread to process gamepad inputs separately
 	logger.debug("Starting gamepad input thread")
-	input_thread.start(_start_process_input)
+	input_thread.add_process(_process_input)
+	input_thread.start()
 	Input.joy_connection_changed.connect(_on_gamepad_change)
 
 
@@ -106,41 +104,12 @@ func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 
 ## Runs evdev input processing in its own thread. We use mutexes to safely
 ## access variables from the main thread
-func _start_process_input():
-	var exited := false
-	var target_frame_time_us := int((1.0 / input_framerate) * 1000000.0)
-	var last_time_us := 0
-	while not exited:
-		# Start timing how long this input frame takes
-		var start_time := Time.get_ticks_usec()
-
-		# If there is a handheld gamepad, process its inputs
-		if handheld_gamepad:
-			handheld_gamepad.process_input()
-
-		# Process the gamepad inputs
-		exited = input_exited
-		_process_input()
-
-		# Calculate how long this frame took
-		var end_time := Time.get_ticks_usec()
-		var frame_time_us := end_time - start_time  # Time in microseconds since last input frame
-
-		# If the last input frame took less time than our target frame
-		# rate, sleep for the difference.
-		var sleep_time_us := target_frame_time_us - frame_time_us
-		if frame_time_us < target_frame_time_us:
-			OS.delay_usec(sleep_time_us)  # Throttle to save CPU
-		else:
-			var msg := (
-				"Missed target frame time {0}us. Got: {1}us"
-				. format([target_frame_time_us, frame_time_us])
-			)
-			logger.debug(msg)
-
-
-## Processes all raw gamepad input
-func _process_input() -> void:
+func _process_input(_delta: float) -> void:
+	# If there is a handheld gamepad, process its inputs
+	if handheld_gamepad:
+		handheld_gamepad.process_input()
+	
+	# Process the input for all currently managed gamepads
 	gamepad_mutex.lock()
 	var gamepads := managed_gamepads.values()
 	gamepad_mutex.unlock()
@@ -161,9 +130,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			continue
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
+		orphaned_gamepads[gamepad.phys] = gamepad
 		# Lock the gamepad mappings so we can alter them.
 		gamepad_mutex.lock()
-		orphaned_gamepads[gamepad.phys] = gamepad
 		managed_gamepads.erase(gamepad.phys_path)
 		gamepad_mutex.unlock()
 
@@ -191,8 +160,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			var gamepad: ManagedGamepad = orphaned_gamepads[input_device.get_phys()]
 			gamepad_mutex.lock()
 			managed_gamepads[path] = gamepad
-			orphaned_gamepads.erase(input_device.get_phys())
 			gamepad_mutex.unlock()
+			orphaned_gamepads.erase(input_device.get_phys())
 			logger.debug("Reconnected gamepad at: " + gamepad.phys_path)
 			continue
 		var gamepad := ManagedGamepad.new()
@@ -416,10 +385,7 @@ func _send_joy_input(axis: int, value: float) -> void:
 
 
 func exit() -> void:
-	gamepad_mutex.lock()
-	input_exited = true
-	gamepad_mutex.unlock()
-	input_thread.wait_to_finish()
+	input_thread.stop()
 	Input.joy_connection_changed.disconnect(_on_gamepad_change)
 	for gamepad in managed_gamepads.values():
 		logger.debug("Cleaning up gamepad: " + gamepad.phys_path)

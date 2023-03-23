@@ -89,7 +89,7 @@ func _check_frame_time(thread: SharedThread) -> void:
 	var target_time_us := get_target_frame_time(thread.target_tick_rate)
 	if time_since_us > (target_time_us * warn_after_num_missed_frames):
 		var time_since := time_since_us / 1000000.0
-		logger.warn("Thread '" + thread.name + "' has been running for {0} seconds".format([time_since]))
+		logger.warn("Thread '" + thread.name + "' has been blocked for {0} seconds".format([time_since]))
 
 
 ## Returns the target frame time in microseconds of the WatchdogThread

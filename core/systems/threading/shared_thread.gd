@@ -14,6 +14,7 @@ var thread: Thread
 var mutex := Mutex.new()
 var running := false
 var nodes: Array[NodeThread] = []
+var process_funcs: Array[Callable] = []
 var one_shots: Array[Callable] = []
 var last_time: int
 var logger := Log.get_logger("SharedThread", Log.LEVEL.DEBUG)
@@ -83,6 +84,21 @@ func exec(method: Callable) -> Variant:
 	return out[1]
 
 
+## Adds the given method to the thread process loop. This method will be called
+## every thread tick.
+func add_process(method: Callable) -> void:
+	mutex.lock()
+	process_funcs.append(method)
+	mutex.unlock()
+
+
+## Removes the given method from the thread process loop.
+func remove_process(method: Callable) -> void:
+	mutex.lock()
+	process_funcs.erase(method)
+	mutex.unlock()
+
+
 func _run() -> void:
 	var exited := false
 	var current_tick_rate = target_tick_rate
@@ -118,7 +134,7 @@ func _run() -> void:
 		else:
 			var msg := (
 				"{0} missed target frame time {1}us. Got: {2}us"
-				. format([name, target_frame_time_us, delta_us])
+				.format([name, target_frame_time_us, delta_us])
 			)
 			logger.debug(msg)
 
@@ -128,7 +144,12 @@ func _process(delta: float) -> void:
 	mutex.lock()
 	var process_nodes := nodes.duplicate()
 	var process_methods := one_shots.duplicate()
+	var process_loops := process_funcs.duplicate()
 	mutex.unlock()
+
+	# Process any thread process methods
+	for process in process_loops:
+		process.call(delta)
 
 	# Process nodes with _thread_process
 	for node in process_nodes:
