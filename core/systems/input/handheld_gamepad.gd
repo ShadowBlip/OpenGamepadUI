@@ -169,15 +169,15 @@ func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void
 	logger.debug("Got audio event: " + str(event_code) + str(event_value))
 	var return_code: int
 	match event_code:
-		113: # EV_KEY KEY_MUTE
+		InputDeviceEvent.KEY_MUTE:
 			return_code = AudioManager.toggle_mute()
 			logger.debug("return code: " + str(return_code))
-		114: # EV_KEY KEY_VOLUMEDOWN
+		InputDeviceEvent.KEY_VOLUMEDOWN:
 			if current_volume == 0:
 				return
 			return_code = AudioManager.set_volume(current_volume - .01)
 			logger.debug("return code: " + str(return_code))
-		115: # EV_KEY KEY_VOLUMEUP
+		InputDeviceEvent.KEY_VOLUMEUP:
 			if current_volume == 1:
 				return
 			return_code = AudioManager.set_volume(current_volume + .01)
