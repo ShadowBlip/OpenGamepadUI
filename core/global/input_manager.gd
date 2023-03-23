@@ -159,6 +159,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			is_handheld_gamepad = true
 		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
+			# Expose the gamepad inside the game sandbox if supported. This is
+			# to workaround SteamInput virtual devices
+			sandbox.expose_input_device(path)
 			continue
 		# Reconfigure disconnected gamepads
 		if orphaned_gamepads.has(input_device.get_phys()):
