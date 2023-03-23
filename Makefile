@@ -4,7 +4,7 @@ ROOTFS ?= .rootfs
 GODOT_VERSION ?= 4.0
 GODOT_RELEASE ?= stable
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
-GODOT ?= /usr/bin/godot4
+GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
