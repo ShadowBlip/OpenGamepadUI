@@ -80,7 +80,7 @@ func _input(event: InputEvent):
 				and event.velocity.length() > _settings.mouse_min_movement
 			):
 				input_type = InputType.KEYBOARD_MOUSE
-		"InputEventJoypadButton":
+		"InputEventJoypadButton", "InputEventAction":
 			input_type = InputType.CONTROLLER
 		"InputEventJoypadMotion":
 			if abs(event.axis_value) > _settings.joypad_deadzone:
