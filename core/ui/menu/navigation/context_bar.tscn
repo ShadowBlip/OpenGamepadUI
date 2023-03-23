@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dpajbxrv14ehk"]
+[gd_scene load_steps=8 format=3 uid="uid://dpajbxrv14ehk"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
 [ext_resource type="Script" path="res://core/ui/menu/navigation/context_bar.gd" id="2_jserv"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="3_vjpxr"]
 [ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="5_wisqw"]
 [ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="6_lel3f"]
+[ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="7_ebva3"]
 
 [node name="ContextBar" type="Control" groups=["menu"]]
 custom_minimum_size = Vector2(0, 40)
@@ -51,6 +52,7 @@ layout_mode = 2
 text = "Accept"
 
 [node name="AcceptButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("5_wisqw")
@@ -63,6 +65,7 @@ layout_mode = 2
 text = "Back"
 
 [node name="BackButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("3_pwpba")
@@ -94,6 +97,7 @@ text = "+"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+texture = ExtResource("7_ebva3")
 expand_mode = 1
 script = ExtResource("3_vjpxr")
 path = "ogui_guide_action_qam"
