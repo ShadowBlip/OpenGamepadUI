@@ -25,6 +25,10 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/opengamepadui/libevdev.linux.template_debug.x86_64.so
 	install -Dm644 usr/share/opengamepadui/libxlib.linux.template_debug.x86_64.so \
 		$(PREFIX)/share/opengamepadui/libxlib.linux.template_debug.x86_64.so
+	install -Dm644 usr/share/opengamepadui/libopensd.linux.template_debug.x86_64.so \
+		$(PREFIX)/share/opengamepadui/libopensd.linux.template_debug.x86_64.so
+	install -Dm644 usr/share/opengamepadui/libpty.linux.template_debug.x86_64.so \
+		$(PREFIX)/share/opengamepadui/libpty.linux.template_debug.x86_64.so
 	install -Dm755 usr/share/opengamepadui/opengamepad-ui.x86_64 \
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	@echo "Installation complete"
