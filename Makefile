@@ -1,14 +1,15 @@
 
 PREFIX ?= $(HOME)/.local
 ROOTFS ?= .rootfs
-GODOT_VERSION ?= 4.0
+GODOT_VERSION ?= 4.0.1
 GODOT_RELEASE ?= stable
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
-EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
+#EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
+EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
