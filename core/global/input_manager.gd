@@ -180,7 +180,10 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		if input_device.open(path) != OK:
 			logger.warn("Unable to create managed gamepad for: " + path)
 			continue
-		if input_device.get_phys() == "":
+		var is_handheld_gamepad := false
+		if handheld_gamepad and handheld_gamepad.is_found_gamepad(input_device):
+			is_handheld_gamepad = true
+		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
 		# Reconfigure disconnected gamepads
@@ -205,7 +208,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
 		# Check if we're using a known handheld and link this device to the
 		# handheld gamepad so we can send events to the correct virtual controller.
-		if handheld_gamepad and handheld_gamepad.is_found_gamepad(gamepad):
+		if is_handheld_gamepad:
 			handheld_gamepad.set_gamepad_device(gamepad)
 	logger.debug("Finished configuring detected controllers")
 

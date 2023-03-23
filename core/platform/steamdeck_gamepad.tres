@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=11 format=3 uid="uid://bpdcscg32xb21"]
+
+[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_u1ks7"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="1_xitrc"]
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_aictv"]
+type = 1
+code = 114
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_1j5l4"]
+type = 1
+code = 114
+value = 1
+
+[sub_resource type="Resource" id="Resource_hdwbx"]
+script = ExtResource("1_u1ks7")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_aictv")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_1j5l4")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_21bq7"]
+type = 1
+code = 115
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_2hfe6"]
+type = 1
+code = 115
+value = 1
+
+[sub_resource type="Resource" id="Resource_5kloo"]
+script = ExtResource("1_u1ks7")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_21bq7")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_2hfe6")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6nyxj"]
+type = 1
+code = 116
+value = 1
+
+[sub_resource type="Resource" id="Resource_v2l7w"]
+script = ExtResource("1_u1ks7")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6nyxj")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_power"
+on_release = false
+
+[resource]
+script = ExtResource("1_xitrc")
+mapped_events = Array[ExtResource("1_u1ks7")]([SubResource("Resource_hdwbx"), SubResource("Resource_5kloo"), SubResource("Resource_v2l7w")])
+kb_phys_path = "isa0060/serio0/input0"
+kb_phys_name = "AT Translated Set 2 keyboard"
+gamepad_phys_path = ""
+gamepad_phys_name = "OpenSD Gamepad Device"

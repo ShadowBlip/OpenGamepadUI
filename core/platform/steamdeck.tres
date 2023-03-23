@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1_16t6g")
+name = "SteamDeck"

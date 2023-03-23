@@ -26,3 +26,8 @@ func _init() -> void:
 	var thread := Thread.new()
 	opensd = OpenSD.new()
 	thread.start(opensd.run)
+
+
+func get_handheld_gamepad() -> HandheldGamepad:
+	logger.info("Using SteamDeck platform configuration.")
+	return load("res://core/platform/steamdeck_gamepad.tres")

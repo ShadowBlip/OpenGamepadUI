@@ -21,6 +21,7 @@ var sent_ogui_events: PackedStringArray
 ## that activates either an ogui_event or another Array[InputDeviceEvent]
 @export var mapped_events: Array[MappedEvent]
 ## Path of the device in sysfs ATTR{phys}
+## cat /proc/bus/input/devices
 @export var kb_phys_path: String
 ## Name of the device in sysfs ATTR{name}
 @export var kb_phys_name: String
@@ -30,7 +31,7 @@ var sent_ogui_events: PackedStringArray
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
 
 
 ## Main process thread for input translation from one device to another.
@@ -279,11 +280,11 @@ func open() -> int:
 	return result
 
 
-## Check if the given ManagedGamepad matches the parameters of the defined
-## ManagedGamepad as specified in the device implementation.
-func is_found_gamepad(gamepad: ManagedGamepad) -> bool:
-	if gamepad.phys_device.get_phys() == gamepad_phys_path and gamepad.phys_device.get_name() == gamepad_phys_name:
-		logger.info("Found handheld gamepad device: " + gamepad.phys_device.get_name())
+## Check if the given InputDevice matches the parameters of the defined
+## InputDevice as specified in the device implementation.
+func is_found_gamepad(device: InputDevice) -> bool:
+	if device.get_phys() == gamepad_phys_path and device.get_name() == gamepad_phys_name:
+		logger.info("Found handheld gamepad device: " + device.get_name())
 		return true
 	return false
 
