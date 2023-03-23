@@ -43,6 +43,7 @@ var state_machine := preload("res://assets/state/state_machines/global_state_mac
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 
+var _sandbox := Sandbox.get_sandbox()
 var _current_app: RunningApp
 var _pid_to_windows := {}
 var _running: Array[RunningApp] = []
@@ -77,11 +78,6 @@ func _save_persist_data():
 	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.WRITE_READ)
 	file.store_string(JSON.stringify(_persist_data))
 	file.flush()
-
-
-## Returns whether or not we can launch via sandboxing
-func has_sandboxing() -> bool:
-	return OS.execute("which", ["firejail"]) == 0
 
 
 ## Launches the given command on the target xwayland display. Returns a PID
@@ -124,13 +120,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 		env_vars.append("{0}={1}".format([key, env[key]]))
 	
 	# If sandboxing is available, launch the game in the sandbox 
-	var sandbox := PackedStringArray()
-	if has_sandboxing():
-		sandbox.append_array(["firejail", "--noprofile"])
-		var blacklist := InputManager.get_managed_gamepads()
-		for device in blacklist:
-			sandbox.append("--blacklist=%s" % device)
-		sandbox.append("--")
+	var sandbox := _sandbox.get_command(app)
 
 	# Build the launch command to run
 	var exec := "env"

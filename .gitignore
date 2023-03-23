@@ -3,5 +3,4 @@
 .rootfs
 build
 dist
-sandbox
 settings.mk
