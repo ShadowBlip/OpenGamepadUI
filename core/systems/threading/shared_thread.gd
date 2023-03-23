@@ -8,11 +8,14 @@ class_name SharedThread
 
 signal exec_completed(method: Callable, ret: Variant)
 
+const watchdog := preload("res://core/systems/threading/watchdog_thread.tres")
+
 var thread: Thread
 var mutex := Mutex.new()
 var running := false
 var nodes: Array[NodeThread] = []
 var one_shots: Array[Callable] = []
+var last_time: int
 var logger := Log.get_logger("SharedThread", Log.LEVEL.DEBUG)
 
 ## Name of the thread group
@@ -22,7 +25,7 @@ var logger := Log.get_logger("SharedThread", Log.LEVEL.DEBUG)
 
 
 func _init() -> void:
-	pass
+	watchdog.add_thread(self)
 
 
 ## Starts the thread for the thread group
@@ -84,7 +87,7 @@ func _run() -> void:
 	var exited := false
 	var current_tick_rate = target_tick_rate
 	var target_frame_time_us := get_target_frame_time()
-	var last_time := Time.get_ticks_usec()
+	last_time = Time.get_ticks_usec()
 	while not exited:
 		# If the tick rate has changed, update it.
 		if target_tick_rate != current_tick_rate:
