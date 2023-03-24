@@ -163,9 +163,18 @@ func _get_cpus_enabled() -> int:
 	return active_cpus
 
 
+# Gets the current and absolute min/max gpu clocks, and sets the slider values
+# to match.
+func _get_gpu_clk_limits() -> void:
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_get_amd_gpu_clock_limits()
+		"GenuineIntel":
+			_get_intel_gpu_clock_limits()
+
 # Reads the pp_os_clk_voltage from sysfs and returns the values. This file will 
 # be empty if not in "manual" for pp_od_performance_level.
-func _get_gpu_clk_limits() -> bool:
+func _get_amd_gpu_clock_limits() -> void:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
 	var output: Array = _do_exec("cat", args)
 	var result := output[0][0].split("\n") as Array
@@ -195,7 +204,22 @@ func _get_gpu_clk_limits() -> bool:
 	gpu_freq_min_slider.min_value = min_value
 	gpu_freq_min_slider.value = current_min
 	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
-	return true
+
+
+# Reads the following sysfs paths to get the current and mix/max gpu frequencies.
+func _get_intel_gpu_clock_limits() -> void:
+	var current_max: int = int(_read_sys("/sys/class/drm/card0/gt_max_freq_mhz"))
+	var current_min: int = int(_read_sys("/sys/class/drm/card0/gt_min_freq_mhz"))
+	var max_value: int = int(_read_sys("/sys/class/drm/card0/gt_RP0_freq_mhz"))
+	var min_value: int = int(_read_sys("/sys/class/drm/card0/gt_RPn_freq_mhz"))
+
+	gpu_freq_max_slider.max_value = max_value
+	gpu_freq_max_slider.min_value = min_value
+	gpu_freq_max_slider.value = current_max
+	gpu_freq_min_slider.max_value = max_value
+	gpu_freq_min_slider.min_value = min_value
+	gpu_freq_min_slider.value = current_min
+	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
 
 
 # Retrieves the current TDP.
@@ -269,16 +293,17 @@ func _ensure_tdp_boost(current_boost: float)  -> void:
 		await _on_tdp_boost_value_changed(current_boost)
 
 
-
 # Called to get the current performance level and set the UI as needed.
 func _get_gpu_perf_level() -> void:
-	var performace_level: String = _read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
-	logger.debug("GPU Mode set to: " + performace_level)
-	if performace_level == "manual":
-		gpu_freq_enable.button_pressed = true
-		gpu_freq_max_slider.visible = true
-		gpu_freq_min_slider.visible = true
-		_get_gpu_clk_limits()
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			var performace_level: String = _read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
+			logger.debug("GPU Mode set to: " + performace_level)
+			if performace_level == "manual":
+				gpu_freq_enable.button_pressed = true
+				gpu_freq_max_slider.visible = true
+				gpu_freq_min_slider.visible = true
+	_get_gpu_clk_limits()
 
 
 # Reads the hardware. Only supports AMD APU's currently.
@@ -315,12 +340,13 @@ func _get_system_components() -> bool:
 	logger.debug("Found CPU: " + cpu_model)
 	# TODO: This is lazy and doesn't support dedicated graphics paired with APU's.
 	if cpu_model in amd_apu_database:
+		gpu_clk_capable = true
 		gpu_model = cpu_model
 		gpu_vendor = cpu_vendor
 		tdp_capable = true
 		tj_temp_capable = true
-		gpu_clk_capable = true
 	if cpu_model in intel_apu_database:
+		gpu_clk_capable = true
 		gpu_model = cpu_model
 		gpu_vendor = cpu_vendor
 		tdp_capable = true
@@ -372,39 +398,49 @@ func _do_change_cpu_cores():
 	if smt:
 		for cpu_no in range(1, core_count):
 			if cpu_no >= cpu_cores_slider.value:
-				args = ["togglecpu", str(cpu_no), "0"]
+				args = ["cpuToggle", str(cpu_no), "0"]
 			else:
-				args = ["togglecpu", str(cpu_no), "1"]
+				args = ["cpuToggle", str(cpu_no), "1"]
 			_async_do_exec(powertools_path, args)
 	if not smt:
 		for cpu_no in range(2, core_count, 2):
 			if cpu_no >= cpu_cores_slider.value * 2:
-				args = ["togglecpu", str(cpu_no), "0"]
+				args = ["cpuToggle", str(cpu_no), "0"]
 			else:
-				args = ["togglecpu", str(cpu_no), "1"]
+				args = ["cpuToggle", str(cpu_no), "1"]
 			_async_do_exec(powertools_path, args)
 
 
 # Sets the T-junction temp using ryzenadj.
 # TODO: Support more than AMD APU's
 func _on_gpu_temp_limit_changed(value: float) -> void:
-	_setup_callback_exec(powertools_path, ["ryzenadj", "-f", str(value)])
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_setup_callback_exec(powertools_path, ["ryzenadj", "-f", str(value)])
+		"GenuineIntel":
+			pass
 
 
 # Called to set the max GPU freq
-# TODO: Support more than AMD APU's
 func _on_max_gpu_freq_changed(value: float) -> void:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
-	_setup_callback_exec(powertools_path, ["gpuclk", "1", str(value)])
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_setup_callback_exec(powertools_path, ["amdGpuClock", "1", str(value)])
+		"GenuineIntel":
+			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_max_freq_mhz", str(value)])
 
 
 # Called to set the min GPU freq
-# TODO: Support more than AMD APU's
 func _on_min_gpu_freq_changed(value: float) -> void:
 	if value > gpu_freq_max_slider.value:
 		gpu_freq_max_slider.value = value
-	_setup_callback_exec(powertools_path, ["gpuclk", "0", str(value)])
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_setup_callback_exec(powertools_path, ["amdGpuClock", "0", str(value)])
+		"GenuineIntel":
+			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_min_freq_mhz", str(value)])
 
 
 # Called to set the base average TDP
@@ -447,7 +483,7 @@ func _do_amd_tdp_boost_change() -> void:
 func _do_intel_tdp_change() -> void:
 	logger.debug("Doing callback func _do_intel_tdp_change")
 	var value: int = tdp_slider.value
-	var results := await _async_do_exec(powertools_path, ["set_rapl", "constraint_0_power_limit_uw", str(value * 1000000)])
+	var results := await _async_do_exec(powertools_path, ["setRapl", "constraint_0_power_limit_uw", str(value * 1000000)])
 	for result in results:
 		logger.debug("Result: " +str(result))
 	_do_intel_tdp_boost_change()
@@ -476,15 +512,20 @@ func _on_toggle_cpu_boost(state: bool) -> void:
 
 
 # Called to toggle auo/manual gpu clocking
-# TODO: Support more than AMD APU's
 func _on_toggle_gpu_freq(state: bool) -> void:
-	var args := ["pdfpl", "auto"]
-	if state:
-		args = ["pdfpl", "manual"]
-	var output: Array = _do_exec(powertools_path, args)
-	var exit_code = output[1]
-	if exit_code:
-		logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			var args := ["pdfpl", "auto"]
+			if state:
+				args = ["pdfpl", "manual"]
+			var output: Array = _do_exec(powertools_path, args)
+			var exit_code = output[1]
+			if exit_code:
+				logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
+		"GenuineIntel":
+			if not state:
+				gpu_freq_min_slider.value = gpu_freq_min_slider.min_value
+				gpu_freq_max_slider.value = gpu_freq_min_slider.max_value
 	gpu_freq_max_slider.visible = state
 	gpu_freq_min_slider.visible = state
 	if state:
@@ -496,10 +537,10 @@ func _on_toggle_smt(state: bool) -> void:
 	smt = state
 	var args := []
 	if smt:
-		args = ["smt", "on"]
+		args = ["smtToggle", "on"]
 		cpu_cores_slider.max_value = core_count
 	else:
-		args = ["smt", "off"]
+		args = ["smtToggle", "off"]
 		cpu_cores_slider.max_value = core_count / 2
 	var output: Array = _do_exec(powertools_path, args)
 	var exit_code = output[1]
