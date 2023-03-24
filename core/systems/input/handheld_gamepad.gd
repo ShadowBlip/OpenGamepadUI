@@ -172,14 +172,11 @@ func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void
 	var return_code: int
 	match event_code:
 		InputDeviceEvent.KEY_MUTE:
-			return_code = AudioManager.toggle_mute()
-			logger.debug("return code: " + str(return_code))
+			AudioManager.call_deferred("toggle_mute")
 		InputDeviceEvent.KEY_VOLUMEDOWN:
-			return_code = AudioManager.set_volume(-0.06, AudioManager.VOLUME.RELATIVE)
-			logger.debug("return code: " + str(return_code))
+			AudioManager.call_deferred("set_volume", -0.06, AudioManager.VOLUME.RELATIVE)
 		InputDeviceEvent.KEY_VOLUMEUP:
-			return_code = AudioManager.set_volume(0.06, AudioManager.VOLUME.RELATIVE)
-			logger.debug("return code: " + str(return_code))
+			AudioManager.call_deferred("set_volume", 0.06, AudioManager.VOLUME.RELATIVE)
 		_:
 			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")
 
