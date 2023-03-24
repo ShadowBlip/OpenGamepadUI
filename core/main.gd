@@ -130,3 +130,13 @@ func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
 	boot_video.visible = false
+
+
+func _input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ogui_power"):
+		return
+	# Handle suspend events
+	logger.info("Received suspend signal")
+	var output: Array = []
+	if OS.execute("systemctl", ["suspend"], output) != OK:
+		logger.warn("Failed to suspend: '" + output[0] + "'")
