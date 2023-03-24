@@ -61,6 +61,7 @@ text = "CPU Cores"
 value = 1.0
 max_value = 1.0
 min_value = 1.0
+separator_visible = true
 
 [node name="GPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
@@ -77,6 +78,7 @@ focus_next = NodePath("../TDPBoostSlider")
 focus_previous = NodePath("../CPUCoresSlider")
 text = "TDP"
 max_value = 0.0
+separator_visible = true
 
 [node name="TDPBoostSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -89,6 +91,7 @@ focus_next = NodePath("../GPUFreqButton")
 focus_previous = NodePath("../TDPSlider")
 text = "TDP Boost"
 max_value = 0.0
+separator_visible = true
 
 [node name="GPUFreqButton" parent="." instance=ExtResource("2_nb5h3")]
 visible = false
@@ -114,6 +117,7 @@ focus_previous = NodePath("../GPUFreqButton")
 text = "Min Freq"
 max_value = 0.0
 step = 100.0
+separator_visible = true
 
 [node name="GPUFreqMaxSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -127,6 +131,7 @@ focus_previous = NodePath("../GPUFreqMinSlider")
 text = "Max Freq"
 max_value = 0.0
 step = 100.0
+separator_visible = true
 
 [node name="GPUTempSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -141,3 +146,4 @@ text = "GPU Temp Limit"
 value = 70.0
 max_value = 105.0
 min_value = 70.0
+separator_visible = true

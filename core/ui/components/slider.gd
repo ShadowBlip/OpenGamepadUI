@@ -53,7 +53,7 @@ signal value_changed(value: float)
 		notify_property_list_changed()
 
 @export var tick_count := 0
-@export var separator_visible: bool = true
+@export var separator_visible: bool = false
 
 @onready var label := $%Label as Label
 @onready var label_value := $%LabelValue as Label

@@ -8,7 +8,7 @@ signal toggled(pressed: bool)
 
 @export_category("Label Settings")
 @export var text: String = "Setting"
-@export var separator_visible: bool = true
+@export var separator_visible: bool = false
 @export var show_label := true:
 	set(v):
 		show_label = v
