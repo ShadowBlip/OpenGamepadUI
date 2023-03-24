@@ -8,6 +8,7 @@ signal toggled(pressed: bool)
 
 @export_category("Label Settings")
 @export var text: String = "Setting"
+@export var separator_visible: bool = true
 @export var show_label := true:
 	set(v):
 		show_label = v
@@ -39,6 +40,7 @@ signal toggled(pressed: bool)
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
 @onready var check_button := $%CheckButton as CheckButton
+@onready var hsep := $HSeparator as HSeparator
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -47,6 +49,7 @@ func _ready() -> void:
 	label.text = text
 	description_label.text = description
 	description_label.visible = description != ""
+	hsep.visible = separator_visible
 	check_button.button_pressed = button_pressed
 	check_button.disabled = disabled
 	check_button.focus_neighbor_bottom = focus_neighbor_bottom
@@ -73,6 +76,8 @@ func _ready() -> void:
 	# Set color based on theme
 	if theme:
 		check_button.modulate = theme.get_color("color", "Toggle")
+
+
 
 # Override focus grabbing to grab the child
 func _grab_focus() -> void:

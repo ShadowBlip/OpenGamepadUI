@@ -23,21 +23,21 @@ signal value_changed(value: float)
 			slider.value = v
 		value_changed.emit(v)
 		notify_property_list_changed()
-	
+
 @export var max_value: float = 100:
 	set(v):
 		max_value = v
 		if slider:
 			slider.max_value = v
 		notify_property_list_changed()
-		
+
 @export var min_value: float = 0:
 	set(v):
 		min_value = v
 		if slider:
 			slider.min_value = v
 		notify_property_list_changed()
-		
+
 @export var step: float = 1:
 	set(v):
 		step = v
@@ -51,13 +51,15 @@ signal value_changed(value: float)
 		if slider:
 			slider.editable = v
 		notify_property_list_changed()
-		
+
 @export var tick_count := 0
+@export var separator_visible: bool = true
 
 @onready var label := $%Label as Label
 @onready var label_value := $%LabelValue as Label
 @onready var slider := $%HSlider as HSlider
 @onready var hbox := $HBoxContainer as HBoxContainer
+@onready var hsep := $HSeparator as HSeparator
 
 
 # Called when the node enters the scene tree for the first time.
@@ -65,6 +67,7 @@ func _ready() -> void:
 	focus_entered.connect(_grab_focus)
 	label.text = text
 	label_value.text = str(slider.value)
+	hsep.visible = separator_visible
 	slider.value_changed.connect(_on_value_changed)
 	slider.value = value
 	slider.min_value = min_value
