@@ -15,6 +15,7 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme = ExtResource("1_6165a")
 script = ExtResource("1_khsna")
+separator_visible = null
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
