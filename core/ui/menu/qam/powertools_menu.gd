@@ -208,6 +208,7 @@ func _get_tdp() -> bool:
 		_:
 			return false
 
+
 # Retrieves the current TDP from ryzenadj for AMD APU's.
 func _get_amd_tdp() -> bool:
 	var output: Array = _do_exec(powertools_path, ["ryzenadj", "-i"])
@@ -232,12 +233,7 @@ func _get_amd_tdp() -> bool:
 			"THM LIMIT CORE":
 				gpu_temp_slider.value = float(parts[2])
 	var current_boost = current_fastppt - tdp_slider.value 
-	if current_boost > tdp_boost_slider.max_value:
-		tdp_boost_slider.value = tdp_boost_slider.max_value
-	elif current_boost <= 0:
-		tdp_boost_slider.value = 0
-	else:
-		tdp_boost_slider.value = current_boost
+	_ensure_tdp_boost(current_boost)
 	return true	
 
 
@@ -256,13 +252,22 @@ func _get_intel_tdp() -> bool:
 	logger.debug("Current TDP: " +str(long_tdp))
 	logger.debug("Current TDP Slider value: " +str(tdp_slider.value))
 	var current_boost = peak_tdp / 1000000 - tdp_slider.value
+	_ensure_tdp_boost(current_boost)
+	return true
+
+
+# Ensures the current boost doesn't exceed the max boost.
+func _ensure_tdp_boost(current_boost: float)  -> void:
 	if current_boost > tdp_boost_slider.max_value:
 		tdp_boost_slider.value = tdp_boost_slider.max_value
+		await _on_tdp_boost_value_changed(tdp_boost_slider.max_value)
 	elif current_boost <= 0:
 		tdp_boost_slider.value = 0
+		await _on_tdp_boost_value_changed(0)
 	else:
 		tdp_boost_slider.value = current_boost
-	return true
+		await _on_tdp_boost_value_changed(current_boost)
+
 
 
 # Called to get the current performance level and set the UI as needed.
@@ -357,7 +362,12 @@ func _get_tdp_range_intel_apu() -> bool:
 
 
 # Called to disable/enable cores by count as specified by value. 
-func _on_change_cpu_cores(value: float):
+func _on_change_cpu_cores(_value: float):
+	_setup_callback_func(_do_change_cpu_cores)
+
+
+# Called to disable/enable cores by count as specified by value. 
+func _do_change_cpu_cores():
 	var args := []
 	if smt:
 		for cpu_no in range(1, core_count):
@@ -365,14 +375,14 @@ func _on_change_cpu_cores(value: float):
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			_setup_callback_exec(powertools_path, args)
+			_async_do_exec(powertools_path, args)
 	if not smt:
 		for cpu_no in range(2, core_count, 2):
 			if cpu_no >= cpu_cores_slider.value * 2:
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			_setup_callback_exec(powertools_path, args)
+			_async_do_exec(powertools_path, args)
 
 
 # Sets the T-junction temp using ryzenadj.
@@ -455,6 +465,7 @@ func _do_intel_tdp_boost_change() -> void:
 	results =await _async_do_exec(powertools_path, ["set_rapl", "constraint_2_power_limit_uw", str(peakTDP)])
 	for result in results:
 		logger.debug("Result: " +str(result))
+
 
 # Called to toggle cpu boost
 func _on_toggle_cpu_boost(state: bool) -> void:
