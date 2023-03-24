@@ -1,30 +1,72 @@
-extends Object
+extends Resource
 class_name AudioManager
 
+## Manage system volume and audio devices
+## 
+## The AudioManager is responsible for managing the system volume and audio
+## devices if the host supports it.
 
-# Returns true if the system has audio controls we support
-static func supports_audio() -> bool:
+signal volume_changed(value: float)
+signal volume_mute_toggled()
+
+## Types of volume changes that are supported
+enum VOLUME {
+	ABSOLUTE,
+	RELATIVE,
+}
+
+## Limit the maximum volume to 200%
+const volume_limit := "2.0"
+
+## Current volume
+var current_volume := get_current_volume()
+
+
+## Returns true if the system has audio controls we support
+func supports_audio() -> bool:
 	var code := OS.execute("which", ["wpctl"])
 	return code == 0
 
 
-# Sets the current audio device volume
-static func set_volume(value: float) -> int:
-	if value > 2:
-		value = 2
+## Sets the current audio device volume based on the given value. The volume
+## value should be in the form of a percent where 1.0 equals 100%. The type
+## can be either absolute (default) or relative volume values.[br][br]
+##     [codeblock]
+##     const AudioManager := preload("res://core/global/audio_manager.tres")
+##     ...
+##     AudioManager.set_volume(1.0) # Set volume to 100%
+##     AudioManager.set_volume(-0.06, AudioManager.TYPE.RELATIVE) # Decrease volume by 6%
+##     [/codeblock]
+func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
+	var last_volume := current_volume
+	var suffix := "%"
+	if type == VOLUME.RELATIVE:
+		if value < 0:
+			suffix = "%-"
+			value = abs(value)
+		else:
+			suffix = "%+"
+		
 	var percent := value * 100
-	var code := OS.execute("wpctl", ["set-volume", "@DEFAULT_AUDIO_SINK@", str(percent) + "%"])
+	var args := ["set-volume", "--limit", volume_limit, "@DEFAULT_AUDIO_SINK@", str(percent) + suffix]
+	var code := OS.execute("wpctl", args)
+	if code == OK:
+		current_volume = get_current_volume()
+		if current_volume != last_volume:
+			volume_changed.emit(current_volume)
 	return code
 
 
-# Toggles mute on the current audio device
-static func toggle_mute() -> int:
+## Toggles mute on the current audio device
+func toggle_mute() -> int:
 	var code := OS.execute("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
+	if code == OK:
+		volume_mute_toggled.emit()
 	return code
 
 
-# Sets the current output device to the given device
-static func set_output_device(device: String) -> int:
+## Sets the current output device to the given device
+func set_output_device(device: String) -> int:
 	var ids := PackedStringArray()
 	var devices := PackedStringArray()
 	for id in _get_wpctl_object_ids():
@@ -48,8 +90,8 @@ static func set_output_device(device: String) -> int:
 	return OS.execute("wpctl", ["set-default", device_id])
 
 
-# Returns the currently set output device
-static func get_current_output_device() -> String:
+## Returns the currently set output device
+func get_current_output_device() -> String:
 	var lines := _wpctl_inspect("@DEFAULT_AUDIO_SINK@")
 	for line in lines:
 		if line.contains("node.description"):
@@ -57,8 +99,8 @@ static func get_current_output_device() -> String:
 	return ""
 
 
-# Returns the current volume as a percentage. E.g. 0.52 is 52%
-static func get_current_volume() -> float:
+## Returns the current volume as a percentage. E.g. 0.52 is 52%
+func get_current_volume() -> float:
 	var output := []
 	var code := OS.execute("wpctl", ["get-volume", "@DEFAULT_AUDIO_SINK@"], output)
 	if code != 0:
@@ -78,8 +120,8 @@ static func get_current_volume() -> float:
 	return vol_text.to_float()
 
 
-# Returns a list of audio output devices
-static func get_output_devices() -> PackedStringArray:
+## Returns a list of audio output devices
+func get_output_devices() -> PackedStringArray:
 	var devices := PackedStringArray()
 	for id in _get_wpctl_object_ids():
 		var lines := _wpctl_inspect(id)
@@ -97,7 +139,7 @@ static func get_output_devices() -> PackedStringArray:
 
 
 # Inspects the given wirepipe object
-static func _wpctl_inspect(id: String) -> PackedStringArray:
+func _wpctl_inspect(id: String) -> PackedStringArray:
 	var out := PackedStringArray()
 	var output := []
 	var code := OS.execute("wpctl", ["inspect", id], output)
@@ -110,7 +152,7 @@ static func _wpctl_inspect(id: String) -> PackedStringArray:
 
 
 # Returns an array of discovered Wirepipe object IDs
-static func _get_wpctl_object_ids() -> PackedStringArray:
+func _get_wpctl_object_ids() -> PackedStringArray:
 	var ids := PackedStringArray()
 
 	var output := []
