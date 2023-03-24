@@ -14,6 +14,7 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme = ExtResource("1_3gndo")
 script = ExtResource("1_pn5mg")
+separator_visible = true
 button_pressed = true
 
 [node name="ToggleContainer" type="HBoxContainer" parent="."]
