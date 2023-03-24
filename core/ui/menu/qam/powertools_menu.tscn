@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgtqpgne2s116"]
+[gd_scene load_steps=6 format=3 uid="uid://cgtqpgne2s116"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/powertools_menu.gd" id="1_8v1ke"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_nb5h3"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_v2y4s"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_ygeel"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_v2d1e"]
 
 [node name="PowerTools" type="VBoxContainer"]
 anchors_preset = 15
@@ -19,10 +20,9 @@ script = ExtResource("1_8v1ke")
 
 [node name="FocusManager" parent="." instance=ExtResource("2_v2y4s")]
 
-[node name="CPUSectionLabel" type="Label" parent="."]
+[node name="CPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
-text = "CPU Settings:
-"
+text = "CPU Settings:"
 
 [node name="CPUBoostButton" parent="." instance=ExtResource("2_nb5h3")]
 visible = false
@@ -62,10 +62,9 @@ value = 1.0
 max_value = 1.0
 min_value = 1.0
 
-[node name="GPUSectionLabel" type="Label" parent="."]
+[node name="GPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
-text = "GPU Settings:
-"
+text = "GPU Settings:"
 
 [node name="TDPSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false

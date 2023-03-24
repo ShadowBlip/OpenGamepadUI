@@ -42,4 +42,8 @@ label_settings = ExtResource("3_q0iwk")
 
 [node name="HSlider" type="HSlider" parent="."]
 unique_name_in_owner = true
+modulate = Color(0.741176, 0.576471, 0.976471, 1)
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2

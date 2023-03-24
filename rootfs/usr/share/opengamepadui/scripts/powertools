@@ -6,6 +6,7 @@ if [[ $EUID -ne 0 ]]; then
   exec pkexec --disable-internal-agent "$0" "$@"
 fi
 
+## CPU Generics
 cpuBoost(){
   /usr/bin/echo $1 > /sys/devices/system/cpu/cpufreq/boost
 }
@@ -14,19 +15,24 @@ cpuPower(){
   /usr/bin/cpupower $1 $2 $3
 }
 
-gpuClock(){
+cpuToggle(){
+ /usr/bin/echo $2 > /sys/bus/cpu/devices/cpu${1}/online
+}
+
+smtToggle(){
+  /usr/bin/echo $1 > /sys/devices/system/cpu/smt/control
+}
+
+## AMD APU
+amdGpuClock(){
   /usr/bin/echo "s $1 $2" > /sys/class/drm/card0/device/pp_od_clk_voltage
 }
 
-intelSetTDP(){
-  /usr/bin/echo $2 > /sys/class/powercap/intel-rapl/intel-rapl:0/${1}
-}
-
-ryzenadj_long(){
+ryzenadjLong(){
   /usr/bin/ryzenadj $1 $2
 }
 
-ryzenadj_short(){
+ryzenadjShort(){
   /usr/bin/ryzenadj $1
 }
 
@@ -38,27 +44,31 @@ setPDFPLW() { # set power_dpm_force_performace_level write
   /usr/bin/chmod a+w /sys/class/drm/card0/device/power_dpm_force_performance_level
 }
 
-smt(){
-  /usr/bin/echo $1 > /sys/devices/system/cpu/smt/control
+## INTEL iGPU
+setRapl(){ #TDP Control
+  /usr/bin/echo $2 > /sys/class/powercap/intel-rapl/intel-rapl:0/${1}
 }
 
-toggleCPU(){
- /usr/bin/echo $2 > /sys/bus/cpu/devices/cpu${1}/online
+intelGpuClock(){
+  /usr/bin/echo $2 > /sys/class/drm/card0/${1}
 }
 
-echo $@
-
+## CPU Generics
 if [[ $1 == "cpuBoost" ]]; then
   cpuBoost $2
 
-elif [[ $1 == "cpupower" ]]; then
+elif [[ $1 == "cpuPower" ]]; then
   cpuPower $2 $3 $4
 
-elif [[ $1 == "gpuclk" ]]; then
-  gpuClock $2 $3
+elif [[ $1 == "cpuToggle" ]]; then
+  cpuToggle $2 $3
 
-elif [[ $1 == "set_rapl" ]]; then
-  intelSetTDP $2 $3
+elif [[ $1 == "smtToggle" ]]; then
+  smtToggle $2
+
+## AMD APU's
+elif [[ $1 == "amdGpuClock" ]]; then
+  amdGpuClock $2 $3
 
 elif [[ $1 == "pdfpl" ]]; then
   if [[ $2 == "write" ]]; then
@@ -69,14 +79,16 @@ elif [[ $1 == "pdfpl" ]]; then
 
 elif [[ $1 == "ryzenadj" ]]; then
   if [[ $# > 2 ]]; then
-    ryzenadj_long $2 $3
+    ryzenadjLong $2 $3
   else
-    ryzenadj_short $2
+    ryzenadjShort $2
   fi
 
-elif [[ $1 == "smt" ]]; then
-  smt $2
+## Intel iGPU's
+elif [[ $1 == "setRapl" ]]; then
+  setRapl $2 $3
 
-elif [[ $1 == "togglecpu" ]]; then
-  toggleCPU $2 $3
+elif [[ $1 == "intelGpuClock" ]]; then
+  intelGpuClock $2 $3
+
 fi
