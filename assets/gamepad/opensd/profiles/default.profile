@@ -1,7 +1,7 @@
 # OpenSD profile file: default
 #
 # Please see the online OpenSD users manual at https://open-sd.gitlab.io/opensd-docs
-# for detailed explanations of each setting in this file. Or use the offline 
+# for detailed explanations of each setting in this file. Or use the offline
 # documentation that came with installation, usually in /usr/local/share/opensd.
 # An offline manpage is also available by typing: man opensdd
 #
@@ -11,13 +11,13 @@
 
 [Profile]
 # Name
-# The profile name as it will appear in the GUI and through the CLI query. 
+# The profile name as it will appear in the GUI and through the CLI query.
 # Should be unique for each profile to avoid confusion.
 #   Value: Any unique name.  Should be enclosed in quotes to preserve spaces.
 Name            = "Default OpenSD Profile"
 
 # Description
-# The profile description as it will appear in the GUI and through the CLI query. 
+# The profile description as it will appear in the GUI and through the CLI query.
 #   Value: A brief description.  Should be enclosed in quotes "" to preserve spaces.
 Description     = "A basic configuration that should work for most games and provide a few extras."
 
@@ -29,7 +29,7 @@ Description     = "A basic configuration that should work for most games and pro
 ForceFeedback   = true
 
 # Motion Device
-# If this is set to true, an additional input device will be created which 
+# If this is set to true, an additional input device will be created which
 # will report motion control data.  Motion axes still need to have thier
 # bindings defined.  If this is disabled, any "Motion" bindings will be
 # ignored.
@@ -47,8 +47,8 @@ MouseDevice     = true
 # Lizard Mode
 # The Steam Controller and the Steam Deck both have a kind of fallback BIOS
 # mode which emulates some keyboard and mouse events.  Valve refers to this
-# as 'Lizard Mode'.  This mode cannot be redefined.  It sends events 
-# IN ADDITION to the gamepad events created by the OpenSD driver, so it 
+# as 'Lizard Mode'.  This mode cannot be redefined.  It sends events
+# IN ADDITION to the gamepad events created by the OpenSD driver, so it
 # should always be disabled. When OpenSD exits, Lizard Mode is re-enabled.
 #   Values:  true, false  (recommended: false)
 LizardMode      = false
@@ -58,26 +58,26 @@ LizardMode      = false
 # data, which makes it feel odd and complicated to apply radial deadzones to.
 # Because of this, OpenSD vectorizes the stick position and returns "cleaner",
 # round stick ranges, as well as being able to create clean deadzone rescaling.
-# If you disable this setting, axis ranges are still internally normalized and 
-# rescaled to the the uinput device, but no vectorization will be applied and 
+# If you disable this setting, axis ranges are still internally normalized and
+# rescaled to the the uinput device, but no vectorization will be applied and
 # any deadzones will be ignored.
 #   Values:  true, false (recommended: true)
 StickFiltering  = true
 
 # Trackpad Filtering
 # Similar to above, but matches the square shape of the trackpad.  Filtering is
-# only applied to absolute values.  This setting must be enabled to apply 
-# deadzones to the trackpad absolute axes.  Relative values (rel_x and rel_y) 
+# only applied to absolute values.  This setting must be enabled to apply
+# deadzones to the trackpad absolute axes.  Relative values (rel_x and rel_y)
 # are unaffected, therefore deadzones do not affect mouse movement with the pads.
 #   Values:  true, false (recommended: true)
 TrackpadFiltering  = true
 
 
 [DeviceInfo]
-# This section allows you to set the name and USB identity of the individual 
-# input devices created by the gamepad driver.  This can be useful to mimic the 
+# This section allows you to set the name and USB identity of the individual
+# input devices created by the gamepad driver.  This can be useful to mimic the
 # appearance of a specific controller in order to get a very poorly written game
-# to recognise and support it. 
+# to recognise and support it.
 #
 # These are optional and will use defaults if undefined.  If the respective
 # device is not first enabled in the Feature section, these values will be
@@ -91,7 +91,7 @@ TrackpadFiltering  = true
 #   pid:     Product ID.  16-bit hex value starting with "0x"
 #   vid:     Version.  16-bit hex value starting with "0x"
 #   name:    The name string of the device
-# 
+#
 # Examples:
 #   Gamepad = 0xDEAD 0xBEEF 0x001 "OpenSD Gamepad Device"
 #   Motion = 0xDEAD 0xBEEF 0x001 "OpenSD Motion Control Device"
@@ -102,8 +102,8 @@ TrackpadFiltering  = true
 # Axis deadzones
 # Values are floating point and represent the percentage of the total range to
 # ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at
-# 90% (0.9).  A value of 0 is considered disabled.  
-# If StickFiltering is disabled, LStick and RStick deadzones will be ignored.  
+# 90% (0.9).  A value of 0 is considered disabled.
+# If StickFiltering is disabled, LStick and RStick deadzones will be ignored.
 # If TrackpadFiltering is disabled, LPad and RPad deadzones will be ignored.
 #   Supported inputs:  LeftStick, RightStick, LeftPad, RightPad, LeftTrigg, RightTrigg
 #   Values: 0.000 to 0.900
@@ -145,14 +145,14 @@ ABS_RZ          = -32767    32767
 # Gamepad input bindings
 #
 # This should be a list of all the physical gamepad buttons/sticks/pads/motion
-# inputs you want to bind to a virtual input event or command.  Anything not 
+# inputs you want to bind to a virtual input event or command.  Anything not
 # specified here will be considered 'unbound' and not register any event.
 #
 # Input:
-#   Input names reflect the action of the user.  Like pressing a button or 
+#   Input names reflect the action of the user.  Like pressing a button or
 #   pushing a thumbstick to the left.  Button bindings are pretty self-explanatory.
 #   While axes are broken into directional actions (i.e. LeftStickUp). This way
-#   you can make an axis send a keypress if you wanted to, and the inverse is 
+#   you can make an axis send a keypress if you wanted to, and the inverse is
 #   also possible.
 #
 # BindType:
@@ -160,9 +160,9 @@ ABS_RZ          = -32767    32767
 #
 #   Event Bindings:
 #     Since OpenSD manages up to 3 separate virtual input devices, you will need
-#     to specify which device will send a particular event.  
-#     These devices are "Gamepad", "Motion and "Mouse".  
-#     
+#     to specify which device will send a particular event.
+#     These devices are "Gamepad", "Motion and "Mouse".
+#
 #     Gamepad: This  device is for buttons and axes input.  This device is always
 #     enabled.
 #
@@ -173,28 +173,28 @@ ABS_RZ          = -32767    32767
 #     Mouse: This is a virtual mouse device which uses relative axes (REL) and
 #     buttons / keys.  This device must be enabled in the [Features] section.
 #
-#     Each binding must be mapped to a Linux input event code.  A complete list 
+#     Each binding must be mapped to a Linux input event code.  A complete list
 #     can be found in <linux/input-event-codes.h> and the supported codes can be
-#     found in the OpenSD documentation.  
+#     found in the OpenSD documentation.
 #     Most KEY_*, BTN_*, ABS_* and REL_* codes should be usable.
 #
-#     Event type is derived from the code prefix (i.e. KEY_* is a key event, 
+#     Event type is derived from the code prefix (i.e. KEY_* is a key event,
 #     ABS_* is an absolute axis event.)
 #
-#     Axis event bindings MUST specify the direction of the axis.  This allows 
-#     buttons to send axis events or allows an axis to be inverted at a driver 
+#     Axis event bindings MUST specify the direction of the axis.  This allows
+#     buttons to send axis events or allows an axis to be inverted at a driver
 #     level.
 #
-#     Event binding format:   
+#     Event binding format:
 #       Input = <Gamepad | Motion | Mouse> <input_event_code> [ + | - ]
 #
-#     Example:  
+#     Example:
 #       DPadUp = Gamepad ABS_HAT0Y -
 #
-#     The above line will bind the up direction on the physical dpad to the negative 
+#     The above line will bind the up direction on the physical dpad to the negative
 #     (up/left) direction of an absolute axis on the gamepad device.
 #
-#     There are also some standard meanings for these with regard to device 
+#     There are also some standard meanings for these with regard to device
 #     types and it is possible to configure this section which can cause very
 #     strange behaviour.
 #
@@ -205,7 +205,7 @@ ABS_RZ          = -32767    32767
 #     The "Command" binding allows you to execute external programs or scripts
 #     by forking them off as a child process.
 #
-#     Format:  
+#     Format:
 #       Input = Command <wait_for_exit> <repeat_delay_ms> <command_to_execute>
 #
 #     wait_for_exit: <true | false> value which specifies if the command should
@@ -215,9 +215,9 @@ ABS_RZ          = -32767    32767
 #     the binding can be triggered again.  The timer starts when the binding is
 #     successfully triggered.
 #
-#     Example:  
+#     Example:
 #       QuickAccess = Command true 0 rofi -show run
-#     
+#
 #   Profile Bindings:
 #     This binding type allows you to switch to a different profile using just
 #     the gamepad input.  Profiles are loaded from the user profile directory.
@@ -230,7 +230,7 @@ ABS_RZ          = -32767    32767
 #
 #     Example:
 #       L5 = Profile left_hand_mouse.profile
-#       
+#
 #
 #   Valid binding types are:  Gamepad, Mouse, Motion, Command, Profile
 #
@@ -245,12 +245,12 @@ DpadRight           = Gamepad   ABS_HAT0X   +
 # Buttons
 A                   = Gamepad   BTN_SOUTH
 B                   = Gamepad   BTN_EAST
-X                   = Gamepad   BTN_WEST     
-Y                   = Gamepad   BTN_NORTH
+X                   = Gamepad   BTN_NORTH
+Y                   = Gamepad   BTN_WEST
 L1                  = Gamepad   BTN_TL
 R1                  = Gamepad   BTN_TR
-L2                  = Gamepad   BTN_TL2
-R2                  = Gamepad   BTN_TR2
+L2                  = Gamepad   None
+R2                  = Gamepad   None
 L3                  = Gamepad   BTN_THUMBL
 R3                  = Gamepad   BTN_THUMBR
 L4                  = None
@@ -260,7 +260,7 @@ R5                  = None
 Menu                = Gamepad   BTN_START
 Options             = Gamepad   BTN_SELECT
 Steam               = Gamepad   BTN_MODE
-QuickAccess         = Mouse     BTN_RIGHT
+QuickAccess         = Gamepad   None
 # Triggers
 LTrigg              = Gamepad   ABS_Z       +
 RTrigg              = Gamepad   ABS_RZ      +
