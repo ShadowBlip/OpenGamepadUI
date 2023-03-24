@@ -78,7 +78,6 @@ func _ready() -> void:
 		check_button.modulate = theme.get_color("color", "Toggle")
 
 
-
 # Override focus grabbing to grab the child
 func _grab_focus() -> void:
 	check_button.grab_focus()
