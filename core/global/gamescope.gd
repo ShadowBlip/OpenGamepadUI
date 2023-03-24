@@ -30,7 +30,7 @@ enum XWAYLAND {
 	GAME,  ## Xwayland instance where games run
 }
 
-@export var log_level := Log.LEVEL.DEBUG
+@export var log_level := Log.LEVEL.INFO
 var xwayland_primary: Xlib
 var xwayland_ogui: Xlib
 var xwayland_game: Xlib

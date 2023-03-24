@@ -43,7 +43,7 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 var guide_action := false
 
 var handheld_gamepad: HandheldGamepad

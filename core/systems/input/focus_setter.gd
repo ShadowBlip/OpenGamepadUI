@@ -39,17 +39,30 @@ func _on_signal():
 # Recursively searches the given node children for a focusable node.
 func _find_focusable(nodes: Array[Node]) -> Control:
 	if nodes.size() == 0:
+		logger.debug("Node has no children to check.")
 		return null
 
 	for node in nodes:
+		var focusable : Control
 		logger.debug("Considering node: " + node.name)
-		if node is Control and node.focus_mode == Control.FOCUS_ALL:
-			if node.visible:
-				return node as Control
-		var focusable := _find_focusable(node.get_children())
+		if not node is Control:
+			logger.debug("Node not control. Checking children.")
+			focusable = _find_focusable(node.get_children())
+			if focusable:
+				return focusable
+			logger.debug("Node: " +node.name + " has no more children to check.")
+			continue
+		if not node.visible:
+			logger.debug("Node: " +node.name + " not visible. Skipping.")
+			continue
+		if node.focus_mode == Control.FOCUS_ALL:
+			logger.debug("Found good node: " + node.name)
+			return node as Control
+		logger.debug("Node: " +node.name + " is not focusable. Checking its children.")
+		focusable = _find_focusable(node.get_children())
 		if focusable:
 			return focusable
-
+	logger.debug("Node has no focusable children.")
 	return null
 
 

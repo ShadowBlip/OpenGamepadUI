@@ -31,7 +31,7 @@ var sent_ogui_events: PackedStringArray
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
 
 
 ## Main process thread for input translation from one device to another.

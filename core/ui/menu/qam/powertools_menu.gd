@@ -1,7 +1,6 @@
 extends VBoxContainer
 
-const powertools_path : String = "/etc/handypt/powertools"
-const SharedThread := preload("res://core/systems/threading/system_thread.tres")
+const powertools_path : String = "/usr/share/opengamepadui/scripts/powertools"
 
 var boost_capable := false
 var core_count := 0
@@ -11,6 +10,7 @@ var gpu_clk_capable := false
 var gpu_model := ""
 var gpu_vendor := ""
 var ht_capable := false
+var shared_thread: SharedThread
 var tdp_capable := false
 var tj_temp_capable := false
 var smt := false
@@ -32,6 +32,8 @@ var command_timer: Timer
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready():
+	shared_thread = SharedThread.new()
+	shared_thread.start()
 	command_timer = Timer.new()
 	command_timer.set_autostart(false)
 	command_timer.set_one_shot(true)
@@ -50,7 +52,7 @@ func _ready():
 
 	if tdp_capable:
 		_get_tdp_range()
-		_get_current_tdp_settings()
+		_get_tdp()
 		tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_changed)
 		tdp_slider.value_changed.connect(_on_tdp_value_changed)
 
@@ -82,7 +84,10 @@ func _ready():
 
 # Thread safe method of calling _do_exec
 func _async_do_exec(command: String, args: Array)-> Array:
-	return await SharedThread.exec(_do_exec.bind(command, args))
+	logger.debug("Start async_do_exec : " + command)
+	for arg in args:
+		logger.debug(str(arg))
+	return await shared_thread.exec(_do_exec.bind(command, args))
 
 
 # Bindable function to be called when command_timer.timeout signal is emmitted
@@ -119,8 +124,13 @@ func _clear_callbacks() -> void:
 # Calls OS.execute with the provided command and args and returns an array with
 # the results and exit code to catch errors.
 func _do_exec(command: String, args: Array)-> Array:
+	logger.debug("Start _do_exec with command : " + command)
+	for arg in args:
+		logger.debug(str(arg))
 	var output = []
 	var exit_code := OS.execute(command, args, output)
+	logger.debug("Output: " + str(output))
+	logger.debug("Exit code: " +str(exit_code))
 	return [output, exit_code]
 
 
@@ -188,9 +198,19 @@ func _get_gpu_clk_limits() -> bool:
 	return true
 
 
-# Retrieves the current TDP from ryzenadj.
-# TODO: make APU's a separate function, and add Intel and AMD GPU methods.
-func _get_current_tdp_settings() -> bool:
+# Retrieves the current TDP.
+func _get_tdp() -> bool:
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			return await _get_amd_tdp()
+		"GenuineIntel":
+			return await _get_intel_tdp()
+		_:
+			return false
+
+
+# Retrieves the current TDP from ryzenadj for AMD APU's.
+func _get_amd_tdp() -> bool:
 	var output: Array = _do_exec(powertools_path, ["ryzenadj", "-i"])
 	var exit_code = output[1]
 	if exit_code:
@@ -213,13 +233,41 @@ func _get_current_tdp_settings() -> bool:
 			"THM LIMIT CORE":
 				gpu_temp_slider.value = float(parts[2])
 	var current_boost = current_fastppt - tdp_slider.value 
+	_ensure_tdp_boost(current_boost)
+	return true	
+
+
+# Retrieves the current TDP from sysfs for Intel iGPU's.
+func _get_intel_tdp() -> bool:
+	var long_tdp: float = float(_read_sys("/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_0_power_limit_uw"))
+	if not long_tdp:
+		logger.warn("Unable to determine long TDP.")
+		return false
+
+	tdp_slider.value = long_tdp / 1000000
+	var peak_tdp: float = float(_read_sys("/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_2_power_limit_uw"))
+	if not peak_tdp:
+		logger.warn("Unable to determine long TDP.")
+		return false
+	logger.debug("Current TDP: " +str(long_tdp))
+	logger.debug("Current TDP Slider value: " +str(tdp_slider.value))
+	var current_boost = peak_tdp / 1000000 - tdp_slider.value
+	_ensure_tdp_boost(current_boost)
+	return true
+
+
+# Ensures the current boost doesn't exceed the max boost.
+func _ensure_tdp_boost(current_boost: float)  -> void:
 	if current_boost > tdp_boost_slider.max_value:
+		tdp_boost_slider.value = tdp_boost_slider.max_value
 		await _on_tdp_boost_value_changed(tdp_boost_slider.max_value)
 	elif current_boost <= 0:
+		tdp_boost_slider.value = 0
 		await _on_tdp_boost_value_changed(0)
 	else:
+		tdp_boost_slider.value = current_boost
 		await _on_tdp_boost_value_changed(current_boost)
-	return true	
+
 
 
 # Called to get the current performance level and set the UI as needed.
@@ -272,6 +320,10 @@ func _get_system_components() -> bool:
 		tdp_capable = true
 		tj_temp_capable = true
 		gpu_clk_capable = true
+	if cpu_model in intel_apu_database:
+		gpu_model = cpu_model
+		gpu_vendor = cpu_vendor
+		tdp_capable = true
 	if gpu_model == "" or gpu_vendor == "":
 		return false
 	logger.debug("Found GPU: " + gpu_model)
@@ -279,17 +331,29 @@ func _get_system_components() -> bool:
 
 
 # Gets the TDP Range for the detected hardware.
-# TODO: Support more than AMD APU's
 func _get_tdp_range() -> bool:
-	if cpu_vendor == "AuthenticAMD":
-		if cpu_model in amd_apu_database:
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
 			return _get_tdp_range_amd_apu()
-	return false
+		"GenuineIntel":
+			return _get_tdp_range_intel_apu()
+		_:
+			return false
 
 
 # Gets the TDP range for the detected APU
 func _get_tdp_range_amd_apu() -> bool:
-	var apu_data := amd_apu_database[cpu_model] as Dictionary
+	var apu_data := amd_apu_database[gpu_model] as Dictionary
+	tdp_boost_slider.max_value = apu_data["max_boost"]
+	tdp_slider.max_value = apu_data["max_tdp"]
+	tdp_slider.min_value = apu_data["min_tdp"]
+	logger.debug("Found TDP Limits: " + str(apu_data["min_tdp"]) + " - " + str(apu_data["max_tdp"]))
+	return true
+
+
+# Gets the TDP range for the detected APU
+func _get_tdp_range_intel_apu() -> bool:
+	var apu_data := intel_apu_database[gpu_model] as Dictionary
 	tdp_boost_slider.max_value = apu_data["max_boost"]
 	tdp_slider.max_value = apu_data["max_tdp"]
 	tdp_slider.min_value = apu_data["min_tdp"]
@@ -298,7 +362,12 @@ func _get_tdp_range_amd_apu() -> bool:
 
 
 # Called to disable/enable cores by count as specified by value. 
-func _on_change_cpu_cores(value: float):
+func _on_change_cpu_cores(_value: float):
+	_setup_callback_func(_do_change_cpu_cores)
+
+
+# Called to disable/enable cores by count as specified by value. 
+func _do_change_cpu_cores():
 	var args := []
 	if smt:
 		for cpu_no in range(1, core_count):
@@ -306,14 +375,14 @@ func _on_change_cpu_cores(value: float):
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			_setup_callback_exec(powertools_path, args)
+			_async_do_exec(powertools_path, args)
 	if not smt:
 		for cpu_no in range(2, core_count, 2):
 			if cpu_no >= cpu_cores_slider.value * 2:
 				args = ["togglecpu", str(cpu_no), "0"]
 			else:
 				args = ["togglecpu", str(cpu_no), "1"]
-			_setup_callback_exec(powertools_path, args)
+			_async_do_exec(powertools_path, args)
 
 
 # Sets the T-junction temp using ryzenadj.
@@ -338,14 +407,35 @@ func _on_min_gpu_freq_changed(value: float) -> void:
 	_setup_callback_exec(powertools_path, ["gpuclk", "0", str(value)])
 
 
-# Called to set the slow/fastPPT in ryzenadj
-# TODO: Support more than AMD APU's
+# Called to set the base average TDP
+func _on_tdp_value_changed(value: float) -> void:
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_setup_callback_func(_do_amd_tdp_change)
+		"GenuineIntel":
+			_setup_callback_func(_do_intel_tdp_change)
+
+
+# Called to set the flow and fast boost TDP
 func _on_tdp_boost_value_changed(_value: float) -> void:
-	_setup_callback_func(_do_tdp_boost_change)
+	match gpu_vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			_setup_callback_func(_do_amd_tdp_boost_change)
+		"GenuineIntel":
+			_setup_callback_func(_do_intel_tdp_boost_change)
 
 
-func _do_tdp_boost_change() -> void:
-	logger.debug("Doing callback func _do_tdp_boost_change")
+# Set STAPM on AMD APU's
+func _do_amd_tdp_change() -> void:
+	logger.debug("Doing callback func _do_amd_tdp_change")
+	var value: int = tdp_slider.value
+	await _async_do_exec(powertools_path, ["ryzenadj", "-a", str(value * 1000)])
+	_do_amd_tdp_boost_change()
+
+
+# Set long/short PPT on AMD APU's
+func _do_amd_tdp_boost_change() -> void:
+	logger.debug("Doing callback func _do_amd_tdp_boost_change")
 	var value: int = tdp_boost_slider.value
 	var slowPPT: float = (floor(value/2) + tdp_slider.value) * 1000
 	var fastPPT: float = (value + tdp_slider.value) * 1000
@@ -353,17 +443,28 @@ func _do_tdp_boost_change() -> void:
 	await _async_do_exec(powertools_path, ["ryzenadj", "-c", str(slowPPT)])
 
 
-func _do_tdp_change() -> void:
-	logger.debug("Doing callback func _do_tdp_change")
+# Set long TDP on Intel iGPU's
+func _do_intel_tdp_change() -> void:
+	logger.debug("Doing callback func _do_intel_tdp_change")
 	var value: int = tdp_slider.value
-	await _async_do_exec(powertools_path, ["ryzenadj", "-a", str(value * 1000)])
-	_do_tdp_boost_change()
+	var results := await _async_do_exec(powertools_path, ["set_rapl", "constraint_0_power_limit_uw", str(value * 1000000)])
+	for result in results:
+		logger.debug("Result: " +str(result))
+	_do_intel_tdp_boost_change()
 
 
-# Called to set the STAPM in ryzenadj
-# TODO: Support more than AMD APU's
-func _on_tdp_value_changed(value: float) -> void:
-	_setup_callback_func(_do_tdp_change)
+# Set short/peak TDP on Intel iGPU's
+func _do_intel_tdp_boost_change() -> void:
+	logger.debug("Doing callback func _do_intel_tdp_boost_change")
+	var value: int = tdp_boost_slider.value
+	var shortTDP: float = (floor(value/2) + tdp_slider.value) * 1000000
+	var peakTDP: float = (value + tdp_slider.value) * 1000000
+	var results := await _async_do_exec(powertools_path, ["set_rapl", "constraint_1_power_limit_uw", str(shortTDP)])
+	for result in results:
+		logger.debug("Result: " +str(result))
+	results =await _async_do_exec(powertools_path, ["set_rapl", "constraint_2_power_limit_uw", str(peakTDP)])
+	for result in results:
+		logger.debug("Result: " +str(result))
 
 
 # Called to toggle cpu boost
@@ -415,284 +516,303 @@ func _read_sys(path: String) -> String:
 
 # AMD APU TDP Database
 # TODO: Not this
-var amd_apu_database := {'AMD Athlon Silver 3020e with Radeon Graphics': { 
+var amd_apu_database := {
+	'AMD Athlon Silver 3020e with Radeon Graphics': {
 		"max_tdp": 12,
 		"min_tdp": 2,
 		"max_boost": 6
-		},
+	},
 	'AMD Athlon Silver 3050e with Radeon Graphics': {
 		"max_tdp": 12,
 		"min_tdp": 2,
 		"max_boost": 6
-		},
+	},
 	'AMD Ryzen 3 2200U with Radeon Graphics': {
 		"max_tdp": 20,
 		"min_tdp": 2,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 3 2300U with Radeon Graphics': {
 		"max_tdp": 25,
 		"min_tdp": 2,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 3 3200U with Radeon Graphics': {
 		"max_tdp": 20,
 		"min_tdp": 2,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 3 3300U with Radeon Graphics': {
 		"max_tdp": 25,
 		"min_tdp": 2,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 3 4300U with Radeon Graphics': {
 		"max_tdp": 23,
 		"min_tdp": 2,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 3 5125C with Radeon Graphics': {
 		"max_tdp": 15,
 		"min_tdp": 2,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 3 5300U with Radeon Graphics': {
 		"max_tdp": 23,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 3 5400U with Radeon Graphics': {
 		"max_tdp": 23,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 3 5425C with Radeon Graphics': {
 		"max_tdp": 23,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 3 5425U with Radeon Graphics': {
 		"max_tdp": 15,
 		"min_tdp": 2,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 5 2500U with Radeon Graphics': {
 		"max_tdp": 25,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 3500U with Radeon Graphics': {
 		"max_tdp": 30,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 3550H with Radeon Graphics': {
 		"max_tdp": 35,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 4500U with Radeon Graphics': {
 		"max_tdp": 28,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 5 4600H with Radeon Graphics': {
 		"max_tdp": 55,
 		"min_tdp": 5,
 		"max_boost": 11
-		},
+	},
 	'AMD Ryzen 5 4600HS with Radeon Graphics': {
 		"max_tdp": 45,
 		"min_tdp": 5,
 		"max_boost": 11
-		},
+	},
 	'AMD Ryzen 5 4600U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 5500U with Radeon Graphics': {
 		"max_tdp": 28,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 5 5560U with Radeon Graphics': {
 		"max_tdp": 28,
 		"min_tdp": 3,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 5 5600H with Radeon Graphics': {
 		"max_tdp": 12,
 		"min_tdp": 2,
 		"max_boost": 6
-		},
+	},
 	'AMD Ryzen 5 5600HS with Radeon Graphics': {
 		"max_tdp": 45,
 		"min_tdp": 5,
 		"max_boost": 11
-		},
+	},
 	'AMD Ryzen 5 5600U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 5625C with Radeon Graphics': {
 		"max_tdp": 15,
 		"min_tdp": 2,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 5 5625U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 5 6600H with Radeon Graphics': {
 		"max_tdp": 58,
 		"min_tdp": 5,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 5 6600HS with Radeon Graphics': {
 		"max_tdp": 45,
 		"min_tdp": 5,
 		"max_boost": 11
-		},
+	},
 	'AMD Ryzen 5 6600U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 7 2700U with Radeon Graphics': {
 		"max_tdp": 25,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 7 3700U with Radeon Graphics': {
 		"max_tdp": 30,
 		"min_tdp": 5,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 7 3750H with Radeon Graphics': {
 		"max_tdp": 40,
 		"min_tdp": 5,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 7 4700U with Radeon Graphics': {
 		"max_tdp": 12,
 		"min_tdp": 2,
 		"max_boost": 6
-		},
+	},
 	'AMD Ryzen 7 4800H with Radeon Graphics': {
 		"max_tdp": 60,
 		"min_tdp": 5,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 7 4800HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 5,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 7 4800U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 7 4980U with Radeon Graphics': {
 		"max_tdp": 15,
 		"min_tdp": 10,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 7 5700U with Radeon Graphics': {
 		"max_tdp": 28,
 		"min_tdp": 5,
 		"max_boost": 2
-		},
+	},
 	'AMD Ryzen 7 5800H with Radeon Graphics': {
 		"max_tdp": 68,
 		"min_tdp": 10,
 		"max_boost": 4
-		},
+	},
 	'AMD Ryzen 7 5800HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 7 5800U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 7 5825C with Radeon Graphics': {
 		"max_tdp": 15,
 		"min_tdp": 10,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 7 5825U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 7 6800H with Radeon Graphics': {
 		"max_tdp": 58,
 		"min_tdp": 10,
 		"max_boost": 10
-		},
+	},
 	'AMD Ryzen 7 6800HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 7 6800U with Radeon Graphics': {
 		"max_tdp": 33,
 		"min_tdp": 5,
 		"max_boost": 5
-		},
+	},
 	'AMD Ryzen 9 4900H with Radeon Graphics': {
 		"max_tdp": 60,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 4900HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 5,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 5900HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 5900HX with Radeon Graphics': {
 		"max_tdp": 70,
 		"min_tdp": 10,
 		"max_boost": 20
-		},
+	},
 	'AMD Ryzen 9 5980HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 5980HX with Radeon Graphics': {
 		"max_tdp": 70,
 		"min_tdp": 10,
 		"max_boost": 20
-		},
+	},
 	'AMD Ryzen 9 6900HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 6900HX with Radeon Graphics': {
 		"max_tdp": 70,
 		"min_tdp": 10,
 		"max_boost": 20
-		},
+	},
 	'AMD Ryzen 9 6980HS with Radeon Graphics': {
 		"max_tdp": 50,
 		"min_tdp": 10,
 		"max_boost": 8
-		},
+	},
 	'AMD Ryzen 9 6980HX with Radeon Graphics': {
 		"max_tdp": 70,
 		"min_tdp": 10,
 		"max_boost": 20
-		}
+	},
+}
+
+var intel_apu_database := {
+	'11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz': {
+		"max_tdp": 28,
+		"min_tdp": 12,
+		"max_boost": 2
+	},
+	'11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz': {
+		"max_tdp": 28,
+		"min_tdp": 12,
+		"max_boost": 2
+	},
+	'11th Gen Intel(R) Core(TM) i7-1195G7 @ 2.90GHz': {
+		"max_tdp": 28,
+		"min_tdp": 12,
+		"max_boost": 2
+	},
 }
