@@ -1,6 +1,8 @@
 extends Resource
 class_name HandheldGamepad
 
+const AudioManager := preload("res://core/global/audio_manager.tres")
+
 ## List of virtual events that are currently held.
 var active_events: Array[InputDeviceEvent]
 ## List of keys and their values that are currently pressed.
@@ -166,7 +168,6 @@ func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void
 	if event_value == 0:
 		logger.debug("Got key_up event for audio_event")
 		return
-	var current_volume := AudioManager.get_current_volume()
 	logger.debug("Got audio event: " + str(event_code) + str(event_value))
 	var return_code: int
 	match event_code:
@@ -174,14 +175,10 @@ func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void
 			return_code = AudioManager.toggle_mute()
 			logger.debug("return code: " + str(return_code))
 		InputDeviceEvent.KEY_VOLUMEDOWN:
-			if current_volume == 0:
-				return
-			return_code = AudioManager.set_volume(current_volume - .01)
+			return_code = AudioManager.set_volume(-0.06, AudioManager.VOLUME.RELATIVE)
 			logger.debug("return code: " + str(return_code))
 		InputDeviceEvent.KEY_VOLUMEUP:
-			if current_volume == 1:
-				return
-			return_code = AudioManager.set_volume(current_volume + .01)
+			return_code = AudioManager.set_volume(0.06, AudioManager.VOLUME.RELATIVE)
 			logger.debug("return code: " + str(return_code))
 		_:
 			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")

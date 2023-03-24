@@ -1,5 +1,7 @@
 extends Control
 
+const AudioManager := preload("res://core/global/audio_manager.tres")
+
 @onready var output_volume := $%VolumeSlider
 @onready var output_device := $%OutputDevice
 @onready var input_volume := $%MicVolumeSlider
@@ -16,11 +18,16 @@ func _ready() -> void:
 		return
 	var current_volume := AudioManager.get_current_volume()
 	output_volume.value = current_volume * 100
-	output_volume.value_changed.connect(_on_output_volume_changed)
+	output_volume.value_changed.connect(_on_output_volume_slider_changed)
 	output_device.item_selected.connect(_on_output_device_changed)
-
+	AudioManager.volume_changed.connect(_on_output_volume_changed)
+	
 	# Populate the dropdown with available output devices
 	_update_output_devices()
+
+
+func _on_output_volume_changed(value: float) -> void:
+	output_volume.value = value * 100
 
 
 # Updates the list of output devices
@@ -46,6 +53,6 @@ func _on_output_device_changed(idx: int) -> void:
 	AudioManager.set_output_device(device)
 
 
-func _on_output_volume_changed(value: float) -> void:
+func _on_output_volume_slider_changed(value: float) -> void:
 	var percent := value * 0.01
 	AudioManager.set_volume(percent)
