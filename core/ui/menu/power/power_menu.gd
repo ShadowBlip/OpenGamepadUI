@@ -30,6 +30,7 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_systemctl_cmd(command: String) -> void:
+	state_machine.pop_state()
 	var output: Array = []
 	if OS.execute("systemctl", [command], output) != OK:
 		logger.warn("Failed to " + command + ": '" + output[0] + "'")
