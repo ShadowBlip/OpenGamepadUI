@@ -15,6 +15,7 @@ var kb_event_path: String
 var kb_device: InputDevice
 ## List of vitural events that will be emitted upon release of the held key.
 var queued_events: Array[InputDeviceEvent]
+var queued_ogui_events: PackedStringArray
 ## List of ogui events that are currently held.
 var sent_ogui_events: PackedStringArray
 
@@ -33,7 +34,7 @@ var sent_ogui_events: PackedStringArray
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
 
 
 ## Main process thread for input translation from one device to another.
@@ -117,8 +118,21 @@ func _on_key_up(event: InputDeviceEvent) -> bool:
 ## Runs on any event with value 0, handles key up/release events.
 func _on_release_event() -> void:
 	# Clear any ogui events
-	if active_events.size() == 0 and not sent_ogui_events.size() == 0:
+	if active_events.size() == 0 and sent_ogui_events.size() != 0:
+		for event in sent_ogui_events:
+			logger.debug("Emitting action: " + event)
+			var input_action := InputEventAction.new()
+			_send_input(input_action, event, false)
 		sent_ogui_events.clear()
+		return
+	if queued_ogui_events.size() > 0:
+		for event in queued_ogui_events:
+			logger.debug("Emitting action: " + event)
+			var input_action := InputEventAction.new()
+			_send_input(input_action, event, true)
+			#sent_ogui_events.append(event)
+		# Clear any queued events because we overrode it with an on_press event
+		queued_ogui_events.clear()
 		return
 	#Any events that were activated by on press or by queue should now be deactivated.
 	if not active_events.size() == 0:
@@ -198,6 +212,8 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 	# Check if the event has already been handled
 	if mapped_event.ogui_event in sent_ogui_events:
 		return
+	if mapped_event.ogui_event in queued_events:
+		return
 	if mapped_event.on_release == false and \
 	mapped_event.output_events_match(active_events):
 		return
@@ -214,6 +230,9 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 			"\" does not correlate to a known event. Verify configuration of gamepad.")
 			# Clear any queued events because we overrode it with an on_press event
 			queued_events.clear()
+			return
+		if mapped_event.on_release:
+			queued_ogui_events.append(mapped_event.ogui_event)
 			return
 		logger.debug("Emit " + mapped_event.ogui_event)
 		_send_input(input_action, mapped_event.ogui_event, true)

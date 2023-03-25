@@ -172,4 +172,9 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
+[node name="PowerTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+one_shot = true
+
 [connection signal="finished" from="BootVideoPlayer" to="." method="_on_boot_video_player_finished"]

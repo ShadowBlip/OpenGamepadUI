@@ -19,6 +19,7 @@ var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 @onready var fade_transition := $%FadeTransitionPlayer
 @onready var fade_texture := $FadeTexture
 @onready var boot_video := $%BootVideoPlayer
+@onready var power_timer := $%PowerTimer
 
 
 func _init() -> void:
@@ -133,10 +134,23 @@ func _on_boot_video_player_finished() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if not event.is_action_pressed("ogui_power"):
+	if not event.is_action("ogui_power"):
 		return
+
+	# Handle power events
+	if event.is_action_pressed("ogui_power"):
+		var open_power_menu := func():
+			logger.info("Power menu requested")
+		power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
+		power_timer.start()
+		return
+
 	# Handle suspend events
-	logger.info("Received suspend signal")
-	var output: Array = []
-	if OS.execute("systemctl", ["suspend"], output) != OK:
-		logger.warn("Failed to suspend: '" + output[0] + "'")
+	if not power_timer.is_stopped():
+		logger.info("Received suspend signal")
+		for connection in power_timer.timeout.get_connections():
+			power_timer.timeout.disconnect(connection["callable"])
+		power_timer.stop()
+		var output: Array = []
+		if OS.execute("systemctl", ["suspend"], output) != OK:
+			logger.warn("Failed to suspend: '" + output[0] + "'")
