@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bexauj4m2rbgm"]
+[gd_scene load_steps=15 format=3 uid="uid://bexauj4m2rbgm"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_r20uv"]
 [ext_resource type="Script" path="res://core/ui/menu/main-menu/main_menu.gd" id="2_2uoqx"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dc7c5nyw5lso3" path="res://assets/ui/icons/round-store.svg" id="9_pnig0"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="11_u0355"]
 [ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="13_q3e8j"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="14_rb8dk"]
 
 [node name="MainMenu" type="Control"]
 custom_minimum_size = Vector2(300, 0)
@@ -114,4 +115,7 @@ text = "Power"
 icon = ExtResource("13_q3e8j")
 expand_icon = true
 
-[connection signal="pressed" from="MarginContainer/ButtonContainer/PowerButton" to="." method="_on_power_button_pressed"]
+[node name="StateUpdater" parent="MarginContainer/ButtonContainer/PowerButton" instance=ExtResource("4_v7rk2")]
+state_machine = ExtResource("5_anbat")
+state = ExtResource("14_rb8dk")
+on_signal = "button_up"

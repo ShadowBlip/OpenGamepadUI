@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bvsnvsby3isxr"]
+[gd_scene load_steps=37 format=3 uid="uid://bvsnvsby3isxr"]
 
 [ext_resource type="Script" path="res://core/ui/menu/gamepad/gamepad_settings.gd" id="1_8xl7t"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
@@ -16,6 +16,7 @@
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_61xd2"]
 [ext_resource type="Texture2D" uid="uid://dq0eirc22li66" path="res://addons/controller_icons/assets/xbox360/start_alt.png" id="7_rrebb"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_1ol5d"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_dv8gt"]
 [ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="9_y2e1p"]
 [ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="10_xi71t"]
 [ext_resource type="Texture2D" uid="uid://bfkjkvs3n12cu" path="res://assets/ui/icons/page-template.svg" id="11_vtwuu"]
@@ -47,7 +48,7 @@ script = ExtResource("1_8xl7t")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_wi2wh")]
 state = ExtResource("3_du3xc")
-visible_during = Array[Resource]([ExtResource("4_2q6j7"), ExtResource("5_4mdii"), ExtResource("6_faybn"), ExtResource("7_61xd2")])
+visible_during = Array[Resource]([ExtResource("4_2q6j7"), ExtResource("5_4mdii"), ExtResource("6_faybn"), ExtResource("7_61xd2"), ExtResource("8_dv8gt")])
 
 [node name="BackInputHandler" parent="." instance=ExtResource("8_1ol5d")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_du3xc")])

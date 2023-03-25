@@ -13,6 +13,7 @@ var state_machine := (
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
+var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var ui_container := $UIContainer
@@ -141,6 +142,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ogui_power"):
 		var open_power_menu := func():
 			logger.info("Power menu requested")
+			state_machine.push_state(power_state)
 		power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
 		power_timer.start()
 		return

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://hg2schw8qdvn"]
+[gd_scene load_steps=13 format=3 uid="uid://hg2schw8qdvn"]
 
 [ext_resource type="Script" path="res://core/ui/menu/store/store_menu.gd" id="1_cl0ln"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_3di5k"]
@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_3pa14"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_uw4ah"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_g3efq"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_ctbht"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_ruxvk"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="11_8g7x5"]
 
@@ -23,7 +24,7 @@ script = ExtResource("1_cl0ln")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_dsuqy")]
 state = ExtResource("3_ci2ci")
-visible_during = Array[Resource]([ExtResource("4_s22f7"), ExtResource("5_3pa14"), ExtResource("6_uw4ah"), ExtResource("7_g3efq")])
+visible_during = Array[Resource]([ExtResource("4_s22f7"), ExtResource("5_3pa14"), ExtResource("6_uw4ah"), ExtResource("7_g3efq"), ExtResource("8_ctbht")])
 
 [node name="BackInputHandler" parent="." instance=ExtResource("8_ruxvk")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_ci2ci")])

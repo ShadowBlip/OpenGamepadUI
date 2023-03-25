@@ -15,7 +15,6 @@ size_flags_horizontal = 3
 focus_mode = 2
 theme = ExtResource("1_6165a")
 script = ExtResource("1_khsna")
-separator_visible = null
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -47,4 +46,5 @@ modulate = Color(0.741176, 0.576471, 0.976471, 1)
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]
+visible = false
 layout_mode = 2

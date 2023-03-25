@@ -45,7 +45,3 @@ func _on_app_closed(app: RunningApp):
 	running_apps.erase(app.launch_item.name)
 	if len(running_apps) == 0:
 		separator.visible = false
-
-
-func _on_power_button_pressed() -> void:
-	get_tree().quit()
