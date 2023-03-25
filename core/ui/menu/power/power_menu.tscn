@@ -1,13 +1,28 @@
-[gd_scene load_steps=9 format=3 uid="uid://bf82p2cncbcem"]
+[gd_scene load_steps=15 format=3 uid="uid://bf82p2cncbcem"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_la4lq"]
 [ext_resource type="Script" path="res://core/ui/menu/power/power_menu.gd" id="1_w2o20"]
+[ext_resource type="Shader" path="res://assets/shaders/simple_blur.gdshader" id="3_7nmm1"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="3_8axqr"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_lyap3"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="3_ofxlp"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="5_fenfs"]
+[ext_resource type="PackedScene" uid="uid://b6p2lrkowintj" path="res://core/ui/components/transition_container.tscn" id="6_1q36d"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="6_pmrmc"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="7_i4hsy"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="7_oq8au"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bxm1k"]
+shader = ExtResource("3_7nmm1")
+shader_parameter/blur_amount = 1.587
+shader_parameter/mix_amount = 0.402
+shader_parameter/color_over = null
+
+[sub_resource type="Gradient" id="Gradient_bc3c0"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nu0jx"]
+gradient = SubResource("Gradient_bc3c0")
 
 [node name="PowerMenu" type="Control" groups=["power_menu"]]
 z_index = 20
@@ -20,11 +35,26 @@ grow_vertical = 2
 theme = ExtResource("1_la4lq")
 script = ExtResource("1_w2o20")
 
+[node name="BlurRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+material = SubResource("ShaderMaterial_bxm1k")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_nu0jx")
+
 [node name="BackInputHandler" parent="." instance=ExtResource("6_pmrmc")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("7_i4hsy")])
 
 [node name="VisibilityManager" parent="." instance=ExtResource("5_fenfs")]
 state = ExtResource("7_i4hsy")
+
+[node name="TransitionContainer" parent="." instance=ExtResource("6_1q36d")]
+
+[node name="TransitionFadeIn" parent="TransitionContainer" instance=ExtResource("7_oq8au")]
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(200, 150)
@@ -92,5 +122,3 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Cancel"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
