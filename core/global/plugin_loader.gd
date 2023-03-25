@@ -182,9 +182,76 @@ func uninstall_plugin(plugin_id: String) -> int:
 	var plugin_dir: String = ProjectSettings.get("OpenGamepadUI/plugin/directory")
 	var filename: String = "/".join([plugin_dir, plugin_id + ".zip"])
 	var result := DirAccess.remove_absolute(filename)
+	var extracted_dir := "/".join([PLUGINS_DIR, plugin_id])
+	if DirAccess.dir_exists_absolute(extracted_dir):
+		OS.move_to_trash(ProjectSettings.globalize_path(extracted_dir))
 	plugin_uninstalled.emit(plugin_id, result)
 	# Backwards compatibility
 	return result
+
+
+## Returns whether or not the given plugin is already extracted. This takes
+## the parsed plugin metadata as an argument.
+func is_extracted(meta: Dictionary) -> bool:
+	var plugin_id: String = meta["plugin.id"]
+	var plugin_version: String = meta["plugin.version"]
+	
+	if not DirAccess.dir_exists_absolute("/".join([PLUGINS_DIR, plugin_id])):
+		return false
+	
+	var extracted_plugin_json := "/".join([PLUGINS_DIR, plugin_id, "plugins", plugin_id, "plugin.json"])
+	if not FileAccess.file_exists(extracted_plugin_json):
+		return false
+		
+	var meta_file := FileAccess.open(extracted_plugin_json, FileAccess.READ)
+	var parsed = JSON.parse_string(meta_file.get_as_text())
+	if parsed == null:
+		return false
+	var current_meta := parsed as Dictionary
+	
+	if not "plugin.version" in current_meta:
+		return false
+	if meta["plugin.version"] != current_meta["plugin.version"]:
+		return false
+	
+	return true
+
+
+## Extract the given plugin into the plugins directory
+func extract_plugin(plugin_id: String, path: String) -> void:
+	var reader := ZIPReader.new()
+	if reader.open(path) != OK:
+		logger.warn("Unable to open archive: " + path)
+		return
+	var files := reader.get_files()
+	for file_path in files:
+		# Filter out content we don't care about
+		if file_path.begins_with(".godot/"):
+			continue
+		if file_path.ends_with(".gd"):
+			continue
+		if file_path.ends_with(".tscn.remap"):
+			continue
+		if file_path.ends_with(".import"):
+			continue
+		if file_path == "project.binary":
+			continue
+		
+		# Read the contents of the file in the zip
+		var content := reader.read_file(file_path)
+		var file_path_arr := Array(file_path.split("/"))
+		var filename := file_path_arr.pop_back() as String
+		var dir := "/".join(file_path_arr)
+		
+		# Create the target directories
+		var target_dir := "/".join([PLUGINS_DIR, plugin_id, dir])
+		DirAccess.make_dir_recursive_absolute(target_dir)
+		
+		# Write the file contents
+		var target_file := "/".join([PLUGINS_DIR, plugin_id, dir, filename])
+		logger.info("Extracting plugin file for '" + plugin_id + "': " + target_file)
+		var file := FileAccess.open(target_file, FileAccess.WRITE)
+		file.store_buffer(content)
 
 
 ## Unloads the given plugin. Returns OK if successful.
@@ -345,6 +412,13 @@ func _load_plugins() -> void:
 
 			# Uninitialize and unload old version
 			unload_plugin(meta["plugin.id"])
+
+		# Extract the plugin to allow accessing plugin assets outside Godot
+		if not is_extracted(meta):
+			var extracted_dir := "/".join([PLUGINS_DIR, meta["plugin.id"]])
+			if DirAccess.dir_exists_absolute(extracted_dir):
+				OS.move_to_trash(ProjectSettings.globalize_path(extracted_dir))
+			extract_plugin(meta["plugin.id"], "/".join([PLUGINS_DIR, file_name]))
 
 		# Load the plugin, this will also replace the existing instance of the resource.
 		# for an updated plugin.
