@@ -18,46 +18,68 @@ enum PLATFORM {
 	ONEXPLAYER_GEN1,  ## Includes most OXP and AOKZOE devices
 	ONEXPLAYER_GEN2,  ## GUNDAM edition.
 	STEAMDECK,
+	
 	# OS Platforms
 	CHIMERAOS,
 	STEAMOS,
+	ARCH_LIKE,
 }
 
+## Data container for OS information
+class OSInfo:
+	var name: String
+	var id: String
+	var id_like: String
+	var pretty_name: String
+	var version_codename: String
+	var variant_id: String
+
+## Detected Operating System information
+var os_info := _detect_os()
+## The OS platform provider detected
+var os: PlatformProvider
+## The hardware platform provider detected
 var platform: PlatformProvider
 var logger := Log.get_logger("Platform", Log.LEVEL.DEBUG)
 
 func _init() -> void:
 	var flags := get_platform_flags()
+	
+	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/abernic_gen1.tres")
-		return
 	if PLATFORM.AYANEO_GEN1 in flags:
 		platform = load("res://core/platform/ayaneo_gen1.tres")
-		return
 	if PLATFORM.AYANEO_GEN2 in flags:
 		platform = load("res://core/platform/ayaneo_gen2.tres")
-		return
 	if PLATFORM.AYANEO_GEN3 in flags:
 		platform = load("res://core/platform/ayaneo_gen3.tres")
-		return
 	if PLATFORM.AYANEO_GEN4 in flags:
 		platform = load("res://core/platform/ayaneo_gen4.tres")
-		return
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
-		return
 	if PLATFORM.GPD_GEN1 in flags:
 		platform = load("res://core/platform/gpd_gen1.tres")
-		return
 	if PLATFORM.ONEXPLAYER_GEN1 in flags:
 		platform = load("res://core/platform/onexplayer_gen1.tres")
-		return
 	if PLATFORM.ONEXPLAYER_GEN2 in flags:
 		platform = load("res://core/platform/onexplayer_gen2.tres")
-		return
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/steamdeck.tres")
-		return
+	
+	# Set OS platform provider
+	if PLATFORM.STEAMOS in flags:
+		os = load("res://core/platform/steamos.tres")
+
+
+## Loads the detected platforms. This should be called once when OpenGamepadUI
+## first starts. It takes the root window to give platform providers the
+## opportinity to modify the scene tree.
+func load(root: Window) -> void:
+	if platform:
+		platform.ready(root)
+	if os:
+		os.ready(root)
 
 
 ## Returns the handheld gamepad for the detected platform
@@ -69,8 +91,11 @@ func get_handheld_gamepad() -> HandheldGamepad:
 
 ## Returns all detected platform flags
 func get_platform_flags() -> Array[PLATFORM]:
+	var flags: Array[PLATFORM] = []
 	var dmi_flags := _read_dmi()
-	return [dmi_flags]
+	flags.append(dmi_flags)
+	flags.append_array(_read_os())
+	return flags
 
 
 ## Returns the hardware product name
@@ -92,7 +117,7 @@ func _read_sys(path: String) -> String:
 
 
 ## returns result of OS.Execute in a reliable data structure
-func _do_exec(command: String, args: Array)-> Array:
+func _do_exec(command: String, args: Array) -> Array:
 	var output = []
 	var exit_code := OS.execute(command, args, output)
 	return [output, exit_code]
@@ -145,5 +170,44 @@ func _read_dmi() -> PLATFORM:
 	return PLATFORM.GENERIC
 
 
-func _detect_os() -> void:
-	pass
+# Read OS information and return flags that match
+func _read_os() -> Array[PLATFORM]:
+	var flags: Array[PLATFORM] = []
+	if not os_info:
+		return flags
+	if os_info.id == "steamos":
+		flags.append(PLATFORM.STEAMOS)
+	if os_info.id_like == "arch":
+		flags.append(PLATFORM.ARCH_LIKE)
+	return flags
+
+
+## Detect the currently running OS
+func _detect_os() -> OSInfo:
+	if not FileAccess.file_exists("/etc/os-release"):
+		return null
+	var os_file := FileAccess.open("/etc/os-release", FileAccess.READ)
+	var content := os_file.get_as_text()
+	var lines := content.split("\n")
+	var info := OSInfo.new()
+	for line in lines:
+		var key_value := line.split("=")
+		if key_value.size() != 2:
+			continue
+		var key := key_value[0]
+		var value := key_value[1].replace('"', "")
+		
+		if key == "ID":
+			info.id = value
+		if key == "ID_LIKE":
+			info.id_like = value
+		if key == "NAME":
+			info.name = value
+		if key == "PRETTY_NAME":
+			info.pretty_name = value
+		if key == "VERSION_CODENAME":
+			info.version_codename = value
+		if key == "VARIANT_ID":
+			info.variant_id = value
+			
+	return info
