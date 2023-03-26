@@ -12,6 +12,7 @@ var logger := Log.get_logger("PowerMenu")
 @onready var shutdown_button := $%ShutdownButton
 @onready var exit_button := $%ExitButton
 @onready var cancel_button := $%CancelButton
+@onready var blur := $BlurRect
 
 
 # Called when the node enters the scene tree for the first time.
@@ -22,6 +23,11 @@ func _ready() -> void:
 	reboot_button.button_down.connect(_on_systemctl_cmd.bind("reboot"))
 	exit_button.button_down.connect(_on_exit)
 	cancel_button.button_up.connect(_on_cancel)
+	
+	# Set the blur background shader parameters
+	blur.material.set_shader_parameter("blur_amount", 1.587)
+	blur.material.set_shader_parameter("mix_amount", 0.402)
+	blur.material.set_shader_parameter("color_over", Color(0, 0, 0, 1))
 
 
 func _on_state_entered(_from: State) -> void:

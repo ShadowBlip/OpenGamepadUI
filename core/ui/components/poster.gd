@@ -30,6 +30,12 @@ func _ready() -> void:
 	_set_layout(LAYOUTS[layout])
 	_label.text = text
 	_highlight(false)
+	
+	# Set shader parameters for highlight effects
+	material.set_shader_parameter("color", Color(0.74, 0.57, 0.97, 1.0))
+	material.set_shader_parameter("width", 2)
+	material.set_shader_parameter("width_speed", 3)
+	material.set_shader_parameter("pattern", 2)
 
 	# Connect to focus events
 	focus_entered.connect(_play_sound.bind(_focus_audio_stream))
