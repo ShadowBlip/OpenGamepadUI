@@ -51,6 +51,9 @@ func _ready() -> void:
 	# Set bg to transparent
 	get_tree().get_root().transparent_bg = true
 	fade_texture.visible = true
+	
+	# Load any platform-specific logic
+	Platform.load(get_tree().get_root())
 
 	# Initialize the state machine with its initial state
 	state_machine.push_state(home_state)
@@ -63,6 +66,8 @@ func _ready() -> void:
 
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	LibraryManager.reload_library()
+	
+	get_tree()
 
 
 func _on_focus_changed(control: Control) -> void:
