@@ -46,20 +46,18 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = nu
 	plugin_button.custom_minimum_size = Vector2(50, 50)
 	plugin_button.expand_icon = true
 	plugin_button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	qam.icon_bar.add_child(plugin_button)
-
-	# Try to wire up the node to focus when you press the menu button
-	if focus_node != null:
-		plugin_button.pressed.connect(focus_node.grab_focus)
-	else:
-		for child in qam_item.get_children():
-			if not child is Control:
-				continue
-			plugin_button.pressed.connect(child.grab_focus)
-			break
 
 	# Set up new button's focus
 	plugin_button.focus_mode = Control.FOCUS_ALL
+
+	# Try to wire up the node to focus when you press the menu button
+	var focus_setter := FocusSetter.new()
+	focus_setter.target = qam_item
+	focus_setter.on_signal = "pressed"
+	plugin_button.add_child(focus_setter)
+
+	# Add the plugin button to the QAM icon bar
+	qam.icon_bar.add_child(plugin_button)
 
 	# Replace the QAM state with the state of the QAM plugin
 	var state := State.new()
@@ -68,7 +66,7 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = nu
 	state_updater.state_machine = qam_state_machine
 	state_updater.on_signal = "focus_entered"
 	state_updater.state = state
-	state_updater.action = StateUpdater.ACTION.REPLACE
+	state_updater.action = StateUpdater.ACTION.PUSH
 
 	# Create a transition for the menu
 	var transition_container := TransitionContainer.new()
