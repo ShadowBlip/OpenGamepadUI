@@ -161,8 +161,12 @@ deploy: dist $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote
 
 .PHONY: deploy-ext
 deploy-ext: systemd-sysext ## Build and deploy systemd extension to remote device
-	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/extensions
-	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/extensions
+	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user
+	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/lib/extensions
+	scp rootfs/usr/lib/systemd/user/systemd-sysext-updater.service $(SSH_USER)@$(SSH_HOST):~/.config/systemd/user
+	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user enable systemd-sysext-updater
+	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user start systemd-sysext-updater
+	sleep 3
 	ssh -t $(SSH_USER)@$(SSH_HOST) sudo systemd-sysext refresh
 	ssh $(SSH_USER)@$(SSH_HOST) systemd-sysext status
 

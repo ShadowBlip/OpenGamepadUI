@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenGamepadUI systemd-sysext updater
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash -c "cd ~/.var/extensions && rm -rf squashfs-root && unsquashfs opengamepadui.raw && grep '^ID=' /etc/os-release > squashfs-root/usr/lib/extension-release.d/extension-release.opengamepadui && grep '^VERSION_ID=' /etc/os-release >> squashfs-root/usr/lib/extension-release.d/extension-release.opengamepadui && rm opengamepadui.raw && mksquashfs squashfs-root opengamepadui.raw"
+
+[Install]
+WantedBy=default.target
