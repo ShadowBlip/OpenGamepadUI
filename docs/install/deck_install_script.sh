@@ -114,7 +114,7 @@ echo "30" ; echo "# Finding latest $BRANCH";
 DOWNLOADURL="https://github.com/ShadowBlip/OpenGamepadUI/releases/latest/download/opengamepadui.raw"
 
 echo "35" ; echo "# Installing systemd extension updater" ;
-curl -L https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/shadowapex/deck-install/rootfs/usr/lib/systemd/user/systemd-sysext-updater.service -o "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
+curl -L https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/rootfs/usr/lib/systemd/user/systemd-sysext-updater.service -o "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
 chown $SUDO_USER "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
 
 echo "45" ; echo "# Installing OpenGamepadUI extension" ;
