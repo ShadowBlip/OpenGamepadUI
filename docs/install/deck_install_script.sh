@@ -128,6 +128,7 @@ sleep 3
 echo "80" ; echo "# Enabling systemd extensions" ;
 systemctl enable systemd-sysext
 systemctl start systemd-sysext
+systemd-sysext refresh
 
 echo "90" ; echo "# Creating desktop shortcuts" ;
 cat > "${USER_DIR}/Desktop/return-opengamepadui.desktop" <<- EOM
