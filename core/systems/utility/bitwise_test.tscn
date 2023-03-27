@@ -4,3 +4,4 @@
 
 [node name="bitwise_test" type="Node"]
 script = ExtResource("1_7ho7x")
+test_name = "BitwiseTest"

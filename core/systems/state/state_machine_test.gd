@@ -1,4 +1,4 @@
-extends Node
+extends Test
 
 
 func _ready() -> void:
@@ -6,6 +6,6 @@ func _ready() -> void:
 	state_machine.state_changed.connect(_on_state_changed)
 	
 
-func _on_state_changed(from: StateMachineState, to: StateMachineState) -> void:
+func _on_state_changed(from: State, to: State) -> void:
 	print("State changed!")
 	pass
