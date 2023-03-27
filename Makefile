@@ -81,6 +81,12 @@ uninstall-ext: ## Uninstall the OpenGamepadUI systemd extension
 
 ##@ Development
 
+.PHONY: test
+test: addons ## Run all unit tests
+	$(GODOT) --path $(PWD) --headless --debug \
+		--remote-debug tcp://127.0.0.1:6007 \
+		res://core/systems/testing/run_tests.tscn
+
 .PHONY: build
 build: addons build/opengamepad-ui.x86_64 ## Build and export the project
 build/opengamepad-ui.x86_64: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
