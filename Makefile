@@ -205,7 +205,7 @@ dist/opengamepadui.tar.gz: build rootfs
 	mkdir -p dist
 	mv opengamepadui.tar.gz dist
 	mv opengamepadui $(ROOTFS)
-	cd dist && sha256sum opengamepadui.tar.gz > sha256sum.txt
+	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
