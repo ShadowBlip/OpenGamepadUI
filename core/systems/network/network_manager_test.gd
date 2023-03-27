@@ -1,9 +1,12 @@
-extends Node
+extends Test
 
 
 func _ready() -> void:
+	if not NetworkManager.supports_network():
+		return
+		
 	for ap in NetworkManager.get_access_points():
-		print(ap.ssid, " ", ap.strength)
+		logger.info(ap.ssid + " " + str(ap.strength))
 
 	for device in NetworkManager.get_devices():
-		print(device.device, " ", device.type, " ", device.state)
+		logger.info(device.device + " " + device.type + " " + device.state)

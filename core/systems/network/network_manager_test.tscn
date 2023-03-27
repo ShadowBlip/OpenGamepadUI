@@ -4,3 +4,4 @@
 
 [node name="network_manager_test" type="Node"]
 script = ExtResource("1_7eymj")
+test_name = "NetworkManagerTest"
