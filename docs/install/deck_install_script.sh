@@ -119,6 +119,7 @@ chown $SUDO_USER "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.servic
 
 echo "45" ; echo "# Installing OpenGamepadUI extension" ;
 curl -L $DOWNLOADURL -o ${EXTENSIONS_FOLDER}/opengamepadui.raw 2>&1 | stdbuf -oL tr '\r' '\n' | sed -u 's/^ *\([0-9][0-9]*\).*\( [0-9].*$\)/\1\n#Download Speed\:\2/' | zen_nospam --progress --title "Downloading OpenGamepadUI" --text="Download Speed: 0" --width=300 --height=100 --auto-close --no-cancel
+chown $SUDO_USER "${EXTENSIONS_FOLDER}/opengamepadui.raw"
 
 echo "75" ; echo "# Enabling systemd extension updater" ;
 sudo -u $SUDO_USER  systemctl --user enable systemd-sysext-updater
