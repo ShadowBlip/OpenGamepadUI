@@ -23,6 +23,7 @@ const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
 
+#TODO: Document these.
 signal plugin_loaded(name: String)
 signal plugin_unloaded(name: String)
 signal plugin_initialized(name: String)
@@ -36,11 +37,18 @@ signal plugin_upgradable(name: String, update_type: int)
 
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var parent: PluginManager
-var logger := Log.get_logger("PluginLoader")
-var plugins := {}
+var logger := Log.get_logger("PluginLoader", Log.LEVEL.INFO)
+## Dictionary of installed plugins on the root file system.
+var plugins := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
+## Dictionary of instantiated plugins.
 var plugin_nodes := {}
-var plugin_store_items := {}
+## Dictionary of available plugins in the defualt plugin store. Similar data
+## stucture to plugins dict with additonal fields
+var plugin_store_items := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
+## List of plugin_ids that are installed where a newer version of the plugin is
+## available in the plugin store.
 var plugins_upgradable := []
+var plugin_filters : Array[Callable] = []
 
 enum update_type{
 	NEW,
@@ -70,7 +78,7 @@ func _load_and_init_plugins() -> void:
 	_load_plugins()
 	logger.info("Done loading plugins")
 	logger.info("Initializing plugins")
-	_init_plugins()
+	_init_plugins(plugin_filters)
 	logger.info("Done initializing plugins")
 	plugins_reloaded.emit()
 
@@ -433,8 +441,15 @@ func _load_plugins() -> void:
 
 
 # Initializes the loaded plugins
-func _init_plugins() -> void:
-	for name in plugins.keys():
+func _init_plugins(filters: Array[Callable] = []) -> void:
+	var all_plugins := plugins.duplicate()
+	var plugin_ids: Array[String] = []
+	plugin_ids.assign(all_plugins.keys())
+	logger.debug("Filters to appy: " + str(filters.size()))
+	for filter in filters:
+		logger.debug("Applying filter " + str(filter))
+		plugin_ids = filter.call(all_plugins)
+	for name in plugin_ids:
 		if SettingsManager.get_value("plugins.enabled", name, true):
 			initialize_plugin(name)
 
@@ -585,3 +600,26 @@ func _is_plugin_new(plugin_id: String) -> bool:
 		plugin_upgradable.emit(plugin_id, update_type.NEW)
 		return true
 	return false
+
+
+# Returns a list of all plugins with the given store.tags tag
+func filter_by_tag(plugins: Dictionary, tag: String) -> Array[String]:
+	logger.debug("Filtering by tag: " + tag)
+	var filtered_ids: Array[String] = []
+	for plugin in plugins.values():
+		if not "store.tags" in plugin:
+			continue
+		logger.debug("Checking " + plugin["plugin.id"])
+		var tags := plugin["store.tags"] as Array
+		if tag in tags:
+			logger.debug(plugin["plugin.id"] + " has the tag and will be loaded.")
+			filtered_ids.append(plugin["plugin.id"])
+			continue
+		logger.debug(plugin["plugin.id"] + " will not be loaded. " + str(tags))
+	return filtered_ids
+
+
+# Sets the filters for the plugin list
+func set_plugin_filters(filters: Array[Callable]) -> void:
+	logger.debug("Setting plugin filters.")
+	plugin_filters = filters
