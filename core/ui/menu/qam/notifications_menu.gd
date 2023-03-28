@@ -7,24 +7,31 @@ var NotificationManager := (
 )
 var label_settings := LabelSettings.new()
 
+@onready var container := $%HFlowContainer
+@onready var no_notifications := $%NoNotifications
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	label_settings.font_size = 12
 	label_settings.line_spacing = 0
 	NotificationManager.notification_sent.connect(_on_notification_sent)
-	for child in get_children():
-		if child.name in ["VisibilityManager", "TransitionContainer"]:
+	for child in container.get_children():
+		if child.name in ["FocusManager", "NoNotifications"]:
 			continue
 		child.queue_free()
 
 
 func _on_notification_sent(_notify: Notification) -> void:
-	for child in get_children():
-		if child.name in ["VisibilityManager", "TransitionContainer"]:
+	for child in container.get_children():
+		if child.name in ["FocusManager", "NoNotifications"]:
 			continue
 		child.queue_free()
 	var history := NotificationManager.get_notification_history()
+	
+	if history.size() > 0:
+		no_notifications.visible = true
+	else:
+		no_notifications.visible = false
 
 	var i := history.size()
 	while i > 0:
@@ -36,5 +43,5 @@ func _on_notification_sent(_notify: Notification) -> void:
 		notification.icon_size = Vector2(24, 24)
 		notification.custom_minimum_size = Vector2(220, 0)
 		notification.label_settings = label_settings
-		add_child(notification)
+		container.add_child(notification)
 		i -= 1
