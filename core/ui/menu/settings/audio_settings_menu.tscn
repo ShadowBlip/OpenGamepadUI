@@ -23,11 +23,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_e1vvx")]
-process_input = false
 
 [node name="AudioLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 layout_mode = 2
 text = "Audio"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
 
 [node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_qsi2y")]
 unique_name_in_owner = true
@@ -41,7 +43,7 @@ layout_mode = 2
 title = "Output Device"
 description = ""
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
 

@@ -8,9 +8,9 @@ var state_machine := preload("res://assets/state/state_machines/plugin_settings_
 var _plugin_containers := {}
 var _plugin_content := {}
 
-@onready var plugin_menu_container := $HBoxContainer/MarginContainer/PluginSettings
-@onready var plugins_content_container := $HBoxContainer/PluginSettingsContentContainer
-@onready var no_plugins_label := $HBoxContainer/PluginSettingsContentContainer/Label
+@onready var plugin_menu_container := $%PluginSettings
+@onready var plugins_content_container := $%PluginSettingsContentContainer
+@onready var no_plugins_label := $%NoPluginsLabel
 
 
 # Called when the node enters the scene tree for the first time.

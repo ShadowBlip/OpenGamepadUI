@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cbybmmt7bigkt"]
+[gd_scene load_steps=9 format=3 uid="uid://cbybmmt7bigkt"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/plugin_store_menu.gd" id="1_mnuo8"]
 [ext_resource type="PackedScene" uid="uid://djoicd3vhbr1y" path="res://core/ui/components/plugin_store_item.tscn" id="1_vqpb4"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_mt41e"]
 [ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="3_upgdo"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="4_gd11w"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="6_6ehwj"]
 
 [node name="PluginStore" type="Control"]
 layout_mode = 3
@@ -26,31 +27,41 @@ state = ExtResource("4_gd11w")
 [node name="HTTPImageFetcher" type="Node" parent="."]
 script = ExtResource("3_upgdo")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SectionLabel" parent="VBoxContainer" instance=ExtResource("6_6ehwj")]
+layout_mode = 2
+text = "Plugin Store"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FocusManager" parent="MarginContainer/HFlowContainer" instance=ExtResource("2_mscek")]
+[node name="FocusManager" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("2_mscek")]
 unique_name_in_owner = true
 
-[node name="PluginStoreItem" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+[node name="PluginStoreItem" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
 layout_mode = 2
 
-[node name="PluginStoreItem2" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+[node name="PluginStoreItem2" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
 layout_mode = 2
 
-[node name="PluginStoreItem3" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+[node name="PluginStoreItem3" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
 layout_mode = 2

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfk55ufy6luqt"]
+[gd_scene load_steps=7 format=3 uid="uid://cfk55ufy6luqt"]
 
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="1_0x8ci"]
 [ext_resource type="Script" path="res://core/ui/menu/settings/plugin_settings_menu.gd" id="1_cydsi"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_rieoa"]
 [ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="3_07iue"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_g7jsu"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_5366u"]
 
 [node name="PluginSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -19,13 +20,25 @@ script = ExtResource("1_cydsi")
 state_machine = ExtResource("3_g7jsu")
 state = ExtResource("3_07iue")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SectionLabel" parent="VBoxContainer" instance=ExtResource("5_5366u")]
+layout_mode = 2
+text = "Plugins"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
@@ -34,16 +47,18 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="PluginSettings" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
+[node name="PluginSettings" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 
-[node name="Button" parent="HBoxContainer/MarginContainer/PluginSettings" instance=ExtResource("1_0x8ci")]
+[node name="Button" parent="VBoxContainer/HBoxContainer/MarginContainer/PluginSettings" instance=ExtResource("1_0x8ci")]
 layout_mode = 2
 text = "Steam"
 
-[node name="PluginSettingsContentContainer" type="MarginContainer" parent="HBoxContainer"]
+[node name="PluginSettingsContentContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 25
@@ -51,7 +66,8 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="Label" type="Label" parent="HBoxContainer/PluginSettingsContentContainer"]
+[node name="NoPluginsLabel" type="Label" parent="VBoxContainer/HBoxContainer/PluginSettingsContentContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
