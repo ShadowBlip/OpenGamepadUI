@@ -1,4 +1,4 @@
-extends HFlowContainer
+extends Control
 
 @export var state_manager_path: NodePath
 
@@ -8,7 +8,10 @@ const plugin_store_item_scene: PackedScene = preload("res://core/ui/components/p
 var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var plugin_store_state := preload("res://assets/state/states/settings_plugin_store.tres") as State
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
+var plugin_nodes := {}
 
+@onready var container := $%HFlowContainer
+@onready var focus_manager := $%FocusManager
 @onready var http_image := $HTTPImageFetcher
 @onready var settings_menu := $"../../../.." #verbose?
 
@@ -35,18 +38,26 @@ func load_plugin_store_items():
 # Gets executed on plugin store items loaded
 func _on_plugin_store_loaded(plugin_items: Dictionary):
 	# Clear the current grid of items
-	var keep_nodes := [$HTTPImageFetcher, $VisibilityManager]
-	for child in self.get_children():
+	var keep_nodes := [focus_manager]
+	for plugin_id in plugin_items.keys():
+		if plugin_id in plugin_nodes:
+			keep_nodes.append(plugin_nodes[plugin_id])
+	
+	for child in container.get_children():
 		if child in keep_nodes:
 			continue
-		self.remove_child(child)
+		container.remove_child(child)
 		child.queue_free()
-	_populate_plugin_store_items(self, plugin_items)
+		
+	_populate_plugin_store_items(container, plugin_items)
 
 
 # Populates the plugin store grid with the given plugin items
 func _populate_plugin_store_items(grid: Container, plugin_items: Dictionary):
 	for plugin_id in plugin_items.keys():
+		if plugin_id in plugin_nodes:
+			continue
+			
 		var plugin: Dictionary = plugin_items[plugin_id]
 
 		# Build the store item

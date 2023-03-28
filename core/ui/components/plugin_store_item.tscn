@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://djoicd3vhbr1y"]
+[gd_scene load_steps=7 format=3 uid="uid://djoicd3vhbr1y"]
 
 [ext_resource type="Script" path="res://core/ui/components/plugin_store_item.gd" id="1_mwjyr"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_cng0r"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_nlpc7"]
+[ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="2_obfvf"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8mk03"]
 font_size = 24
@@ -10,15 +12,19 @@ shadow_size = 4
 [sub_resource type="LabelSettings" id="LabelSettings_1n30o"]
 font_size = 12
 
-[node name="PluginStoreItem" type="Control"]
+[node name="PluginStoreItem" type="Button"]
 custom_minimum_size = Vector2(415, 200)
-layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+flat = true
 script = ExtResource("1_mwjyr")
+
+[node name="FocusSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_obfvf")]
+target = NodePath("../MarginContainer/HBoxContainer/InstallButton")
+on_signal = "pressed"
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
@@ -75,6 +81,9 @@ clip_text = true
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 8
+
+[node name="FocusManager" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_cng0r")]
+process_input = true
 
 [node name="InstallButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_nlpc7")]
 layout_mode = 2

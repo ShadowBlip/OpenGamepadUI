@@ -22,9 +22,9 @@ class Assertion:
 
 
 func _init() -> void:
-	if not finish_after_ready:
-		return
 	var on_ready := func():
+		if not finish_after_ready:
+			return
 		finish()
 	ready.connect(on_ready)
 
@@ -57,7 +57,9 @@ func _get_caller() -> Dictionary:
 
 
 func finish() -> void:
-	queue_free()
+	if get_parent().name == "RunTests":
+		queue_free()
+	get_tree().quit()
 
 
 func _exit_tree() -> void:
