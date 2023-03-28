@@ -24,7 +24,6 @@ using godot::String;
 
 static int error(Display *dpy, XErrorEvent *ev) {
   // Always return, I guess?
-  godot::UtilityFunctions::push_error("Got X error: ", ev->error_code);
   return 0;
 }
 
@@ -124,7 +123,6 @@ int Xlib::set_xprop(int window_id, String key, int value) {
 // Sets the given x window property values on the given window. Returns 0 if
 // successful.
 int Xlib::set_xprop_array(int window_id, String key, PackedInt32Array values) {
-  godot::UtilityFunctions::print("Setting values: ", values);
   Window window = (Window)window_id;
 
   // Build the atom to set
@@ -139,7 +137,6 @@ int Xlib::set_xprop_array(int window_id, String key, PackedInt32Array values) {
   int result =
       XChangeProperty(dpy, window, atom, XA_CARDINAL, 32, PropModeReplace,
                       (unsigned char *)values.ptr(), values.size());
-  godot::UtilityFunctions::print("Got result: ", result);
   if (result > 1) {
     return result;
   }
