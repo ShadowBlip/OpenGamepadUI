@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2se1l330qmln"]
+[gd_scene load_steps=7 format=3 uid="uid://b2se1l330qmln"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_pvtqf"]
 [ext_resource type="Script" path="res://core/ui/menu/navigation/top_bar.gd" id="2_s10b7"]
 [ext_resource type="PackedScene" uid="uid://bx0fnuxd8mm51" path="res://core/ui/components/search_bar.tscn" id="3_4ldf8"]
 [ext_resource type="Texture2D" uid="uid://dfqj87oi7gygp" path="res://assets/ui/icons/wifi-none.svg" id="4_54qll"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="4_lv4ws"]
+[ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="5_ik6os"]
 
 [node name="TopBar" type="Control" groups=["menu", "top_bar"]]
 z_index = 20
@@ -53,7 +54,21 @@ texture = ExtResource("4_54qll")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="BatteryContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BatteryIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/BatteryContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(48, 24)
+layout_mode = 2
+texture = ExtResource("5_ik6os")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer/BatteryContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "100%"

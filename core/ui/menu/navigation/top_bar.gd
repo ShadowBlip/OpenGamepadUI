@@ -6,11 +6,14 @@ var main_menu_state := preload("res://assets/state/states/main_menu.tres") as St
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
+var battery_capacity := -1
 var panel_alpha_normal := 156
 var panel_alpha_solid := 255
 
 @onready var battery: String = Battery.find_battery_path()
 @onready var time_label: Label = $%TimeLabel
+@onready var battery_container: HBoxContainer = $%BatteryContainer
+@onready var battery_icon: TextureRect = $%BatteryIcon
 @onready var battery_label: Label = $%BatteryLabel
 @onready var search_bar := $%SearchBar
 @onready var panel := $%Panel
@@ -36,7 +39,6 @@ func _ready() -> void:
 	time_timer.autostart = true
 	add_child(time_timer)
 	_on_update_time()
-	_on_update_battery()
 
 	# Create a timer to check wifi signal strength and battery percent
 	var wifi_timer := Timer.new()
@@ -46,7 +48,17 @@ func _ready() -> void:
 	wifi_timer.autostart = true
 	add_child(wifi_timer)
 	_on_wifi_update()
-
+	_on_update_battery()
+	battery_capacity = Battery.get_capacity(battery)
+	
+	# Create a timer to check battery status
+	var battery_timer := Timer.new()
+	battery_timer.timeout.connect(_on_update_battery_status)
+	battery_timer.wait_time = 5
+	battery_timer.autostart = true
+	add_child(battery_timer)
+	_on_update_battery_status()
+	
 
 func _on_game_menu_entered(_from: State) -> void:
 	panel.modulate.a8 = panel_alpha_solid
@@ -69,11 +81,26 @@ func _on_wifi_update() -> void:
 	network_icon.texture = NetworkManager.get_strength_texture(strength)
 
 
+## Updates the battery status on timer timeout
+func _on_update_battery_status():
+	if battery == "":
+		if battery_container.visible:
+			battery_container.visible = false
+		return
+	var status: int = Battery.get_status(battery)
+	battery_icon.texture = Battery.get_capacity_texture(battery_capacity, status)
+	if status < Battery.STATUS.CHARGING and battery_capacity < 10:
+		battery_icon.modulate = Color(255, 0, 0)
+	else:
+		battery_icon.modulate = Color(255, 255, 255)
+
+
 # Updates the battery capacity on timer timeout
 func _on_update_battery():
 	var get_capacity := func() -> int:
 		return Battery.get_capacity(battery)
 	var current_capacity: int = await system_thread.exec(get_capacity)
+	battery_capacity = current_capacity
 	battery_label.text = "{0}%".format([current_capacity])
 
 
