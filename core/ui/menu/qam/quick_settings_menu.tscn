@@ -64,3 +64,4 @@ focus_previous = NodePath("../PerGameToggle")
 text = "Saturation"
 value = 100.0
 max_value = 400.0
+step = 5.0
