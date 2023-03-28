@@ -609,6 +609,10 @@ func filter_by_tag(plugins: Dictionary, tag: String) -> Array[String]:
 	for plugin in plugins.values():
 		if not "store.tags" in plugin:
 			continue
+		# Don't load plugins more than once if it matches miltiple filters.
+		if plugin["plugin.id"] in filtered_ids:
+			logger.debug(plugin["plugin.id"] + " has already been set to load. Skipping.")
+			continue
 		logger.debug("Checking " + plugin["plugin.id"])
 		var tags := plugin["store.tags"] as Array
 		if tag in tags:
