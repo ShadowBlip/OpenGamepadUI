@@ -5,13 +5,22 @@ const Gamescope := preload("res://core/global/gamescope.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 
 var qam_state = load("res://assets/state/states/quick_access_menu.tres")
-
 var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
 var steam_window_id: int
 
-var logger := Log.get_logger("OQMain", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("OQMain", Log.LEVEL.INFO)
+
+func _init():
+	logger.debug("Init only_qam mode.")
+	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
+	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("qam")]
+	plugin_loader.set_plugin_filters(filters)
+	var plugin_manager_scene := load("res://core/systems/plugin/plugin_manager.tscn") as PackedScene
+	var plugin_manager := plugin_manager_scene.instantiate()
+	add_child(plugin_manager)
+
 
 ## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
