@@ -1,11 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://lr8i2omwm82b"]
+[gd_scene load_steps=6 format=3 uid="uid://lr8i2omwm82b"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/performance_menu.gd" id="1_r31yj"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_yptsc"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_tkf3x"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_wyqhe"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_6060o"]
 
-[node name="PerformanceMenu" type="Control" node_paths=PackedStringArray("focus_node")]
+[node name="PerformanceMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +16,6 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_r31yj")
-focus_node = NodePath("VBoxContainer/MangoAppSlider")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -27,25 +27,27 @@ grow_vertical = 2
 
 [node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_tkf3x")]
 
+[node name="SectionLabel" parent="VBoxContainer" instance=ExtResource("3_6060o")]
+layout_mode = 2
+text = "Performance"
+
 [node name="MangoAppSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_mode = 2
 text = "Performance Overlay"
 max_value = 4.0
 tick_count = 5
 
 [node name="PerGameToggle" parent="VBoxContainer" instance=ExtResource("2_wyqhe")]
 layout_mode = 2
-focus_mode = 2
 text = "Per-game Profile"
 
 [node name="FramerateLimitSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
+visible = false
 layout_mode = 2
-focus_mode = 2
 text = "FPS Limit"
 
 [node name="RefreshRateSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
+visible = false
 layout_mode = 2
-focus_mode = 2
 text = "Refresh Rate"

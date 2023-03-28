@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bv45as7q2lrwt"]
+[gd_scene load_steps=27 format=3 uid="uid://bv45as7q2lrwt"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_cs2ac"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_h1vfn"]
@@ -23,6 +23,7 @@
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
 [ext_resource type="PackedScene" uid="uid://lr8i2omwm82b" path="res://core/ui/menu/qam/performance_menu.tscn" id="13_gsdkm"]
 [ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://assets/ui/icons/powertools_icon.svg" id="15_77afh"]
+[ext_resource type="PackedScene" uid="uid://bn50u254c4qjf" path="res://core/ui/menu/qam/help_menu.tscn" id="17_nk7fc"]
 [ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="18_cwnr0"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="22_t3o17"]
 
@@ -125,6 +126,19 @@ state = ExtResource("10_ft1gj")
 script = ExtResource("3_tk446")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/PerformanceMenu/TransitionContainer" instance=ExtResource("8_c20ym")]
+
+[node name="HelpMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("17_nk7fc")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/Viewport/HelpMenu" instance=ExtResource("4_klkp7")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("11_dhes6")
+
+[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/Viewport/HelpMenu"]
+script = ExtResource("3_tk446")
+
+[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/HelpMenu/TransitionContainer" instance=ExtResource("8_c20ym")]
 
 [node name="IconBar" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -229,5 +243,8 @@ expand_icon = true
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/IconBar/HelpButton" instance=ExtResource("6_kd46h")]
 state_machine = ExtResource("7_6iqch")
 state = ExtResource("11_dhes6")
-action = 2
 on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="MarginContainer/HBoxContainer/IconBar/HelpButton" node_paths=PackedStringArray("target") instance=ExtResource("18_cwnr0")]
+target = NodePath("../../../Viewport/HelpMenu")
+on_signal = "pressed"
