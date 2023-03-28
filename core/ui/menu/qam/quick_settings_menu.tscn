@@ -36,6 +36,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Volume"
 
+[node name="BrightnessSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Brightness"
+step = 3.0
+
 [node name="PerGameToggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
 layout_mode = 2
 focus_neighbor_left = NodePath("../SaturationSlider")
