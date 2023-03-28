@@ -42,8 +42,8 @@ var logger := Log.get_logger("PluginLoader", Log.LEVEL.INFO)
 var plugins := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
 ## Dictionary of instantiated plugins.
 var plugin_nodes := {}
-## Dictionary of available plugins in the defualt plugin store. Similar data
-## stucture to plugins dict with additonal fields
+## Dictionary of available plugins in the defualt plugin store. Similair data
+## struture to the plugins dict with some additonal fields.
 var plugin_store_items := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
 ## List of plugin_ids that are installed where a newer version of the plugin is
 ## available in the plugin store.
@@ -444,11 +444,15 @@ func _load_plugins() -> void:
 func _init_plugins(filters: Array[Callable] = []) -> void:
 	var all_plugins := plugins.duplicate()
 	var plugin_ids: Array[String] = []
-	plugin_ids.assign(all_plugins.keys())
+	if filters.size() == 0:
+		plugin_ids.assign(all_plugins.keys())
 	logger.debug("Filters to appy: " + str(filters.size()))
 	for filter in filters:
 		logger.debug("Applying filter " + str(filter))
-		plugin_ids = filter.call(all_plugins)
+		var ids_to_append: Array[String] = filter.call(all_plugins)
+		for plugin_id in ids_to_append:
+			if plugin_id not in plugin_ids:
+				plugin_ids.append(plugin_id)
 	for name in plugin_ids:
 		if SettingsManager.get_value("plugins.enabled", name, true):
 			initialize_plugin(name)
@@ -609,10 +613,6 @@ func filter_by_tag(plugins: Dictionary, tag: String) -> Array[String]:
 	for plugin in plugins.values():
 		if not "store.tags" in plugin:
 			continue
-		# Don't load plugins more than once if it matches miltiple filters.
-		if plugin["plugin.id"] in filtered_ids:
-			logger.debug(plugin["plugin.id"] + " has already been set to load. Skipping.")
-			continue
 		logger.debug("Checking " + plugin["plugin.id"])
 		var tags := plugin["store.tags"] as Array
 		if tag in tags:
@@ -621,7 +621,6 @@ func filter_by_tag(plugins: Dictionary, tag: String) -> Array[String]:
 			continue
 		logger.debug(plugin["plugin.id"] + " will not be loaded. " + str(tags))
 	return filtered_ids
-
 
 # Sets the filters for the plugin list
 func set_plugin_filters(filters: Array[Callable]) -> void:
