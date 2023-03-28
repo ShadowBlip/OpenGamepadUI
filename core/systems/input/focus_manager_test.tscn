@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://cu5r1tyc8ko7r"]
+
+[ext_resource type="Script" path="res://core/systems/input/focus_manager_test.gd" id="1_imj4y"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_nbalq"]
+[ext_resource type="PackedScene" uid="uid://djoicd3vhbr1y" path="res://core/ui/components/plugin_store_item.tscn" id="3_ket4y"]
+
+[node name="FocusManagerTest" type="Node"]
+script = ExtResource("1_imj4y")
+test_name = "FocusManagerTest"
+
+[node name="HFlowContainer" type="HFlowContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FocusManager" parent="HFlowContainer" instance=ExtResource("2_nbalq")]
+
+[node name="PluginStoreItem" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem2" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem3" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem4" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem5" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem6" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem7" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem8" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2
+
+[node name="PluginStoreItem9" parent="HFlowContainer" instance=ExtResource("3_ket4y")]
+layout_mode = 2

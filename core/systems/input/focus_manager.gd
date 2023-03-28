@@ -20,6 +20,16 @@ func _ready():
 	set_process_input(process_input)
 	if process_input:
 		parent.visibility_changed.connect(_on_visibility_changed)
+	
+	# Flow containers need to recalculate focus whenever the container 
+	# tries to sort its children
+	if parent is FlowContainer:
+		parent.sort_children.connect(recalculate_focus)
+
+
+## Recalculate the focus neighbors of the container's children
+func recalculate_focus() -> void:
+	_on_child_tree_changed(null)
 
 
 func _on_child_tree_changed(_node) -> void:
@@ -32,7 +42,8 @@ func _on_child_tree_changed(_node) -> void:
 		if not child is Control:
 			continue
 		control_children.append(child)
-		child.focus_entered.connect(_on_child_focused.bind(child))
+		if not child.focus_entered.is_connected(_on_child_focused):
+			child.focus_entered.connect(_on_child_focused.bind(child))
 
 	if control_children.size() == 0:
 		return
@@ -48,11 +59,73 @@ func _on_child_tree_changed(_node) -> void:
 		child.focus_neighbor_right = child.get_path()
 		return
 
+	if parent is HFlowContainer:
+		_hflow_set_focus_tree(control_children)
+		return
+
 	if parent is HBoxContainer:
 		_hbox_set_focus_tree(control_children)
 		return
 
 	_vbox_set_focus_tree(control_children)
+
+
+func _hflow_set_focus_tree(control_children: Array[Control]) -> void:
+	var hflow := parent as HFlowContainer
+	var lines := hflow.get_line_count()
+	
+	# If no lines exist, the flow container hasn't sorted its children yet.
+	if lines == 0:
+		return
+		
+	# Calculate the number of children per line
+	# TODO: Use 'item_rect_changed' and child positions to determine focus
+	var children_per_row := ceilf(float(control_children.size()) / lines)
+	
+	# Build a 2d array of the children
+	var grid: Array[Array] = [[]]
+	var y := 0
+	for child in control_children:
+		var row := grid[y]
+		if row.size() >= children_per_row:
+			y += 1
+			grid.append([])
+			row = grid[y]
+		row.append(child)
+	
+	_grid_set_focus_tree(grid)
+
+
+func _grid_set_focus_tree(control_children: Array[Array]) -> void:
+	for y in range(control_children.size()):
+		for x in range(control_children[y].size()):
+			var row := control_children[y]
+			var child := control_children[y][x] as Control
+
+			# LEFT
+			child.focus_neighbor_left = row[x-1].get_path()
+
+			# UP
+			var row_above := control_children[y-1]
+			var top := _nearest_neighbor(x, row.size(), row_above.size())
+			child.focus_neighbor_top = row_above[top].get_path()
+
+			# RIGHT
+			var right := x+1
+			if right >= control_children[y].size():
+				right = 0
+			child.focus_neighbor_right = row[right].get_path()
+
+			# BOTTOM
+			var bottom_y := y+1
+			if bottom_y >= control_children.size():
+				bottom_y = 0
+			var row_below := control_children[bottom_y]
+			var bottom := _nearest_neighbor(x, row.size(), row_below.size())
+			child.focus_neighbor_bottom = row_below[bottom].get_path()
+
+			child.focus_next = child.focus_neighbor_right
+			child.focus_previous = child.focus_neighbor_left
 
 
 func _hbox_set_focus_tree(control_children: Array[Control]) -> void:
@@ -106,6 +179,21 @@ func _on_visibility_changed() -> void:
 		set_process_input(true)
 		return
 	set_process_input(false)
+
+
+# Returns the index that closest matches how far the given index is in an array 
+# of the given size in comparision to the given 'to_size'. 
+# E.g. 
+#   var a := [1, 2, 3]
+#   var b := [1, 2, 3, 4, 5, 6]
+#   _nearest_neighbor(2, a.size(), b.size())
+# Returns index in 'b' array: 4
+func _nearest_neighbor(idx: int, from_size: int, to_size: int) -> int:
+	var factor := float(to_size) / float(from_size)
+	var closest := int(round(idx * factor))
+	if closest >= to_size:
+		return to_size - 1
+	return closest
 
 
 func _input(event: InputEvent) -> void:

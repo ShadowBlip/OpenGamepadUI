@@ -8,27 +8,49 @@
 [ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="3_upgdo"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="4_gd11w"]
 
-[node name="PluginStore" type="HFlowContainer"]
+[node name="PluginStore" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 script = ExtResource("1_mnuo8")
-
-[node name="FocusManager" parent="." instance=ExtResource("2_mscek")]
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_2d4kq")]
 state_machine = ExtResource("3_mt41e")
 state = ExtResource("4_gd11w")
 
-[node name="PluginStoreItem" parent="." instance=ExtResource("1_vqpb4")]
-layout_mode = 2
-
-[node name="PluginStoreItem2" parent="." instance=ExtResource("1_vqpb4")]
-layout_mode = 2
-
-[node name="PluginStoreItem3" parent="." instance=ExtResource("1_vqpb4")]
-layout_mode = 2
-
 [node name="HTTPImageFetcher" type="Node" parent="."]
 script = ExtResource("3_upgdo")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="HFlowContainer" type="HFlowContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FocusManager" parent="MarginContainer/HFlowContainer" instance=ExtResource("2_mscek")]
+unique_name_in_owner = true
+
+[node name="PluginStoreItem" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+layout_mode = 2
+
+[node name="PluginStoreItem2" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+layout_mode = 2
+
+[node name="PluginStoreItem3" parent="MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
+layout_mode = 2
