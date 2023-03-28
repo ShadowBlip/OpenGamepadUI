@@ -24,6 +24,7 @@ using godot::String;
 
 static int error(Display *dpy, XErrorEvent *ev) {
   // Always return, I guess?
+  godot::UtilityFunctions::push_error("Got X error: ", ev->error_code);
   return 0;
 }
 
@@ -110,11 +111,7 @@ int Xlib::set_xprop(int window_id, String key, int value) {
     return BadAtom;
   }
 
-  // Fetch the actual property
-  Atom actual;
-  int format;
-  unsigned long n, left;
-  unsigned char *data;
+  // Set the actual property
   int result = XChangeProperty(dpy, window, atom, XA_CARDINAL, 32,
                                PropModeReplace, (unsigned char *)&value, 1);
   if (result > 1) {
@@ -127,6 +124,7 @@ int Xlib::set_xprop(int window_id, String key, int value) {
 // Sets the given x window property values on the given window. Returns 0 if
 // successful.
 int Xlib::set_xprop_array(int window_id, String key, PackedInt32Array values) {
+  godot::UtilityFunctions::print("Setting values: ", values);
   Window window = (Window)window_id;
 
   // Build the atom to set
@@ -138,13 +136,33 @@ int Xlib::set_xprop_array(int window_id, String key, PackedInt32Array values) {
   }
 
   // Fetch the actual property
-  Atom actual;
-  int format;
-  unsigned long n, left;
-  unsigned char *data;
   int result =
       XChangeProperty(dpy, window, atom, XA_CARDINAL, 32, PropModeReplace,
                       (unsigned char *)values.ptr(), values.size());
+  godot::UtilityFunctions::print("Got result: ", result);
+  if (result > 1) {
+    return result;
+  }
+
+  return 0;
+};
+
+// Appends the given x window property value on the given window. Returns 0 if
+// successful.
+int Xlib::append_xprop(int window_id, String key, int value) {
+  Window window = (Window)window_id;
+
+  // Build the atom to set
+  Atom atom = XInternAtom(dpy, key.ascii().get_data(), false);
+  if (atom == None) {
+    godot::UtilityFunctions::push_error("Failed to create atom with name: ",
+                                        key);
+    return BadAtom;
+  }
+
+  // Append the actual property
+  int result = XChangeProperty(dpy, window, atom, XA_CARDINAL, 32,
+                               PropModeAppend, (unsigned char *)&value, 1);
   if (result > 1) {
     return result;
   }
@@ -494,6 +512,8 @@ void Xlib::_bind_methods() {
   ClassDB::bind_method(
       D_METHOD("set_xprop_array", "window_id", "key", "values"),
       &Xlib::set_xprop_array);
+  ClassDB::bind_method(D_METHOD("append_xprop", "window_id", "key", "value"),
+                       &Xlib::append_xprop);
   ClassDB::bind_method(D_METHOD("remove_xprop", "window_id", "key"),
                        &Xlib::remove_xprop);
   ClassDB::bind_method(D_METHOD("get_xprop", "window_id", "key"),

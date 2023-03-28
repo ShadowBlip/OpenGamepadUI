@@ -30,7 +30,7 @@ enum XWAYLAND {
 	GAME,  ## Xwayland instance where games run
 }
 
-@export var log_level := Log.LEVEL.INFO
+@export var log_level := Log.LEVEL.DEBUG
 var xwayland_primary: Xlib
 var xwayland_ogui: Xlib
 var xwayland_game: Xlib
@@ -426,6 +426,7 @@ func get_saturation(display: XWAYLAND = XWAYLAND.PRIMARY) -> float:
 func set_saturation(saturation: float, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	saturation = maxf(saturation, 0.0)
 	saturation = minf(saturation, 4.0)
+	logger.debug("Setting saturation to: " + str(saturation))
 
 	# Generate color transformation matrix
 	var coeffs := _saturation_to_coeffs(saturation)
@@ -439,6 +440,7 @@ func set_saturation(saturation: float, display: XWAYLAND = XWAYLAND.PRIMARY) -> 
 		return -1
 	var root_id := xwayland.get_root_window_id()
 	
+	logger.debug("Setting color matrix coeffs: " + str(long_coeffs))
 	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_COLOR_MATRIX", long_coeffs)
 
 
@@ -528,7 +530,14 @@ func _set_xprop(xwayland: Xlib, window_id: int, key: String, value: int) -> int:
 func _set_xprop_array(xwayland: Xlib, window_id: int, key: String, values: PackedInt32Array) -> int:
 	var msg_args := [window_id, key, str(values), xwayland.get_name()]
 	logger.debug("Setting window {0} key {1} to {2} on display {3}".format(msg_args))
-	return xwayland.set_xprop_array(window_id, key, values)
+	# TODO: Fix set_xprop_array and use that instead of xprop
+	var values_str_arr := []
+	for value in values:
+		values_str_arr.append(str(value))
+	var values_str := ",".join(values_str_arr)
+	var cmd := "env"
+	var args := ["DISPLAY="+xwayland.get_name(), "xprop", "-id", str(window_id), "-f", key, "32c", "-set", key, values_str]
+	return OS.execute(cmd, args)
 
 
 ## Returns the value of the given X property for the given window. Returns

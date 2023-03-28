@@ -5,6 +5,7 @@ var AudioManager := preload("res://core/global/audio_manager.tres") as AudioMana
 var DisplayManager := preload("res://core/global/display_manager.tres") as DisplayManager
 
 var backlights := DisplayManager.get_backlight_paths()
+var logger := Log.get_logger("QuickSettings")
 
 @onready var output_volume := $%VolumeSlider
 @onready var brightness_slider := $%BrightnessSlider
@@ -18,6 +19,7 @@ func _ready() -> void:
 	output_volume.value_changed.connect(_on_output_volume_slider_changed)
 	AudioManager.volume_changed.connect(_on_output_volume_changed)
 
+	# Setup the saturation slider
 	saturation_slider.value = 100
 	saturation_slider.value_changed.connect(_on_saturation_changed)
 
@@ -44,4 +46,6 @@ func _on_brightness_slider_changed(value: float) -> void:
 
 
 func _on_saturation_changed(value: float) -> void:
-	Gamescope.set_saturation(value / 100.0)
+	var code := Gamescope.set_saturation(value / 100.0)
+	if code != OK:
+		logger.warn("Unable to set saturation. Code: " + str(code))
