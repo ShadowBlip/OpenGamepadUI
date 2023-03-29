@@ -220,7 +220,7 @@ dist/opengamepadui.tar.gz: build rootfs
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: systemd-sysext
-systemd-sysext: dist dist/opengamepadui-session.tar.gz ## Create a systemd-sysext extension archive
+systemd-sysext: dist dist/opengamepadui-session.tar.gz dist/ryzenadj ## Create a systemd-sysext extension archive
 	rm -rf dist/opengamepadui.raw
 	cd dist && tar xvfz opengamepadui.tar.gz opengamepadui/usr
 	mkdir -p dist/opengamepadui/usr/lib/extension-release.d
@@ -231,11 +231,26 @@ systemd-sysext: dist dist/opengamepadui-session.tar.gz ## Create a systemd-sysex
 	cd dist && tar xvfz opengamepadui-session.tar.gz
 	cp -r dist/OpenGamepadUI-session-main/usr/* dist/opengamepadui/usr
 
+	@# Copy ryzenadj files into the extension
+	install -Dsm 755 dist/ryzenadj dist/opengamepadui/usr/bin/ryzenadj
+	install -Dsm 744 dist/libryzenadj.so dist/opengamepadui/usr/lib/libryzenadj.so
+	install -Dm 744 dist/ryzenadj.h dist/opengamepadui/usr/include/ryzenadj.h
+
+
 	@# Build the extension archive
 	cd dist && mksquashfs opengamepadui opengamepadui.raw
 	rm -rf dist/opengamepadui dist/OpenGamepadUI-session-main
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
 
+dist/ryzenadj:
+	rm -Rf RyzenAdj
+	@# Copy ryzenadj into the extension
+	git clone https://github.com/FlyGoat/RyzenAdj.git
+	mkdir -p RyzenAdj/build
+	cd RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
+	install -Dsm 755 RyzenAdj/build/ryzenadj dist/ryzenadj
+	install -Dsm 744 RyzenAdj/build/libryzenadj.so dist/libryzenadj.so
+	install -Dm 744 RyzenAdj/lib/ryzenadj.h dist/ryzenadj.h
 
 dist/opengamepadui-session.tar.gz:
 	wget -O dist/opengamepadui-session.tar.gz https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
