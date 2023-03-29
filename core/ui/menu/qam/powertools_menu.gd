@@ -568,6 +568,11 @@ var amd_apu_database := {
 		"min_tdp": 2,
 		"max_boost": 6
 	},
+	'AMD Custom APU 0405': { # Steam Deck
+		"max_tdp": 15,
+		"min_tdp": 3,
+		"max_boost": 5
+	},
 	'AMD Ryzen 3 2200U with Radeon Graphics': {
 		"max_tdp": 20,
 		"min_tdp": 2,
