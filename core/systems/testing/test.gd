@@ -11,6 +11,8 @@ signal assert_failed(assertion: Assertion)
 ## Whether or not to finish the test after _ready() returns. If this is false,
 ## you must call finish() to end the test.
 @export var finish_after_ready: bool = true
+## Whether or not to print assertions during the test run
+@export var print_assertions: bool = false
 var logger := Log.get_logger(test_name)
 
 ## Test assertion
@@ -27,6 +29,7 @@ func _init() -> void:
 			return
 		finish()
 	ready.connect(on_ready)
+	assert_failed.connect(print_assertion)
 
 
 func assert_true(expr: bool) -> void:
@@ -56,8 +59,26 @@ func _get_caller() -> Dictionary:
 	return stack[2]
 
 
-func finish() -> void:
+func print_assertion(assertion: Test.Assertion) -> void:
+	if not print_assertions:
+		return
+	var msg := "Assert failed: {0}:{1}():{2}: {3}".format([
+		assertion.caller["source"],
+		assertion.caller["function"],
+		assertion.caller["line"],
+		assertion.reason,
+	])
+	logger.error(msg)
+
+
+func _is_running_standalone() -> bool:
 	if get_parent().name == "RunTests":
+		return false
+	return true
+
+
+func finish() -> void:
+	if _is_running_standalone():
 		queue_free()
 	get_tree().quit()
 

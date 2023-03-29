@@ -38,7 +38,7 @@ func check_for_updates() -> void:
 	tag = tag.replace("v", "")
 	
 	# Check if the release is newer than the current one.
-	if not _is_greater_version(Version.core, tag):
+	if not SemanticVersion.is_greater_version(Version.core, tag):
 		logger.debug("Latest release " + tag + " is not newer than installed: " + Version.core)
 		update_available.emit(false)
 		return
@@ -115,44 +115,3 @@ func install_update(download_url: String, sha256: String = "") -> void:
 	file.close()
 	update_installed.emit(OK)
 
-
-# Returns whether or not the given semantic version string is greater than 
-# the target semantic version string.  
-func _is_greater_version(version: String, target: String) -> bool:
-	var version_list := version.split(".")
-	var target_list := target.split(".")
-	
-	# Ensure the given versions are valid semver
-	if not _is_valid_semver(version_list) or not _is_valid_semver(target_list):
-		return false
-	
-	# Compare major versions: X.x.x
-	if target_list[0] > version_list[0]:
-		return true
-	var matches_major := false
-	if target_list[0] == version_list[0]:
-		matches_major = true
-	
-	# Compare minor versions: x.X.x
-	if matches_major and target_list[1] > version_list[1]:
-		return true
-	var matches_minor := false
-	if target_list[1] == version_list[1]:
-		matches_minor = true
-	
-	# Compare patch versions: x.x.X
-	if matches_minor and target_list[2] > version_list[2]:
-		return true
-		
-	return false
-
-
-# Returns whether or not the given version array is a valid semver
-func _is_valid_semver(version: PackedStringArray) -> bool:
-	if version.size() != 3:
-		return false
-	for i in version:
-		var v: String = i
-		if not v.is_valid_int():
-			return false
-	return true

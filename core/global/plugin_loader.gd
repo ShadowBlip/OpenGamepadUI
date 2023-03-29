@@ -414,7 +414,7 @@ func _load_plugins() -> void:
 
 			# Check if we need to upgrade
 			var existing = get_plugin_meta(meta["plugin.id"])
-			if not _is_greater_version(meta["plugin.version"], existing["plugin.version"]):
+			if not SoftwareUpdater.is_greater_version(meta["plugin.version"], existing["plugin.version"]):
 				file_name = dir.get_next()
 				continue
 
@@ -505,51 +505,7 @@ func _is_valid_plugin_meta(meta: Dictionary) -> bool:
 # equal to the target semantic version string, except if the target major
 # version differs.
 func _is_compatible_version(version: String, target: String) -> bool:
-	var version_list = version.split(".")
-	var target_list = target.split(".")
-
-	# Ensure the given versions are valid semver
-	if not _is_valid_semver(version_list) or not _is_valid_semver(target_list):
-		return false
-
-	# Compare major versions
-	if version_list[0] != target_list[0]:
-		return false
-
-	# Compare minor versions
-	if int(version_list[0]) < int(target_list[0]):
-		return false
-
-	return true
-
-
-# Returns whether or not the given semantic version string is greater than or
-# equal to the target semantic version string.  This is usefull to determine if
-# an updated plugin needs to be reloaded.
-func _is_greater_version(version: String, target: String) -> bool:
-	var version_list = version.split(".")
-	var target_list = target.split(".")
-
-	# Ensure the given versions are valid semver
-	if not _is_valid_semver(version_list) or not _is_valid_semver(target_list):
-		return false
-
-	# Compare minor versions
-	if int(version_list[0]) <= int(target_list[0]):
-		return false
-
-	return true
-
-
-# Returns whether or not the given version array is a valid semver
-func _is_valid_semver(version: Array) -> bool:
-	if len(version) != 3:
-		return false
-	for i in version:
-		var v: String = i
-		if not v.is_valid_int():
-			return false
-	return true
+	return SemanticVersion.is_feature_compatible(version, target)
 
 
 # Refreshes the pluign store database and reports if an updated plugin is available
@@ -589,7 +545,7 @@ func _is_plugin_upgradable(plugin_id: String, store_db: Dictionary) -> bool:
 		return false
 	var current_version = plugins[plugin_id]["plugin.version"]
 	var new_version = store_db[plugin_id]["plugin.version"]
-	if _is_greater_version(new_version, current_version):
+	if SemanticVersion.is_greater(new_version, current_version):
 		logger.info("Plugin update available: {0}.".format([plugin_id]))
 		plugin_upgradable.emit(plugin_id, update_type.UPDATE)
 		plugins_upgradable.append(plugin_id)

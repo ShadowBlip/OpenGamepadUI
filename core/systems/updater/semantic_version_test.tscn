@@ -5,5 +5,3 @@
 [node name="SemanticVersionTest" type="Node"]
 script = ExtResource("1_e3aio")
 test_name = "SemanticVersionTest"
-finish_after_ready = false
-print_assertions = true
