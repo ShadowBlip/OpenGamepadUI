@@ -93,6 +93,12 @@ build/opengamepad-ui.x86_64: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
+.PHONY: update-pack
+update-pack: addons build/update.pck ## Build and export update pack
+build/update.pck: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+	mkdir -p build
+	$(GODOT) --headless --export-pack "Linux/X11 (Update Pack)" $@
+
 .PHONY: plugins
 plugins: addons build/plugins.zip ## Build and export plugins
 build/plugins.zip: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
