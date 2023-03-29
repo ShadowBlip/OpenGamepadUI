@@ -170,6 +170,7 @@ inspect: addons ## Launch Gamescope inspector
 signing-keys: assets/crypto/keys/opengamepadui.pub ## Generate a signing keypair to sign packages
 
 assets/crypto/keys/opengamepadui.key:
+	@echo "Generating signing keys"
 	mkdir -p assets/crypto/keys
 	openssl genrsa -out $@ 4096
 
@@ -180,12 +181,13 @@ assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
 ##@ Remote Debugging
 
 .PHONY: deploy
-deploy: dist $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote device
+deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote device
 	cp dist/opengamepadui.tar.gz $(SSH_MOUNT_PATH)
 	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui.tar.gz
 
+
 .PHONY: deploy-ext
-deploy-ext: systemd-sysext ## Build and deploy systemd extension to remote device
+deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user
 	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/lib/extensions
 	scp rootfs/usr/lib/systemd/user/systemd-sysext-updater.service $(SSH_USER)@$(SSH_HOST):~/.config/systemd/user
@@ -195,6 +197,7 @@ deploy-ext: systemd-sysext ## Build and deploy systemd extension to remote devic
 	ssh -t $(SSH_USER)@$(SSH_HOST) sudo systemd-sysext refresh
 	ssh $(SSH_USER)@$(SSH_HOST) systemd-sysext status
 
+
 .PHONY: enable-debug
 enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .config/environment.d
@@ -202,9 +205,11 @@ enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
 		ssh $(SSH_USER)@$(SSH_HOST) bash -c \
 		'cat > .config/environment.d/opengamepadui-session.conf'
 
+
 .PHONY: tunnel
 tunnel: ## Create an SSH tunnel to allow remote debugging
 	ssh $(SSH_USER)@$(SSH_HOST) -N -f -R 6007:localhost:6007
+
 
 # Mounts the remote device and creates an SSH tunnel for remote debugging
 $(SSH_MOUNT_PATH)/.mounted:
@@ -212,6 +217,7 @@ $(SSH_MOUNT_PATH)/.mounted:
 	sshfs -o default_permissions $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH) $(SSH_MOUNT_PATH)
 	$(MAKE) tunnel
 	touch $(SSH_MOUNT_PATH)/.mounted
+
 
 ##@ Distribution
 
@@ -227,7 +233,7 @@ rootfs: build/opengamepad-ui.x86_64
 
 
 .PHONY: dist 
-dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck ## Create all redistributable versions of the project
+dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck.sig ## Create all redistributable versions of the project
 	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
 	cd dist && sha256sum update.pck > update.pck.sha256.txt
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
@@ -236,6 +242,7 @@ dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck ## Create
 .PHONY: dist-archive
 dist-archive: dist/opengamepadui.tar.gz ## Create a redistributable tar.gz of the project
 dist/opengamepadui.tar.gz: rootfs
+	@echo "Building redistributable tar.gz archive"
 	mkdir -p dist
 	mv $(ROOTFS) $(CACHE_DIR)/opengamepadui
 	cd $(CACHE_DIR) && tar cvfz opengamepadui.tar.gz opengamepadui
@@ -246,17 +253,20 @@ dist/opengamepadui.tar.gz: rootfs
 .PHONY: dist-update-pack
 dist-update-pack: dist/update.pck ## Create an update pack archive
 dist/update.pck: update-pack
+	@echo "Building redistributable update pack"
 	mkdir -p dist
 	cp build/update.pck $@
 
-dist/update.pck.sig: dist/update.pck
-	openssl dgst -sha256 -sign assets/crypto/keys/opengamepadui.key -out $@ $^
+dist/update.pck.sig: dist/update.pck assets/crypto/keys/opengamepadui.key
+	@echo "Signing update pack $<"
+	openssl dgst -sha256 -sign assets/crypto/keys/opengamepadui.key -out $@ $<
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: dist-ext
 dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
 dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-session.tar.gz $(CACHE_DIR)/RyzenAdj/build/ryzenadj
+	@echo "Building redistributable systemd extension"
 	mkdir -p dist
 	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
 	cp dist/opengamepadui.tar.gz $(CACHE_DIR)
