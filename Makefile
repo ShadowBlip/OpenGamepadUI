@@ -258,7 +258,7 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-ses
 	@# Copy ryzenadj files into the extension
 	install -Dsm 755 $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/opengamepadui/usr/bin/ryzenadj
 	install -Dsm 744 $(CACHE_DIR)/RyzenAdj/build/libryzenadj.so $(CACHE_DIR)/opengamepadui/usr/lib/libryzenadj.so
-	install -Dm 744 $(CACHE_DIR)/RyzenAdj/lib/ryzenadj.h $(CACHE_DIR)/opengamepadui/usr/include/ryzenadj.h
+	install -Dm 644 $(CACHE_DIR)/RyzenAdj/lib/ryzenadj.h $(CACHE_DIR)/opengamepadui/usr/include/ryzenadj.h
 
 	@# Build the extension archive
 	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
@@ -272,9 +272,6 @@ $(CACHE_DIR)/RyzenAdj/build/ryzenadj:
 	git clone https://github.com/FlyGoat/RyzenAdj.git $(CACHE_DIR)/RyzenAdj
 	mkdir -p $(CACHE_DIR)/RyzenAdj/build
 	cd $(CACHE_DIR)/RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
-	#install -Dsm 755 RyzenAdj/build/ryzenadj dist/ryzenadj
-	#install -Dsm 744 RyzenAdj/build/libryzenadj.so dist/libryzenadj.so
-	#install -Dm 744 RyzenAdj/lib/ryzenadj.h dist/ryzenadj.h
 
 
 $(CACHE_DIR)/opengamepadui-session.tar.gz:
