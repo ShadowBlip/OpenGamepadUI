@@ -20,7 +20,7 @@ signal brightness_changed
 const backlight_path := "/sys/class/backlight"
 const steamos_write_bin := "/usr/bin/steamos-polkit-helpers/steamos-priv-write"
 
-var logger := Log.get_logger("DisplayManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("DisplayManager", Log.LEVEL.INFO)
 var backlights := get_backlight_paths()
 var brightness_provider := _get_brightness_provider()
 
