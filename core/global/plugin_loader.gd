@@ -414,7 +414,7 @@ func _load_plugins() -> void:
 
 			# Check if we need to upgrade
 			var existing = get_plugin_meta(meta["plugin.id"])
-			if not SoftwareUpdater.is_greater_version(meta["plugin.version"], existing["plugin.version"]):
+			if not SemanticVersion.is_greater(meta["plugin.version"], existing["plugin.version"]):
 				file_name = dir.get_next()
 				continue
 
