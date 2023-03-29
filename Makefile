@@ -186,6 +186,13 @@ deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to 
 	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui.tar.gz
 
 
+.PHONY: deploy-pack
+deploy-pack: dist/update.pck.sig ## Build and deploy update pack to remote device
+	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .local/share/opengamepadui/updates
+	scp dist/update.pck $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
+	scp dist/update.pck.sig $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
+
+
 .PHONY: deploy-ext
 deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user
