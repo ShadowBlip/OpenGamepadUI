@@ -39,7 +39,7 @@ func _ready() -> void:
 	# Configure install update
 	var on_install_update := func():
 		update_button.disabled = true
-		updater.install_update(updater.update_pack_url)
+		updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
 		var status := await updater.update_installed as int
 		if status == OK:
 			var notify := Notification.new("Client update installed successfully")
@@ -78,7 +78,7 @@ func _on_autoupdate() -> void:
 
 	logger.info("New update was found. Trying to install it.")
 	update_button.disabled = true
-	updater.install_update(updater.update_pack_url)
+	updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
 	var status := await updater.update_installed as int
 	if status == OK:
 		update_installed = true

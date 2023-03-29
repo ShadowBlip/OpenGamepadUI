@@ -5,11 +5,14 @@ signal update_available(available: bool)
 signal update_installed(status: int)
 
 var Version := preload("res://core/global/version.tres") as Version
+var PackageVerifier := preload("res://core/global/package_verifier.tres") as PackageVerifier
 var update_pack_url := ""
+var update_pack_signature_url := ""
 var logger := Log.get_logger("SoftwareUpdater", Log.LEVEL.DEBUG)
 
 @export var github_project := "ShadowBlip/OpenGamepadUI"
 @export var update_filename := "update.pck"
+@export var update_signature_filename := "update.pck.sig"
 @export var update_hash_filename := "update.pck.sha256.txt"
 @export var update_folder := "user://updates"
 
@@ -38,7 +41,7 @@ func check_for_updates() -> void:
 	tag = tag.replace("v", "")
 	
 	# Check if the release is newer than the current one.
-	if not SemanticVersion.is_greater_version(Version.core, tag):
+	if not SemanticVersion.is_greater(Version.core, tag):
 		logger.debug("Latest release " + tag + " is not newer than installed: " + Version.core)
 		update_available.emit(false)
 		return
@@ -50,7 +53,9 @@ func check_for_updates() -> void:
 		return
 	var assets := latest_release["assets"] as Array[Dictionary]
 	
+	# Look for the download url for the pack itself and its signature
 	update_pack_url = ""
+	update_pack_signature_url = ""
 	for asset in assets:
 		if not "name" in asset:
 			continue
@@ -58,8 +63,10 @@ func check_for_updates() -> void:
 			continue
 		if asset["name"] == update_filename:
 			update_pack_url = asset["browser_download_url"]
+		if asset["name"] == update_signature_filename:
+			update_pack_signature_url = asset["browser_download_url"]
 	
-	if update_pack_url == "":
+	if update_pack_url == "" or update_pack_signature_url == "":
 		logger.info("Unable to find update pack in release assets")
 		update_available.emit(false)
 		return
@@ -68,15 +75,57 @@ func check_for_updates() -> void:
 
 
 ## Downloads and installs the given update
-func install_update(download_url: String, sha256: String = "") -> void:
+func install_update(download_url: String, signature_url: String) -> void:
+	# Download the update pack
+	var update_data := await _download_file(download_url)
+	if update_data.size() == 0:
+		logger.info("Failed to download update pack")
+		update_installed.emit(FAILED)
+		return
+
+	# Download the update pack signature
+	var signature_data := await _download_file(signature_url)
+	if signature_data.size() == 0:
+		logger.info("Failed to download update pack signature")
+		update_installed.emit(FAILED)
+		return
+
+	# Validate the update pack against its signature
+	var args := OS.get_cmdline_args()
+	if "--skip-verify-packages" in args:
+		logger.warn("Skipping validation of update pack. This could be dangerous!")
+	else:
+		if not PackageVerifier.has_valid_signature(update_data, signature_data):
+			logger.warn("Update pack does not have a valid signature! Not saving update pack.")
+			update_installed.emit(FAILED)
+			return
+
+	# Save the update to the update folder
+	DirAccess.make_dir_recursive_absolute(update_folder)
+	var update_path := "/".join([update_folder, update_filename])
+	var update_file := FileAccess.open(update_path, FileAccess.WRITE)
+	update_file.store_buffer(update_data)
+	update_file.close()
+	
+	# Save the update signature to the update folder
+	var sig_path := "/".join([update_folder, update_signature_filename])
+	var sig_file := FileAccess.open(sig_path, FileAccess.WRITE)
+	sig_file.store_buffer(signature_data)
+	sig_file.close()
+	
+	update_installed.emit(OK)
+
+
+## Download the given file and return its data as a PackedByteArray. Returns
+## an empty array if file could not be downloaded.
+func _download_file(download_url: String) -> PackedByteArray:
 	# Build the request
 	var http: HTTPRequest = HTTPRequest.new()
 	add_child(http)
 	if http.request(download_url) != OK:
-		logger.info("Error making http request for update pack: " + download_url)
+		logger.info("Error downloading file: " + download_url)
 		http.queue_free()
-		update_installed.emit(FAILED)
-		return
+		return PackedByteArray()
 
 	# Wait for the request signal to complete
 	# result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
@@ -88,30 +137,8 @@ func install_update(download_url: String, sha256: String = "") -> void:
 	http.queue_free()
 
 	if result != HTTPRequest.RESULT_SUCCESS:
-		logger.info("Update couldn't be downloaded: " + download_url)
+		logger.info("File couldn't be downloaded: " + download_url)
 		update_installed.emit(FAILED)
-		return
-
-	# Now we have the body ;)
-	var ctx = HashingContext.new()
-
-	# Start a SHA-256 context.
-	ctx.start(HashingContext.HASH_SHA256)
-	ctx.update(body)
-
-	# Get the computed hash.
-	var res = ctx.finish()
-
-	# Print the result as hex string and array.
-	if sha256 != "" and res.hex_encode() != sha256:
-		logger.error("sha256 hash does not match for the downloaded update pack")
-		update_installed.emit(FAILED)
-		return
-
-	# Install the update
-	DirAccess.make_dir_recursive_absolute(update_folder)
-	var file := FileAccess.open("/".join([update_folder, update_filename]), FileAccess.WRITE_READ)
-	file.store_buffer(body)
-	file.close()
-	update_installed.emit(OK)
-
+		return PackedByteArray()
+	
+	return body

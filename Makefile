@@ -166,6 +166,17 @@ inspect: addons ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
 
 
+.PHONY: signing-keys
+signing-keys: assets/crypto/keys/opengamepadui.pub ## Generate a signing keypair to sign packages
+
+assets/crypto/keys/opengamepadui.key:
+	mkdir -p assets/crypto/keys
+	openssl genrsa -out $@ 4096
+
+assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
+	openssl rsa -in $^ -outform PEM -pubout -out $@
+
+
 ##@ Remote Debugging
 
 .PHONY: deploy
@@ -237,6 +248,9 @@ dist-update-pack: dist/update.pck ## Create an update pack archive
 dist/update.pck: update-pack
 	mkdir -p dist
 	cp build/update.pck $@
+
+dist/update.pck.sig: dist/update.pck
+	openssl dgst -sha256 -sign assets/crypto/keys/opengamepadui.key -out $@ $^
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
