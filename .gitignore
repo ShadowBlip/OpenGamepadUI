@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
-.rootfs
+.cache/
+.rootfs/
 build
 dist
 settings.mk

@@ -1,6 +1,7 @@
 
 PREFIX ?= $(HOME)/.local
-ROOTFS ?= .rootfs
+CACHE_DIR ?= .cache
+ROOTFS ?= $(CACHE_DIR)/rootfs
 GODOT_VERSION ?= 4.0.1
 GODOT_RELEASE ?= stable
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
@@ -126,6 +127,7 @@ edit: ## Open the project in the Godot editor
 clean: ## Remove build artifacts
 	rm -rf build
 	rm -rf $(ROOTFS)
+	rm -rf $(CACHE_DIR)
 	rm -rf dist
 	cd ./addons/godot-xlib && make clean
 	cd ./addons/godot-evdev && make clean
@@ -203,7 +205,7 @@ $(SSH_MOUNT_PATH)/.mounted:
 ##@ Distribution
 
 .PHONY: rootfs
-rootfs: ## Build the archive structure
+rootfs: build/opengamepad-ui.x86_64
 	rm -rf $(ROOTFS)
 	mkdir -p $(ROOTFS)
 	cp -r rootfs/* $(ROOTFS)
@@ -214,49 +216,66 @@ rootfs: ## Build the archive structure
 
 
 .PHONY: dist 
-dist: dist/opengamepadui.tar.gz ## Create an archive distribution of the project
-dist/opengamepadui.tar.gz: build rootfs
-	mv $(ROOTFS) opengamepadui
-	tar cvfz opengamepadui.tar.gz opengamepadui
-	mkdir -p dist
-	mv opengamepadui.tar.gz dist
-	mv opengamepadui $(ROOTFS)
+dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck ## Create all redistributable versions of the project
 	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
+	cd dist && sha256sum update.pck > update.pck.sha256.txt
+	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
+
+
+.PHONY: dist-archive
+dist-archive: dist/opengamepadui.tar.gz ## Create a redistributable tar.gz of the project
+dist/opengamepadui.tar.gz: rootfs
+	mkdir -p dist
+	mv $(ROOTFS) $(CACHE_DIR)/opengamepadui
+	cd $(CACHE_DIR) && tar cvfz opengamepadui.tar.gz opengamepadui
+	mv $(CACHE_DIR)/opengamepadui.tar.gz dist
+	mv $(CACHE_DIR)/opengamepadui $(ROOTFS)
+
+
+.PHONY: dist-update-pack
+dist-update-pack: dist/update.pck ## Create an update pack archive
+dist/update.pck: update-pack
+	mkdir -p dist
+	cp build/update.pck $@
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
-.PHONY: systemd-sysext
-systemd-sysext: dist dist/opengamepadui-session.tar.gz dist/ryzenadj ## Create a systemd-sysext extension archive
-	rm -rf dist/opengamepadui.raw
-	cd dist && tar xvfz opengamepadui.tar.gz opengamepadui/usr
-	mkdir -p dist/opengamepadui/usr/lib/extension-release.d
-	echo ID=$(SYSEXT_ID) > dist/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
-	echo VERSION_ID=$(SYSEXT_VERSION_ID) >> dist/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
+.PHONY: dist-ext
+dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
+dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-session.tar.gz $(CACHE_DIR)/RyzenAdj/build/ryzenadj
+	mkdir -p dist
+	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
+	cp dist/opengamepadui.tar.gz $(CACHE_DIR)
+	cd $(CACHE_DIR) && tar xvfz opengamepadui.tar.gz opengamepadui/usr
+	mkdir -p $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d
+	echo ID=$(SYSEXT_ID) > $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
+	echo VERSION_ID=$(SYSEXT_VERSION_ID) >> $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
 
 	@# Copy opengamepadui-session into the extension
-	cd dist && tar xvfz opengamepadui-session.tar.gz
-	cp -r dist/OpenGamepadUI-session-main/usr/* dist/opengamepadui/usr
+	cd $(CACHE_DIR) && tar xvfz opengamepadui-session.tar.gz
+	cp -r $(CACHE_DIR)/OpenGamepadUI-session-main/usr/* $(CACHE_DIR)/opengamepadui/usr
 
 	@# Copy ryzenadj files into the extension
-	install -Dsm 755 dist/ryzenadj dist/opengamepadui/usr/bin/ryzenadj
-	install -Dsm 744 dist/libryzenadj.so dist/opengamepadui/usr/lib/libryzenadj.so
-	install -Dm 744 dist/ryzenadj.h dist/opengamepadui/usr/include/ryzenadj.h
-
+	install -Dsm 755 $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/opengamepadui/usr/bin/ryzenadj
+	install -Dsm 744 $(CACHE_DIR)/RyzenAdj/build/libryzenadj.so $(CACHE_DIR)/opengamepadui/usr/lib/libryzenadj.so
+	install -Dm 744 $(CACHE_DIR)/RyzenAdj/lib/ryzenadj.h $(CACHE_DIR)/opengamepadui/usr/include/ryzenadj.h
 
 	@# Build the extension archive
-	cd dist && mksquashfs opengamepadui opengamepadui.raw
-	rm -rf dist/opengamepadui dist/OpenGamepadUI-session-main
-	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
+	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
+	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/OpenGamepadUI-session-main
+	mv $(CACHE_DIR)/opengamepadui.raw $@
 
-dist/ryzenadj:
-	rm -Rf RyzenAdj
+
+$(CACHE_DIR)/RyzenAdj/build/ryzenadj:
+	rm -Rf $(CACHE_DIR)/RyzenAdj
 	@# Copy ryzenadj into the extension
-	git clone https://github.com/FlyGoat/RyzenAdj.git
-	mkdir -p RyzenAdj/build
-	cd RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
-	install -Dsm 755 RyzenAdj/build/ryzenadj dist/ryzenadj
-	install -Dsm 744 RyzenAdj/build/libryzenadj.so dist/libryzenadj.so
-	install -Dm 744 RyzenAdj/lib/ryzenadj.h dist/ryzenadj.h
+	git clone https://github.com/FlyGoat/RyzenAdj.git $(CACHE_DIR)/RyzenAdj
+	mkdir -p $(CACHE_DIR)/RyzenAdj/build
+	cd $(CACHE_DIR)/RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
+	#install -Dsm 755 RyzenAdj/build/ryzenadj dist/ryzenadj
+	#install -Dsm 744 RyzenAdj/build/libryzenadj.so dist/libryzenadj.so
+	#install -Dm 744 RyzenAdj/lib/ryzenadj.h dist/ryzenadj.h
 
-dist/opengamepadui-session.tar.gz:
-	wget -O dist/opengamepadui-session.tar.gz https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
+
+$(CACHE_DIR)/opengamepadui-session.tar.gz:
+	wget -O $@ https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
