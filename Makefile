@@ -8,12 +8,6 @@ GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
 
-# Addon dependencies
-ALL_ADDONS := addons/godot-xlib/bin/libxlib.linux.template_debug.x86_64.so \
-	      addons/godot-evdev/bin/libevdev.linux.template_debug.x86_64.so \
-	      addons/godot-pty/bin/libpty.linux.template_debug.x86_64.so \
-	      addons/godot-opensd/bin/libopensd.linux.template_debug.x86_64.so
-
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
@@ -95,7 +89,7 @@ uninstall-ext: ## Uninstall the OpenGamepadUI systemd extension
 ##@ Development
 
 .PHONY: test
-test: addons ## Run all unit tests
+test: ## Run all unit tests
 	$(GODOT) --path $(PWD) --headless --debug \
 		--remote-debug tcp://127.0.0.1:6007 \
 		res://core/systems/testing/run_tests.tscn
@@ -123,25 +117,6 @@ import: ## Import project assets
 	@echo "Importing project assets. This will take some time..."
 	timeout --foreground 60 $(GODOT) --headless --editor . || echo "Finished"
 
-.PHONY: addons
-addons: $(ALL_ADDONS) ## Build GDExtension add-ons
-
-XLIB_FILES := $(shell find ./addons/godot-xlib -regex  '.*\(cpp\|h\|hpp\)$$')
-addons/godot-xlib/bin/libxlib.linux.template_debug.x86_64.so: $(XLIB_FILES)
-	cd ./addons/godot-xlib && make build
-
-EVDEV_FILES := $(shell find ./addons/godot-evdev -regex  '.*\(cpp\|h\|hpp\)$$')
-addons/godot-evdev/bin/libevdev.linux.template_debug.x86_64.so: $(EVDEV_FILES)
-	cd ./addons/godot-evdev && make build
-
-PTY_FILES := $(shell find ./addons/godot-pty -regex  '.*\(cpp\|h\|hpp\)$$')
-addons/godot-pty/bin/libpty.linux.template_debug.x86_64.so: $(PTY_FILES)
-	cd ./addons/godot-pty && make build
-
-OPENSD_FILES := $(shell find ./addons/godot-opensd -regex  '.*\(cpp\|h\|hpp\)$$')
-addons/godot-opensd/bin/libopensd.linux.template_debug.x86_64.so: $(OPENSD_FILES)
-	cd ./addons/godot-opensd && make build
-
 .PHONY: edit
 edit: ## Open the project in the Godot editor
 	$(GODOT) --editor .
@@ -152,13 +127,9 @@ clean: ## Remove build artifacts
 	rm -rf $(ROOTFS)
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
-	cd ./addons/godot-xlib && make clean
-	cd ./addons/godot-evdev && make clean
-	cd ./addons/godot-pty && make clean
-	cd ./addons/godot-opensd && make clean
 
 .PHONY: run run-force
-run: addons build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
+run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
 run-force:
 	$(GAMESCOPE) -w 1920 -h 1080 -f -e \
 		--xwayland-count 2 -- ./build/opengamepad-ui.x86_64
@@ -173,19 +144,19 @@ $(EXPORT_TEMPLATE):
 	mv $(HOME)/.local/share/godot/export_templates/templates $(@D)
 
 .PHONY: debug 
-debug: addons ## Run the project in debug mode in gamescope
+debug: ## Run the project in debug mode in gamescope
 	$(GAMESCOPE) -e --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
 .PHONY: debug-qam
-debug-qam: addons ## Run the project in debug mode in gamescope with --only-qam
+debug-qam: ## Run the project in debug mode in gamescope with --only-qam
 	$(GAMESCOPE) -e --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn --only-qam -- steam -gamepadui -steamos3 -steampal -steamdeck
 
 .PHONY: inspect
-inspect: addons ## Launch Gamescope inspector
+inspect: ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
 
 

@@ -1,0 +1,8 @@
+[configuration]
+
+entry_symbol = "evdev_library_init"
+
+[libraries]
+
+linux.debug.x86_64 = "res://addons/evdev/bin/libevdev.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/evdev/bin/libevdev.linux.template_release.x86_64.so"
