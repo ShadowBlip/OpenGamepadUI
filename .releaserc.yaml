@@ -1,0 +1,51 @@
+# Semantic Release Configuration
+# https://semantic-release.gitbook.io/semantic-release/usage/configuration
+
+# Any merges into branches that match these patterns will trigger a release.
+branches:
+  - name: main
+
+# These plugins will run when a release is triggered. They will analyze commit 
+# messages to determine what kind of release this is and publish a new release.
+plugins:
+  # Analyze commit messages to determine next version
+  - "@semantic-release/commit-analyzer"
+
+  # Generate release notes
+  - "@semantic-release/release-notes-generator"
+
+  # Replace version strings in the project. The 'git' plugin is needed to 
+  # commit the version strings to the repository.
+  - - "@google/semantic-release-replace-plugin"
+    - replacements:
+      - files:
+          - core/global/version.tres
+        from: "core = .*"
+        to: "core = \"${nextRelease.version}\""
+        results:
+          - file: core/global/version.tres
+            hasChanged: true
+            numMatches: 1
+            numReplacements: 1
+        countMatches: true
+
+  # Commit the following changes to git after other plugins have run
+  - - "@semantic-release/git"
+    - assets:
+      - core/global/version.tres
+
+  # Execute commands to build the project
+  - - "@semantic-release/exec"
+    - shell: true
+      prepareCmd: "make in-docker TARGET=dist"
+
+  # Publish artifacts as a GitHub release
+  - - "@semantic-release/github"
+    - assets:
+      - path: dist/opengamepadui.raw
+      - path: dist/opengamepadui.raw.sha256.txt
+      - path: dist/opengamepadui.tar.gz
+      - path: dist/opengamepadui.tar.gz.sha256.txt
+      - path: dist/update.pck
+      - path: dist/update.pck.sha256.txt
+      - path: dist/update.pck.sig

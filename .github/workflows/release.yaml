@@ -1,0 +1,40 @@
+# Build and publish a release of OpenGamepadUI using semantic-release whenever
+# changes are merged into main.
+name: "Release"
+
+on:
+  push:
+    branches:
+      - main
+      - release/v*
+
+env:
+  IMAGE_NAME: ghcr.io/shadowblip/opengamepadui-builder
+
+# Jobs to run
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install @semantic-release/exec @google/semantic-release-replace-plugin @semantic-release/git
+
+      - name: Save the signing key to sign update packs
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        run: |
+          echo "$SIGNING_KEY" > assets/crypto/keys/opengamepadui.key
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make release
