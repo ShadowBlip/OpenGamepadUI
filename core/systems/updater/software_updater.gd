@@ -51,7 +51,7 @@ func check_for_updates() -> void:
 		logger.info("No assets found in release")
 		update_available.emit(false)
 		return
-	var assets := latest_release["assets"] as Array[Dictionary]
+	var assets := latest_release["assets"] as Array
 	
 	# Look for the download url for the pack itself and its signature
 	update_pack_url = ""
