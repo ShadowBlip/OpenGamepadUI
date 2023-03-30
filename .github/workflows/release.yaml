@@ -7,6 +7,9 @@ on:
     branches:
       - main
       - release/v*
+    paths-ignore:
+      - README.md
+      - "docs/**"
 
 env:
   IMAGE_NAME: ghcr.io/shadowblip/opengamepadui-builder

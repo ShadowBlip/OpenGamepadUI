@@ -2,8 +2,8 @@
 PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
 ROOTFS ?= $(CACHE_DIR)/rootfs
-GODOT_VERSION ?= 4.0.1
-GODOT_RELEASE ?= stable
+GODOT_VERSION ?= $(shell godot --version | cut -d'.' -f 1,2,3)
+GODOT_RELEASE ?= $(shell godot --version | cut -d'.' -f 4)
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
@@ -337,7 +337,7 @@ release: ## Publish a release with semantic release
 
 # E.g. make in-docker TARGET=build
 .PHONY: in-docker
-in-docker: docker-builder
+in-docker:
 	@# Run the given make target inside Docker
 	docker run --rm \
 		-v $(PWD):/src \
