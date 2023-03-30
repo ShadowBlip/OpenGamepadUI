@@ -1,8 +1,0 @@
-[configuration]
-
-entry_symbol = "xlib_library_init"
-
-[libraries]
-
-linux.debug.x86_64 = "res://addons/godot-xlib/bin/libxlib.linux.template_debug.x86_64.so"
-linux.release.x86_64 = "res://addons/godot-xlib/bin/libxlib.linux.template_release.x86_64.so"

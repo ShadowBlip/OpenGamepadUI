@@ -1,8 +1,0 @@
-[configuration]
-
-entry_symbol = "opensd_library_init"
-
-[libraries]
-
-linux.debug.x86_64 = "res://addons/godot-opensd/bin/libopensd.linux.template_debug.x86_64.so"
-linux.release.x86_64 = "res://addons/godot-opensd/bin/libopensd.linux.template_release.x86_64.so"
