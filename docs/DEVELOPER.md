@@ -98,7 +98,7 @@ The following are required to build Open Gamepad UI:
 If you are using ArchLinux, you can run the following:
 
 ```bash
-pacman -S --needed scons pkgconf gcc gcc-libs libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib make unzip wget git libevdev libxau libxcb libxdmcp libxext libxres
+pacman -S --needed scons pkgconf gcc gcc-libs libxcursor libxinerama libxi libxrandr mesa glu libglvnd alsa-lib make cmake unzip wget git libevdev libxau libxcb libxdmcp libxext libxres libxtst squashfs-tools godot
 ```
 
 ### Building
