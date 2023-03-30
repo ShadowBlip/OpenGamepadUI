@@ -8,10 +8,10 @@ on:
   push:
     paths:
       - "docker/Dockerfile"
+      - ".github/workflows/docker.yaml"
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-builder
+  IMAGE_NAME: ghcr.io/${{ github.repository }}-builder
 
 jobs:
   build-and-push-image:
