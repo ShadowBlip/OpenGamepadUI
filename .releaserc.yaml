@@ -22,12 +22,12 @@ plugins:
           - core/global/version.tres
         from: "core = .*"
         to: "core = \"${nextRelease.version}\""
-        results:
-          - file: core/global/version.tres
-            hasChanged: true
-            numMatches: 1
-            numReplacements: 1
-        countMatches: true
+        #results:
+        #  - file: core/global/version.tres
+        #    hasChanged: true
+        #    numMatches: 1
+        #    numReplacements: 1
+        #countMatches: true
 
   # Commit the following changes to git after other plugins have run
   - - "@semantic-release/git"
