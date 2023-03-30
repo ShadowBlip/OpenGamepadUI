@@ -22,7 +22,7 @@ ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
 
 # Docker image variables
-IMAGE_NAME ?= ogui-builder
+IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-builder
 IMAGE_TAG ?= latest
 
 # Remote debugging variables 
