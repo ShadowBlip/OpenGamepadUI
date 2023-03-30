@@ -339,7 +339,7 @@ release: ## Publish a release with semantic release
 .PHONY: in-docker
 in-docker: docker-builder
 	@# Run the given make target inside Docker
-	docker run -it --rm \
+	docker run --rm \
 		-v $(PWD):/src \
 		--workdir /src \
 		-e HOME=/home/build \
