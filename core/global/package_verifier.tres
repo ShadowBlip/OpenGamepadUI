@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PackageVerifier" load_steps=2 format=3 uid="uid://bbosp30u63yyx"]
+
+[ext_resource type="Script" path="res://core/systems/crypto/package_verifier.gd" id="1_88uy4"]
+
+[resource]
+script = ExtResource("1_88uy4")
+public_key = "res://assets/crypto/keys/opengamepadui.pub"

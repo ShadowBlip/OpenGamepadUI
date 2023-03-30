@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bimj0mmmy32ju"]
+[gd_scene load_steps=8 format=3 uid="uid://bimj0mmmy32ju"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/general_settings_menu.gd" id="1_e3m8q"]
+[ext_resource type="PackedScene" uid="uid://bnhxravpuheh2" path="res://core/systems/updater/software_updater.tscn" id="2_6yc3d"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_vuj0e"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_yfte1"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="3_0dgbf"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="5_kdlwa"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="5_v4e5k"]
 
 [node name="GeneralSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -15,22 +18,65 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_e3m8q")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="SoftwareUpdater" parent="." instance=ExtResource("2_6yc3d")]
+
+[node name="UpdateTimer" type="Timer" parent="."]
+wait_time = 120.0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_vuj0e")]
-process_input = false
+[node name="FocusManager" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_vuj0e")]
 
-[node name="HomeLabel" parent="VBoxContainer" instance=ExtResource("2_yfte1")]
+[node name="GeneralLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_yfte1")]
+layout_mode = 2
+text = "General"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="UpdatesLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_yfte1")]
+layout_mode = 2
+text = "Updates"
+
+[node name="AutoUpdateToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_kdlwa")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Automatic Updates"
+separator_visible = false
+description = "Automatically download and apply updates in the background when they are available"
+button_pressed = false
+
+[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_v4e5k")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Check for updates"
+
+[node name="UpdateButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_v4e5k")]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Install update"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HomeLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_yfte1")]
 layout_mode = 2
 text = "Home"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="MaxRecentAppsSlider" parent="VBoxContainer" instance=ExtResource("3_0dgbf")]
+[node name="MaxRecentAppsSlider" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_0dgbf")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Maximum Recent Apps"
