@@ -28,6 +28,7 @@ RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
 	libxdmcp \
 	libxext \
 	libxres \
+	libxtst \
 	squashfs-tools \
 	godot
 
