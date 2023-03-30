@@ -20,6 +20,8 @@ EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
+ALL_RESOURCES := $(shell find ./ -regex  '.*\(tres\|svg\|png\)$$')
+PROJECT_FILES := $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES)
 
 # Docker image variables
 IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-builder
@@ -100,19 +102,19 @@ test: addons ## Run all unit tests
 
 .PHONY: build
 build: build/opengamepad-ui.x86_64 ## Build and export the project
-build/opengamepad-ui.x86_64: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+build/opengamepad-ui.x86_64: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
 .PHONY: update-pack
 update-pack: build/update.pck ## Build and export update pack
-build/update.pck: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+build/update.pck: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Update Pack)" $@
 
 .PHONY: plugins
 plugins: build/plugins.zip ## Build and export plugins
-build/plugins.zip: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+build/plugins.zip: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
 
