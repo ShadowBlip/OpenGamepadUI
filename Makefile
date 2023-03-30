@@ -8,12 +8,22 @@ GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
 
+# Addon dependencies
+ALL_ADDONS := addons/godot-xlib/bin/libxlib.linux.template_debug.x86_64.so \
+	      addons/godot-evdev/bin/libevdev.linux.template_debug.x86_64.so \
+	      addons/godot-pty/bin/libpty.linux.template_debug.x86_64.so \
+	      addons/godot-opensd/bin/libopensd.linux.template_debug.x86_64.so
+
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
+
+# Docker image variables
+IMAGE_NAME ?= ogui-builder
+IMAGE_TAG ?= latest
 
 # Remote debugging variables 
 SSH_USER ?= deck
@@ -89,20 +99,20 @@ test: addons ## Run all unit tests
 		res://core/systems/testing/run_tests.tscn
 
 .PHONY: build
-build: addons build/opengamepad-ui.x86_64 ## Build and export the project
-build/opengamepad-ui.x86_64: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+build: build/opengamepad-ui.x86_64 ## Build and export the project
+build/opengamepad-ui.x86_64: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
 .PHONY: update-pack
-update-pack: addons build/update.pck ## Build and export update pack
-build/update.pck: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+update-pack: build/update.pck ## Build and export update pack
+build/update.pck: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Update Pack)" $@
 
 .PHONY: plugins
-plugins: addons build/plugins.zip ## Build and export plugins
-build/plugins.zip: $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
+plugins: build/plugins.zip ## Build and export plugins
+build/plugins.zip: $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
 
@@ -112,11 +122,22 @@ import: ## Import project assets
 	timeout --foreground 60 $(GODOT) --headless --editor . || echo "Finished"
 
 .PHONY: addons
-addons: ## Build GDExtension add-ons
-	@echo "Building gdnative addons"
+addons: $(ALL_ADDONS) ## Build GDExtension add-ons
+
+XLIB_FILES := $(shell find ./addons/godot-xlib -regex  '.*\(cpp\|h\|hpp\)$$')
+addons/godot-xlib/bin/libxlib.linux.template_debug.x86_64.so: $(XLIB_FILES)
 	cd ./addons/godot-xlib && make build
+
+EVDEV_FILES := $(shell find ./addons/godot-evdev -regex  '.*\(cpp\|h\|hpp\)$$')
+addons/godot-evdev/bin/libevdev.linux.template_debug.x86_64.so: $(EVDEV_FILES)
 	cd ./addons/godot-evdev && make build
+
+PTY_FILES := $(shell find ./addons/godot-pty -regex  '.*\(cpp\|h\|hpp\)$$')
+addons/godot-pty/bin/libpty.linux.template_debug.x86_64.so: $(PTY_FILES)
 	cd ./addons/godot-pty && make build
+
+OPENSD_FILES := $(shell find ./addons/godot-opensd -regex  '.*\(cpp\|h\|hpp\)$$')
+addons/godot-opensd/bin/libopensd.linux.template_debug.x86_64.so: $(OPENSD_FILES)
 	cd ./addons/godot-opensd && make build
 
 .PHONY: edit
@@ -307,3 +328,25 @@ $(CACHE_DIR)/RyzenAdj/build/ryzenadj:
 
 $(CACHE_DIR)/opengamepadui-session.tar.gz:
 	wget -O $@ https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
+
+
+.PHONY: release 
+release: docker-builder ## Publish a release with semantic release 
+	@# Run the build inside Docker
+	docker run -it --rm \
+		-v $(PWD):/src \
+		--workdir /src \
+		--user $(shell id -u):$(shell id -g) \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
+		make dist
+
+.PHONY: docker-builder
+docker-builder:
+	@# Pull any existing image to cache it
+	docker pull $(IMAGE_NAME):$(IMAGE_TAG) || echo "No remote image to pull"
+	@# Build the Docker image that will build the project
+	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -f docker/Dockerfile ./docker
+
+.PHONY: docker-builder-push
+docker-builder-push: docker-builder
+	docker push $(IMAGE_NAME):$(IMAGE_TAG)
