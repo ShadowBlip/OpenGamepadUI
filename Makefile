@@ -330,15 +330,22 @@ $(CACHE_DIR)/opengamepadui-session.tar.gz:
 	wget -O $@ https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
 
 
+# Refer to .releaserc.yaml for release configuration
 .PHONY: release 
-release: docker-builder ## Publish a release with semantic release 
-	@# Run the build inside Docker
+release: ## Publish a release with semantic release 
+	npx semantic-release
+
+# E.g. make in-docker TARGET=build
+.PHONY: in-docker
+in-docker: docker-builder
+	@# Run the given make target inside Docker
 	docker run -it --rm \
 		-v $(PWD):/src \
 		--workdir /src \
+		-e HOME=/home/build \
 		--user $(shell id -u):$(shell id -g) \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
-		make dist
+		make $(TARGET)
 
 .PHONY: docker-builder
 docker-builder:
