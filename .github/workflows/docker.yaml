@@ -11,7 +11,7 @@ on:
       - ".github/workflows/docker.yaml"
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}-builder
+  IMAGE_NAME: ghcr.io/shadowblip/opengamepadui-builder
 
 jobs:
   build-and-push-image:
