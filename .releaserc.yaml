@@ -49,3 +49,4 @@ plugins:
       - path: dist/update.pck
       - path: dist/update.pck.sha256.txt
       - path: dist/update.pck.sig
+      - path: docs/install/opengamepadui_deck_installer.desktop
