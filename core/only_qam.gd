@@ -9,8 +9,9 @@ var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
 var steam_window_id: int
-
-var logger := Log.get_logger("OQMain", Log.LEVEL.INFO)
+var steam_process: InteractiveProcess
+var steam_log: FileAccess
+var logger := Log.get_logger("OQMain", Log.LEVEL.DEBUG)
 
 func _init():
 	logger.debug("Init only_qam mode.")
@@ -29,10 +30,22 @@ func _ready() -> void:
 	var window : Window = get_window()
 	window.set_size(screen_size)
 
+	var steam_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
+	steam_log = FileAccess.open(steam_log_path, FileAccess.WRITE)
+	var error := steam_log.get_open_error()
+	if error != OK:
+		logger.warn("Got error opening log file.")
+	else:
+		logger.debug("Opened Steam log at " + steam_log_path)
 	# Get user arguments
 	var args := OS.get_cmdline_user_args()
 	_setup_qam_only(args)
 
+
+func _physics_process(delta):
+	if not steam_process:
+		return
+	steam_process.output_to_log_file(steam_log)
 
 ## Creates teh input manager, qam scene, and starts teh user defined program (steam) in firejail.
 func _setup_qam_only(args: Array) -> void:
@@ -55,21 +68,19 @@ func _setup_qam_only(args: Array) -> void:
 
 	# Don't crash if we're not launching another program.
 	if args == []:
-		print("Nothing to do")
+		logger.warn("only-qam mode started with no launcher arguments.")
 		return
 	# Launch underlay in the sandbox 
 	var sandbox := PackedStringArray()
-	sandbox.append_array(["firejail", "--noprofile"])
+	sandbox.append_array(["--noprofile"])
 	var blacklist := InputManager.get_managed_gamepads()
 	for device in blacklist:
 		sandbox.append("--blacklist=%s" % device)
 	sandbox.append("--")
 	sandbox.append_array(args)
-	sandbox.append_array([">", "~/.steam-stdout.log"])
-	var sandbox_cmd = " ".join(sandbox)
-	print("Sandbox cmd: ", sandbox_cmd)
-	OS.create_process("bash", ["-c", sandbox_cmd])
-
+	steam_process = InteractiveProcess.new("firejail", sandbox)
+	if steam_process.start() != OK:
+		logger.error("Failed to start steam process.")
 	if not "steam" in args:
 		return
 
@@ -84,7 +95,7 @@ func _setup_qam_only(args: Array) -> void:
 				continue
 			if Gamescope.has_xprop(window, "STEAM_OVERLAY", display):
 				steam_window_id = window
-				print("Found steam! ", steam_window_id)
+				logger.debug("Found steam! " + str(steam_window_id))
 				break
 		# Wait a bit to reduce cpu load.
 		OS.delay_msec(1000)
@@ -113,5 +124,5 @@ func _on_qam_closed(_to: State) -> void:
 func _check_exit() -> void:
 	if Gamescope.has_xprop(steam_window_id, "STEAM_OVERLAY", display):
 		return
-	print("Steam closed. Shutting down.")
+	logger.debug("Steam closed. Shutting down.")
 	get_tree().quit()
