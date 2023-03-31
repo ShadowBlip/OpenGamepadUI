@@ -4,7 +4,9 @@ class_name FocusManager
 @export_category("Focus Control")
 @export var current_focus: Control
 @export_category("Refocus on input")
+## If enabled, will intercept input and refocus on the current focus node
 @export var process_input := false
+## The InputEvent that will trigger refocusing the current focus node
 @export var refocus_on := "ogui_east"
 
 var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)
