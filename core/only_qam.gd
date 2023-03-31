@@ -8,10 +8,12 @@ var qam_state = load("res://assets/state/states/quick_access_menu.tres")
 var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
 var pid: int
-var steam_window_id: int
-var steam_process: InteractiveProcess
+var shared_thread: SharedThread
 var steam_log: FileAccess
-var logger := Log.get_logger("OQMain", Log.LEVEL.DEBUG)
+var steam_process: InteractiveProcess
+var steam_window_id: int
+
+var logger := Log.get_logger("OQMain", Log.LEVEL.INFO)
 
 func _init():
 	logger.debug("Init only_qam mode.")
@@ -25,6 +27,8 @@ func _init():
 
 ## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
+	shared_thread = SharedThread.new()
+	shared_thread.start()
 	# Set window size to native resolution
 	var screen_size : Vector2i = DisplayServer.screen_get_size()
 	var window : Window = get_window()
@@ -41,11 +45,6 @@ func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
 	_setup_qam_only(args)
 
-
-func _physics_process(delta):
-	if not steam_process:
-		return
-	steam_process.output_to_log_file(steam_log)
 
 ## Creates teh input manager, qam scene, and starts teh user defined program (steam) in firejail.
 func _setup_qam_only(args: Array) -> void:
@@ -83,7 +82,9 @@ func _setup_qam_only(args: Array) -> void:
 		logger.error("Failed to start steam process.")
 	if not "steam" in args:
 		return
-
+	var logger_func := func(delta: float):
+		steam_process.output_to_log_file(steam_log)
+	shared_thread.add_process(logger_func)
 	# Look for steam
 	while not steam_window_id:
 		
