@@ -62,3 +62,22 @@ func stop() -> void:
 	logger.debug("Stopping pid: " + str(pid))
 	OS.kill(pid)
 	pty = null
+
+
+func output_to_log_file(log_file: FileAccess, chunk_size: int = 1024) -> int:
+	if not log_file:
+		logger.warn("Unable to log output. Log file has not been opened.")
+		return ERR_FILE_CANT_OPEN
+	# Keep reading from the process until the buffer is empty
+	if not pty:
+		logger.warn("Unable to read from closed PTY")
+		return ERR_DOES_NOT_EXIST
+
+	# Keep reading from the process until the buffer is empty
+	var buffer := pty.read(chunk_size)
+	while buffer.size() != 0:
+		log_file.store_buffer(buffer)
+		buffer = pty.read(chunk_size)
+
+	log_file.flush()
+	return OK
