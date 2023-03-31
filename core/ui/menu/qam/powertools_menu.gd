@@ -843,6 +843,21 @@ var amd_apu_database := {
 		"min_tdp": 10,
 		"max_boost": 20
 	},
+	'AMD Ryzen Embedded R1305G with Radeon Vega Gfx': {
+		"max_tdp": 25,
+		"min_tdp": 6,
+		"max_boost": 2
+	},
+	'AMD Ryzen Embedded R1505G with Radeon Vega Gfx': {
+		"max_tdp": 25,
+		"min_tdp": 6,
+		"max_boost": 2
+	},
+	'AMD Ryzen Embedded R1606G with Radeon Vega Gfx': {
+		"max_tdp": 10,
+		"min_tdp": 6,
+		"max_boost": 2
+	},
 }
 
 var intel_apu_database := {
