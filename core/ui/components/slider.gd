@@ -105,3 +105,13 @@ func _on_value_changed(v: float) -> void:
 # Override focus grabbing to grab the slider
 func _grab_focus() -> void:
 	slider.grab_focus()
+
+
+# Override certain properties and pass them to child objects
+func _set(property: StringName, value: Variant) -> bool:
+	if not slider:
+		return false
+	if property.begins_with("focus"):
+		slider.set(property, value)
+		return false
+	return false

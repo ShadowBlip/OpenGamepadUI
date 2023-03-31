@@ -81,3 +81,13 @@ func _ready() -> void:
 # Override focus grabbing to grab the child
 func _grab_focus() -> void:
 	check_button.grab_focus()
+
+
+# Override certain properties and pass them to child objects
+func _set(property: StringName, value: Variant) -> bool:
+	if not check_button:
+		return false
+	if property.begins_with("focus"):
+		check_button.set(property, value)
+		return false
+	return false

@@ -1,5 +1,6 @@
-extends Object
+extends Resource
 class_name Log
+
 
 # Possible log levels
 enum LEVEL {
@@ -10,13 +11,15 @@ enum LEVEL {
 	DEBUG,
 }
 
-class Logger:
+class Logger extends RefCounted:
 	var _name: String
 	var _level: int
 	
 	func _init(name: String, level: LEVEL = LEVEL.INFO):
 		self._name = name
 		self._level = level
+		var log_manager := preload("res://core/global/log_manager.tres")
+		log_manager.register(self)
 	
 	func _get_caller() -> Dictionary:
 		var stack := get_stack()
@@ -29,9 +32,15 @@ class Logger:
 		var line: int = caller["line"]
 		var prefix := "[{0}] [{1}] {2}:{3}: ".format([level, self._name, file, line])
 		return prefix
-		
+	
+	func set_level(level: LEVEL) -> void:
+		_level = level
+	
 	func set_name(name: String) -> void:
 		_name = name
+		
+	func get_name() -> String:
+		return _name
 		
 	func debug(message: Variant):
 		if self._level < LEVEL.DEBUG:
