@@ -19,30 +19,39 @@ script = ExtResource("1_p1a73")
 [node name="VisibilityManager" parent="." instance=ExtResource("2_6s6l4")]
 state_machine = ExtResource("3_tkirr")
 
-[node name="ContentLayout" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ContentLayout" type="VBoxContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PluginNameText" parent="ContentLayout" instance=ExtResource("4_20vm5")]
+[node name="PluginNameText" parent="MarginContainer/ContentLayout" instance=ExtResource("4_20vm5")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Plugin Name"
 description = ""
 text = ""
 
-[node name="PluginEnabledToggle" parent="ContentLayout" instance=ExtResource("5_fw0qx")]
+[node name="PluginEnabledToggle" parent="MarginContainer/ContentLayout" instance=ExtResource("5_fw0qx")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enabled"
 
-[node name="PluginVersionText" parent="ContentLayout" instance=ExtResource("4_20vm5")]
+[node name="PluginVersionText" parent="MarginContainer/ContentLayout" instance=ExtResource("4_20vm5")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Version"
 description = ""
 text = "v0.0.0"
 
-[node name="HSeparator" type="HSeparator" parent="ContentLayout"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/ContentLayout"]
 layout_mode = 2

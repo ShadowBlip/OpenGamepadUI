@@ -11,6 +11,7 @@ var _plugin_content := {}
 @onready var plugin_menu_container := $%PluginSettings
 @onready var plugins_content_container := $%PluginSettingsContentContainer
 @onready var no_plugins_label := $%NoPluginsLabel
+@onready var focus_manager := $%FocusManager
 
 
 # Called when the node enters the scene tree for the first time.
@@ -43,6 +44,7 @@ func _populate_plugins():
 		if node == no_plugins_label:
 			continue
 		node.queue_free()
+	focus_manager.current_focus = null
 	_plugin_content = {}
 	_plugin_containers = {}
 
@@ -107,6 +109,18 @@ func _populate_menu_for_plugin(plugin_id: String) -> void:
 	button.text = meta["plugin.name"]
 	button.focus_entered.connect(on_focus)
 	plugin_menu_container.add_child(button)
+	
+	# Add a focus setter so the plugin settings content is focused when
+	# the button is pressed
+	var focus_setter_scene := load("res://core/systems/input/focus_setter.tscn")
+	var focus_setter := focus_setter_scene.instantiate() as FocusSetter
+	focus_setter.target = enable_button
+	focus_setter.on_signal = "pressed"
+	button.add_child(focus_setter)
+	
+	# Set the focus to the button
+	if focus_manager.current_focus == null:
+		focus_manager.current_focus = button
 	
 	# Add the plugin content to our list of plugin content
 	plugins_content_container.add_child(plugin_content_container)
