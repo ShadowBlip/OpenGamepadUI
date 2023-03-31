@@ -46,6 +46,8 @@ func _on_child_tree_changed(_node) -> void:
 	for child in parent.get_children():
 		if not child is Control:
 			continue
+		if not child.is_inside_tree():
+			continue
 		control_children.append(child)
 		if not child.focus_entered.is_connected(_on_child_focused):
 			child.focus_entered.connect(_on_child_focused.bind(child))

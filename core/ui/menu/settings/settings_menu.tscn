@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ibmgxjl33jn8"]
+[gd_scene load_steps=36 format=3 uid="uid://ibmgxjl33jn8"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/settings_menu.gd" id="1_olmbp"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_7txcp"]
@@ -33,6 +33,8 @@
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="25_ibhfw"]
 [ext_resource type="PackedScene" uid="uid://b7gtaqrauwj6i" path="res://core/ui/menu/settings/network_settings_menu.tscn" id="26_w065c"]
 [ext_resource type="Resource" uid="uid://2efht48q7i6v" path="res://assets/state/states/settings_network.tres" id="27_jgdpx"]
+[ext_resource type="PackedScene" uid="uid://baumn63ts16o0" path="res://core/ui/menu/settings/logging_settings_menu.tscn" id="34_3dtbe"]
+[ext_resource type="Resource" uid="uid://cakuo0qwrrkk8" path="res://assets/state/states/settings_logging.tres" id="35_ow1ef"]
 
 [node name="SettingsMenu" type="Control" groups=["settings_menu"]]
 layout_mode = 3
@@ -207,6 +209,20 @@ on_signal = "focus_entered"
 target = NodePath("../../../../../ContentContainer/ContentMarginContainer/GamescopeInspector")
 on_signal = "pressed"
 
+[node name="LoggingButton" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer" instance=ExtResource("3_11sf6")]
+layout_mode = 2
+text = "Logging"
+
+[node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/LoggingButton" instance=ExtResource("11_11xk2")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("35_ow1ef")
+action = 3
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/MenuMarginContainer/SettingButtonsContainer/LoggingButton" node_paths=PackedStringArray("target") instance=ExtResource("15_mgpko")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/LoggingSettings")
+on_signal = "pressed"
+
 [node name="ContentContainer" type="PanelContainer" parent="VBoxContainer/MainContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -229,10 +245,7 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("13_k0fou")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GeneralSettings"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GeneralSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GeneralSettings/VisibilityManager" instance=ExtResource("18_agbuc")]
 
 [node name="DisplaySettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("25_bpujy")]
 visible = false
@@ -242,10 +255,7 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("16_fqpn6")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/DisplaySettings/VisibilityManager" instance=ExtResource("18_agbuc")]
 
 [node name="NetworkSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("26_w065c")]
 visible = false
@@ -255,10 +265,7 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("27_jgdpx")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/NetworkSettings/VisibilityManager" instance=ExtResource("18_agbuc")]
 
 [node name="AudioSettingsMenu" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("20_jaa1w")]
 visible = false
@@ -268,10 +275,7 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("21_514f3")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/AudioSettingsMenu"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/AudioSettingsMenu/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/AudioSettingsMenu/VisibilityManager" instance=ExtResource("18_agbuc")]
 
 [node name="PluginSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("6_tmsre")]
 visible = false
@@ -291,14 +295,11 @@ follow_focus = true
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_bra7i")
 
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ScrollContainer/VisibilityManager" instance=ExtResource("18_agbuc")]
+
 [node name="PluginStore" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ScrollContainer" instance=ExtResource("4_dx1s7")]
 visible = false
 layout_mode = 2
-
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ScrollContainer"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ScrollContainer/TransitionContainer" instance=ExtResource("18_agbuc")]
 
 [node name="ProcessesMenu" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("24_sybcu")]
 visible = false
@@ -308,10 +309,7 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("25_ibhfw")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ProcessesMenu"]
-script = ExtResource("17_2cktl")
-
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ProcessesMenu/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/ProcessesMenu/VisibilityManager" instance=ExtResource("18_agbuc")]
 
 [node name="GamescopeInspector" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("18_qnd5c")]
 visible = false
@@ -321,7 +319,14 @@ layout_mode = 2
 state_machine = ExtResource("12_q442d")
 state = ExtResource("15_s8u5h")
 
-[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GamescopeInspector"]
-script = ExtResource("17_2cktl")
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GamescopeInspector/VisibilityManager" instance=ExtResource("18_agbuc")]
 
-[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/GamescopeInspector/TransitionContainer" instance=ExtResource("18_agbuc")]
+[node name="LoggingSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("34_3dtbe")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/LoggingSettings" instance=ExtResource("2_364oy")]
+state_machine = ExtResource("12_q442d")
+state = ExtResource("35_ow1ef")
+
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/LoggingSettings/VisibilityManager" instance=ExtResource("18_agbuc")]

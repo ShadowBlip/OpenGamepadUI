@@ -17,6 +17,12 @@ signal item_selected(index: int)
 		if description_label:
 			description_label.text = v
 			description_label.visible = v != ""
+@export_category("Toggle Settings")
+@export var disabled: bool:
+	set(v):
+		disabled = v
+		if option_button:
+			option_button.disabled = v
 
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
@@ -28,7 +34,14 @@ func _ready() -> void:
 	focus_entered.connect(_grab_focus)
 	label.text = title
 	description_label.text = description
-
+	option_button.disabled = disabled
+	option_button.focus_neighbor_bottom = focus_neighbor_bottom
+	option_button.focus_neighbor_left = focus_neighbor_left
+	option_button.focus_neighbor_right = focus_neighbor_right
+	option_button.focus_neighbor_top = focus_neighbor_top
+	option_button.focus_previous = focus_previous
+	option_button.focus_next = focus_next
+	
 	# Hide labels if nothing is specified
 	if title == "":
 		label.visible = false
@@ -60,3 +73,13 @@ func clear() -> void:
 
 func select(idx: int) -> void:
 	option_button.select(idx)
+
+
+# Override certain properties and pass them to child objects
+func _set(property: StringName, value: Variant) -> bool:
+	if not option_button:
+		return false
+	if property.begins_with("focus"):
+		option_button.set(property, value)
+		return false
+	return false
