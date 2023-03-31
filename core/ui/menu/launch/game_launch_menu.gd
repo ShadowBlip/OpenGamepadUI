@@ -1,10 +1,10 @@
 extends Control
 
-const SettingsManager := preload("res://core/global/settings_manager.tres")
-const LaunchManager := preload("res://core/global/launch_manager.tres")
-const LibraryManager := preload("res://core/global/library_manager.tres")
-const NotificationManager := preload("res://core/global/notification_manager.tres")
-const BoxArtManager := preload("res://core/global/boxart_manager.tres")
+var SettingsManager := preload("res://core/global/settings_manager.tres")
+var LaunchManager := preload("res://core/global/launch_manager.tres")
+var NotificationManager := preload("res://core/global/notification_manager.tres")
+var BoxArtManager := preload("res://core/global/boxart_manager.tres")
+var LibraryManager := preload("res://core/global/library_manager.tres")
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine

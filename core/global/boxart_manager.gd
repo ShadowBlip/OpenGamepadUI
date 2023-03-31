@@ -20,6 +20,7 @@ class_name BoxArtManager
 ##     [/codeblock]
 
 const SettingsManager := preload("res://core/global/settings_manager.tres")
+const io_thread = preload("res://core/systems/threading/io_thread.tres")
 
 ## Fields required to be set by [BoxArtProvider] implementations
 const REQUIRED_FIELDS: Array = ["provider_id"]
@@ -44,8 +45,16 @@ var _providers: Dictionary = {}
 var _providers_by_priority: Array = []
 
 
+func _init() -> void:
+	io_thread.start()
+
+
 ## Returns the boxart of the given kind for the given library item. 
 func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
+	return await io_thread.exec(_get_boxart_sync.bind(item, kind))
+
+
+func _get_boxart_sync(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 	if _providers.is_empty():
 		logger.error("No box art providers were found!")
 		return null

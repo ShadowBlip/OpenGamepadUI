@@ -21,7 +21,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="12_fa67h"]
 [ext_resource type="Texture2D" uid="uid://dkdoyup6wajvq" path="res://assets/images/library-grid-portrait.png" id="17_7n7ug"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_grjtv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_31pe1"]
 resource_local_to_scene = true
 shader = ExtResource("12_fa67h")
 shader_parameter/on = false
@@ -57,7 +57,7 @@ launch_items = [SubResource("Resource_gsruu")]
 tags = null
 categories = null
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5tph2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meu0h"]
 resource_local_to_scene = true
 shader = ExtResource("12_fa67h")
 shader_parameter/on = false
@@ -170,23 +170,24 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="PostersContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
-material = SubResource("ShaderMaterial_grjtv")
+[node name="Button" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/PostersContainer" instance=ExtResource("4_k6kif")]
+material = SubResource("ShaderMaterial_31pe1")
 custom_minimum_size = Vector2(200.2, 301)
 layout_mode = 2
 text = "vkCube"
 layout = 1
 layout_scale = 1.4
 
-[node name="Launcher" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/Button" instance=ExtResource("5_0bpdu")]
+[node name="Launcher" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/PostersContainer/Button" instance=ExtResource("5_0bpdu")]
 library_item = SubResource("Resource_icex7")
 
-[node name="LibraryPoster" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_k6kif")]
-material = SubResource("ShaderMaterial_5tph2")
+[node name="LibraryPoster" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/PostersContainer" instance=ExtResource("4_k6kif")]
+material = SubResource("ShaderMaterial_meu0h")
 custom_minimum_size = Vector2(200.2, 301)
 layout_mode = 2
 texture_normal = ExtResource("17_7n7ug")
@@ -195,7 +196,7 @@ text = "Library"
 layout = 1
 layout_scale = 1.4
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer/LibraryPoster" instance=ExtResource("9_8yw4g")]
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/PostersContainer/LibraryPoster" instance=ExtResource("9_8yw4g")]
 state_machine = ExtResource("10_tl8ss")
 state = ExtResource("11_lws2k")
 on_signal = "button_up"

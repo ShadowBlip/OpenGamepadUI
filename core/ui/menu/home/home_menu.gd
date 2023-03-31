@@ -9,11 +9,11 @@ var main_menu_state := preload("res://assets/state/states/main_menu.tres") as St
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var poster_scene := preload("res://core/ui/components/poster.tscn") as PackedScene
 var _initialized := false
+var recent_apps: Array
 
-@onready var container: HBoxContainer = $MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer
+@onready var container: HBoxContainer = $%PostersContainer
 @onready var banner: TextureRect = $SelectedBanner
 @onready var player: AnimationPlayer = $AnimationPlayer
-var recent_apps: Array
 
 
 # Called when the node enters the scene tree for the first time.
@@ -22,7 +22,6 @@ func _ready() -> void:
 	for child in container.get_children():
 		if child.name == "LibraryPoster":
 			continue
-		container.remove_child(child)
 		child.queue_free()
 	
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
@@ -98,7 +97,7 @@ func _on_recent_apps_updated() -> void:
 		items[name] = library_item
 		
 	# Populate our grid with items
-	_repopulate_grid(container, items.values())
+	await _repopulate_grid(container, items.values())
 	_grab_focus()
 
 
@@ -128,6 +127,7 @@ func _build_poster(item: LibraryItem, portrait: bool) -> TextureButton:
 		poster.layout = poster.LAYOUT_MODE.PORTRAIT
 	else:
 		poster.layout = poster.LAYOUT_MODE.LANDSCAPE
+	poster.name = item.name
 	poster.text = item.name
 	poster.layout_scale = 1.4
 

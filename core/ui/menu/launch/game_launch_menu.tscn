@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bwl2icwgry4l"]
+[gd_scene load_steps=22 format=3 uid="uid://bwl2icwgry4l"]
 
 [ext_resource type="Script" path="res://core/ui/menu/launch/game_launch_menu.gd" id="1_uhkt4"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_hg7ac"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_jwh6r"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="11_8fkuv"]
+[ext_resource type="PackedScene" uid="uid://61bw8lmqymry" path="res://core/ui/components/transition_slide_down.tscn" id="11_ei0vn"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="16_0i4he"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="16_d1x8e"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="17_yolrd"]
@@ -60,6 +61,12 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
+
+[node name="VisibilityManager" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_sp632")]
+state = ExtResource("3_68ilj")
+visible_during = Array[Resource]([ExtResource("4_mab76"), ExtResource("5_ejgx3"), ExtResource("6_t3rni"), ExtResource("7_2y6wm"), ExtResource("8_jwh6r")])
+
+[node name="SlideTransition" parent="ScrollContainer/VBoxContainer/VisibilityManager" instance=ExtResource("11_ei0vn")]
 
 [node name="GameBanner" type="TextureRect" parent="ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 440)

@@ -1,6 +1,8 @@
 extends Node
 class_name TransitionContainer
 
+## DEPRECATED - Add transitions to VisibilityManager instead
+
 signal transition_started
 signal transition_finished
 signal entered
