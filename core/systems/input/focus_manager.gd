@@ -36,6 +36,11 @@ func _on_child_tree_changed(_node) -> void:
 	# Get existing children so we can manage focus
 	if parent.get_child_count() == 0:
 		return
+	
+	# Only update focus if the node is inside the scene tree
+	if not is_inside_tree():
+		logger.debug("Not updating focus; not yet in the scene tree")
+		return
 
 	var control_children: Array[Control] = []
 	for child in parent.get_children():

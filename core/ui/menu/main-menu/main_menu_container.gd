@@ -5,6 +5,7 @@ const InGameMenu := preload("res://core/ui/menu/main-menu/in-game_menu.gd")
 
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+var logger := Log.get_logger("MainMenuContainer")
 
 @onready var main_menu := $%MainMenu as MainMenu
 @onready var in_game_menu := $%InGameMenu as InGameMenu
@@ -46,7 +47,12 @@ func _animate(should_show: bool) -> void:
 # TODO: We should pull this into a generic node that can handle complex grid focus
 func _recalculate_focus(node_changed: Node, exclude: bool = false) -> void:
 	var button_rows: Array[Array] = []
-
+	
+	# Only update focus if the node is inside the scene tree
+	if not is_inside_tree():
+		logger.debug("Not updating focus; not yet in the scene tree")
+		return
+		
 	for node in main_menu_buttons.get_children():
 		if not node is Button:
 			continue
