@@ -1,8 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://0gyfan0mne5p"]
+[gd_scene load_steps=14 format=3 uid="uid://0gyfan0mne5p"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_6eq2a"]
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_access_menu.gd" id="2_dgy5y"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="3_84s26"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="4_u26a3"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="6_bel00"]
 [ext_resource type="Resource" uid="uid://cycr83vpni1ka" path="res://assets/state/state_machines/qam_state_machine.tres" id="7_qvrin"]
@@ -29,8 +28,14 @@ grow_vertical = 2
 theme = ExtResource("1_6eq2a")
 script = ExtResource("2_dgy5y")
 
-[node name="BackInputHandler" parent="." instance=ExtResource("3_84s26")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_u26a3")])
+[node name="VisibilityManager" parent="." instance=ExtResource("6_bel00")]
+state = ExtResource("4_u26a3")
+visible_during = Array[Resource]([ExtResource("4_u26a3")])
+
+[node name="TransitionContainer" type="Node" parent="."]
+script = ExtResource("9_g5tpc")
+
+[node name="TransitionFadeIn" parent="TransitionContainer" instance=ExtResource("10_3yfx4")]
 
 [node name="PanelMarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -53,12 +58,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 65
-theme_override_constants/margin_right = 25
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 25
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
 
 [node name="Viewport" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -76,6 +81,9 @@ state = ExtResource("12_greee")
 script = ExtResource("9_g5tpc")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu/TransitionContainer" instance=ExtResource("10_3yfx4")]
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
 
 [node name="IconBar" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
