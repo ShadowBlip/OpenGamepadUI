@@ -30,6 +30,7 @@ RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
 	libxres \
 	libxtst \
 	squashfs-tools \
+	fontconfig \
 	godot
 
 # Create a home directory for the builder

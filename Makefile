@@ -127,6 +127,7 @@ clean: ## Remove build artifacts
 	rm -rf $(ROOTFS)
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
+	rm -rf .godot
 
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

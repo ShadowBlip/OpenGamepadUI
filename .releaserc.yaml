@@ -37,7 +37,7 @@ plugins:
   # Execute commands to build the project
   - - "@semantic-release/exec"
     - shell: true
-      prepareCmd: "make in-docker TARGET=dist"
+      prepareCmd: "make in-docker TARGET='import dist'"
 
   # Publish artifacts as a GitHub release
   - - "@semantic-release/github"
