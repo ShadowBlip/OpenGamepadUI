@@ -41,8 +41,17 @@ grow_vertical = 2
 theme = ExtResource("1_cs2ac")
 script = ExtResource("2_h1vfn")
 
+[node name="VisibilityManager" parent="." instance=ExtResource("4_klkp7")]
+state = ExtResource("4_kh3k0")
+visible_during = Array[Resource]([ExtResource("4_kh3k0")])
+
+[node name="TransitionContainer" type="Node" parent="."]
+script = ExtResource("3_tk446")
+
+[node name="TransitionFadeIn" parent="TransitionContainer" instance=ExtResource("8_c20ym")]
+
 [node name="BackInputHandler" parent="." instance=ExtResource("3_8krnn")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_kh3k0")])
+process_input_during = Array[Resource]([ExtResource("4_kh3k0")])
 
 [node name="PanelMarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -65,16 +74,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 25
 theme_override_constants/margin_top = 65
-theme_override_constants/margin_right = 25
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 25
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
 
 [node name="Viewport" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
 [node name="NotificationsMenu" parent="MarginContainer/HBoxContainer/Viewport" instance=ExtResource("3_7mul3")]
 layout_mode = 2
@@ -139,6 +149,9 @@ state = ExtResource("11_dhes6")
 script = ExtResource("3_tk446")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/HelpMenu/TransitionContainer" instance=ExtResource("8_c20ym")]
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
 
 [node name="IconBar" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2

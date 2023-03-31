@@ -17,7 +17,7 @@ func _ready() -> void:
 
 	# Launch only-qam mode
 	if "--qam-only" in args or "--only-qam" in args:
-		get_tree().change_scene_to_file("res://core/only_qam.tscn")
+		get_tree().change_scene_to_file("res://core/only_qam_main.tscn")
 		return
 
 	# Launch the main interface

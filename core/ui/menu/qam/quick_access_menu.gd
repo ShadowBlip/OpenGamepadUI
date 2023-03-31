@@ -16,19 +16,12 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	visible = false
 	qam_state.state_entered.connect(_on_state_entered)
-	qam_state.state_exited.connect(_on_state_exited)
 
 
 func _on_state_entered(_from: State) -> void:
-	visible = true
 	if focus_manager and focus_manager.current_focus:
 		focus_manager.current_focus.grab_focus.call_deferred()
-
-
-func _on_state_exited(_to: State) -> void:
-	visible = false
 
 
 # Adds the given Control menu to the QAM. A focus node can be given which will

@@ -34,6 +34,7 @@ focus_neighbor_bottom = NodePath("../SMTButton")
 focus_next = NodePath("../SMTButton")
 focus_previous = NodePath("../GPUTempSlider")
 text = "CPU Boost"
+separator_visible = false
 button_pressed = false
 
 [node name="SMTButton" parent="." instance=ExtResource("2_nb5h3")]
@@ -46,6 +47,7 @@ focus_neighbor_bottom = NodePath("../CPUCoresSlider")
 focus_next = NodePath("../CPUCoresSlider")
 focus_previous = NodePath("../CPUBoostButton")
 text = "SMT Enabled"
+separator_visible = false
 button_pressed = false
 
 [node name="CPUCoresSlider" parent="." instance=ExtResource("2_ygeel")]
@@ -61,7 +63,6 @@ text = "CPU Cores"
 value = 1.0
 max_value = 1.0
 min_value = 1.0
-separator_visible = true
 
 [node name="GPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
@@ -78,7 +79,6 @@ focus_next = NodePath("../TDPBoostSlider")
 focus_previous = NodePath("../CPUCoresSlider")
 text = "TDP"
 max_value = 0.0
-separator_visible = true
 
 [node name="TDPBoostSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -91,7 +91,6 @@ focus_next = NodePath("../GPUFreqButton")
 focus_previous = NodePath("../TDPSlider")
 text = "TDP Boost"
 max_value = 0.0
-separator_visible = true
 
 [node name="GPUFreqButton" parent="." instance=ExtResource("2_nb5h3")]
 visible = false
@@ -103,6 +102,7 @@ focus_neighbor_bottom = NodePath("../GPUFreqMinSlider")
 focus_next = NodePath("../GPUFreqMinSlider")
 focus_previous = NodePath("../TDPBoostSlider")
 text = "Manual Freq"
+separator_visible = false
 button_pressed = false
 
 [node name="GPUFreqMinSlider" parent="." instance=ExtResource("2_ygeel")]
@@ -117,7 +117,6 @@ focus_previous = NodePath("../GPUFreqButton")
 text = "Min Freq"
 max_value = 0.0
 step = 100.0
-separator_visible = true
 
 [node name="GPUFreqMaxSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -131,7 +130,6 @@ focus_previous = NodePath("../GPUFreqMinSlider")
 text = "Max Freq"
 max_value = 0.0
 step = 100.0
-separator_visible = true
 
 [node name="GPUTempSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
@@ -146,4 +144,3 @@ text = "GPU Temp Limit"
 value = 70.0
 max_value = 105.0
 min_value = 70.0
-separator_visible = true
