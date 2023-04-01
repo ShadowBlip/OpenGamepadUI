@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://si46nqof206"]
+[gd_scene load_steps=28 format=3 uid="uid://si46nqof206"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_vl16i"]
 [ext_resource type="Script" path="res://core/main.gd" id="2_gwx84"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://bv45as7q2lrwt" path="res://core/ui/menu/qam/quick_access_menu.tscn" id="16_4ky7m"]
 [ext_resource type="PackedScene" uid="uid://dpajbxrv14ehk" path="res://core/ui/menu/navigation/context_bar.tscn" id="17_7qf7f"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="18_ycfam"]
+[ext_resource type="PackedScene" uid="uid://g4o1uuo0hlbv" path="res://core/ui/menu/game/game_loading.tscn" id="19_es4xs"]
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="19_ruxfl"]
 [ext_resource type="PackedScene" uid="uid://bf82p2cncbcem" path="res://core/ui/menu/power/power_menu.tscn" id="20_d22mh"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="20_vy825"]
@@ -153,6 +154,10 @@ unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_06k1n")
 }
+
+[node name="GameLoading" parent="." instance=ExtResource("19_es4xs")]
+visible = false
+layout_mode = 1
 
 [node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
 unique_name_in_owner = true
