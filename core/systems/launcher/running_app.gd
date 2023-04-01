@@ -177,13 +177,9 @@ func discover_window_id() -> int:
 	# Get all windows associated with the running app
 	var possible_windows := get_all_window_ids()
 	
-	# Try setting the app ID on each possible Window and check Gamescope to 
-	# see if any of the windows are focusable.
-	var app_name := launch_item.name
+	# Look for the app window in the list of focusable windows
+	var focusable := Gamescope.get_focusable_windows()
 	for window in possible_windows:
-		var display_type := Gamescope.get_display_type(display)
-		Gamescope.set_app_id(window, window, display_type)
-		var focusable := Gamescope.get_focusable_windows()
 		if window in focusable:
 			return window
 			
