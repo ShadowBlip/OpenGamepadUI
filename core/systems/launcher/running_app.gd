@@ -34,6 +34,8 @@ var app_id: int:
 	set(v):
 		app_id = v
 		app_id_changed.emit()
+## Whether or not the running app has created at least one valid window
+var created_window := false
 var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
 
 
@@ -163,6 +165,10 @@ func needs_window_id() -> bool:
 		logger.debug(str(window_id) + " is not in the list of focusable windows")
 		return true
 
+	# Track that a window has been successfully detected at least once.
+	if not created_window:
+		created_window = true
+		
 	return false
 
 
@@ -197,3 +203,18 @@ func is_steam_app() -> bool:
 			return true
 	set_meta("is_steam_app", false)
 	return false
+
+
+## Finds the steam process so it can be killed when a game closes
+func find_steam() -> int:
+	var child_pids := get_child_pids()
+	for child_pid in child_pids:
+		var pid_info := Reaper.get_pid_status(child_pid)
+		if not "Name" in pid_info:
+			continue
+		var process_name := pid_info["Name"] as String
+		if process_name == "steam":
+			logger.debug("Found steam PID: " + str(child_pid))
+			return child_pid
+	
+	return -1
