@@ -12,13 +12,13 @@ enum LEVEL {
 }
 
 class Logger extends RefCounted:
+	var log_manager: LogManager = load("res://core/global/log_manager.tres")
 	var _name: String
 	var _level: int
 	
 	func _init(name: String, level: LEVEL = LEVEL.INFO):
 		self._name = name
 		self._level = level
-		var log_manager := preload("res://core/global/log_manager.tres")
 		log_manager.register(self)
 	
 	func _get_caller() -> Dictionary:

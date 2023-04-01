@@ -10,8 +10,6 @@ signal logger_registered(logger: Log.Logger)
 signal logger_unregistered
 signal loggers_changed
 
-## All registered loggers
-var loggers: Array[Log.Logger]
 ## Mapping of loggers by their name. This is in the form of {"<logger name>": [<logger>, ...]}
 var loggers_by_name: Dictionary = {}
 ## Mutex to allow register/unregister through threads
@@ -23,12 +21,16 @@ func register(logger: Log.Logger) -> void:
 	if logger.get_name() == "":
 		return
 	mutex.lock()
-	loggers.append(logger)
 	if not logger.get_name() in loggers_by_name:
 		loggers_by_name[logger.get_name()] = []
 	loggers_by_name[logger.get_name()].append(logger)
 	mutex.unlock()
 	logger_registered.emit(logger)
+
+	# NOTE: Decrement the reference count so the logger gets garbage collected
+	# if we're the only one referencing it.
+	#logger.unreference()
+	
 	loggers_changed.emit()
 
 
