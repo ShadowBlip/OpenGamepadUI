@@ -83,6 +83,7 @@ script = ExtResource("9_g5tpc")
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/Viewport/PowerToolsMenu/TransitionContainer" instance=ExtResource("10_3yfx4")]
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer"]
+modulate = Color(1, 0.47451, 0.776471, 1)
 layout_mode = 2
 
 [node name="IconBar" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
