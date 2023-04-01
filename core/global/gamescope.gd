@@ -179,6 +179,28 @@ func get_window_id(pid: int, display: XWAYLAND) -> int:
 	return -1
 
 
+## Returns the xwayland window ID(s) for the given process using multiple methods
+## to try and discover.
+func get_window_ids(pid: int, display: XWAYLAND) -> PackedInt32Array:
+	var window_ids := PackedInt32Array()
+	var display_name := get_display_name(display)
+	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display_name]))
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return window_ids
+	var root_id := xwayland.get_root_window_id()
+	var all_windows := get_all_windows(root_id, display)
+	for window_id in all_windows:
+		var window_pid := xwayland.get_window_pid(window_id)
+		if pid == window_pid and not window_id in window_ids:
+			window_ids.append(window_id)
+		var net_window_pid := xwayland.get_xprop(window_id, "_NET_WM_PID")
+		if pid == net_window_pid and not net_window_pid in window_ids:
+			window_ids.append(net_window_pid)
+
+	return window_ids
+
+
 ## Returns the child window ids of the given window
 func get_window_children(window_id: int, display: XWAYLAND) -> PackedInt32Array:
 	var xwayland := get_xwayland(display)
@@ -318,6 +340,11 @@ func set_app_id(window_id: int, app_id: int, display: XWAYLAND = XWAYLAND.GAME) 
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_GAME", app_id)
+
+
+## Returns whether or not the given window has an app ID set
+func has_app_id(window_id: int, display: XWAYLAND = XWAYLAND.GAME) -> bool:
+	return has_xprop(window_id, "STEAM_GAME", display)
 
 
 ## Sets the Gamescope FPS limit

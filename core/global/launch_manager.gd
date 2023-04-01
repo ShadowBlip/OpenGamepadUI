@@ -113,6 +113,9 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	if not "DISPLAY" in env:
 		env["DISPLAY"] = Gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
 	var display := env["DISPLAY"] as String
+	
+	# Set the OGUI ID environment variable
+	env["OGUI_ID"] = app.name
 
 	# Build any environment variables to include in the command
 	var env_vars := PackedStringArray()
@@ -132,7 +135,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
 
 	# Launch the application process
-	var pid = OS.create_process(exec, command)
+	var pid = Reaper.create_process(exec, command)
 	logger.info("Launched with PID: {0}".format([pid]))
 
 	# Create a running app instance
@@ -142,6 +145,8 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	running_app.launch_item = app
 	running_app.pid = pid
 	running_app.display = display
+	running_app.command = command
+	running_app.environment = env
 
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
@@ -178,7 +183,7 @@ func set_gamepad_profile(path: String) -> void:
 
 ## Stops the game and all its children with the given PID
 func stop(app: RunningApp) -> void:
-	Reaper.reap(app.pid)
+	app.kill()
 	_remove_running(app)
 
 
@@ -246,21 +251,6 @@ func is_running(app_name: String) -> bool:
 	return false
 
 
-## Returns a list of window IDs that don't have a corresponding RunningApp
-func get_orphan_windows(focusable: PackedInt32Array) -> Array[int]:
-	var orphans: Array[int] = []
-	
-	var windows_with_app := []
-	for app in _running:
-		if app.window_id in focusable:
-			windows_with_app.push_back(app.window_id)
-	for window_id in focusable:
-		if window_id in windows_with_app:
-			continue
-		orphans.push_back(window_id)
-	return orphans
-
-
 # Updates our list of recently launched apps
 func _update_recent_apps(app: LibraryLaunchItem) -> void:
 	if not "recent" in _persist_data:
@@ -325,31 +315,19 @@ func _check_running():
 	# TODO: Maybe start a timer for any apps that haven't produced a window
 	# in a certain timeframe? If the timer ends, kill everything.
 
-	var focusable_windows := Gamescope.get_window_children(root_id, Gamescope.XWAYLAND.GAME)
-	var focusable_apps := Gamescope.get_focusable_apps()
-
-	# Get a list of orphaned windows to try and pair windows with running apps
-	var orphan_windows := get_orphan_windows(focusable_windows) as Array
-	
-	# Hacky?
-	# Don't consider windows that come from a process in our blacklist
-	var pid_blacklist := ["steam", "default ime"] # "gamescope-wl"?
-	for pid in _pid_to_windows.keys():
-		var pid_info := Reaper.get_pid_status(pid)
-		var pid_name := ""
-		if "Name" in pid_info:
-			pid_name = pid_info["Name"]
-		if not pid_name in pid_blacklist:
-			continue
-		for window in _pid_to_windows[pid]:
-			orphan_windows.erase(window)
-	
 	# Check all running apps
 	var to_remove := []
 	for app in _running:
-		# Ensure that the running app has a corresponding window ID and app ID
-		_ensure_window_id(app, focusable_windows, orphan_windows)
-		_ensure_app_id(app, focusable_windows, focusable_apps)
+		var app_name := app.launch_item.name
+		# Ensure that all windows related to the app have an app ID set
+		app.ensure_app_id()
+		
+		# Ensure that the running app has a corresponding window ID
+		if app.needs_window_id():
+			var window_id := app.discover_window_id()
+			if window_id > 0:
+				logger.debug("Setting window ID " + str(window_id) + " for " + app_name)
+				app.window_id = window_id
 		
 		# If our app is still running, great!
 		if app.is_running():
@@ -374,110 +352,3 @@ func _update_pids(root_id: int):
 			pids[pid] = []
 		pids[pid].append(window)
 	_pid_to_windows = pids
-
-
-# Ensures that the given app has a window id associated with it
-func _ensure_window_id(app: RunningApp, focusable: Array, orphan_windows: Array) -> void:
-	# Try to set the window ID to allow app switching
-	var needs_window_id := false
-	if app.window_id <= 0:
-		logger.debug(app.launch_item.name + " has a bad window ID: " + str(app.window_id))
-		needs_window_id = true
-	elif not app.window_id in focusable:
-		logger.debug(str(app.window_id) + " is not in the list of focusable windows")
-		needs_window_id = true
-	elif app.app_id < 1:
-		logger.debug(app.launch_item.name + " has no valid app ID")
-		needs_window_id = true
-	#elif app.window_id > 0 and not Gamescope.is_focusable_app(overlay_display, app.window_id):
-	#	needs_window_id = true
-	if not needs_window_id:
-		return
-	var discovered := _discover_window_id(app, orphan_windows)
-	if discovered <= 0:
-		return
-	
-	# Set the window ID
-	logger.debug("Setting app '" + app.launch_item.name + "' to window ID: " + str(discovered))
-	app.window_id = discovered
-
-
-func _ensure_app_id(app: RunningApp, focusable_windows: Array, focusable_apps: Array):
-	if app.window_id <= 0 or not app.window_id in focusable_windows:
-		logger.debug("No valid window ID to set app ID on")
-		return
-	if app.app_id > 0 and app.app_id in focusable_apps:
-		logger.debug("App ID already exists in focusable apps")
-		return
-	var app_id := Gamescope.get_app_id(app.window_id)
-	if app_id > 0:
-		if app.app_id == app_id:
-			return
-		logger.debug("Window already has app ID set. Using app ID from window: " + str(app_id))
-		app.app_id = app_id
-		return
-	
-	# Set the app ID atom so the app is focusable by Gamescope in Steam mode
-	if app.launch_item.provider_app_id.is_valid_int():
-		app.app_id = app.launch_item.provider_app_id.to_int()
-		logger.debug("Setting window {0} to use provider app ID: {1}".format([app.window_id, app.app_id]))
-
-	elif Gamescope.get_app_id(app.window_id) < 0:
-		app.app_id = app.window_id
-		logger.debug("Setting window {0} to use window app ID: {1}".format([app.window_id, app.app_id]))
-		
-	if app.app_id > 0:
-		Gamescope.set_app_id(app.window_id, app.app_id)
-
-
-# Try to discover the window id of the given app
-func _discover_window_id(app: RunningApp, orphan_windows: Array[int]) -> int:
-	var window_id := app.get_window_id_from_pid()
-	if window_id > 0:
-		logger.debug("Found window ID for {0} from PID: {1}".format([app.launch_item.name, window_id]))
-		return window_id
-		
-	# Look through orphan windows for a possible match
-	# TODO: Any way we can do this better?
-	var blacklist := ["steam", "steamcompmgr"]
-	var candidates := [[], [], [], []]  # High, medium, low, garbage chance window candidates
-	for window in orphan_windows:
-		# Find by app ID atom (High chance match)
-		var app_id := Gamescope.get_app_id(window)
-		if app_id > 0:
-			logger.debug("Orphan window {0} has an app id set: {1}".format([window, app_id]))
-			candidates[0].append(window)
-			continue
-			
-		# Find by window name (Medium chance match)
-		var window_name := Gamescope.get_window_name(window)
-		if app.launch_item.name.to_lower() == window_name.to_lower():
-			logger.debug("Orphan window name {0} matches {1}".format([window, app.launch_item.name]))
-			candidates[1].append(window)
-			continue
-		
-		# Garbage chance matches
-		if window_name == "":
-			candidates[3].append(window)
-			continue
-		if window_name.to_lower() in blacklist:
-			continue
-		
-		# Low chance matches
-		candidates[2].append(window)
-	
-	# Return the window ID of the best candidate that matches the app
-	var i := 0
-	var chance_map := ["high", "medium", "low", "garbage"]
-	for windows in candidates:
-		if windows.size() > 0:
-			var window: int = windows[0]
-			var window_name := Gamescope.get_window_name(window)
-			logger.debug("Found {0} chance that window '{1}' ({2}) is {3}".format([
-				chance_map[i], window_name, window, app.launch_item.name
-			]))
-			return windows[0]
-		i += 1
-	logger.debug("Unable to discover window for: " + app.launch_item.name)
-	return -1
-
