@@ -24,6 +24,7 @@ extends VBoxContainer
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
 @onready var value_label := $%LabelValue as Label
+@onready var panel := $%PanelContainer as PanelContainer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -32,3 +33,19 @@ func _ready() -> void:
 	description_label.text = description
 	description_label.visible = description != ""
 	value_label.text = text
+
+	# Get the style from the set theme so it can be set on the panel container
+	var normal_stylebox := get_theme_stylebox("panel", "Text").duplicate()
+	panel.add_theme_stylebox_override("panel", normal_stylebox)
+	focus_entered.connect(_on_focus.bind(true))
+	focus_exited.connect(_on_focus.bind(false))
+
+
+func _on_focus(focused: bool) -> void:
+	panel.remove_theme_stylebox_override("panel")
+	if focused:
+		var focus_stylebox := get_theme_stylebox("panel_focus", "Text").duplicate()
+		panel.add_theme_stylebox_override("panel", focus_stylebox)
+		return
+	var normal_stylebox := get_theme_stylebox("panel", "Text").duplicate()
+	panel.add_theme_stylebox_override("panel", normal_stylebox)

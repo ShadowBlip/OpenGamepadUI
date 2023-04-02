@@ -9,26 +9,35 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 31.0
 grow_horizontal = 2
+focus_mode = 2
+mouse_filter = 0
 script = ExtResource("1_lo12x")
 
-[node name="LabelContainer" type="HBoxContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="LabelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="LabelContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/LabelContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
 label_settings = ExtResource("1_i3fb3")
 
-[node name="LabelValue" type="Label" parent="LabelContainer"]
+[node name="LabelValue" type="Label" parent="PanelContainer/VBoxContainer/LabelContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Value"
 label_settings = ExtResource("1_i3fb3")
 horizontal_alignment = 2
 
-[node name="DescriptionLabel" type="Label" parent="."]
+[node name="DescriptionLabel" type="Label" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Description"
