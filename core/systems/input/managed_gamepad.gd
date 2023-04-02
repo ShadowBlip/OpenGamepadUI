@@ -274,12 +274,38 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			_send_input("ogui_tab_left", event.value == 1, 1)
 		event.BTN_TRIGGER_HAPPY1:
 			_send_input("ui_left", event.value == 1, 1)
+			return
 		event.BTN_TRIGGER_HAPPY2:
 			_send_input("ui_right", event.value == 1, 1)
+			return
 		event.BTN_TRIGGER_HAPPY3:
 			_send_input("ui_up", event.value == 1, 1)
+			return
 		event.BTN_TRIGGER_HAPPY4:
 			_send_input("ui_down", event.value == 1, 1)
+			return
+		event.ABS_HAT0Y:
+			if event.value < 0: # UP
+				_send_input("ui_up", true)
+				return
+			if event.value > 0: # DOWN
+				_send_input("ui_down", true)
+				return
+			if Input.is_action_pressed("ui_up"):
+				_send_input("ui_up", false)
+			else:
+				_send_input("ui_down", false)
+		event.ABS_HAT0X:
+			if event.value < 0: # LEFT
+				_send_input("ui_left", true)
+				return
+			if event.value > 0: # RIGHT
+				_send_input("ui_right", true)
+				return
+			if Input.is_action_pressed("ui_left"):
+				_send_input("ui_left", false)
+			else:
+				_send_input("ui_down", false)
 		event.ABS_Y:
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
