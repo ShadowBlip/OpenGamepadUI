@@ -9,12 +9,15 @@ class_name Platform
 enum PLATFORM {
 	# Hardware platforms
 	ABERNIC_GEN1,
+	AOKZOE_GEN1,
 	AYANEO_GEN1,  ## Includes Founders Edition, Pro, and Retro Power models.
 	AYANEO_GEN2,  ## Includes NEXT models.
 	AYANEO_GEN3,  ## Includes AIR models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
 	GENERIC,  ## Generic platform doesn't do anything special
-	GPD_GEN1,
+	GPD_GEN1, ## Win3
+	GPD_GEN2, ## WinMax2
+	GPD_GEN3, ## Win4
 	ONEXPLAYER_GEN1,  ## Includes most OXP and AOKZOE devices
 	ONEXPLAYER_GEN2,  ## GUNDAM edition.
 	STEAMDECK,
@@ -48,6 +51,8 @@ func _init() -> void:
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/abernic_gen1.tres")
+	if PLATFORM.AOKZOE_GEN1 in flags:
+		platform = load("res://core/platform/aokzoe_gen1.tres")
 	if PLATFORM.AYANEO_GEN1 in flags:
 		platform = load("res://core/platform/ayaneo_gen1.tres")
 	if PLATFORM.AYANEO_GEN2 in flags:
@@ -60,6 +65,10 @@ func _init() -> void:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
 		platform = load("res://core/platform/gpd_gen1.tres")
+	if PLATFORM.GPD_GEN2 in flags:
+		platform = load("res://core/platform/gpd_gen2.tres")
+	if PLATFORM.GPD_GEN3 in flags:
+		platform = load("res://core/platform/gpd_gen3.tres")
 	if PLATFORM.ONEXPLAYER_GEN1 in flags:
 		platform = load("res://core/platform/onexplayer_gen1.tres")
 	if PLATFORM.ONEXPLAYER_GEN2 in flags:
@@ -130,9 +139,9 @@ func _read_dmi() -> PLATFORM:
 	logger.debug("Product: " + product_name)
 	logger.debug("Vendor: " + vendor_name)
 
-#	if product_name == "Win600" and vendor_name == "ABERNIC":
-#		logger.debug("Detected Win600 platform")
-#		return PLATFORM.ABERNIC_GEN1
+	if product_name == "Win600" and vendor_name == "ABERNIC":
+		logger.debug("Detected Win600 platform")
+		return PLATFORM.ABERNIC_GEN1
 	if product_name == "AOKZOE A1 AR07" and vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE A1 platform")
 		return PLATFORM.ONEXPLAYER_GEN2
@@ -148,12 +157,18 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("AIR") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO AIR platform")
 		return PLATFORM.AYANEO_GEN3
-#	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
-#		logger.debug("Detected AYANEO NEXT platform")
-#		return PLATFORM.AYANEO_GEN2
-#	elif product_name in ["G1618-03", "G1618-04", "G1619-04"] and vendor_name == "GPD":
-#		logger.debug("Detected GPD Gen1 platform")
-#		return PLATFORM.GPD_GEN1
+	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO NEXT platform")
+		return PLATFORM.AYANEO_GEN2
+	elif product_name.contains("G1618-03") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen1 platform")
+		return PLATFORM.GPD_GEN1
+	elif product_name.contains("G1618-04") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen2 platform")
+		return PLATFORM.GPD_GEN2
+	elif product_name.contains("G1619-04") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen1 platform")
+		return PLATFORM.GPD_GEN3
 	elif product_name == "ONE XPLAYER" and vendor_name == ("ONE-NETBOOK TECHNOLOGY CO., LTD."):
 		logger.debug("Detected OneXPlayer Intel platform")
 		return PLATFORM.ONEXPLAYER_GEN1

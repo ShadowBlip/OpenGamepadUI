@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=9 format=3 uid="uid://brbq612u28nws"]
+
+[ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_rbrpk"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_skulf"]
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_byfrh"]
+type = 1
+code = 99
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_po88p"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_bfu3m"]
+type = 1
+code = 304
+value = 1
+
+[sub_resource type="Resource" id="Resource_ninkn"]
+script = ExtResource("1_rbrpk")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_byfrh")])
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_po88p"), SubResource("InputDeviceEvent_bfu3m")])
+ogui_event = ""
+on_release = false
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_0etxa"]
+type = 1
+code = 119
+value = 1
+
+[sub_resource type="Resource" id="Resource_xrxtg"]
+script = ExtResource("1_rbrpk")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_0etxa")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_qam"
+on_release = false
+
+[resource]
+script = ExtResource("2_skulf")
+mapped_events = Array[ExtResource("1_rbrpk")]([SubResource("Resource_ninkn"), SubResource("Resource_xrxtg")])
+kb_phys_path = "usb-0000:73:00.4-2/input1"
+kb_phys_name = "  Mouse for Windows"
+gamepad_phys_path = "usb-0000:73:00.3-4/input0"
+gamepad_phys_name = "Microsoft X-Box 360 pad"

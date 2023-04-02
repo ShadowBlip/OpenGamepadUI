@@ -1,0 +1,2 @@
+# Enables keycodes and user access for the input devices that provide back button events.
+ACTION=="add|change", KERNEL=="event[0-9]*", ATTRS{idVendor}=="2f24", ATTRS{idProduct}=="0135", ENV{ID_INPUT_KEYBOARD}="1", ENV{ID_INPUT_JOYSTICK}="1"

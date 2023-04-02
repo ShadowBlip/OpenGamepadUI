@@ -13,16 +13,6 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYA NEO:*
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYANEO:*
   ID_INPUT_JOYSTICK=1
 
-## GPD DEVICES
-evdev:name:  Mouse for Windows:dmi:*:svnGPD:pniG1618-03:*
-  ID_INPUT_JOYSTICK=1
-
-evdev:name:  Mouse for Windows:dmi:*:svnGPD:pniG1618-04:*
-  ID_INPUT_JOYSTICK=1
-
-evdev:name:  Mouse for Windows:dmi:*:svnGPD:pniG1619-04:*
-  ID_INPUT_JOYSTICK=1
-
 ## ONEXPLAYER DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnONE-NETBOOK*:pnONE*:
   ID_INPUT_JOYSTICK=1
