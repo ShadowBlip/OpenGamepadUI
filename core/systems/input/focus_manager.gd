@@ -1,4 +1,4 @@
-extends Control
+extends Node
 class_name FocusManager
 
 @export_category("Focus Control")
