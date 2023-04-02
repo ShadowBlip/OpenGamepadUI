@@ -5,8 +5,7 @@ name: "Release"
 on:
   push:
     branches:
-      - main
-      - release/v*
+      - v*
     paths-ignore:
       - README.md
       - "docs/**"

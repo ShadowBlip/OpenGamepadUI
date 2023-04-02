@@ -3,7 +3,7 @@
 
 # Any merges into branches that match these patterns will trigger a release.
 branches:
-  - name: main
+  - name: 'v+([0-9])?(.{+([0-9]),x}).x'
 
 # These plugins will run when a release is triggered. They will analyze commit 
 # messages to determine what kind of release this is and publish a new release.
