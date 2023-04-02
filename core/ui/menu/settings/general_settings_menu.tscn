@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bimj0mmmy32ju"]
+[gd_scene load_steps=9 format=3 uid="uid://bimj0mmmy32ju"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/general_settings_menu.gd" id="1_e3m8q"]
 [ext_resource type="PackedScene" uid="uid://bnhxravpuheh2" path="res://core/systems/updater/software_updater.tscn" id="2_6yc3d"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="3_0dgbf"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="5_kdlwa"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="5_v4e5k"]
+[ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="8_28f0p"]
 
 [node name="GeneralSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -82,3 +83,38 @@ layout_mode = 2
 text = "Maximum Recent Apps"
 value = 10.0
 max_value = 30.0
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SystemLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_yfte1")]
+layout_mode = 2
+text = "System Information"
+
+[node name="ClientVersionText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Client Version"
+description = ""
+text = "v0.0.0"
+
+[node name="OSText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "OS"
+description = ""
+text = "Generic"
+
+[node name="ProductText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Product"
+description = ""
+text = "Generic"
+
+[node name="VendorText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Vendor"
+description = ""
+text = "Generic"

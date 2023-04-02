@@ -2,6 +2,8 @@ extends Control
 
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
+var Version := load("res://core/global/version.tres") as Version
+var Platform := load("res://core/global/platform.tres") as Platform
 var update_available := false
 var update_installed := false
 var logger := Log.get_logger("GeneralSettings")
@@ -12,10 +14,20 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var check_update_button := $%CheckUpdateButton
 @onready var update_button := $%UpdateButton
 @onready var max_recent_slider := $%MaxRecentAppsSlider
+@onready var client_version_text := $%ClientVersionText
+@onready var os_text := $%OSText
+@onready var product_text := $%ProductText
+@onready var vendor_text := $%VendorText
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Set system info text
+	client_version_text.text = "v{0}".format([str(Version.core)])
+	os_text.text = Platform.os_info.pretty_name
+	product_text.text = Platform.get_product_name()
+	vendor_text.text = Platform.get_vendor_name()
+	
 	# Configure home menu
 	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
 	max_recent_slider.value = max_recent
