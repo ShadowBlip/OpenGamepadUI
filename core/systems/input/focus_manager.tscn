@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://core/systems/input/focus_manager.gd" id="1_8tk1v"]
 
-[node name="FocusManager" type="Node"]
+[node name="FocusManager" type="Control"]
 editor_description = "Manages focus neighbors for all Control nodes in the parent container. Also keeps track of the currently focused Control child."
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_8tk1v")
