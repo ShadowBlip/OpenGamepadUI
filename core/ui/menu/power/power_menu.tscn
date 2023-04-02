@@ -18,11 +18,11 @@ shader_parameter/blur_amount = 1.587
 shader_parameter/mix_amount = 0.402
 shader_parameter/color_over = null
 
-[sub_resource type="Gradient" id="Gradient_bc3c0"]
+[sub_resource type="Gradient" id="Gradient_dtt4c"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_nu0jx"]
-gradient = SubResource("Gradient_bc3c0")
+gradient = SubResource("Gradient_dtt4c")
 
 [node name="PowerMenu" type="Control" groups=["power_menu"]]
 z_index = 20
