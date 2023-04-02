@@ -1,13 +1,15 @@
-extends Node
+extends Control
 class_name FocusManager
 
 @export_category("Focus Control")
 @export var current_focus: Control
 @export_category("Refocus on input")
-## If enabled, will intercept input and refocus on the current focus node
+## If enabled, will intercept input and refocus on the current focus node instead
 @export var process_input := false
 ## The InputEvent that will trigger refocusing the current focus node
 @export var refocus_on := "ogui_east"
+## If true, only intercept input and refocus if a descendent node has focus
+@export var intercept_children_only := false
 
 var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)
 
@@ -223,8 +225,16 @@ func _input(event: InputEvent) -> void:
 	if current_focus.has_focus():
 		return
 
+	# If the active focus node is not a decendent, let someone else handle this
+	# input
+	# TODO: Refactor using a concept of a focus tree, separate from the scene tree
+	if intercept_children_only:
+		var active_focus := get_viewport().gui_get_focus_owner()
+		if not parent.is_ancestor_of(active_focus):
+			return
+
 	# Stop the event from propagating
-	logger.debug("Processing back input!")
+	logger.info(parent.name + " intercepting back input to refocus")
 	get_viewport().set_input_as_handled()
 
 	# Grab focus on the current child

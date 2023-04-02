@@ -56,6 +56,7 @@ layout_mode = 2
 
 [node name="FocusManager" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("2_mscek")]
 unique_name_in_owner = true
+process_input = true
 
 [node name="PluginStoreItem" parent="VBoxContainer/MarginContainer/HFlowContainer" instance=ExtResource("1_vqpb4")]
 layout_mode = 2
