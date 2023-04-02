@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://bko0q7gp1hwjp"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://bko0q7gp1hwjp"]
 
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="1_vsinb"]
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_vv7ku"]
@@ -11,6 +11,12 @@ color = Color(1, 1, 1, 0.25098)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rycl"]
 bg_color = Color(0.203922, 0.211765, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cqu4"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ordfq"]
+bg_color = Color(0.384314, 0.447059, 0.643137, 1)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ls1is"]
 color = Color(1, 1, 1, 0.25098)
@@ -47,5 +53,7 @@ Status/colors/pink = Color(1, 0.47451, 0.776471, 1)
 Status/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
 Status/colors/red = Color(1, 0.333333, 0.333333, 1)
 Status/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
+Text/styles/panel = SubResource("StyleBoxFlat_6cqu4")
+Text/styles/panel_focus = SubResource("StyleBoxFlat_ordfq")
 Toggle/colors/color = Color(0.741176, 0.576471, 0.976471, 1)
 VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")
