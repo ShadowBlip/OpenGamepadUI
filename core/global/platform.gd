@@ -52,7 +52,7 @@ func _init() -> void:
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/abernic_gen1.tres")
 	if PLATFORM.AOKZOE_GEN1 in flags:
-		platform = load("res://core/platform/aokzoe_gen1.gd")
+		platform = load("res://core/platform/aokzoe_gen1.tres")
 	if PLATFORM.AYANEO_GEN1 in flags:
 		platform = load("res://core/platform/ayaneo_gen1.tres")
 	if PLATFORM.AYANEO_GEN2 in flags:
