@@ -45,6 +45,7 @@ var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 var guide_action := false
+var sandbox := Sandbox.get_sandbox() # Input devices can be sandboxed
 
 var handheld_gamepad: HandheldGamepad
 var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
@@ -131,6 +132,10 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		orphaned_gamepads[gamepad.phys] = gamepad
+		
+		# Remove the gamepad inside the game sandbox if supported
+		sandbox.remove_input_device(gamepad.virt_path)
+		
 		# Lock the gamepad mappings so we can alter them.
 		gamepad_mutex.lock()
 		managed_gamepads.erase(gamepad.phys_path)
@@ -154,6 +159,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			is_handheld_gamepad = true
 		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
+			# Expose the gamepad inside the game sandbox if supported. This is
+			# to workaround SteamInput virtual devices
+			sandbox.expose_input_device(path)
 			continue
 		# Reconfigure disconnected gamepads
 		if orphaned_gamepads.has(input_device.get_phys()):
@@ -163,6 +171,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			gamepad_mutex.unlock()
 			orphaned_gamepads.erase(input_device.get_phys())
 			logger.debug("Reconnected gamepad at: " + gamepad.phys_path)
+			# Expose the gamepad inside the game sandbox if supported
+			sandbox.expose_input_device(gamepad.virt_path)
 			continue
 		var gamepad := ManagedGamepad.new()
 		if gamepad.open(path) != OK:
@@ -175,6 +185,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		gamepad_mutex.unlock()
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
+		# Expose the gamepad inside the game sandbox if supported
+		sandbox.expose_input_device(gamepad.virt_path)
 		# Check if we're using a known handheld and link this device to the
 		# handheld gamepad so we can send events to the correct virtual controller.
 		if is_handheld_gamepad:

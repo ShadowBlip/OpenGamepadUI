@@ -14,6 +14,17 @@ func is_available() -> bool:
 	return false
 
 
+## Exposes the given event input device path inside the sandbox.
+## E.g. "/dev/input/event9"
+func expose_input_device(path: String) -> int:
+	return OK
+
+
+## Removes the given input device from the sandbox.
+func remove_input_device(path: String) -> int:
+	return OK
+
+
 ## Returns the best sandbox to use for launching apps
 static func get_sandbox() -> Sandbox:
 	var logger := Log.get_logger("Sandbox", Log.LEVEL.INFO)
