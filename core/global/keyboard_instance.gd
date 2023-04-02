@@ -24,6 +24,10 @@ func open(ctx: KeyboardContext) -> void:
 
 # Closes the OSK
 func close() -> void:
+	# If the target is a control node, return focus back to it when the
+	# keyboard closes
+	if context and context.target:
+		context.target.grab_focus.call_deferred()
 	set_context(null)
 	keyboard_closed.emit()
 
