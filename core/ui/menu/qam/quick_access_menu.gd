@@ -9,8 +9,8 @@ const transition_fade_in := preload("res://core/ui/components/transition_fade_in
 
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
-@onready var icon_bar: VBoxContainer = $MarginContainer/HBoxContainer/IconBar
-@onready var viewport: VBoxContainer = $MarginContainer/HBoxContainer/Viewport
+@onready var icon_bar: VBoxContainer = $%IconBar
+@onready var viewport: VBoxContainer = $%Viewport
 @onready var focus_manager := $%FocusManager as FocusManager
 
 
