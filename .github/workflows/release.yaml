@@ -5,6 +5,7 @@ name: "Release"
 on:
   push:
     branches:
+      - main
       - v0.x
       - v1.x
     paths-ignore:
