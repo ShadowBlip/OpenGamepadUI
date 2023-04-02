@@ -164,11 +164,11 @@ func set_mode_shift(mode: MODE_SHIFT) -> void:
 func _input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event.is_action_released("ogui_east"):
+	if event.is_action_pressed("ogui_east"):
 		instance.close()
 		get_viewport().set_input_as_handled()
 		return 
-	if event.is_action_released("ogui_north"):
+	if event.is_action_pressed("ogui_north"):
 		var key := KeyboardKeyConfig.new()
 		key.input = InputEventKey.new()
 		key.input.keycode = KEY_BACKSPACE
