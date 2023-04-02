@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bko0q7gp1hwjp"]
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://bko0q7gp1hwjp"]
 
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="1_vsinb"]
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_vv7ku"]
@@ -6,8 +6,15 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_7mvpb"]
+color = Color(1, 1, 1, 0.25098)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rycl"]
 bg_color = Color(0.203922, 0.211765, 0.27451, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ls1is"]
+color = Color(1, 1, 1, 0.25098)
+vertical = true
 
 [resource]
 Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
@@ -26,6 +33,7 @@ General/colors/pink = Color(1, 0.47451, 0.776471, 1)
 General/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
 General/colors/red = Color(1, 0.333333, 0.333333, 1)
 General/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
+HSeparator/styles/separator = SubResource("StyleBoxLine_7mvpb")
 LightPanel/base_type = &"Panel"
 LightPanel/styles/panel = SubResource("StyleBoxFlat_4rycl")
 Panel/styles/panel = ExtResource("1_vsinb")
@@ -40,3 +48,4 @@ Status/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
 Status/colors/red = Color(1, 0.333333, 0.333333, 1)
 Status/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
 Toggle/colors/color = Color(0.741176, 0.576471, 0.976471, 1)
+VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")
