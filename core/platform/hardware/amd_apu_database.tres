@@ -1,0 +1,429 @@
+[gd_resource type="Resource" script_class="APUDatabase" load_steps=63 format=3 uid="uid://hm5433bg4nrm"]
+
+[ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_a4rxd"]
+[ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="2_pbguw"]
+
+[sub_resource type="Resource" id="Resource_wio8w"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Athlon Silver 3020e with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 12.0
+max_boost = 6.0
+
+[sub_resource type="Resource" id="Resource_tcfff"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Athlon Silver 3050e with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 12.0
+max_boost = 6.0
+
+[sub_resource type="Resource" id="Resource_wmno8"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Custom APU 0405"
+min_tdp = 3.0
+max_tdp = 15.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_b8fpu"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 2200U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 20.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_1g34g"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 2300U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 25.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_sp41q"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 3200U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 20.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_h2si0"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 3300U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 25.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_0pmlr"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 4300U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 23.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_y8ihm"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 5125C with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 15.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_bvqtb"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 5300U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 23.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_rk6b7"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 5400U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 23.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_lnxua"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 5425C with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 23.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_0u6yf"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 5425U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 15.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_6f80n"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 2500U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 25.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_lbrm0"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 3500U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_t5d1l"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 3550H with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 35.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_pnxln"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 4500U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 28.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_e6tev"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 4600H with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 55.0
+max_boost = 11.0
+
+[sub_resource type="Resource" id="Resource_u52m2"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 4600HS with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 45.0
+max_boost = 11.0
+
+[sub_resource type="Resource" id="Resource_uwui8"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 4600U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_2ks23"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5500U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 28.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_yv37b"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5560U with Radeon Graphics"
+min_tdp = 3.0
+max_tdp = 28.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_pwp6g"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5600H with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 12.0
+max_boost = 6.0
+
+[sub_resource type="Resource" id="Resource_chr8q"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5600HS with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 45.0
+max_boost = 11.0
+
+[sub_resource type="Resource" id="Resource_2pyvv"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5600U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_3lvxu"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5625C with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 15.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_rct3m"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 5625U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_pps3c"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 6600H with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 58.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_5xvvv"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 6600HS with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 45.0
+max_boost = 11.0
+
+[sub_resource type="Resource" id="Resource_pseh1"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 6600U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_b2c3r"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 2700U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 25.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_q76ve"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 3700U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_xjgl8"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 3750H with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 40.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_n363j"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 4700U with Radeon Graphics"
+min_tdp = 2.0
+max_tdp = 12.0
+max_boost = 6.0
+
+[sub_resource type="Resource" id="Resource_bq0w7"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 4800H with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 60.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_5k7fn"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 4800HS with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_msyku"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 4800U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_8qb0g"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 4980U with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 15.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_ynh34"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5700U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 28.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_b6xme"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5800H with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 68.0
+max_boost = 4.0
+
+[sub_resource type="Resource" id="Resource_soogm"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5800HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_t80ob"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5800U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_8p12x"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5825C with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 15.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_duhig"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 5825U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_20afn"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 6800H with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 58.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_cc6u3"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 6800HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_fja1l"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 6800U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 33.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_fmue3"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 4900H with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 60.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_wdxra"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 4900HS with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_6o1lg"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 5900HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_s24u0"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 5900HX with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 70.0
+max_boost = 20.0
+
+[sub_resource type="Resource" id="Resource_nn84a"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 5980HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_n0x5x"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 5980HX with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 70.0
+max_boost = 20.0
+
+[sub_resource type="Resource" id="Resource_rj5oh"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 6900HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_jnmf4"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 6900HX with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 70.0
+max_boost = 20.0
+
+[sub_resource type="Resource" id="Resource_6crrv"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 6980HS with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 50.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_a0hyt"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 6980HX with Radeon Graphics"
+min_tdp = 10.0
+max_tdp = 70.0
+max_boost = 20.0
+
+[sub_resource type="Resource" id="Resource_4nd4h"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen Embedded R1305G with Radeon Vega Gfx"
+min_tdp = 6.0
+max_tdp = 25.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_fyb6g"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen Embedded R1505G with Radeon Vega Gfx"
+min_tdp = 6.0
+max_tdp = 25.0
+max_boost = 2.0
+
+[sub_resource type="Resource" id="Resource_bw227"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen Embedded R1606G with Radeon Vega Gfx"
+min_tdp = 6.0
+max_tdp = 10.0
+max_boost = 2.0
+
+[resource]
+script = ExtResource("2_pbguw")
+apu_list = Array[ExtResource("1_a4rxd")]([SubResource("Resource_wio8w"), SubResource("Resource_tcfff"), SubResource("Resource_wmno8"), SubResource("Resource_b8fpu"), SubResource("Resource_1g34g"), SubResource("Resource_sp41q"), SubResource("Resource_h2si0"), SubResource("Resource_0pmlr"), SubResource("Resource_y8ihm"), SubResource("Resource_bvqtb"), SubResource("Resource_rk6b7"), SubResource("Resource_lnxua"), SubResource("Resource_0u6yf"), SubResource("Resource_6f80n"), SubResource("Resource_lbrm0"), SubResource("Resource_t5d1l"), SubResource("Resource_pnxln"), SubResource("Resource_e6tev"), SubResource("Resource_u52m2"), SubResource("Resource_uwui8"), SubResource("Resource_2ks23"), SubResource("Resource_yv37b"), SubResource("Resource_pwp6g"), SubResource("Resource_chr8q"), SubResource("Resource_2pyvv"), SubResource("Resource_3lvxu"), SubResource("Resource_rct3m"), SubResource("Resource_pps3c"), SubResource("Resource_5xvvv"), SubResource("Resource_pseh1"), SubResource("Resource_b2c3r"), SubResource("Resource_q76ve"), SubResource("Resource_xjgl8"), SubResource("Resource_n363j"), SubResource("Resource_bq0w7"), SubResource("Resource_5k7fn"), SubResource("Resource_msyku"), SubResource("Resource_8qb0g"), SubResource("Resource_ynh34"), SubResource("Resource_b6xme"), SubResource("Resource_soogm"), SubResource("Resource_t80ob"), SubResource("Resource_8p12x"), SubResource("Resource_duhig"), SubResource("Resource_20afn"), SubResource("Resource_cc6u3"), SubResource("Resource_fja1l"), SubResource("Resource_fmue3"), SubResource("Resource_wdxra"), SubResource("Resource_6o1lg"), SubResource("Resource_s24u0"), SubResource("Resource_nn84a"), SubResource("Resource_n0x5x"), SubResource("Resource_rj5oh"), SubResource("Resource_jnmf4"), SubResource("Resource_6crrv"), SubResource("Resource_a0hyt"), SubResource("Resource_4nd4h"), SubResource("Resource_fyb6g"), SubResource("Resource_bw227")])
+database_name = "Intel"
