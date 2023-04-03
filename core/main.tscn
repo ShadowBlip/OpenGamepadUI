@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://si46nqof206"]
+[gd_scene load_steps=29 format=3 uid="uid://si46nqof206"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_vl16i"]
 [ext_resource type="Script" path="res://core/main.gd" id="2_gwx84"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://b0p4eo4ny7veo" path="res://core/ui/menu/main-menu/main_menu_container.tscn" id="15_n7egu"]
 [ext_resource type="PackedScene" uid="uid://bv45as7q2lrwt" path="res://core/ui/menu/qam/quick_access_menu.tscn" id="16_4ky7m"]
 [ext_resource type="PackedScene" uid="uid://dpajbxrv14ehk" path="res://core/ui/menu/navigation/context_bar.tscn" id="17_7qf7f"]
+[ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_v6bwg"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="18_ycfam"]
 [ext_resource type="PackedScene" uid="uid://g4o1uuo0hlbv" path="res://core/ui/menu/game/game_loading.tscn" id="19_es4xs"]
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="19_ruxfl"]
@@ -135,12 +136,15 @@ layout_mode = 1
 [node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("16_4ky7m")]
 visible = false
 layout_mode = 1
-offset_left = 0.0
+
+[node name="VolumeIndicator" parent="UIContainer" instance=ExtResource("18_v6bwg")]
+layout_mode = 2
 
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("17_7qf7f")]
 layout_mode = 2
 
 [node name="FadeTexture" type="TextureRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
