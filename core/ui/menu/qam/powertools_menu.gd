@@ -1,19 +1,12 @@
 extends VBoxContainer
 
+const Platform := preload("res://core/global/platform.tres")
 const powertools_path : String = "/usr/share/opengamepadui/scripts/powertools"
 
-var boost_capable := false
 var core_count := 0
-var cpu_model := ""
-var cpu_vendor := ""
-var gpu_clk_capable := false
-var gpu_model := ""
-var gpu_vendor := ""
-var ht_capable := false
+var cpu: Platform.CPUInfo
+var gpu: Platform.GPUInfo
 var shared_thread: SharedThread
-var tdp_capable := false
-var tj_temp_capable := false
-var smt := false
 
 @onready var cpu_boost_button := $CPUBoostButton
 @onready var cpu_cores_slider := $CPUCoresSlider
@@ -42,21 +35,21 @@ func _ready():
 	_get_system_components()
 
 	# Set UI capabilities from system capabilities
-	cpu_boost_button.visible = boost_capable
-	cpu_cores_slider.visible = ht_capable
-	gpu_freq_enable.visible = gpu_clk_capable
-	gpu_temp_slider.visible = tj_temp_capable
-	smt_button.visible = ht_capable
-	tdp_boost_slider.visible = tdp_capable
-	tdp_slider.visible = tdp_capable
+	cpu_boost_button.visible = cpu.boost_capable
+	cpu_cores_slider.visible = cpu.smt_capable
+	gpu_freq_enable.visible = gpu.clk_capable
+	gpu_temp_slider.visible = gpu.tj_temp_capable
+	smt_button.visible = cpu.smt_capable
+	tdp_boost_slider.visible = gpu.tdp_capable
+	tdp_slider.visible = gpu.tdp_capable
 
-	if tdp_capable:
-		_get_tdp_range()
+	if gpu.tdp_capable:
+		_set_tdp_range()
 		_get_tdp()
 		tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_changed)
 		tdp_slider.value_changed.connect(_on_tdp_value_changed)
 
-	if gpu_clk_capable:
+	if gpu.clk_capable:
 		_get_gpu_perf_level()
 		gpu_freq_enable.toggled.connect(_on_toggle_gpu_freq)
 		gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_changed)
@@ -65,20 +58,20 @@ func _ready():
 		_setup_callback_exec(powertools_path, ["pdfpl", "write"])
 
 
-	if ht_capable:
+	if cpu.smt_capable:
 		if _read_sys("/sys/devices/system/cpu/smt/control") == "on":
 			smt_button.button_pressed = true
-			smt = true
+#			_on_toggle_smt(true)
 		_get_cpu_count()
 		cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
 		smt_button.toggled.connect(_on_toggle_smt)
 
-	if boost_capable:
+	if cpu.boost_capable:
 		if _read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
 			cpu_boost_button.button_pressed = true
 		cpu_boost_button.toggled.connect(_on_toggle_cpu_boost)
 
-	if tj_temp_capable:
+	if gpu.tj_temp_capable:
 		gpu_temp_slider.value_changed.connect(_on_gpu_temp_limit_changed)
 
 
@@ -166,10 +159,10 @@ func _get_cpus_enabled() -> int:
 # Gets the current and absolute min/max gpu clocks, and sets the slider values
 # to match.
 func _get_gpu_clk_limits() -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_get_amd_gpu_clock_limits()
-		"GenuineIntel":
+		"Intel":
 			_get_intel_gpu_clock_limits()
 
 # Reads the pp_os_clk_voltage from sysfs and returns the values. This file will 
@@ -224,10 +217,10 @@ func _get_intel_gpu_clock_limits() -> void:
 
 # Retrieves the current TDP.
 func _get_tdp() -> bool:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			return await _get_amd_tdp()
-		"GenuineIntel":
+		"Intel":
 			return await _get_intel_tdp()
 		_:
 			return false
@@ -295,8 +288,8 @@ func _ensure_tdp_boost(current_boost: float)  -> void:
 
 # Called to get the current performance level and set the UI as needed.
 func _get_gpu_perf_level() -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			var performace_level: String = _read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
 			logger.debug("GPU Mode set to: " + performace_level)
 			if performace_level == "manual":
@@ -308,83 +301,17 @@ func _get_gpu_perf_level() -> void:
 
 # Reads the hardware. Only supports AMD APU's currently.
 # TODO: Support more than AMD APU's
-func _get_system_components() -> bool:
-	var args = ["-c", "lscpu"]
-	var output: Array = _do_exec("bash", args)
-	var exit_code = output[1]
-	if exit_code:
-		return false
-	var result := output[0][0].split("\n") as Array
-	for param in result:
-		var parts := param.split(" ", false) as Array
-		if parts.is_empty():
-			continue
-		if parts[0] == "Flags:":
-			if "ht" in parts:
-				ht_capable = true
-			if "cpb" in parts:
-				boost_capable = true
-		if parts[0] == "Vendor" and parts[1] == "ID:":
-			# Delete parts of the string we don't want
-			parts.remove_at(1)
-			parts.remove_at(0)
-			cpu_vendor = str(" ".join(parts))
-		if parts[0] == "Model" and parts[1] == "name:":
-			# Delete parts of the string we don't want
-			parts.remove_at(1)
-			parts.remove_at(0)
-			cpu_model = str(" ".join(parts))
-			# TODO: We can get min/max CPU freq here.
-	if cpu_model == "" or cpu_vendor == "":
-		return false
-	logger.debug("Found CPU: " + cpu_model)
-	# TODO: This is lazy and doesn't support dedicated graphics paired with APU's.
-	if cpu_model in amd_apu_database:
-		gpu_clk_capable = true
-		gpu_model = cpu_model
-		gpu_vendor = cpu_vendor
-		tdp_capable = true
-		tj_temp_capable = true
-	if cpu_model in intel_apu_database:
-		gpu_clk_capable = true
-		gpu_model = cpu_model
-		gpu_vendor = cpu_vendor
-		tdp_capable = true
-	if gpu_model == "" or gpu_vendor == "":
-		return false
-	logger.debug("Found GPU: " + gpu_model)
-	return true
+func _get_system_components() -> void:
+	cpu = Platform.get_cpu_info()
+	gpu = Platform.get_gpu_info()
 
 
 # Gets the TDP Range for the detected hardware.
-func _get_tdp_range() -> bool:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
-			return _get_tdp_range_amd_apu()
-		"GenuineIntel":
-			return _get_tdp_range_intel_apu()
-		_:
-			return false
-
-
-# Gets the TDP range for the detected APU
-func _get_tdp_range_amd_apu() -> bool:
-	var apu_data := amd_apu_database[gpu_model] as Dictionary
-	tdp_boost_slider.max_value = apu_data["max_boost"]
-	tdp_slider.max_value = apu_data["max_tdp"]
-	tdp_slider.min_value = apu_data["min_tdp"]
-	logger.debug("Found TDP Limits: " + str(apu_data["min_tdp"]) + " - " + str(apu_data["max_tdp"]))
-	return true
-
-
-# Gets the TDP range for the detected APU
-func _get_tdp_range_intel_apu() -> bool:
-	var apu_data := intel_apu_database[gpu_model] as Dictionary
-	tdp_boost_slider.max_value = apu_data["max_boost"]
-	tdp_slider.max_value = apu_data["max_tdp"]
-	tdp_slider.min_value = apu_data["min_tdp"]
-	logger.debug("Found TDP Limits: " + str(apu_data["min_tdp"]) + " - " + str(apu_data["max_tdp"]))
-	return true
+func _set_tdp_range() -> void:
+	tdp_boost_slider.max_value = gpu.max_boost
+	tdp_slider.max_value = gpu.max_tdp
+	tdp_slider.min_value = gpu.min_tdp
+	logger.debug("Found TDP Limits: " + str(gpu.min_tdp) + " - " + str(gpu.max_tdp))
 
 
 # Called to disable/enable cores by count as specified by value. 
@@ -395,14 +322,14 @@ func _on_change_cpu_cores(_value: float):
 # Called to disable/enable cores by count as specified by value. 
 func _do_change_cpu_cores():
 	var args := []
-	if smt:
+	if smt_button.button_pressed:
 		for cpu_no in range(1, core_count):
 			if cpu_no >= cpu_cores_slider.value:
 				args = ["cpuToggle", str(cpu_no), "0"]
 			else:
 				args = ["cpuToggle", str(cpu_no), "1"]
 			_async_do_exec(powertools_path, args)
-	if not smt:
+	else:
 		for cpu_no in range(2, core_count, 2):
 			if cpu_no >= cpu_cores_slider.value * 2:
 				args = ["cpuToggle", str(cpu_no), "0"]
@@ -414,10 +341,10 @@ func _do_change_cpu_cores():
 # Sets the T-junction temp using ryzenadj.
 # TODO: Support more than AMD APU's
 func _on_gpu_temp_limit_changed(value: float) -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_setup_callback_exec(powertools_path, ["ryzenadj", "-f", str(value)])
-		"GenuineIntel":
+		"Intel":
 			pass
 
 
@@ -425,10 +352,10 @@ func _on_gpu_temp_limit_changed(value: float) -> void:
 func _on_max_gpu_freq_changed(value: float) -> void:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_setup_callback_exec(powertools_path, ["amdGpuClock", "1", str(value)])
-		"GenuineIntel":
+		"Intel":
 			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_max_freq_mhz", str(value)])
 
 
@@ -436,28 +363,28 @@ func _on_max_gpu_freq_changed(value: float) -> void:
 func _on_min_gpu_freq_changed(value: float) -> void:
 	if value > gpu_freq_max_slider.value:
 		gpu_freq_max_slider.value = value
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_setup_callback_exec(powertools_path, ["amdGpuClock", "0", str(value)])
-		"GenuineIntel":
+		"Intel":
 			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_min_freq_mhz", str(value)])
 
 
 # Called to set the base average TDP
 func _on_tdp_value_changed(value: float) -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_setup_callback_func(_do_amd_tdp_change)
-		"GenuineIntel":
+		"Intel":
 			_setup_callback_func(_do_intel_tdp_change)
 
 
 # Called to set the flow and fast boost TDP
 func _on_tdp_boost_value_changed(_value: float) -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			_setup_callback_func(_do_amd_tdp_boost_change)
-		"GenuineIntel":
+		"Intel":
 			_setup_callback_func(_do_intel_tdp_boost_change)
 
 
@@ -513,8 +440,8 @@ func _on_toggle_cpu_boost(state: bool) -> void:
 
 # Called to toggle auo/manual gpu clocking
 func _on_toggle_gpu_freq(state: bool) -> void:
-	match gpu_vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu.vendor:
+		"AMD":
 			var args := ["pdfpl", "auto"]
 			if state:
 				args = ["pdfpl", "manual"]
@@ -522,7 +449,7 @@ func _on_toggle_gpu_freq(state: bool) -> void:
 			var exit_code = output[1]
 			if exit_code:
 				logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
-		"GenuineIntel":
+		"Intel":
 			if not state:
 				gpu_freq_min_slider.value = gpu_freq_min_slider.min_value
 				gpu_freq_max_slider.value = gpu_freq_min_slider.max_value
@@ -534,9 +461,8 @@ func _on_toggle_gpu_freq(state: bool) -> void:
 
 # Called to toggle SMT
 func _on_toggle_smt(state: bool) -> void:
-	smt = state
 	var args := []
-	if smt:
+	if state:
 		args = ["smtToggle", "on"]
 		cpu_cores_slider.max_value = core_count
 	else:
@@ -554,326 +480,3 @@ func _read_sys(path: String) -> String:
 	var output: Array = _do_exec("cat", [path])
 	return output[0][0].strip_escapes()
 
-
-# AMD APU TDP Database
-# TODO: Not this
-var amd_apu_database := {
-	'AMD Athlon Silver 3020e with Radeon Graphics': {
-		"max_tdp": 12,
-		"min_tdp": 2,
-		"max_boost": 6
-	},
-	'AMD Athlon Silver 3050e with Radeon Graphics': {
-		"max_tdp": 12,
-		"min_tdp": 2,
-		"max_boost": 6
-	},
-	'AMD Custom APU 0405': { # Steam Deck
-		"max_tdp": 15,
-		"min_tdp": 3,
-		"max_boost": 5
-	},
-	'AMD Ryzen 3 2200U with Radeon Graphics': {
-		"max_tdp": 20,
-		"min_tdp": 2,
-		"max_boost": 5
-	},
-	'AMD Ryzen 3 2300U with Radeon Graphics': {
-		"max_tdp": 25,
-		"min_tdp": 2,
-		"max_boost": 5
-	},
-	'AMD Ryzen 3 3200U with Radeon Graphics': {
-		"max_tdp": 20,
-		"min_tdp": 2,
-		"max_boost": 5
-	},
-	'AMD Ryzen 3 3300U with Radeon Graphics': {
-		"max_tdp": 25,
-		"min_tdp": 2,
-		"max_boost": 5
-	},
-	'AMD Ryzen 3 4300U with Radeon Graphics': {
-		"max_tdp": 23,
-		"min_tdp": 2,
-		"max_boost": 2
-	},
-	'AMD Ryzen 3 5125C with Radeon Graphics': {
-		"max_tdp": 15,
-		"min_tdp": 2,
-		"max_boost": 2
-	},
-	'AMD Ryzen 3 5300U with Radeon Graphics': {
-		"max_tdp": 23,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 3 5400U with Radeon Graphics': {
-		"max_tdp": 23,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 3 5425C with Radeon Graphics': {
-		"max_tdp": 23,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 3 5425U with Radeon Graphics': {
-		"max_tdp": 15,
-		"min_tdp": 2,
-		"max_boost": 2
-	},
-	'AMD Ryzen 5 2500U with Radeon Graphics': {
-		"max_tdp": 25,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 3500U with Radeon Graphics': {
-		"max_tdp": 30,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 3550H with Radeon Graphics': {
-		"max_tdp": 35,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 4500U with Radeon Graphics': {
-		"max_tdp": 28,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 5 4600H with Radeon Graphics': {
-		"max_tdp": 55,
-		"min_tdp": 5,
-		"max_boost": 11
-	},
-	'AMD Ryzen 5 4600HS with Radeon Graphics': {
-		"max_tdp": 45,
-		"min_tdp": 5,
-		"max_boost": 11
-	},
-	'AMD Ryzen 5 4600U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 5500U with Radeon Graphics': {
-		"max_tdp": 28,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 5 5560U with Radeon Graphics': {
-		"max_tdp": 28,
-		"min_tdp": 3,
-		"max_boost": 2
-	},
-	'AMD Ryzen 5 5600H with Radeon Graphics': {
-		"max_tdp": 12,
-		"min_tdp": 2,
-		"max_boost": 6
-	},
-	'AMD Ryzen 5 5600HS with Radeon Graphics': {
-		"max_tdp": 45,
-		"min_tdp": 5,
-		"max_boost": 11
-	},
-	'AMD Ryzen 5 5600U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 5625C with Radeon Graphics': {
-		"max_tdp": 15,
-		"min_tdp": 2,
-		"max_boost": 2
-	},
-	'AMD Ryzen 5 5625U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 5 6600H with Radeon Graphics': {
-		"max_tdp": 58,
-		"min_tdp": 5,
-		"max_boost": 10
-	},
-	'AMD Ryzen 5 6600HS with Radeon Graphics': {
-		"max_tdp": 45,
-		"min_tdp": 5,
-		"max_boost": 11
-	},
-	'AMD Ryzen 5 6600U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 7 2700U with Radeon Graphics': {
-		"max_tdp": 25,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 7 3700U with Radeon Graphics': {
-		"max_tdp": 30,
-		"min_tdp": 5,
-		"max_boost": 10
-	},
-	'AMD Ryzen 7 3750H with Radeon Graphics': {
-		"max_tdp": 40,
-		"min_tdp": 5,
-		"max_boost": 10
-	},
-	'AMD Ryzen 7 4700U with Radeon Graphics': {
-		"max_tdp": 12,
-		"min_tdp": 2,
-		"max_boost": 6
-	},
-	'AMD Ryzen 7 4800H with Radeon Graphics': {
-		"max_tdp": 60,
-		"min_tdp": 5,
-		"max_boost": 8
-	},
-	'AMD Ryzen 7 4800HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 5,
-		"max_boost": 8
-	},
-	'AMD Ryzen 7 4800U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 7 4980U with Radeon Graphics': {
-		"max_tdp": 15,
-		"min_tdp": 10,
-		"max_boost": 10
-	},
-	'AMD Ryzen 7 5700U with Radeon Graphics': {
-		"max_tdp": 28,
-		"min_tdp": 5,
-		"max_boost": 2
-	},
-	'AMD Ryzen 7 5800H with Radeon Graphics': {
-		"max_tdp": 68,
-		"min_tdp": 10,
-		"max_boost": 4
-	},
-	'AMD Ryzen 7 5800HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 7 5800U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 7 5825C with Radeon Graphics': {
-		"max_tdp": 15,
-		"min_tdp": 10,
-		"max_boost": 10
-	},
-	'AMD Ryzen 7 5825U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 7 6800H with Radeon Graphics': {
-		"max_tdp": 58,
-		"min_tdp": 10,
-		"max_boost": 10
-	},
-	'AMD Ryzen 7 6800HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 7 6800U with Radeon Graphics': {
-		"max_tdp": 33,
-		"min_tdp": 5,
-		"max_boost": 5
-	},
-	'AMD Ryzen 9 4900H with Radeon Graphics': {
-		"max_tdp": 60,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 4900HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 5,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 5900HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 5900HX with Radeon Graphics': {
-		"max_tdp": 70,
-		"min_tdp": 10,
-		"max_boost": 20
-	},
-	'AMD Ryzen 9 5980HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 5980HX with Radeon Graphics': {
-		"max_tdp": 70,
-		"min_tdp": 10,
-		"max_boost": 20
-	},
-	'AMD Ryzen 9 6900HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 6900HX with Radeon Graphics': {
-		"max_tdp": 70,
-		"min_tdp": 10,
-		"max_boost": 20
-	},
-	'AMD Ryzen 9 6980HS with Radeon Graphics': {
-		"max_tdp": 50,
-		"min_tdp": 10,
-		"max_boost": 8
-	},
-	'AMD Ryzen 9 6980HX with Radeon Graphics': {
-		"max_tdp": 70,
-		"min_tdp": 10,
-		"max_boost": 20
-	},
-	'AMD Ryzen Embedded R1305G with Radeon Vega Gfx': {
-		"max_tdp": 25,
-		"min_tdp": 6,
-		"max_boost": 2
-	},
-	'AMD Ryzen Embedded R1505G with Radeon Vega Gfx': {
-		"max_tdp": 25,
-		"min_tdp": 6,
-		"max_boost": 2
-	},
-	'AMD Ryzen Embedded R1606G with Radeon Vega Gfx': {
-		"max_tdp": 10,
-		"min_tdp": 6,
-		"max_boost": 2
-	},
-}
-
-var intel_apu_database := {
-	'11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz': {
-		"max_tdp": 28,
-		"min_tdp": 12,
-		"max_boost": 2
-	},
-	'11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz': {
-		"max_tdp": 28,
-		"min_tdp": 12,
-		"max_boost": 2
-	},
-	'11th Gen Intel(R) Core(TM) i7-1195G7 @ 2.90GHz': {
-		"max_tdp": 28,
-		"min_tdp": 12,
-		"max_boost": 2
-	},
-}

@@ -118,3 +118,17 @@ layout_mode = 2
 title = "Vendor"
 description = ""
 text = "Generic"
+
+[node name="CPUModelText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "CPU Model"
+description = ""
+text = "Generic"
+
+[node name="GPUModelText" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_28f0p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "GPU Model"
+description = ""
+text = "Generic"

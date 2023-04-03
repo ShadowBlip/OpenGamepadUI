@@ -29,13 +29,34 @@ enum PLATFORM {
 }
 
 ## Data container for OS information
-class OSInfo:
+class OSInfo extends Resource:
 	var name: String
 	var id: String
 	var id_like: String
 	var pretty_name: String
 	var version_codename: String
 	var variant_id: String
+
+## Data container for CPU information
+class CPUInfo extends Resource:
+	var model: String
+	var vendor: String
+	var smt_capable: bool = false
+	var boost_capable: bool = false
+
+## Data container for GPU information
+class GPUInfo extends Resource:
+	var model: String
+	var vendor: String
+	var tdp_capable: bool = false
+	var tj_temp_capable: bool = false
+	var clk_capable: bool = false
+	var min_tdp: float = false
+	var max_tdp: float = false
+	var max_boost: float = false
+
+const amd_apu_database: APUDatabase = preload("res://core/platform/hardware/amd_apu_database.tres")
+const intel_apu_database: APUDatabase = preload("res://core/platform/hardware/intel_apu_database.tres")
 
 ## Detected Operating System information
 var os_info := _detect_os()
@@ -44,8 +65,14 @@ var os: PlatformProvider
 ## The hardware platform provider detected
 var platform: PlatformProvider
 var logger := Log.get_logger("Platform", Log.LEVEL.DEBUG)
+var cpu: CPUInfo
+var gpu: GPUInfo
 
 func _init() -> void:
+	amd_apu_database.init()
+	intel_apu_database.init()
+	_get_system_components()
+
 	var flags := get_platform_flags()
 	
 	# Set hardware platform provider
@@ -117,6 +144,23 @@ func get_product_name() -> String:
 func get_vendor_name() -> String:
 	var vendor_name := _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
 	return vendor_name
+
+
+## Returns the CPUInfo
+func get_cpu_info() -> CPUInfo:
+	return cpu
+
+
+func get_cpu_model() -> String:
+	return cpu.model
+
+## Returns the GPUInfo
+func get_gpu_info() -> GPUInfo:
+	return gpu
+
+
+func get_gpu_model() -> String:
+	return gpu.model
 
 
 ## Used to read values from sysfs
@@ -226,3 +270,107 @@ func _detect_os() -> OSInfo:
 			info.variant_id = value
 			
 	return info
+
+
+# Reads the hardware.
+func _get_system_components():
+	cpu = _read_cpu_info()
+	gpu = _read_gpu_info()
+
+
+# Provides info on the CPU vendor, model, and capabilities.
+func _read_cpu_info() -> CPUInfo:
+	var cpu_info := CPUInfo.new()
+	var cpu_raw := _get_lscpu_info()
+
+	for param in cpu_raw:
+		var parts := param.split(" ", false) as Array
+		if parts.is_empty():
+			continue
+		if parts[0] == "Flags:":
+			if "ht" in parts:
+				cpu_info.smt_capable = true
+			if "cpb" in parts:
+				cpu_info.boost_capable = true
+		if parts[0] == "Vendor" and parts[1] == "ID:":
+			# Delete parts of the string we don't want
+			parts.remove_at(1)
+			parts.remove_at(0)
+			cpu_info.vendor = str(" ".join(parts))
+		if parts[0] == "Model" and parts[1] == "name:":
+			# Delete parts of the string we don't want
+			parts.remove_at(1)
+			parts.remove_at(0)
+			cpu_info.model = str(" ".join(parts))
+		# TODO: We can get min/max CPU freq here.
+	logger.debug("Found CPU: Vendor: " + cpu_info.vendor + " Model: " + cpu_info.model)
+	return cpu_info
+
+
+# Provides info on the GPU vendor, model, and capabilities.
+func _get_lscpu_info() -> Array:
+	var args = ["-c", "lscpu"]
+	var output: Array = _do_exec("bash", args)
+	var exit_code = output[1]
+	if exit_code:
+		return []
+	return  output[0][0].split("\n") as Array
+
+
+# Reads system files and tools to fill out the GPUInfo
+func _read_gpu_info() -> GPUInfo:
+	var gpu_info := GPUInfo.new()
+	var gpu_raw := _get_glxinfo()
+
+	# Get the GPU Vendor and Model
+	for param in gpu_raw:
+		var parts := param.split(" ", false) as Array
+		if parts.is_empty():
+			continue
+		if parts[0] == "OpenGL" and parts[1] == "vendor" and parts[2] == "string:":
+			parts.remove_at(2)
+			parts.remove_at(1)
+			parts.remove_at(0)
+			gpu_info.vendor = str(" ".join(parts))
+		if parts[0] == "OpenGL" and parts[1] == "renderer" and parts[2] == "string:":
+			parts.remove_at(2)
+			parts.remove_at(1)
+			parts.remove_at(0)
+			gpu_info.model = str(" ".join(parts))
+	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
+
+	if not cpu:
+		return gpu_info
+
+	# Get APU data, if it exists
+	var apu_data: APUEntry = null
+	match cpu.vendor:
+		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+			apu_data = amd_apu_database.get_apu(cpu.model)
+			if apu_data:
+				gpu_info.tj_temp_capable = true
+		"GenuineIntel":
+			apu_data = intel_apu_database.get_apu(cpu.model)
+	if not apu_data:
+		logger.info("No APU data for " + cpu.model)
+		return gpu_info
+
+	gpu_info.min_tdp = apu_data.min_tdp
+	gpu_info.max_tdp = apu_data.max_tdp
+	gpu_info.max_boost = apu_data.max_boost
+	gpu_info.clk_capable = true
+	gpu_info.tdp_capable = true
+	logger.debug("Found all APU data")
+	return gpu_info
+
+# Run glxinfo and return the data from it.
+# TODO: Maybe use vulkaninfo? Need a way to get vendor string in that. It can
+# output to JSON so it might be easier to get more info like driver name and info,
+# device type (dedicated or integrated), etc.
+func _get_glxinfo() -> Array:
+	var args = ["-c", "glxinfo", "-B"]
+	var output: Array = _do_exec("bash", args)
+	var exit_code = output[1]
+	if exit_code:
+		return []
+	return  output[0][0].split("\n") as Array

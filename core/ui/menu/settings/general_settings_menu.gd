@@ -18,6 +18,8 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var os_text := $%OSText
 @onready var product_text := $%ProductText
 @onready var vendor_text := $%VendorText
+@onready var cpu_text := $%CPUModelText
+@onready var gpu_text := $%GPUModelText
 
 
 # Called when the node enters the scene tree for the first time.
@@ -27,7 +29,9 @@ func _ready() -> void:
 	os_text.text = Platform.os_info.pretty_name
 	product_text.text = Platform.get_product_name()
 	vendor_text.text = Platform.get_vendor_name()
-	
+	cpu_text.text = Platform.get_cpu_model()
+	gpu_text.text = Platform.get_gpu_model()
+
 	# Configure home menu
 	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
 	max_recent_slider.value = max_recent
