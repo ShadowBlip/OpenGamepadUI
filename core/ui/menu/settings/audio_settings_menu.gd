@@ -1,6 +1,6 @@
 extends Control
 
-const AudioManager := preload("res://core/global/audio_manager.tres")
+var AudioManager := load("res://core/global/audio_manager.tres") as AudioManager
 
 @onready var output_volume := $%VolumeSlider
 @onready var output_device := $%OutputDevice
@@ -32,8 +32,8 @@ func _on_output_volume_changed(value: float) -> void:
 
 # Updates the list of output devices
 func _update_output_devices() -> void:
-	var current_device := AudioManager.get_current_output_device()
-	var output_devices := AudioManager.get_output_devices()
+	var current_device := await AudioManager.get_current_output_device()
+	var output_devices := await AudioManager.get_output_devices()
 	output_device.clear()
 
 	var selected := 0
@@ -48,7 +48,7 @@ func _update_output_devices() -> void:
 
 
 func _on_output_device_changed(idx: int) -> void:
-	var output_devices := AudioManager.get_output_devices()
+	var output_devices := await AudioManager.get_output_devices()
 	var device := output_devices[idx]
 	AudioManager.set_output_device(device)
 

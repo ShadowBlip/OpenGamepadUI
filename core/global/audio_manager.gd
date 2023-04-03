@@ -18,8 +18,20 @@ enum VOLUME {
 ## Limit the maximum volume to 200%
 const volume_limit := "2.0"
 
+## Thread to run audio changes on
+var thread := load("res://core/systems/threading/audio_thread.tres") as SharedThread
+
 ## Current volume
-var current_volume := get_current_volume()
+var current_volume := await _get_current_volume()
+var _muted := false
+var _output_devices := PackedStringArray()
+var _current_output := ""
+
+
+func _init() -> void:
+	thread.start()
+	current_volume = await _get_current_volume()
+	_output_devices = await _get_output_devices()
 
 
 ## Returns true if the system has audio controls we support
@@ -38,7 +50,20 @@ func supports_audio() -> bool:
 ##     AudioManager.set_volume(-0.06, AudioManager.TYPE.RELATIVE) # Decrease volume by 6%
 ##     [/codeblock]
 func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
+	# Clamp the value to min and max values
+	value = minf(volume_limit.to_float(), value)
+	value = maxf(0, value)
+	
+	# Set the volume immediately and async control the system volume
 	var last_volume := current_volume
+	if type == VOLUME.ABSOLUTE:
+		current_volume = value
+	else:
+		current_volume += value
+	if last_volume != current_volume:
+		volume_changed.emit(current_volume)
+
+	# Build the wireplumber arguments
 	var suffix := "%"
 	if type == VOLUME.RELATIVE:
 		if value < 0:
@@ -49,19 +74,16 @@ func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
 		
 	var percent := value * 100
 	var args := ["set-volume", "--limit", volume_limit, "@DEFAULT_AUDIO_SINK@", str(percent) + suffix]
-	var code := OS.execute("wpctl", args)
-	if code == OK:
-		current_volume = get_current_volume()
-		if current_volume != last_volume:
-			volume_changed.emit(current_volume)
+	var code := await thread.exec(OS.execute.bind("wpctl", args)) as int
+	
 	return code
 
 
 ## Toggles mute on the current audio device
 func toggle_mute() -> int:
-	var code := OS.execute("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
-	if code == OK:
-		volume_mute_toggled.emit()
+	_muted = !_muted
+	volume_mute_toggled.emit()
+	var code := await thread.exec(OS.execute.bind("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])) as int
 	return code
 
 
@@ -69,8 +91,8 @@ func toggle_mute() -> int:
 func set_output_device(device: String) -> int:
 	var ids := PackedStringArray()
 	var devices := PackedStringArray()
-	for id in _get_wpctl_object_ids():
-		var lines := _wpctl_inspect(id)
+	for id in await _get_wpctl_object_ids():
+		var lines := await _wpctl_inspect(id)
 		var node_name: String
 		var is_output := false
 		for line in lines:
@@ -87,12 +109,12 @@ func set_output_device(device: String) -> int:
 	var i := devices.find(device)
 	var device_id := ids[i]
 
-	return OS.execute("wpctl", ["set-default", device_id])
+	return await thread.exec(OS.execute.bind("wpctl", ["set-default", device_id]))
 
 
 ## Returns the currently set output device
 func get_current_output_device() -> String:
-	var lines := _wpctl_inspect("@DEFAULT_AUDIO_SINK@")
+	var lines := await _wpctl_inspect("@DEFAULT_AUDIO_SINK@")
 	for line in lines:
 		if line.contains("node.description"):
 			return line.split('"', false)[-1]
@@ -101,8 +123,13 @@ func get_current_output_device() -> String:
 
 ## Returns the current volume as a percentage. E.g. 0.52 is 52%
 func get_current_volume() -> float:
+	return current_volume
+
+
+## Fetch the volume for the current output device
+func _get_current_volume() -> float:
 	var output := []
-	var code := OS.execute("wpctl", ["get-volume", "@DEFAULT_AUDIO_SINK@"], output)
+	var code := await thread.exec(OS.execute.bind("wpctl", ["get-volume", "@DEFAULT_AUDIO_SINK@"], output)) as int
 	if code != 0:
 		return -1
 	if output.size() == 0:
@@ -122,9 +149,13 @@ func get_current_volume() -> float:
 
 ## Returns a list of audio output devices
 func get_output_devices() -> PackedStringArray:
+	return await _get_output_devices()
+	
+	
+func _get_output_devices() -> PackedStringArray:
 	var devices := PackedStringArray()
-	for id in _get_wpctl_object_ids():
-		var lines := _wpctl_inspect(id)
+	for id in await _get_wpctl_object_ids():
+		var lines := await _wpctl_inspect(id)
 		var node_name: String
 		var is_output := false
 		for line in lines:
@@ -142,7 +173,7 @@ func get_output_devices() -> PackedStringArray:
 func _wpctl_inspect(id: String) -> PackedStringArray:
 	var out := PackedStringArray()
 	var output := []
-	var code := OS.execute("wpctl", ["inspect", id], output)
+	var code := await thread.exec(OS.execute.bind("wpctl", ["inspect", id], output)) as int
 	if code != 0:
 		return out
 	if output.size() == 0:
@@ -156,7 +187,7 @@ func _get_wpctl_object_ids() -> PackedStringArray:
 	var ids := PackedStringArray()
 
 	var output := []
-	var code := OS.execute("wpctl", ["status"], output)
+	var code := await thread.exec(OS.execute.bind("wpctl", ["status"], output)) as int
 	if code != 0:
 		return ids
 	if output.size() == 0:
