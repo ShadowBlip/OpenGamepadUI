@@ -55,8 +55,10 @@ class GPUInfo extends Resource:
 	var max_tdp: float = -1
 	var max_boost: float = -1
 
-const amd_apu_database: APUDatabase = preload("res://core/platform/hardware/amd_apu_database.tres")
-const intel_apu_database: APUDatabase = preload("res://core/platform/hardware/intel_apu_database.tres")
+const APUDatabase := preload("res://core/platform/hardware/apu_database.gd")
+const APUEntry := preload("res://core/platform/hardware/apu_entry.gd")
+var amd_apu_database: APUDatabase
+var intel_apu_database: APUDatabase
 
 ## Detected Operating System information
 var os_info := _detect_os()
@@ -69,6 +71,8 @@ var cpu: CPUInfo
 var gpu: GPUInfo
 
 func _init() -> void:
+	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
+	intel_apu_database = load("res://core/platform/hardware/intel_apu_database.tres")
 	amd_apu_database.init()
 	intel_apu_database.init()
 	_get_system_components()

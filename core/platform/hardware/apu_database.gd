@@ -2,6 +2,8 @@ extends Resource
 
 class_name APUDatabase
 
+const APUEntry := preload("res://core/platform/hardware/apu_entry.gd")
+
 @export var apu_list: Array[APUEntry]
 @export var database_name: String
 var apu_map: Dictionary
