@@ -51,9 +51,9 @@ class GPUInfo extends Resource:
 	var tdp_capable: bool = false
 	var tj_temp_capable: bool = false
 	var clk_capable: bool = false
-	var min_tdp: float = false
-	var max_tdp: float = false
-	var max_boost: float = false
+	var min_tdp: float = -1
+	var max_tdp: float = -1
+	var max_boost: float = -1
 
 const amd_apu_database: APUDatabase = preload("res://core/platform/hardware/amd_apu_database.tres")
 const intel_apu_database: APUDatabase = preload("res://core/platform/hardware/intel_apu_database.tres")
