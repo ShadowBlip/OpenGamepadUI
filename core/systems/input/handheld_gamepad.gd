@@ -284,12 +284,17 @@ func open() -> int:
 	kb_device = InputDevice.new()
 	var result: int = kb_device.open(kb_event_path)
 	if result != OK:
-		logger.warn("Unable to open event device: " + kb_event_path)
+		logger.error("Unable to open event device: " + kb_event_path +". Handheld Gamepad not configured.")
 		kb_device = null
 		return result
 	# Grab exclusive access over the physical device
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
-		kb_device.grab(true)
+		result = kb_device.grab(true)
+		if result != OK:
+			logger.error("Unable to grab " + kb_device.get_name())
+			return result
+		logger.debug("Grabbed " + kb_device.get_name())
+	logger.debug("Successfully opened " + kb_device.get_name() + " at " + kb_event_path)
 	return result
 
 
