@@ -11,6 +11,8 @@ var logger := Log.get_logger("Entrypoint")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().get_root().transparent_bg = true
+	var version := load("res://core/global/version.tres") as Version
+	print("OpenGamepadUI v", version.core)
 	
 	# Apply any update packs
 	_apply_update_packs()
@@ -47,5 +49,7 @@ func _apply_update_packs() -> void:
 	# Load the update pack
 	if ProjectSettings.load_resource_pack(update_pack_file):
 		logger.info("Update pack loaded successfully")
+		var version := load("res://core/global/version.tres") as Version
+		print("OpenGamepadUI Update Pack v", version.core)
 	else:
 		logger.warn("Failed to load update pack")
