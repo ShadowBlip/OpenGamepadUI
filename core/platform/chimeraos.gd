@@ -1,7 +1,7 @@
 extends PlatformProvider
 class_name PlatformChimeraOS
 
-const DESKTOP_FILE_PATH := "/home/deck/Desktop/return-opengamepadui.desktop"
+const DESKTOP_FILE_PATH := "/home/gamer/Desktop/return-opengamepadui.desktop"
 const DESKTOP_FILE := "#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
