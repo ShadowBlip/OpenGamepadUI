@@ -20,7 +20,7 @@ var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)
 func _ready():
 	parent.child_entered_tree.connect(_on_child_tree_changed)
 	parent.child_exiting_tree.connect(_on_child_tree_changed)
-	_on_child_tree_changed(null)
+	recalculate_focus()
 	set_process_input(process_input)
 	if process_input:
 		parent.visibility_changed.connect(_on_visibility_changed)
@@ -37,8 +37,10 @@ func recalculate_focus() -> void:
 
 
 func _on_child_tree_changed(_node) -> void:
+	logger.debug("Child tree changed. Rebuilding focus tree.")
 	# Get existing children so we can manage focus
 	if parent.get_child_count() == 0:
+		logger.debug("No children to set focus to; nothing to do.")
 		return
 	
 	# Only update focus if the node is inside the scene tree
@@ -57,9 +59,11 @@ func _on_child_tree_changed(_node) -> void:
 			child.focus_entered.connect(_on_child_focused.bind(child))
 
 	if control_children.size() == 0:
+		logger.debug("No control children. Nothing to do.")
 		return
 
 	if control_children.size() == 1:
+		logger.debug("One control child. Setting all focus neighbors to itself.")
 		# Block leaving the UI element unless B button is pressed.
 		var child := control_children[0]
 		child.focus_next = child.get_path()
@@ -68,6 +72,7 @@ func _on_child_tree_changed(_node) -> void:
 		child.focus_neighbor_top = child.get_path()
 		child.focus_neighbor_left = child.get_path()
 		child.focus_neighbor_right = child.get_path()
+		_on_child_focused(child)
 		return
 
 	if parent is HFlowContainer:
