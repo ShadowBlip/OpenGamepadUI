@@ -31,6 +31,11 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 SYSEXT_ID ?= steamos
 SYSEXT_VERSION_ID ?= 3.4.6
 
+# git version tag
+TAG_COMMIT := $(shell git rev-list --abbrev-commit --tags --max-count=1)
+TAG := $(shell git describe --abbrev=0 --tags ${TAG_COMMIT} 2>/dev/null || true)
+PROJECT_VERSION := $(TAG:v%=%)
+
 # Include any user defined settings
 -include settings.mk
 
@@ -177,8 +182,8 @@ assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
 
 .PHONY: deploy
 deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote device
-	cp dist/opengamepadui.tar.gz $(SSH_MOUNT_PATH)
-	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui.tar.gz
+	cp dist/opengamepadui-v$(PROJECT_VERSION).tar.gz $(SSH_MOUNT_PATH)
+	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui-v$(PROJECT_VERSION).tar.gz
 
 
 .PHONY: deploy-pack
@@ -236,7 +241,7 @@ rootfs: build/opengamepad-ui.x86_64
 
 .PHONY: dist 
 dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck.sig ## Create all redistributable versions of the project
-	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
+	cd dist && sha256sum opengamepadui-v$(PROJECT_VERSION).tar.gz > opengamepadui-v$(PROJECT_VERSION).tar.gz.sha256.txt
 	cd dist && sha256sum update.pck > update.pck.sha256.txt
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
 
@@ -247,8 +252,8 @@ dist/opengamepadui.tar.gz: rootfs
 	@echo "Building redistributable tar.gz archive"
 	mkdir -p dist
 	mv $(ROOTFS) $(CACHE_DIR)/opengamepadui
-	cd $(CACHE_DIR) && tar cvfz opengamepadui.tar.gz opengamepadui
-	mv $(CACHE_DIR)/opengamepadui.tar.gz dist
+	cd $(CACHE_DIR) && tar cvfz opengamepadui-v$(PROJECT_VERSION).tar.gz opengamepadui
+	mv $(CACHE_DIR)/opengamepadui-v$(PROJECT_VERSION).tar.gz dist
 	mv $(CACHE_DIR)/opengamepadui $(ROOTFS)
 
 
@@ -271,8 +276,8 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-ses
 	@echo "Building redistributable systemd extension"
 	mkdir -p dist
 	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
-	cp dist/opengamepadui.tar.gz $(CACHE_DIR)
-	cd $(CACHE_DIR) && tar xvfz opengamepadui.tar.gz opengamepadui/usr
+	cp dist/opengamepadui-v$(PROJECT_VERSION).tar.gz $(CACHE_DIR)
+	cd $(CACHE_DIR) && tar xvfz opengamepadui-v$(PROJECT_VERSION).tar.gz opengamepadui/usr
 	mkdir -p $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d
 	echo ID=$(SYSEXT_ID) > $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
 	echo VERSION_ID=$(SYSEXT_VERSION_ID) >> $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
