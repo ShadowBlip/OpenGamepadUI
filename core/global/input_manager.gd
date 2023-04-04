@@ -130,9 +130,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			continue
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
-		orphaned_gamepads[gamepad.phys] = gamepad
 		# Lock the gamepad mappings so we can alter them.
 		gamepad_mutex.lock()
+		orphaned_gamepads[gamepad.phys] = gamepad
 		managed_gamepads.erase(gamepad.phys_path)
 		gamepad_mutex.unlock()
 
@@ -160,8 +160,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			var gamepad: ManagedGamepad = orphaned_gamepads[input_device.get_phys()]
 			gamepad_mutex.lock()
 			managed_gamepads[path] = gamepad
-			gamepad_mutex.unlock()
 			orphaned_gamepads.erase(input_device.get_phys())
+			gamepad_mutex.unlock()
 			logger.debug("Reconnected gamepad at: " + gamepad.phys_path)
 			continue
 		var gamepad := ManagedGamepad.new()
@@ -179,6 +179,9 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		# handheld gamepad so we can send events to the correct virtual controller.
 		if is_handheld_gamepad:
 			handheld_gamepad.set_gamepad_device(gamepad)
+	if handheld_gamepad and not handheld_gamepad.is_open():
+		if handheld_gamepad.open() != OK:
+			logger.error("Unable to open handheld keyboard device.")
 	logger.debug("Finished configuring detected controllers")
 
 
