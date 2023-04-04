@@ -49,7 +49,8 @@ func _apply_update_packs() -> void:
 	# Load the update pack
 	if ProjectSettings.load_resource_pack(update_pack_file):
 		logger.info("Update pack loaded successfully")
-		var version := load("res://core/global/version.tres") as Version
+		var version := ResourceLoader.load("res://core/global/version.tres", "", ResourceLoader.CACHE_MODE_IGNORE) as Version
+		version.take_over_path("res://core/global/version.tres")
 		print("OpenGamepadUI Update Pack v", version.core)
 	else:
 		logger.warn("Failed to load update pack")
