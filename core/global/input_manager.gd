@@ -131,8 +131,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		# Lock the gamepad mappings so we can alter them.
-		gamepad_mutex.lock()
 		orphaned_gamepads[gamepad.phys] = gamepad
+		gamepad_mutex.lock()
 		managed_gamepads.erase(gamepad.phys_path)
 		gamepad_mutex.unlock()
 
@@ -160,8 +160,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			var gamepad: ManagedGamepad = orphaned_gamepads[input_device.get_phys()]
 			gamepad_mutex.lock()
 			managed_gamepads[path] = gamepad
-			orphaned_gamepads.erase(input_device.get_phys())
 			gamepad_mutex.unlock()
+			orphaned_gamepads.erase(input_device.get_phys())
 			logger.debug("Reconnected gamepad at: " + gamepad.phys_path)
 			continue
 		var gamepad := ManagedGamepad.new()
@@ -170,8 +170,8 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 			continue
 		gamepad.xwayland = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 		gamepad_mutex.lock()
-		managed_gamepads[path] = gamepad
 		virtual_gamepads.append(gamepad.virt_path)
+		managed_gamepads[path] = gamepad
 		gamepad_mutex.unlock()
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
@@ -179,6 +179,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		# handheld gamepad so we can send events to the correct virtual controller.
 		if is_handheld_gamepad:
 			handheld_gamepad.set_gamepad_device(gamepad)
+	# If we're using a handheld, open the device.
 	if handheld_gamepad and not handheld_gamepad.is_open():
 		if handheld_gamepad.open() != OK:
 			logger.error("Unable to open handheld keyboard device.")
