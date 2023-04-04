@@ -43,8 +43,8 @@ func _add_session_switcher(root: Window) -> void:
 	switch_to_steam.pressed.connect(_switch_session.bind("gamepadui"))
 	
 	var switch_to_steam_qam := button_scene.instantiate() as Button
-	switch_to_steam.text = "Switch to Steam with QAM"
-	switch_to_steam.pressed.connect(_switch_session.bind("gamepadui-with-qam"))
+	switch_to_steam_qam.text = "Switch to Steam with QAM"
+	switch_to_steam_qam.pressed.connect(_switch_session.bind("gamepadui-with-qam"))
 	
 	var switch_to_desktop := button_scene.instantiate() as Button
 	switch_to_desktop.text = "Switch to Desktop"
