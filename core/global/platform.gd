@@ -194,7 +194,7 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.ABERNIC_GEN1
 	if product_name == "AOKZOE A1 AR07" and vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE A1 platform")
-		return PLATFORM.ONEXPLAYER_GEN2
+		return PLATFORM.AOKZOE_GEN1
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO 2 platform")
 		return PLATFORM.AYANEO_GEN4

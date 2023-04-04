@@ -287,6 +287,7 @@ func open() -> int:
 		logger.error("Unable to open event device: " + kb_event_path +". Handheld Gamepad not configured.")
 		kb_device = null
 		return result
+	logger.debug("Successfully opened " + kb_device.get_name() + " at " + kb_event_path)
 	# Grab exclusive access over the physical device
 	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
 		result = kb_device.grab(true)
@@ -294,7 +295,6 @@ func open() -> int:
 			logger.error("Unable to grab " + kb_device.get_name())
 			return result
 		logger.debug("Grabbed " + kb_device.get_name())
-	logger.debug("Successfully opened " + kb_device.get_name() + " at " + kb_event_path)
 	return result
 
 
@@ -323,13 +323,10 @@ func set_kb_event_path(path: String) -> void:
 
 ## Sets the associated ManagedGamepad so it can recieve virtual device events
 ## that are mapped via the mapped_events Array.
-func set_gamepad_device(gamepad: ManagedGamepad) -> bool:
+func set_gamepad_device(gamepad: ManagedGamepad) -> void:
 	gamepad_device = gamepad
-	if open() != OK:
-		logger.warn("Unable to configure handheld gamepad device")
-		return false
 	logger.info("Configured handeheld gamepad device")
-	return true
+	return
 
 
 ## Custom sort method that returns true if the first InputDeviceEvent  is less 
@@ -340,3 +337,9 @@ func _sort_events(event1: InputDeviceEvent, event2: InputDeviceEvent) -> bool:
 	if event1.get_code() != event2.get_code():
 		return event1.get_code() < event2.get_code()
 	return event1.get_value() < event2.get_value()
+
+## Returns if the kb device is open or not.
+func is_open() -> bool:
+	if not kb_device:
+		return false
+	return kb_device.is_open()
