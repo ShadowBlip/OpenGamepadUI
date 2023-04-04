@@ -164,6 +164,13 @@ func needs_window_id() -> bool:
 	if not window_id in focusable_windows:
 		logger.debug(str(window_id) + " is not in the list of focusable windows")
 		return true
+	
+	# Check if the current window ID exists in the list of open windows
+	var root_window := Gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
+	var all_windows := Gamescope.get_all_windows(root_window, Gamescope.XWAYLAND.GAME)
+	if not window_id in all_windows:
+		logger.debug(str(window_id) + " is not in the list of all windows")
+		return true
 
 	# Track that a window has been successfully detected at least once.
 	if not created_window:
