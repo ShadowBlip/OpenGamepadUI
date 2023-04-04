@@ -1,7 +1,9 @@
 extends PlatformProvider
 class_name PlatformChimeraOS
 
-const DESKTOP_FILE_PATH := "/home/gamer/Desktop/return-opengamepadui.desktop"
+var HOME := OS.get_environment("HOME")
+var DESKTOP_PATH := "/".join(["/home", HOME, "Desktop"])
+var DESKTOP_FILE_PATH := "/".join([DESKTOP_PATH, "return-opengamepadui.desktop"])
 const DESKTOP_FILE := "#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
@@ -72,6 +74,8 @@ func _has_session_switcher() -> bool:
 func _ensure_desktop_file() -> void:
 	if FileAccess.file_exists(DESKTOP_FILE_PATH):
 		return
+	if not DirAccess.dir_exists_absolute(DESKTOP_PATH):
+		DirAccess.make_dir_recursive_absolute(DESKTOP_PATH)
 	var desktop_file := FileAccess.open(DESKTOP_FILE_PATH, FileAccess.WRITE)
 	desktop_file.store_string(DESKTOP_FILE)
 	desktop_file.close()
