@@ -3,6 +3,7 @@ extends VBoxContainer
 const Platform := preload("res://core/global/platform.tres")
 const powertools_path : String = "/usr/share/opengamepadui/scripts/powertools"
 
+var command_timer: Timer
 var core_count := 0
 var cpu: Platform.CPUInfo
 var gpu: Platform.GPUInfo
@@ -20,7 +21,6 @@ var shared_thread: SharedThread
 
 var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
-var command_timer: Timer
 
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
@@ -98,7 +98,7 @@ func _setup_callback_exec(command: String, args: Array) -> void:
 	command_timer.start(.5)
 
 
-# Overrides or sets the command_timer.timeout signal connection function and 
+# Overrides or sets the command_timer.timeout signal connection function and
 # (re)starts the timer.
 func _setup_callback_func(callable: Callable) -> void:
 	logger.debug("Setting callback func")

@@ -22,7 +22,7 @@ script = ExtResource("1_8v1ke")
 
 [node name="CPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
-text = "CPU Settings:"
+text = "CPU Settings"
 
 [node name="CPUBoostButton" parent="." instance=ExtResource("2_nb5h3")]
 visible = false
@@ -66,7 +66,7 @@ min_value = 1.0
 
 [node name="GPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2
-text = "GPU Settings:"
+text = "GPU Settings"
 
 [node name="TDPSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
