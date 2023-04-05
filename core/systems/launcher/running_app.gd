@@ -38,6 +38,8 @@ var app_id: int:
 var created_window := false
 ## The number of windows that have been disovered from this app
 var num_created_windows := 0
+## Number of times this app has failed its "is_running" check
+var not_running_count := 0
 var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
 
 
@@ -91,6 +93,7 @@ func is_running() -> bool:
 		logger.debug("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
 		return true
 
+	not_running_count += 1
 	return false
 
 
@@ -106,9 +109,17 @@ func get_child_pids() -> PackedInt32Array:
 	pids.append_array(pids)
 
 	# Get all PIDs that share the running app's process ID group
-	var gamescope_pid := Reaper.get_parent_pid(OS.get_process_id())
-	var pids_in_group := Reaper.get_children_with_pgid(gamescope_pid, pid)
-	
+	var pids_in_group := []
+	for proc in DirAccess.get_directories_at("/proc"):
+		if not (proc as String).is_valid_int():
+			continue
+		var process_id := proc.to_int()
+		if process_id in pids_in_group or process_id in pids:
+			continue
+		var pgid := Reaper.get_pid_group(process_id)
+		if pgid == pid:
+			pids_in_group.append(process_id)
+
 	# Get all the children of THOSE pids as well
 	for process_id in pids_in_group:
 		var subchildren := Reaper.pstree(process_id)
@@ -120,7 +131,7 @@ func get_child_pids() -> PackedInt32Array:
 			pids.append(subpid)
 
 	# Recursively return all child PIDs of the process
-	return Reaper.pstree(pid)
+	return pids
 
 
 ## Return true if the currently running app is focused

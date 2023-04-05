@@ -333,7 +333,7 @@ func _check_running():
 				logger.debug("Running app is a Steam game and has no valid window ID, but has been detected " + str(app.num_created_windows) + " times.")
 				var steam_pid := app.find_steam()
 				if steam_pid > 0:
-					logger.debug("Trying to stop steam with pid: " + str(steam_pid))
+					logger.info("Trying to stop steam with pid: " + str(steam_pid))
 					OS.execute("kill", ["-15", str(steam_pid)])
 		
 		# If our app is still running, great!
@@ -341,7 +341,8 @@ func _check_running():
 			continue
 		
 		# If it's not running, make sure we remove it from our list
-		to_remove.push_back(app)
+		if app.not_running_count > 3:
+			to_remove.push_back(app)
 		
 	# Remove any non-running apps
 	for app in to_remove:
