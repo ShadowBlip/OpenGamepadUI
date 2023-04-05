@@ -162,16 +162,6 @@ state = ExtResource("8_ktmf6")
 
 [node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/NotificationsMenu/VisibilityManager" instance=ExtResource("8_c20ym")]
 
-[node name="PowerToolsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("9_aug1r")]
-visible = false
-layout_mode = 2
-
-[node name="VisibilityManager" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu" instance=ExtResource("4_klkp7")]
-state_machine = ExtResource("7_6iqch")
-state = ExtResource("10_4ijxt")
-
-[node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu/VisibilityManager" instance=ExtResource("8_c20ym")]
-
 [node name="QuickSettingsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("7_ilsni")]
 visible = false
 layout_mode = 2
@@ -191,6 +181,16 @@ state_machine = ExtResource("7_6iqch")
 state = ExtResource("10_ft1gj")
 
 [node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PerformanceMenu/VisibilityManager" instance=ExtResource("8_c20ym")]
+
+[node name="PowerToolsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("9_aug1r")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu" instance=ExtResource("4_klkp7")]
+state_machine = ExtResource("7_6iqch")
+state = ExtResource("10_4ijxt")
+
+[node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu/VisibilityManager" instance=ExtResource("8_c20ym")]
 
 [node name="HelpMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("17_nk7fc")]
 visible = false
