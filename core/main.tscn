@@ -137,9 +137,6 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
-[node name="VolumeIndicator" parent="UIContainer" instance=ExtResource("18_v6bwg")]
-layout_mode = 2
-
 [node name="ContextBar" parent="UIContainer" instance=ExtResource("17_7qf7f")]
 layout_mode = 2
 
@@ -180,6 +177,9 @@ visible = false
 layout_mode = 1
 
 [node name="Toast" parent="." instance=ExtResource("19_ruxfl")]
+layout_mode = 1
+
+[node name="VolumeIndicator" parent="." instance=ExtResource("18_v6bwg")]
 layout_mode = 1
 
 [node name="OnScreenKeyboard" parent="." instance=ExtResource("20_vy825")]
