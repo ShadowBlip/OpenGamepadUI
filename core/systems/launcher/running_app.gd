@@ -36,6 +36,8 @@ var app_id: int:
 		app_id_changed.emit()
 ## Whether or not the running app has created at least one valid window
 var created_window := false
+## The number of windows that have been disovered from this app
+var num_created_windows := 0
 var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
 
 
@@ -175,6 +177,7 @@ func needs_window_id() -> bool:
 	# Track that a window has been successfully detected at least once.
 	if not created_window:
 		created_window = true
+	num_created_windows += 1
 		
 	return false
 

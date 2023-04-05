@@ -49,7 +49,6 @@ var _pid_to_windows := {}
 var _running: Array[RunningApp] = []
 var _apps_by_pid: Dictionary = {}
 var _apps_by_name: Dictionary = {}
-var _all_apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
@@ -139,9 +138,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	logger.info("Launched with PID: {0}".format([pid]))
 
 	# Create a running app instance
-	if not app.name in _all_apps_by_name:
-		_all_apps_by_name[app.name] = RunningApp.new(app, pid, display)
-	var running_app := _all_apps_by_name[app.name] as RunningApp
+	var running_app := RunningApp.new(app, pid, display)
 	running_app.launch_item = app
 	running_app.pid = pid
 	running_app.display = display
@@ -332,7 +329,8 @@ func _check_running():
 			
 			# If this was launched by Steam, try and detect if the game closed 
 			# so we can kill Steam graefully
-			if app.is_steam_app() and app.created_window:
+			if app.is_steam_app() and app.num_created_windows > 0:
+				logger.debug("Running app is a Steam game and has no valid window ID, but has been detected " + str(app.num_created_windows) + " times.")
 				var steam_pid := app.find_steam()
 				if steam_pid > 0:
 					logger.debug("Trying to stop steam with pid: " + str(steam_pid))
