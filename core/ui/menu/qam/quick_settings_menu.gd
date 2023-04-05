@@ -6,7 +6,6 @@ var DisplayManager := preload("res://core/global/display_manager.tres") as Displ
 
 var backlights := DisplayManager.get_backlight_paths()
 var command_timer: Timer
-var shared_thread: SharedThread
 
 var logger := Log.get_logger("QuickSettings", Log.LEVEL.INFO)
 
@@ -17,8 +16,6 @@ var logger := Log.get_logger("QuickSettings", Log.LEVEL.INFO)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	shared_thread = SharedThread.new()
-	shared_thread.start()
 	command_timer = Timer.new()
 	command_timer.set_autostart(false)
 	command_timer.set_one_shot(true)
