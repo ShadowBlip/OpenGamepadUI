@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=34 format=3 uid="uid://clyydkcfnu4ea"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=33 format=3 uid="uid://clyydkcfnu4ea"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_7uypd"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_rw2tc"]
@@ -57,7 +57,7 @@ script = ExtResource("1_7uypd")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_vc761"), SubResource("InputDeviceEvent_ao1il")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_x5vvi")])
 ogui_event = ""
-on_release = true
+on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_cog26"]
 type = 1
@@ -84,7 +84,7 @@ script = ExtResource("1_7uypd")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_cog26"), SubResource("InputDeviceEvent_72vfc")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_8ssot"), SubResource("InputDeviceEvent_badu2")])
 ogui_event = ""
-on_release = true
+on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6254a"]
 type = 1
@@ -96,16 +96,11 @@ type = 1
 code = 125
 value = 1
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_h4xcf"]
-type = 1
-code = 1
-value = 1
-
 [sub_resource type="Resource" id="Resource_g2coo"]
 script = ExtResource("1_7uypd")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6254a"), SubResource("InputDeviceEvent_4xywv")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_h4xcf")])
-ogui_event = ""
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_osk"
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5ctcb"]
@@ -138,7 +133,7 @@ script = ExtResource("1_7uypd")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5ctcb"), SubResource("InputDeviceEvent_1rgfv"), SubResource("InputDeviceEvent_lsc4n")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_m23md"), SubResource("InputDeviceEvent_p6uib")])
 ogui_event = "ogui_qam"
-on_release = true
+on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_v7xis"]
 type = 1
@@ -170,7 +165,7 @@ script = ExtResource("1_7uypd")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_v7xis"), SubResource("InputDeviceEvent_w5r5v"), SubResource("InputDeviceEvent_s0r7f")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_y4ef7"), SubResource("InputDeviceEvent_2h1td")])
 ogui_event = ""
-on_release = true
+on_release = false
 
 [resource]
 script = ExtResource("2_rw2tc")

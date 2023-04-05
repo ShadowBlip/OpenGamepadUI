@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=33 format=3 uid="uid://bplwnpgr1jxs3"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=32 format=3 uid="uid://bplwnpgr1jxs3"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_xnmxl"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_2nxm6"]
@@ -91,16 +91,11 @@ type = 1
 code = 125
 value = 1
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_h4xcf"]
-type = 1
-code = 1
-value = 1
-
 [sub_resource type="Resource" id="Resource_g2coo"]
 script = ExtResource("1_xnmxl")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6254a"), SubResource("InputDeviceEvent_4xywv")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_h4xcf")])
-ogui_event = ""
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_osk"
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5ctcb"]
