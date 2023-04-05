@@ -29,7 +29,7 @@ script = ExtResource("1_7rewb")
 model_name = "Intel(R) Core(TM) m3-8100Y CPU @ 1.10GHz"
 min_tdp = 3.0
 max_tdp = 8.0
-max_boost = 0.0
+max_boost = 2.0
 
 [resource]
 script = ExtResource("2_k20lo")
