@@ -50,9 +50,16 @@ func supports_audio() -> bool:
 ##     AudioManager.set_volume(-0.06, AudioManager.TYPE.RELATIVE) # Decrease volume by 6%
 ##     [/codeblock]
 func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
+	var is_negative := false
+	if value < 0:
+		is_negative = true
+		value = abs(value)
+		
 	# Clamp the value to min and max values
 	value = minf(volume_limit.to_float(), value)
 	value = maxf(0, value)
+	if is_negative:
+		value *= -1
 	
 	# Set the volume immediately and async control the system volume
 	var last_volume := current_volume

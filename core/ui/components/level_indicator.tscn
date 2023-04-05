@@ -19,6 +19,7 @@ anchor_bottom = 1.0
 offset_top = -22.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_type_variation = &"RoundedPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
 layout_mode = 2

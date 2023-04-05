@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://bko0q7gp1hwjp"]
+[gd_resource type="Theme" load_steps=11 format=3 uid="uid://bko0q7gp1hwjp"]
 
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="1_vsinb"]
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_vv7ku"]
@@ -18,6 +18,15 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knf7f"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 4
+shadow_offset = Vector2(1, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6cqu4"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -52,6 +61,7 @@ LightPanel/styles/panel = SubResource("StyleBoxFlat_4rycl")
 Panel/styles/panel = ExtResource("1_vsinb")
 PanelContainer/styles/panel = ExtResource("1_vsinb")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
+RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
 Slider/colors/color = Color(0.741176, 0.576471, 0.976471, 1)
 Status/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
 Status/colors/gray = Color(0.384314, 0.447059, 0.643137, 1)
