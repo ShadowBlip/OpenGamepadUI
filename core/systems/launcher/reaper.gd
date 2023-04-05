@@ -112,7 +112,7 @@ static func pstree(pid: int) -> Array:
 	# Loop through each task for the pid and get its children
 	var tasks: DirAccess = DirAccess.open(task_path)
 	if not tasks:
-		logger.error("Unable to open proc directory")
+		logger.debug("Unable to open proc directory: " + task_path)
 		return []
 	tasks.list_dir_begin()
 	var task: String = tasks.get_next()
@@ -121,7 +121,7 @@ static func pstree(pid: int) -> Array:
 		var children_path: String = "/".join([task_path, task, "children"])
 		var children: FileAccess = FileAccess.open(children_path, FileAccess.READ)
 		if not children:
-			logger.error("Unable to open children: " + children_path)
+			logger.debug("Unable to open children: " + children_path)
 			task = tasks.get_next()
 			continue
 		
