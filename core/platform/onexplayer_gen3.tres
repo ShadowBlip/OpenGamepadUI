@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlatformOneXPlayerGen3" load_steps=2 format=3 uid="uid://btihsq01c4udc"]
+
+[ext_resource type="Script" path="res://core/platform/onexplayer_gen3.gd" id="1_a6mxd"]
+
+[resource]
+script = ExtResource("1_a6mxd")
+name = ""
