@@ -18,8 +18,9 @@ enum PLATFORM {
 	GPD_GEN1, ## Win3
 	GPD_GEN2, ## WinMax2
 	GPD_GEN3, ## Win4
-	ONEXPLAYER_GEN1,  ## Includes most OXP and AOKZOE devices
-	ONEXPLAYER_GEN2,  ## GUNDAM edition.
+	ONEXPLAYER_GEN1,  ## Intel OXP Devices
+	ONEXPLAYER_GEN2,  ## AMD OXP Devices 5800U and older.
+	ONEXPLAYER_GEN3,  ## AMD OXP Mini Pro 6800U.
 	STEAMDECK,
 	
 	# OS Platforms
@@ -104,6 +105,8 @@ func _init() -> void:
 		platform = load("res://core/platform/onexplayer_gen1.tres")
 	if PLATFORM.ONEXPLAYER_GEN2 in flags:
 		platform = load("res://core/platform/onexplayer_gen2.tres")
+	if PLATFORM.ONEXPLAYER_GEN3 in flags:
+		platform = load("res://core/platform/onexplayer_gen3.tres")
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/steamdeck.tres")
 	
@@ -219,15 +222,18 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("G1619-04") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen1 platform")
 		return PLATFORM.GPD_GEN3
-	elif product_name == "ONE XPLAYER" and vendor_name == ("ONE-NETBOOK TECHNOLOGY CO., LTD."):
-		logger.debug("Detected OneXPlayer Intel platform")
-		return PLATFORM.ONEXPLAYER_GEN1
-	elif product_name == "ONE XPLAYER" and vendor_name == ("ONE-NETBOOK"):
-		logger.debug("Detected OneXPlayer AMD platform")
-		return PLATFORM.ONEXPLAYER_GEN2
-	elif product_name.contains("ONEXPLAYER") and vendor_name == ("ONE-NETBOOK"):
-		logger.debug("Detected OneXPlayer AMD platform")
-		return PLATFORM.ONEXPLAYER_GEN2
+	elif product_name in ["ONE XPLAYER", "ONEXPLAYER"] and vendor_name.contains("ONE-NETBOOK"):
+		match cpu.vendor:
+			"GenuineIntel":
+				logger.debug("Detected OneXPlayer Gen 1 platform")
+				return PLATFORM.ONEXPLAYER_GEN1
+			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
+				if cpu.model == "AMD Ryzen 7 6800U with Radeon Graphics":
+					logger.debug("Detected OneXPlayer Gen 3 platform")
+					return PLATFORM.ONEXPLAYER_GEN3
+				else:
+					logger.debug("Detected OneXPlayer Gen 2 platform")
+					return PLATFORM.ONEXPLAYER_GEN2
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
 		return PLATFORM.STEAMDECK
