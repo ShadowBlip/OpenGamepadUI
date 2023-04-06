@@ -231,9 +231,8 @@ func _read_dmi() -> PLATFORM:
 				if cpu.model == "AMD Ryzen 7 6800U with Radeon Graphics":
 					logger.debug("Detected OneXPlayer Gen 3 platform")
 					return PLATFORM.ONEXPLAYER_GEN3
-				else:
-					logger.debug("Detected OneXPlayer Gen 2 platform")
-					return PLATFORM.ONEXPLAYER_GEN2
+				logger.debug("Detected OneXPlayer Gen 2 platform")
+				return PLATFORM.ONEXPLAYER_GEN2
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
 		return PLATFORM.STEAMDECK
