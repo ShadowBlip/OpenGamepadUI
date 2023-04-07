@@ -20,6 +20,11 @@ func _init() -> void:
 	logger.info("Watchdog thread started")
 
 
+func _notification(what: int):
+	if what == NOTIFICATION_PREDELETE:
+		stop()
+
+
 ## Add the given shared thread
 func add_thread(thread: SharedThread) -> void:
 	mutex.lock()
