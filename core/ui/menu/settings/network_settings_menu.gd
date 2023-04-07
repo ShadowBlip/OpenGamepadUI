@@ -1,6 +1,6 @@
 extends Control
 
-const system_thread := preload("res://core/systems/threading/system_thread.tres")
+const thread := preload("res://core/systems/threading/thread_pool.tres")
 const bar_0 := preload("res://assets/ui/icons/wifi-none.svg")
 const bar_1 := preload("res://assets/ui/icons/wifi-low.svg")
 const bar_2 := preload("res://assets/ui/icons/wifi-medium.svg")
@@ -21,7 +21,7 @@ func _ready() -> void:
 		no_net_label.visible = true
 		return
 
-	system_thread.start()
+	thread.start()
 	visibility_changed.connect(_on_visible_changed)
 	refresh_button.pressed.connect(_refresh_networks)
 	wifi_tree.item_activated.connect(_on_wifi_selected)
@@ -51,7 +51,7 @@ func _on_wifi_selected() -> void:
 	var connect_ap := func() -> int:
 		return NetworkManager.connect_access_point(ssid)
 	item.set_text(4, "Connecting")
-	var code := await system_thread.exec(connect_ap) as int
+	var code := await thread.exec(connect_ap) as int
 
 	connecting = false
 	refresh_button.disabled = false
@@ -77,7 +77,7 @@ func _on_wifi_challenge(item: TreeItem, ssid: String) -> void:
 		var connect_ap := func() -> int:
 			return NetworkManager.connect_access_point(ssid, password)
 		item.set_text(4, "Connecting")
-		var code := await system_thread.exec(connect_ap) as int
+		var code := await thread.exec(connect_ap) as int
 
 		connecting = false
 		refresh_button.disabled = false
@@ -100,7 +100,7 @@ func _refresh_networks() -> void:
 	var access_points: Array[NetworkManager.WifiAP]
 	var get_aps := func() -> Array[NetworkManager.WifiAP]:
 		return NetworkManager.get_access_points()
-	access_points = await system_thread.exec(get_aps)
+	access_points = await thread.exec(get_aps)
 
 	# Create an array of BSSIDs from our access points
 	var bssids := []

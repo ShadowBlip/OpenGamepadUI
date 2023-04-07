@@ -19,7 +19,7 @@ enum VOLUME {
 const volume_limit := "2.0"
 
 ## Thread to run audio changes on
-var thread := load("res://core/systems/threading/audio_thread.tres") as SharedThread
+var thread := load("res://core/systems/threading/thread_pool.tres")
 
 ## Current volume
 var current_volume := await _get_current_volume()
