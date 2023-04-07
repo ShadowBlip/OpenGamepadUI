@@ -29,6 +29,11 @@ func _init() -> void:
 	watchdog.add_thread(self)
 
 
+func _notification(what: int):
+	if what == NOTIFICATION_PREDELETE:
+		stop()
+		
+
 ## Starts the thread for the thread group
 func start() -> void:
 	if running:
