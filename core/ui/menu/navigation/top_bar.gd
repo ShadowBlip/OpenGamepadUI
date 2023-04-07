@@ -1,6 +1,6 @@
 extends Control
 
-const system_thread := preload("res://core/systems/threading/system_thread.tres")
+const thread := preload("res://core/systems/threading/thread_pool.tres")
 
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
@@ -22,7 +22,7 @@ var panel_alpha_solid := 255
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	system_thread.start()
+	thread.start()
 
 	# Update the panel alpha during in-game and main menus
 	panel.modulate.a8 = panel_alpha_normal
@@ -74,7 +74,7 @@ func _on_game_menu_exited(to: State) -> void:
 func _on_wifi_update() -> void:
 	var get_ap := func() -> NetworkManager.WifiAP:
 		return NetworkManager.get_current_access_point()
-	var current_ap := await system_thread.exec(get_ap) as NetworkManager.WifiAP
+	var current_ap := await thread.exec(get_ap) as NetworkManager.WifiAP
 	var strength := 0
 	if current_ap:
 		strength = current_ap.strength
@@ -99,7 +99,7 @@ func _on_update_battery_status():
 func _on_update_battery():
 	var get_capacity := func() -> int:
 		return Battery.get_capacity(battery)
-	var current_capacity: int = await system_thread.exec(get_capacity)
+	var current_capacity: int = await thread.exec(get_capacity)
 	battery_capacity = current_capacity
 	battery_label.text = "{0}%".format([current_capacity])
 
