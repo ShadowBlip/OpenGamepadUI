@@ -7,7 +7,7 @@ var command_timer: Timer
 var core_count := 0
 var cpu: Platform.CPUInfo
 var gpu: Platform.GPUInfo
-var shared_thread: SharedThread
+var thread := load("res://core/systems/threading/thread_pool.tres")
 
 @onready var cpu_boost_button := $CPUBoostButton
 @onready var cpu_cores_slider := $CPUCoresSlider
@@ -25,8 +25,7 @@ var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready():
-	shared_thread = SharedThread.new()
-	shared_thread.start()
+	thread.start()
 	command_timer = Timer.new()
 	command_timer.set_autostart(false)
 	command_timer.set_one_shot(true)
@@ -80,7 +79,7 @@ func _async_do_exec(command: String, args: Array)-> Array:
 	logger.debug("Start async_do_exec : " + command)
 	for arg in args:
 		logger.debug(str(arg))
-	return await shared_thread.exec(_do_exec.bind(command, args))
+	return await thread.exec(_do_exec.bind(command, args))
 
 
 # Bindable function to be called when command_timer.timeout signal is emmitted
