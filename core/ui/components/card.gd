@@ -9,8 +9,13 @@ extends Control
 func _ready() -> void:
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
+	texture.mouse_entered.connect(_on_focus)
+	texture.mouse_exited.connect(_on_unfocus)
 	texture.position = Vector2.ZERO
 	animation_player.play("RESET")
+	
+	# Set shader parameters
+	texture.material.set_shader_parameter("corder_radius", 80)
 	
 	var parent := get_parent()
 	if parent and parent is Container:

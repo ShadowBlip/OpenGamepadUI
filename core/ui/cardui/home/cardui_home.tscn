@@ -1,9 +1,38 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=15 format=3 uid="uid://d7lts0p8kgtt"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/home/cardui_home.gd" id="1_w2ler"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_e17i6"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_xxt6k"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="3_14fg7"]
+[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="3_we4gb"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="4_rttsk"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_y72ix"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="5_d60gb"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_is5nc"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_rwgge"]
+[ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="8_tm3rn"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_7jhv6"]
+
+[sub_resource type="Animation" id="Animation_638a6"]
+resource_name = "fade_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer/BannerTexture:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_srvn2"]
+_data = {
+"fade_in": SubResource("Animation_638a6")
+}
 
 [node name="CardUIHome" type="Control"]
 layout_mode = 3
@@ -13,6 +42,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w2ler")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_e17i6")]
+state = ExtResource("3_we4gb")
+visible_during = Array[Resource]([ExtResource("4_y72ix"), ExtResource("5_d60gb"), ExtResource("6_is5nc"), ExtResource("7_rwgge"), ExtResource("8_tm3rn"), ExtResource("9_7jhv6")])
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -27,7 +60,7 @@ theme_override_constants/separation = 0
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
+size_flags_stretch_ratio = 1.1
 texture = ExtResource("2_xxt6k")
 expand_mode = 1
 stretch_mode = 6
@@ -86,10 +119,8 @@ size_flags_horizontal = 2
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="Card7" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
-layout_mode = 2
-size_flags_horizontal = 2
-
-[node name="Card8" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
-layout_mode = 2
-size_flags_horizontal = 2
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_srvn2")
+}
