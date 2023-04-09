@@ -5,32 +5,14 @@ class_name BluetoothManager
 ##
 ## Allows bluetooth management through bluez
 ## Reference: https://wiki.archlinux.org/title/bluetooth#Pairing
+const thread := preload("res://core/systems/threading/thread_pool.tres")
 
 var logger := Log.get_logger("BluetoothManager", Log.LEVEL.DEBUG)
 
-var cmd_queue: Array[String] = []
-var current_cmd := ""
-var current_output: Array[String] = []
 var discovered_devices: Array[BluetoothDevice]
-var proc: InteractiveProcess
-var state: STATE = STATE.READY
-
-enum STATE {
-	READY,
-	PROMPT,
-	EXECUTING,
-}
-
-signal command_finished(cmd: String, output: Array[String])
-signal command_progressed(cmd: String, output: Array[String], finished: bool)
-signal devices_updated(devices: Array[BluetoothDevice])
-signal prompt_available
-
-
-# Main thread signals
-signal client_ready
 var started: bool = false
-var shared_thread: SharedThread
+
+signal devices_updated(devices: Array[BluetoothDevice])
 
 
 ## Bluetooth device
@@ -47,18 +29,11 @@ func start(toggle_on: bool) -> bool:
 		logger.warn("BluetoothManager.start() called when it was already started.")
 		return started
 	logger.info("Starting BluetoothManager")
-	shared_thread = SharedThread.new()
-	shared_thread.name = "BluetoothManager"
-	shared_thread.add_process(_thread_process)
-	shared_thread.start()
+	thread.start()
 	_set_agent("on")
-	proc = InteractiveProcess.new("bluetoothctl")
-	if proc.start() != OK:
-		logger.error("Unable to spawn bluethoothctl")
-		return started
 	get_devices("Paired")
 	get_devices("Connected")
-#	scan_devices("on")
+	scan_devices("on")
 	started = true
 	return started
 
@@ -84,16 +59,24 @@ func get_devices(source: String) -> void:
 	var output:=  _do_bluetoothctl_cmd(["devices", source])
 	var exit_code: int = output[1]
 	if exit_code != 0:
-		logger.error("Failed to get devices with status: " + source)
+		logger.error("Failed to get " + source + " devices. Error code:  " + str(exit_code))
 		return 
 	var devices: Array[BluetoothDevice] = []
 	var device_list:= _get_devices_from_output(output[0])
 	if device_list.size() == 0:
-		logger.debug("No devices available that are " + source)
+		logger.info("Found nothing in a search of " + source + " devices.")
 		return
+	logger.info("Found " + source + " Devices: " + str(device_list))
 	for found_device in device_list:
 		_update_device(found_device, source)
 	devices_updated.emit(discovered_devices)
+
+
+## Starts or stops scan of bluetooth devices
+func scan_devices(status: String) -> void:
+	logger.debug("Start Scan Devices")
+	var scan_results: Array = await thread.exec(_do_async_cmd.bind(["scan", status], "15"))
+	logger.debug("Got scan results: " + str(scan_results))
 
 
 func _update_device(listed_device: Array, source: String) -> void:
@@ -135,14 +118,14 @@ func _get_device_index(listed_device: Array) -> int:
 func _get_devices_from_output(raw_output: Array) -> Array:
 	var devices:= []
 	if raw_output.size() == 0:
-		logger.debug("No devices")
+#		logger.debug("No devices")
 		return devices
-	logger.debug(str(raw_output))
+#	logger.debug(str(raw_output))
 	for new_device in raw_output:
 		var clean_device: String = new_device.strip_edges()
-		logger.debug("Clean Device: " +clean_device)
+#		logger.debug("Clean Device: " +clean_device)
 		var split_device:= clean_device.split(" ")
-		logger.debug("Split Device: " +str(split_device))
+#		logger.debug("Split Device: " +str(split_device))
 		var device:= []
 		if split_device[0].contains("Device"):
 			device.append(split_device[1])
@@ -150,7 +133,7 @@ func _get_devices_from_output(raw_output: Array) -> Array:
 			split_device.remove_at(0)
 			device.append(" ".join(split_device))
 			devices.append(device)
-	logger.debug("Found devices: " + str(devices))
+#	logger.debug("Found devices: " + str(devices))
 	return devices
 
 
@@ -170,109 +153,12 @@ func _do_bluetoothctl_cmd(args: PackedStringArray, timeout: String = "0")-> Arra
 	cmd_args.append_array(args)
 	var output = []
 	var exit_code := OS.execute(command, cmd_args, output)
-	logger.debug("Command: " + command + " ".join(cmd_args))
-	logger.debug("Output: " + str(output))
-	logger.debug("Exit code: " +str(exit_code))
+#	logger.debug("Command: " + command + " ".join(cmd_args))
+#	logger.debug("Output: " + str(output))
+#	logger.debug("Exit code: " +str(exit_code))
 	return [output, exit_code]
 
-## Starts or stops scan of bluetooth devices
-func scan_devices(status: String) -> void:
-	_run_bluetoothctl_int(status)
-	return
 
-
-# Run bluetoothctl with the given arguments and an interactive shell.
-func _run_bluetoothctl_int(status: String) -> void:
-	_queue_cmd("bluetoothctl --agent=NoInputNoOutput")
-	var cmd := "bluetoothctl scan " + status
-	_queue_cmd(cmd)
-	var on_progress := func(output: Array):
-		logger.debug("on progress")
-		for line in output:
-			# Send the user's password if prompted
-			if line.contains("Agent registered"):
-				logger.debug("Agent registered!")
-			if line.contains("[NEW]"):
-				logger.debug("New device! " + line)
-				continue
-			if line.contains("[CHG]"):
-				logger.debug("Change to device! " + line)
-				continue
-			if line.contains("[DEL]"):
-				logger.debug("Device not present! " + line)
-				continue
-
-	# Pass the callback which will watch our command output
-	await _follow_command(cmd, on_progress)
-
-
-# Waits for the given command to produce some output and executes the given 
-# callback with the output.
-func _follow_command(cmd: String, callback: Callable) -> void:
-	# Signal output: [cmd, output, finished]
-	logger.debug("Start follow_command: " + cmd)
-	var out: Array = [""]
-	var finished = false
-	while not finished:
-		while out[0] != cmd:
-			out = await command_progressed 
-		var output := out[1] as Array
-		finished = out[2]
-		callback.call(output)
-		# Clear the inner loop condition to fetch progress again
-		out[0] = ""
-	logger.debug("End follow_command: " + cmd)
-
-
-func _queue_cmd(cmd: String) -> void:
-	logger.debug("Queued command: " + cmd)
-	cmd_queue.push_back(cmd)
-
-
-func _thread_process(_delta: float) -> void:
-	if not proc:
-		return
-
-	# Process our command queue
-	_process_command_queue()
-
-	# Read the output from the process
-	var output := proc.read()
-
-	# Return if there is no output from the process
-	if output == "":
-		return
-	logger.debug("Start Process Thread. State: " + str(state))
-	# Split the output into lines
-	var lines := output.split("\n")
-	current_output.append_array(lines)
-
-	# Print the output of steamcmd, except during login for security reasons
-	var out:= lines.duplicate()
-	for line in lines:
-		logger.debug("Thread Process out: " + line)
-		
-	command_finished.emit(current_cmd, out)
-	current_cmd = ""
-	current_output.clear()
-	command_progressed.emit(current_cmd, out, true)
-	logger.debug("End Process Thread. State: " + str(state))
-
-
-# Processes commands in the queue source popping the first item in the queue and 
-# setting our state to EXECUTING.
-func _process_command_queue() -> void:
-	if state != STATE.PROMPT or cmd_queue.size() == 0:
-		return
-	var cmd := cmd_queue.pop_front() as String
-	state = STATE.EXECUTING
-	current_cmd = cmd
-	current_output.clear()
-	proc.send(cmd)
-
-
-func _exit_tree() -> void:
-	if not proc:
-		return
-	proc.send("quit\n")
-	proc.stop()
+func _do_async_cmd(args: PackedStringArray, timeout: String = "0")-> Array:
+	_set_agent("on")
+	return _do_bluetoothctl_cmd(args, timeout)
