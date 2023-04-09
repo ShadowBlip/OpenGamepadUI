@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/ui/cardui/home/cardui_home.gd" id="1_w2ler"]
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_xxt6k"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="3_14fg7"]
+[ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="4_rttsk"]
+
+[node name="CardUIHome" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w2ler")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="BannerTexture" type="TextureRect" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
+texture = ExtResource("2_xxt6k")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.9
+theme = ExtResource("3_14fg7")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+clip_contents = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 0
+
+[node name="CardContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="Spacer" type="Control" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="Card" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card2" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card3" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card4" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card5" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card6" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card7" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Card8" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
+layout_mode = 2
+size_flags_horizontal = 2
