@@ -1,0 +1,160 @@
+[gd_scene load_steps=16 format=3 uid="uid://cir6gksabfpi4"]
+
+[ext_resource type="Script" path="res://core/ui/cardui/launch/game_launch_menu.gd" id="1_u3ehs"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_oae7b"]
+[ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="3_dp3a3"]
+[ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="3_w7th1"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="4_krc2y"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_le731"]
+[ext_resource type="Texture2D" uid="uid://bec6fhiswf6ve" path="res://assets/ui/icons/gamepad-bold.svg" id="5_ewj68"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tdidy"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_gnrnf"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_qt0bt"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_3e46i"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
+[ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svm8w"]
+bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_offset = Vector2(4, 4)
+
+[node name="GameLaunchMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u3ehs")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_135m3")]
+state = ExtResource("3_w7th1")
+visible_during = Array[Resource]([ExtResource("4_le731"), ExtResource("5_tdidy"), ExtResource("6_gnrnf"), ExtResource("7_qt0bt"), ExtResource("8_3e46i")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("9_hnl5c")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_w7th1")])
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="BannerTexture" type="TextureRect" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_oae7b")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/BannerTexture"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadingAnimation" parent="VBoxContainer/BannerTexture/CenterContainer" instance=ExtResource("3_dp3a3")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="LogoTexture" type="TextureRect" parent="VBoxContainer/PanelContainer/CenterContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("12_01uv6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="PlayMenu" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_svm8w")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/PlayMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/PlayMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="LaunchButton" type="Button" parent="CenterContainer/HBoxContainer/PlayMenu/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 48)
+layout_mode = 2
+text = "PLAY NOW"
+flat = true
+
+[node name="ExtraMenu" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_svm8w")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/ExtraMenu"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="GamepadButton" type="Button" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+icon = ExtResource("5_ewj68")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+icon = ExtResource("4_krc2y")
+flat = true
+icon_alignment = 1
+expand_icon = true

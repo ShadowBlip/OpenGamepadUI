@@ -146,6 +146,8 @@ size_flags_vertical = 3
 focus_mode = 2
 mouse_filter = 1
 script = ExtResource("1_aiin0")
+focus_audio = null
+select_audio = null
 
 [node name="TextureRect" type="TextureRect" parent="."]
 unique_name_in_owner = true
@@ -159,8 +161,8 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -640.0
 offset_top = -400.0
-offset_right = -490.0
-offset_bottom = -175.0
+offset_right = -440.0
+offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_2hlyj")
@@ -191,3 +193,6 @@ unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_4o5xo")
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

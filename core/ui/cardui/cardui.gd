@@ -16,10 +16,10 @@ var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var ui_container := $UIContainer
-#@onready var fade_transition := $%FadeTransitionPlayer
-#@onready var fade_texture := $FadeTexture
-#@onready var boot_video := $%BootVideoPlayer
-#@onready var power_timer := $%PowerTimer
+@onready var boot_video := $%BootVideoPlayer
+@onready var fade_transition := $%FadeTransitionPlayer
+@onready var fade_texture := $%FadeTexture
+@onready var power_timer := $%PowerTimer
 
 
 func _init() -> void:
@@ -49,7 +49,8 @@ func _setup(window_id: int) -> void:
 func _ready() -> void:
 	# Set bg to transparent
 	get_tree().get_root().transparent_bg = true
-	#fade_texture.visible = true
+	fade_texture.visible = true
+	boot_video.finished.connect(_on_boot_video_player_finished)
 	
 	# Load any platform-specific logic
 	Platform.load(get_tree().get_root())
@@ -132,8 +133,8 @@ func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 
 
 func _on_boot_video_player_finished() -> void:
-	#fade_transition.play("fade")
-	#boot_video.visible = false
+	fade_transition.play("fade")
+	boot_video.visible = false
 	pass
 
 
