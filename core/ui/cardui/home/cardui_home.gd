@@ -136,7 +136,7 @@ func _build_card(item: LibraryItem, portrait: bool) -> TextureButton:
 	var on_button_up := func():
 		launcher_state.data = {"item": item}
 		state_machine.push_state(launcher_state)
-	#card.button_up.connect(on_button_up)
+	card.button_up.connect(on_button_up)
 	
 	return card
 

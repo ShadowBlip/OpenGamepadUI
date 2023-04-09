@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://diug36y0he1qx"]
+[gd_scene load_steps=29 format=3 uid="uid://diug36y0he1qx"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/cardui/cardui.gd" id="1_f8851"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://d7lts0p8kgtt" path="res://core/ui/cardui/home/cardui_home.tscn" id="6_12lhu"]
 [ext_resource type="Texture2D" uid="uid://c78ns4176vb5s" path="res://assets/icons/search.svg" id="9_3u4c1"]
 [ext_resource type="PackedScene" uid="uid://bx0fnuxd8mm51" path="res://core/ui/components/search_bar.tscn" id="9_lchag"]
+[ext_resource type="PackedScene" uid="uid://cir6gksabfpi4" path="res://core/ui/cardui/launch/game_launch_menu.tscn" id="9_m34in"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="11_n451f"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="12_qamns"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="13_cmqpa"]
@@ -19,6 +20,8 @@
 [ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="17_0qk16"]
 [ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="17_uyw85"]
 [ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="18_sfaus"]
+[ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
+[ext_resource type="PackedScene" uid="uid://g4o1uuo0hlbv" path="res://core/ui/menu/game/game_loading.tscn" id="22_morxu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
 bg_color = Color(0.266667, 0.278431, 0.352941, 1)
@@ -37,6 +40,47 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 shadow_size = 5
 shadow_offset = Vector2(3, 3)
+
+[sub_resource type="Gradient" id="Gradient_d65wo"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.734982)
+colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_y4ncd"]
+gradient = SubResource("Gradient_d65wo")
+
+[sub_resource type="Animation" id="Animation_vgwwd"]
+resource_name = "fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_06k1n"]
+_data = {
+"fade": SubResource("Animation_vgwwd")
+}
 
 [node name="CardUI" type="Control"]
 layout_mode = 3
@@ -71,6 +115,10 @@ layout_mode = 2
 theme_override_constants/margin_bottom = 35
 
 [node name="CardUIHome" parent="Content/HomeMargin" instance=ExtResource("6_12lhu")]
+layout_mode = 2
+
+[node name="GameLaunchMenu" parent="Content" instance=ExtResource("9_m34in")]
+visible = false
 layout_mode = 2
 
 [node name="TopMargin" type="MarginContainer" parent="Content"]
@@ -126,7 +174,7 @@ theme_override_constants/margin_right = 10
 layout_mode = 2
 
 [node name="NotifyButton" type="Button" parent="Content/TopMargin/HotMenu/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 icon = ExtResource("11_n451f")
 flat = true
@@ -134,7 +182,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="HelpButton" type="Button" parent="Content/TopMargin/HotMenu/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 icon = ExtResource("12_qamns")
 flat = true
@@ -142,7 +190,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="SettingsButton" type="Button" parent="Content/TopMargin/HotMenu/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 icon = ExtResource("13_cmqpa")
 flat = true
@@ -271,3 +319,41 @@ texture = ExtResource("18_sfaus")
 expand_mode = 1
 script = ExtResource("15_snoth")
 path = "ogui_guide_action_qam"
+
+[node name="FadeTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_y4ncd")
+
+[node name="FadeTransitionPlayer" type="AnimationPlayer" parent="FadeTexture"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_06k1n")
+}
+
+[node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
+visible = false
+layout_mode = 1
+
+[node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
+unique_name_in_owner = true
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("21_s3peg")
+autoplay = true
+
+[node name="PowerTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 1.5
+one_shot = true
