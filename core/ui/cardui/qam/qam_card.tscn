@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwqwrfp616h21"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/qam_card.gd" id="1_nu7eg"]
-[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_64vpi"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="3_3krq8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
@@ -35,7 +35,7 @@ theme_override_constants/margin_bottom = 8
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="SectionLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_64vpi")]
+[node name="SectionLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_3ilsd")]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1

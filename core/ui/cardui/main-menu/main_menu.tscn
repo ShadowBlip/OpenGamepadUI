@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dwlifno8asacn"]
+[gd_scene load_steps=22 format=3 uid="uid://dwlifno8asacn"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
@@ -7,7 +7,6 @@
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="3_3xh32"]
 [ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="3_cctrn"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_6xrv5"]
-[ext_resource type="PackedScene" uid="uid://oh82ksgmb5hu" path="res://core/ui/cardui/navigation/running_game_card.tscn" id="4_7lmkh"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_jawel"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_maija"]
 [ext_resource type="Script" path="res://core/ui/components/transition.gd" id="6_r8xs1"]
@@ -179,53 +178,60 @@ follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ButtonContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="FocusManager" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("7_6i3ij")]
+[node name="FocusManager" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("7_6i3ij")]
 current_focus = NodePath("../LibraryButton")
 
-[node name="RunningGameCard" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_7lmkh")]
-layout_mode = 2
-
-[node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_jawel")]
+[node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "LIBRARY"
 
-[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/LibraryButton" instance=ExtResource("6_ris1l")]
+[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/LibraryButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
 state = ExtResource("8_iv515")
 action = 2
 on_signal = "button_up"
 
-[node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_jawel")]
+[node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
 layout_mode = 2
 text = "STORE"
 
-[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/StoreButton" instance=ExtResource("6_ris1l")]
+[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/StoreButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
 state = ExtResource("9_2jho2")
 action = 2
 on_signal = "button_up"
 
-[node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_jawel")]
+[node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
 layout_mode = 2
 text = "SETTINGS"
 
-[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/SettingsButton" instance=ExtResource("6_ris1l")]
+[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/SettingsButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
 state = ExtResource("10_irj46")
 action = 2
 on_signal = "button_up"
 
-[node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("4_jawel")]
+[node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
 layout_mode = 2
 text = "POWER"
 
-[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/PowerButton" instance=ExtResource("6_ris1l")]
+[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/PowerButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
 state = ExtResource("11_e52bm")
 on_signal = "button_up"
