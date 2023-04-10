@@ -109,6 +109,8 @@ func _grab_focus() -> void:
 
 # Called when a poster is focused
 func _on_card_focused(item: LibraryItem) -> void:
+	if state_machine.current_state() != home_state:
+		return
 	player.stop()
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)

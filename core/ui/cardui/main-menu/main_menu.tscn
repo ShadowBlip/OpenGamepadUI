@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dwlifno8asacn"]
+[gd_scene load_steps=23 format=3 uid="uid://dwlifno8asacn"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_jmie1"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="3_3xh32"]
 [ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="3_cctrn"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_6xrv5"]
 [ext_resource type="PackedScene" uid="uid://oh82ksgmb5hu" path="res://core/ui/cardui/navigation/running_game_card.tscn" id="4_7lmkh"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_jawel"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_maija"]
@@ -30,7 +31,7 @@ length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -42,7 +43,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("..:visible")
+tracks/1/path = NodePath(".:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -58,7 +59,7 @@ length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("..:position")
+tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -70,7 +71,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("..:visible")
+tracks/1/path = NodePath(".:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -98,6 +99,9 @@ script = ExtResource("1_3looj")
 script = ExtResource("2_256ue")
 state = ExtResource("3_3xh32")
 
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_6xrv5")]
+root_node = NodePath("../..")
+
 [node name="BackInputHandler" parent="." instance=ExtResource("2_jmie1")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_3xh32"), ExtResource("4_maija")])
 
@@ -115,6 +119,7 @@ script = ExtResource("2_256ue")
 state = ExtResource("3_3xh32")
 
 [node name="Transition" type="AnimationPlayer" parent="PanelContainer/VisibilityManager"]
+root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_pu4v7")
 }

@@ -22,6 +22,7 @@ var logger := Log.get_logger("GameLaunchMenu")
 @onready var logo: TextureRect = $%LogoTexture
 @onready var launch_button: Button = $%LaunchButton
 @onready var loading: Control = $%LoadingAnimation
+@onready var player := $%AnimationPlayer
 #@onready var progress_bar: ProgressBar = $%ProgressBar
 
 
@@ -33,6 +34,9 @@ func _ready() -> void:
 
 
 func _on_state_entered(_from: State) -> void:
+	# Fade in the banner texture
+	player.play("fade_in")
+	
 	# Focus the first entry on state change
 	launch_button.grab_focus.call_deferred()
 
