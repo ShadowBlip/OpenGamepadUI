@@ -20,7 +20,8 @@ var threads: Array[Thread] = []
 var semaphore := Semaphore.new()
 var mutex := Mutex.new()
 var queue: Array[Task] = []
-var logger := Log.get_logger("ThreadPool", Log.LEVEL.DEBUG)
+
+var logger := Log.get_logger("ThreadPool", Log.LEVEL.INFO)
 
 
 ## A queued task to run in the thread pool
@@ -64,6 +65,7 @@ func is_running() -> bool:
 	mutex.lock()
 	var run := running
 	mutex.unlock()
+	logger.debug("Thread Pool running: " + str(run))
 	return run
 
 
@@ -72,6 +74,7 @@ func is_running() -> bool:
 ## this method if your method returns something. 
 ## E.g. [code]var result = await thread_pool.exec(myfund.bind("myarg"))[/code]
 func exec(method: Callable) -> Variant:
+	logger.debug("Starting exec on " + str(method))
 	if size == 0:
 		return method.call()
 	var task := Task.new()
@@ -83,6 +86,7 @@ func exec(method: Callable) -> Variant:
 	var out: Task
 	while out != task:
 		out = await exec_completed
+		logger.debug("Recieved out from "  + str(task.method) + ": " + str(out))
 	return out.ret
 
 
@@ -96,6 +100,7 @@ func _process(id: int) -> void:
 		mutex.unlock()
 
 		if should_exit:
+			logger.debug("Break process")
 			break
 
 		mutex.lock()
@@ -107,6 +112,8 @@ func _process(id: int) -> void:
 
 
 func _async_call(task: Task) -> void:
+	logger.debug("In async_call. " + str(task.method))
 	var ret = await task.method.call()
+	logger.debug("Task completed. " + str(task.method))
 	task.ret = ret
 	emit_signal.call_deferred("exec_completed", task)

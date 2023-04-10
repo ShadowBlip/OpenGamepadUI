@@ -14,7 +14,7 @@ var logger := Log.get_logger("BluetoothSettings", Log.LEVEL.DEBUG)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	bluetooth_manager.start(true)
+	var result = await bluetooth_manager.start(true)
 	if not bluetooth_manager.supports_bluetooth():
 		no_net_label.visible = true
 		return
@@ -25,13 +25,9 @@ func _ready() -> void:
 	_on_visible_changed()
 
 
-func _process(delta):
+func _on_visible_changed() -> void:
 	for device in discovered_devices:
 		logger.debug(str(device))
-
-
-func _on_visible_changed() -> void:
-	set_process(self.visible)
 
 
 func _on_bt_selected() -> void:
