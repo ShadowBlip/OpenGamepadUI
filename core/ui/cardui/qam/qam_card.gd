@@ -22,7 +22,6 @@ func _ready() -> void:
 	#focus_entered.connect(_play_sound.bind(_focus_audio_stream))
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
-	grab_focus.call_deferred() # TMP
 	pressed.connect(_on_pressed)
 	label.text = title
 	
