@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://by0i08fw1fwty"]
+
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="1_te2kv"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="2_1q5o3"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="3_u2gym"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
+bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_offset = Vector2(4, 4)
+
+[node name="ButtonMenu" type="PanelContainer"]
+z_index = 20
+custom_minimum_size = Vector2(0, 40)
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="NotifyButton" type="Button" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+icon = ExtResource("1_te2kv")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="HelpButton" type="Button" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+icon = ExtResource("2_1q5o3")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+icon = ExtResource("3_u2gym")
+flat = true
+icon_alignment = 1
+expand_icon = true
