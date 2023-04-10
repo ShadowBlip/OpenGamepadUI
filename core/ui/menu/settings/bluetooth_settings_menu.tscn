@@ -46,8 +46,10 @@ text = "Bluetooth"
 layout_mode = 2
 
 [node name="ScanToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_sb411")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Scan for Devices"
+button_pressed = false
 
 [node name="DevicesLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_c5wtx")]
 layout_mode = 2
@@ -58,5 +60,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 columns = 5
+column_titles_visible = true
 hide_root = true
 select_mode = 1

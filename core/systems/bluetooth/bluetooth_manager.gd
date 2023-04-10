@@ -10,10 +10,11 @@ var thread := load("res://core/systems/threading/thread_pool.tres")
 var logger := Log.get_logger("BluetoothManager", Log.LEVEL.DEBUG)
 
 var discovered_devices: Array[BluetoothDevice]
+var discovered_controllers: Array[ControllerDevice]
 var started: bool = false
 
 signal devices_updated(devices: Array[BluetoothDevice])
-
+signal controllers_updated(devices: Array[ControllerDevice])
 
 ## Bluetooth device
 class BluetoothDevice:
@@ -25,22 +26,28 @@ class BluetoothDevice:
 	var signal_strength: float = -99.9
 	var transmit_power: float = 0.0
 
+class ControllerDevice:
+	var name: String = ""
+	var mac_address: String = ""
+	var discoverable: bool = false
+	var pairable: bool = false
+	var powered: bool = false
+	var discovering:  bool = false
 
-func start(toggle_on: bool) -> bool:
+
+func start(scan_on: bool) -> bool:
 	if started:
 		logger.warn("BluetoothManager.start() called when it was already started.")
 		return started
 	logger.info("Starting BluetoothManager")
 	thread.start()
 	started = true
-	scan_devices("on")
+	get_known_controllers()
 	get_known_devices("Paired")
 	get_known_devices("Connected")
+	if scan_on:
+		scan_devices("on")
 	return started
-
-
-func get_discovered_devices() -> Array[BluetoothDevice]:
-	return discovered_devices
 
 
 ## Returns true if the system has bluetooth controls we support
@@ -55,7 +62,7 @@ func get_known_devices(source: String) -> void:
 	var exit_code: int = output[1]
 	if exit_code != 0:
 		logger.error("Failed to get " + source + " devices. Error code:  " + str(exit_code))
-		return 
+		return
 	var devices: Array[BluetoothDevice] = []
 	var device_list:= _get_devices_from_output(output[0])
 	if device_list.size() == 0:
@@ -64,13 +71,32 @@ func get_known_devices(source: String) -> void:
 	logger.debug("Found " + source + " Devices: " + str(device_list))
 	for found_device in device_list:
 		_update_device(found_device, source)
+	logger.debug("Emit devices_updated")
 	devices_updated.emit(discovered_devices)
 
+
+func get_known_controllers() -> void:
+	logger.debug("get_known_controllers")
+	var output:= _do_bluetoothctl_cmd(["list"])
+	var exit_code: int = output[1]
+	if exit_code != 0:
+		logger.error("Failed to get controller devices. Error code:  " + str(exit_code))
+		return
+	var devices: Array[BluetoothDevice] = []
+	var device_list:= _get_controller_from_output(output[0])
+	if device_list.size() == 0:
+		logger.error("Found nothing in a search of controller devices.")
+		return
+	logger.debug("Found controller devices: " + str(device_list))
+	for found_device in device_list:
+		_update_controller(found_device)
+	logger.debug("Emit controllers_updated")
+	controllers_updated.emit(discovered_controllers)
 
 ## Starts or stops scan of bluetooth devices
 func scan_devices(status: String) -> void:
 	logger.debug("Start Scan Devices")
-	var output: Array = await _do_async_btc(["scan", status], "15")
+	var output: Array = await _do_async_btc(["scan", status], "5")
 	var exit_code: int = output[1]
 	if exit_code != 0:
 		logger.error("Failed to scan devices. Error code:  " + str(exit_code))
@@ -84,7 +110,19 @@ func scan_devices(status: String) -> void:
 #	logger.debug("Found Devices: " + str(device_list))
 	for found_device in device_list:
 		_update_device(found_device, "Scan")
+	logger.debug("Emit devices_updated")
 	devices_updated.emit(discovered_devices)
+	controllers_updated.emit(discovered_controllers)
+
+
+func toggle_enabled(state: String) -> void:
+	_do_bluetoothctl_cmd(["power", state])
+	for controller in discovered_controllers:
+		if state == "off":
+			controller.powered = false
+			continue
+		controller.powered = true
+	controllers_updated.emit(discovered_controllers)
 
 
 func _update_device(listed_device: Dictionary, source: String) -> void:
@@ -116,12 +154,39 @@ func _update_device(listed_device: Dictionary, source: String) -> void:
 			discovered_devices[index].signal_strength = listed_device["signal_strength"]
 
 
+func _update_controller(listed_device: Dictionary) -> void:
+	var index = _get_controller_index(listed_device["mac_address"])
+	var device: ControllerDevice
+	if index == -1:
+		logger.debug("Controller is new. Adding to controller list")
+		device = ControllerDevice.new()
+		device.mac_address = listed_device["mac_address"]
+		device.name = listed_device["name"]
+		device.powered = listed_device["powered"]
+		device.discoverable = listed_device["discoverable"]
+		device.pairable = listed_device["pairable"]
+		discovered_controllers.append(device)
+
+
 func _get_device_index(mac_address: String) -> int:
 	var index:= -1
 	if discovered_devices.size() == 0:
 		return index
 	var idx:= 0
 	for device in discovered_devices:
+		if device.mac_address == mac_address:
+			index = idx
+			break
+		idx = idx +1
+	return index
+
+
+func _get_controller_index(mac_address: String) -> int:
+	var index:= -1
+	if discovered_controllers.size() == 0:
+		return index
+	var idx:= 0
+	for device in discovered_controllers:
 		if device.mac_address == mac_address:
 			index = idx
 			break
@@ -147,8 +212,50 @@ func _get_devices_from_output(raw_output: String) -> Array:
 			split_device.remove_at(1)
 			split_device.remove_at(0)
 			device["name"] = " ".join(split_device)
-			devices.append(device)
 		logger.debug("Found devices: " + str(devices))
+	return devices
+
+
+func _get_controller_from_output(raw_output: String) -> Array:
+	var devices:= []
+	if raw_output == "":
+#		logger.debug("No devices")
+		return devices
+	var clean_device: String = raw_output.strip_edges()
+	var split_device:= clean_device.split("\n")
+	var mac_address:= split_device[0].split(" ")[1]
+	logger.info("mac_address: " + mac_address)
+	var controller_data: Array = _do_bluetoothctl_cmd(["show", mac_address])[0].strip_edges().split("\n")
+	logger.info("Controller_data: " + str(controller_data))
+	var device:= {
+		"mac_address": mac_address,
+		"powered": false,
+		"discoverable": false,
+		"pairable": false
+	}
+	for data_string in controller_data:
+#		logger.info("Data string: " + data_string)
+		var split_string: Array = data_string.split(" ")
+		var match_string = split_string[0].strip_edges()
+		logger.info("match_string: " + match_string)
+		match match_string:
+			"Name:":
+				logger.info("split_string[1]: " + split_string[1])
+				device["name"] = split_string[1]
+			"Powered:":
+				logger.info("split_string[1]: " + split_string[1])
+				if split_string[1] == "yes":
+					device["powered"] = true
+			"Discoverable:":
+				logger.info("split_string[1]: " + split_string[1])
+				if split_string[1] == "yes":
+					device["discoverable"] = true
+			"Pairable:":
+				logger.info("split_string[1]: " + split_string[1])
+				if split_string[1] == "yes":
+					device["pairable"] = true
+	logger.info("Found controller: " +str(devices))
+	devices.append(device)
 	return devices
 
 
