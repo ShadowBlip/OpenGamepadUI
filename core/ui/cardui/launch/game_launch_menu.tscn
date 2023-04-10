@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cir6gksabfpi4"]
+[gd_scene load_steps=18 format=3 uid="uid://cir6gksabfpi4"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
@@ -14,6 +14,26 @@
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_3e46i"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
+
+[sub_resource type="Animation" id="Animation_ou6f5"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yfglc"]
+_data = {
+"fade_in": SubResource("Animation_ou6f5")
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svm8w"]
 bg_color = Color(0.266667, 0.278431, 0.352941, 1)
@@ -51,6 +71,7 @@ theme_override_constants/separation = 0
 
 [node name="BannerTexture" type="TextureRect" parent="VBoxContainer"]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.4)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("2_oae7b")
@@ -70,6 +91,12 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/BannerTexture"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_yfglc")
+}
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2

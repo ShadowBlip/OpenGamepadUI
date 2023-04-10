@@ -1,5 +1,5 @@
 @tool
-extends Control
+extends Container
 
 signal pressed
 signal button_up
@@ -35,6 +35,11 @@ func _ready() -> void:
 		if child == margin_container:
 			continue
 		child.reparent(content_container)
+		
+		# If the node is a control, resize it based on its children
+		if child.get_class() == "Control":
+			for c in child.get_children():
+				(child as Control).custom_minimum_size += c.size
 
 
 func _on_focus() -> void:
@@ -43,7 +48,6 @@ func _on_focus() -> void:
 	style.border_width_bottom = 4
 	style.border_width_top = 4
 	style.border_width_right = 4
-
 
 
 func _on_unfocus() -> void:
