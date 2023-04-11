@@ -15,8 +15,12 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	main_menu_state.state_entered.connect(_on_state_entered)
-	in_game_menu_state.state_entered.connect(_on_state_entered)
 	launch_manager.app_launched.connect(_on_app_launched)
+	
+	# Hack because we decided to have different states for main menu and in-game menu
+	var on_in_game_menu := func(_from: State):
+		state_machine.replace_state(main_menu_state)
+	in_game_menu_state.state_entered.connect(on_in_game_menu)
 	
 	
 func _on_state_entered(_from: State) -> void:
@@ -27,7 +31,6 @@ func _on_state_entered(_from: State) -> void:
 func _on_app_launched(app: RunningApp):
 	# Create a new running game card
 	var card: RunningGameCard = running_card_scene.instantiate()
-	card.set_running_app(app)
 
 	# Switch to the app if its card is pressed
 	var on_pressed := func():
@@ -42,3 +45,4 @@ func _on_app_launched(app: RunningApp):
 	# Add and move the card to the menu
 	button_container.add_child(card)
 	button_container.move_child(card, 0)
+	card.set_running_app(app)

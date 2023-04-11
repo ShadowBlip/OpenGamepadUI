@@ -16,7 +16,6 @@ var in_game_state := load("res://assets/state/states/in_game.tres") as State
 
 @onready var separator := $%HSeparator
 @onready var content_container := $%ContentContainer
-@onready var margin_container := $%MarginContainer
 @onready var game_logo := $%GameLogo
 @onready var game_label := $%GameLabel
 @onready var resume_button := $%ResumeButton
@@ -52,7 +51,7 @@ func set_running_app(app: RunningApp):
 	game_logo.visible = false
 	game_label.visible = false
 	var logo := await boxart_manager.get_boxart(item, BoxArtProvider.LAYOUT.LOGO) as Texture2D
-	if logo:
+	if logo != null:
 		game_logo.texture = logo
 		game_logo.visible = true
 	else:
@@ -69,6 +68,8 @@ func _on_focus() -> void:
 
 
 func _on_unfocus() -> void:
+	if not content_container:
+		return
 	for child in content_container.get_children():
 		if not child is Control:
 			continue

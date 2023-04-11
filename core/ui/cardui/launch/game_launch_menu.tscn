@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cir6gksabfpi4"]
+[gd_scene load_steps=19 format=3 uid="uid://cir6gksabfpi4"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_qt0bt"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_3e46i"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="9_k6q8g"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
 
 [sub_resource type="Animation" id="Animation_ou6f5"]
@@ -57,6 +58,9 @@ script = ExtResource("1_u3ehs")
 state = ExtResource("3_w7th1")
 visible_during = Array[Resource]([ExtResource("4_le731"), ExtResource("5_tdidy"), ExtResource("6_gnrnf"), ExtResource("7_qt0bt"), ExtResource("8_3e46i")])
 
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("9_k6q8g")]
+root_node = NodePath("../..")
+
 [node name="BackInputHandler" parent="." instance=ExtResource("9_hnl5c")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_w7th1")])
 
@@ -71,7 +75,7 @@ theme_override_constants/separation = 0
 
 [node name="BannerTexture" type="TextureRect" parent="VBoxContainer"]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.4)
+modulate = Color(1, 1, 1, 0.666667)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("2_oae7b")
@@ -101,6 +105,7 @@ libraries = {
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_type_variation = &"LightPanel"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2

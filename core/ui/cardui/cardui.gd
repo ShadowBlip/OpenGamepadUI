@@ -15,7 +15,8 @@ var osk_state := preload("res://assets/state/states/osk.tres") as State
 var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
-@onready var ui_container := $UIContainer
+@onready var panel := $%Panel
+@onready var ui_container := $%Content
 @onready var boot_video := $%BootVideoPlayer
 @onready var fade_transition := $%FadeTransitionPlayer
 @onready var fade_texture := $%FadeTexture
@@ -80,6 +81,7 @@ func _on_state_changed(_from: State, _to: State) -> void:
 
 
 func _on_game_state_entered(_from: State) -> void:
+	panel.visible = false
 	_set_overlay(false)
 	_set_blur(Gamescope.BLUR_MODE.OFF)
 	for child in ui_container.get_children():
@@ -88,6 +90,7 @@ func _on_game_state_entered(_from: State) -> void:
 
 func _on_game_state_exited(to: State) -> void:
 	if state_machine.has_state(in_game_state):
+		panel.visible = false
 		_set_overlay(true)
 		if to != osk_state:
 			_set_blur(Gamescope.BLUR_MODE.ALWAYS)
@@ -100,6 +103,7 @@ func _on_game_state_exited(to: State) -> void:
 func _on_game_state_removed() -> void:
 	_set_overlay(false)
 	_set_blur(Gamescope.BLUR_MODE.OFF)
+	panel.visible = true
 
 
 # Set overlay will set the Gamescope atom to indicate that we should be drawn
