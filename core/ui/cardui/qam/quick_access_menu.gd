@@ -7,10 +7,13 @@ const qam_state_machine := preload("res://assets/state/state_machines/qam_state_
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const transition_fade_in := preload("res://core/ui/components/transition_fade_in.tscn")
 
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
 @onready var viewport: VBoxContainer = $%Viewport
 @onready var focus_manager := $%FocusManager as FocusManager
+@onready var playing_container := $%PlayingNowContainer
+@onready var game_label := $%GameNameLabel
 
 
 # Called when the node enters the scene tree for the first time.
@@ -19,8 +22,21 @@ func _ready() -> void:
 
 
 func _on_state_entered(_from: State) -> void:
+	# Update the "playing now" container
+	_update_playing_now()
+	
 	if focus_manager and focus_manager.current_focus:
 		focus_manager.current_focus.grab_focus.call_deferred()
+
+
+func _update_playing_now() -> void:
+	if launch_manager.get_running().size() == 0:
+		playing_container.visible = false
+		return
+	var app := launch_manager.get_current_app()
+	playing_container.visible = true
+	game_label.text = app.launch_item.name
+	# TODO: Implement fetching game icon and setting it
 
 
 # Adds the given Control menu to the QAM. A focus node can be given which will

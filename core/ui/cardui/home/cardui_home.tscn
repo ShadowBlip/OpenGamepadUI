@@ -71,6 +71,7 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.9
 theme = ExtResource("3_14fg7")
+theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2

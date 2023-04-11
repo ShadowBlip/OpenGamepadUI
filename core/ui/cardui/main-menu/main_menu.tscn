@@ -1,11 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://dwlifno8asacn"]
+[gd_scene load_steps=21 format=3 uid="uid://dwlifno8asacn"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
-[ext_resource type="Texture2D" uid="uid://dfqj87oi7gygp" path="res://assets/ui/icons/wifi-none.svg" id="2_cod0q"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_jmie1"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="3_3xh32"]
-[ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="3_cctrn"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_6xrv5"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_jawel"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_maija"]
@@ -14,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="7_6i3ij"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="7_n0655"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="8_iv515"]
+[ext_resource type="PackedScene" uid="uid://b1skjohwb8fyl" path="res://core/ui/cardui/navigation/system_container.tscn" id="8_p8fdd"]
 [ext_resource type="Resource" uid="uid://ba34axjjpixwc" path="res://assets/state/states/store.tres" id="9_2jho2"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="10_irj46"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="11_e52bm"]
@@ -135,41 +134,8 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 theme_override_constants/separation = 60
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="SystemContainer" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("8_p8fdd")]
 layout_mode = 2
-alignment = 1
-
-[node name="NetworkIcon" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-texture = ExtResource("2_cod0q")
-expand_mode = 1
-stretch_mode = 4
-
-[node name="BatteryContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="BatteryIcon" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/BatteryContainer"]
-unique_name_in_owner = true
-modulate = Color(1, 0, 0, 1)
-custom_minimum_size = Vector2(48, 24)
-layout_mode = 2
-texture = ExtResource("3_cctrn")
-expand_mode = 1
-stretch_mode = 5
-flip_h = true
-
-[node name="BatteryLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/BatteryContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "100%"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

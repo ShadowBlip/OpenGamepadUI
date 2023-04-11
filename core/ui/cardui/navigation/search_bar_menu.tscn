@@ -1,14 +1,14 @@
 [gd_scene load_steps=8 format=3 uid="uid://lper3pd72fq3"]
 
-[ext_resource type="Texture2D" uid="uid://c78ns4176vb5s" path="res://assets/icons/search.svg" id="1_1abv8"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_3s0wp"]
 [ext_resource type="PackedScene" uid="uid://bx0fnuxd8mm51" path="res://core/ui/components/search_bar.tscn" id="2_gqstr"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="2_kr4pi"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_sj5or"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_r83xd"]
+[ext_resource type="Texture2D" uid="uid://8pmccsyfv3u7" path="res://assets/ui/icons/search.svg" id="5_pq07x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
-bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -18,7 +18,7 @@ shadow_offset = Vector2(4, 4)
 
 [node name="SearchBarMenu" type="PanelContainer"]
 z_index = 20
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 48)
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
@@ -38,18 +38,18 @@ theme_override_constants/margin_right = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 11
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-texture = ExtResource("1_1abv8")
+texture = ExtResource("5_pq07x")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="SearchBar" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_gqstr")]
-custom_minimum_size = Vector2(250, 25)
+custom_minimum_size = Vector2(250, 36)
 layout_mode = 2
 theme_override_colors/background_color = Color(0, 0, 0, 0)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 15
 placeholder_text = "What should you play?"

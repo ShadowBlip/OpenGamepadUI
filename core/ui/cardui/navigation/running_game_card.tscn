@@ -10,7 +10,7 @@
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7abjx"]
-bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -53,7 +53,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 texture = ExtResource("1_4m4go")
-expand_mode = 3
+expand_mode = 5
 stretch_mode = 5
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]

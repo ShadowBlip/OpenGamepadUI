@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_lk3ix"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
-bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -19,7 +19,7 @@ shadow_offset = Vector2(4, 4)
 
 [node name="ButtonMenu" type="PanelContainer"]
 z_index = 20
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 48)
 size_flags_horizontal = 8
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
