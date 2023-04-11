@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://uljtdvmuol3l"]
+
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="1_snu2o"]
+
+[node name="FocusGroupSetter" type="Node"]
+script = ExtResource("1_snu2o")
