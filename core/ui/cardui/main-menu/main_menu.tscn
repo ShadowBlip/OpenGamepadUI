@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dwlifno8asacn"]
+[gd_scene load_steps=22 format=3 uid="uid://dwlifno8asacn"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
@@ -9,12 +9,13 @@
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_maija"]
 [ext_resource type="Script" path="res://core/ui/components/transition.gd" id="6_r8xs1"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_ris1l"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="7_6i3ij"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="7_n0655"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="8_iv515"]
 [ext_resource type="PackedScene" uid="uid://b1skjohwb8fyl" path="res://core/ui/cardui/navigation/system_container.tscn" id="8_p8fdd"]
 [ext_resource type="Resource" uid="uid://ba34axjjpixwc" path="res://assets/state/states/store.tres" id="9_2jho2"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_brlgl"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="10_irj46"]
+[ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/cardui/main-menu/main_menu_focus.tres" id="10_v2rc1"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="11_e52bm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjrde"]
@@ -159,8 +160,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="FocusManager" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("7_6i3ij")]
+[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_brlgl")]
 current_focus = NodePath("../LibraryButton")
+focus_stack = ExtResource("10_v2rc1")
 
 [node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
 unique_name_in_owner = true
