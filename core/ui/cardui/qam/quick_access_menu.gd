@@ -11,7 +11,7 @@ var launch_manager := load("res://core/global/launch_manager.tres") as LaunchMan
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
 
 @onready var viewport: VBoxContainer = $%Viewport
-@onready var focus_manager := $%FocusManager as FocusManager
+@onready var focus_group := $%FocusGroup as FocusGroup
 @onready var playing_container := $%PlayingNowContainer
 @onready var game_label := $%GameNameLabel
 
@@ -25,8 +25,8 @@ func _on_state_entered(_from: State) -> void:
 	# Update the "playing now" container
 	_update_playing_now()
 	
-	if focus_manager and focus_manager.current_focus:
-		focus_manager.current_focus.grab_focus.call_deferred()
+	if focus_group:
+		focus_group.grab_focus()
 
 
 func _update_playing_now() -> void:

@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwqwrfp616h21"]
+[gd_scene load_steps=7 format=3 uid="uid://bwqwrfp616h21"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/qam_card.gd" id="1_nu7eg"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_3gbka"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="3_3krq8"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_3umv1"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/cardui/qam/quick_access_menu_focus.tres" id="4_f1mex"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
 resource_local_to_scene = true
@@ -23,6 +25,10 @@ focus_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ptn26")
 script = ExtResource("1_nu7eg")
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_3gbka")]
+target = NodePath("../MarginContainer/VBoxContainer/ContentContainer/FocusGroup")
+on_signal = "pressed"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
@@ -51,6 +57,5 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FocusManager" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("3_3krq8")]
-process_input = true
-intercept_children_only = true
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("3_3umv1")]
+focus_stack = ExtResource("4_f1mex")

@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://oh82ksgmb5hu"]
+[gd_scene load_steps=12 format=3 uid="uid://oh82ksgmb5hu"]
 
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="1_4m4go"]
 [ext_resource type="Script" path="res://core/ui/cardui/navigation/running_game_card.gd" id="1_vgpef"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_ao14v"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_w7u51"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_4x3oi"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="3_fes2t"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_smmwr"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_s452c"]
+[ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/cardui/main-menu/main_menu_focus.tres" id="6_xmlue"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="7_yrgt0"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
 
@@ -25,6 +27,10 @@ focus_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_7abjx")
 script = ExtResource("1_vgpef")
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_ao14v")]
+target = NodePath("../MarginContainer/VBoxContainer/ContentContainer/FocusGroup")
+on_signal = "finished_growing"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -67,10 +73,9 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FocusManager" parent="MarginContainer/VBoxContainer/ContentContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_fes2t")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/ContentContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("5_smmwr")]
 current_focus = NodePath("../ResumeButton")
-process_input = true
-intercept_children_only = true
+focus_stack = ExtResource("6_xmlue")
 
 [node name="ResumeButton" type="Button" parent="MarginContainer/VBoxContainer/ContentContainer"]
 unique_name_in_owner = true

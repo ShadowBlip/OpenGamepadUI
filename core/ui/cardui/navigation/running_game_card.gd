@@ -5,6 +5,8 @@ signal pressed
 signal button_up
 signal button_down
 signal toggled(pressed: bool)
+signal finished_growing
+signal finished_shrinking
 
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var boxart_manager := load("res://core/global/boxart_manager.tres") as BoxArtManager
@@ -105,26 +107,27 @@ func _grow() -> void:
 #			continue
 #		focus_node = child
 #		break
-#	var on_grown := func():
-#		if not focus_node:
-#			return
-#		focus_node.grab_focus.call_deferred()
+	var on_grown := func():
+		finished_growing.emit()
 	tween.tween_property(self, "custom_minimum_size", Vector2(0, size.y + content_container.size.y), 0.2)
 	tween.tween_property(content_container, "visible", true, 0)
 	tween.tween_property(separator, "visible", true, 0)
 	tween.tween_property(content_container, "modulate", Color(1, 1, 1, 1), 0.2)
-	#tween.tween_callback(on_grown)
+	tween.tween_callback(on_grown)
 	
 	
 func _shrink() -> void:
 	if tween:
 		tween.kill()
+	var on_shrunk := func():
+		finished_shrinking.emit()
+		grab_focus()
 	tween = get_tree().create_tween()
 	tween.tween_property(content_container, "modulate", Color(1, 1, 1, 0), 0.2)
 	tween.tween_property(separator, "visible", false, 0)
 	tween.tween_property(content_container, "visible", false, 0)
 	tween.tween_property(self, "custom_minimum_size", Vector2(0, 0), 0.2)
-	tween.tween_callback(grab_focus)
+	tween.tween_callback(on_shrunk)
 
 
 func _gui_input(event: InputEvent) -> void:
