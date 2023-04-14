@@ -6,17 +6,20 @@ var bluetooth_manager := load("res://core/systems/bluetooth/bluetooth_manager.tr
 var connecting := false
 var discovered_devices: Array[BluetoothManager.BluetoothDevice] = []
 var discovered_controllers: Array[BluetoothManager.ControllerDevice] = []
+var scan_enabled = false
 
 @onready var no_net_label := $%NoBluetoothLabel
 @onready var bt_tree := $%BluetoothDeviceTree as Tree
+@onready var autoconnect_toggle := $%AutoconnectToggle
+@onready var enable_toggle := $%EnableToggle
 @onready var scan_toggle := $%ScanToggle
 
-var logger := Log.get_logger("BluetoothSettings", Log.LEVEL.INFO)
+var logger := Log.get_logger("BluetoothSettings", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var result = await bluetooth_manager.start(true)
+	var result = await bluetooth_manager.start(enable_toggle.button_pressed)
 	if not bluetooth_manager.supports_bluetooth():
 		no_net_label.visible = true
 		return
@@ -25,9 +28,20 @@ func _ready() -> void:
 	bt_tree.create_item()
 	bluetooth_manager.devices_updated.connect(_on_refresh_devices)
 	bluetooth_manager.controllers_updated.connect(_on_refresh_controllers)
+	bluetooth_manager.scan_completed.connect(_on_scan_completed)
 	scan_toggle.toggled.connect(_on_toggle_scan)
+	enable_toggle.toggled.connect(_on_toggle_enabled)
 	_set_bt_tree_titles()
 	_on_visible_changed()
+	if autoconnect_toggle.button_pressed:
+		_connect_known_devices()
+
+
+func _on_scan_completed() -> void:
+	logger.info("Scan complete! Should we do this again? " + str(scan_enabled))
+	if scan_enabled:
+		logger.info("Scanning still enabled. Starting another scan.")
+		_on_toggle_scan(scan_enabled)
 
 
 func _set_bt_tree_titles() -> void:
@@ -38,14 +52,23 @@ func _set_bt_tree_titles() -> void:
 	bt_tree.set_column_title(4, "Signal Strength")
 
 
+func _connect_known_devices() -> void:
+	logger.info("_connect_known_devices")
+
+
 func _on_visible_changed() -> void:
 	logger.info("_on_visible_changed")
 	for device in discovered_devices:
 		logger.info(str(device.mac_address) + " | " + str(device.name) + " | " + str(device.signal_strength) + " | " + str(device.connected) + " | " + str(device.paired))
 
 
+# Do a popup for pair/unpair connect/disconnect
 func _on_bt_selected() -> void:
-	return# Do a popup for pair/unpair connect/disconnect
+	logger.info("_on_bt_selected")
+
+
+func _on_toggle_enabled(_pressed: bool) -> void:
+	logger.info("_on_toggle_enabled")
 
 
 func _on_refresh_devices(devices: Array[BluetoothManager.BluetoothDevice]) -> void:
@@ -98,4 +121,8 @@ func _on_refresh_controllers(devices: Array[BluetoothManager.ControllerDevice]) 
 
 
 func _on_toggle_scan(pressed: bool) -> void:
-	logger.info("Toggled " + str(pressed))
+	logger.info("Scan enabled " + str(pressed))
+	scan_enabled = pressed
+	if scan_enabled == false:
+		return
+	bluetooth_manager.scan_devices()

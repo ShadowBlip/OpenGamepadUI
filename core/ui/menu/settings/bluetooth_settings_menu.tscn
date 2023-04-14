@@ -45,6 +45,16 @@ text = "Bluetooth"
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="EnableToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_sb411")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enable Bluetooth"
+
+[node name="AutoconnectToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_sb411")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Autoconnect Paired Devices"
+
 [node name="ScanToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_sb411")]
 unique_name_in_owner = true
 layout_mode = 2
