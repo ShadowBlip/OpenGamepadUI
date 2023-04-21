@@ -2,8 +2,11 @@
 extends Node
 class_name FocusSetter
 
-# The node to try and discover the focusable node.
+@export_category("Focus")
+## The node to try and discover the focusable node.
 @export var target: Node
+## Menus with multiple levels of focus can be part of a chain of focus
+@export var focus_stack: FocusStack
 
 # Signal on our parent to connect to
 var on_signal: String

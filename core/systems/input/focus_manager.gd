@@ -10,6 +10,9 @@ class_name FocusManager
 @export var refocus_on := "ogui_east"
 ## If true, only intercept input and refocus if a descendent node has focus
 @export var intercept_children_only := false
+@export_category("Focus Stack")
+## Menus with multiple levels of focus can be part of a chain of focus
+@export var focus_stack: FocusStack
 
 var logger := Log.get_logger("FocusManager", Log.LEVEL.INFO)
 

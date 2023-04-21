@@ -27,6 +27,13 @@ func is_focused(group: FocusGroup) -> bool:
 	return false
 
 
+## Returns true if the given focus group exists anywhere in the stack
+func is_in_stack(group: FocusGroup) -> bool:
+	if not group:
+		return false
+	return group in stack
+
+
 ## Current size of the focus stack
 func size() -> int:
 	return stack.size()
@@ -35,6 +42,8 @@ func size() -> int:
 ## Push the given focus group to the top of the focus stack and call its
 ## grab_focus method
 func push(group: FocusGroup) -> void:
+	if group and group in stack:
+		stack.erase(group)
 	stack.push_back(group)
 	logger.debug("Pushed focus stack: " + str(stack))
 	focus_group_changed.emit(group)
