@@ -5,12 +5,13 @@ signal button_up
 signal button_down
 signal pressed
 
-@onready var animation_player := $%AnimationPlayer
 @onready var texture := $%TextureRect
+@onready var shadow := $%Shadow
 @onready var audio_player: AudioStreamPlayer = $%AudioStreamPlayer
 @export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
 
+var tween: Tween
 var _focus_audio_stream = load(focus_audio)
 var _select_audio_stream = load(select_audio)
 
@@ -23,11 +24,13 @@ func _ready() -> void:
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)
 	texture.mouse_exited.connect(_on_unfocus)
-	texture.position = Vector2.ZERO
-	animation_player.play("RESET")
+	#texture.position = Vector2.ZERO
 	
 	# Set shader parameters
 	texture.material.set_shader_parameter("corder_radius", 80)
+	
+	# Set minimum size based on texture size
+	#custom_minimum_size += texture.size
 	
 	var parent := get_parent()
 	if parent and parent is Container:
@@ -35,11 +38,21 @@ func _ready() -> void:
 
 
 func _on_focus() -> void:
-	animation_player.play("focus_entered")
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property(texture, "scale", Vector2(1.01, 1.01), 0.2)
+	tween.parallel().tween_property(texture, "position", Vector2(0, -40), 0.2)
+	tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", 20, 0.2)
 
 
 func _on_unfocus() -> void:
-	animation_player.play("focus_exited")
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property(texture, "scale", Vector2(1, 1), 0.2)
+	tween.parallel().tween_property(texture, "position", Vector2(0, 0), 0.2)
+	tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", 10, 0.2)
 
 
 func _play_sound(stream: AudioStream) -> void:
