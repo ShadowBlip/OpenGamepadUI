@@ -1,0 +1,284 @@
+[gd_scene load_steps=23 format=3 uid="uid://bdwu6kiayvvgm"]
+
+[ext_resource type="Script" path="res://core/ui/cardui/library/library_menu.gd" id="1_jetsl"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_nb0by"]
+[ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_mhjhd"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_wevdw"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_g76tw"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_fma8f"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_o36kh"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_s8n0e"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_ecjxf"]
+[ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="10_sn5qv"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="10_t33cl"]
+[ext_resource type="Texture2D" uid="uid://8pmccsyfv3u7" path="res://assets/ui/icons/search.svg" id="11_2l62d"]
+[ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="11_e1qc7"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="11_w0o68"]
+[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="11_y4e47"]
+[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="13_ec862"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="13_rfcx1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xn2qp"]
+bg_color = Color(0.266667, 0.278431, 0.352941, 0)
+
+[sub_resource type="Resource" id="Resource_y6lie"]
+script = ExtResource("11_e1qc7")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yt8vl"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sf1kb"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+color = Color(0.384314, 0.447059, 0.643137, 1)
+grow_begin = -10.0
+grow_end = -10.0
+vertical = true
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_pixel"]
+color = Color(1, 0.47451, 0.776471, 1)
+thickness = 3
+
+[node name="LibraryMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jetsl")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_nb0by")]
+state = ExtResource("3_mhjhd")
+visible_during = Array[Resource]([ExtResource("4_wevdw"), ExtResource("5_g76tw"), ExtResource("6_fma8f"), ExtResource("7_o36kh"), ExtResource("8_s8n0e")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("9_ecjxf")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_mhjhd")])
+
+[node name="TabContainer" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_xn2qp")
+tabs_visible = false
+
+[node name="InstalledTab" type="ScrollContainer" parent="TabContainer"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/InstalledTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="InstalledGrid" type="HFlowContainer" parent="TabContainer/InstalledTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FocusGroup" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
+current_focus = NodePath("../Card")
+focus_stack = SubResource("Resource_y6lie")
+
+[node name="Card" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card2" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card3" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card4" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card5" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card6" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card7" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card8" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card9" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card10" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card11" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="Card12" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
+layout_mode = 2
+
+[node name="AllGamesTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/AllGamesTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="AllGamesGrid" type="HFlowContainer" parent="TabContainer/AllGamesTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FocusGroup" parent="TabContainer/AllGamesTab/MarginContainer/AllGamesGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
+current_focus = NodePath("")
+focus_stack = SubResource("Resource_y6lie")
+
+[node name="TopMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+offset_right = 1280.0
+offset_bottom = 58.0
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+
+[node name="TabsContainer" type="PanelContainer" parent="TopMargin"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_yt8vl")
+
+[node name="MarginContainer" type="MarginContainer" parent="TopMargin/TabsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopMargin/TabsContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 11
+
+[node name="TextureRect" type="TextureRect" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("11_2l62d")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VSeparator" type="VSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_sf1kb")
+
+[node name="TextureLB" type="TextureRect" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("11_y4e47")
+expand_mode = 1
+script = ExtResource("11_w0o68")
+path = "joypad/lb"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="AllGamesContainer2" type="VBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer2" instance=ExtResource("13_rfcx1")]
+layout_mode = 2
+text = "installed"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer2"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_pixel")
+
+[node name="AllGamesContainer" type="VBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer" instance=ExtResource("13_rfcx1")]
+layout_mode = 2
+text = "alL gAMES"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_pixel")
+
+[node name="AllGamesContainer3" type="VBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer3" instance=ExtResource("13_rfcx1")]
+layout_mode = 2
+text = "favorites"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer3"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_pixel")
+
+[node name="AllGamesContainer4" type="VBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer4" instance=ExtResource("13_rfcx1")]
+layout_mode = 2
+text = "collections"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer4"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_pixel")
+
+[node name="AllGamesContainer5" type="VBoxContainer" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer5" instance=ExtResource("13_rfcx1")]
+layout_mode = 2
+text = "plugins"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer/HBoxContainer/AllGamesContainer5"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_pixel")
+
+[node name="TextureRB" type="TextureRect" parent="TopMargin/TabsContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("13_ec862")
+expand_mode = 1
+script = ExtResource("11_w0o68")
+path = "joypad/rb"

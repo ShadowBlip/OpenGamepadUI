@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://diug36y0he1qx"]
+[gd_scene load_steps=22 format=3 uid="uid://diug36y0he1qx"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/cardui/cardui.gd" id="1_f8851"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://d7lts0p8kgtt" path="res://core/ui/cardui/home/cardui_home.tscn" id="6_12lhu"]
 [ext_resource type="PackedScene" uid="uid://cir6gksabfpi4" path="res://core/ui/cardui/launch/game_launch_menu.tscn" id="9_m34in"]
 [ext_resource type="PackedScene" uid="uid://lper3pd72fq3" path="res://core/ui/cardui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
+[ext_resource type="PackedScene" uid="uid://bdwu6kiayvvgm" path="res://core/ui/cardui/library/library_menu.tscn" id="10_uqodp"]
 [ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/cardui/navigation/top_button_menu.tscn" id="11_x7ns7"]
 [ext_resource type="PackedScene" uid="uid://40v4c0khrlfm" path="res://core/ui/cardui/navigation/context_bar_menu.tscn" id="12_bstc8"]
 [ext_resource type="PackedScene" uid="uid://dwlifno8asacn" path="res://core/ui/cardui/main-menu/main_menu.tscn" id="13_46tck"]
@@ -99,12 +100,22 @@ grow_vertical = 2
 
 [node name="HomeMenu" type="MarginContainer" parent="Content"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
 [node name="CardUIHome" parent="Content/HomeMenu" instance=ExtResource("6_12lhu")]
 layout_mode = 2
 
 [node name="GameLaunchMenu" parent="Content/HomeMenu" instance=ExtResource("9_m34in")]
+visible = false
+layout_mode = 2
+
+[node name="FullscreenMenus" type="MarginContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LibraryMenu" parent="Content/FullscreenMenus" instance=ExtResource("10_uqodp")]
+visible = false
 layout_mode = 2
 
 [node name="TopMargin" type="MarginContainer" parent="Content"]
@@ -132,12 +143,15 @@ layout_mode = 2
 
 [node name="MenuContainer" type="MarginContainer" parent="Content"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_bottom = 70
 
 [node name="MainMenu" parent="Content/MenuContainer" instance=ExtResource("13_46tck")]
+visible = false
 layout_mode = 2
 
 [node name="QuickAccessMenu" parent="Content/MenuContainer" instance=ExtResource("14_lsaok")]
+visible = false
 layout_mode = 2
 
 [node name="FadeTexture" type="TextureRect" parent="."]

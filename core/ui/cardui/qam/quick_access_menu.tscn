@@ -86,7 +86,7 @@ _data = {
 "exit": SubResource("Animation_4xb6e")
 }
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t5cah"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jikv8"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -95,7 +95,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r7ebl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpfdw"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -104,7 +104,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vohth"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5awec"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -252,12 +252,12 @@ focus_stack = ExtResource("14_6yknl")
 
 [node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("15_tmqe2")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_t5cah")
+theme_override_styles/panel = SubResource("StyleBoxFlat_jikv8")
 
 [node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("16_bait0")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_r7ebl")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tpfdw")
 
 [node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("17_ohpj3")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vohth")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5awec")
