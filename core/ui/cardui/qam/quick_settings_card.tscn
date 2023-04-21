@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cunttqskm5ers"]
+
+[ext_resource type="PackedScene" uid="uid://bwqwrfp616h21" path="res://core/ui/cardui/qam/qam_card.tscn" id="1_dgms2"]
+[ext_resource type="PackedScene" uid="uid://cu2w013yn7cic" path="res://core/ui/menu/qam/quick_settings_menu.tscn" id="2_7q68h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_de1d3"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="QuickSettingsCard" instance=ExtResource("1_dgms2")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_de1d3")
+title = "Quick Settings"
+
+[node name="QuickSettingsMenu" parent="MarginContainer/CardVBoxContainer/ContentContainer" index="0" instance=ExtResource("2_7q68h")]
+layout_mode = 2

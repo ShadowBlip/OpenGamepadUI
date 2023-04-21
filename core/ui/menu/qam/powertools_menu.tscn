@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cgtqpgne2s116"]
+[gd_scene load_steps=7 format=3 uid="uid://cgtqpgne2s116"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/powertools_menu.gd" id="1_8v1ke"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_nb5h3"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_v2y4s"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_ygeel"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5n8hq"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_v2d1e"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/cardui/qam/quick_access_menu_focus.tres" id="4_yqywg"]
 
 [node name="PowerTools" type="VBoxContainer"]
 anchors_preset = 15
@@ -18,7 +19,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8v1ke")
 
-[node name="FocusManager" parent="." instance=ExtResource("2_v2y4s")]
+[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("3_5n8hq")]
+current_focus = NodePath("../CPUBoostButton")
+focus_stack = ExtResource("4_yqywg")
 
 [node name="CPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
 layout_mode = 2

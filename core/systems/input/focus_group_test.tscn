@@ -7,6 +7,7 @@
 
 [node name="FocusGroupTest" type="Node"]
 script = ExtResource("1_yb5t4")
+finish_after_ready = false
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15

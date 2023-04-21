@@ -11,10 +11,12 @@ var logger := Log.get_logger("QuickSettings", Log.LEVEL.INFO)
 @onready var output_volume := $%VolumeSlider
 @onready var brightness_slider := $%BrightnessSlider
 @onready var saturation_slider := $%SaturationSlider
+@onready var focus_group := $%FocusGroup
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Set the volume sliders
 	var current_volume := AudioManager.get_current_volume()
 	output_volume.value = current_volume * 100
 	output_volume.value_changed.connect(_on_output_volume_slider_changed)

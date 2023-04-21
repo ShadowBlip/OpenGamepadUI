@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cu2w013yn7cic"]
+[gd_scene load_steps=7 format=3 uid="uid://cu2w013yn7cic"]
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/quick_settings_menu.gd" id="1_gwnsx"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_6j2qt"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_2f2tv"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="3_2eg06"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_gbk7l"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/cardui/qam/quick_access_menu_focus.tres" id="3_yiaoy"]
 
 [node name="QuickSettingsMenu" type="Control"]
 layout_mode = 3
@@ -17,7 +18,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_gwnsx")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="QuickVBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,24 +26,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_6j2qt")]
+[node name="FocusGroup" parent="QuickVBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_2f2tv")]
+unique_name_in_owner = true
+current_focus = NodePath("../VolumeSlider")
+focus_stack = ExtResource("3_yiaoy")
 
-[node name="SectionLabel" parent="VBoxContainer" instance=ExtResource("3_gbk7l")]
+[node name="SectionLabel" parent="QuickVBoxContainer" instance=ExtResource("3_gbk7l")]
 layout_mode = 2
 text = "Quick Settings"
 
-[node name="VolumeSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
+[node name="VolumeSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Volume"
 
-[node name="BrightnessSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
+[node name="BrightnessSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Brightness"
 step = 3.0
 
-[node name="PerGameToggle" parent="VBoxContainer" instance=ExtResource("3_2eg06")]
+[node name="PerGameToggle" parent="QuickVBoxContainer" instance=ExtResource("3_2eg06")]
 layout_mode = 2
 focus_neighbor_left = NodePath("../SaturationSlider")
 focus_neighbor_top = NodePath("../SaturationSlider")
@@ -52,7 +56,7 @@ focus_next = NodePath("../SaturationSlider")
 focus_previous = NodePath("../SaturationSlider")
 text = "Per-game Profile"
 
-[node name="SaturationSlider" parent="VBoxContainer" instance=ExtResource("2_v67rd")]
+[node name="SaturationSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 focus_neighbor_left = NodePath("../PerGameToggle")
