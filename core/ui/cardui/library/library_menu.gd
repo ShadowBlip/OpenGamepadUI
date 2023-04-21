@@ -129,7 +129,7 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 			_library[tab_num].erase(item.name)
 		item.removed_from_library.connect(on_removed)
 		
-		# Add the poster to the grid
+		# Add the card to the grid
 		grid.add_child(card)
 		
 		# Keep track of all the library items so we can search them.

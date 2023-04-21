@@ -24,13 +24,9 @@ func _ready() -> void:
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)
 	texture.mouse_exited.connect(_on_unfocus)
-	#texture.position = Vector2.ZERO
 	
 	# Set shader parameters
 	texture.material.set_shader_parameter("corder_radius", 80)
-	
-	# Set minimum size based on texture size
-	#custom_minimum_size += texture.size
 	
 	var parent := get_parent()
 	if parent and parent is Container:
