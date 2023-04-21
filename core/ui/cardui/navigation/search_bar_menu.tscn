@@ -1,11 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://lper3pd72fq3"]
+[gd_scene load_steps=15 format=3 uid="uid://lper3pd72fq3"]
 
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_3s0wp"]
+[ext_resource type="Script" path="res://core/ui/cardui/navigation/search_bar_menu.gd" id="1_518qs"]
 [ext_resource type="PackedScene" uid="uid://bx0fnuxd8mm51" path="res://core/ui/components/search_bar.tscn" id="2_gqstr"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="2_kr4pi"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_sj5or"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_r83xd"]
 [ext_resource type="Texture2D" uid="uid://8pmccsyfv3u7" path="res://assets/ui/icons/search.svg" id="5_pq07x"]
+[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="7_uu507"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="8_3rpuo"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="9_onjl6"]
+[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="10_2emdw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -16,12 +21,25 @@ corner_radius_bottom_left = 10
 shadow_size = 5
 shadow_offset = Vector2(4, 4)
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lb7pt"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+color = Color(0.384314, 0.447059, 0.643137, 1)
+grow_begin = -10.0
+grow_end = -10.0
+vertical = true
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_88qmc"]
+color = Color(1, 0.47451, 0.776471, 1)
+thickness = 3
+
 [node name="SearchBarMenu" type="PanelContainer"]
 z_index = 20
 custom_minimum_size = Vector2(0, 48)
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
+script = ExtResource("1_518qs")
 
 [node name="VisibilityManager" type="Node" parent="."]
 script = ExtResource("1_3s0wp")
@@ -53,3 +71,102 @@ layout_mode = 2
 theme_override_colors/background_color = Color(0, 0, 0, 0)
 theme_override_font_sizes/font_size = 15
 placeholder_text = "What should you play?"
+
+[node name="LibraryTabsContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lb7pt")
+
+[node name="TextureLB" type="TextureRect" parent="MarginContainer/HBoxContainer/LibraryTabsContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("7_uu507")
+expand_mode = 1
+script = ExtResource("8_3rpuo")
+path = "joypad/lb"
+
+[node name="TabLabelContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="AllGamesContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer2" instance=ExtResource("9_onjl6")]
+layout_mode = 2
+text = "installed"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer2"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")
+
+[node name="AllGamesContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer" instance=ExtResource("9_onjl6")]
+layout_mode = 2
+text = "alL gAMES"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")
+
+[node name="AllGamesContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer3" instance=ExtResource("9_onjl6")]
+layout_mode = 2
+text = "favorites"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer3"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")
+
+[node name="AllGamesContainer4" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer4" instance=ExtResource("9_onjl6")]
+layout_mode = 2
+text = "collections"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer4"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")
+
+[node name="AllGamesContainer5" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer5" instance=ExtResource("9_onjl6")]
+layout_mode = 2
+text = "plugins"
+uppercase = true
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/LibraryTabsContainer/TabLabelContainer/AllGamesContainer5"]
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")
+
+[node name="TextureRB" type="TextureRect" parent="MarginContainer/HBoxContainer/LibraryTabsContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("10_2emdw")
+expand_mode = 1
+script = ExtResource("8_3rpuo")
+path = "joypad/rb"
