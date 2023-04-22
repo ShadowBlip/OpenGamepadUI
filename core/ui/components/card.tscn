@@ -5,6 +5,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/corner_radius.gdshader" id="2_hbj7w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nfs8d"]
+resource_local_to_scene = true
 shader = ExtResource("2_hbj7w")
 shader_parameter/corner_radius = 80.0
 
