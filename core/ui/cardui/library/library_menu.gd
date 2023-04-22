@@ -8,8 +8,11 @@ var library_state := preload("res://assets/state/states/library.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var card_scene := preload("res://core/ui/components/card.tscn") as PackedScene
+var tween: Tween
 var _library := {}
 var _current_selection := {}
+
+@export var tabs_state: TabContainerState
 
 @onready var global_search: SearchBar = get_tree().get_first_node_in_group("global_search_bar")
 @onready var tab_container: TabContainer = $%TabContainer
@@ -19,7 +22,7 @@ var _current_selection := {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tab_container.tab_changed.connect(_on_tab_container_tab_changed)
+	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
 	library_state.state_entered.connect(_on_state_entered)
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
 	LibraryManager.library_registered.connect(_on_library_registered)
@@ -138,44 +141,44 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		_library[tab_num][item.name] = card
 
 
+# Called when a library card is focused
 func _on_focus_updated(card: Control, tab: int) -> void:
 	_current_selection[tab] = card
-
-
-func _input(event: InputEvent) -> void:
-	if not visible:
+	
+	# Get the scroll container for this card
+	var scroll_container := tab_container.get_child(tab) as ScrollContainer
+	if not scroll_container:
 		return
 	
-	var num_tabs: int = tab_container.get_tab_count()
-	var next_tab: int = tab_container.current_tab
-	if event.is_action_pressed("ogui_tab_right"):
-		next_tab += 1
-	if event.is_action_pressed("ogui_tab_left"):
-		next_tab -= 1
-	
-	if next_tab < 0:
-		next_tab = num_tabs - 1
-	if next_tab + 1 > num_tabs:
-		next_tab = 0
-	tab_container.current_tab = next_tab
+	# Smoothly scroll to the card using a tween
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property(scroll_container, "scroll_vertical", card.position.y - card.size.y/3, 0.25)
 
 
 func _on_tab_container_tab_changed(tab: int) -> void:
+	# Update the tab container current tab
+	tab_container.current_tab = tab
+	
 	# Get the child container to grab focus
 	var container: ScrollContainer = tab_container.get_child(tab)
 	var grid: HFlowContainer = container.get_child(0).get_child(0)
 	
 	# If we had a previous selection, grab focus on that.
 	if tab in _current_selection:
-		var poster: Control = _current_selection[tab]
-		if poster.visible:
-			poster.grab_focus.call_deferred()
+		var card: Control = _current_selection[tab]
+		if card.visible:
+			card.grab_focus.call_deferred()
 			return
 		# If the selection is no longer visible, clear it from our current selection
 		_current_selection.erase(tab)
 	
 	# Otherwise, focus the first entry on tab change
 	for child in grid.get_children():
+		if child is FocusGroup:
+			child.grab_focus()
+			break
 		if child.visible:
 			child.grab_focus.call_deferred()
 			break

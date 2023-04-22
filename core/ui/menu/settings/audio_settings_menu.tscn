@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://baorkrl7picci"]
+[gd_scene load_steps=7 format=3 uid="uid://baorkrl7picci"]
 
 [ext_resource type="Script" path="res://core/ui/menu/settings/audio_settings_menu.gd" id="1_hjnkk"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="1_x5cm4"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_e1vvx"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_73ivm"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_qsi2y"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/cardui/settings/settings_menu_focus.tres" id="3_pfahh"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="3_pixnq"]
 
 [node name="AudioSettingsMenu" type="MarginContainer"]
@@ -22,7 +23,9 @@ script = ExtResource("1_hjnkk")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FocusManager" parent="VBoxContainer" instance=ExtResource("2_e1vvx")]
+[node name="FocusGroup" parent="VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_73ivm")]
+current_focus = NodePath("../VolumeSlider")
+focus_stack = ExtResource("3_pfahh")
 
 [node name="AudioLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 layout_mode = 2

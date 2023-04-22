@@ -11,7 +11,7 @@ var NotificationManager := load("res://core/global/notification_manager.tres") a
 var plugin_nodes := {}
 
 @onready var container := $%HFlowContainer
-@onready var focus_manager := $%FocusManager
+@onready var focus_group := $%FocusGroup
 @onready var http_image := $HTTPImageFetcher
 @onready var settings_menu := $"../../../.." #verbose?
 
@@ -38,7 +38,7 @@ func load_plugin_store_items():
 # Gets executed on plugin store items loaded
 func _on_plugin_store_loaded(plugin_items: Dictionary):
 	# Clear the current grid of items
-	var keep_nodes := [focus_manager]
+	var keep_nodes := [focus_group]
 	for plugin_id in plugin_items.keys():
 		if plugin_id in plugin_nodes:
 			keep_nodes.append(plugin_nodes[plugin_id])

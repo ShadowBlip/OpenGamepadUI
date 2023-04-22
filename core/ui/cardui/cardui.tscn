@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://diug36y0he1qx"]
+[gd_scene load_steps=28 format=3 uid="uid://diug36y0he1qx"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/cardui/cardui.gd" id="1_f8851"]
@@ -9,14 +9,18 @@
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
 [ext_resource type="PackedScene" uid="uid://d7lts0p8kgtt" path="res://core/ui/cardui/home/cardui_home.tscn" id="6_12lhu"]
 [ext_resource type="PackedScene" uid="uid://cir6gksabfpi4" path="res://core/ui/cardui/launch/game_launch_menu.tscn" id="9_m34in"]
-[ext_resource type="PackedScene" uid="uid://lper3pd72fq3" path="res://core/ui/cardui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
+[ext_resource type="PackedScene" uid="uid://cl8pe1jkrpgjh" path="res://core/ui/cardui/settings/settings_menu.tscn" id="10_1ruvi"]
+[ext_resource type="PackedScene" uid="uid://dvflfricinu3g" path="res://core/ui/cardui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
+[ext_resource type="PackedScene" uid="uid://bmthiteswen4h" path="res://core/ui/cardui/launch/game_settings.tscn" id="10_7cj6o"]
 [ext_resource type="PackedScene" uid="uid://bdwu6kiayvvgm" path="res://core/ui/cardui/library/library_menu.tscn" id="10_uqodp"]
 [ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/cardui/navigation/top_button_menu.tscn" id="11_x7ns7"]
 [ext_resource type="PackedScene" uid="uid://40v4c0khrlfm" path="res://core/ui/cardui/navigation/context_bar_menu.tscn" id="12_bstc8"]
+[ext_resource type="PackedScene" uid="uid://bvsnvsby3isxr" path="res://core/ui/menu/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://dwlifno8asacn" path="res://core/ui/cardui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://xg0f88hltny1" path="res://core/ui/cardui/qam/quick_access_menu.tscn" id="14_lsaok"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
+[ext_resource type="PackedScene" uid="uid://bdty1sw30ficb" path="res://core/ui/cardui/power/power_menu.tscn" id="20_noim3"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" uid="uid://g4o1uuo0hlbv" path="res://core/ui/menu/game/game_loading.tscn" id="22_morxu"]
 
@@ -112,6 +116,18 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
+[node name="GameSettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_7cj6o")]
+visible = false
+layout_mode = 2
+
+[node name="SettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_1ruvi")]
+visible = false
+layout_mode = 2
+
+[node name="GamepadSettings" parent="Content/HomeMenu" instance=ExtResource("12_yovai")]
+visible = false
+layout_mode = 2
+
 [node name="FullscreenMenus" type="MarginContainer" parent="Content"]
 layout_mode = 2
 mouse_filter = 2
@@ -160,6 +176,7 @@ layout_mode = 2
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
 visible = false
+z_index = 20
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -189,6 +206,10 @@ grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("21_s3peg")
 autoplay = true
+
+[node name="PowerMenu" parent="." instance=ExtResource("20_noim3")]
+visible = false
+layout_mode = 1
 
 [node name="VolumeIndicator" parent="." instance=ExtResource("18_g4maw")]
 layout_mode = 1

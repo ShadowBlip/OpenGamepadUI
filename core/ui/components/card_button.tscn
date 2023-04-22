@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://c71ayw7pcw6u6"]
+
+[ext_resource type="Script" path="res://core/ui/components/card_button.gd" id="1_62nf7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxw8g"]
+bg_color = Color(0.105882, 0.113725, 0.145098, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 2
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_f3s25"]
+colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7cyn5"]
+gradient = SubResource("Gradient_f3s25")
+fill = 1
+fill_to = Vector2(1, 2)
+
+[node name="CardButton" type="PanelContainer"]
+clip_children = 2
+offset_right = 103.0
+offset_bottom = 34.0
+focus_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lxw8g")
+script = ExtResource("1_62nf7")
+highlight_speed = null
+
+[node name="HighlightTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture2D_7cyn5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="Label" type="Label" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Button"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
