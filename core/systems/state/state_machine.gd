@@ -30,6 +30,10 @@ func _on_state_changed(from: State, to: State) -> void:
 	if logger._name != logger_name:
 		logger = Log.get_logger(logger_name)
 	logger.info("Switched from state {0} to {1}".format([from_str, to_str]))
+	var state_names := PackedStringArray()
+	for state in _state_stack:
+		state_names.append(state.name)
+	logger.info("Stack: " + "-> ".join(state_names))
 
 
 # Returns the current state at the end of the state stack

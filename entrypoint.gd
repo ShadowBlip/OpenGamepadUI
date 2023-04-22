@@ -23,8 +23,9 @@ func _ready() -> void:
 		return
 
 	# Launch the main interface
-	get_tree().change_scene_to_file("res://core/main.tscn")
-
+	get_tree().change_scene_to_file("res://core/ui/cardui/cardui.tscn")
+	#get_tree().change_scene_to_file("res://core/main.tscn")
+	
 
 # Applies any update packs to load newer scripts and resources
 # TODO: Verify that pack version is not older than current version before

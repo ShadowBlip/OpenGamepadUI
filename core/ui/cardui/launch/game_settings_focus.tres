@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="FocusStack" load_steps=2 format=3 uid="uid://cc6i4i264dmqd"]
+
+[ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="1_y3gl5"]
+
+[resource]
+script = ExtResource("1_y3gl5")

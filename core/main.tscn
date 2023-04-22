@@ -25,13 +25,13 @@
 [ext_resource type="PackedScene" uid="uid://bf82p2cncbcem" path="res://core/ui/menu/power/power_menu.tscn" id="20_d22mh"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="20_vy825"]
 
-[sub_resource type="Gradient" id="Gradient_ccxfq"]
+[sub_resource type="Gradient" id="Gradient_867l0"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.734982)
 colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_ig3ys"]
-gradient = SubResource("Gradient_ccxfq")
+gradient = SubResource("Gradient_867l0")
 
 [sub_resource type="Animation" id="Animation_vgwwd"]
 resource_name = "fade"

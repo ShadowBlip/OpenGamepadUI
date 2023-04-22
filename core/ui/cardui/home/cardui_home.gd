@@ -10,10 +10,12 @@ var launcher_state := preload("res://assets/state/states/game_launcher.tres") as
 var card_scene := preload("res://core/ui/components/card.tscn") as PackedScene
 var _initialized := false
 var recent_apps: Array
+var tween: Tween
 
 @onready var container: HBoxContainer = $%CardContainer
 @onready var banner: TextureRect = $%BannerTexture
 @onready var player: AnimationPlayer = $%AnimationPlayer
+@onready var scroll_container: ScrollContainer = $%ScrollContainer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -107,13 +109,19 @@ func _grab_focus() -> void:
 		break
 
 
-# Called when a poster is focused
-func _on_card_focused(item: LibraryItem) -> void:
+# Called when a card is focused
+func _on_card_focused(item: LibraryItem, card: Control) -> void:
 	if state_machine.current_state() != home_state:
 		return
 	player.stop()
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)
+
+	# Smoothly scroll to the card using a tween
+	if tween:
+		tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property(scroll_container, "scroll_horizontal", card.position.x - card.size.x/2, 0.25)
 
 
 func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton) -> void:
@@ -132,7 +140,7 @@ func _build_card(item: LibraryItem, portrait: bool) -> TextureButton:
 	texture_rect.texture = await BoxArtManager.get_boxart_or_placeholder(item, layout)
 	
 	# Listen for focus events on the posters
-	card.focus_entered.connect(_on_card_focused.bind(item))
+	card.focus_entered.connect(_on_card_focused.bind(item, card))
 
 	# Listen for button presses and pass the library item with the state
 	var on_button_up := func():

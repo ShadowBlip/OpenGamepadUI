@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_5jtbs")
-name = ""
+name = "display"
 data = {}

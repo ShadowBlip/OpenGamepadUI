@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://cgmb4kr2ec4ha"]
+
+[ext_resource type="Script" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
+[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="3_15bgo"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="4_cjawb"]
+[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="6_61y6d"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lb7pt"]
+content_margin_top = 20.0
+content_margin_bottom = 20.0
+color = Color(0.384314, 0.447059, 0.643137, 1)
+grow_begin = -10.0
+grow_end = -10.0
+vertical = true
+
+[node name="TabsHeader" type="HBoxContainer"]
+theme_override_constants/separation = 5
+script = ExtResource("1_su51c")
+
+[node name="LSeparator" type="VSeparator" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lb7pt")
+
+[node name="TextureLB" type="TextureRect" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_15bgo")
+expand_mode = 1
+script = ExtResource("4_cjawb")
+path = "joypad/lb"
+
+[node name="TabLabelContainer" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TextureRB" type="TextureRect" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("6_61y6d")
+expand_mode = 1
+script = ExtResource("4_cjawb")
+path = "joypad/rb"
+
+[node name="RSeparator" type="VSeparator" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lb7pt")

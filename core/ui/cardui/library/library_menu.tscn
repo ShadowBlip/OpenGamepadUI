@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://bdwu6kiayvvgm"]
+[gd_scene load_steps=16 format=3 uid="uid://bdwu6kiayvvgm"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/library/library_menu.gd" id="1_jetsl"]
+[ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/cardui/library/library_tabs_state.tres" id="2_chnkw"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_nb0by"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_mhjhd"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_wevdw"]
@@ -27,6 +28,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jetsl")
+tabs_state = ExtResource("2_chnkw")
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_nb0by")]
 state = ExtResource("3_mhjhd")
@@ -49,9 +51,7 @@ tabs_visible = false
 
 [node name="InstalledTab" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
-follow_focus = true
 horizontal_scroll_mode = 0
-vertical_scroll_mode = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/InstalledTab"]
 layout_mode = 2
@@ -111,7 +111,6 @@ layout_mode = 2
 [node name="AllGamesTab" type="ScrollContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
-follow_focus = true
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/AllGamesTab"]
@@ -130,5 +129,77 @@ theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 16
 
 [node name="FocusGroup" parent="TabContainer/AllGamesTab/MarginContainer/AllGamesGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
+current_focus = NodePath("")
+focus_stack = SubResource("Resource_y6lie")
+
+[node name="FavoritesTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/FavoritesTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="FavoritesGrid" type="HFlowContainer" parent="TabContainer/FavoritesTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FocusGroup" parent="TabContainer/FavoritesTab/MarginContainer/FavoritesGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
+current_focus = NodePath("")
+focus_stack = SubResource("Resource_y6lie")
+
+[node name="CollectionsTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/CollectionsTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="CollectionsGrid" type="HFlowContainer" parent="TabContainer/CollectionsTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FocusGroup" parent="TabContainer/CollectionsTab/MarginContainer/CollectionsGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
+current_focus = NodePath("")
+focus_stack = SubResource("Resource_y6lie")
+
+[node name="PluginsTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/PluginsTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="PluginsGrid" type="HFlowContainer" parent="TabContainer/PluginsTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FocusGroup" parent="TabContainer/PluginsTab/MarginContainer/PluginsGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
 current_focus = NodePath("")
 focus_stack = SubResource("Resource_y6lie")

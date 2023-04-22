@@ -6,7 +6,7 @@ var logger_map := {}
 var log_manager := preload("res://core/global/log_manager.tres")
 
 @onready var container := $%VBoxContainer
-@onready var focus_manager := $%FocusManager
+@onready var focus_group := $%FocusGroup
 @onready var global_dropdown := $%GlobalDropdown
 
 
@@ -60,7 +60,7 @@ func _populate_loggers() -> void:
 		logger_map[logger_name].queue_free()
 		logger_map.erase(logger_name)
 		
-	focus_manager.recalculate_focus()
+	focus_group.recalculate_focus()
 
 
 func _create_logger_toggle(logger_name: String) -> void:

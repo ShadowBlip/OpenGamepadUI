@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_jmie1"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="3_3xh32"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_6xrv5"]
-[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_jawel"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_maija"]
 [ext_resource type="Script" path="res://core/ui/components/transition.gd" id="6_r8xs1"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_ris1l"]
@@ -17,6 +16,7 @@
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="10_irj46"]
 [ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/cardui/main-menu/main_menu_focus.tres" id="10_v2rc1"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="11_e52bm"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="11_obt01"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjrde"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -164,10 +164,11 @@ theme_override_constants/separation = 20
 current_focus = NodePath("../LibraryButton")
 focus_stack = ExtResource("10_v2rc1")
 
-[node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
+[node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "LIBRARY"
+text = "Library"
+highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/LibraryButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -175,9 +176,10 @@ state = ExtResource("8_iv515")
 action = 2
 on_signal = "button_up"
 
-[node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
+[node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
-text = "STORE"
+text = "Store"
+highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/StoreButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -185,9 +187,10 @@ state = ExtResource("9_2jho2")
 action = 2
 on_signal = "button_up"
 
-[node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
+[node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
-text = "SETTINGS"
+text = "Settings"
+highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/SettingsButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -195,9 +198,10 @@ state = ExtResource("10_irj46")
 action = 2
 on_signal = "button_up"
 
-[node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("4_jawel")]
+[node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
-text = "POWER"
+text = "Power"
+highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/PowerButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")

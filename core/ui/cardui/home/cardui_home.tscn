@@ -81,9 +81,9 @@ theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 15
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
 clip_contents = false
 layout_mode = 2
-follow_focus = true
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 

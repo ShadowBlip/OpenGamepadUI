@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cir6gksabfpi4"]
+[gd_scene load_steps=23 format=3 uid="uid://cir6gksabfpi4"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
@@ -15,6 +15,10 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="9_k6q8g"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="15_lat8h"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="16_m8g5y"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="17_7ydn0"]
+[ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="19_b21vy"]
 
 [sub_resource type="Animation" id="Animation_ou6f5"]
 resource_name = "fade_in"
@@ -177,6 +181,11 @@ flat = true
 icon_alignment = 1
 expand_icon = true
 
+[node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/GamepadButton" instance=ExtResource("15_lat8h")]
+state_machine = ExtResource("16_m8g5y")
+state = ExtResource("17_7ydn0")
+on_signal = "button_up"
+
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
@@ -190,3 +199,8 @@ icon = ExtResource("4_krc2y")
 flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/SettingsButton" instance=ExtResource("15_lat8h")]
+state_machine = ExtResource("16_m8g5y")
+state = ExtResource("19_b21vy")
+on_signal = "button_up"
