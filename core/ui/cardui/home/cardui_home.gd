@@ -136,8 +136,8 @@ func _build_card(item: LibraryItem, portrait: bool) -> TextureButton:
 
 	# Get the boxart for the item
 	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var texture_rect = card.get_node("TextureRect")
-	texture_rect.texture = await BoxArtManager.get_boxart_or_placeholder(item, layout)
+	var card_texture: Texture2D = await BoxArtManager.get_boxart_or_placeholder(item, layout)
+	card.set_texture(card_texture)
 	
 	# Listen for focus events on the posters
 	card.focus_entered.connect(_on_card_focused.bind(item, card))
