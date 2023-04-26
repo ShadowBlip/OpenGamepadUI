@@ -12,11 +12,11 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="Gradient" id="Gradient_73o7r"]
+[sub_resource type="Gradient" id="Gradient_2e33l"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_quvnw"]
-gradient = SubResource("Gradient_73o7r")
+gradient = SubResource("Gradient_2e33l")
 fill = 1
 fill_to = Vector2(1, 2)
 

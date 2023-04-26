@@ -233,6 +233,9 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 		if not node.visible:
 			logger.debug("Node: " + node.name + " not visible. Skipping.")
 			continue
+		# Skip if the node is a FocusGroupNeighbor node
+		if node.name == "FocusGroupNeighbor":
+			continue
 		# If the Control node has FOCUS_ALL set, return it
 		if node.focus_mode == Control.FOCUS_ALL:
 			logger.debug("Found good node: " + node.name)

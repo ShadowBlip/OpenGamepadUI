@@ -161,6 +161,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 20
 
 [node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_brlgl")]
+unique_name_in_owner = true
 current_focus = NodePath("../LibraryButton")
 focus_stack = ExtResource("10_v2rc1")
 
@@ -168,7 +169,6 @@ focus_stack = ExtResource("10_v2rc1")
 unique_name_in_owner = true
 layout_mode = 2
 text = "Library"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/LibraryButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -179,7 +179,6 @@ on_signal = "button_up"
 [node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Store"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/StoreButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -190,7 +189,6 @@ on_signal = "button_up"
 [node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Settings"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/SettingsButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -201,7 +199,6 @@ on_signal = "button_up"
 [node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Power"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/PowerButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
