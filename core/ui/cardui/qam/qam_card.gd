@@ -29,12 +29,11 @@ var highlight_tween: Tween
 var focus_group: FocusGroup
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
-var logger := Log.get_logger(name, Log.LEVEL.DEBUG)
+var logger := Log.get_logger("QAMCard", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#focus_entered.connect(_play_sound.bind(_focus_audio_stream))
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	pressed.connect(_on_pressed)
