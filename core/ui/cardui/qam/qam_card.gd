@@ -6,16 +6,29 @@ signal button_up
 signal button_down
 signal toggled(pressed: bool)
 
+@export_category("Card")
 @export var title := "Section"
 @export var is_toggled := false
+
+@export_category("Animation")
+@export var highlight_speed := 0.1
+
+@export_category("AudioSteamPlayer")
+@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
 
 @onready var label := $%SectionLabel
 @onready var separator := $%HSeparator
 @onready var content_container := $%ContentContainer
+@onready var inside_panel := $%InsidePanel
 @onready var margin_container := $%MarginContainer
+@onready var highlight := $%HighlightTexture as TextureRect
 
 var tween: Tween
+var highlight_tween: Tween
 var focus_group: FocusGroup
+var focus_audio_stream = load(focus_audio)
+var select_audio_stream = load(select_audio)
 var logger := Log.get_logger(name, Log.LEVEL.DEBUG)
 
 
@@ -65,11 +78,13 @@ func _find_child_focus_group(nodes: Array[Node]) -> FocusGroup:
 
 
 func _on_focus() -> void:
-	var style := get("theme_override_styles/panel") as StyleBoxFlat
-	style.border_width_left = 4
-	style.border_width_bottom = 4
-	style.border_width_top = 4
-	style.border_width_right = 4
+	_highlight()
+	
+	# If the card gets focused, and its already expanded, that means we've
+	# the user has focused outside the card, and we should shrink to hide the
+	# content
+	if is_toggled:
+		_on_pressed()
 
 
 func _on_unfocus() -> void:
@@ -82,13 +97,26 @@ func _on_unfocus() -> void:
 	if focus_group.is_in_focus_stack():
 		return
 	
-	var style := get("theme_override_styles/panel") as StyleBoxFlat
-	style.border_width_left = 0
-	style.border_width_bottom = 0
-	style.border_width_top = 0
-	style.border_width_right = 0
-	#if is_toggled:
-	#	_on_pressed()
+	_unhighlight()
+
+
+func _highlight() -> void:
+	if highlight_tween:
+		highlight_tween.kill()
+	highlight_tween = get_tree().create_tween()
+	highlight_tween.tween_property(highlight, "visible", true, 0)
+	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 0), 0)
+	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), highlight_speed)
+	_play_sound(focus_audio_stream)
+	
+	
+func _unhighlight() -> void:
+	if highlight_tween:
+		highlight_tween.kill()
+	highlight_tween = get_tree().create_tween()
+	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), 0)
+	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 0), highlight_speed)
+	highlight_tween.tween_property(highlight, "visible", false, 0)
 
 
 func _on_pressed() -> void:
@@ -106,8 +134,10 @@ func _grow() -> void:
 		tween.kill()
 	tween = get_tree().create_tween()
 	tween.tween_property(self, "custom_minimum_size", Vector2(0, size.y + content_container.size.y), 0.2)
+	tween.tween_property(inside_panel, "visible", true, 0)
 	tween.tween_property(content_container, "visible", true, 0)
 	tween.tween_property(separator, "visible", true, 0)
+	tween.tween_property(inside_panel, "modulate", Color(1, 1, 1, 1), 0.1)
 	tween.tween_property(content_container, "modulate", Color(1, 1, 1, 1), 0.2)
 	
 	# After growing finishes, grab focus on the child focus group
@@ -125,10 +155,18 @@ func _shrink() -> void:
 		tween.kill()
 	tween = get_tree().create_tween()
 	tween.tween_property(content_container, "modulate", Color(1, 1, 1, 0), 0.2)
+	tween.tween_property(inside_panel, "modulate", Color(1, 1, 1, 0), 0.1)
 	tween.tween_property(separator, "visible", false, 0)
+	tween.tween_property(inside_panel, "visible", false, 0)
 	tween.tween_property(content_container, "visible", false, 0)
 	tween.tween_property(self, "custom_minimum_size", Vector2(0, 0), 0.2)
 	tween.tween_callback(grab_focus)
+
+
+func _play_sound(stream: AudioStream) -> void:
+	var audio_player: AudioStreamPlayer = $AudioStreamPlayer
+	audio_player.stream = stream
+	audio_player.play()
 
 
 func _gui_input(event: InputEvent) -> void:

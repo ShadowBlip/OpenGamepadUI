@@ -8,6 +8,7 @@ const qam_card_scene := preload("res://core/ui/cardui/qam/qam_card.tscn")
 
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
+var qam_focus := preload("res://core/ui/cardui/qam/quick_access_menu_focus.tres") as FocusStack
 
 @onready var viewport: VBoxContainer = $%Viewport
 @onready var focus_group := $%FocusGroup as FocusGroup
@@ -18,6 +19,7 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	qam_state.state_entered.connect(_on_state_entered)
+	qam_state.state_exited.connect(_on_state_exited)
 
 
 func _on_state_entered(_from: State) -> void:
@@ -26,6 +28,10 @@ func _on_state_entered(_from: State) -> void:
 	
 	if focus_group:
 		focus_group.grab_focus()
+		
+
+func _on_state_exited(_to: State) -> void:
+	qam_focus.pop()
 
 
 func _update_playing_now() -> void:
@@ -49,3 +55,4 @@ func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = nu
 	# Create a QAM card
 	var qam_card := qam_card_scene.instantiate()
 	viewport.add_child(qam_card)
+	#qam_card.focus_group.focus_stack = load("res://core/ui/cardui/qam/quick_access_menu_focus.tres")

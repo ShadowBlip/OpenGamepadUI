@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dvflfricinu3g"]
+[gd_scene load_steps=12 format=3 uid="uid://dvflfricinu3g"]
 
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_3s0wp"]
 [ext_resource type="Script" path="res://core/ui/cardui/navigation/search_bar_menu.gd" id="1_518qs"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_sj5or"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_r83xd"]
 [ext_resource type="Texture2D" uid="uid://8pmccsyfv3u7" path="res://assets/ui/icons/search.svg" id="5_pq07x"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_dilc0"]
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_uixir"]
 [ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/cardui/library/library_tabs_state.tres" id="9_dlgkq"]
 
@@ -44,14 +45,13 @@ theme_override_constants/margin_right = 10
 layout_mode = 2
 theme_override_constants/separation = 11
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(24, 24)
+[node name="SearchButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("6_dilc0")]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("5_pq07x")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="SearchBar" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_gqstr")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 36)
 layout_mode = 2
 theme_override_colors/background_color = Color(0, 0, 0, 0)

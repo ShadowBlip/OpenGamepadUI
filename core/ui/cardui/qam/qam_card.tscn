@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwqwrfp616h21"]
+[gd_scene load_steps=7 format=3 uid="uid://bwqwrfp616h21"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
@@ -12,7 +12,23 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="Gradient" id="Gradient_73o7r"]
+colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_quvnw"]
+gradient = SubResource("Gradient_73o7r")
+fill = 1
+fill_to = Vector2(1, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sh8jt"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="QuickAccessCard" type="PanelContainer"]
+clip_children = 2
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 51.0
@@ -22,6 +38,27 @@ focus_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ptn26")
 script = ExtResource("1_nu7eg")
+
+[node name="HighlightTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture2D_quvnw")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="InsidePanelMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sh8jt")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
@@ -49,3 +86,6 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

@@ -21,6 +21,7 @@ class_name FocusGroup
 @export var focus_neighbor_left: FocusGroup
 @export var focus_neighbor_right: FocusGroup
 
+var neighbor_control := Control.new()
 var logger := Log.get_logger("FocusGroup", Log.LEVEL.DEBUG)
 
 @onready var parent := get_parent() as Control
@@ -28,6 +29,18 @@ var logger := Log.get_logger("FocusGroup", Log.LEVEL.DEBUG)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Create a focus stack if none is defined
+	if not focus_stack:
+		focus_stack = FocusStack.new()
+	
+	# Create a Control node child that nodes can set their focus neighbors to.
+	# This can allow focus groups to neighbor other focus groups.
+	neighbor_control.name = "FocusGroupNeighbor"
+	neighbor_control.focus_entered.connect(grab_focus)
+	neighbor_control.focus_mode = Control.FOCUS_ALL
+	add_child(neighbor_control)
+	
+	# Listen for events that require recalculating the focus neighbors
 	parent.child_entered_tree.connect(_on_child_tree_changed)
 	parent.child_exiting_tree.connect(_on_child_tree_changed)
 	parent.sort_children.connect(recalculate_focus)
@@ -42,7 +55,49 @@ func _ready():
 
 ## Recalculate the focus neighbors of the container's children
 func recalculate_focus() -> void:
-	_on_child_tree_changed(null)
+	logger.debug("Rebuilding the focus tree")
+	# Get existing children so we can manage focus
+	if parent.get_child_count() == 0:
+		logger.debug("No children to set focus to; nothing to do.")
+		return
+	
+	# Only update focus if the node is inside the scene tree
+	if not is_inside_tree():
+		logger.debug("Not updating focus; not yet in the scene tree")
+		return
+
+	var control_children: Array[Control] = []
+	for child in parent.get_children():
+		if not child is Control:
+			continue
+		if not child.is_inside_tree():
+			continue
+		if child.focus_mode != Control.FOCUS_ALL:
+			continue
+		control_children.append(child)
+		if not child.focus_entered.is_connected(_on_child_focused):
+			child.focus_entered.connect(_on_child_focused.bind(child))
+
+	if control_children.size() == 0:
+		logger.debug("No control children. Nothing to do.")
+		return
+
+	if control_children.size() == 1:
+		logger.debug("One control child. Setting all focus neighbors to itself.")
+		# Block leaving the UI element unless B button is pressed.
+		var child := control_children[0]
+		_single_set_focus_tree(child)
+		return
+
+	if parent is HFlowContainer:
+		_hflow_set_focus_tree(control_children)
+		return
+
+	if parent is HBoxContainer:
+		_hbox_set_focus_tree(control_children)
+		return
+
+	_vbox_set_focus_tree(control_children)
 
 
 ## Grab focus on the currently focused node in the group and push this group
@@ -123,6 +178,8 @@ func _on_visibility_changed() -> void:
 	set_process_input(false)
 
 
+# Recursively tries to find a FocusGroup in the given array of nodes. Returns
+# null if none are found.
 func _find_child_focus_group(nodes: Array[Node], root: Node = null) -> FocusGroup:
 	if nodes.size() == 0:
 		logger.debug("Node has no children to check.")
@@ -189,56 +246,29 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 	return null
 
 
+# Called when nodes are added or removed from the parent
 func _on_child_tree_changed(_node) -> void:
-	logger.debug("Child tree changed. Rebuilding focus tree.")
-	# Get existing children so we can manage focus
-	if parent.get_child_count() == 0:
-		logger.debug("No children to set focus to; nothing to do.")
-		return
-	
-	# Only update focus if the node is inside the scene tree
-	if not is_inside_tree():
-		logger.debug("Not updating focus; not yet in the scene tree")
-		return
+	logger.debug("Child tree changed.")
+	recalculate_focus()
 
-	var control_children: Array[Control] = []
-	for child in parent.get_children():
-		if not child is Control:
-			continue
-		if not child.is_inside_tree():
-			continue
-		if child.focus_mode != Control.FOCUS_ALL:
-			continue
-		control_children.append(child)
-		if not child.focus_entered.is_connected(_on_child_focused):
-			child.focus_entered.connect(_on_child_focused.bind(child))
 
-	if control_children.size() == 0:
-		logger.debug("No control children. Nothing to do.")
-		return
-
-	if control_children.size() == 1:
-		logger.debug("One control child. Setting all focus neighbors to itself.")
-		# Block leaving the UI element unless B button is pressed.
-		var child := control_children[0]
-		child.focus_next = child.get_path()
-		child.focus_neighbor_bottom = child.get_path()
-		child.focus_previous = child.get_path()
-		child.focus_neighbor_top = child.get_path()
-		child.focus_neighbor_left = child.get_path()
-		child.focus_neighbor_right = child.get_path()
-		_on_child_focused(child)
-		return
-
-	if parent is HFlowContainer:
-		_hflow_set_focus_tree(control_children)
-		return
-
-	if parent is HBoxContainer:
-		_hbox_set_focus_tree(control_children)
-		return
-
-	_vbox_set_focus_tree(control_children)
+# Update the focus neighbors when only one child exists
+func _single_set_focus_tree(child: Control) -> void:
+	child.focus_next = child.get_path()
+	child.focus_neighbor_bottom = child.get_path()
+	child.focus_previous = child.get_path()
+	child.focus_neighbor_top = child.get_path()
+	child.focus_neighbor_left = child.get_path()
+	child.focus_neighbor_right = child.get_path()
+	if focus_neighbor_top:
+		child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
+	if focus_neighbor_bottom:
+		child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
+	if focus_neighbor_left:
+		child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
+	if focus_neighbor_right:
+		child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
+	_on_child_focused(child)
 
 
 func _hflow_set_focus_tree(control_children: Array[Control]) -> void:
@@ -297,6 +327,16 @@ func _grid_set_focus_tree(control_children: Array[Array]) -> void:
 
 			child.focus_next = child.focus_neighbor_right
 			child.focus_previous = child.focus_neighbor_left
+			
+			# Set the focus group neighbors if they are defined
+			if focus_neighbor_top and y == 0:
+				child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
+			if focus_neighbor_bottom and y == control_children.size() - 1:
+				child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
+			if focus_neighbor_left and x == 0:
+				child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
+			if focus_neighbor_right and x == control_children[y].size() - 1:
+				child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
 
 
 func _hbox_set_focus_tree(control_children: Array[Control]) -> void:
@@ -317,6 +357,17 @@ func _hbox_set_focus_tree(control_children: Array[Control]) -> void:
 		# Block leaving the UI element unless B button is pressed.
 		child.focus_neighbor_top = control_children[i].get_path()
 		child.focus_neighbor_bottom = control_children[i].get_path()
+		
+		# Set the focus group neighbors if they are defined
+		if focus_neighbor_top:
+			child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
+		if focus_neighbor_bottom:
+			child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
+		if focus_neighbor_left and i == 0:
+			child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
+		if focus_neighbor_right and i == control_children.size() - 1:
+			child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
+		
 		i += 1
 
 
@@ -338,6 +389,17 @@ func _vbox_set_focus_tree(control_children: Array[Control]) -> void:
 		# Block leaving the UI element unless B button is pressed.
 		child.focus_neighbor_left = control_children[i].get_path()
 		child.focus_neighbor_right = control_children[i].get_path()
+		
+		# Set the focus group neighbors if they are defined
+		if focus_neighbor_top and i == 0:
+			child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
+		if focus_neighbor_bottom and i == control_children.size() - 1:
+			child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
+		if focus_neighbor_left:
+			child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
+		if focus_neighbor_right:
+			child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
+
 		i += 1
 
 
