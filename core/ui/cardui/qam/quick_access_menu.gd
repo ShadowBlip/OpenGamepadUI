@@ -46,13 +46,31 @@ func _update_playing_now() -> void:
 
 # Adds the given Control menu to the QAM. A focus node can be given which will
 # be the first node to focus
-func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = null):
-	print("ADD QAM ITEM: ", qam_item)
-
-	# TODO: Backwards compatibility
-	# Replace FocusManager with FocusGroup
-
+func add_child_menu(qam_item: Control, icon: Texture2D, focus_node: Control = null, title: String = ""):
 	# Create a QAM card
 	var qam_card := qam_card_scene.instantiate()
+	var content := qam_card.get_node("MarginContainer/CardVBoxContainer/ContentContainer")
+	content.add_child(qam_item)
+
+	# Backwards compatibility
+	# If no title was specified, try to find a section label to use instead
+	if title == "":
+		var section := qam_item.find_child("SectionLabel")
+		if section.get("text") != null:
+			title = section.text
+			section.queue_free()
+		else:
+			title = "Plugin"
+	qam_card.title = title
+
+	# Backwards compatibility
+	# Replace FocusManager with FocusGroup
+	var focus_manager := qam_item.find_child("FocusManager")
+	if focus_manager:
+		var focus_parent := focus_manager.get_parent()
+		focus_manager.queue_free()
+		var focus_group := FocusGroup.new()
+		focus_group.focus_stack = load("res://core/ui/cardui/qam/quick_access_menu_focus.tres")
+		focus_parent.add_child(focus_group)
+
 	viewport.add_child(qam_card)
-	#qam_card.focus_group.focus_stack = load("res://core/ui/cardui/qam/quick_access_menu_focus.tres")

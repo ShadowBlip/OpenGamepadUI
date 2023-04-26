@@ -48,6 +48,8 @@ func _ready() -> void:
 		# If the node is a control, resize it based on its children
 		if child.get_class() == "Control":
 			for c in child.get_children():
+				if not c is Control:
+					continue
 				(child as Control).custom_minimum_size += c.size
 	
 	# Try and find a FocusGroup in the content to focus
