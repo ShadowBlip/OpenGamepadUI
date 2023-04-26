@@ -35,17 +35,18 @@ func _add_session_switcher(root: Window) -> void:
 		return
 	
 	# Create a button that will perform the session switching
-	var button_scene := load("res://core/ui/components/button.tscn") as PackedScene
-	var switch_to_steam := button_scene.instantiate() as Button
+	# TODO: Create methods for getting UI components
+	var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
+	var switch_to_steam := button_scene.instantiate() as Control
 	switch_to_steam.text = "Switch to Steam"
 	switch_to_steam.pressed.connect(_switch_session.bind("gamescope"))
 	
-	var switch_to_desktop := button_scene.instantiate() as Button
+	var switch_to_desktop := button_scene.instantiate() as Control
 	switch_to_desktop.text = "Switch to Desktop"
 	switch_to_desktop.pressed.connect(_switch_session.bind("plasma"))
 	
 	# Add the buttons just above the exit button
-	var exit_button := power_menu.exit_button as Button
+	var exit_button := power_menu.exit_button as Control
 	var container := exit_button.get_parent()
 	container.add_child(switch_to_steam)
 	container.move_child(switch_to_steam, exit_button.get_index())

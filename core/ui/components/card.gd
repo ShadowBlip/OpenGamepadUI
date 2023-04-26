@@ -44,8 +44,6 @@ func set_texture(new_texture: Texture2D) -> void:
 	# Update the corner radius based on the image size
 	var radius := texture_size.x / 7.5
 	texture_rect.material.set_shader_parameter("corner_radius", radius)
-	print("Size: ", texture_size)
-	print("Setting to radius: ", radius)
 
 
 func _on_focus() -> void:
