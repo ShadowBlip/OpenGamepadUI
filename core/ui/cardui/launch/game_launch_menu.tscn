@@ -1,11 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://cir6gksabfpi4"]
+[gd_scene load_steps=24 format=3 uid="uid://cir6gksabfpi4"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_oae7b"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="3_dp3a3"]
 [ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="3_w7th1"]
-[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="4_krc2y"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_le731"]
 [ext_resource type="Texture2D" uid="uid://bec6fhiswf6ve" path="res://assets/ui/icons/gamepad-bold.svg" id="5_ewj68"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tdidy"]
@@ -15,6 +14,8 @@
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="9_k6q8g"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="14_3h1st"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="15_f3ktw"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="15_lat8h"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="16_m8g5y"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="17_7ydn0"]
@@ -135,27 +136,10 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 100
 
-[node name="PlayMenu" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_svm8w")
-
-[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/PlayMenu"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/PlayMenu/MarginContainer"]
-layout_mode = 2
-
-[node name="LaunchButton" type="Button" parent="CenterContainer/HBoxContainer/PlayMenu/MarginContainer/HBoxContainer"]
+[node name="LaunchButton" parent="CenterContainer/HBoxContainer" instance=ExtResource("14_3h1st")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(24, 48)
 layout_mode = 2
-text = "PLAY NOW"
-flat = true
+text = "Play Now"
 
 [node name="ExtraMenu" type="PanelContainer" parent="CenterContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
@@ -172,14 +156,11 @@ theme_override_constants/margin_right = 10
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer"]
 layout_mode = 2
 
-[node name="GamepadButton" type="Button" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
+[node name="GamepadButton" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer" instance=ExtResource("15_f3ktw")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
-icon = ExtResource("5_ewj68")
-flat = true
-icon_alignment = 1
-expand_icon = true
+texture = ExtResource("5_ewj68")
 
 [node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/GamepadButton" instance=ExtResource("15_lat8h")]
 state_machine = ExtResource("16_m8g5y")
@@ -191,14 +172,10 @@ custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
+[node name="SettingsButton" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer" instance=ExtResource("15_f3ktw")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
-icon = ExtResource("4_krc2y")
-flat = true
-icon_alignment = 1
-expand_icon = true
 
 [node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/SettingsButton" instance=ExtResource("15_lat8h")]
 state_machine = ExtResource("16_m8g5y")

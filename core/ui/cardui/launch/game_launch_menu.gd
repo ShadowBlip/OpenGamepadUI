@@ -20,7 +20,7 @@ var logger := Log.get_logger("GameLaunchMenu")
 
 @onready var banner: TextureRect = $%BannerTexture
 @onready var logo: TextureRect = $%LogoTexture
-@onready var launch_button: Button = $%LaunchButton
+@onready var launch_button := $%LaunchButton
 @onready var loading: Control = $%LoadingAnimation
 @onready var player := $%AnimationPlayer
 #@onready var progress_bar: ProgressBar = $%ProgressBar
@@ -65,7 +65,7 @@ func _on_state_entered(_from: State) -> void:
 
 	# Check if the app is installed or not
 	if library_item.is_installed():
-		launch_button.text = "Launch"
+		launch_button.text = "Play Now"
 	else:
 		launch_button.text = "Install"
 	if LaunchManager.is_running(library_item.name):

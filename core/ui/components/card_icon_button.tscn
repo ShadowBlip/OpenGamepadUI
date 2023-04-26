@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://cr83fmlociwko"]
+
+[ext_resource type="Script" path="res://core/ui/components/card_icon_button.gd" id="1_u71p0"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="2_k5pua"]
+
+[sub_resource type="Gradient" id="Gradient_f3s25"]
+colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_xsk1b"]
+gradient = SubResource("Gradient_f3s25")
+fill = 1
+fill_to = Vector2(1, 2)
+
+[node name="CardIconButton" type="MarginContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(24, 24)
+offset_right = 24.0
+offset_bottom = 24.0
+focus_mode = 2
+script = ExtResource("1_u71p0")
+texture = ExtResource("2_k5pua")
+
+[node name="Icon" type="TextureRect" parent="."]
+unique_name_in_owner = true
+clip_children = 2
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_k5pua")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HighlightTexture" type="TextureRect" parent="Icon"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_xsk1b")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

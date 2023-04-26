@@ -11,11 +11,11 @@ corner_radius_bottom_left = 10
 shadow_size = 2
 shadow_offset = Vector2(0, 1)
 
-[sub_resource type="Gradient" id="Gradient_f3s25"]
+[sub_resource type="Gradient" id="Gradient_v5glp"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_7cyn5"]
-gradient = SubResource("Gradient_f3s25")
+gradient = SubResource("Gradient_v5glp")
 fill = 1
 fill_to = Vector2(1, 2)
 
@@ -26,7 +26,6 @@ offset_bottom = 34.0
 focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lxw8g")
 script = ExtResource("1_62nf7")
-highlight_speed = null
 
 [node name="HighlightTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
