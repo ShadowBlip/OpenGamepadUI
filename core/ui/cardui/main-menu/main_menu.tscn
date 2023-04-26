@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dwlifno8asacn"]
+[gd_scene load_steps=23 format=3 uid="uid://dwlifno8asacn"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
@@ -17,6 +17,7 @@
 [ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/cardui/main-menu/main_menu_focus.tres" id="10_v2rc1"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="11_e52bm"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="11_obt01"]
+[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="14_lxab3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjrde"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -162,11 +163,20 @@ theme_override_constants/separation = 20
 
 [node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_brlgl")]
 unique_name_in_owner = true
-current_focus = NodePath("../LibraryButton")
+current_focus = NodePath("../HomeButton")
 focus_stack = ExtResource("10_v2rc1")
 
+[node name="HomeButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
+layout_mode = 2
+text = "Home"
+
+[node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/HomeButton" instance=ExtResource("6_ris1l")]
+state_machine = ExtResource("7_n0655")
+state = ExtResource("14_lxab3")
+action = 3
+on_signal = "button_up"
+
 [node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
-unique_name_in_owner = true
 layout_mode = 2
 text = "Library"
 
@@ -177,6 +187,7 @@ action = 2
 on_signal = "button_up"
 
 [node name="StoreButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
+visible = false
 layout_mode = 2
 text = "Store"
 

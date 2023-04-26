@@ -104,6 +104,8 @@ func _on_game_state_removed() -> void:
 	_set_overlay(false)
 	_set_blur(Gamescope.BLUR_MODE.OFF)
 	panel.visible = true
+	if not state_machine.has_state(home_state):
+		state_machine.set_state([home_state])
 
 
 # Set overlay will set the Gamescope atom to indicate that we should be drawn
