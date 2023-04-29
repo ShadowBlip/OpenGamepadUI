@@ -87,6 +87,8 @@ if [ "$BRANCH" == "uninstall OpenGamepadUI" ] ; then
 
     echo "50" ; echo "# Removing OpenGamepadUI" ;
     rm -rf "${EXTENSIONS_FOLDER}/opengamepadui.raw"
+    rm -rf "${EXTENSIONS_FOLDER}/squashfs-root"
+    rm -rf "${EXTENSIONS_FOLDER}/extensions"
     rm -f "${USER_DIR}/Desktop/return-opengamepadui.desktop"
     #rm -rf "${USER_DIR}/.local/share/opengamepadui"
 
@@ -108,7 +110,9 @@ fi
 (
 echo "15" ; echo "# Creating file structure" ;
 sudo -u $SUDO_USER  mkdir -p "${EXTENSIONS_FOLDER}" "${USER_DIR}/.config/systemd/user"
-ln -s "${EXTENSIONS_FOLDER}" /var/lib/extensions
+if ! [ -s /var/lib/extensions ]; then
+	ln -s "${EXTENSIONS_FOLDER}" /var/lib/extensions
+fi
 
 echo "30" ; echo "# Finding latest $BRANCH";
 DOWNLOADURL="https://github.com/ShadowBlip/OpenGamepadUI/releases/latest/download/opengamepadui.raw"
