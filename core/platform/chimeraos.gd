@@ -42,21 +42,21 @@ func _add_session_switcher(root: Window) -> void:
 		return
 	
 	# Create a button that will perform the session switching
-	var button_scene := load("res://core/ui/components/button.tscn") as PackedScene
-	var switch_to_steam := button_scene.instantiate() as Button
+	var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
+	var switch_to_steam := button_scene.instantiate() as Control
 	switch_to_steam.text = "Switch to Steam"
 	switch_to_steam.pressed.connect(_switch_session.bind("gamepadui"))
 	
-	var switch_to_steam_qam := button_scene.instantiate() as Button
+	var switch_to_steam_qam := button_scene.instantiate() as Control
 	switch_to_steam_qam.text = "Switch to Steam with QAM"
 	switch_to_steam_qam.pressed.connect(_switch_session.bind("gamepadui-with-qam"))
 	
-	var switch_to_desktop := button_scene.instantiate() as Button
+	var switch_to_desktop := button_scene.instantiate() as Control
 	switch_to_desktop.text = "Switch to Desktop"
 	switch_to_desktop.pressed.connect(_switch_session.bind("desktop"))
 	
 	# Add the buttons just above the exit button
-	var exit_button := power_menu.exit_button as Button
+	var exit_button := power_menu.exit_button as Control
 	var container := exit_button.get_parent()
 	container.add_child(switch_to_steam)
 	container.move_child(switch_to_steam, exit_button.get_index())
@@ -65,9 +65,9 @@ func _add_session_switcher(root: Window) -> void:
 	container.add_child(switch_to_desktop)
 	container.move_child(switch_to_desktop, exit_button.get_index())
 	
-	# Coerce the focus manager to recalculate the focus neighbors
-	var focus_manager := power_menu.focus_manager as FocusManager
-	focus_manager._on_child_tree_changed(null)
+	# Coerce the focus group to recalculate the focus neighbors
+	var focus_group := power_menu.focus_group as FocusGroup
+	focus_group.recalculate_focus()
 
 
 ## Returns true if we detect the session switching script
