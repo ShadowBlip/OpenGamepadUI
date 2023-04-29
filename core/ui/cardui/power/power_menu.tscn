@@ -110,19 +110,16 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "Suspend"
-highlight_speed = 0.1
 
 [node name="RebootButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reboot"
-highlight_speed = 0.1
 
 [node name="ShutdownButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Shutdown"
-highlight_speed = 0.1
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -131,7 +128,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
-highlight_speed = 0.1
 
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -140,4 +136,3 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Cancel"
-highlight_speed = 0.1

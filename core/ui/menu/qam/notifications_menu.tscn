@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://core/ui/menu/qam/notifications_menu.gd" id="1_iomxi"]
 [ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_ak5ln"]
-[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_mf70d"]
-[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_n42yi"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_6rngx"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/cardui/qam/quick_access_menu_focus.tres" id="3_vli0v"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
 line_spacing = 0.0
@@ -27,10 +27,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SectionLabel" parent="VBoxContainer" instance=ExtResource("2_mf70d")]
-layout_mode = 2
-text = "Notifications"
-
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -40,8 +36,9 @@ horizontal_scroll_mode = 0
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FocusManager" parent="VBoxContainer/ScrollContainer/HFlowContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_n42yi")]
-current_focus = NodePath("")
+[node name="FocusGroup" parent="VBoxContainer/ScrollContainer/HFlowContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_6rngx")]
+current_focus = NodePath("../NotificationContainer")
+focus_stack = ExtResource("3_vli0v")
 
 [node name="NoNotifications" parent="VBoxContainer/ScrollContainer/HFlowContainer" instance=ExtResource("2_ak5ln")]
 unique_name_in_owner = true

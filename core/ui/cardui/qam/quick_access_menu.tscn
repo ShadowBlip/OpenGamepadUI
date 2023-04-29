@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://xg0f88hltny1"]
+[gd_scene load_steps=30 format=3 uid="uid://xg0f88hltny1"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/quick_access_menu.gd" id="1_iv1ik"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_14qhq"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://cunttqskm5ers" path="res://core/ui/cardui/qam/quick_settings_card.tscn" id="15_tmqe2"]
 [ext_resource type="PackedScene" uid="uid://ceitdk4xujywq" path="res://core/ui/cardui/qam/performance_card.tscn" id="16_bait0"]
 [ext_resource type="PackedScene" uid="uid://c1yiyqk8mjtvc" path="res://core/ui/cardui/qam/power_tools_card.tscn" id="17_ohpj3"]
+[ext_resource type="PackedScene" uid="uid://08cacrpnpao3" path="res://core/ui/cardui/qam/notifications_card.tscn" id="18_8qme3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s3u8f"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -89,7 +90,7 @@ _data = {
 "exit": SubResource("Animation_4xb6e")
 }
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bl1l7"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gm7n2"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -98,7 +99,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_758g0"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gsx3t"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -107,7 +108,16 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njl3t"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_86q0o"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uv04q"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -184,6 +194,7 @@ current_focus = NodePath("../NotifyButton")
 focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
 
 [node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 texture = ExtResource("7_x6s26")
@@ -253,14 +264,20 @@ current_focus = NodePath("../QuickSettingsCard")
 focus_stack = ExtResource("14_6yknl")
 focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 
+[node name="NotificationsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("18_8qme3")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gm7n2")
+
 [node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("15_tmqe2")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bl1l7")
+theme_override_styles/panel = SubResource("StyleBoxFlat_gsx3t")
 
 [node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("16_bait0")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_758g0")
+theme_override_styles/panel = SubResource("StyleBoxFlat_86q0o")
 
 [node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("17_ohpj3")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_njl3t")
+theme_override_styles/panel = SubResource("StyleBoxFlat_uv04q")

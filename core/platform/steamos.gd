@@ -53,9 +53,9 @@ func _add_session_switcher(root: Window) -> void:
 	container.add_child(switch_to_desktop)
 	container.move_child(switch_to_desktop, exit_button.get_index())
 	
-	# Coerce the focus manager to recalculate the focus neighbors
-	var focus_manager := power_menu.focus_manager as FocusManager
-	focus_manager._on_child_tree_changed(null)
+	# Coerce the focus group to recalculate the focus neighbors
+	var focus_group := power_menu.focus_group as FocusGroup
+	focus_group.recalculate_focus()
 
 
 ## Returns true if we detect the session switching script

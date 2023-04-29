@@ -16,14 +16,14 @@ func _ready() -> void:
 	label_settings.line_spacing = 0
 	NotificationManager.notification_sent.connect(_on_notification_sent)
 	for child in container.get_children():
-		if child.name in ["FocusManager", "NoNotifications"]:
+		if child.name in ["FocusGroup", "NoNotifications"]:
 			continue
 		child.queue_free()
 
 
 func _on_notification_sent(_notify: Notification) -> void:
 	for child in container.get_children():
-		if child.name in ["FocusManager", "NoNotifications"]:
+		if child.name in ["FocusGroup", "NoNotifications"]:
 			continue
 		child.queue_free()
 	var history := NotificationManager.get_notification_history()
