@@ -29,7 +29,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
-SYSEXT_VERSION_ID ?= 3.4.6
+SYSEXT_VERSION_ID ?= 3.4.7
 
 # Include any user defined settings
 -include settings.mk
