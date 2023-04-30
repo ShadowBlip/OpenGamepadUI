@@ -83,7 +83,6 @@ layout_mode = 2
 size_flags_vertical = 8
 
 [node name="FocusManager" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_cng0r")]
-layout_mode = 2
 process_input = true
 intercept_children_only = true
 

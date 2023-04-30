@@ -1,0 +1,139 @@
+[gd_scene load_steps=14 format=3 uid="uid://c0qycxb6qjvfu"]
+
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_8yjid"]
+[ext_resource type="Script" path="res://core/ui/components/plugin_store_card.gd" id="1_mpwli"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_cg18p"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_wtj1w"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="3_3jc55"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_6yau4"]
+[ext_resource type="Texture2D" uid="uid://54ncgpi6yy3p" path="res://assets/ui/icons/download-cloud-2-fill.svg" id="4_b4p24"]
+[ext_resource type="Texture2D" uid="uid://dt1r8cyx48k2p" path="res://assets/ui/icons/upgrade.svg" id="6_dsefr"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/cardui/settings/settings_menu_focus.tres" id="6_fo8lr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43kcj"]
+bg_color = Color(0.105882, 0.113725, 0.145098, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Gradient" id="Gradient_2e33l"]
+colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_thoiv"]
+gradient = SubResource("Gradient_2e33l")
+fill = 1
+fill_to = Vector2(1, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i4bpu"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="PluginStoreCard" type="PanelContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(415, 200)
+offset_right = 253.0
+offset_bottom = 143.0
+focus_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_43kcj")
+script = ExtResource("1_mpwli")
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_wtj1w")]
+target = NodePath("../MarginContainer/HBoxContainer/FocusGroup")
+on_signal = "pressed"
+
+[node name="HighlightTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture2D_thoiv")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="InsidePanelMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i4bpu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 26
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 26
+theme_override_constants/margin_bottom = 26
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+texture = ExtResource("1_8yjid")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameLabel" parent="MarginContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_cg18p")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Plugin Name"
+
+[node name="SummaryLabel" type="Label" parent="MarginContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Description of the plugin"
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+alignment = 2
+
+[node name="FocusGroup" parent="MarginContainer/HBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("4_6yau4")]
+unique_name_in_owner = true
+current_focus = NodePath("../ActionButton")
+focus_stack = ExtResource("6_fo8lr")
+
+[node name="UpgradeButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_3jc55")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+texture = ExtResource("6_dsefr")
+
+[node name="ActionButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_3jc55")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+texture = ExtResource("4_b4p24")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

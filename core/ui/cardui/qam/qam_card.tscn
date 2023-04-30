@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bwqwrfp616h21"]
+[gd_scene load_steps=8 format=3 uid="uid://bwqwrfp616h21"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="3_8scgv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
 resource_local_to_scene = true
@@ -38,6 +39,13 @@ focus_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ptn26")
 script = ExtResource("1_nu7eg")
+
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("3_8scgv")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("3_8scgv")]
+audio = "res://assets/audio/interface/select_002.ogg"
+on_signal = "pressed"
 
 [node name="HighlightTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
