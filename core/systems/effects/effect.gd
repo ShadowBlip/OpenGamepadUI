@@ -1,4 +1,5 @@
 @tool
+@icon("res://assets/editor-icons/special-effects-bold.svg")
 extends Node
 class_name Effect
 
@@ -6,6 +7,8 @@ class_name Effect
 ##
 ## This class is meant to act as a base class for other effects. Effects listen
 ## for a given signal and perform some action when that signal is triggered.
+
+signal effect_finished
 
 # Signal on our parent to connect to
 var on_signal: String
@@ -17,7 +20,8 @@ func _init() -> void:
 
 func _on_ready() -> void:
 	notify_property_list_changed()
-	get_parent().connect(on_signal, _on_signal)
+	if on_signal != "":
+		get_parent().connect(on_signal, _on_signal)
 
 
 ## Fires when the given signal is emitted. This should be overriden in a child
@@ -39,9 +43,7 @@ func _get_property_list():
 			parent_signals.push_back(sig["name"])
 
 	var properties := []
-	(
-		properties
-		. append(
+	properties.append(
 			{
 				"name": "on_signal",
 				"type": TYPE_STRING,
@@ -49,7 +51,6 @@ func _get_property_list():
 				"hint": PROPERTY_HINT_ENUM,
 				"hint_string": ",".join(parent_signals)
 			}
-		)
 	)
 
 	return properties

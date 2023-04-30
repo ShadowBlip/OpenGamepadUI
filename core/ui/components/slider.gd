@@ -1,4 +1,5 @@
 @tool
+@icon("res://assets/editor-icons/slider.svg")
 extends VBoxContainer
 
 signal drag_ended(value_changed: bool)

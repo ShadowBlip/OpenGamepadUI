@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/focus-field.svg")
 extends Node
 class_name FocusGroup
 

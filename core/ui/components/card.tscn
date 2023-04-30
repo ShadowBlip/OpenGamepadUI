@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bkhrcemal7uxo"]
+[gd_scene load_steps=8 format=3 uid="uid://bkhrcemal7uxo"]
 
 [ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_701dj"]
 [ext_resource type="Shader" path="res://assets/shaders/corner_radius.gdshader" id="2_hbj7w"]
+[ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_gyi80"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nfs8d"]
 resource_local_to_scene = true
@@ -20,7 +22,7 @@ shadow_color = Color(0, 0, 0, 0.376471)
 shadow_size = 20
 shadow_offset = Vector2(0, 5)
 
-[node name="Card" type="Control"]
+[node name="GameCard" type="Control"]
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 3
 anchors_preset = 0
@@ -31,8 +33,20 @@ size_flags_vertical = 3
 focus_mode = 2
 mouse_filter = 2
 script = ExtResource("1_aiin0")
-focus_audio = null
-select_audio = null
+
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_701dj")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_701dj")]
+audio = "res://assets/audio/interface/select_002.ogg"
+on_signal = "pressed"
+
+[node name="RaiseEffect" parent="." node_paths=PackedStringArray("target", "shadow") instance=ExtResource("3_gyi80")]
+target = NodePath("../TextureRect")
+shadow = NodePath("../TextureRect/MarginContainer/Shadow")
+on_signal = "highlighted"
+lower_signal = "unhighlighted"
+on_signal = "highlighted"
 
 [node name="TextureRect" type="TextureRect" parent="."]
 unique_name_in_owner = true
@@ -65,11 +79,7 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="Shadow" type="PanelContainer" parent="TextureRect/MarginContainer"]
-unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_st1t5")
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
