@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://hbgypx7p3gyw"]
+
+[ext_resource type="Script" path="res://core/systems/effects/grower_effect.gd" id="1_v0gq0"]
+
+[node name="GrowerEffect" type="Node"]
+script = ExtResource("1_v0gq0")

@@ -37,11 +37,15 @@ func _on_plugins_reloaded() -> void:
 func _populate_plugins():
 	# Clear any existing plugin menus
 	for node in plugin_menu_container.get_children():
+		if node is FocusGroup or node is FocusManager:
+			continue
 		node.queue_free()
 
 	# Clear any plugin content menus
 	for node in plugins_content_container.get_children():
 		if node == no_plugins_label:
+			continue
+		if node is FocusGroup or node is FocusManager:
 			continue
 		node.queue_free()
 	focus_manager.current_focus = null

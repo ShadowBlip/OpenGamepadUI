@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d806maqin76k"]
+
+[ext_resource type="Script" path="res://core/ui/cardui/settings/plugin_settings_menu.gd" id="1_1p4dc"]
+
+[node name="PluginSettingsMenu" type="ScrollContainer"]
+script = ExtResource("1_1p4dc")
