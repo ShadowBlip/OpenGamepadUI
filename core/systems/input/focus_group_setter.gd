@@ -1,4 +1,5 @@
 @tool
+@icon("res://assets/editor-icons/center-focus-strong-sharp.svg")
 extends Node
 class_name FocusGroupSetter
 

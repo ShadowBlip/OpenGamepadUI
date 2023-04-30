@@ -4,3 +4,6 @@
 
 [node name="GrowerEffect" type="Node"]
 script = ExtResource("1_v0gq0")
+on_signal = ""
+shrink_signal = ""
+on_signal = ""

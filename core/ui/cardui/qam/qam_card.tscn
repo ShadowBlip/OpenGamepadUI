@@ -1,8 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwqwrfp616h21"]
+[gd_scene load_steps=11 format=3 uid="uid://bwqwrfp616h21"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="3_8scgv"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_73cqf"]
+[ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_j0bxm"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_2hyw7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
 resource_local_to_scene = true
@@ -47,8 +50,26 @@ on_signal = "focus_entered"
 audio = "res://assets/audio/interface/select_002.ogg"
 on_signal = "pressed"
 
-[node name="HighlightTexture" type="TextureRect" parent="."]
+[node name="HighlightFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_73cqf")]
+target = NodePath("../HighlightTexture")
+on_signal = "focus_entered"
+fade_out_signal = "nonchild_focused"
+on_signal = "focus_entered"
+
+[node name="GrowerEffect" parent="." node_paths=PackedStringArray("target", "content_container", "inside_panel", "separator") instance=ExtResource("4_j0bxm")]
+target = NodePath("..")
+content_container = NodePath("../MarginContainer/CardVBoxContainer/ContentContainer")
+inside_panel = NodePath("../InsidePanelMargin/InsidePanel")
+separator = NodePath("../MarginContainer/CardVBoxContainer/HSeparator")
+on_signal = "toggled_on"
+shrink_signal = "toggled_off"
+on_signal = "toggled_on"
+
+[node name="FocusGroupSetter" parent="GrowerEffect" instance=ExtResource("5_2hyw7")]
 unique_name_in_owner = true
+on_signal = "effect_finished"
+
+[node name="HighlightTexture" type="TextureRect" parent="."]
 visible = false
 layout_mode = 2
 texture = SubResource("GradientTexture2D_quvnw")
@@ -63,13 +84,11 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sh8jt")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
@@ -85,7 +104,6 @@ layout_mode = 2
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/CardVBoxContainer"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
@@ -94,6 +112,3 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true

@@ -1,25 +1,19 @@
 @tool
+@icon("res://assets/editor-icons/card-clubs.svg")
 extends Control
+class_name GameCard
 
 signal button_up
 signal button_down
 signal pressed
+signal highlighted
+signal unhighlighted
 
 @onready var texture := $%TextureRect
-@onready var shadow := $%Shadow
-@onready var audio_player: AudioStreamPlayer = $%AudioStreamPlayer
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
-
-var tween: Tween
-var _focus_audio_stream = load(focus_audio)
-var _select_audio_stream = load(select_audio)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pressed.connect(_play_sound.bind(_select_audio_stream))
-	focus_entered.connect(_play_sound.bind(_focus_audio_stream))
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)
@@ -47,26 +41,11 @@ func set_texture(new_texture: Texture2D) -> void:
 
 
 func _on_focus() -> void:
-	if tween:
-		tween.kill()
-	tween = get_tree().create_tween()
-	tween.tween_property(texture, "scale", Vector2(1.01, 1.01), 0.2)
-	tween.parallel().tween_property(texture, "position", Vector2(0, -40), 0.2)
-	tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", 20, 0.2)
+	highlighted.emit()
 
 
 func _on_unfocus() -> void:
-	if tween:
-		tween.kill()
-	tween = get_tree().create_tween()
-	tween.tween_property(texture, "scale", Vector2(1, 1), 0.2)
-	tween.parallel().tween_property(texture, "position", Vector2(0, 0), 0.2)
-	tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", 10, 0.2)
-
-
-func _play_sound(stream: AudioStream) -> void:
-	audio_player.stream = stream
-	audio_player.play()
+	unhighlighted.emit()
 
 
 func _gui_input(event: InputEvent) -> void:
