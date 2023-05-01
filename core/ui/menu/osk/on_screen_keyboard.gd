@@ -1,5 +1,5 @@
 @tool
-@icon("res://assets/icons/command.svg")
+@icon("res://assets/editor-icons/keyboard.svg")
 extends Control
 class_name OnScreenKeyboard
 

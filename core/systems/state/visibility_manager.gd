@@ -1,4 +1,4 @@
-@icon("res://assets/icons/eye.svg")
+@icon("res://assets/editor-icons/visible.svg")
 extends Node
 class_name VisibilityManager
 

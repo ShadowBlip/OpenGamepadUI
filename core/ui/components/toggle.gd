@@ -1,5 +1,7 @@
 @tool
+@icon("res://assets/editor-icons/twotone-toggle-off.svg")
 extends BoxContainer
+class_name Toggle
 
 signal button_down
 signal button_up

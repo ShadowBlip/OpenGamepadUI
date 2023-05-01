@@ -1,4 +1,4 @@
-@icon("res://assets/icons/book-open.svg")
+@icon("res://assets/editor-icons/library.svg")
 extends Node
 class_name Library
 

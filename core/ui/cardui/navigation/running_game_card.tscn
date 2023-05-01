@@ -43,7 +43,6 @@ focus_mode = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_7abjx")
 script = ExtResource("1_vgpef")
-highlight_speed = null
 focus_audio = null
 select_audio = null
 

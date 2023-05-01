@@ -1,4 +1,6 @@
+@icon("res://assets/editor-icons/arrow-back.svg")
 extends Node
+class_name BackInputHandler
 
 @export var state_machine: StateMachine = preload(
 	"res://assets/state/state_machines/global_state_machine.tres"

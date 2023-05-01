@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/codesandbox-logo-fill.svg")
 extends Node
 class_name PluginManager
 

@@ -28,9 +28,12 @@ func _on_out_signal():
 
 
 func fade_in() -> void:
+	var tree := get_tree()
+	if not tree:
+		return
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween()
+	tween = tree.create_tween()
 	tween.tween_property(target, "visible", true, 0)
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 0), 0)
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 1), fade_speed)
@@ -40,9 +43,12 @@ func fade_in() -> void:
 
 
 func fade_out() -> void:
+	var tree := get_tree()
+	if not tree:
+		return
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween()
+	tween = tree.create_tween()
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 1), 0)
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 0), fade_speed)
 	tween.tween_property(target, "visible", false, 0)

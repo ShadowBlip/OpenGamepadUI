@@ -32,9 +32,8 @@
 [ext_resource type="PackedScene" uid="uid://dy338pcid4l4q" path="res://core/ui/menu/settings/display_settings_menu.tscn" id="30_22tgj"]
 [ext_resource type="PackedScene" uid="uid://b7gtaqrauwj6i" path="res://core/ui/menu/settings/network_settings_menu.tscn" id="31_35x2h"]
 [ext_resource type="PackedScene" uid="uid://baorkrl7picci" path="res://core/ui/menu/settings/audio_settings_menu.tscn" id="32_dqi6v"]
-[ext_resource type="PackedScene" uid="uid://cfk55ufy6luqt" path="res://core/ui/menu/settings/plugin_settings_menu.tscn" id="33_nov56"]
-[ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="34_jtxsr"]
 [ext_resource type="PackedScene" uid="uid://cgsvynumt3tj7" path="res://core/ui/cardui/settings/plugin_store_menu.tscn" id="35_0u4bv"]
+[ext_resource type="PackedScene" uid="uid://d806maqin76k" path="res://core/ui/cardui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
 [ext_resource type="PackedScene" uid="uid://dnrqudepej3u" path="res://core/ui/menu/debug/processes_menu.tscn" id="36_hnokx"]
 [ext_resource type="PackedScene" uid="uid://baumn63ts16o0" path="res://core/ui/menu/settings/logging_settings_menu.tscn" id="37_iwtxk"]
 
@@ -52,6 +51,15 @@ color = Color(0.384314, 0.447059, 0.643137, 1)
 grow_begin = -10.0
 grow_end = -10.0
 vertical = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xa6qt"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -240,7 +248,8 @@ state = ExtResource("21_6lg2v")
 action = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginsButton" instance=ExtResource("18_axp35")]
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer/FocusGroup")
 on_signal = "pressed"
 
 [node name="PluginStoreButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
@@ -381,14 +390,12 @@ state = ExtResource("20_5v03o")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
 
-[node name="PluginSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("33_nov56")]
+[node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_dooq8")]
 visible = false
 layout_mode = 2
 
-[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettings"]
-script = ExtResource("34_jtxsr")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettings/TransitionContainer" instance=ExtResource("29_grs7x")]
+[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer" index="2"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_xa6qt")
 
 [node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_0u4bv")]
 visible = false
@@ -418,7 +425,7 @@ state = ExtResource("25_nijem")
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettings"]
+[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings"]
