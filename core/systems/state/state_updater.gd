@@ -1,4 +1,5 @@
 @tool
+@icon("res://assets/editor-icons/transition-right.svg")
 extends Node
 class_name StateUpdater
 

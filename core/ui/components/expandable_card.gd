@@ -1,9 +1,7 @@
 @tool
 @icon("res://assets/editor-icons/card-bulleted.svg")
 extends Container
-class_name QuickAccessCard
-
-# DEPRECATED
+class_name ExpandableCard
 
 signal pressed
 signal button_up
@@ -22,7 +20,7 @@ signal nonchild_focused
 @onready var focus_group_setter := $%FocusGroupSetter as FocusGroupSetter
 
 var focus_group: FocusGroup
-var logger := Log.get_logger("QAMCard", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("ExpandableCard", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -84,6 +82,7 @@ func _on_unfocus() -> void:
 	# If a child focus group is focused, don't do anything. That means that
 	if not focus_group:
 		logger.warn("No focus group defined!")
+		nonchild_focused.emit()
 		return
 
 	# a child node is focused and we want the card to remain "selected"

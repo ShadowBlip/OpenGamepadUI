@@ -44,7 +44,8 @@ func _ready():
 	# Listen for events that require recalculating the focus neighbors
 	parent.child_entered_tree.connect(_on_child_tree_changed)
 	parent.child_exiting_tree.connect(_on_child_tree_changed)
-	parent.sort_children.connect(recalculate_focus)
+	if parent.has_signal("sort_children"):
+		parent.sort_children.connect(recalculate_focus)
 	recalculate_focus()
 	set_process_input(parent.is_visible_in_tree())
 	parent.visibility_changed.connect(_on_visibility_changed)
@@ -98,7 +99,14 @@ func recalculate_focus() -> void:
 		_hbox_set_focus_tree(control_children)
 		return
 
-	_vbox_set_focus_tree(control_children)
+	if parent is VBoxContainer:
+		_vbox_set_focus_tree(control_children)
+		return
+	
+	# For all others, try to recursively search for focusable children and
+	# treat it like a VBoxContainer
+	var focusable := _get_focusable_children(parent)
+	_vbox_set_focus_tree(focusable)
 
 
 ## Grab focus on the currently focused node in the group and push this group
@@ -248,6 +256,36 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 			return focusable
 	logger.debug("Node has no focusable children.")
 	return null
+
+
+# Recursively searches the given node for focusable children.
+func _get_focusable_children(node: Control) -> Array[Control]:
+	var focusable: Array[Control] = []
+	if node.get_child_count() == 0:
+		logger.debug("Node has no children to check.")
+		return focusable
+
+	for child in node.get_children():
+		if _is_focusable(child):
+			focusable.append(child)
+		focusable.append_array(_get_focusable_children(child))
+	
+	return focusable
+
+
+# Returns true if the given node is focusable
+func _is_focusable(node: Node) -> bool:
+	if node is FocusGroup:
+		return true
+	if node.name == "FocusGroupNeighbor":
+		return false
+	if node.get("focus_mode") == null:
+		return false
+	if node.focus_mode != Control.FOCUS_ALL:
+		return false
+	if not node.is_visible_in_tree():
+		return false
+	return true
 
 
 # Called when nodes are added or removed from the parent

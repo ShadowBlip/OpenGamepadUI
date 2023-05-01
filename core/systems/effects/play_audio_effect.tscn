@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://core/systems/effects/play_audio_effect.gd" id="1_evyh6"]
 
 [node name="PlayAudioEffect" type="Node"]
+editor_description = "Plays the given audio effect whenever the given signal fires. Useful for attaching UI sound effects."
 script = ExtResource("1_evyh6")
 on_signal = ""
 

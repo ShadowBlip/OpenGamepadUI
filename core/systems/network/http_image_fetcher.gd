@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/image-download.svg")
 extends Node
 class_name HTTPImageFetcher
 

@@ -1,6 +1,6 @@
 # Based on the mod loader by Harry Giel
 # https://gitlab.com/Delta-V-Modding/Mods/-/blob/main/game/ModLoader.gd
-@icon("res://assets/icons/codesandbox.svg")
+@icon("res://assets/editor-icons/codesandbox-logo-fill.svg")
 extends Resource
 class_name PluginLoader
 

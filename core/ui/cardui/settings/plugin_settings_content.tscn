@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://cin78dthyq1mf"]
+
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="1_kkfns"]
+[ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="1_qr2e8"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/cardui/settings/settings_menu_focus.tres" id="2_132sf"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_sphif"]
+
+[node name="PluginSettingsContent" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentLayout" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FocusGroup" parent="ContentLayout" node_paths=PackedStringArray("current_focus") instance=ExtResource("1_kkfns")]
+unique_name_in_owner = true
+current_focus = NodePath("../PluginNameText")
+focus_stack = ExtResource("2_132sf")
+
+[node name="PluginNameText" parent="ContentLayout" instance=ExtResource("1_qr2e8")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Plugin Name"
+description = ""
+text = ""
+
+[node name="PluginEnabledToggle" parent="ContentLayout" instance=ExtResource("2_sphif")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enabled"
+
+[node name="PluginVersionText" parent="ContentLayout" instance=ExtResource("1_qr2e8")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Version"
+description = ""
+text = "v0.0.0"
+
+[node name="HSeparator" type="HSeparator" parent="ContentLayout"]
+layout_mode = 2

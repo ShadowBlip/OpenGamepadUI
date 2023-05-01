@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_gw0nk"]
 
 [node name="VisibilityManager" type="Node"]
+editor_description = "Controls the visibility of the parent node based on the current state of a state machine. Optionally, transition nodes can be added as children to this node to perform a visibility transition."
 script = ExtResource("1_gw0nk")

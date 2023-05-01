@@ -1,5 +1,7 @@
 @tool
+@icon("res://assets/editor-icons/text-field-bold.svg")
 extends VBoxContainer
+class_name SelectableText
 
 @export_category("Label Settings")
 @export var title: String = "Setting":
