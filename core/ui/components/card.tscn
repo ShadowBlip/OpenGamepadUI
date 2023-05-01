@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bkhrcemal7uxo"]
+[gd_scene load_steps=9 format=3 uid="uid://bkhrcemal7uxo"]
 
 [ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
@@ -21,6 +21,13 @@ corner_radius_bottom_left = 12
 shadow_color = Color(0, 0, 0, 0.376471)
 shadow_size = 20
 shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gtppc"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 0.698039)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="GameCard" type="Control"]
 custom_minimum_size = Vector2(200, 300)
@@ -53,11 +60,8 @@ unique_name_in_owner = true
 material = SubResource("ShaderMaterial_nfs8d")
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 200.0
+offset_bottom = 300.0
 scale = Vector2(1.01, 1.01)
 mouse_filter = 0
 texture = ExtResource("2_2hlyj")
@@ -83,3 +87,32 @@ show_behind_parent = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_st1t5")
+
+[node name="NameMargin" type="MarginContainer" parent="TextureRect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -26.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 70
+
+[node name="NamePanel" type="PanelContainer" parent="TextureRect/NameMargin"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gtppc")
+
+[node name="MarginContainer" type="MarginContainer" parent="TextureRect/NameMargin/NamePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="NameLabel" type="Label" parent="TextureRect/NameMargin/NamePanel/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Game Name"
+horizontal_alignment = 1
+autowrap_mode = 3

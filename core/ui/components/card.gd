@@ -9,11 +9,26 @@ signal pressed
 signal highlighted
 signal unhighlighted
 
+@export var show_label := false:
+	set(v):
+		show_label = v
+		if name_container:
+			name_container.visible = v
+@export var text := "Game Name":
+	set(v):
+		text = v
+		if name_label:
+			name_label.text = v
+
 @onready var texture := $%TextureRect
+@onready var name_container := $%NameMargin
+@onready var name_label := $%NameLabel
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	name_container.visible = show_label
+	name_label.text = text
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)
