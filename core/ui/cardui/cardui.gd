@@ -141,7 +141,6 @@ func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
 	boot_video.visible = false
-	pass
 
 
 func _input(event: InputEvent) -> void:
@@ -153,16 +152,16 @@ func _input(event: InputEvent) -> void:
 		var open_power_menu := func():
 			logger.info("Power menu requested")
 			state_machine.push_state(power_state)
-		#power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
-		#power_timer.start()
+		power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
+		power_timer.start()
 		return
 
 	# Handle suspend events
-	#if not power_timer.is_stopped():
-	#	logger.info("Received suspend signal")
-	#	for connection in power_timer.timeout.get_connections():
-	#		power_timer.timeout.disconnect(connection["callable"])
-	#	power_timer.stop()
-	#	var output: Array = []
-	#	if OS.execute("systemctl", ["suspend"], output) != OK:
-	#		logger.warn("Failed to suspend: '" + output[0] + "'")
+	if not power_timer.is_stopped():
+		logger.info("Received suspend signal")
+		for connection in power_timer.timeout.get_connections():
+			power_timer.timeout.disconnect(connection["callable"])
+		power_timer.stop()
+		var output: Array = []
+		if OS.execute("systemctl", ["suspend"], output) != OK:
+			logger.warn("Failed to suspend: '" + output[0] + "'")
