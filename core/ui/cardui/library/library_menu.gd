@@ -93,15 +93,19 @@ func _on_library_reloaded(_first_load: bool) -> void:
 
 
 # Builds a home card from the given library item
-func _build_card(item: LibraryItem) -> TextureButton:
+func _build_card(item: LibraryItem) -> GameCard:
 	# Build a poster for each library item
-	var card := card_scene.instantiate() as Control
+	var card := card_scene.instantiate() as GameCard
 	card.name = item.name
 
 	# Get the boxart for the item
 	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var texture_rect = card.get_node("TextureRect")
-	texture_rect.texture = await BoxArtManager.get_boxart_or_placeholder(item, layout)
+	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
+	if not card_texture:
+		card_texture = BoxArtManager.get_placeholder(layout)
+		card.show_label = true
+		card.text = item.name
+	card.set_texture(card_texture)
 
 	# Listen for button presses and pass the library item with the state
 	var on_button_up := func():

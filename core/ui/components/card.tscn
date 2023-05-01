@@ -18,16 +18,12 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.376471)
+shadow_color = Color(0, 0, 0, 0.486275)
 shadow_size = 20
 shadow_offset = Vector2(0, 5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gtppc"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 0.698039)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [node name="GameCard" type="Control"]
 custom_minimum_size = Vector2(200, 300)
@@ -59,10 +55,9 @@ on_signal = "highlighted"
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_nfs8d")
 custom_minimum_size = Vector2(200, 300)
-layout_mode = 1
+layout_mode = 2
 offset_right = 200.0
 offset_bottom = 300.0
-scale = Vector2(1.01, 1.01)
 mouse_filter = 0
 texture = ExtResource("2_2hlyj")
 expand_mode = 1
