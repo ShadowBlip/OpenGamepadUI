@@ -74,63 +74,39 @@ focus_stack = SubResource("Resource_y6lie")
 
 [node name="Card" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card2" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card3" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card4" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card5" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card6" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card7" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card8" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card9" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card10" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card11" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="Card12" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
-show_label = null
-text = null
 
 [node name="AllGamesTab" type="ScrollContainer" parent="TabContainer"]
 visible = false

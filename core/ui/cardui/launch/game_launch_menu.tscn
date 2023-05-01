@@ -117,7 +117,7 @@ layout_mode = 2
 
 [node name="LogoTexture" type="TextureRect" parent="VBoxContainer/PanelContainer/CenterContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(640, 360)
+custom_minimum_size = Vector2(533.333, 300)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("12_01uv6")

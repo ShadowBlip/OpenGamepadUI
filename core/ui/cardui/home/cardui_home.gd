@@ -129,14 +129,18 @@ func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton) -> void
 
 
 # Builds a home card from the given library item
-func _build_card(item: LibraryItem, portrait: bool) -> TextureButton:
+func _build_card(item: LibraryItem, portrait: bool) -> GameCard:
 	# Build a poster for each library item
-	var card := card_scene.instantiate() as Control
+	var card := card_scene.instantiate() as GameCard
 	card.name = item.name
 
 	# Get the boxart for the item
 	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var card_texture: Texture2D = await BoxArtManager.get_boxart_or_placeholder(item, layout)
+	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
+	if not card_texture:
+		card_texture = BoxArtManager.get_placeholder(layout)
+		card.show_label = true
+		card.text = item.name
 	card.set_texture(card_texture)
 	
 	# Listen for focus events on the posters

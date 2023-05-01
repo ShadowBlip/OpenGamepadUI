@@ -79,14 +79,14 @@ func _on_state_entered(_from: State) -> void:
 	loading.visible = true
 
 	# Load the banner for the game
-	var banner_texture = await (
-		BoxArtManager . get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.BANNER)
-	)
 	var logo_texture = await (
 		BoxArtManager . get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.LOGO)
 	)
-	banner.texture = banner_texture
 	logo.texture = logo_texture
+	var banner_texture = await (
+		BoxArtManager . get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.BANNER)
+	)
+	banner.texture = banner_texture
 
 	loading.visible = false
 
