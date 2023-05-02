@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d7lts0p8kgtt"]
+[gd_scene load_steps=19 format=3 uid="uid://d7lts0p8kgtt"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/home/cardui_home.gd" id="1_w2ler"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_e17i6"]
@@ -12,6 +12,10 @@
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_rwgge"]
 [ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="8_tm3rn"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_7jhv6"]
+[ext_resource type="PackedScene" uid="uid://crsu0vpicq0vh" path="res://core/ui/components/library_deck.tscn" id="13_rtugh"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="14_n4sr2"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="15_nijuw"]
+[ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="16_33bf3"]
 
 [sub_resource type="Animation" id="Animation_638a6"]
 resource_name = "fade_in"
@@ -93,7 +97,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 30
 
-[node name="Spacer" type="Control" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer"]
+[node name="StartSpacer" type="Control" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
@@ -120,6 +124,20 @@ size_flags_horizontal = 2
 [node name="Card6" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("4_rttsk")]
 layout_mode = 2
 size_flags_horizontal = 2
+
+[node name="LibraryDeck" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer" instance=ExtResource("13_rtugh")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="StateUpdater" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer/LibraryDeck" instance=ExtResource("14_n4sr2")]
+state_machine = ExtResource("15_nijuw")
+state = ExtResource("16_33bf3")
+on_signal = "button_up"
+
+[node name="EndSpacer" type="Control" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/CardContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

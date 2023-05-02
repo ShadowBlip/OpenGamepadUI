@@ -16,15 +16,20 @@ var tween: Tween
 @onready var banner: TextureRect = $%BannerTexture
 @onready var player: AnimationPlayer = $%AnimationPlayer
 @onready var scroll_container: ScrollContainer = $%ScrollContainer
+@onready var library_deck: LibraryDeck = $%LibraryDeck
+@onready var end_spacer := $%EndSpacer
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Clear any example grid items
 	for child in container.get_children():
-		if child.name == "LibraryPoster":
+		if child.name in ["LibraryDeck", "StartSpacer", "EndSpacer"]:
 			continue
 		child.queue_free()
+	
+	# Scroll on focus on the LibraryCard
+	library_deck.focus_entered.connect(_scroll_to.bind(library_deck))
 	
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
 	LibraryManager.library_item_added.connect(_on_library_item_added)
@@ -101,10 +106,29 @@ func _on_recent_apps_updated() -> void:
 	# Populate our grid with items
 	await _repopulate_grid(container, items.values())
 	_grab_focus()
+	
+	# Update the textures of the library deck
+	_update_library_deck()
+
+
+func _update_library_deck() -> void:
+	var library_items := LibraryManager.get_library_items()
+	randomize()
+	var card1 := library_items[randi() % library_items.size()]
+	var tex1 := await BoxArtManager.get_boxart_or_placeholder(card1, BoxArtProvider.LAYOUT.GRID_PORTRAIT)
+	var card2 := library_items[randi() % library_items.size()]
+	var tex2 := await BoxArtManager.get_boxart_or_placeholder(card2, BoxArtProvider.LAYOUT.GRID_PORTRAIT)
+	var card3 := library_items[randi() % library_items.size()]
+	var tex3 := await BoxArtManager.get_boxart_or_placeholder(card3, BoxArtProvider.LAYOUT.GRID_PORTRAIT)
+	library_deck.set_texture(0, tex1)
+	library_deck.set_texture(1, tex2)
+	library_deck.set_texture(2, tex3)
 
 
 func _grab_focus() -> void:
 	for child in container.get_children():
+		if child.name in ["StartSpacer", "EndSpacer"]:
+			continue
 		child.grab_focus.call_deferred()
 		break
 
@@ -116,12 +140,15 @@ func _on_card_focused(item: LibraryItem, card: Control) -> void:
 	player.stop()
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)
+	_scroll_to(card)
 
+
+func _scroll_to(node: Control) -> void:
 	# Smoothly scroll to the card using a tween
 	if tween:
 		tween.kill()
 	tween = get_tree().create_tween()
-	tween.tween_property(scroll_container, "scroll_horizontal", card.position.x - card.size.x/2, 0.25)
+	tween.tween_property(scroll_container, "scroll_horizontal", node.position.x - node.size.x/2, 0.15)
 
 
 func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton) -> void:
@@ -159,7 +186,7 @@ func _build_card(item: LibraryItem, portrait: bool) -> GameCard:
 func _repopulate_grid(grid: HBoxContainer, library_items: Array) -> void:
 	# Clear any old grid items
 	for child in container.get_children():
-		if child.name == "LibraryPoster":
+		if child.name in ["LibraryDeck", "StartSpacer", "EndSpacer"]:
 			continue
 		container.remove_child(child)
 		child.queue_free()
@@ -176,6 +203,6 @@ func _repopulate_grid(grid: HBoxContainer, library_items: Array) -> void:
 		grid.add_child(poster)
 		i += 1
 
-	# Move our Library Poster to the back
-	#var library_poster: Node = grid.get_node("LibraryPoster")
-	#grid.move_child(library_poster, -1)
+	# Move our Library Deck to the back
+	grid.move_child(library_deck, -1)
+	grid.move_child(end_spacer, -1)
