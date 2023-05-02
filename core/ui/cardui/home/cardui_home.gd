@@ -113,6 +113,8 @@ func _on_recent_apps_updated() -> void:
 
 func _update_library_deck() -> void:
 	var library_items := LibraryManager.get_library_items()
+	if library_items.size() == 0:
+		return
 	randomize()
 	var card1 := library_items[randi() % library_items.size()]
 	var tex1 := await BoxArtManager.get_boxart_or_placeholder(card1, BoxArtProvider.LAYOUT.GRID_PORTRAIT)
