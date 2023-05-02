@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="8_rs83g"]
 [ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_veuxu"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trqgc"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svwwa"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -59,4 +59,4 @@ horizontal_alignment = 1
 
 [node name="ExpandableCard" parent="MarginContainer/ContentContainer" instance=ExtResource("8_veuxu")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_trqgc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_svwwa")

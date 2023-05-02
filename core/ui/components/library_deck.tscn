@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://crsu0vpicq0vh"]
+
+[ext_resource type="Script" path="res://core/ui/components/library_deck.gd" id="1_sh5i6"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_hx7j7"]
+[ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_v27hf"]
+[ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="4_ivhmt"]
+
+[node name="LibraryDeck" type="MarginContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+mouse_filter = 0
+script = ExtResource("1_sh5i6")
+
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_hx7j7")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_hx7j7")]
+audio = "res://assets/audio/interface/select_002.ogg"
+on_signal = "pressed"
+
+[node name="RaiseEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_v27hf")]
+target = NodePath("../MarginContainer")
+on_signal = "highlighted"
+lower_signal = "unhighlighted"
+on_signal = "highlighted"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer1" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="GameCard1" parent="MarginContainer/MarginContainer1" instance=ExtResource("4_ivhmt")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+
+[node name="GameCard2" parent="MarginContainer/MarginContainer2" instance=ExtResource("4_ivhmt")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 80
+
+[node name="GameCard3" parent="MarginContainer/MarginContainer3" instance=ExtResource("4_ivhmt")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
