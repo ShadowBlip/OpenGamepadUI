@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://ekhjpmat02f8"]
+
+[ext_resource type="Script" path="res://core/systems/effects/slide_effect.gd" id="1_7y4wo"]
+
+[node name="SlideEffect" type="Node"]
+editor_description = "Slide the given target off-screen in the given direction"
+script = ExtResource("1_7y4wo")
