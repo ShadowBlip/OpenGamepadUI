@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://diug36y0he1qx"]
+[gd_scene load_steps=29 format=3 uid="uid://diug36y0he1qx"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/cardui/cardui.gd" id="1_f8851"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://bvsnvsby3isxr" path="res://core/ui/menu/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://dwlifno8asacn" path="res://core/ui/cardui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://xg0f88hltny1" path="res://core/ui/cardui/qam/quick_access_menu.tscn" id="14_lsaok"]
+[ext_resource type="PackedScene" uid="uid://cenewgjqn725y" path="res://core/ui/cardui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" uid="uid://bo6ui7jq422m6" path="res://core/ui/menu/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
 [ext_resource type="PackedScene" uid="uid://bdty1sw30ficb" path="res://core/ui/cardui/power/power_menu.tscn" id="20_noim3"]
@@ -149,6 +150,11 @@ layout_mode = 2
 
 [node name="ButtonMenu" parent="Content/TopMargin" instance=ExtResource("11_x7ns7")]
 layout_mode = 2
+
+[node name="InGameNotification" parent="Content/TopMargin" instance=ExtResource("16_bcudw")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
 
 [node name="BottomMargin" type="MarginContainer" parent="Content"]
 layout_mode = 2
