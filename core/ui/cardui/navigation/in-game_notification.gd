@@ -24,9 +24,6 @@ func _ready() -> void:
 	var on_finished := func():
 		_on_notification_queued(null)
 	effect.slide_out_finished.connect(on_finished)
-	
-	NotificationManager.show_notification.call_deferred("Notifications ready")
-	NotificationManager.show_notification.call_deferred("Other notify")
 
 
 # Show notifications when they are queued
