@@ -1,6 +1,7 @@
 extends Control
 
 var LaunchManager := preload("res://core/global/launch_manager.tres") as LaunchManager
+var InstallManager := preload("res://core/global/install_manager.tres")
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -39,6 +40,7 @@ func _ready() -> void:
 	home_state.state_exited.connect(_on_state_exited)
 	recent_apps = LaunchManager.get_recent_apps()
 	LaunchManager.recent_apps_changed.connect(_on_recent_apps_updated)
+	InstallManager.install_queued.connect(_on_install_queued)
 
 
 func _on_state_entered(from: State) -> void:
@@ -64,6 +66,29 @@ func _input(event: InputEvent) -> void:
 
 	# Push the main menu state when the back button is pressed
 	state_machine.push_state(main_menu_state)
+
+
+
+# When an install is queued, connect signals to show a progress bar on the library
+# card.
+func _on_install_queued(req: InstallManager.Request) -> void:
+	if not req.item.name in recent_apps:
+		return
+	# Find the card
+	var node := container.find_child(req.item.name, false)
+	if not node is GameCard:
+		return
+	var card := node as GameCard
+	var item := LibraryManager.get_app_by_name(req.item.name)
+	card.value = 0
+	card.show_progress = true
+	var on_progress := func(progress: float):
+		card.value = progress * 100
+	req.progressed.connect(on_progress)
+	var on_completed := func(success: bool):
+		card.show_progress = false
+		req.progressed.disconnect(on_progress)
+	req.completed.connect(on_completed, CONNECT_ONE_SHOT)
 
 
 func _on_library_reloaded(_first_load: bool) -> void:

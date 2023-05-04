@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bdwu6kiayvvgm"]
+[gd_scene load_steps=13 format=3 uid="uid://bdwu6kiayvvgm"]
 
 [ext_resource type="Script" path="res://core/ui/cardui/library/library_menu.gd" id="1_jetsl"]
 [ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/cardui/library/library_tabs_state.tres" id="2_chnkw"]
@@ -11,14 +11,9 @@
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_s8n0e"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_ecjxf"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="10_sn5qv"]
-[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="10_t33cl"]
-[ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="11_e1qc7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xn2qp"]
 bg_color = Color(0.266667, 0.278431, 0.352941, 0)
-
-[sub_resource type="Resource" id="Resource_y6lie"]
-script = ExtResource("11_e1qc7")
 
 [node name="LibraryMenu" type="Control"]
 layout_mode = 3
@@ -67,10 +62,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 16
-
-[node name="FocusGroup" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
-current_focus = NodePath("../Card")
-focus_stack = SubResource("Resource_y6lie")
 
 [node name="Card" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("10_sn5qv")]
 layout_mode = 2
@@ -128,10 +119,6 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 16
 
-[node name="FocusGroup" parent="TabContainer/AllGamesTab/MarginContainer/AllGamesGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
-current_focus = NodePath("")
-focus_stack = SubResource("Resource_y6lie")
-
 [node name="FavoritesTab" type="ScrollContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -152,10 +139,6 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 16
 
-[node name="FocusGroup" parent="TabContainer/FavoritesTab/MarginContainer/FavoritesGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
-current_focus = NodePath("")
-focus_stack = SubResource("Resource_y6lie")
-
 [node name="CollectionsTab" type="ScrollContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -175,31 +158,3 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 16
-
-[node name="FocusGroup" parent="TabContainer/CollectionsTab/MarginContainer/CollectionsGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
-current_focus = NodePath("")
-focus_stack = SubResource("Resource_y6lie")
-
-[node name="PluginsTab" type="ScrollContainer" parent="TabContainer"]
-visible = false
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/PluginsTab"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 15
-
-[node name="PluginsGrid" type="HFlowContainer" parent="TabContainer/PluginsTab/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 4
-theme_override_constants/v_separation = 16
-
-[node name="FocusGroup" parent="TabContainer/PluginsTab/MarginContainer/PluginsGrid" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_t33cl")]
-current_focus = NodePath("")
-focus_stack = SubResource("Resource_y6lie")

@@ -12,6 +12,14 @@ class_name LibraryItem
 signal added_to_library
 ## Is emitted when the [LibraryManager] removes this item from the library
 signal removed_from_library
+## Emitted when a user has updated the boxart for this library item
+signal boxart_updated
+## Emitted when the [InstallManager] has installed this library item
+signal installed(launch_item: LibraryLaunchItem)
+## Emitted when the [InstallManager] has uninstalled this library item
+signal uninstalled(launch_item: LibraryLaunchItem)
+## Emitted when the [InstallManager] has updated this library item
+signal upgraded(launch_item: LibraryLaunchItem)
 
 ## The unique ID of the library item
 @export var _id: String
@@ -50,12 +58,3 @@ func is_installed() -> bool:
 		if launch_item.installed:
 			return true
 	return false
-
-#  shortcutId: 123
-#  name: Fortnite
-#  command: steam
-#  args: []
-#  provider: steam
-#  providerAppId: 1234
-#  tags: []
-#  categories: []

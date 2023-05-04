@@ -34,7 +34,7 @@ corner_radius_bottom_left = 10
 
 [node name="PluginStoreCard" type="PanelContainer"]
 clip_children = 2
-custom_minimum_size = Vector2(415, 200)
+custom_minimum_size = Vector2(340, 200)
 offset_right = 253.0
 offset_bottom = 143.0
 focus_mode = 2
