@@ -18,6 +18,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 follow_focus = true
+horizontal_scroll_mode = 0
 script = ExtResource("1_m5rij")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -141,7 +142,7 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 focus_mode = 2
 texture = ExtResource("7_hrbc6")
-expand_mode = 5
+expand_mode = 3
 stretch_mode = 5
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/LandscapeTexture"]

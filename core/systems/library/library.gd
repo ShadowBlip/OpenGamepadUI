@@ -28,6 +28,8 @@ var LibraryManager := load("res://core/global/library_manager.tres") as LibraryM
 @export var store_id: String
 ## Icon for library provider
 @export var library_icon: Texture2D
+## Whether or not the library provider supports uninstalls
+@export var supports_uninstall := true
 ## Logger name used for debug messages
 @export var logger_name := library_id
 ## Log level of the logger.

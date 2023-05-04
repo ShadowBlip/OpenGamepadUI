@@ -5,6 +5,7 @@ var LaunchManager := preload("res://core/global/launch_manager.tres")
 var NotificationManager := preload("res://core/global/notification_manager.tres")
 var BoxArtManager := preload("res://core/global/boxart_manager.tres")
 var LibraryManager := preload("res://core/global/library_manager.tres")
+var InstallManager := preload("res://core/global/install_manager.tres")
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -13,7 +14,6 @@ var launcher_state := preload("res://assets/state/states/game_launcher.tres") as
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
 var gamepad_settings_state := preload("res://assets/state/states/gamepad_settings.tres") as State
-var installing := {}
 var logger := Log.get_logger("GameLaunchMenu")
 
 @export var launch_item: LibraryLaunchItem
@@ -23,14 +23,33 @@ var logger := Log.get_logger("GameLaunchMenu")
 @onready var launch_button := $%LaunchButton
 @onready var loading: Control = $%LoadingAnimation
 @onready var player := $%AnimationPlayer
-#@onready var progress_bar: ProgressBar = $%ProgressBar
+@onready var progress_container := $%ProgressContainer
+@onready var progress_bar: ProgressBar = $%ProgressBar
+@onready var delete_container := $%DeleteContainer
+@onready var delete_button := $%DeleteButton
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	set_process(false)
 	launcher_state.state_entered.connect(_on_state_entered)
 	launcher_state.state_exited.connect(_on_state_exited)
 	launch_button.button_up.connect(_on_launch)
+	delete_button.button_up.connect(_on_uninstall)
+
+
+# Ensure the launcher elements are up-to-date with any installs going on
+func _process(_delta: float) -> void:
+	_update_launch_button()
+	_update_uninstall_button()
+	if not launch_item or not InstallManager.is_installing(launch_item):
+		launch_button.disabled = false
+		progress_container.visible = false
+		return
+	var req := InstallManager.get_installing()
+	launch_button.disabled = true
+	progress_container.visible = true
+	progress_bar.value = req.progress * 100
 
 
 func _on_state_entered(_from: State) -> void:
@@ -56,7 +75,8 @@ func _on_state_entered(_from: State) -> void:
 			provider = p
 	launch_item = provider
 	logger.info("Configured launcher for game: " + library_item.name)
-
+	set_process(true)
+	
 	# Configure the game settings state with this game
 	game_settings_state.data = launcher_state.data
 
@@ -64,12 +84,7 @@ func _on_state_entered(_from: State) -> void:
 	gamepad_settings_state.data = launcher_state.data
 
 	# Check if the app is installed or not
-	if library_item.is_installed():
-		launch_button.text = "Play Now"
-	else:
-		launch_button.text = "Install"
-	if LaunchManager.is_running(library_item.name):
-		launch_button.text = "Resume"
+	_update_launch_button()
 
 	# Set the launcher art to placeholders while we async load the right ones.
 	banner.texture = BoxArtManager.get_placeholder(BoxArtProvider.LAYOUT.BANNER)
@@ -94,6 +109,35 @@ func _on_state_entered(_from: State) -> void:
 func _on_state_exited(to: State) -> void:
 	if to == in_game_state:
 		state_machine.remove_state(launcher_state)
+	set_process(false)
+
+
+func _update_launch_button() -> void:
+	if not launch_item:
+		return
+	if launch_item.installed:
+		launch_button.text = "Play Now"
+	else:
+		launch_button.text = "Install"
+	if LaunchManager.is_running(launch_item.name):
+		launch_button.text = "Resume"
+	if InstallManager.is_queued(launch_item):
+		launch_button.text = "Queued"
+	if InstallManager.is_installing(launch_item):
+		launch_button.text = "Installing"
+
+
+func _update_uninstall_button() -> void:
+	if not launch_item:
+		return
+	if not launch_item.installed:
+		delete_container.visible = false
+		return
+	var provider := LibraryManager.get_library_by_id(launch_item._provider_id)
+	if not provider.supports_uninstall:
+		delete_container.visible = false
+		return
+	delete_container.visible = true
 
 
 func _on_launch() -> void:
@@ -113,36 +157,56 @@ func _on_launch() -> void:
 
 func _on_install() -> void:
 	# Do nothing if we're already installing
-	if launch_item.name in installing and installing[launch_item.name]:
+	if InstallManager.is_queued_or_installing(launch_item):
 		return
 	var notify := Notification.new("Installing " + launch_item.name)
 	NotificationManager.show(notify)
 
-	# Start the install
-	LibraryManager.install(launch_item)
-	installing[launch_item.name] = true
-	launch_button.disabled = true
+	# Create an install request
+	var provider := LibraryManager.get_library_by_id(launch_item._provider_id)
+	var install_req := InstallManager.Request.new(provider, launch_item)
 
-	# Update the progress bar with install progress
-	#progress_bar.visible = true
-	#var on_progress := func(item: LibraryLaunchItem, progress: float):
-	#	progress_bar.value = progress * 100
-	#LibraryManager.item_progressed.connect(on_progress)
+	# Update the progress bar with install progress of the request
+	progress_bar.value = 0
+
+	# Start the install
+	InstallManager.install(install_req)
 
 	# Show a notification when install completes
-	var on_installed := func(item: LibraryLaunchItem, success: bool):
-		launch_button.disabled = false
+	var on_installed := func(success: bool):
 		var verb: String
 		if success:
 			verb = "completed"
-			item.installed = true
-			launch_button.text = "Launch"
+			install_req.item.installed = true
 		else:
 			verb = "failed"
-		var install_msg := Notification.new("Install " + verb + " for " + item.name)
+		var install_msg := Notification.new("Install " + verb + " for " + install_req.item.name)
 		NotificationManager.show(install_msg)
-		installing[launch_item.name] = false
-		#progress_bar.visible = false
-		#LibraryManager.item_progressed.disconnect(on_progress)
-	LibraryManager.item_installed.connect(on_installed, CONNECT_ONE_SHOT)
+	install_req.completed.connect(on_installed, CONNECT_ONE_SHOT)
 
+
+func _on_uninstall() -> void:
+	# Do nothing if we're already installing
+	if InstallManager.is_queued_or_installing(launch_item):
+		return
+	var notify := Notification.new("Uninstalling " + launch_item.name)
+	NotificationManager.show(notify)
+
+	# Create an uninstall request
+	var provider := LibraryManager.get_library_by_id(launch_item._provider_id)
+	var uninstall_req := InstallManager.Request.new(provider, launch_item)
+
+	# Show a notification when uninstall completes
+	var on_installed := func(success: bool):
+		var verb: String
+		if success:
+			verb = "completed"
+			uninstall_req.item.installed = false
+		else:
+			verb = "failed"
+		var uninstall_msg := Notification.new("Uninstall " + verb + " for " + uninstall_req.item.name)
+		NotificationManager.show(uninstall_msg)
+	uninstall_req.completed.connect(on_installed, CONNECT_ONE_SHOT)
+
+	# Start the uninstall
+	InstallManager.install(uninstall_req)

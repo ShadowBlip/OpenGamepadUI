@@ -132,7 +132,6 @@ focus_stack = ExtResource("12_e0uun")
 [node name="LaunchButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
 layout_mode = 2
 text = "Launch"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LaunchButton" instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("20_cokg3")
@@ -147,7 +146,6 @@ on_signal = "pressed"
 [node name="BoxartButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
 layout_mode = 2
 text = "Boxart"
-highlight_speed = 0.1
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/BoxartButton" instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("20_cokg3")
