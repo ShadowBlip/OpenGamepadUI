@@ -5,4 +5,5 @@
 [node name="DesktopLibrary" type="Node"]
 script = ExtResource("1_6nq3r")
 library_id = "desktop"
+supports_uninstall = false
 logger_name = "DesktopLibrary"

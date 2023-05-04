@@ -3,6 +3,7 @@ extends Control
 
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
+var InstallManager := preload("res://core/global/install_manager.tres")
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var library_state := preload("res://assets/state/states/library.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
@@ -27,6 +28,7 @@ func _ready() -> void:
 	LibraryManager.library_reloaded.connect(_on_library_reloaded)
 	LibraryManager.library_registered.connect(_on_library_registered)
 	LibraryManager.library_unregistered.connect(_on_library_unregistered)
+	InstallManager.install_queued.connect(_on_install_queued)
 	if global_search != null:
 		global_search.search_submitted.connect(_on_search)
 
@@ -75,9 +77,13 @@ func _on_library_reloaded(_first_load: bool) -> void:
 	# TODO: Make this better
 	for child in all_games_grid.get_children():
 		#all_games_grid.remove_child(child)
+		if child is FocusGroup:
+			continue
 		child.queue_free()
 	for child in installed_games_grid.get_children():
 		#all_games_grid.remove_child(child)
+		if child is FocusGroup:
+			continue
 		child.queue_free()
 	
 	# Load our library entries and add them to all games
@@ -143,6 +149,24 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		if not tab_num in _library:
 			_library[tab_num] = {}
 		_library[tab_num][item.name] = card
+
+
+# When an install is queued, connect signals to show a progress bar on the library
+# card.
+func _on_install_queued(req: InstallManager.Request) -> void:
+	for tab_num in _library.keys():
+		if not req.item.name in _library[tab_num]:
+			continue
+		var card := _library[tab_num][req.item.name] as GameCard
+		card.value = 0
+		card.show_progress = true
+		var on_progress := func(progress: float):
+			card.value = progress * 100
+		req.progressed.connect(on_progress)
+		var on_completed := func(success: bool):
+			card.show_progress = false
+			req.progressed.disconnect(on_progress)
+		req.completed.connect(on_completed, CONNECT_ONE_SHOT)
 
 
 # Called when a library card is focused

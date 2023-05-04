@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bkhrcemal7uxo"]
+[gd_scene load_steps=10 format=3 uid="uid://bkhrcemal7uxo"]
 
 [ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
@@ -24,6 +24,13 @@ shadow_offset = Vector2(0, 5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gtppc"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 0.698039)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_up8ek"]
+bg_color = Color(1, 0.47451, 0.776471, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="GameCard" type="Control"]
 custom_minimum_size = Vector2(200, 300)
@@ -110,3 +117,18 @@ layout_mode = 2
 text = "Game Name"
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="TextureRect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/fill = SubResource("StyleBoxFlat_up8ek")
+value = 50.0
+rounded = true

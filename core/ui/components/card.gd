@@ -9,6 +9,7 @@ signal pressed
 signal highlighted
 signal unhighlighted
 
+@export_category("Label")
 @export var show_label := false:
 	set(v):
 		show_label = v
@@ -19,16 +20,30 @@ signal unhighlighted
 		text = v
 		if name_label:
 			name_label.text = v
+@export_category("ProgressBar")
+@export var show_progress := false:
+	set(v):
+		show_progress = v
+		if progress:
+			progress.visible = v
+@export var value: float = 50:
+	set(v):
+		value = v
+		if progress:
+			progress.value = v
 
 @onready var texture := $%TextureRect
 @onready var name_container := $%NameMargin
 @onready var name_label := $%NameLabel
+@onready var progress := $%ProgressBar as ProgressBar
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	name_container.visible = show_label
 	name_label.text = text
+	progress.visible = show_progress
+	progress.value = value
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)

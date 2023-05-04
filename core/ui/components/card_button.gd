@@ -6,6 +6,9 @@ signal pressed
 signal button_up
 signal button_down
 
+@export_category("Button")
+@export var disabled := false
+
 @export_category("Label")
 @export var text := "Button":
 	set(v):
@@ -97,6 +100,8 @@ func _play_sound(stream: AudioStream) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if disabled:
+		return
 	if not event.is_action("ui_accept"):
 		return
 	if event.is_pressed():

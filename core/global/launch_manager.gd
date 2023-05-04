@@ -329,12 +329,12 @@ func _check_running():
 			
 			# If this was launched by Steam, try and detect if the game closed 
 			# so we can kill Steam graefully
-			if app.is_steam_app() and app.num_created_windows > 0:
-				logger.debug("Running app is a Steam game and has no valid window ID, but has been detected " + str(app.num_created_windows) + " times.")
-				var steam_pid := app.find_steam()
-				if steam_pid > 0:
-					logger.info("Trying to stop steam with pid: " + str(steam_pid))
-					OS.execute("kill", ["-15", str(steam_pid)])
+			#if app.is_steam_app() and app.num_created_windows > 0:
+			#	logger.debug("Running app is a Steam game and has no valid window ID, but has been detected " + str(app.num_created_windows) + " times.")
+			#	var steam_pid := app.find_steam()
+			#	if steam_pid > 0:
+			#		logger.info("Trying to stop steam with pid: " + str(steam_pid))
+			#		OS.execute("kill", ["-15", str(steam_pid)])
 		
 		# If our app is still running, great!
 		if app.is_running():

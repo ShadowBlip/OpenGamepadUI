@@ -36,9 +36,13 @@ signal library_item_added(item: LibraryItem)
 signal library_item_removed(item: LibraryItem)
 signal library_launch_item_added(item: LibraryLaunchItem)
 signal library_launch_item_removed(item: LibraryLaunchItem)
+## DEPRECATED - Use InstallManager
 signal item_installed(item: LibraryLaunchItem, success: bool)
+## DEPRECATED - Use InstallManager
 signal item_updated(item: LibraryLaunchItem, success: bool)
+## DEPRECATED - Use InstallManager
 signal item_uninstalled(item: LibraryLaunchItem, success: bool)
+## DEPRECATED - Use InstallManager
 signal item_progressed(item: LibraryLaunchItem, percent_completed: float)
 
 # Dictionary of registered library providers
@@ -63,6 +67,7 @@ var _initialized := false
 var logger := Log.get_logger("LibraryManager")
 
 
+## DEPRECATED - Use InstallManager
 ## Installs the given library launch item using its provider
 func install(item: LibraryLaunchItem) -> void:
 	# Get the library provider for this launch item 
@@ -73,6 +78,7 @@ func install(item: LibraryLaunchItem) -> void:
 	provider.install(item)
 
 
+## DEPRECATED - Use InstallManager
 ## Updates the given library launch item using its provider
 func update(item: LibraryLaunchItem) -> void:
 	# Get the library provider for this launch item 
@@ -83,6 +89,7 @@ func update(item: LibraryLaunchItem) -> void:
 	provider.update(item)
 
 
+## DEPRECATED - Use InstallManager
 ## Uninstalls the given library launch item using its provider
 func uninstall(item: LibraryLaunchItem) -> void:
 	# Get the library provider for this launch item 
@@ -368,6 +375,7 @@ func _on_install_completed(item: LibraryLaunchItem, success: bool) -> void:
 	item_installed.emit(item, success)
 
 
+## DEPRECATED - Use InstallManager
 func _on_update_completed(item: LibraryLaunchItem, success: bool) -> void:
 	item_updated.emit(item, success)
 
@@ -376,6 +384,7 @@ func _on_uninstall_completed(item: LibraryLaunchItem, success: bool) -> void:
 	item_uninstalled.emit(item, success)
 
 
+## DEPRECATED - Use InstallManager
 func _on_install_progressed(item: LibraryLaunchItem, percent_completed: float) -> void:
 	item_progressed.emit(item, percent_completed)
 
