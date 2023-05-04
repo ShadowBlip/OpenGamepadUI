@@ -53,7 +53,7 @@ func update(request: Request) -> void:
 func uninstall(request: Request) -> void:
 	request._type = REQUEST_TYPE.UNINSTALL
 	var on_completed := func(_i: LibraryLaunchItem, success: bool):
-		request.completed.emit()
+		request.completed.emit(success)
 		uninstall_completed.emit(request)
 	request.provider.uninstall_completed.connect(on_completed, CONNECT_ONE_SHOT)
 	request.provider.uninstall(request.item)

@@ -197,7 +197,7 @@ func _on_uninstall() -> void:
 	var uninstall_req := InstallManager.Request.new(provider, launch_item)
 
 	# Show a notification when uninstall completes
-	var on_installed := func(success: bool):
+	var on_uninstalled := func(success: bool):
 		var verb: String
 		if success:
 			verb = "completed"
@@ -206,7 +206,7 @@ func _on_uninstall() -> void:
 			verb = "failed"
 		var uninstall_msg := Notification.new("Uninstall " + verb + " for " + uninstall_req.item.name)
 		NotificationManager.show(uninstall_msg)
-	uninstall_req.completed.connect(on_installed, CONNECT_ONE_SHOT)
+	uninstall_req.completed.connect(on_uninstalled, CONNECT_ONE_SHOT)
 
 	# Start the uninstall
-	InstallManager.install(uninstall_req)
+	InstallManager.uninstall(uninstall_req)
