@@ -50,7 +50,7 @@ unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("5_pq07x")
 
-[node name="SearchBar" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_gqstr")]
+[node name="SearchBar" parent="MarginContainer/HBoxContainer" groups=["global_search_bar"] instance=ExtResource("2_gqstr")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 36)
 layout_mode = 2

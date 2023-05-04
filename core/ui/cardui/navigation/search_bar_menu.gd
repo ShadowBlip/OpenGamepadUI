@@ -30,7 +30,7 @@ func _ready() -> void:
 
 func _on_library_entered(_from: State) -> void:
 	_show_library_tabs()
-	_hide_search_bar()
+	#_hide_search_bar()
 
 
 func _on_library_exited(_to: State) -> void:

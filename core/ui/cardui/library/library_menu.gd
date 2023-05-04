@@ -29,6 +29,8 @@ func _ready() -> void:
 	LibraryManager.library_registered.connect(_on_library_registered)
 	LibraryManager.library_unregistered.connect(_on_library_unregistered)
 	InstallManager.install_queued.connect(_on_install_queued)
+	InstallManager.install_completed.connect(_on_installed)
+	InstallManager.uninstall_completed.connect(_on_uninstalled)
 	if global_search != null:
 		global_search.search_submitted.connect(_on_search)
 
@@ -167,6 +169,28 @@ func _on_install_queued(req: InstallManager.Request) -> void:
 			card.show_progress = false
 			req.progressed.disconnect(on_progress)
 		req.completed.connect(on_completed, CONNECT_ONE_SHOT)
+
+
+# When an app is installed, ensure a card exists for it in the installed tab
+# TODO: Add new card in installed tab
+func _on_installed(req: InstallManager.Request) -> void:
+	pass
+
+
+# When an app is uninstalled, ensure a card DOESN'T exist for it on the installed tab
+func _on_uninstalled(req: InstallManager.Request) -> void:
+	var tab_num := 0
+	if not req.success:
+		return
+	if not tab_num in _library:
+		return
+	if not req.item.name in _library[tab_num]:
+		return
+	var card: Control = _library[tab_num][req.item.name]
+	_library[tab_num].erase(req.item.name)
+	if tab_num in _current_selection and _current_selection[tab_num] == card:
+		_current_selection.erase(tab_num)
+	card.queue_free()
 
 
 # Called when a library card is focused
