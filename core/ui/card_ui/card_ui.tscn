@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bh6sb57i7vw4l"]
+[gd_scene load_steps=30 format=3 uid="uid://bh6sb57i7vw4l"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
@@ -7,17 +7,18 @@
 [ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
-[ext_resource type="PackedScene" uid="uid://d7lts0p8kgtt" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
+[ext_resource type="PackedScene" uid="uid://o70x5igrlq30" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
+[ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="8_hyc1j"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/launch/game_launch_menu.tscn" id="9_m34in"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="10_1ruvi"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/launch/game_settings.tscn" id="10_7cj6o"]
-[ext_resource type="PackedScene" uid="uid://bdwu6kiayvvgm" path="res://core/ui/card_ui/library/library_menu.tscn" id="10_uqodp"]
+[ext_resource type="PackedScene" uid="uid://uqkwpeq7f1o" path="res://core/ui/card_ui/library/library_menu.tscn" id="10_uqodp"]
 [ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/card_ui/navigation/top_button_menu.tscn" id="11_x7ns7"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
+[ext_resource type="PackedScene" uid="uid://cd2p3lu01aric" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
+[ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
+[ext_resource type="PackedScene" uid="uid://chq023a11tl3k" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
@@ -85,6 +86,8 @@ script = ExtResource("1_f8851")
 [node name="LaunchManager" parent="." instance=ExtResource("4_tgw75")]
 
 [node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]
+
+[node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
 
 [node name="Panel" type="Panel" parent="."]
 unique_name_in_owner = true

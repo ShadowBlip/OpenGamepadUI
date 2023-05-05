@@ -28,15 +28,16 @@ func _ready() -> void:
 	time_timer.autostart = true
 	add_child(time_timer)
 	_on_update_time()
-	_on_update_battery()
 	battery_capacity = Battery.get_capacity(battery)
 	
 	# Create a timer to check battery status
 	var battery_timer := Timer.new()
 	battery_timer.timeout.connect(_on_update_battery_status)
-	battery_timer.wait_time = 5
+	battery_timer.timeout.connect(_on_update_battery)
+	battery_timer.wait_time = 3
 	battery_timer.autostart = true
 	add_child(battery_timer)
+	_on_update_battery()
 	_on_update_battery_status()
 
 

@@ -1,9 +1,12 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://cd2p3lu01aric"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
+[ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="2_7vfu8"]
 [ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="2_hvl7j"]
 [ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="4_ticck"]
+[ext_resource type="Texture2D" uid="uid://cnghdqiitl0fu" path="res://addons/controller_icons/assets/key/esc.png" id="4_tlvqf"]
 [ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="5_mcgmc"]
+[ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="7_wroit"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipcsm"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -49,6 +52,7 @@ text = "Accept"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+texture = ExtResource("2_7vfu8")
 expand_mode = 1
 script = ExtResource("2_hvl7j")
 path = "ui_accept"
@@ -61,6 +65,7 @@ text = "Back"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+texture = ExtResource("4_tlvqf")
 expand_mode = 1
 script = ExtResource("2_hvl7j")
 path = "ogui_east"
@@ -125,6 +130,7 @@ text = "+"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+texture = ExtResource("7_wroit")
 expand_mode = 1
 script = ExtResource("2_hvl7j")
 path = "ogui_guide_action_qam"
