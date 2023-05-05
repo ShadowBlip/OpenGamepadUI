@@ -18,20 +18,20 @@ func _ready() -> void:
 	# Create a timer to check wifi signal strength and battery percent
 	var wifi_timer := Timer.new()
 	wifi_timer.timeout.connect(_on_wifi_update)
-	wifi_timer.timeout.connect(_on_update_battery)
 	wifi_timer.wait_time = 60
 	wifi_timer.autostart = true
 	add_child(wifi_timer)
 	_on_wifi_update()
-	_on_update_battery()
 	battery_capacity = Battery.get_capacity(battery)
 	
 	# Create a timer to check battery status
 	var battery_timer := Timer.new()
 	battery_timer.timeout.connect(_on_update_battery_status)
-	battery_timer.wait_time = 5
+	battery_timer.timeout.connect(_on_update_battery)
+	battery_timer.wait_time = 3
 	battery_timer.autostart = true
 	add_child(battery_timer)
+	_on_update_battery()
 	_on_update_battery_status()
 
 
