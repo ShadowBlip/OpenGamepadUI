@@ -17,14 +17,8 @@ func _ready() -> void:
 	# Apply any update packs
 	_apply_update_packs()
 
-	# Launch only-qam mode
-	if "--qam-only" in args or "--only-qam" in args:
-		get_tree().change_scene_to_file("res://core/only_qam_main.tscn")
-		return
-
 	# Launch the main interface
-	get_tree().change_scene_to_file("res://core/ui/cardui/cardui.tscn")
-	#get_tree().change_scene_to_file("res://core/main.tscn")
+	get_tree().change_scene_to_file("res://core/main.tscn")
 	
 
 # Applies any update packs to load newer scripts and resources

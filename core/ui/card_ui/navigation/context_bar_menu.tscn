@@ -1,0 +1,130 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="2_hvl7j"]
+[ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="4_ticck"]
+[ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="5_mcgmc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipcsm"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_size = 5
+shadow_offset = Vector2(3, 3)
+
+[node name="ContextBar" type="PanelContainer"]
+z_index = 20
+custom_minimum_size = Vector2(0, 45)
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_ipcsm")
+script = ExtResource("1_wt5if")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DebugLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AcceptLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Accept"
+
+[node name="AcceptButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("2_hvl7j")
+path = "ui_accept"
+
+[node name="BackLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="BackButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("2_hvl7j")
+path = "ogui_east"
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="TimeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "12:00AM"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BatteryContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="BatteryIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/BatteryContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(48, 24)
+layout_mode = 2
+texture = ExtResource("4_ticck")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/BatteryContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "100%"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="QAMLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Quick Access Menu"
+horizontal_alignment = 2
+
+[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("5_mcgmc")
+expand_mode = 1
+script = ExtResource("2_hvl7j")
+path = "joypad/home"
+force_type = 2
+
+[node name="PlusLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "+"
+
+[node name="QAMButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+script = ExtResource("2_hvl7j")
+path = "ogui_guide_action_qam"

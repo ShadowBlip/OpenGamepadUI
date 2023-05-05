@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://core/ui/vapor_ui/settings/display_settings_menu.gd" id="1_w4xaq"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_oj3r7"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_nmfgp"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="3_rrkak"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="4_fpepf"]
+
+[node name="DisplaySettings" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_w4xaq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FocusGroup" parent="VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_oj3r7")]
+current_focus = NodePath("../ScaleSlider")
+focus_stack = ExtResource("3_rrkak")
+
+[node name="DisplayLabel" parent="VBoxContainer" instance=ExtResource("3_nmfgp")]
+layout_mode = 2
+text = "Display"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ScaleSlider" parent="VBoxContainer" instance=ExtResource("4_fpepf")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Scale"
+value = 1.2
+max_value = 5.0
+min_value = 0.2
+step = 0.2

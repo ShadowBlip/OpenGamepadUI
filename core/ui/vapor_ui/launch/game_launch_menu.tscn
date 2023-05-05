@@ -1,0 +1,214 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="Script" path="res://core/ui/vapor_ui/launch/game_launch_menu.gd" id="1_uhkt4"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_q87np"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_sp632"]
+[ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="3_68ilj"]
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="3_io70p"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_7y2kk"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_mab76"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_ejgx3"]
+[ext_resource type="Texture2D" uid="uid://bi3kevyi1dgys" path="res://assets/icons/game-controller.svg" id="6_hc1fc"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_t3rni"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_2y6wm"]
+[ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_hg7ac"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_jwh6r"]
+[ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="11_8fkuv"]
+[ext_resource type="PackedScene" uid="uid://61bw8lmqymry" path="res://core/ui/components/transition_slide_down.tscn" id="11_ei0vn"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="16_0i4he"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="16_d1x8e"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="17_yolrd"]
+[ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="18_x6wsr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ef1c"]
+bg_color = Color(0.741176, 0.576471, 0.976471, 1)
+
+[node name="GameLaunchMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uhkt4")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_sp632")]
+state = ExtResource("3_68ilj")
+visible_during = Array[Resource]([ExtResource("4_mab76"), ExtResource("5_ejgx3"), ExtResource("6_t3rni"), ExtResource("7_2y6wm"), ExtResource("8_jwh6r")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("8_hg7ac")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_68ilj")])
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_q87np")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="VisibilityManager" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_sp632")]
+state = ExtResource("3_68ilj")
+visible_during = Array[Resource]([ExtResource("4_mab76"), ExtResource("5_ejgx3"), ExtResource("6_t3rni"), ExtResource("7_2y6wm"), ExtResource("8_jwh6r")])
+
+[node name="SlideTransition" parent="ScrollContainer/VBoxContainer/VisibilityManager" instance=ExtResource("11_ei0vn")]
+
+[node name="GameBanner" type="TextureRect" parent="ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 440)
+layout_mode = 2
+texture = ExtResource("3_io70p")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/VBoxContainer/GameBanner"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 70
+
+[node name="GameLogo" type="TextureRect" parent="ScrollContainer/VBoxContainer/GameBanner/MarginContainer"]
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/VBoxContainer/GameBanner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Loading02" parent="ScrollContainer/VBoxContainer/GameBanner/CenterContainer" instance=ExtResource("11_8fkuv")]
+visible = false
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="LaunchBarMargin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="LaunchBar" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LaunchButtonContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LaunchButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer" instance=ExtResource("4_7y2kk")]
+layout_mode = 2
+focus_neighbor_left = NodePath("../../SettingsButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../LaunchOptionButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../LaunchOptionButton")
+focus_previous = NodePath("../../SettingsButton")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1ef1c")
+text = "Launch"
+
+[node name="LaunchOptionButton" type="OptionButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LaunchButtonContainer"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+focus_neighbor_left = NodePath("../LaunchButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../../ControllerButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../../ControllerButton")
+focus_previous = NodePath("../LaunchButton")
+text_overrun_behavior = 2
+clip_text = true
+
+[node name="LastPlayedContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
+
+[node name="LastPlayedTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
+text = "LAST PLAYED"
+
+[node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/LastPlayedContainer"]
+layout_mode = 2
+text = "Nov 21"
+
+[node name="PlayTimeContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
+
+[node name="PlayTimeTitle" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
+text = "PLAY TIME"
+
+[node name="LastPlayed" type="Label" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/PlayTimeContainer"]
+layout_mode = 2
+text = "0h"
+
+[node name="Spacer" type="Control" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ControllerButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 1
+focus_neighbor_left = NodePath("../LaunchButtonContainer/LaunchOptionButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../SettingsButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../SettingsButton")
+focus_previous = NodePath("../LaunchButtonContainer/LaunchOptionButton")
+icon = ExtResource("6_hc1fc")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/ControllerButton" instance=ExtResource("16_d1x8e")]
+state_machine = ExtResource("17_yolrd")
+state = ExtResource("16_0i4he")
+on_signal = "button_up"
+
+[node name="SettingsButton" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar" instance=ExtResource("4_7y2kk")]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 1
+focus_neighbor_left = NodePath("../ControllerButton")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../LaunchButtonContainer/LaunchButton")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../LaunchButtonContainer/LaunchButton")
+focus_previous = NodePath("../ControllerButton")
+icon = ExtResource("7_qo3p1")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="ScrollContainer/VBoxContainer/LaunchBarMargin/LaunchBar/SettingsButton" instance=ExtResource("16_d1x8e")]
+state_machine = ExtResource("17_yolrd")
+state = ExtResource("18_x6wsr")
+on_signal = "button_up"
+
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("2_q87np")

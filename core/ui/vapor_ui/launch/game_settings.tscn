@@ -1,0 +1,152 @@
+[gd_scene load_steps=23 format=3]
+
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_7xt8l"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui/launch/game_settings.gd" id="2_rlpdq"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="3_pi1te"]
+[ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="4_8ues3"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_16bvj"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="6_dwsls"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_iyj0c"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="8_rbldu"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_f63vb"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_jugdd"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="10_8hmfk"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="10_fevkh"]
+[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="11_0pls5"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_vf520"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_launch_settings.tscn" id="12_xquv8"]
+[ext_resource type="Resource" uid="uid://1dnelmxp0tuq" path="res://assets/state/state_machines/game_settings_state_machine.tres" id="13_n13br"]
+[ext_resource type="Resource" uid="uid://d3rbp3ws1ejal" path="res://assets/state/states/game_settings_launch.tres" id="14_ww42w"]
+[ext_resource type="Resource" uid="uid://bn8ih6qafytvi" path="res://assets/state/states/game_settings_boxart.tres" id="15_mj8i3"]
+[ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="16_gbqn4"]
+[ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="17_je5ff"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="18_xmkhr"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_boxart_settings.tscn" id="19_extkk"]
+
+[node name="GameSettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_7xt8l")
+script = ExtResource("2_rlpdq")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("3_pi1te")]
+state = ExtResource("4_8ues3")
+visible_during = Array[Resource]([ExtResource("5_16bvj"), ExtResource("6_dwsls"), ExtResource("7_iyj0c"), ExtResource("8_rbldu"), ExtResource("9_f63vb")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("9_jugdd")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_8ues3")])
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 35
+
+[node name="MainContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="MenuContainer" type="PanelContainer" parent="VBoxContainer/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SideMenuMarginContainer" type="MarginContainer" parent="VBoxContainer/MainContainer/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="SideMenuContainer" type="VBoxContainer" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FocusManager" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("10_8hmfk")]
+current_focus = NodePath("../LaunchSettingsButton")
+process_input = true
+
+[node name="GameNameLabel" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer" instance=ExtResource("10_fevkh")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "GAME NAME"
+uppercase = true
+
+[node name="LaunchSettingsButton" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer" instance=ExtResource("11_0pls5")]
+layout_mode = 2
+text = "Launch"
+
+[node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer/LaunchSettingsButton" instance=ExtResource("12_vf520")]
+state_machine = ExtResource("13_n13br")
+state = ExtResource("14_ww42w")
+action = 2
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer/LaunchSettingsButton" node_paths=PackedStringArray("target") instance=ExtResource("16_gbqn4")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/LaunchSettings")
+on_signal = "pressed"
+
+[node name="BoxArtSettingsButton" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer" instance=ExtResource("11_0pls5")]
+layout_mode = 2
+text = "Box Art"
+
+[node name="StateUpdater" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer/BoxArtSettingsButton" instance=ExtResource("12_vf520")]
+state_machine = ExtResource("13_n13br")
+state = ExtResource("15_mj8i3")
+action = 2
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="VBoxContainer/MainContainer/MenuContainer/SideMenuMarginContainer/SideMenuContainer/BoxArtSettingsButton" node_paths=PackedStringArray("target") instance=ExtResource("16_gbqn4")]
+target = NodePath("../../../../../ContentContainer/ContentMarginContainer/BoxArtSettings")
+on_signal = "pressed"
+
+[node name="ContentContainer" type="PanelContainer" parent="VBoxContainer/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_type_variation = &"LightPanel"
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="VBoxContainer/MainContainer/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="LaunchSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("12_xquv8")]
+layout_mode = 2
+
+[node name="VisibilityManager" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/LaunchSettings" instance=ExtResource("3_pi1te")]
+state_machine = ExtResource("13_n13br")
+state = ExtResource("14_ww42w")
+
+[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/LaunchSettings"]
+script = ExtResource("17_je5ff")
+
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/LaunchSettings/TransitionContainer" instance=ExtResource("18_xmkhr")]
+
+[node name="BoxArtSettings" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer" instance=ExtResource("19_extkk")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/BoxArtSettings" instance=ExtResource("3_pi1te")]
+state_machine = ExtResource("13_n13br")
+state = ExtResource("15_mj8i3")
+
+[node name="TransitionContainer" type="Node" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/BoxArtSettings"]
+script = ExtResource("17_je5ff")
+
+[node name="TransitionFadeIn" parent="VBoxContainer/MainContainer/ContentContainer/ContentMarginContainer/BoxArtSettings/TransitionContainer" instance=ExtResource("18_xmkhr")]

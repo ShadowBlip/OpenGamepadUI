@@ -1,0 +1,62 @@
+[gd_scene load_steps=11 format=3 uid="uid://cliqk7lo4t8ao"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/settings/plugin_settings_menu.gd" id="1_1p4dc"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_d8jy7"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_a1fhd"]
+[ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="4_m0d4b"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="5_0c8si"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="6_fo0yk"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="7_8k476"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="8_rs83g"]
+[ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_veuxu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bleea"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="PluginSettingsMenu" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+script = ExtResource("1_1p4dc")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_d8jy7")]
+state_machine = ExtResource("3_a1fhd")
+state = ExtResource("4_m0d4b")
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("5_0c8si")]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ContentContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/ContentContainer" instance=ExtResource("6_fo0yk")]
+unique_name_in_owner = true
+focus_stack = ExtResource("7_8k476")
+
+[node name="NoPluginsLabel" parent="MarginContainer/ContentContainer" instance=ExtResource("8_rs83g")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No plugins found"
+horizontal_alignment = 1
+
+[node name="ExpandableCard" parent="MarginContainer/ContentContainer" instance=ExtResource("8_veuxu")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bleea")
