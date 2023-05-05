@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c0qycxb6qjvfu"]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_8yjid"]
 [ext_resource type="Script" path="res://core/ui/components/plugin_store_card.gd" id="1_mpwli"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_6yau4"]
 [ext_resource type="Texture2D" uid="uid://54ncgpi6yy3p" path="res://assets/ui/icons/download-cloud-2-fill.svg" id="4_b4p24"]
 [ext_resource type="Texture2D" uid="uid://dt1r8cyx48k2p" path="res://assets/ui/icons/upgrade.svg" id="6_dsefr"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/cardui/settings/settings_menu_focus.tres" id="6_fo8lr"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="6_fo8lr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43kcj"]
 bg_color = Color(0.105882, 0.113725, 0.145098, 1)

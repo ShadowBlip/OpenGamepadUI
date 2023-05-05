@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bkqeer0umb0tt"]
+
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="1_f6er3"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui/osk/on_screen_keyboard_test.gd" id="1_l7c3f"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui/osk/keyboard_layout.gd" id="4_5um32"]
+
+[sub_resource type="Resource" id="Resource_0ajxf"]
+script = ExtResource("4_5um32")
+name = "Default"
+rows = Array[Resource("res://core/ui/vapor_ui/osk/keyboard_row.gd")]([])
+
+[node name="KeyboardTest" type="Node"]
+script = ExtResource("1_l7c3f")
+test_name = "KeyboardTest"
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="CenterContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "Some Text"
+
+[node name="OnScreenKeyboard" parent="." instance=ExtResource("1_f6er3")]
+layout = SubResource("Resource_0ajxf")

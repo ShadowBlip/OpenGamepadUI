@@ -1,0 +1,76 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_gymt1"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="2_ljdx2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5xik1"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_offset = Vector2(4, 4)
+
+[node name="InGameNotification" type="Control"]
+z_index = 20
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -262.0
+offset_bottom = 48.0
+grow_horizontal = 0
+script = ExtResource("1_w3dkg")
+
+[node name="SlideEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_ljdx2")]
+unique_name_in_owner = true
+target = NodePath("../MarginContainer/PanelContainer")
+slide_speed = 0.5
+on_signal = "notification_received"
+slide_out_signal = "notification_finished"
+on_signal = "notification_received"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -262.0
+offset_bottom = 48.0
+grow_horizontal = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5xik1")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+texture = ExtResource("2_gymt1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Some text notification"
+vertical_alignment = 1
+
+[node name="TimeoutTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true

@@ -1,0 +1,230 @@
+[gd_scene load_steps=29 format=3 uid="uid://bh6sb57i7vw4l"]
+
+[ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
+[ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_sbg4l"]
+[ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="2_600i0"]
+[ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
+[ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
+[ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
+[ext_resource type="PackedScene" uid="uid://d7lts0p8kgtt" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/launch/game_launch_menu.tscn" id="9_m34in"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="10_1ruvi"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/launch/game_settings.tscn" id="10_7cj6o"]
+[ext_resource type="PackedScene" uid="uid://bdwu6kiayvvgm" path="res://core/ui/card_ui/library/library_menu.tscn" id="10_uqodp"]
+[ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/card_ui/navigation/top_button_menu.tscn" id="11_x7ns7"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
+[ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
+[ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
+
+[sub_resource type="Gradient" id="Gradient_d65wo"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.734982)
+colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_y4ncd"]
+gradient = SubResource("Gradient_d65wo")
+
+[sub_resource type="Animation" id="Animation_vgwwd"]
+resource_name = "fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_06k1n"]
+_data = {
+"fade": SubResource("Animation_vgwwd")
+}
+
+[node name="CardUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_sbg4l")
+script = ExtResource("1_f8851")
+
+[node name="InputManager" parent="." instance=ExtResource("1_34t85")]
+
+[node name="BoxArtLocal" parent="." instance=ExtResource("2_600i0")]
+
+[node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
+
+[node name="LaunchManager" parent="." instance=ExtResource("4_tgw75")]
+
+[node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]
+
+[node name="Panel" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"LightPanel"
+
+[node name="Content" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HomeMenu" type="MarginContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="CardUIHome" parent="Content/HomeMenu" instance=ExtResource("6_12lhu")]
+layout_mode = 2
+
+[node name="GameLaunchMenu" parent="Content/HomeMenu" instance=ExtResource("9_m34in")]
+visible = false
+layout_mode = 2
+
+[node name="GameSettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_7cj6o")]
+visible = false
+layout_mode = 2
+
+[node name="SettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_1ruvi")]
+visible = false
+layout_mode = 2
+
+[node name="GamepadSettings" parent="Content/HomeMenu" instance=ExtResource("12_yovai")]
+visible = false
+layout_mode = 2
+
+[node name="FullscreenMenus" type="MarginContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LibraryMenu" parent="Content/FullscreenMenus" instance=ExtResource("10_uqodp")]
+visible = false
+layout_mode = 2
+
+[node name="TopMargin" type="MarginContainer" parent="Content"]
+z_index = 20
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+
+[node name="SearchBarMenu" parent="Content/TopMargin" instance=ExtResource("10_7bl6b")]
+layout_mode = 2
+
+[node name="ButtonMenu" parent="Content/TopMargin" instance=ExtResource("11_x7ns7")]
+layout_mode = 2
+
+[node name="InGameNotification" parent="Content/TopMargin" instance=ExtResource("16_bcudw")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="BottomMargin" type="MarginContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="ContextBar" parent="Content/BottomMargin" instance=ExtResource("12_bstc8")]
+layout_mode = 2
+
+[node name="MenuContainer" type="MarginContainer" parent="Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 70
+
+[node name="MainMenu" parent="Content/MenuContainer" instance=ExtResource("13_46tck")]
+visible = false
+layout_mode = 2
+
+[node name="QuickAccessMenu" parent="Content/MenuContainer" instance=ExtResource("14_lsaok")]
+visible = false
+layout_mode = 2
+
+[node name="FadeTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_y4ncd")
+
+[node name="FadeTransitionPlayer" type="AnimationPlayer" parent="FadeTexture"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_06k1n")
+}
+
+[node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
+visible = false
+layout_mode = 1
+
+[node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
+unique_name_in_owner = true
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("21_s3peg")
+autoplay = true
+
+[node name="PowerMenu" parent="." instance=ExtResource("20_noim3")]
+visible = false
+layout_mode = 1
+
+[node name="VolumeIndicator" parent="." instance=ExtResource("18_g4maw")]
+layout_mode = 1
+
+[node name="OnScreenKeyboard" parent="." instance=ExtResource("18_462u5")]
+visible = false
+layout_mode = 1
+
+[node name="PowerTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 1.5
+one_shot = true

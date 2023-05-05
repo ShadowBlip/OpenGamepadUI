@@ -1,0 +1,160 @@
+[gd_scene load_steps=13 format=3 uid="uid://uqkwpeq7f1o"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/library/library_menu.gd" id="1_7invr"]
+[ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/card_ui/library/library_tabs_state.tres" id="2_4hmwr"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="3_2qh2a"]
+[ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="4_dffbv"]
+[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="5_i24wn"]
+[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="6_gwkmd"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="7_oigb4"]
+[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="8_s5vy4"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_swp14"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="10_brww5"]
+[ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="11_bj8cj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xn2qp"]
+bg_color = Color(0.266667, 0.278431, 0.352941, 0)
+
+[node name="LibraryMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7invr")
+tabs_state = ExtResource("2_4hmwr")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("3_2qh2a")]
+state = ExtResource("4_dffbv")
+visible_during = Array[Resource]([ExtResource("5_i24wn"), ExtResource("6_gwkmd"), ExtResource("7_oigb4"), ExtResource("8_s5vy4"), ExtResource("9_swp14")])
+
+[node name="BackInputHandler" parent="." instance=ExtResource("10_brww5")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_dffbv")])
+
+[node name="TabContainer" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_xn2qp")
+tabs_visible = false
+
+[node name="InstalledTab" type="ScrollContainer" parent="TabContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/InstalledTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="InstalledGrid" type="HFlowContainer" parent="TabContainer/InstalledTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="Card" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card2" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card3" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card4" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card5" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card6" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card7" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card8" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card9" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card10" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card11" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="Card12" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
+layout_mode = 2
+
+[node name="AllGamesTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/AllGamesTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="AllGamesGrid" type="HFlowContainer" parent="TabContainer/AllGamesTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="FavoritesTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/FavoritesTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="FavoritesGrid" type="HFlowContainer" parent="TabContainer/FavoritesTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16
+
+[node name="CollectionsTab" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/CollectionsTab"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 15
+
+[node name="CollectionsGrid" type="HFlowContainer" parent="TabContainer/CollectionsTab/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 16

@@ -1,0 +1,283 @@
+[gd_scene load_steps=30 format=3 uid="uid://chq023a11tl3k"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/qam/quick_access_menu.gd" id="1_iv1ik"]
+[ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_14qhq"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_xf32g"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="3_wfvum"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_po62f"]
+[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="5_kyjm7"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_4nd6m"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="7_npuoo"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="7_x6s26"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="8_6r1gm"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="8_a6ggx"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="10_o3y3b"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_pbr6g"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="13_kyb0u"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="13_sugtt"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_3ea2i"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="14_6yknl"]
+[ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/qam/quick_settings_card.tscn" id="15_tmqe2"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/performance_card.tscn" id="16_bait0"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="17_ohpj3"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/notifications_card.tscn" id="18_8qme3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s3u8f"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_bottom_left = 10
+shadow_size = 5
+shadow_offset = Vector2(-4, 4)
+
+[sub_resource type="Animation" id="Animation_5up20"]
+resource_name = "enter"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(400, 0), Vector2(1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+
+[sub_resource type="Animation" id="Animation_4xb6e"]
+resource_name = "exit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(400, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cdpfs"]
+_data = {
+"enter": SubResource("Animation_5up20"),
+"exit": SubResource("Animation_4xb6e")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pch1"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqtsn"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2k7ee"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_snwl8"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="QuickAccessMenu" type="Control" groups=["qam"]]
+z_index = 20
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_iv1ik")
+
+[node name="VisibilityManager" type="Node" parent="."]
+script = ExtResource("2_14qhq")
+state = ExtResource("3_wfvum")
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_po62f")]
+root_node = NodePath("../..")
+
+[node name="BackInputHandler" parent="." instance=ExtResource("2_xf32g")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wfvum")])
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s3u8f")
+
+[node name="VisibilityManager" type="Node" parent="MarginContainer/PanelContainer"]
+script = ExtResource("2_14qhq")
+state = ExtResource("3_wfvum")
+
+[node name="TransitionSlideRight" type="AnimationPlayer" parent="MarginContainer/PanelContainer/VisibilityManager"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_cdpfs")
+}
+script = ExtResource("5_kyjm7")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SystemContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_4nd6m")]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("13_kyb0u")]
+current_focus = NodePath("../NotifyButton")
+focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
+
+[node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("7_x6s26")
+
+[node name="HelpButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("8_6r1gm")
+
+[node name="Spacer" type="Control" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_pbr6g")]
+state_machine = ExtResource("13_sugtt")
+state = ExtResource("14_3ea2i")
+on_signal = "button_up"
+
+[node name="PlayingNowContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+layout_mode = 2
+
+[node name="SectionLabel" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer" instance=ExtResource("7_npuoo")]
+layout_mode = 2
+text = "Playing Now"
+
+[node name="GameNameLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Game Name"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("10_o3y3b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Viewport" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("13_kyb0u")]
+unique_name_in_owner = true
+current_focus = NodePath("../QuickSettingsCard")
+focus_stack = ExtResource("14_6yknl")
+focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
+
+[node name="NotificationsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("18_8qme3")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2pch1")
+
+[node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("15_tmqe2")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_aqtsn")
+
+[node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("16_bait0")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2k7ee")
+
+[node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("17_ohpj3")]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_snwl8")

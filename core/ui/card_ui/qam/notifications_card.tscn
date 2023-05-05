@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/qam_card.tscn" id="1_apgy0"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/notifications_menu.tscn" id="2_5wlde"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_opdiq"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="NotificationsCard" instance=ExtResource("1_apgy0")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_opdiq")
+title = "Notifications"
+
+[node name="SectionLabel" parent="MarginContainer/CardVBoxContainer" index="0"]
+text = "Notifications"
+
+[node name="NotificationsMenu" parent="MarginContainer/CardVBoxContainer/ContentContainer" index="0" instance=ExtResource("2_5wlde")]
+layout_mode = 2

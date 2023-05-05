@@ -1,0 +1,103 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui/navigation/context_bar.gd" id="2_jserv"]
+[ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="3_rubyt"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="3_vjpxr"]
+[ext_resource type="Texture2D" uid="uid://cnghdqiitl0fu" path="res://addons/controller_icons/assets/key/esc.png" id="5_k2vuu"]
+[ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="6_lel3f"]
+[ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="7_xtiui"]
+
+[node name="ContextBar" type="Control" groups=["menu"]]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("1_ylil8")
+script = ExtResource("2_jserv")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="DebugLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AcceptLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Accept"
+
+[node name="AcceptButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_rubyt")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ui_accept"
+
+[node name="BackLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="BackButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("5_k2vuu")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ogui_east"
+
+[node name="QAMLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quick Access Menu"
+horizontal_alignment = 2
+
+[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("6_lel3f")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "joypad/home"
+force_type = 2
+
+[node name="PlusLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "+"
+
+[node name="QAMButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("7_xtiui")
+expand_mode = 1
+script = ExtResource("3_vjpxr")
+path = "ogui_guide_action_qam"
