@@ -4,8 +4,6 @@
 
 [node name="PowerSaver" type="Node"]
 script = ExtResource("1_qeyke")
-dim_after_inactivity_mins = 1
-dim_percent = 5
 
 [node name="DimTimer" type="Timer" parent="."]
 unique_name_in_owner = true
