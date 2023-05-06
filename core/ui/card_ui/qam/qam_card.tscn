@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=11 format=3 uid="uid://b5xnora73yd8x"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
@@ -90,10 +90,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_sh8jt")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="CardVBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2

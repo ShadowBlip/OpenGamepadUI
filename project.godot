@@ -157,6 +157,22 @@ ogui_power={
 "deadzone": 0.5,
 "events": []
 }
+ogui_scroll_up={
+"deadzone": 0.5,
+"events": []
+}
+ogui_scroll_down={
+"deadzone": 0.5,
+"events": []
+}
+ogui_scroll_left={
+"deadzone": 0.5,
+"events": []
+}
+ogui_scroll_right={
+"deadzone": 0.5,
+"events": []
+}
 
 [input_devices]
 

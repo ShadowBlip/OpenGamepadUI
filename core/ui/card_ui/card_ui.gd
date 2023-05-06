@@ -16,7 +16,7 @@ var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 @onready var panel := $%Panel
-@onready var ui_container := $%Content
+@onready var ui_container := $%MenuContent
 @onready var boot_video := $%BootVideoPlayer
 @onready var fade_transition := $%FadeTransitionPlayer
 @onready var fade_texture := $%FadeTexture

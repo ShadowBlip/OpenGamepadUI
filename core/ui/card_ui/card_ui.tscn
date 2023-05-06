@@ -19,7 +19,7 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://chq023a11tl3k" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
+[ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
@@ -89,6 +89,11 @@ script = ExtResource("1_f8851")
 
 [node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
 
+[node name="PowerTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 1.5
+one_shot = true
+
 [node name="Panel" type="Panel" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -99,7 +104,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"LightPanel"
 
-[node name="Content" type="MarginContainer" parent="."]
+[node name="MenuContent" type="MarginContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -108,39 +113,39 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HomeMenu" type="MarginContainer" parent="Content"]
+[node name="AboveContextBarMargin" type="MarginContainer" parent="MenuContent"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="CardUIHome" parent="Content/HomeMenu" instance=ExtResource("6_12lhu")]
+[node name="CardUIHome" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("6_12lhu")]
 layout_mode = 2
 
-[node name="GameLaunchMenu" parent="Content/HomeMenu" instance=ExtResource("9_m34in")]
+[node name="GameLaunchMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("9_m34in")]
 visible = false
 layout_mode = 2
 
-[node name="GameSettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_7cj6o")]
+[node name="GameSettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("10_7cj6o")]
 visible = false
 layout_mode = 2
 
-[node name="SettingsMenu" parent="Content/HomeMenu" instance=ExtResource("10_1ruvi")]
+[node name="SettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("10_1ruvi")]
 visible = false
 layout_mode = 2
 
-[node name="GamepadSettings" parent="Content/HomeMenu" instance=ExtResource("12_yovai")]
+[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("12_yovai")]
 visible = false
 layout_mode = 2
 
-[node name="FullscreenMenus" type="MarginContainer" parent="Content"]
+[node name="FullscreenMenus" type="MarginContainer" parent="MenuContent"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="LibraryMenu" parent="Content/FullscreenMenus" instance=ExtResource("10_uqodp")]
+[node name="LibraryMenu" parent="MenuContent/FullscreenMenus" instance=ExtResource("10_uqodp")]
 visible = false
 layout_mode = 2
 
-[node name="TopMargin" type="MarginContainer" parent="Content"]
+[node name="TopMargin" type="MarginContainer" parent="MenuContent"]
 z_index = 20
 layout_mode = 2
 mouse_filter = 2
@@ -148,37 +153,71 @@ theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 
-[node name="SearchBarMenu" parent="Content/TopMargin" instance=ExtResource("10_7bl6b")]
+[node name="SearchBarMenu" parent="MenuContent/TopMargin" instance=ExtResource("10_7bl6b")]
 layout_mode = 2
 
-[node name="ButtonMenu" parent="Content/TopMargin" instance=ExtResource("11_x7ns7")]
+[node name="ButtonMenu" parent="MenuContent/TopMargin" instance=ExtResource("11_x7ns7")]
 layout_mode = 2
 
-[node name="InGameNotification" parent="Content/TopMargin" instance=ExtResource("16_bcudw")]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0
-
-[node name="BottomMargin" type="MarginContainer" parent="Content"]
+[node name="BottomMargin" type="MarginContainer" parent="MenuContent"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="ContextBar" parent="Content/BottomMargin" instance=ExtResource("12_bstc8")]
+[node name="ContextBar" parent="MenuContent/BottomMargin" instance=ExtResource("12_bstc8")]
 layout_mode = 2
 
-[node name="MenuContainer" type="MarginContainer" parent="Content"]
+[node name="MenuContainer" type="MarginContainer" parent="MenuContent"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_bottom = 70
 
-[node name="MainMenu" parent="Content/MenuContainer" instance=ExtResource("13_46tck")]
+[node name="MainMenu" parent="MenuContent/MenuContainer" instance=ExtResource("13_46tck")]
 visible = false
 layout_mode = 2
 
-[node name="QuickAccessMenu" parent="Content/MenuContainer" instance=ExtResource("14_lsaok")]
+[node name="QuickAccessMenu" parent="MenuContent/MenuContainer" instance=ExtResource("14_lsaok")]
+visible = false
+layout_mode = 2
+
+[node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
+editor_description = "Anything in this container will always be visible, even during in-game states.
+"
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="GameLoading" parent="AlwaysVisibleContent" instance=ExtResource("22_morxu")]
+visible = false
+layout_mode = 2
+
+[node name="PowerMenu" parent="AlwaysVisibleContent" instance=ExtResource("20_noim3")]
+visible = false
+layout_mode = 2
+
+[node name="VolumeIndicator" parent="AlwaysVisibleContent" instance=ExtResource("18_g4maw")]
+layout_mode = 2
+
+[node name="TopMargin" type="MarginContainer" parent="AlwaysVisibleContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+
+[node name="InGameNotification" parent="AlwaysVisibleContent/TopMargin" instance=ExtResource("16_bcudw")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="OnScreenKeyboard" parent="AlwaysVisibleContent" instance=ExtResource("18_462u5")]
 visible = false
 layout_mode = 2
 
@@ -200,34 +239,20 @@ libraries = {
 "": SubResource("AnimationLibrary_06k1n")
 }
 
-[node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
-visible = false
-layout_mode = 1
-
 [node name="BootVideoPlayer" type="VideoStreamPlayer" parent="."]
 unique_name_in_owner = true
 z_index = 20
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -544.0
+offset_right = 960.0
+offset_bottom = 544.0
 grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("21_s3peg")
 autoplay = true
-
-[node name="PowerMenu" parent="." instance=ExtResource("20_noim3")]
-visible = false
-layout_mode = 1
-
-[node name="VolumeIndicator" parent="." instance=ExtResource("18_g4maw")]
-layout_mode = 1
-
-[node name="OnScreenKeyboard" parent="." instance=ExtResource("18_462u5")]
-visible = false
-layout_mode = 1
-
-[node name="PowerTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 1.5
-one_shot = true

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dxaeufuk7ump2"]
 
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/qam_card.tscn" id="1_dgms2"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/quick_settings_menu.tscn" id="2_ohkpi"]
+[ext_resource type="PackedScene" uid="uid://b5xnora73yd8x" path="res://core/ui/card_ui/qam/qam_card.tscn" id="1_dgms2"]
+[ext_resource type="PackedScene" uid="uid://gjrgimao0edi" path="res://core/ui/vapor_ui/qam/quick_settings_menu.tscn" id="2_ohkpi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_de1d3"]
 resource_local_to_scene = true

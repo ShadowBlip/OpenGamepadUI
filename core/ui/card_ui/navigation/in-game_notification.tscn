@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://cu4l0d1joc37w"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_gymt1"]

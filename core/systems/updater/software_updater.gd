@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/document-update.svg")
 extends Node
 class_name SoftwareUpdater
 
