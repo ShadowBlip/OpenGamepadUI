@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://csor0e54svgja"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/settings/logging_settings_menu.gd" id="1_qleso"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_5va5m"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_udmnv"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_6uj1s"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="6_ljvn8"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="7_fbxhf"]
 
 [node name="LoggingSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -57,3 +58,5 @@ text = "Per-system Logging"
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="ScrollerJoystick" parent="." instance=ExtResource("7_fbxhf")]

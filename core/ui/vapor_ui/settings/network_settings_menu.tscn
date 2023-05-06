@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3 uid="uid://cpss2bhdwm8t7"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/settings/network_settings_menu.gd" id="1_2qdps"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_8jmkq"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="5_round"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="6_i7u1a"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="7_qx5i7"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="9_v6vet"]
 
 [node name="NetworkSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -111,3 +112,5 @@ secret = true
 unique_name_in_owner = true
 layout_mode = 2
 text = "Submit"
+
+[node name="ScrollerJoystick" parent="." instance=ExtResource("9_v6vet")]

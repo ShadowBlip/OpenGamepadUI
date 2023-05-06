@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://uqkwpeq7f1o"]
+[gd_scene load_steps=14 format=3 uid="uid://uqkwpeq7f1o"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/library/library_menu.gd" id="1_7invr"]
 [ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/card_ui/library/library_tabs_state.tres" id="2_4hmwr"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="8_s5vy4"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_swp14"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="10_brww5"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="11_27umd"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="11_bj8cj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xn2qp"]
@@ -47,6 +48,8 @@ tabs_visible = false
 [node name="InstalledTab" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
 horizontal_scroll_mode = 0
+
+[node name="ScrollerJoystick" parent="TabContainer/InstalledTab" instance=ExtResource("11_27umd")]
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/InstalledTab"]
 layout_mode = 2
@@ -104,6 +107,8 @@ visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 
+[node name="ScrollerJoystick" parent="TabContainer/AllGamesTab" instance=ExtResource("11_27umd")]
+
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/AllGamesTab"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -124,6 +129,8 @@ visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
 
+[node name="ScrollerJoystick" parent="TabContainer/FavoritesTab" instance=ExtResource("11_27umd")]
+
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/FavoritesTab"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -143,6 +150,8 @@ theme_override_constants/v_separation = 16
 visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
+
+[node name="ScrollerJoystick" parent="TabContainer/CollectionsTab" instance=ExtResource("11_27umd")]
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/CollectionsTab"]
 layout_mode = 2

@@ -368,6 +368,14 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 				_send_input("ui_left", true)
 				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.LEFT)
 				return
+		event.ABS_RY:
+			var value := _normalize_axis(event)
+			_send_joy_input(JOY_AXIS_RIGHT_Y, value)
+			return
+		event.ABS_RX:
+			var value := _normalize_axis(event)
+			_send_joy_input(JOY_AXIS_RIGHT_X, value)
+			return
 
 
 ## Sometimes games will send gamepad events to the controller, such as when to

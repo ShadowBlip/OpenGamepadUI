@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0cyl6fdqxevn"]
+
+[ext_resource type="Script" path="res://core/systems/input/scroller_joystick.gd" id="1_n0qwt"]
+
+[node name="ScrollerJoystick" type="Node"]
+script = ExtResource("1_n0qwt")

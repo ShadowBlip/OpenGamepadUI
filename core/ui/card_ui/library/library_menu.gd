@@ -215,7 +215,7 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 	
 	# Get the child container to grab focus
 	var container: ScrollContainer = tab_container.get_child(tab)
-	var grid: HFlowContainer = container.get_child(0).get_child(0)
+	var grid: HFlowContainer = container.get_child(1).get_child(0)
 	
 	# If we had a previous selection, grab focus on that.
 	if tab in _current_selection:
@@ -231,6 +231,8 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 		if child is FocusGroup:
 			child.grab_focus()
 			break
+		if not child is Control:
+			continue
 		if child.visible:
 			child.grab_focus.call_deferred()
 			break

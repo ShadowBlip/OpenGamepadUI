@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cliqk7lo4t8ao"]
+[gd_scene load_steps=12 format=3 uid="uid://cliqk7lo4t8ao"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/plugin_settings_menu.gd" id="1_1p4dc"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_d8jy7"]
@@ -9,8 +9,9 @@
 [ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="7_8k476"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="8_rs83g"]
 [ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_veuxu"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_nbqrj"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bleea"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v4qto"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -59,4 +60,6 @@ horizontal_alignment = 1
 
 [node name="ExpandableCard" parent="MarginContainer/ContentContainer" instance=ExtResource("8_veuxu")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bleea")
+theme_override_styles/panel = SubResource("StyleBoxFlat_v4qto")
+
+[node name="ScrollerJoystick" parent="." instance=ExtResource("10_nbqrj")]

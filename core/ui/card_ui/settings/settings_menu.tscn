@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3]
+[gd_scene load_steps=41 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
@@ -26,16 +26,17 @@
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="23_ilbjf"]
 [ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="24_oscnu"]
 [ext_resource type="Resource" uid="uid://cakuo0qwrrkk8" path="res://assets/state/states/settings_logging.tres" id="25_nijem"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="27_krt45"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="27_x4tym"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/general_settings_menu.tscn" id="28_cvgja"]
+[ext_resource type="PackedScene" uid="uid://dsgrw1grwef4m" path="res://core/ui/card_ui/settings/general_settings_menu.tscn" id="29_8hwjo"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_grs7x"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/display_settings_menu.tscn" id="30_22tgj"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/network_settings_menu.tscn" id="31_35x2h"]
+[ext_resource type="PackedScene" uid="uid://521da7e2cdxd" path="res://core/ui/vapor_ui/settings/display_settings_menu.tscn" id="30_22tgj"]
+[ext_resource type="PackedScene" uid="uid://cpss2bhdwm8t7" path="res://core/ui/vapor_ui/settings/network_settings_menu.tscn" id="31_35x2h"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/audio_settings_menu.tscn" id="32_dqi6v"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="35_0u4bv"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
+[ext_resource type="PackedScene" uid="uid://cf5bdr4sh2irb" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="35_0u4bv"]
+[ext_resource type="PackedScene" uid="uid://cliqk7lo4t8ao" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_hnokx"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/logging_settings_menu.tscn" id="37_iwtxk"]
+[ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/vapor_ui/settings/logging_settings_menu.tscn" id="37_iwtxk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oylvd"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -310,6 +311,8 @@ on_signal = "focus_entered"
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
+[node name="ScrollerJoystick" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer" instance=ExtResource("27_krt45")]
+
 [node name="ContentContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -351,7 +354,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("28_cvgja")]
+[node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("29_8hwjo")]
 layout_mode = 2
 
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings" instance=ExtResource("2_xwevg")]
