@@ -29,6 +29,16 @@ you to remap gamepad input to mouse and keyboard inputs.
 
 > :warning: NOTE: This project is currently in the very early stages of development.
 
+## Features
+
+- In-game overlay menus
+- Power tools (TDP control, SMT, etc.)
+- Fully configurable gamepad input (buttons, axes, mouse & keyboard, etc.)
+- Per-game customizable gamepad profiles
+- Launch games from multiple sources
+- Automatic artwork downloading
+- Plugin architecture
+
 ## Documentation
 
 You can read documentation about how to use and develop for the project here:
