@@ -31,6 +31,19 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/opengamepadui/libpty.linux.template_debug.x86_64.so
 	install -Dm755 usr/share/opengamepadui/opengamepad-ui.x86_64 \
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
+	mkdir -p $(PREFIX)/share/opengamepadui/scripts
+	install -Dm755 usr/share/opengamepadui/scripts/powertools \
+		$(PREFIX)/share/opengamepadui/scripts/powertools
+	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.powertools.policy \
+		$(PREFIX)/share/polkit-1/actions/org.shadowblip.powertools.policy
+	install -Dm644 usr/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb \
+		$(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
+	install -Dm644 usr/lib/udev/rules.d/10-opengamepadui-handheld.rules \
+		$(PREFIX)/lib/udev/rules.d/10-opengamepadui-handheld.rules
+	install -Dm644 usr/lib/systemd/user/systemd-sysext-updater.service \
+		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
+	install -Dm644 usr/lib/systemd/user/ogui-qam.service \
+		$(PREFIX)/lib/systemd/user/ogui-qam.service
 	@echo "Installation complete"
 
 .PHONY: uninstall
@@ -40,4 +53,10 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/bin/opengamepadui
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
+	rm -rf $(PREFIX)/share/opengamepadui/scripts/powertools
+	rm -rf $(PREFIX)/share/polkit-1/actions/org.shadowblip.powertools.policy
+	rm -rf $(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
+	rm -rf $(PREFIX)/lib/udev/rules.d/10-opengamepadui-handheld.rules
+	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
+	rm -rf $(PREFIX)/lib/systemd/user/ogui-qam.service
 	@echo "Uninstall complete"
