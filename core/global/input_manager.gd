@@ -135,6 +135,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		gamepad_mutex.lock()
 		managed_gamepads.erase(gamepad.phys_path)
 		gamepad_mutex.unlock()
+		restore_event_device(gamepad.phys_path)
 
 	# Add any newly found gamepads
 	for path in discovered_paths:
@@ -179,6 +180,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		# handheld gamepad so we can send events to the correct virtual controller.
 		if is_handheld_gamepad:
 			handheld_gamepad.set_gamepad_device(gamepad)
+		hide_event_device(gamepad.phys_path)
 	# If we're using a handheld, open the device.
 	if handheld_gamepad and not handheld_gamepad.is_open():
 		if handheld_gamepad.open() != OK:
@@ -396,3 +398,27 @@ func exit() -> void:
 		gamepad.phys_device.grab(false)
 		gamepad.virt_device.close()
 		gamepad.phys_device.close()
+
+
+func hide_event_device(phys_path: String) -> int:
+	return _manage_event_path("hide", _get_event_from_phys(phys_path))
+
+
+
+func restore_event_device(phys_path: String) -> int:
+	return _manage_event_path("restore", _get_event_from_phys(phys_path))
+
+
+func _manage_event_path(action: String, event_id: String) -> int:
+	var command := "/usr/share/opengamepadui/scripts/manage_input"
+	var args := [action, event_id] 
+	var output = []
+	logger.debug("Start _manage_event_path with command : " + command + "  ".join(args))
+	var exit_code := OS.execute(command, args, output)
+	logger.debug("Output: " + str(output))
+	logger.debug("Exit code: " +str(exit_code))
+	return exit_code
+
+
+func _get_event_from_phys(phys_path: String)  -> String:
+	return phys_path.lstrip("/dev/input")
