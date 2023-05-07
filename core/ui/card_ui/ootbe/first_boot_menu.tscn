@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://b30stcxjwk3od"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/first_boot_menu.gd" id="1_37dam"]
+[ext_resource type="PackedScene" uid="uid://cwdf3dyj7grrk" path="res://core/ui/card_ui/ootbe/language_select.tscn" id="2_djjvb"]
+[ext_resource type="PackedScene" uid="uid://ct7bukd6le5qq" path="res://core/ui/card_ui/ootbe/timezone_select.tscn" id="3_l6sfn"]
+[ext_resource type="PackedScene" uid="uid://b64v61ut4e1qv" path="res://core/ui/card_ui/ootbe/network_select.tscn" id="4_mx76i"]
+[ext_resource type="PackedScene" uid="uid://cq5do4hbuevrd" path="res://core/ui/card_ui/ootbe/plugin_select.tscn" id="5_8uql2"]
+[ext_resource type="PackedScene" uid="uid://cx0pugv62qwkw" path="res://core/ui/card_ui/ootbe/plugin_setup.tscn" id="6_jawcd"]
+
+[node name="FirstBootMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_37dam")
+
+[node name="ContentContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LanguageSelect" parent="ContentContainer" instance=ExtResource("2_djjvb")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TimezoneSelect" parent="ContentContainer" instance=ExtResource("3_l6sfn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="NetworkSelect" parent="ContentContainer" instance=ExtResource("4_mx76i")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PluginSelect" parent="ContentContainer" instance=ExtResource("5_8uql2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PluginSetup" parent="ContentContainer" instance=ExtResource("6_jawcd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2

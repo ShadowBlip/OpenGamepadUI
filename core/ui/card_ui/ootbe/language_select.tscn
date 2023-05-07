@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwdf3dyj7grrk"]
+
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_wyexk"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_bgpjd"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_ny0gt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_4bjpv"]
+font_size = 64
+
+[node name="LanguageSelect" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_right = 100
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Welcome"
+label_settings = SubResource("LabelSettings_4bjpv")
+
+[node name="SubsectionLabel" parent="HBoxContainer/VBoxContainer" instance=ExtResource("1_wyexk")]
+layout_mode = 2
+text = "Select a language"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="FocusGroup" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_bgpjd")]
+
+[node name="CardButton" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_ny0gt")]
+layout_mode = 2
+text = "English"
