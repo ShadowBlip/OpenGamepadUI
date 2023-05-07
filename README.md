@@ -11,7 +11,12 @@
   <a href="https://discord.gg/fKsUbrt"><img src="https://img.shields.io/badge/discord-server-%235865F2" /></a>
   <br>
   <br>
-  <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot02.png" alt="OpenGamepadUI screenshot" width="80%">
+  <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot01.png" alt="OpenGamepadUI screenshot" width="80%">
+  <p align="center" width="100%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot02.png" alt="OpenGamepadUI screenshot" width="25%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot03.png" alt="OpenGamepadUI screenshot" width="25%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot04.png" alt="OpenGamepadUI screenshot" width="25%">
+  </p>
 </p>
 
 ## About
