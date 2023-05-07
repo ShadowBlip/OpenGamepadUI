@@ -13,9 +13,9 @@
   <br>
   <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot01.png" alt="OpenGamepadUI screenshot" width="80%">
   <p align="center" width="100%">
-    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot02.png" alt="OpenGamepadUI screenshot" width="25%">
-    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot03.png" alt="OpenGamepadUI screenshot" width="25%">
-    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot04.png" alt="OpenGamepadUI screenshot" width="25%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot02.png" alt="OpenGamepadUI screenshot" width="30%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot03.png" alt="OpenGamepadUI screenshot" width="30%">
+    <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot04.png" alt="OpenGamepadUI screenshot" width="30%">
   </p>
 </p>
 
