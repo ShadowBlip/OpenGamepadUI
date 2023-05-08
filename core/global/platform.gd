@@ -12,8 +12,9 @@ enum PLATFORM {
 	AOKZOE_GEN1,
 	AYANEO_GEN1,  ## Includes Founders Edition, Pro, and Retro Power models.
 	AYANEO_GEN2,  ## Includes NEXT models.
-	AYANEO_GEN3,  ## Includes AIR models
+	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
+	AYANEO_GEN5,  ## Includes AIR Plus
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
 	GPD_GEN2, ## WinMax2
@@ -93,6 +94,8 @@ func _init() -> void:
 		platform = load("res://core/platform/ayaneo_gen3.tres")
 	if PLATFORM.AYANEO_GEN4 in flags:
 		platform = load("res://core/platform/ayaneo_gen4.tres")
+	if PLATFORM.AYANEO_GEN5 in flags:
+		platform = load("res://core/platform/ayaneo_gen5.tres")
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
@@ -207,9 +210,12 @@ func _read_dmi() -> PLATFORM:
 	):
 		logger.debug("Detected AYANEO 2021 platform")
 		return PLATFORM.AYANEO_GEN1
-	elif product_name.contains("AIR") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO AIR platform")
+	elif product_name in ["AIR", "AIR Pro"] and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO AIR Gen1 platform")
 		return PLATFORM.AYANEO_GEN3
+	elif product_name.contains("AIR Plus") and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO AIR Gen2 platform")
+		return PLATFORM.AYANEO_GEN5
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO NEXT platform")
 		return PLATFORM.AYANEO_GEN2
