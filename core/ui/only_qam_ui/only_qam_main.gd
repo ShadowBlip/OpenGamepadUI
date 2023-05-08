@@ -99,15 +99,9 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 		logger.warn("Got error opening log file.")
 	else:
 		logger.info("Started logging underlay process at " + log_path)
-	# Launch underlay in the sandbox
-	var sandbox := PackedStringArray()
-	sandbox.append_array(["--noprofile"])
-	var blacklist := InputManager.get_managed_gamepads()
-	for device in blacklist:
-		sandbox.append("--blacklist=%s" % device)
-	sandbox.append("--")
-	sandbox.append_array(args)
-	underlay_process = InteractiveProcess.new("firejail", sandbox)
+	var command: String = args[0]
+	args.remove_at(0)
+	underlay_process = InteractiveProcess.new(command, args)
 	if underlay_process.start() != OK:
 		logger.error("Failed to start child process.")
 		return
