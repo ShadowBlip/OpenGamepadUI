@@ -1,18 +1,18 @@
 ## ABERNIC DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAbernic:*
-  ID_INPUT_JOYSTICK=1
+  FORCE_INPUT_UACCESS=1
 
 ## AOKZOE DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAOKZOE:*
-  ID_INPUT_JOYSTICK=1
+  FORCE_INPUT_UACCESS=1
 
 ## AYANEO DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYA NEO:*
-  ID_INPUT_JOYSTICK=1
+  FORCE_INPUT_UACCESS=1
 
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYANEO:*
-  ID_INPUT_JOYSTICK=1
+  FORCE_INPUT_UACCESS=1
 
 ## ONEXPLAYER DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnONE-NETBOOK*:pnONE*:
-  ID_INPUT_JOYSTICK=1
+  FORCE_INPUT_UACCESS=1
