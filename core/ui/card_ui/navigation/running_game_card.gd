@@ -55,7 +55,8 @@ func _ready() -> void:
 	resume_button.pressed.connect(on_resume_game)
 	var on_exit_game := func():
 		# TODO: Handle this better
-		launch_manager.stop(launch_manager.get_current_app())
+		launch_manager.stop(running_app)
+		state_machine.pop_state()
 	exit_button.pressed.connect(on_exit_game)
 
 
