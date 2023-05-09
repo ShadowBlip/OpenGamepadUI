@@ -9,7 +9,7 @@ var Version := preload("res://core/global/version.tres") as Version
 var PackageVerifier := preload("res://core/global/package_verifier.tres") as PackageVerifier
 var update_pack_url := ""
 var update_pack_signature_url := ""
-var logger := Log.get_logger("SoftwareUpdater", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("SoftwareUpdater", Log.LEVEL.INFO)
 
 @export var github_project := "ShadowBlip/OpenGamepadUI"
 @export var update_filename := "update.pck"

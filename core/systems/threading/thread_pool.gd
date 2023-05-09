@@ -20,7 +20,7 @@ var threads: Array[Thread] = []
 var semaphore := Semaphore.new()
 var mutex := Mutex.new()
 var queue: Array[Task] = []
-var logger := Log.get_logger("ThreadPool", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("ThreadPool", Log.LEVEL.INFO)
 
 
 ## A queued task to run in the thread pool

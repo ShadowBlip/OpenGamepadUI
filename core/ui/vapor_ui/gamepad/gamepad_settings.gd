@@ -16,7 +16,7 @@ var change_input_state := preload("res://assets/state/states/gamepad_change_inpu
 var library_item: LibraryItem
 var profile: GamepadProfile
 var last_focus: Control
-var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 
 @onready var focus_node: Control = $%NewButton
 

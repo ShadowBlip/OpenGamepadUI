@@ -89,7 +89,7 @@ var not_running_count := 0
 ## When a steam-launched app has no window, count a few tries before trying
 ## to close Steam
 var steam_close_tries := 0
-var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:

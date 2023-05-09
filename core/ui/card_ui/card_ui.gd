@@ -13,7 +13,7 @@ var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var power_state := load("res://assets/state/states/power_menu.tres") as State
-var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
+var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
 @onready var panel := $%Panel
 @onready var ui_container := $%MenuContent

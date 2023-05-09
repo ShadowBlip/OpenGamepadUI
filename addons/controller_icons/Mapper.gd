@@ -1,7 +1,7 @@
 extends Node
 class_name ControllerMapper
 
-var logger := Log.get_logger("ControllerMapper", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("ControllerMapper", Log.LEVEL.INFO)
 
 func _convert_joypad_path(path: String, fallback) -> String:
 	match _get_joypad_type(fallback):

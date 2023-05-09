@@ -9,7 +9,7 @@ class_name FocusGroupSetter
 
 # Signal on our parent to connect to
 var on_signal: String
-var logger := Log.get_logger("FocusGroupSetter", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("FocusGroupSetter", Log.LEVEL.INFO)
 
 
 func _ready() -> void:

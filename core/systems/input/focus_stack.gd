@@ -8,7 +8,7 @@ class_name FocusStack
 signal focus_group_changed(group: FocusGroup)
 
 var stack: Array[FocusGroup] = []
-var logger := Log.get_logger("FocusStack", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("FocusStack", Log.LEVEL.INFO)
 
 
 ## Returns the currently focused focus group

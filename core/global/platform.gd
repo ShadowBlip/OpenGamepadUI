@@ -68,7 +68,7 @@ var os_info := _detect_os()
 var os: PlatformProvider
 ## The hardware platform provider detected
 var platform: PlatformProvider
-var logger := Log.get_logger("Platform", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
 var cpu: CPUInfo
 var gpu: GPUInfo
 

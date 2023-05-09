@@ -12,7 +12,7 @@ class_name MappedEvent
 @export var on_release: bool = false
 
 ## Will show logger statements in the event log with the prefix [MappedEvent].
-var logger := Log.get_logger("MappedEvent", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("MappedEvent", Log.LEVEL.INFO)
 
 
 ## Checks if the given Array of InputDeviceEvent's matches the event_list array.
