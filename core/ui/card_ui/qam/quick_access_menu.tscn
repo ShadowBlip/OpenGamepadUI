@@ -1,27 +1,27 @@
-[gd_scene load_steps=31 format=3 uid="uid://chq023a11tl3k"]
+[gd_scene load_steps=31 format=3 uid="uid://hroo3ll4inrb"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/qam/quick_access_menu.gd" id="1_iv1ik"]
-[ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_14qhq"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_xf32g"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="3_wfvum"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_po62f"]
-[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="5_kyjm7"]
-[ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_4nd6m"]
-[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="7_npuoo"]
-[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="7_x6s26"]
-[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="8_6r1gm"]
-[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="8_a6ggx"]
-[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="10_o3y3b"]
-[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_pbr6g"]
-[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="13_kyb0u"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="13_sugtt"]
-[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_3ea2i"]
-[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="14_6yknl"]
-[ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/qam/quick_settings_card.tscn" id="15_tmqe2"]
-[ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/qam/performance_card.tscn" id="16_bait0"]
-[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_bvaah"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="17_ohpj3"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/notifications_card.tscn" id="18_8qme3"]
+[ext_resource type="Script" path="res://core/ui/card_ui/qam/quick_access_menu.gd" id="1_56jo7"]
+[ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_s7f3g"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="3_cxjne"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_a56vb"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_ro2hl"]
+[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="6_agpm1"]
+[ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_xtcf0"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_5082k"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="9_6qs1m"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="10_4yppf"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_a0ma3"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_ldp5y"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="13_u3r8o"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_didkb"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="15_ip4q6"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="16_5eydp"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_qgen2"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="18_4nxly"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/notifications_card.tscn" id="19_pppbi"]
+[ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/qam/quick_settings_card.tscn" id="20_17ks0"]
+[ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/qam/performance_card.tscn" id="21_uw510"]
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="22_dtanu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s3u8f"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -91,7 +91,7 @@ _data = {
 "exit": SubResource("Animation_4xb6e")
 }
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jnk8h"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cwmsm"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -100,7 +100,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6x3q"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_syo1q"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -109,7 +109,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rks8m"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vq7gx"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -118,7 +118,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmp2x"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27wni"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -136,17 +136,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
-script = ExtResource("1_iv1ik")
+script = ExtResource("1_56jo7")
 
 [node name="VisibilityManager" type="Node" parent="."]
-script = ExtResource("2_14qhq")
-state = ExtResource("3_wfvum")
+script = ExtResource("2_s7f3g")
+state = ExtResource("3_cxjne")
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_po62f")]
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_a56vb")]
 root_node = NodePath("../..")
 
-[node name="BackInputHandler" parent="." instance=ExtResource("2_xf32g")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wfvum")])
+[node name="BackInputHandler" parent="." instance=ExtResource("5_ro2hl")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_cxjne")])
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -163,15 +163,15 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_s3u8f")
 
 [node name="VisibilityManager" type="Node" parent="MarginContainer/PanelContainer"]
-script = ExtResource("2_14qhq")
-state = ExtResource("3_wfvum")
+script = ExtResource("2_s7f3g")
+state = ExtResource("3_cxjne")
 
 [node name="TransitionSlideRight" type="AnimationPlayer" parent="MarginContainer/PanelContainer/VisibilityManager"]
 root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_cdpfs")
 }
-script = ExtResource("5_kyjm7")
+script = ExtResource("6_agpm1")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 layout_mode = 2
@@ -184,38 +184,38 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SystemContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_4nd6m")]
+[node name="SystemContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_xtcf0")]
 layout_mode = 2
 
 [node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("13_kyb0u")]
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("8_5082k")]
 current_focus = NodePath("../NotifyButton")
 focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
 
-[node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+[node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
-texture = ExtResource("7_x6s26")
+texture = ExtResource("10_4yppf")
 
-[node name="HelpButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+[node name="HelpButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
-texture = ExtResource("8_6r1gm")
+texture = ExtResource("11_a0ma3")
 
 [node name="Spacer" type="Control" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SettingsButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("8_a6ggx")]
+[node name="SettingsButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 
-[node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_pbr6g")]
-state_machine = ExtResource("13_sugtt")
-state = ExtResource("14_3ea2i")
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("13_u3r8o")
+state = ExtResource("14_didkb")
 on_signal = "button_up"
 
 [node name="PlayingNowContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
@@ -225,7 +225,7 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
 layout_mode = 2
 
-[node name="SectionLabel" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer" instance=ExtResource("7_npuoo")]
+[node name="SectionLabel" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer" instance=ExtResource("15_ip4q6")]
 layout_mode = 2
 text = "Playing Now"
 
@@ -241,7 +241,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_horizontal = 3
-texture = ExtResource("10_o3y3b")
+texture = ExtResource("16_5eydp")
 expand_mode = 1
 stretch_mode = 5
 
@@ -252,7 +252,7 @@ follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="ScrollerJoystick" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("17_bvaah")]
+[node name="ScrollerJoystick" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("17_qgen2")]
 
 [node name="Viewport" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
@@ -261,26 +261,26 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("13_kyb0u")]
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("8_5082k")]
 unique_name_in_owner = true
 current_focus = NodePath("../QuickSettingsCard")
-focus_stack = ExtResource("14_6yknl")
+focus_stack = ExtResource("18_4nxly")
 focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 
-[node name="NotificationsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("18_8qme3")]
+[node name="NotificationsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("19_pppbi")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jnk8h")
+theme_override_styles/panel = SubResource("StyleBoxFlat_cwmsm")
 
-[node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("15_tmqe2")]
+[node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("20_17ks0")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f6x3q")
+theme_override_styles/panel = SubResource("StyleBoxFlat_syo1q")
 
-[node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("16_bait0")]
+[node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("21_uw510")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rks8m")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vq7gx")
 
-[node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("17_ohpj3")]
+[node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("22_dtanu")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vmp2x")
+theme_override_styles/panel = SubResource("StyleBoxFlat_27wni")

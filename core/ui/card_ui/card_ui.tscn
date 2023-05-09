@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bh6sb57i7vw4l"]
+[gd_scene load_steps=30 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
@@ -18,7 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://cd2p3lu01aric" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
-[ext_resource type="PackedScene" uid="uid://chq023a11tl3k" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
+[ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
@@ -179,7 +179,6 @@ visible = false
 layout_mode = 2
 
 [node name="QuickAccessMenu" parent="MenuContent/MenuContainer" instance=ExtResource("14_lsaok")]
-visible = false
 layout_mode = 2
 
 [node name="GameLoading" parent="." instance=ExtResource("22_morxu")]

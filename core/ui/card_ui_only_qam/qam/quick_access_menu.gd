@@ -14,24 +14,12 @@ var qam_focus := preload("res://core/ui/card_ui/qam/quick_access_menu_focus.tres
 @onready var focus_group := $%FocusGroup as FocusGroup
 @onready var playing_container := $%PlayingNowContainer
 @onready var game_label := $%GameNameLabel
-@onready var notify_button := $%NotifyButton
-@onready var notify_card := $%NotificationsCard
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	qam_state.state_entered.connect(_on_state_entered)
 	qam_state.state_exited.connect(_on_state_exited)
-
-	# Handle when the notifications button is pressed
-	var on_notify_pressed := func():
-		open_notifications()
-	notify_button.pressed.connect(on_notify_pressed)
-
-
-func open_notifications() -> void:
-	notify_card.grab_focus()
-	notify_card._on_pressed()
 
 
 func _on_state_entered(_from: State) -> void:
