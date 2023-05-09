@@ -1,5 +1,4 @@
 extends Control
-class_name OnlyQAM
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
