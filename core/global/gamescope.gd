@@ -16,6 +16,13 @@ class_name Gamescope
 ## Most of the core functionality of this class is provided by the [Xlib]
 ## module, which is a GDExtension that exposes Xlib methods to Godot.
 
+signal blur_mode_updated(from: int, to: int)
+signal display_is_external_updated(from: int, to: int)
+signal focused_window_updated(from: int, to: int)
+signal focusable_windows_updated(from: PackedInt32Array, to: PackedInt32Array)
+signal focused_app_updated(from: int, to: int)
+signal focusable_apps_updated(from: PackedInt32Array, to: PackedInt32Array)
+
 ## Gamescope Blur modes
 enum BLUR_MODE {
 	OFF = 0,  ## Turns off blur of running games
@@ -30,12 +37,65 @@ enum XWAYLAND {
 	GAME,  ## Xwayland instance where games run
 }
 
+## Gamescope is hard-coded to look for STEAM_GAME=769 to determine if it is the
+## overlay app.
+const OVERLAY_GAME_ID := 769
+
 @export var log_level := Log.LEVEL.INFO
+## The primary xwayland is the primary Gamescope xwayland session that contains
+## Gamescope properties on the root window.
 var xwayland_primary: Xlib
+## The OGUI xwayland is the xwayland instance that OGUI is running under.
 var xwayland_ogui: Xlib
+## The Game xwayland is the xwayland instance that games are launched under.
 var xwayland_game: Xlib
+## Array of all discovered xwayland instances
 var xwaylands: Array[Xlib] = []
 var logger := Log.get_logger("Gamescope", log_level)
+
+# Gamescope properties
+## Blur mode (read-only)
+var blur_mode: int:
+	set(v):
+		var prev_value := blur_mode
+		blur_mode = v
+		if prev_value != v:
+			blur_mode_updated.emit(prev_value, v)
+var baselayer_window: int
+var input_counter: int
+var display_is_external: int
+var vrr_enabled: int
+var vrr_feedback: int
+var vrr_capable: int
+var keyboard_focus_display: PackedInt32Array
+var mouse_focus_display: PackedInt32Array
+var focus_display: PackedInt32Array
+var focused_window: int:
+	set(v):
+		var prev_value := focused_window
+		focused_window = v
+		if prev_value != v:
+			focused_window_updated.emit(prev_value, v)
+var focused_app_gfx: int
+var focused_app: int:
+	set(v):
+		var prev_value := focused_app
+		focused_app = v
+		if prev_value != v:
+			focused_app_updated.emit(prev_value, v)
+var focusable_windows: PackedInt32Array:
+	set(v):
+		var prev_value := focusable_windows
+		focusable_windows = v
+		if prev_value != v:
+			focusable_windows_updated.emit(prev_value, v)
+var focusable_apps: PackedInt32Array:
+	set(v):
+		var prev_value := focusable_apps
+		focusable_apps = v
+		if prev_value != v:
+			focusable_apps_updated.emit(prev_value, v)
+var cursor_visible_feedback: int
 
 
 # Connects to all gamescope xwayland instances
@@ -116,6 +176,20 @@ func discover_gamescope_displays() -> PackedStringArray:
 			logger.debug("Discovered X server display: " + display)
 		xwayland.close()
 	return gamescope_displays
+
+
+## Updates the Gamescope state. Should be called in a loop to keep the Gamescope
+## state up-to-date.
+func update() -> void:
+	blur_mode = get_blur_mode()
+	focused_window = get_focused_window()
+	focused_app = get_focused_app()
+	focusable_windows = get_focusable_windows()
+	focusable_apps = get_focusable_apps()
+	baselayer_window = get_baselayer_window()
+	if not baselayer_window in get_focusable_windows():
+		baselayer_window = -1
+		remove_baselayer_window()
 
 
 ## Returns the name of the given xwayland display (e.g. ":1")
@@ -285,13 +359,25 @@ func get_focused_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 	return results[0]
 
 
+## Return the currently focused app id.
+func get_focused_app(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	var results := _get_xprop_array(xwayland, root_id, "GAMESCOPE_FOCUSED_APP")
+	if results.size() == 0:
+		return 0
+	return results[0]
+
+
 ## Sets the given window as the main launcher app.
 ## Gamescope is hard-coded to look for appId 769
 func set_main_app(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
-	return _set_xprop(xwayland, window_id, "STEAM_GAME", 769)
+	return _set_xprop(xwayland, window_id, "STEAM_GAME", OVERLAY_GAME_ID)
 
 
 ## Set the given window as the primary overlay input focus
@@ -300,6 +386,11 @@ func set_input_focus(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OG
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_INPUT_FOCUS", value)
+
+
+## Returns whether or not the overlay window is currently focused
+func is_overlay_focused(display: XWAYLAND = XWAYLAND.OGUI) -> bool:
+	return get_focused_app(display) == OVERLAY_GAME_ID
 
 
 ## Get the overlay status for the given window
@@ -382,7 +473,9 @@ func set_blur_mode(mode: BLUR_MODE = BLUR_MODE.OFF, display: XWAYLAND = XWAYLAND
 	if not xwayland:
 		return -1
 	var root_id := xwayland.get_root_window_id()
-	return _set_xprop(xwayland, root_id, "GAMESCOPE_BLUR_MODE", mode)
+	var err := _set_xprop(xwayland, root_id, "GAMESCOPE_BLUR_MODE", mode)
+	blur_mode = mode
+	return err
 
 
 ## Sets the Gamescope blur radius when blur is active
@@ -406,6 +499,15 @@ func set_allow_tearing(allow: bool, display: XWAYLAND = XWAYLAND.PRIMARY) -> int
 		value = 1
 	var root_id := xwayland.get_root_window_id()
 	return _set_xprop(xwayland, root_id, "GAMESCOPE_ALLOW_TEARING", value)
+
+
+## Returns the currently set manual focus
+func get_baselayer_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	return _get_xprop(xwayland, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW")
 
 
 ## Focuses the given window

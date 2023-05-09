@@ -7,12 +7,31 @@ class_name RunningApp
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 
-## Emitted when the given app has been killed
+## Emitted when all child processes of the app are no longer running
 signal app_killed
+## Emitted when the given app is gracefully stopped
+signal app_stopped
 ## Emitted when the window id of the given app has changed
 signal window_id_changed
+## Emitted whenever the windows change for the app
+signal window_ids_changed(from: PackedInt32Array, to: PackedInt32Array)
 ## Emitted when the app id of the given app has changed
 signal app_id_changed
+## Emitted when the app's state has changed
+signal state_changed(from: STATE, to: STATE)
+## Emitted when the app is focused
+signal focus_entered
+## Emitted when the app is unfocused
+signal focus_exited
+
+## Possible states the running app can be in
+enum STATE {
+	STARTED, ## App was just started
+	RUNNING, ## App is running and has an app_id and window_id
+	MISSING_WINDOW, ## App was running, but now its window cannot be discovered
+	STOPPING, ## App is being killed gracefully
+	STOPPED, ## App is no longer running
+}
 
 ## The LibraryLaunchItem associated with the running application
 var launch_item: LibraryLaunchItem
@@ -24,22 +43,52 @@ var display: String
 var command: PackedStringArray
 ## Environment variables that were set with the launched application
 var environment: Dictionary
+## The state of the running app
+var state: STATE = STATE.STARTED:
+	set(v):
+		var old_state := state
+		state = v
+		if old_state != state:
+			state_changed.emit(old_state, state)
+## Time in milliseconds when the app started
+var start_time := Time.get_ticks_msec()
 ## The currently detected window ID of the application
 var window_id: int:
 	set(v):
 		window_id = v
 		window_id_changed.emit()
+## A list of all detected window IDs related to the application
+var window_ids: PackedInt32Array = PackedInt32Array():
+	set(v):
+		var old_windows := window_ids
+		window_ids = v
+		if old_windows != window_ids:
+			window_ids_changed.emit(old_windows, window_ids)
 ## The current app ID of the application
 var app_id: int:
 	set(v):
 		app_id = v
 		app_id_changed.emit()
+## Whether or not the app is currently focused
+var focused: bool = false:
+	set(v):
+		var old_focus := focused
+		focused = v
+		if old_focus == focused:
+			return
+		if focused:
+			focus_entered.emit()
+			return
+		focus_exited.emit()
 ## Whether or not the running app has created at least one valid window
 var created_window := false
-## The number of windows that have been disovered from this app
+## The number of windows that have been discovered from this app
 var num_created_windows := 0
 ## Number of times this app has failed its "is_running" check
 var not_running_count := 0
+## When a steam-launched app has no window, count a few tries before trying
+## to close Steam
+var steam_close_tries := 0
 var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
 
 
@@ -47,6 +96,68 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	launch_item = item
 	pid = process_id
 	display = dsp
+
+
+## Updates the running app and fires signals
+func update() -> void:
+	# Update all windows related to the app's PID
+	window_ids = get_all_window_ids()
+	
+	# Ensure that all windows related to the app have an app ID set
+	_ensure_app_id()
+	
+	# Ensure that the running app has a corresponding window ID
+	var has_valid_window := false
+	if needs_window_id():
+		logger.debug("App needs a valid window id")
+		var id := _discover_window_id()
+		if id > 0 and window_id != id:
+			logger.debug("Setting window ID " + str(id) + " for " + launch_item.name)
+			window_id = id
+	else:
+		has_valid_window = true
+	
+	# Update the focus state of the app
+	focused = is_focused()
+	
+	# Check if the app, or any of its children, are still running
+	var running := is_running()
+	if not running:
+		not_running_count += 1
+	
+	# Update the running app's state
+	if not_running_count > 3:
+		state = STATE.STOPPED
+		app_killed.emit()
+	elif state == STATE.STARTED and has_valid_window:
+		state = STATE.RUNNING
+	elif state == STATE.RUNNING and not has_valid_window:
+		state = STATE.MISSING_WINDOW
+	
+	var state_str := {
+		STATE.STARTED: "started", 
+		STATE.RUNNING: "running", 
+		STATE.MISSING_WINDOW: "no window",
+		STATE.STOPPING: "stopping", 
+		STATE.STOPPED: "stopped"
+	}
+	logger.info("Current state: " + state_str[state])
+	
+	# TODO: Check all windows for STEAM_GAME prop
+	# If this was launched by Steam, try and detect if the game closed 
+	# so we can kill Steam gracefully
+	if is_steam_app() and state == STATE.MISSING_WINDOW:
+		logger.debug("Running app is a Steam game and has no valid window ID. The game may have closed.")
+		# Don't try closing Steam immediately. Wait a few more ticks before attempting
+		# to close Steam.
+		if steam_close_tries < 4:
+			steam_close_tries += 1
+			return
+		var steam_pid := find_steam()
+		if steam_pid > 0:
+			logger.info("Trying to stop steam with pid: " + str(steam_pid))
+			OS.execute("kill", ["-15", str(steam_pid)])
+
 
 
 ## Attempt to discover the window ID from the PID of the given application
@@ -73,7 +184,7 @@ func get_all_window_ids() -> PackedInt32Array:
 			if window in window_ids:
 				continue
 			window_ids.append(window)
-	logger.debug(app_name + " found window IDs: " + str(window_ids))
+	logger.debug(app_name + " found related window IDs: " + str(window_ids))
 
 	return window_ids
 
@@ -93,7 +204,6 @@ func is_running() -> bool:
 		logger.debug("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
 		return true
 
-	not_running_count += 1
 	return false
 
 
@@ -134,29 +244,44 @@ func get_child_pids() -> PackedInt32Array:
 	return pids
 
 
+## Returns whether or not the app can be switched to/focused
+func can_focus() -> bool:
+	return window_id > 0
+
+
 ## Return true if the currently running app is focused
 func is_focused() -> bool:
+	if not can_focus():
+		return false
 	var focused_window := Gamescope.get_focused_window()
-	if window_id == focused_window:
-		return true
-	return false
+	return window_id == focused_window or focused_window in window_ids
+
+
+## Focuses to the app's window
+func grab_focus() -> void:
+	if not can_focus():
+		return
+	Gamescope.set_baselayer_window(window_id)
+	focused = true
 
 
 ## Kill the running app
 func kill(sig: Reaper.SIG = Reaper.SIG.TERM) -> void:
+	state = STATE.STOPPING
+	app_stopped.emit()
 	Reaper.reap(pid, sig)
 
 
 ## Iterates through all windows related to the app and sets the app ID property
 ## so they will appear as focusable windows to Gamescope
-func ensure_app_id() -> void:
+func _ensure_app_id() -> void:
 	# If this is a Steam app, there's no need to set the app ID; Steam will do
 	# it for us.
 	if is_steam_app():
 		return
 	
 	# Get all windows associated with the running app
-	var possible_windows := get_all_window_ids()
+	var possible_windows := window_ids.duplicate()
 	
 	# Try setting the app ID on each possible Window. If they are valid windows,
 	# gamescope will make these windows available as focusable windows.
@@ -184,6 +309,18 @@ func needs_window_id() -> bool:
 	if not window_id in all_windows:
 		logger.debug(str(window_id) + " is not in the list of all windows")
 		return true
+	
+	# If this is a Steam app, the only acceptable window will have its STEAM_GAME
+	# property set.
+	if is_steam_app():
+		var display_type := Gamescope.get_display_type(display)
+		var steam_app_id := get_meta("steam_app_id") as int
+		if not Gamescope.has_app_id(window_id, display_type):
+			logger.debug(str(window_id) + " does not have an app ID already set by Steam")
+			return true
+		if Gamescope.get_app_id(window_id) != steam_app_id:
+			logger.debug(str(window_id) + " has an app ID but it does not match " + str(steam_app_id))
+			return true
 
 	# Track that a window has been successfully detected at least once.
 	if not created_window:
@@ -194,7 +331,7 @@ func needs_window_id() -> bool:
 
 
 ## Tries to discover the window ID of the running app
-func discover_window_id() -> int:
+func _discover_window_id() -> int:
 	# If there's a window directly associated with the PID, return that
 	var win_id := get_window_id_from_pid()
 	if win_id > 0:
@@ -202,7 +339,7 @@ func discover_window_id() -> int:
 		return win_id
 
 	# Get all windows associated with the running app
-	var possible_windows := get_all_window_ids()
+	var possible_windows := window_ids.duplicate()
 	
 	# Look for the app window in the list of focusable windows
 	var focusable := Gamescope.get_focusable_windows()
@@ -221,6 +358,9 @@ func is_steam_app() -> bool:
 	for arg in args:
 		if arg.contains("steam://rungameid/"):
 			set_meta("is_steam_app", true)
+			var steam_app_id := arg.split("/")[-1]
+			if steam_app_id.is_valid_int():
+				set_meta("steam_app_id", steam_app_id.to_int())
 			return true
 	set_meta("is_steam_app", false)
 	return false
