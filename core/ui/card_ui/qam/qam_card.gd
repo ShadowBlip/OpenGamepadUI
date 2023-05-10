@@ -22,7 +22,7 @@ signal nonchild_focused
 @onready var focus_group_setter := $%FocusGroupSetter as FocusGroupSetter
 
 var focus_group: FocusGroup
-var logger := Log.get_logger("QAMCard", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("QAMCard", Log.LEVEL.INFO)
 
 
 # Called when the node enters the scene tree for the first time.

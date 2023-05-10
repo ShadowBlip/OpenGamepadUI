@@ -55,7 +55,7 @@ var _ff_effects := {}  # Current force feedback effect ids
 
 var mode_event: InputDeviceEvent
 var _last_time := 0
-var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.INFO)
 
 # List of events to consume the BTN_MODE event in PASS_QAM mode. This enables the
 # use of default button combo's in Steam.

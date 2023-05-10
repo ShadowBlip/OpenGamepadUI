@@ -2,7 +2,7 @@ extends Resource
 class_name PlatformProvider
 
 @export var name: String
-var logger := Log.get_logger("PlatformProvider", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("PlatformProvider", Log.LEVEL.INFO)
 
 
 ## Ready will be called after the scene tree has initialized. This should be

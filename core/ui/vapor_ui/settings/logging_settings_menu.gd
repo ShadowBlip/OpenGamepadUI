@@ -24,7 +24,7 @@ func _ready() -> void:
 	global_dropdown.select(1)
 	var on_item_selected := func(idx: int):
 		if idx == 0:
-			log_manager.set_global_log_level(Log.LEVEL.DEBUG)
+			log_manager.set_global_log_level(Log.LEVEL.INFO)
 			for toggle in logger_map.values():
 				toggle.button_pressed = true
 		if idx == 1:
@@ -71,7 +71,7 @@ func _create_logger_toggle(logger_name: String) -> void:
 	toggle.button_pressed = false
 	var on_toggled := func(on: bool):
 		if on:
-			log_manager.set_log_level(logger_name, Log.LEVEL.DEBUG)
+			log_manager.set_log_level(logger_name, Log.LEVEL.INFO)
 			return
 		log_manager.set_log_level(logger_name, Log.LEVEL.INFO)
 	toggle.toggled.connect(on_toggled)

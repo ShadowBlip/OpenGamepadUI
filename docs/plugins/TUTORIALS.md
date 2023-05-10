@@ -37,7 +37,7 @@ extends Library
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
         super()
-        logger = Log.get_logger("vkCube", Log.LEVEL.DEBUG)
+        logger = Log.get_logger("vkCube", Log.LEVEL.INFO)
         logger.info("vkCube Library loaded")
 
 
@@ -63,7 +63,7 @@ extends Plugin
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-        logger = Log.get_logger("vkCube", Log.LEVEL.DEBUG)
+        logger = Log.get_logger("vkCube", Log.LEVEL.INFO)
 
         # Load the Library implementation
         var library: Library = load(plugin_base + "/core/library.tscn").instantiate()

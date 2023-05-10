@@ -34,7 +34,7 @@ var sent_ogui_events: PackedStringArray
 @export var gamepad_phys_name: String
 
 ## Will show logger events with the prefix HandheldGamepad
-var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
 
 
 ## Main process thread for input translation from one device to another.
@@ -295,7 +295,6 @@ func open() -> int:
 			logger.error("Unable to grab " + kb_device.get_name())
 			return result
 		logger.debug("Grabbed " + kb_device.get_name())
-	hide_event_device(kb_event_path)
 	return result
 
 
@@ -344,27 +343,3 @@ func is_open() -> bool:
 	if not kb_device:
 		return false
 	return kb_device.is_open()
-
-# TODO: These are duplicated in InputManager. Find a way to have them only once.
-func hide_event_device(phys_path: String) -> int:
-	return _manage_event_path("hide", _get_event_from_phys(phys_path))
-
-
-
-func restore_event_device(phys_path: String) -> int:
-	return _manage_event_path("restore", _get_event_from_phys(phys_path))
-
-
-func _manage_event_path(action: String, event_id: String) -> int:
-	var command := "/usr/share/opengamepadui/scripts/manage_input"
-	var args := [action, event_id] 
-	var output = []
-	logger.debug("Start _manage_event_path with command : " + command + "  ".join(args))
-	var exit_code := OS.execute(command, args, output)
-	logger.debug("Output: " + str(output))
-	logger.debug("Exit code: " +str(exit_code))
-	return exit_code
-
-
-func _get_event_from_phys(phys_path: String)  -> String:
-	return phys_path.lstrip("/dev/input")

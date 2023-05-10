@@ -61,6 +61,9 @@ func init() -> void:
 	in_game_state.state_exited.connect(_on_game_state_exited)
 	in_game_state.state_removed.connect(_on_game_state_removed)
 
+	# If we crashed, unhide any device events taht were orphaned
+	_restore_all_hidden()
+
 	# If running on a platform with a built-in gamepad, get the device
 	# to process input on it.
 	handheld_gamepad = Platform.get_handheld_gamepad()
@@ -118,22 +121,26 @@ func _process_input(_delta: float) -> void:
 
 
 ## Triggers whenever we detect any gamepad connect/disconnect events
-func _on_gamepad_change(_device: int, _connected: bool) -> void:
-	logger.info("Gamepad was changed")
+func _on_gamepad_change(device: int, connected: bool) -> void:
+	logger.info("Gamepad was changed: " + Input.get_joy_name(device) + " connected: " + str(connected))
 
 	# Discover any new gamepads
 	var discovered_paths := discover_gamepads()
-
+	var discovered_events := PackedStringArray()
+	for path in discovered_paths:
+		discovered_events.append(_get_event_from_phys(path))
 	# Remove all gamepads that no longer exist
 	for gamepad in managed_gamepads.values():
-		if gamepad.phys_path in discovered_paths:
+		var event := _get_event_from_phys(gamepad.phys_path)
+		if event in discovered_events:
+			logger.debug("Gamepad already managed: " + gamepad.phys_path)
 			continue
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		# Lock the gamepad mappings so we can alter them.
 		orphaned_gamepads[gamepad.phys] = gamepad
 		gamepad_mutex.lock()
-		managed_gamepads.erase(gamepad.phys_path)
+		managed_gamepads.erase("/dev/input/.hidden/"+event)
 		gamepad_mutex.unlock()
 		restore_event_device(gamepad.phys_path)
 
@@ -172,7 +179,10 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 		gamepad.xwayland = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 		gamepad_mutex.lock()
 		virtual_gamepads.append(gamepad.virt_path)
-		managed_gamepads[path] = gamepad
+		# We're going to hide this, use the hidden path
+		var event := _get_event_from_phys(path)
+		var hidden_path = "/dev/input/.hidden/"+event
+		managed_gamepads[hidden_path] = gamepad
 		gamepad_mutex.unlock()
 		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
 		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
@@ -185,6 +195,7 @@ func _on_gamepad_change(_device: int, _connected: bool) -> void:
 	if handheld_gamepad and not handheld_gamepad.is_open():
 		if handheld_gamepad.open() != OK:
 			logger.error("Unable to open handheld keyboard device.")
+		hide_event_device(handheld_gamepad.kb_event_path)
 	logger.debug("Finished configuring detected controllers")
 
 
@@ -226,7 +237,12 @@ func set_focus(focused: bool) -> void:
 ## Returns an array of device paths
 func discover_gamepads() -> PackedStringArray:
 	var paths := PackedStringArray()
-	var input_path := "/dev/input"
+	paths.append_array(_discover_gamepads_from_path("/dev/input"))
+	paths.append_array(_discover_gamepads_from_path("/dev/input/.hidden"))
+	return paths
+	
+func _discover_gamepads_from_path(input_path: String) -> PackedStringArray:
+	var paths := PackedStringArray()
 	var files := DirAccess.get_files_at(input_path)
 	for file in files:
 		if not file.begins_with("event"):
@@ -398,14 +414,20 @@ func exit() -> void:
 		gamepad.phys_device.grab(false)
 		gamepad.virt_device.close()
 		gamepad.phys_device.close()
+		restore_event_device(gamepad.phys_path)
+	if handheld_gamepad and handheld_gamepad.is_open():
+		handheld_gamepad.kb_device.grab(false)
+		handheld_gamepad.kb_device.close()
+		restore_event_device(handheld_gamepad.kb_phys_path)
 
 
 func hide_event_device(phys_path: String) -> int:
+	logger.debug("Hiding " + phys_path)
 	return _manage_event_path("hide", _get_event_from_phys(phys_path))
 
 
-
 func restore_event_device(phys_path: String) -> int:
+	logger.debug("Restoring " + phys_path)
 	return _manage_event_path("restore", _get_event_from_phys(phys_path))
 
 
@@ -413,7 +435,7 @@ func _manage_event_path(action: String, event_id: String) -> int:
 	var command := "/usr/share/opengamepadui/scripts/manage_input"
 	var args := [action, event_id] 
 	var output = []
-	logger.debug("Start _manage_event_path with command : " + command + "  ".join(args))
+	logger.debug("Start _manage_event_path with command : " + command + " " + "  ".join(args))
 	var exit_code := OS.execute(command, args, output)
 	logger.debug("Output: " + str(output))
 	logger.debug("Exit code: " +str(exit_code))
@@ -421,4 +443,26 @@ func _manage_event_path(action: String, event_id: String) -> int:
 
 
 func _get_event_from_phys(phys_path: String)  -> String:
-	return phys_path.lstrip("/dev/input")
+	logger.debug("_get_event_from_phys: " + phys_path)
+	var event : String = phys_path.trim_prefix("/dev/input/")
+	if ".hidden" in phys_path:
+		event = phys_path.trim_prefix("/dev/input/.hidden/")
+	logger.debug("found event: " + event)
+	return event
+
+
+func _restore_all_hidden() -> void:
+	logger.info("Restoring hidden UInput devices.")
+	var path := "/dev/input/.hidden"
+	var files := DirAccess.get_files_at(path)
+	if files.size() == 0:
+		logger.debug("Found no hidden files at " + path + ". Nothing to do.")
+		return
+
+	for file_name in files:
+		if not file_name.begins_with("event"):
+			continue
+		logger.debug("Found hidden file: " + file_name)
+		restore_event_device(file_name)
+
+	logger.info("Restore hidden UInput devices completed.")

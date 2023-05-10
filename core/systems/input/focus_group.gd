@@ -23,7 +23,7 @@ class_name FocusGroup
 @export var focus_neighbor_right: FocusGroup
 
 var neighbor_control := Control.new()
-var logger := Log.get_logger("FocusGroup", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("FocusGroup", Log.LEVEL.INFO)
 
 @onready var parent := get_parent() as Control
 

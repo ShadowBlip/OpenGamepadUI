@@ -40,7 +40,7 @@ var highlight_tween: Tween
 var running_app: RunningApp
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
-var logger := Log.get_logger("RunningGameCard", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("RunningGameCard", Log.LEVEL.INFO)
 
 
 # Called when the node enters the scene tree for the first time.

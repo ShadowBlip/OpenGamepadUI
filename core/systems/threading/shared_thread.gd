@@ -17,7 +17,7 @@ var nodes: Array[NodeThread] = []
 var process_funcs: Array[Callable] = []
 var one_shots: Array[Callable] = []
 var last_time: int
-var logger := Log.get_logger("SharedThread", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 
 ## Name of the thread group
 @export var name := "SharedThread"
