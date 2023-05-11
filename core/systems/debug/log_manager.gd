@@ -25,12 +25,42 @@ func register(logger: Log.Logger) -> void:
 		loggers_by_name[logger.get_name()] = []
 	loggers_by_name[logger.get_name()].append(logger)
 	mutex.unlock()
-	logger_registered.emit(logger)
+
+	# If the global log level variable was set on start, update the logger's log level.
+	# E.g. LOG_LEVEL=debug opengamepadui
+	var env_level := OS.get_environment("LOG_LEVEL")
+	if env_level != "":
+		match env_level:
+			"debug", "trace":
+				logger.set_level(Log.LEVEL.DEBUG)
+			"info":
+				logger.set_level(Log.LEVEL.INFO)
+			"warn":
+				logger.set_level(Log.LEVEL.WARN)
+			"error":
+				logger.set_level(Log.LEVEL.ERROR)
+	
+	# Check to see if there is a named logger log level variable set. If there is,
+	# update the log level.
+	# E.g. LOG_LEVEL_BOXARTMANAGER=debug opengamepadui
+	var env_suffix := logger.get_name().to_upper().replace(" ", "")
+	var env_named_level := OS.get_environment("LOG_LEVEL_" + env_suffix)
+	if env_named_level != "":
+		match env_named_level:
+			"debug", "trace":
+				logger.set_level(Log.LEVEL.DEBUG)
+			"info":
+				logger.set_level(Log.LEVEL.INFO)
+			"warn":
+				logger.set_level(Log.LEVEL.WARN)
+			"error":
+				logger.set_level(Log.LEVEL.ERROR)
 
 	# NOTE: Decrement the reference count so the logger gets garbage collected
 	# if we're the only one referencing it.
 	#logger.unreference()
-	
+
+	logger_registered.emit(logger)
 	loggers_changed.emit()
 
 
@@ -39,6 +69,7 @@ func set_global_log_level(level: Log.LEVEL) -> void:
 	mutex.lock()
 	var logger_names := loggers_by_name.keys()
 	mutex.unlock()
+	print("SETTING GLOBAL LOG LEVEL!")
 	for logger in logger_names:
 		set_log_level(logger, level)
 

@@ -12,9 +12,6 @@ var log_manager := preload("res://core/global/log_manager.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# Set the default log level on all loggers
-	log_manager.set_global_log_level(Log.LEVEL.INFO)
-	
 	# Populate the global log levels
 	global_dropdown.clear()
 	global_dropdown.add_item("debug")
