@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/circle-dot-filled.svg")
 extends Resource
 class_name State
 

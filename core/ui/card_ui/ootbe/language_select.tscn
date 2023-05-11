@@ -1,8 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://cwdf3dyj7grrk"]
+[gd_scene load_steps=12 format=3 uid="uid://cwdf3dyj7grrk"]
 
+[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/language_select.gd" id="1_eqouq"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_wyexk"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_bgpjd"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_foimq"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_ny0gt"]
+[ext_resource type="Resource" uid="uid://cawipbut6fx5o" path="res://assets/state/states/first_boot_language.tres" id="4_mdw06"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="5_ju3se"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_m66wv"]
+[ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="6_i6yev"]
+[ext_resource type="Resource" uid="uid://rrsjc5oyp40f" path="res://assets/state/states/first_boot_network.tres" id="10_w7x3x"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4bjpv"]
 font_size = 64
@@ -15,6 +22,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_right = 100
+script = ExtResource("1_eqouq")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_foimq")]
+state_machine = ExtResource("6_i6yev")
+state = ExtResource("4_mdw06")
+
+[node name="FocusGroupSetter" parent="VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("5_m66wv")]
+target = NodePath("../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "entered"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -51,8 +67,15 @@ theme_override_constants/margin_bottom = 80
 layout_mode = 2
 alignment = 1
 
-[node name="FocusGroup" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_bgpjd")]
+[node name="FocusGroup" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_bgpjd")]
+current_focus = NodePath("../EnglishButton")
 
-[node name="CardButton" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_ny0gt")]
+[node name="EnglishButton" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_ny0gt")]
 layout_mode = 2
 text = "English"
+
+[node name="StateUpdater" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/EnglishButton" instance=ExtResource("5_ju3se")]
+state_machine = ExtResource("6_i6yev")
+state = ExtResource("10_w7x3x")
+action = 2
+on_signal = "button_up"

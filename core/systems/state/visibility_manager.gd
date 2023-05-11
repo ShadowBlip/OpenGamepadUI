@@ -2,16 +2,28 @@
 extends Node
 class_name VisibilityManager
 
+## Update visibility based on [State] changes to a [StateMachine]
+##
+## The [VisibilityManager] manages the visibility of its parent node based on
+## the current [State] of a [StateMachine]. This enables nodes to be visible or
+## invisible only during the correct state(s), allowing menus to hide themselves
+## or become visible depending on the state. Optionally, [Transition] nodes
+## can be added as a child to [VisibilityManager] to play an animation to
+## show or hide the node.
+
 signal transition_started
 signal transition_finished
 signal entered
 signal exited
 
-# State machine to use
+## The state machine instance to use for managing state changes
 @export var state_machine: StateMachine = preload(
 	"res://assets/state/state_machines/global_state_machine.tres"
 )
+## Toggles visibility when this state is entered
 @export var state: State
+## Toggles visibility when any of these states are entered, but the main state
+## exists in the state stack
 @export var visible_during: Array[Resource] = []
 
 var _transitions: Array[Transition] = []

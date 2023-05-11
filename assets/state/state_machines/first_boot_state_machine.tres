@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://bj8aa7rky3u36"]
+
+[ext_resource type="Script" path="res://core/systems/state/state_machine.gd" id="1_8ewnv"]
+
+[resource]
+script = ExtResource("1_8ewnv")
+logger_name = "FirstBoot"
