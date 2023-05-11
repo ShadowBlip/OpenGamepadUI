@@ -30,12 +30,12 @@ func register(logger: Log.Logger) -> void:
 	# E.g. LOG_LEVEL=debug opengamepadui
 	var env_level := OS.get_environment("LOG_LEVEL")
 	if env_level != "":
-		match env_level:
+		match env_level.to_lower():
 			"debug", "trace":
 				logger.set_level(Log.LEVEL.DEBUG)
 			"info":
 				logger.set_level(Log.LEVEL.INFO)
-			"warn":
+			"warn", "warning":
 				logger.set_level(Log.LEVEL.WARN)
 			"error":
 				logger.set_level(Log.LEVEL.ERROR)
@@ -46,12 +46,12 @@ func register(logger: Log.Logger) -> void:
 	var env_suffix := logger.get_name().to_upper().replace(" ", "")
 	var env_named_level := OS.get_environment("LOG_LEVEL_" + env_suffix)
 	if env_named_level != "":
-		match env_named_level:
+		match env_named_level.to_lower():
 			"debug", "trace":
 				logger.set_level(Log.LEVEL.DEBUG)
 			"info":
 				logger.set_level(Log.LEVEL.INFO)
-			"warn":
+			"warn", "warning":
 				logger.set_level(Log.LEVEL.WARN)
 			"error":
 				logger.set_level(Log.LEVEL.ERROR)
@@ -69,7 +69,6 @@ func set_global_log_level(level: Log.LEVEL) -> void:
 	mutex.lock()
 	var logger_names := loggers_by_name.keys()
 	mutex.unlock()
-	print("SETTING GLOBAL LOG LEVEL!")
 	for logger in logger_names:
 		set_log_level(logger, level)
 
