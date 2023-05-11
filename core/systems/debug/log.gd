@@ -11,15 +11,12 @@ enum LEVEL {
 	DEBUG,
 }
 
-class Logger extends RefCounted:
-	var log_manager: LogManager = load("res://core/global/log_manager.tres")
-	var _name: String
+class Logger extends Resource:
 	var _level: int
 	
 	func _init(name: String, level: LEVEL = LEVEL.INFO):
-		self._name = name
+		self.resource_name = name
 		self._level = level
-		log_manager.register(self)
 	
 	func _get_caller() -> Dictionary:
 		var stack := get_stack()
@@ -30,18 +27,12 @@ class Logger extends RefCounted:
 	func _format_prefix(level: String, caller: Dictionary) -> String:
 		var file: String = caller["source"].split("/")[-1]
 		var line: int = caller["line"]
-		var prefix := "[{0}] [{1}] {2}:{3}: ".format([level, self._name, file, line])
+		var prefix := "[{0}] [{1}] {2}:{3}: ".format([level, self.resource_name, file, line])
 		return prefix
 	
 	func set_level(level: LEVEL) -> void:
 		_level = level
 	
-	func set_name(name: String) -> void:
-		_name = name
-		
-	func get_name() -> String:
-		return _name
-		
 	func debug(message: Variant):
 		if self._level < LEVEL.DEBUG:
 			return
@@ -68,7 +59,20 @@ class Logger extends RefCounted:
 		push_error(prefix, message)
 		print_rich("[color=red]", prefix, "[/color]", message)
 
-	
+
 # Returns a named logger for logging
 static func get_logger(name: String, level: LEVEL = LEVEL.INFO) -> Logger:
-	return Logger.new(name, level)
+	# Try to load the logger if it already exists
+	var res_path := "logger://" + name
+	var logger: Logger
+	if ResourceLoader.exists(res_path):
+		logger = load(res_path)
+	else:
+		logger = Logger.new(name, level)
+		logger.take_over_path("logger://" + name)
+
+		# Register the logger with LogManager
+		var log_manager := load("res://core/global/log_manager.tres") as LogManager
+		log_manager.register(logger)
+
+	return logger

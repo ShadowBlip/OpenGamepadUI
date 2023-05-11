@@ -30,6 +30,7 @@ var logger := Log.get_logger("FocusGroup", Log.LEVEL.INFO)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	logger.debug("FocusGroup ready")
 	# Create a focus stack if none is defined
 	if not focus_stack:
 		focus_stack = FocusStack.new()
