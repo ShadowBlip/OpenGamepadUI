@@ -28,33 +28,13 @@ func register(logger: Log.Logger) -> void:
 
 	# If the global log level variable was set on start, update the logger's log level.
 	# E.g. LOG_LEVEL=debug opengamepadui
-	var env_level := OS.get_environment("LOG_LEVEL")
-	if env_level != "":
-		match env_level.to_lower():
-			"debug", "trace":
-				logger.set_level(Log.LEVEL.DEBUG)
-			"info":
-				logger.set_level(Log.LEVEL.INFO)
-			"warn", "warning":
-				logger.set_level(Log.LEVEL.WARN)
-			"error":
-				logger.set_level(Log.LEVEL.ERROR)
-	
+	set_log_level_from_env(logger, "LOG_LEVEL")
+
 	# Check to see if there is a named logger log level variable set. If there is,
 	# update the log level.
 	# E.g. LOG_LEVEL_BOXARTMANAGER=debug opengamepadui
 	var env_suffix := logger.get_name().to_upper().replace(" ", "")
-	var env_named_level := OS.get_environment("LOG_LEVEL_" + env_suffix)
-	if env_named_level != "":
-		match env_named_level.to_lower():
-			"debug", "trace":
-				logger.set_level(Log.LEVEL.DEBUG)
-			"info":
-				logger.set_level(Log.LEVEL.INFO)
-			"warn", "warning":
-				logger.set_level(Log.LEVEL.WARN)
-			"error":
-				logger.set_level(Log.LEVEL.ERROR)
+	set_log_level_from_env(logger, "LOG_LEVEL_" + env_suffix)
 
 	# NOTE: Decrement the reference count so the logger gets garbage collected
 	# if we're the only one referencing it.
@@ -87,6 +67,23 @@ func set_log_level(name: String, level: Log.LEVEL) -> void:
 			continue
 		var logger := l as Log.Logger
 		logger.set_level(level)
+
+
+## Looks up the given environment variable and sets the log level on the given
+## logger if the variable exists.
+func set_log_level_from_env(logger: Log.Logger, env_var: String) -> void:
+	var env_level := OS.get_environment(env_var)
+	if env_level == "":
+		return
+	match env_level.to_lower():
+		"debug", "trace":
+			logger.set_level(Log.LEVEL.DEBUG)
+		"info":
+			logger.set_level(Log.LEVEL.INFO)
+		"warn", "warning":
+			logger.set_level(Log.LEVEL.WARN)
+		"error":
+			logger.set_level(Log.LEVEL.ERROR)
 
 
 ## Return a list of loggers that are currently registered
