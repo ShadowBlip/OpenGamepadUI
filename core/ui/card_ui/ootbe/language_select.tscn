@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cwdf3dyj7grrk"]
+[gd_scene load_steps=14 format=3 uid="uid://cwdf3dyj7grrk"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/ootbe/language_select.gd" id="1_eqouq"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_wyexk"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="5_ju3se"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_m66wv"]
 [ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="6_i6yev"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="6_n0ln5"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="6_ykb20"]
 [ext_resource type="Resource" uid="uid://rrsjc5oyp40f" path="res://assets/state/states/first_boot_network.tres" id="10_w7x3x"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4bjpv"]
@@ -32,6 +34,8 @@ state = ExtResource("4_mdw06")
 target = NodePath("../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "entered"
 
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("6_n0ln5")]
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 80
@@ -46,9 +50,21 @@ layout_mode = 2
 text = "Welcome"
 label_settings = SubResource("LabelSettings_4bjpv")
 
+[node name="FadeEffect" parent="HBoxContainer/VBoxContainer/Label" node_paths=PackedStringArray("target") instance=ExtResource("6_ykb20")]
+target = NodePath("..")
+fade_speed = 6.0
+on_signal = "visibility_changed"
+on_signal = "visibility_changed"
+
 [node name="SubsectionLabel" parent="HBoxContainer/VBoxContainer" instance=ExtResource("1_wyexk")]
 layout_mode = 2
 text = "Select a language"
+
+[node name="FadeEffect" parent="HBoxContainer/VBoxContainer/SubsectionLabel" node_paths=PackedStringArray("target") instance=ExtResource("6_ykb20")]
+target = NodePath("..")
+fade_speed = 8.0
+on_signal = "visibility_changed"
+on_signal = "visibility_changed"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
 layout_mode = 2

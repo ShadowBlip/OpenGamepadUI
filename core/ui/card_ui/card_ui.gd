@@ -3,12 +3,14 @@ extends Control
 const Platform := preload("res://core/global/platform.tres")
 const Gamescope := preload("res://core/global/gamescope.tres")
 const LibraryManager := preload("res://core/global/library_manager.tres")
+const SettingsManager := preload("res://core/global/settings_manager.tres")
 
 var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
+var first_boot_state := preload("res://assets/state/states/first_boot_menu.tres") as State
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
@@ -56,8 +58,13 @@ func _ready() -> void:
 	# Load any platform-specific logic
 	Platform.load(get_tree().get_root())
 
-	# Initialize the state machine with its initial state
-	state_machine.push_state(home_state)
+	# If this is the first boot, enter the first-boot menu state. Otherwise,
+	# go to the home state.
+	if SettingsManager.get_value("general", "first_boot", true):
+		state_machine.push_state(first_boot_state)
+	else:
+		# Initialize the state machine with its initial state
+		state_machine.push_state(home_state)
 	state_machine.state_changed.connect(_on_state_changed)
 
 	# Show/hide the overlay when we enter/exit the in-game state

@@ -68,6 +68,10 @@ func _transition(visibility: bool) -> void:
 	# If the parent doesn't have any transitions, flip visibility
 	if not has_transitions():
 		_parent.visible = visibility
+		if visibility:
+			entered.emit()
+		else:
+			exited.emit()
 		return
 
 	# Prefer transitions that are children of visibilitymanager
