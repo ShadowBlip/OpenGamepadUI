@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b30stcxjwk3od"]
+[gd_scene load_steps=13 format=3 uid="uid://b30stcxjwk3od"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/ootbe/first_boot_menu.gd" id="1_37dam"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_bh7el"]
@@ -11,6 +11,7 @@
 [ext_resource type="Resource" uid="uid://cawipbut6fx5o" path="res://assets/state/states/first_boot_language.tres" id="4_pe1rt"]
 [ext_resource type="PackedScene" uid="uid://cq5do4hbuevrd" path="res://core/ui/card_ui/ootbe/plugin_select.tscn" id="5_8uql2"]
 [ext_resource type="PackedScene" uid="uid://cx0pugv62qwkw" path="res://core/ui/card_ui/ootbe/plugin_setup.tscn" id="6_jawcd"]
+[ext_resource type="PackedScene" uid="uid://lbf0ycha2pav" path="res://core/ui/card_ui/ootbe/finished_menu.tscn" id="12_5m0q4"]
 
 [node name="FirstBootMenu" type="Control"]
 layout_mode = 3
@@ -38,26 +39,25 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="LanguageSelect" parent="ContentContainer" instance=ExtResource("2_djjvb")]
-unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="TimezoneSelect" parent="ContentContainer" instance=ExtResource("3_l6sfn")]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="NetworkSelect" parent="ContentContainer" instance=ExtResource("4_mx76i")]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="PluginSelect" parent="ContentContainer" instance=ExtResource("5_8uql2")]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
 [node name="PluginSetup" parent="ContentContainer" instance=ExtResource("6_jawcd")]
+visible = false
+layout_mode = 2
+
+[node name="FinishMenu" parent="ContentContainer" instance=ExtResource("12_5m0q4")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

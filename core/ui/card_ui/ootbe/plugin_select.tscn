@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cq5do4hbuevrd"]
+[gd_scene load_steps=12 format=3 uid="uid://cq5do4hbuevrd"]
 
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="1_glflu"]
 [ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="2_8r7jx"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_4pfh5"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="8_7mmqh"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_di8uy"]
+[ext_resource type="Resource" uid="uid://j1csnsnb672v" path="res://assets/state/states/first_boot_plugin_setup.tres" id="11_83y3o"]
 
 [node name="PluginSelect" type="MarginContainer"]
 anchors_preset = 15
@@ -79,7 +80,7 @@ text = "Next"
 
 [node name="StateUpdater" parent="HBoxContainer/MarginContainer/VBoxContainer/NextButton" instance=ExtResource("8_7mmqh")]
 state_machine = ExtResource("2_8r7jx")
-state = ExtResource("3_r2fie")
+state = ExtResource("11_83y3o")
 action = 2
 on_signal = "button_up"
 

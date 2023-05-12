@@ -27,13 +27,13 @@
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
 
-[sub_resource type="Gradient" id="Gradient_d65wo"]
+[sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.734982)
 colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_y4ncd"]
-gradient = SubResource("Gradient_d65wo")
+gradient = SubResource("Gradient_0h0x4")
 
 [sub_resource type="Animation" id="Animation_vgwwd"]
 resource_name = "fade"
