@@ -228,15 +228,15 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("G1619-04") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen3 platform")
 		return PLATFORM.GPD_GEN3
+	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 3 platform")
+		return PLATFORM.ONEXPLAYER_GEN3
 	elif product_name in ["ONE XPLAYER", "ONEXPLAYER", "ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
 		match cpu.vendor:
 			"GenuineIntel":
 				logger.debug("Detected OneXPlayer Gen 1 platform")
 				return PLATFORM.ONEXPLAYER_GEN1
 			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
-				if cpu.model == "AMD Ryzen 7 6800U with Radeon Graphics":
-					logger.debug("Detected OneXPlayer Gen 3 platform")
-					return PLATFORM.ONEXPLAYER_GEN3
 				logger.debug("Detected OneXPlayer Gen 2 platform")
 				return PLATFORM.ONEXPLAYER_GEN2
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
