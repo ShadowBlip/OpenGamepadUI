@@ -6,6 +6,8 @@ var network_state := load("res://assets/state/states/first_boot_network.tres") a
 
 var logger := Log.get_logger("NetworkSelect")
 
+@onready var password_popup := $%PopupContainer
+
 
 # Called when the node enters the scene tree for the first time.`
 func _ready() -> void:

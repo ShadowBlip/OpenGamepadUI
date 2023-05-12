@@ -53,7 +53,7 @@ current_focus = NodePath("../NextButton")
 
 [node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2"]
 layout_mode = 2
-text = "Finished!"
+text = "Finished"
 label_settings = SubResource("LabelSettings_qw5vb")
 horizontal_alignment = 1
 
