@@ -125,24 +125,26 @@ func _on_release_event() -> void:
 			_send_input(input_action, event, false)
 		sent_ogui_events.clear()
 		return
+
 	if queued_ogui_events.size() > 0:
 		for event in queued_ogui_events:
 			logger.debug("Emitting action: " + event)
 			var input_action := InputEventAction.new()
 			_send_input(input_action, event, true)
-			#sent_ogui_events.append(event)
 		# Clear any queued events because we overrode it with an on_press event
 		queued_ogui_events.clear()
 		return
-	#Any events that were activated by on press or by queue should now be deactivated.
+
+	# Any key events that were previously activated by on press or by queue should now be deactivated.
 	if not active_events.size() == 0:
 		logger.debug("Clearing active events with key_up")
 		_emit_events(active_events, true)
 		active_events.clear()
+
 	# Any events that were queued as "on release" should now be activated.
 	# Events will be "key_up" on next loop ext loop
 	if not queued_events.size() == 0:
-		logger.debug("Clearing queued events with key_down")
+		logger.debug("Emitting queued events tagged on_release")
 		_emit_events(queued_events)
 		active_events = queued_events.duplicate()
 		queued_events.clear()
@@ -155,7 +157,7 @@ func _emit_events(event_list: Array[InputDeviceEvent], do_release = false) -> vo
 		var value = event.get_value()
 		if do_release:
 			value = 0
-#		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
+		logger.debug("Emit event:" + str(event.type) + " code: "  + str(event.code) + " value: "  + str(value))
 		if _emit_event(event.get_type(), event.get_code(), value) == ERR_PARAMETER_RANGE_ERROR:
 			_do_audio_event(event.get_type(), event.get_code(), value)
 		if event_list.size() > 1:
@@ -225,34 +227,42 @@ func _handle_mapped_event(mapped_event: MappedEvent) -> void:
 	if mapped_event.ogui_event != "":
 		var input_action := InputEventAction.new()
 		input_action.action = mapped_event.ogui_event
+
 		if not input_action.is_action(mapped_event.ogui_event):
 			logger.warn("Listed ogui_event \"" + mapped_event.ogui_event +
 			"\" does not correlate to a known event. Verify configuration of gamepad.")
 			# Clear any queued events because we overrode it with an on_press event
 			queued_events.clear()
 			return
+
 		if mapped_event.on_release:
 			queued_ogui_events.append(mapped_event.ogui_event)
 			return
+
 		logger.debug("Emit " + mapped_event.ogui_event)
 		_send_input(input_action, mapped_event.ogui_event, true)
 		sent_ogui_events.append(mapped_event.ogui_event)
+
 		# Clear any queued events because we overrode it with an on_press event
 		queued_events.clear()
 		return
-	# Queue events that should activate only on release of the button
-	if mapped_event.on_release == true:
-		logger.debug("Queue events.")
-		queued_events = mapped_event.event_list.duplicate()
-		return
+
 	# Don't crash if the event_list is incomplete. Warn user.
 	if mapped_event.event_list.size() == 0:
 		logger.warn("No events list or ogui_event mapping for active keys. Verify configuration of gamepad.")
 		return
+
+	# Queue events that should activate only on release of the button
+	if mapped_event.on_release == true:
+		logger.debug("Mapped event tagged as 'on_release', queueing mapped event.")
+		queued_events = mapped_event.event_list.duplicate()
+		return
+
 	# Finally, send events to virtual device.
 	logger.debug("Emit mapped events!")
 	_emit_events(mapped_event.event_list)
 	active_events = mapped_event.event_list.duplicate()
+
 	# Clear and queued events because we overrode it with an on_press event
 	queued_events.clear()
 

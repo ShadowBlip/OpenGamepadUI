@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=18 format=3 uid="uid://c8mhtnr4cgdq7"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=15 format=3 uid="uid://c8mhtnr4cgdq7"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_ntqa2"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_8j07l"]
@@ -57,7 +57,7 @@ script = ExtResource("1_ntqa2")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_03tti")])
 event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_l5jor"), SubResource("InputDeviceEvent_iwyk7")])
 ogui_event = ""
-on_release = true
+on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_kvcdx"]
 type = 1
@@ -69,28 +69,11 @@ script = ExtResource("1_ntqa2")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_kvcdx")])
 event_list = Array[InputDeviceEvent]([])
 ogui_event = "ogui_qam"
-on_release = true
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_enofc"]
-type = 1
-code = 10
-value = 1
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_tqi38"]
-type = 1
-code = 11
-value = 1
-
-[sub_resource type="Resource" id="Resource_b7uql"]
-script = ExtResource("1_ntqa2")
-activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_enofc"), SubResource("InputDeviceEvent_tqi38")])
-event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui_none"
 on_release = false
 
 [resource]
 script = ExtResource("2_8j07l")
-mapped_events = Array[ExtResource("1_ntqa2")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_b6vim"), SubResource("Resource_rxeat"), SubResource("Resource_b7uql")])
+mapped_events = Array[ExtResource("1_ntqa2")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_b6vim"), SubResource("Resource_rxeat")])
 kb_phys_path = "usb-0000:74:00.3-4/input1"
 kb_phys_name = "  Mouse for Windows"
 gamepad_phys_path = "usb-0000:74:00.3-3/input0"
