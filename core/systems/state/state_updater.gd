@@ -3,22 +3,31 @@
 extends Node
 class_name StateUpdater
 
+## Update the state of a state machine when a signal fires
+##
+## The [StateUpdater] can be added as a child to any node that exposes signals.
+## Upon entering the scene tree, the [StateUpdater] connects to a given signal
+## on its parent, and will update the configured state machine's state to the
+## given state, allowing menus to react to state changes (e.g. changing menus)
+
 const in_game := preload("res://assets/state/states/in_game.tres")
 
-# Possible state actions to take
+## Possible state actions to take
 enum ACTION {
-	PUSH,
-	POP,
-	REPLACE,
-	SET,
+	PUSH, ## Pushes the state on top of the state stack
+	POP, ## Removes the state at the top of the state stack
+	REPLACE, ## Replaces the state at the top of the state stack
+	SET, ## Removes all states and sets the given state
 }
 
-# State machine resource to use
+## The state machine instance to use for managing state changes
 @export var state_machine: StateMachine
-# Signal on our parent to connect to
+## Signal on our parent to connect to. When this signal fires, the [StateUpdater] 
+## will change the state machine to the given state.
 var on_signal: String
-# The state to change to when the given signal is emitted
+## The state to change to when the given signal is emitted.
 @export var state: State
+## Whether to push, pop, replace, or set the state when the signal has fired.
 @export var action: ACTION = ACTION.PUSH
 
 

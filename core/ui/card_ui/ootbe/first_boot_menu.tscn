@@ -1,0 +1,63 @@
+[gd_scene load_steps=13 format=3 uid="uid://b30stcxjwk3od"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/first_boot_menu.gd" id="1_37dam"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_bh7el"]
+[ext_resource type="PackedScene" uid="uid://cwdf3dyj7grrk" path="res://core/ui/card_ui/ootbe/language_select.tscn" id="2_djjvb"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="2_ikevm"]
+[ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="3_0m4gw"]
+[ext_resource type="PackedScene" uid="uid://ct7bukd6le5qq" path="res://core/ui/card_ui/ootbe/timezone_select.tscn" id="3_l6sfn"]
+[ext_resource type="Resource" uid="uid://bpchr5agfb5gg" path="res://assets/state/states/first_boot_menu.tres" id="3_yp1h6"]
+[ext_resource type="PackedScene" uid="uid://b64v61ut4e1qv" path="res://core/ui/card_ui/ootbe/network_select.tscn" id="4_mx76i"]
+[ext_resource type="Resource" uid="uid://cawipbut6fx5o" path="res://assets/state/states/first_boot_language.tres" id="4_pe1rt"]
+[ext_resource type="PackedScene" uid="uid://cq5do4hbuevrd" path="res://core/ui/card_ui/ootbe/plugin_select.tscn" id="5_8uql2"]
+[ext_resource type="PackedScene" uid="uid://cx0pugv62qwkw" path="res://core/ui/card_ui/ootbe/plugin_setup.tscn" id="6_jawcd"]
+[ext_resource type="PackedScene" uid="uid://lbf0ycha2pav" path="res://core/ui/card_ui/ootbe/finished_menu.tscn" id="12_5m0q4"]
+
+[node name="FirstBootMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_37dam")
+
+[node name="StateUpdater" parent="." instance=ExtResource("2_ikevm")]
+state_machine = ExtResource("3_0m4gw")
+state = ExtResource("4_pe1rt")
+on_signal = "ready"
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_bh7el")]
+state = ExtResource("3_yp1h6")
+
+[node name="ContentContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LanguageSelect" parent="ContentContainer" instance=ExtResource("2_djjvb")]
+layout_mode = 2
+
+[node name="TimezoneSelect" parent="ContentContainer" instance=ExtResource("3_l6sfn")]
+visible = false
+layout_mode = 2
+
+[node name="NetworkSelect" parent="ContentContainer" instance=ExtResource("4_mx76i")]
+visible = false
+layout_mode = 2
+
+[node name="PluginSelect" parent="ContentContainer" instance=ExtResource("5_8uql2")]
+visible = false
+layout_mode = 2
+
+[node name="PluginSetup" parent="ContentContainer" instance=ExtResource("6_jawcd")]
+visible = false
+layout_mode = 2
+
+[node name="FinishMenu" parent="ContentContainer" instance=ExtResource("12_5m0q4")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2

@@ -1,0 +1,108 @@
+[gd_scene load_steps=13 format=3 uid="uid://cx0pugv62qwkw"]
+
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_k5enj"]
+[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/plugin_setup.gd" id="1_q8rl5"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_akyvd"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="3_frsar"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_bqgae"]
+[ext_resource type="Resource" uid="uid://j1csnsnb672v" path="res://assets/state/states/first_boot_plugin_setup.tres" id="4_jqk8c"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_t7ff7"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="6_4ff03"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="6_7qmdd"]
+[ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="8_se3gk"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="11_0crkr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6mdnw"]
+bg_color = Color(0.266667, 0.278431, 0.352941, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="PluginSetup" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_right = 100
+script = ExtResource("1_q8rl5")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_akyvd")]
+state_machine = ExtResource("8_se3gk")
+state = ExtResource("4_jqk8c")
+
+[node name="FocusGroupSetter" parent="VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("5_t7ff7")]
+target = NodePath("../../HBoxContainer/MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "entered"
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("6_7qmdd")]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="HBoxContainer/VBoxContainer" instance=ExtResource("1_k5enj")]
+layout_mode = 2
+text = "Configure your plugins"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("4_bqgae")]
+unique_name_in_owner = true
+current_focus = NodePath("")
+
+[node name="Spacer" type="Control" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PluginNameLabel" parent="HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("11_0crkr")]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="PluginContentPanel" type="PanelContainer" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_6mdnw")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginContentPanel"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ScrollerJoystick" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginContentPanel/ScrollContainer" instance=ExtResource("3_frsar")]
+
+[node name="PluginContent" type="MarginContainer" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginContentPanel/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="NextButton" parent="HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("6_4ff03")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Next"

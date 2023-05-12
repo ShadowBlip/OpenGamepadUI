@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=31 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://cd2p3lu01aric" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
+[ext_resource type="PackedScene" uid="uid://b30stcxjwk3od" path="res://core/ui/card_ui/ootbe/first_boot_menu.tscn" id="14_dpfu1"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
@@ -26,13 +27,13 @@
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
 
-[sub_resource type="Gradient" id="Gradient_d65wo"]
+[sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.734982)
 colors = PackedColorArray(0.0235294, 0.027451, 0.0313726, 1, 0.0245151, 0.0260339, 0.03125, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_y4ncd"]
-gradient = SubResource("Gradient_d65wo")
+gradient = SubResource("Gradient_0h0x4")
 
 [sub_resource type="Animation" id="Animation_vgwwd"]
 resource_name = "fade"
@@ -134,6 +135,10 @@ visible = false
 layout_mode = 2
 
 [node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("12_yovai")]
+visible = false
+layout_mode = 2
+
+[node name="FirstBootMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("14_dpfu1")]
 visible = false
 layout_mode = 2
 

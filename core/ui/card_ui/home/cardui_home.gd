@@ -130,7 +130,8 @@ func _on_recent_apps_updated() -> void:
 		
 	# Populate our grid with items
 	await _repopulate_grid(container, items.values())
-	_grab_focus()
+	if get_viewport().gui_get_focus_owner() == null:
+		_grab_focus()
 	
 	# Update the textures of the library deck
 	_update_library_deck()

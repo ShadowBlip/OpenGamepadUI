@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://cq5do4hbuevrd"]
+
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="1_glflu"]
+[ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="2_8r7jx"]
+[ext_resource type="Resource" uid="uid://bpi21xakop5wy" path="res://assets/state/states/first_boot_plugin_select.tres" id="3_r2fie"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="4_byts3"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="5_6lpmx"]
+[ext_resource type="PackedScene" uid="uid://cf5bdr4sh2irb" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="6_cox3h"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="6_mn0iu"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_4pfh5"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="8_7mmqh"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_di8uy"]
+[ext_resource type="Resource" uid="uid://j1csnsnb672v" path="res://assets/state/states/first_boot_plugin_setup.tres" id="11_83y3o"]
+
+[node name="PluginSelect" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_right = 20
+
+[node name="VisibilityManager" parent="." instance=ExtResource("1_glflu")]
+state_machine = ExtResource("2_8r7jx")
+state = ExtResource("3_r2fie")
+
+[node name="FocusGroupSetter" parent="VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("4_byts3")]
+target = NodePath("../../HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu/MarginContainer/HFlowContainer/FocusGroup")
+on_signal = "entered"
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("5_6lpmx")]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="SubsectionLabel" parent="HBoxContainer/VBoxContainer" instance=ExtResource("6_mn0iu")]
+layout_mode = 2
+text = "Install plugins"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("9_di8uy")]
+current_focus = NodePath("../NextButton")
+focus_neighbor_bottom = NodePath("../PluginStoreMenu/MarginContainer/HFlowContainer/FocusGroup")
+focus_neighbor_top = NodePath("../PluginStoreMenu/MarginContainer/HFlowContainer/FocusGroup")
+
+[node name="Spacer" type="Control" parent="HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PluginStoreMenu" parent="HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("6_cox3h")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu/MarginContainer/HFlowContainer" index="0" node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top")]
+focus_neighbor_bottom = NodePath("../../../../FocusGroup")
+focus_neighbor_top = NodePath("../../../../FocusGroup")
+
+[node name="NextButton" parent="HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_4pfh5")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "Next"
+
+[node name="StateUpdater" parent="HBoxContainer/MarginContainer/VBoxContainer/NextButton" instance=ExtResource("8_7mmqh")]
+state_machine = ExtResource("2_8r7jx")
+state = ExtResource("11_83y3o")
+action = 2
+on_signal = "button_up"
+
+[editable path="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu"]

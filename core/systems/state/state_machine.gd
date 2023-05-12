@@ -2,7 +2,7 @@
 # The state machine takes advantage of the fact that resources are globally unique.
 # This allows you to load a state machine resource from anywhere to subscribe to
 # state changes.
-@icon("res://assets/icons/log-in.svg")
+@icon("res://assets/editor-icons/state-machine.svg")
 extends Resource
 class_name StateMachine
 

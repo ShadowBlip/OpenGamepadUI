@@ -1,0 +1,86 @@
+[gd_scene load_steps=15 format=3 uid="uid://lbf0ycha2pav"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/finished_menu.gd" id="1_ugtes"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_oaqfm"]
+[ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="3_q8b04"]
+[ext_resource type="Resource" uid="uid://nap8yimxtnpm" path="res://assets/state/states/first_boot_finished.tres" id="4_v76vv"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_gim07"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="6_7e6kn"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="7_1dc31"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_2xta4"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_n7pwn"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="9_e5vxk"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="11_gl4s4"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="12_js4mn"]
+[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="13_8jjwv"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_qw5vb"]
+font_size = 64
+
+[node name="FinishMenu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_right = 100
+script = ExtResource("1_ugtes")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_oaqfm")]
+state_machine = ExtResource("3_q8b04")
+state = ExtResource("4_v76vv")
+
+[node name="FocusGroupSetter" parent="VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("5_gim07")]
+target = NodePath("../../HBoxContainer/VBoxContainer2/FocusGroup")
+on_signal = "entered"
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("6_7e6kn")]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 80
+alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="FocusGroup" parent="HBoxContainer/VBoxContainer2" node_paths=PackedStringArray("current_focus") instance=ExtResource("8_n7pwn")]
+current_focus = NodePath("../NextButton")
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Finished"
+label_settings = SubResource("LabelSettings_qw5vb")
+horizontal_alignment = 1
+
+[node name="FadeEffect" parent="HBoxContainer/VBoxContainer2/Label" node_paths=PackedStringArray("target") instance=ExtResource("7_2xta4")]
+target = NodePath("..")
+fade_speed = 4.0
+on_signal = "visibility_changed"
+on_signal = "visibility_changed"
+
+[node name="SubsectionLabel" parent="HBoxContainer/VBoxContainer2" instance=ExtResource("7_1dc31")]
+layout_mode = 2
+text = "You're ready to go"
+horizontal_alignment = 1
+
+[node name="FadeEffect" parent="HBoxContainer/VBoxContainer2/SubsectionLabel" node_paths=PackedStringArray("target") instance=ExtResource("7_2xta4")]
+target = NodePath("..")
+fade_speed = 5.0
+on_signal = "visibility_changed"
+on_signal = "visibility_changed"
+
+[node name="NextButton" parent="HBoxContainer/VBoxContainer2" instance=ExtResource("9_e5vxk")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start playing"
+
+[node name="StateUpdater" parent="HBoxContainer/VBoxContainer2/NextButton" instance=ExtResource("11_gl4s4")]
+state_machine = ExtResource("12_js4mn")
+state = ExtResource("13_8jjwv")
+action = 2
+on_signal = "button_up"

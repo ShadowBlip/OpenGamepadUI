@@ -40,7 +40,6 @@ func _process(delta: float) -> void:
 	
 	parent.scroll_horizontal = target_pos.x
 	parent.scroll_vertical = target_pos.y
-	print(target_pos)
 
 
 func _input(event: InputEvent) -> void:
