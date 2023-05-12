@@ -219,15 +219,15 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO NEXT platform")
 		return PLATFORM.AYANEO_GEN2
-#	elif product_name.contains("G1618-03") and vendor_name == "GPD":
-#		logger.debug("Detected GPD Gen1 platform")
-#		return PLATFORM.GPD_GEN1
-#	elif product_name.contains("G1618-04") and vendor_name == "GPD":
-#		logger.debug("Detected GPD Gen2 platform")
-#		return PLATFORM.GPD_GEN2
-#	elif product_name.contains("G1619-04") and vendor_name == "GPD":
-#		logger.debug("Detected GPD Gen3 platform")
-#		return PLATFORM.GPD_GEN3
+	elif product_name.contains("G1618-03") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen1 platform")
+		return PLATFORM.GPD_GEN1
+	elif product_name.contains("G1618-04") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen2 platform")
+		return PLATFORM.GPD_GEN2
+	elif product_name.contains("G1619-04") and vendor_name == "GPD":
+		logger.debug("Detected GPD Gen3 platform")
+		return PLATFORM.GPD_GEN3
 	elif product_name in ["ONE XPLAYER", "ONEXPLAYER", "ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
 		match cpu.vendor:
 			"GenuineIntel":
