@@ -33,7 +33,7 @@ const osk := preload("res://core/global/keyboard_instance.tres")
 const Platform := preload("res://core/global/platform.tres")
 const input_thread := preload("res://core/systems/threading/input_thread.tres")
 const input_default_path := "/dev/input"
-const hidden_path := "/dev/input/.hidden"
+const input_hidden_path := "/dev/input/.hidden"
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -131,8 +131,8 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 	# Remove all gamepads that no longer exist
 	var hidden_devices := PackedStringArray()
-	if DirAccess.dir_exists_absolute(hidden_path):
-		hidden_devices = DirAccess.get_files_at(hidden_path)
+	if DirAccess.dir_exists_absolute(input_hidden_path):
+		hidden_devices = DirAccess.get_files_at(input_hidden_path)
 	for gamepad in managed_gamepads.values():
 		if _get_event_from_phys(gamepad.phys_path) in hidden_devices:
 			continue
@@ -471,7 +471,7 @@ func _manage_event_path(action: String, event_name: String) -> String:
 	if exit_code != OK:
 		return ""
 	if action == "hide":
-		return "/".join([hidden_path, event_name])
+		return "/".join([input_hidden_path, event_name])
 	return "/".join([input_default_path, event_name])
 
 
@@ -484,13 +484,13 @@ func _get_event_from_phys(phys_path: String)  -> String:
 
 func _restore_all_hidden() -> void:
 	logger.info("Restoring hidden UInput devices.")
-	if not DirAccess.dir_exists_absolute(hidden_path):
+	if not DirAccess.dir_exists_absolute(input_hidden_path):
 		logger.debug("No hidden devices found")
 		return
 
-	var files := DirAccess.get_files_at(hidden_path)
+	var files := DirAccess.get_files_at(input_hidden_path)
 	if files.size() == 0:
-		logger.debug("Found no hidden files at " + hidden_path + ". Nothing to do.")
+		logger.debug("Found no hidden files at " + input_hidden_path + ". Nothing to do.")
 		return
 
 	for file_name in files:
