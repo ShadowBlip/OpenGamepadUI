@@ -8,6 +8,8 @@ class_name BackInputHandler
 @export var process_input_during: Array[State] = []
 @export var minimum_states := 1
 
+## Will show logger events with the prefix BackInputHandler
+var logger := Log.get_logger("BackInputHandler", Log.LEVEL.INFO)
 
 func _ready() -> void:
 	set_process_input(false)
@@ -29,6 +31,7 @@ func _input(event: InputEvent) -> void:
 	# Only handle back button pressed and when the guide button is not held
 	if not event.is_action_pressed("ogui_east") or Input.is_action_pressed("ogui_guide"):
 		return
+	logger.debug(str(event))
 
 	# Stop the event from propagating
 	get_viewport().set_input_as_handled()
