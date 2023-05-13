@@ -238,8 +238,9 @@ func get_current_app() -> RunningApp:
 ## Sets the gamepad profile for the running app with the given profile
 func set_app_gamepad_profile(app: RunningApp) -> void:
 	# If no app was specified, unset the current gamepad profile
-	if app == null or app.launch_item == null:
+	if not app or not app.launch_item:
 		set_gamepad_profile("")
+		return
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
