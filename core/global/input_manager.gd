@@ -130,9 +130,13 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 	var discovered_paths := discover_gamepads()
 
 	# Remove all gamepads that no longer exist
-	var hidden_devices := DirAccess.get_files_at(hidden_path)
+	var hidden_devices := PackedStringArray()
+	if DirAccess.dir_exists_absolute(hidden_path):
+		hidden_devices = DirAccess.get_files_at(hidden_path)
 	for gamepad in managed_gamepads.values():
-		if gamepad.phys_path in hidden_devices:
+		if _get_event_from_phys(gamepad.phys_path) in hidden_devices:
+			continue
+		if gamepad.phys_path in discovered_paths:
 			continue
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
@@ -216,6 +220,9 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			logger.error("Unable to open handheld keyboard device.")
 		hide_event_device(handheld_gamepad.kb_event_path)
 	logger.debug("Finished configuring detected controllers")
+	gamepad_mutex.lock()
+	logger.debug("Managed gamepads: " + str(managed_gamepads))
+	gamepad_mutex.unlock()
 
 
 func _on_game_state_entered(_from: State) -> void:

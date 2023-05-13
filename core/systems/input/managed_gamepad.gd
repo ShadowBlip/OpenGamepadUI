@@ -215,6 +215,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 	# Always skip passing FF events to the virtual gamepad
 	if event.get_type() == event.EV_FF:
 		return
+	logger.debug("Got event: " + event.get_code_name())
 
 	# Intercept mode NONE will pass all input to the virtual gamepad
 	if mode == INTERCEPT_MODE.NONE:
