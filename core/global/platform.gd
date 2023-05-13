@@ -199,10 +199,10 @@ func _read_dmi() -> PLATFORM:
 		logger.debug("Detected Win600 platform")
 		return PLATFORM.ABERNIC_GEN1
 	if product_name == "AOKZOE A1 AR07" and vendor_name == "AOKZOE":
-		logger.debug("Detected AOKZOE A1 platform")
+		logger.debug("Detected AOKZOE Gen1 platform")
 		return PLATFORM.AOKZOE_GEN1
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO 2 platform")
+		logger.debug("Detected AYANEO Gen4 platform")
 		return PLATFORM.AYANEO_GEN4
 	elif (
 		(product_name.contains("2021") or product_name.contains("FOUNDER"))
@@ -211,10 +211,10 @@ func _read_dmi() -> PLATFORM:
 		logger.debug("Detected AYANEO 2021 platform")
 		return PLATFORM.AYANEO_GEN1
 	elif product_name in ["AIR", "AIR Pro"] and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO AIR Gen1 platform")
+		logger.debug("Detected AYANEO Gen3 platform")
 		return PLATFORM.AYANEO_GEN3
 	elif product_name.contains("AIR Plus") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO AIR Gen2 platform")
+		logger.debug("Detected AYANEO Gen5 platform")
 		return PLATFORM.AYANEO_GEN5
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO NEXT platform")
