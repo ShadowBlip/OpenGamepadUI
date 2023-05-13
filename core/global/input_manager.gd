@@ -467,7 +467,7 @@ func exit() -> void:
 	if handheld_gamepad and handheld_gamepad.is_open():
 		handheld_gamepad.kb_device.grab(false)
 		handheld_gamepad.kb_device.close()
-		restore_event_device(handheld_gamepad.kb_phys_path)
+		restore_event_device(handheld_gamepad.kb_event_path)
 
 
 func hide_event_device(phys_path: String) -> String:
