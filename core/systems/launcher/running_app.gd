@@ -210,8 +210,6 @@ func is_running() -> bool:
 ## Return a list of child PIDs. When launching apps with [Reaper], PR_SET_CHILD_SUBREAPER
 ## is set to prevent processes from re-parenting themselves to other processes.
 func get_child_pids() -> PackedInt32Array:
-	if launch_item != null:
-		logger._name = "RunningApp-" + launch_item.name
 	var pids := PackedInt32Array()
 
 	# Get all child processes
