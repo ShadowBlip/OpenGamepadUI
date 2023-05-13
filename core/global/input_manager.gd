@@ -45,7 +45,7 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 var guide_action := false
 
 var handheld_gamepad: HandheldGamepad
@@ -125,7 +125,10 @@ func _process_input(_delta: float) -> void:
 ## Triggers whenever we detect any gamepad connect/disconnect events
 func _on_gamepad_change(device: int, connected: bool) -> void:
 	logger.info("Gamepad was changed: " + Input.get_joy_name(device) + " connected: " + str(connected))
-
+	
+	logger.debug("START Managed gamepads: " + str(managed_gamepads))
+	logger.debug("START Orphan gamepads: " + str(orphaned_gamepads))
+	
 	# Discover any new gamepads
 	var discovered_paths := discover_gamepads()
 
@@ -141,34 +144,41 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		# Lock the gamepad mappings so we can alter them.
-		var event := _get_event_from_phys(gamepad.phys_path)
-		orphaned_gamepads[event] = gamepad
+		var event_name := _get_event_from_phys(gamepad.phys_path)
+		orphaned_gamepads[event_name] = gamepad
 		gamepad_mutex.lock()
 		managed_gamepads.erase(gamepad.phys_path)
 		gamepad_mutex.unlock()
 		restore_event_device(gamepad.phys_path)
+		return
 
 	# Add any newly found gamepads
 	for path in discovered_paths:
+		logger.debug("Considering gamepad: " + path)
 		# Reject managed and virtual devices
 		if path in virtual_gamepads:
 			logger.debug("Virtual gamepad is already being managed: " + path)
 			continue
+		if path in managed_gamepads:
+			logger.debug("Gamepad is already being managed: " + path)
+			continue
 		
-		# Hide the device from other processes
-		var hidden_path := hide_event_device(path)
-		if hidden_path == "":
-			logger.warn("Unable to hide gamepad: " + path)
-			logger.warn("Opening the raw gamepad instead")
-			# Try to open the non-hidden device instead
-			hidden_path = path
-
 		# Reconfigure disconnected gamepads
-		var event_name := _get_event_from_phys(hidden_path)
+		var event_name := _get_event_from_phys(path)
 		if orphaned_gamepads.has(event_name):
 			var gamepad: ManagedGamepad = orphaned_gamepads[event_name]
+			
+			# Hide the device from other processes
+			var hidden_path := hide_event_device(path)
+			if hidden_path == "":
+				logger.warn("Unable to hide gamepad: " + path)
+				logger.warn("Opening the raw gamepad instead")
+				# Try to open the non-hidden device instead
+				hidden_path = path
+			
+			# Reopen the physical gamepad
 			if gamepad.reopen(hidden_path) != OK:
-				logger.error("Unable to create managed gamepad for: " + hidden_path)
+				logger.error("Unable to reopen managed gamepad for: " + hidden_path)
 				continue
 			gamepad_mutex.lock()
 			managed_gamepads[hidden_path] = gamepad
@@ -180,8 +190,8 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		# Open the device from its new path to check if it is a gamepad
 		# that we need to manage or if it's one of our own virtual devices.
 		var input_device := InputDevice.new()
-		if input_device.open(hidden_path) != OK:
-			logger.error("Unable to create managed gamepad for: " + hidden_path)
+		if input_device.open(path) != OK:
+			logger.error("Unable to create managed gamepad for: " + path)
 			continue
 		
 		# See if we've identified the gamepad defined by the device platform.
@@ -192,6 +202,14 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
+			
+		# Hide the device from other processes
+		var hidden_path := hide_event_device(path)
+		if hidden_path == "":
+			logger.warn("Unable to hide gamepad: " + path)
+			logger.warn("Opening the raw gamepad instead")
+			# Try to open the non-hidden device instead
+			hidden_path = path
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
 		var gamepad := ManagedGamepad.new()
@@ -222,6 +240,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 	logger.debug("Finished configuring detected controllers")
 	gamepad_mutex.lock()
 	logger.debug("Managed gamepads: " + str(managed_gamepads))
+	logger.debug("Orphan gamepads: " + str(orphaned_gamepads))
 	gamepad_mutex.unlock()
 
 
