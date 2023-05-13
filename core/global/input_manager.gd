@@ -45,7 +45,7 @@ var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as 
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var PID: int = OS.get_process_id()
 var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 var guide_action := false
 
 var handheld_gamepad: HandheldGamepad
@@ -188,9 +188,6 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
-		
-		# Close the device, as we're going to re-open it as part of a ManagedGamepad
-		input_device.close()
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
 		var gamepad := ManagedGamepad.new()
@@ -276,10 +273,8 @@ func discover_gamepads() -> PackedStringArray:
 			continue
 		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
 			paths.append(path)
-			dev.close()
 			continue
 		if not handheld_gamepad:
-			dev.close()
 			continue
 
 		if handheld_gamepad.is_found_kb(dev):
