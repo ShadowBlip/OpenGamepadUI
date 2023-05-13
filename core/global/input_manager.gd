@@ -197,8 +197,8 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		# See if we've identified the gamepad defined by the device platform.
 		# Specifically, OpenSD creates a virtual device that we DO want to manage
 		var is_handheld_gamepad := false
-		if handheld_gamepad and handheld_gamepad.is_found_gamepad(input_device):
-			is_handheld_gamepad = true
+		if handheld_gamepad:
+			is_handheld_gamepad = handheld_gamepad.is_found_gamepad(input_device)
 		if input_device.get_phys() == "" and not is_handheld_gamepad:
 			logger.debug("Device appears to be virtual, skipping " + path)
 			continue
@@ -213,8 +213,9 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
 		var gamepad := ManagedGamepad.new()
-		if gamepad.open(path) != OK:
-			logger.error("Unable to create managed gamepad for: " + path)
+		if gamepad.open(hidden_path) != OK:
+			logger.error("Unable to create managed gamepad for: " + hidden_path)
+			restore_event_device(hidden_path)
 			continue
 		
 		# Give the gamepad xwayland access and add it to our mapping of managed
@@ -230,6 +231,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		# Check if we're using a known handheld and link this device to the
 		# handheld gamepad so we can send events to the correct virtual controller.
 		if is_handheld_gamepad:
+			logger.debug("Assigning managed gamepad to handheld gamepad")
 			handheld_gamepad.set_gamepad_device(gamepad)
 
 	# If we're using a handheld, open the device.
