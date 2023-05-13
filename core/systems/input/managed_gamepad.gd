@@ -79,6 +79,37 @@ var use_mode_list: Array = [
 ## Opens the given physical gamepad with exclusive access and creates a virtual
 ## gamepad.
 func open(path: String) -> int:
+	# Open the physical device
+	var err := open_physical(path)
+	if err != OK:
+		return err
+
+	# Create a virtual gamepad from this physical one
+	virt_device = phys_device.duplicate()
+	if not virt_device:
+		logger.warn("Unable to create virtual gamepad for: " + phys_path)
+		return ERR_CANT_CREATE
+
+	# Set the path to the virtual gamepad
+	virt_path = virt_device.get_devnode()
+
+	# Create a virtual mouse associated with this gamepad
+	virt_mouse = InputDevice.create_mouse()
+	if not virt_mouse:
+		logger.warn("Unable to create virtual mouse for: " + phys_path)
+		return ERR_CANT_CREATE
+
+	# Set the path to the virtual mouse
+	mouse_path = virt_mouse.get_devnode()
+
+	# Grab exclusive access over the physical device
+	grab()
+
+	return OK
+
+
+## Opens the given physical device and grabs exclusive access to it.
+func open_physical(path: String) -> int:
 	# Create a physical device
 	phys_path = path
 	phys_device = InputDevice.new()
@@ -100,31 +131,25 @@ func open(path: String) -> int:
 	abs_rz_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RZ)
 	abs_rz_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RZ)
 
-	# Create a virtual gamepad from this physical one
-	virt_device = phys_device.duplicate()
-	if not virt_device:
-		logger.warn("Unable to create virtual gamepad for: " + phys_path)
-		return ERR_CANT_CREATE
-
-	# Set the path to the virtual gamepad
-	virt_path = virt_device.get_devnode()
-
-	# Create a virtual mouse associated with this gamepad
-	virt_mouse = InputDevice.create_mouse()
-	if not virt_mouse:
-		logger.warn("Unable to create virtual mouse for: " + phys_path)
-		return ERR_CANT_CREATE
-
-	# Set the path to the virtual mouse
-	mouse_path = virt_mouse.get_devnode()
-
-	# Grab exclusive access over the physical device
-	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
-		phys_device.grab(true)
-
 	# Store value of get_phys() so this can be reidentified if disconnected.
 	phys = phys_device.get_phys()
+
 	return OK
+
+
+## Re-opens the physical device, re-using the existing virtual device
+func reopen(path: String) -> int:
+	var err := open_physical(path)
+	if err != OK:
+		return err
+	grab()
+	return OK
+
+
+## Grab exclusive access over the physical device
+func grab() -> void:
+	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
+		phys_device.grab(true)
 
 
 ## Set the managed gamepad to use the given gamepad profile for translating
