@@ -126,8 +126,8 @@ func _process_input(_delta: float) -> void:
 func _on_gamepad_change(device: int, connected: bool) -> void:
 	logger.info("Gamepad was changed: " + Input.get_joy_name(device) + " connected: " + str(connected))
 	
-	logger.debug("START Managed gamepads: " + str(managed_gamepads))
-	logger.debug("START Orphan gamepads: " + str(orphaned_gamepads))
+	logger.debug("Current Managed gamepads: " + str(managed_gamepads))
+	logger.debug("Current Orphan gamepads: " + str(orphaned_gamepads))
 	
 	# Discover any new gamepads
 	var discovered_paths := discover_gamepads()
@@ -241,8 +241,8 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		hide_event_device(handheld_gamepad.kb_event_path)
 	logger.debug("Finished configuring detected controllers")
 	gamepad_mutex.lock()
-	logger.debug("Managed gamepads: " + str(managed_gamepads))
-	logger.debug("Orphan gamepads: " + str(orphaned_gamepads))
+	logger.debug("New Managed gamepads: " + str(managed_gamepads))
+	logger.debug("New Orphan gamepads: " + str(orphaned_gamepads))
 	gamepad_mutex.unlock()
 
 
@@ -497,9 +497,7 @@ func _manage_event_path(action: String, event_name: String) -> String:
 
 
 func _get_event_from_phys(phys_path: String)  -> String:
-	logger.debug("_get_event_from_phys: " + phys_path)
 	var event := phys_path.split("/")[-1] as String
-	logger.debug("found event: " + event)
 	return event 
 
 
