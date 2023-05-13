@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_lsnmg"]
 [ext_resource type="Script" path="res://core/ui/card_ui_only_qam/only_qam_main.gd" id="2_stvk6"]
-[ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="3_npogh"]
+[ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/only_qam_input_manager.tscn" id="3_klhmb"]
 [ext_resource type="PackedScene" uid="uid://c211brlhxmf8k" path="res://core/ui/card_ui_only_qam/settings/settings_menu.tscn" id="4_13eyr"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="5_0bp4q"]
 [ext_resource type="PackedScene" uid="uid://chq023a11tl3k" path="res://core/ui/card_ui_only_qam/qam/quick_access_menu.tscn" id="6_mqdlv"]
@@ -17,7 +17,7 @@ grow_vertical = 2
 theme = ExtResource("1_lsnmg")
 script = ExtResource("2_stvk6")
 
-[node name="InputManager" parent="." instance=ExtResource("3_npogh")]
+[node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
 
 [node name="MenuContent" type="MarginContainer" parent="."]
 unique_name_in_owner = true
