@@ -68,7 +68,7 @@ func _create_logger_toggle(logger_name: String) -> void:
 	toggle.button_pressed = false
 	var on_toggled := func(on: bool):
 		if on:
-			log_manager.set_log_level(logger_name, Log.LEVEL.INFO)
+			log_manager.set_log_level(logger_name, Log.LEVEL.DEBUG)
 			return
 		log_manager.set_log_level(logger_name, Log.LEVEL.INFO)
 	toggle.toggled.connect(on_toggled)
