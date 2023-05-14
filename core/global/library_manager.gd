@@ -331,7 +331,7 @@ func get_library_by_id(id: String) -> Library:
 func get_libraries() -> Array[Library]:
 	var libraries: Array[Library] = []
 	libraries.assign(_libraries.values())
-	print("Got libraries: ", libraries)
+	logger.debug("Got libraries: " + str(libraries))
 
 	return libraries
 

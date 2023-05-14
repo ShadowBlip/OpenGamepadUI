@@ -10,6 +10,7 @@ var main_menu_state := preload("res://assets/state/states/main_menu.tres") as St
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var card_scene := preload("res://core/ui/components/card.tscn") as PackedScene
 var _initialized := false
+var repopulating := false
 var recent_apps: Array
 var tween: Tween
 
@@ -124,8 +125,6 @@ func _on_recent_apps_updated() -> void:
 		var library_item: LibraryItem = LibraryManager.get_app_by_name(name)
 		if library_item == null:
 			continue
-		if not library_item.removed_from_library.is_connected(_on_recent_apps_updated):
-			library_item.removed_from_library.connect(_on_recent_apps_updated)
 		items[name] = library_item
 		
 	# Populate our grid with items
@@ -187,16 +186,7 @@ func _on_poster_boxart_loaded(texture: Texture2D, poster: TextureButton) -> void
 func _build_card(item: LibraryItem, portrait: bool) -> GameCard:
 	# Build a poster for each library item
 	var card := card_scene.instantiate() as GameCard
-	card.name = item.name
-
-	# Get the boxart for the item
-	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
-	if not card_texture:
-		card_texture = BoxArtManager.get_placeholder(layout)
-		card.show_label = true
-		card.text = item.name
-	card.set_texture(card_texture)
+	await card.set_library_item(item)
 	
 	# Listen for focus events on the posters
 	card.focus_entered.connect(_on_card_focused.bind(item, card))
@@ -212,6 +202,9 @@ func _build_card(item: LibraryItem, portrait: bool) -> GameCard:
 
 # Populates the given grid with library items
 func _repopulate_grid(grid: HBoxContainer, library_items: Array) -> void:
+	if repopulating:
+		return
+	repopulating = true
 	# Clear any old grid items
 	for child in container.get_children():
 		if child.name in ["LibraryDeck", "StartSpacer", "EndSpacer"]:
@@ -234,3 +227,4 @@ func _repopulate_grid(grid: HBoxContainer, library_items: Array) -> void:
 	# Move our Library Deck to the back
 	grid.move_child(library_deck, -1)
 	grid.move_child(end_spacer, -1)
+	repopulating = false
