@@ -23,7 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
+[ext_resource type="PackedScene" uid="uid://lfm3ps837gy5" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
 
@@ -223,6 +223,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 
 [node name="InGameNotification" parent="AlwaysVisibleContent/TopMargin" instance=ExtResource("16_bcudw")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0

@@ -48,6 +48,9 @@ signal button_down
 @export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
 
+@export_category("Mouse")
+@export var click_focuses := true
+
 var tween: Tween
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
@@ -102,6 +105,12 @@ func _play_sound(stream: AudioStream) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if disabled:
 		return
+	if event is InputEventMouseButton and not click_focuses:
+		if event.is_pressed():
+			button_down.emit()
+			pressed.emit()
+		else:
+			button_up.emit()
 	if not event.is_action("ui_accept"):
 		return
 	if event.is_pressed():

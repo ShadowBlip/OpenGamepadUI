@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=18 format=3 uid="uid://lfm3ps837gy5"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_6y86d"]
 [ext_resource type="Script" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
@@ -110,16 +110,19 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "Suspend"
+click_focuses = false
 
 [node name="RebootButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reboot"
+click_focuses = false
 
 [node name="ShutdownButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Shutdown"
+click_focuses = false
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -128,6 +131,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
+click_focuses = false
 
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -136,3 +140,4 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Cancel"
+click_focuses = false
