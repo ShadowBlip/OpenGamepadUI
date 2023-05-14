@@ -1,4 +1,5 @@
 extends Tree
+class_name WifiNetworkTree
 
 const thread := preload("res://core/systems/threading/thread_pool.tres")
 
