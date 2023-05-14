@@ -79,6 +79,9 @@ func _on_unfocus() -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_pressed() and event.double_click:
+			button_up.emit()
 	if event.is_action("ui_accept"):
 		if event.is_pressed():
 			button_down.emit()

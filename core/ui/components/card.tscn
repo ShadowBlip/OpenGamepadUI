@@ -41,6 +41,7 @@ offset_bottom = 300.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 2
+mouse_filter = 1
 script = ExtResource("1_aiin0")
 
 [node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_701dj")]
@@ -64,7 +65,6 @@ custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
 offset_right = 200.0
 offset_bottom = 300.0
-mouse_filter = 0
 texture = ExtResource("2_2hlyj")
 expand_mode = 1
 stretch_mode = 4
