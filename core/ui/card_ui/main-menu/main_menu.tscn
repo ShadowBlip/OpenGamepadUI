@@ -170,6 +170,7 @@ focus_stack = ExtResource("10_v2rc1")
 [node name="HomeButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Home"
+click_focuses = false
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/HomeButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -180,6 +181,7 @@ on_signal = "button_up"
 [node name="LibraryButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Library"
+click_focuses = false
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/LibraryButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -191,6 +193,7 @@ on_signal = "button_up"
 visible = false
 layout_mode = 2
 text = "Store"
+click_focuses = false
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/StoreButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -201,6 +204,7 @@ on_signal = "button_up"
 [node name="SettingsButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Settings"
+click_focuses = false
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/SettingsButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
@@ -211,6 +215,7 @@ on_signal = "button_up"
 [node name="PowerButton" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_obt01")]
 layout_mode = 2
 text = "Power"
+click_focuses = false
 
 [node name="StateUpdater" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/ButtonContainer/PowerButton" instance=ExtResource("6_ris1l")]
 state_machine = ExtResource("7_n0655")
