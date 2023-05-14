@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://vf4sij64f82b"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.gd" id="1_3r64j"]
-[ext_resource type="Resource" uid="uid://c4prk1be46i2u" path="res://assets/keyboard/layouts/full_layout.tres" id="2_0han2"]
+[ext_resource type="Resource" uid="uid://bhkeiyrw5uwed" path="res://assets/keyboard/layouts/full_layout.tres" id="2_0han2"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="3_crr8i"]
 
 [node name="OnScreenKeyboard" type="Control" groups=["osk"]]
@@ -12,6 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_3r64j")
 layout = ExtResource("2_0han2")
 

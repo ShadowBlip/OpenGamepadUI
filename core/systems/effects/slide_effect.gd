@@ -2,6 +2,7 @@
 extends Effect
 class_name SlideEffect
 
+signal slide_out_started
 signal slide_out_finished
 
 @export_category("Target")
@@ -42,6 +43,7 @@ func slide_in() -> void:
 	var on_finished := func():
 		effect_finished.emit()
 	tween.tween_callback(on_finished)
+	effect_started.emit()
 
 
 func slide_out() -> void:
@@ -59,6 +61,7 @@ func slide_out() -> void:
 	var on_finished := func():
 		slide_out_finished.emit()
 	tween.tween_callback(on_finished)
+	slide_out_started.emit()
 
 
 func _get_target_pos(dir: String) -> Vector2:

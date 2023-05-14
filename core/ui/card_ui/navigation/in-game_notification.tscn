@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cu4l0d1joc37w"]
+[gd_scene load_steps=6 format=3 uid="uid://cu4l0d1joc37w"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_ftn07"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_gymt1"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="2_ljdx2"]
 
@@ -22,6 +23,7 @@ anchor_right = 1.0
 offset_left = -262.0
 offset_bottom = 48.0
 grow_horizontal = 0
+mouse_filter = 1
 script = ExtResource("1_w3dkg")
 
 [node name="SlideEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_ljdx2")]
@@ -31,6 +33,13 @@ slide_speed = 0.5
 on_signal = "notification_received"
 slide_out_signal = "notification_finished"
 on_signal = "notification_received"
+
+[node name="FadeEffect" parent="SlideEffect" node_paths=PackedStringArray("target") instance=ExtResource("2_ftn07")]
+target = NodePath("../..")
+fade_speed = 0.3
+on_signal = "effect_started"
+fade_out_signal = "slide_out_finished"
+on_signal = "effect_started"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -45,6 +54,7 @@ grow_horizontal = 0
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_5xik1")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]

@@ -67,6 +67,12 @@ func _play_sound(stream: AudioStream) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			button_down.emit()
+			pressed.emit()
+		else:
+			button_up.emit()
 	if not event.is_action("ui_accept"):
 		return
 	if event.is_pressed():
