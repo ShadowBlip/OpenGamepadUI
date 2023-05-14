@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b64v61ut4e1qv"]
+[gd_scene load_steps=21 format=3 uid="uid://b64v61ut4e1qv"]
 
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="1_abkdp"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_isj2i"]
@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" uid="uid://btg3dylh0tqoi" path="res://core/systems/effects/smooth_scroll_effect.tscn" id="10_umeai"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="11_hldpx"]
 [ext_resource type="Resource" uid="uid://bpi21xakop5wy" path="res://assets/state/states/first_boot_plugin_select.tres" id="14_bvbb6"]
+[ext_resource type="Resource" uid="uid://b5e8kjinft7rs" path="res://assets/state/state_machines/first_boot_network_state_machine.tres" id="16_ckd3v"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="16_tppol"]
+[ext_resource type="Resource" uid="uid://bm3fu76wxxmnt" path="res://assets/state/states/first_boot_network_password.tres" id="17_mmuaj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfgwf"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -110,6 +113,25 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[node name="BackInputHandler" parent="PopupContainer" instance=ExtResource("16_tppol")]
+state_machine = ExtResource("16_ckd3v")
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("17_mmuaj")])
+minimum_states = 0
+
+[node name="VisibilityManager" parent="PopupContainer" instance=ExtResource("1_abkdp")]
+state_machine = ExtResource("16_ckd3v")
+state = ExtResource("17_mmuaj")
+
+[node name="FocusOnPopupOpen" parent="PopupContainer/VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
+target = NodePath("../../PanelContainer/MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "entered"
+
+[node name="FocusOnPopupClose" parent="PopupContainer/VisibilityManager" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
+target = NodePath("../../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "exited"
+
+[node name="TransitionFadeIn" parent="PopupContainer/VisibilityManager" instance=ExtResource("6_3snpb")]
+
 [node name="PanelContainer" type="PanelContainer" parent="PopupContainer"]
 layout_mode = 2
 theme = ExtResource("10_oxokr")
@@ -140,3 +162,8 @@ secret = true
 unique_name_in_owner = true
 layout_mode = 2
 text = "Submit"
+
+[node name="StateUpdater" parent="PopupContainer/PanelContainer/MarginContainer/VBoxContainer/WifiPasswordButton" instance=ExtResource("9_d1uu0")]
+state_machine = ExtResource("16_ckd3v")
+action = 1
+on_signal = "button_up"
