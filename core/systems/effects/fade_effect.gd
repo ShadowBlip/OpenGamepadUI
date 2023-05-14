@@ -33,9 +33,9 @@ func fade_in() -> void:
 		return
 	if tween:
 		tween.kill()
+	target.visible = true
+	target.modulate = Color(1, 1, 1, 0)
 	tween = tree.create_tween()
-	tween.tween_property(target, "visible", true, 0)
-	tween.tween_property(target, "modulate", Color(1, 1, 1, 0), 0)
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 1), fade_speed)
 	var on_finished := func():
 		effect_finished.emit()
@@ -48,8 +48,8 @@ func fade_out() -> void:
 		return
 	if tween:
 		tween.kill()
+	target.modulate = Color(1, 1, 1, 1)
 	tween = tree.create_tween()
-	tween.tween_property(target, "modulate", Color(1, 1, 1, 1), 0)
 	tween.tween_property(target, "modulate", Color(1, 1, 1, 0), fade_speed)
 	tween.tween_property(target, "visible", false, 0)
 	var on_finished := func():
