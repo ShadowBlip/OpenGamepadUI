@@ -98,6 +98,7 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "Next"
+click_focuses = false
 
 [node name="StateUpdater" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/NextButton" instance=ExtResource("9_d1uu0")]
 state_machine = ExtResource("2_0fb0p")

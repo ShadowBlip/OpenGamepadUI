@@ -78,6 +78,7 @@ on_signal = "visibility_changed"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start playing"
+click_focuses = false
 
 [node name="StateUpdater" parent="HBoxContainer/VBoxContainer2/NextButton" instance=ExtResource("11_gl4s4")]
 state_machine = ExtResource("12_js4mn")

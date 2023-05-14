@@ -106,3 +106,4 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "Next"
+click_focuses = false

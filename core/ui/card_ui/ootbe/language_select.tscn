@@ -89,6 +89,7 @@ current_focus = NodePath("../EnglishButton")
 [node name="EnglishButton" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_ny0gt")]
 layout_mode = 2
 text = "English"
+click_focuses = false
 
 [node name="StateUpdater" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/EnglishButton" instance=ExtResource("5_ju3se")]
 state_machine = ExtResource("6_i6yev")
