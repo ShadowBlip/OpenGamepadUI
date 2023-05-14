@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=32 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
 [ext_resource type="PackedScene" uid="uid://o70x5igrlq30" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
+[ext_resource type="PackedScene" uid="uid://qhco71yy3dbg" path="res://core/systems/library/library_steam_local.tscn" id="6_ruhi5"]
 [ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="8_hyc1j"]
 [ext_resource type="PackedScene" path="res://core/ui/card_ui/launch/game_launch_menu.tscn" id="9_m34in"]
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="10_1ruvi"]
@@ -83,6 +84,8 @@ script = ExtResource("1_f8851")
 [node name="BoxArtLocal" parent="." instance=ExtResource("2_600i0")]
 
 [node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
+
+[node name="LibrarySteamLocal" parent="." instance=ExtResource("6_ruhi5")]
 
 [node name="LaunchManager" parent="." instance=ExtResource("4_tgw75")]
 

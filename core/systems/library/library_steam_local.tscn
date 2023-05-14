@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://qhco71yy3dbg"]
+
+[ext_resource type="Script" path="res://core/systems/library/library_steam_local.gd" id="1_f1cho"]
+[ext_resource type="Script" path="res://core/systems/network/steam_api_client.gd" id="2_p1qng"]
+
+[node name="LibrarySteamLocal" type="Node"]
+script = ExtResource("1_f1cho")
+library_id = "steam_local"
+logger_name = "SteamLocalLibrary"
+
+[node name="SteamAPIClient" type="Node" parent="."]
+script = ExtResource("2_p1qng")

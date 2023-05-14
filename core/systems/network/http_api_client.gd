@@ -1,10 +1,12 @@
+@icon("res://assets/editor-icons/api.svg")
 extends Node
 class_name HTTPAPIClient
 
-var base_url := ""
-var headers := PackedStringArray()
-var cache_folder := "HTTPAPIClient"
-var logger := Log.get_logger("HTTPAPIClient")
+@export var base_url := ""
+@export var headers := PackedStringArray()
+@export var cache_folder := "HTTPAPIClient"
+@export var logger_name := "HTTPAPIClient"
+var logger := Log.get_logger(logger_name)
 
 
 class Response:
