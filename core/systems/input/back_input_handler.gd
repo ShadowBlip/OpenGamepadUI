@@ -2,10 +2,15 @@
 extends Node
 class_name BackInputHandler
 
+## The state machine to use to update when back input is pressed
 @export var state_machine: StateMachine = preload(
 	"res://assets/state/state_machines/global_state_machine.tres"
 )
+## Pop the state machine when back input is pressed during any of these
+## states
 @export var process_input_during: Array[State] = []
+## Minimum number of states in the state machine stack. [BackInputHandler]
+## will not pop the state machine stack beyond this number.
 @export var minimum_states := 1
 
 ## Will show logger events with the prefix BackInputHandler
