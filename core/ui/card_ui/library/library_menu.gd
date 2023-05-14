@@ -104,16 +104,7 @@ func _on_library_reloaded(_first_load: bool) -> void:
 func _build_card(item: LibraryItem) -> GameCard:
 	# Build a poster for each library item
 	var card := card_scene.instantiate() as GameCard
-	card.name = item.name
-
-	# Get the boxart for the item
-	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
-	if not card_texture:
-		card_texture = BoxArtManager.get_placeholder(layout)
-		card.show_label = true
-		card.text = item.name
-	card.set_texture(card_texture)
+	await card.set_library_item(item)
 
 	# Listen for button presses and pass the library item with the state
 	var on_button_up := func():
@@ -138,9 +129,6 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		
 		# Listen for library item removed events
 		var on_removed := func():
-			if tab_num in _current_selection and _current_selection[tab_num] == card:
-				_current_selection.erase(tab_num)
-			card.queue_free()
 			_library[tab_num].erase(item.name)
 		item.removed_from_library.connect(on_removed)
 		
@@ -219,11 +207,12 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 	
 	# If we had a previous selection, grab focus on that.
 	if tab in _current_selection:
-		var card: Control = _current_selection[tab]
-		if card.visible:
-			card.grab_focus.call_deferred()
-			return
-		# If the selection is no longer visible, clear it from our current selection
+		if is_instance_valid(_current_selection[tab]):
+			var card: Control = _current_selection[tab]
+			if card.visible:
+				card.grab_focus.call_deferred()
+				return
+		# If the selection is no longer valid, clear it from our current selection
 		_current_selection.erase(tab)
 	
 	# Otherwise, focus the first entry on tab change
