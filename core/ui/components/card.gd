@@ -3,6 +3,8 @@
 extends Control
 class_name GameCard
 
+var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+
 signal button_up
 signal button_down
 signal pressed
@@ -31,6 +33,9 @@ signal unhighlighted
 		value = v
 		if progress:
 			progress.value = v
+
+var library_item: LibraryItem
+var logger := Log.get_logger("GameCard")
 
 @onready var texture := $%TextureRect
 @onready var name_container := $%NameMargin
@@ -68,6 +73,29 @@ func set_texture(new_texture: Texture2D) -> void:
 	# Update the corner radius based on the image size
 	var radius := texture_size.x / 7.5
 	texture_rect.material.set_shader_parameter("corner_radius", radius)
+
+
+## Configures the card with the given library item.
+func set_library_item(item: LibraryItem, free_on_remove: bool = true) -> void:
+	# Set the name based on the library item
+	name = item.name
+	library_item = item
+	
+	# Get the boxart for the item
+	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
+	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
+	if not card_texture:
+		card_texture = BoxArtManager.get_placeholder(layout)
+		show_label = true
+		text = item.name
+	set_texture(card_texture)
+
+	# Listen for library removal signals and free the card if removed
+	if free_on_remove:
+		var on_removed := func() -> void:
+			logger.debug("Removing card: " + name)
+			queue_free()
+		item.removed_from_library.connect(on_removed, CONNECT_ONE_SHOT)
 
 
 func _on_focus() -> void:
