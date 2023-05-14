@@ -43,15 +43,18 @@ func _add_session_switcher(root: Window) -> void:
 	
 	# Create a button that will perform the session switching
 	var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
-	var switch_to_steam := button_scene.instantiate() as Control
+	var switch_to_steam := button_scene.instantiate() as CardButton
+	switch_to_steam.click_focuses = false
 	switch_to_steam.text = "Switch to Steam"
 	switch_to_steam.pressed.connect(_switch_session.bind("gamepadui"))
 	
-	var switch_to_steam_qam := button_scene.instantiate() as Control
+	var switch_to_steam_qam := button_scene.instantiate() as CardButton
+	switch_to_steam_qam.click_focuses = false
 	switch_to_steam_qam.text = "Switch to Steam with QAM"
 	switch_to_steam_qam.pressed.connect(_switch_session.bind("gamepadui-with-qam"))
 	
-	var switch_to_desktop := button_scene.instantiate() as Control
+	var switch_to_desktop := button_scene.instantiate() as CardButton
+	switch_to_desktop.click_focuses = false
 	switch_to_desktop.text = "Switch to Desktop"
 	switch_to_desktop.pressed.connect(_switch_session.bind("desktop"))
 	
