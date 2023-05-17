@@ -129,6 +129,8 @@ func _on_recent_apps_updated() -> void:
 		
 	# Populate our grid with items
 	await _repopulate_grid(container, items.values())
+	if not is_instance_valid(get_viewport()):
+		return
 	if get_viewport().gui_get_focus_owner() == null:
 		_grab_focus()
 	
