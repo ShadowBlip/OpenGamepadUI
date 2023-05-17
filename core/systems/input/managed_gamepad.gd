@@ -48,10 +48,27 @@ var cur_x: float
 var cur_y: float
 var cur_rx: float
 var cur_ry: float
-var axis_pressed: int
+## Bitwise flags indicating what left-stick axis directions are currently being pressed.
+var axis_pressed: AXIS_PRESSED
 var mouse_remainder := Vector2()
 var should_process_mouse := false
 var _ff_effects := {}  # Current force feedback effect ids
+
+## Time in seconds to wait to start sending echo events when a direction is being
+## held and intercept mode is ALL.
+var echo_initial_delay_secs := 0.6
+## Time in seconds between sending echo events when a direction is being held and
+## intercept mode is ALL.
+var echo_interval_secs := 0.15
+## Map of directional echo events and how long it has been since the last echo
+## event was sent. This is used in _process_echo_input to calculate when the
+## next echo event should be sent.
+var echo_last_event_time := {
+	AXIS_PRESSED.UP: -echo_initial_delay_secs,
+	AXIS_PRESSED.DOWN: -echo_initial_delay_secs,
+	AXIS_PRESSED.LEFT: -echo_initial_delay_secs,
+	AXIS_PRESSED.RIGHT: -echo_initial_delay_secs,
+}
 
 var mode_event: InputDeviceEvent
 var _last_time := 0
@@ -202,6 +219,10 @@ func process_input() -> void:
 			continue
 		_process_virt_event(event)
 
+	# Handle echo inputs for directions when intercepting input
+	if mode == INTERCEPT_MODE.ALL:
+		_process_echo_input(delta)
+
 	# If we need to process mouse movement, do it
 	if mode == INTERCEPT_MODE.PASS and should_process_mouse:
 		_move_mouse(delta)
@@ -298,39 +319,55 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		event.BTN_TL:
 			_send_input("ogui_tab_left", event.value == 1, 1)
 		event.BTN_TRIGGER_HAPPY1:
-			_send_input("ui_left", event.value == 1, 1)
+			var pressed := event.value == 1
+			_send_input("ui_left", pressed, 1)
+			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.LEFT, pressed)
 			return
 		event.BTN_TRIGGER_HAPPY2:
-			_send_input("ui_right", event.value == 1, 1)
+			var pressed := event.value == 1
+			_send_input("ui_right", pressed, 1)
+			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.RIGHT, pressed)
 			return
 		event.BTN_TRIGGER_HAPPY3:
-			_send_input("ui_up", event.value == 1, 1)
+			var pressed := event.value == 1
+			_send_input("ui_up", pressed, 1)
+			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.UP, pressed)
 			return
 		event.BTN_TRIGGER_HAPPY4:
-			_send_input("ui_down", event.value == 1, 1)
+			var pressed := event.value == 1
+			_send_input("ui_down", pressed, 1)
+			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.DOWN, pressed)
 			return
 		event.ABS_HAT0Y:
 			if event.value < 0: # UP
 				_send_input("ui_up", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.UP)
 				return
 			if event.value > 0: # DOWN
 				_send_input("ui_down", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.DOWN)
 				return
 			if Input.is_action_pressed("ui_up"):
 				_send_input("ui_up", false)
+				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.UP)
 			else:
 				_send_input("ui_down", false)
+				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.DOWN)
 		event.ABS_HAT0X:
 			if event.value < 0: # LEFT
 				_send_input("ui_left", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.LEFT)
 				return
 			if event.value > 0: # RIGHT
 				_send_input("ui_right", true)
+				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.RIGHT)
 				return
 			if Input.is_action_pressed("ui_left"):
 				_send_input("ui_left", false)
+				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.LEFT)
 			else:
-				_send_input("ui_down", false)
+				_send_input("ui_right", false)
+				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.RIGHT)
 		event.ABS_Y:
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
@@ -401,6 +438,32 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			var value := _normalize_axis(event)
 			_send_joy_input(JOY_AXIS_RIGHT_X, value)
 			return
+
+
+# Detect and emit "echo" inputs. Echo inputs are repeated input events when the user
+# is holding down a direction.
+func _process_echo_input(delta: float) -> void:
+	# Go through each possible direction
+	for direction in echo_last_event_time.keys():
+		if Bitwise.has_flag(axis_pressed, direction):
+			echo_last_event_time[direction] += delta
+		else:
+			echo_last_event_time[direction] = -echo_initial_delay_secs
+			continue
+		
+		# If echo_interval amount of time has passed, send an event
+		if not echo_last_event_time[direction] > echo_interval_secs:
+			continue
+		
+		if direction == AXIS_PRESSED.UP:
+			_send_input("ui_up", true)
+		elif direction == AXIS_PRESSED.DOWN:
+			_send_input("ui_down", true)
+		elif direction == AXIS_PRESSED.LEFT:
+			_send_input("ui_left", true)
+		elif direction == AXIS_PRESSED.RIGHT:
+			_send_input("ui_right", true)
+		echo_last_event_time[direction] = 0.0
 
 
 ## Sometimes games will send gamepad events to the controller, such as when to
@@ -692,6 +755,7 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.action = action
 	input_action.pressed = pressed
 	input_action.strength = strength
+	input_action.set_meta("managed_gamepad", phys_path)
 	Input.parse_input_event(input_action)
 
 
@@ -700,4 +764,5 @@ func _send_joy_input(axis: int, value: float) -> void:
 	var joy_action := InputEventJoypadMotion.new()
 	joy_action.axis = axis
 	joy_action.axis_value = value
+	joy_action.set_meta("managed_gamepad", phys_path)
 	Input.parse_input_event(joy_action)
