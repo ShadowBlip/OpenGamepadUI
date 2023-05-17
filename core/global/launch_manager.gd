@@ -54,7 +54,7 @@ var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
 
 
 # Connect to Gamescope signals
@@ -64,6 +64,11 @@ func _init() -> void:
 		logger.info("Window focus changed from " + str(from) + " to: " + str(to))
 		var last_app := _current_app
 		_current_app = get_running_from_window_id(to)
+		# If there is no _current_app then another process opened this window. Find it.
+		if _current_app == null:
+			_current_app = _detect_running_app(to)
+
+		logger.debug("Last app: " + str(last_app) + " current_app: " + str(_current_app))
 		app_switched.emit(last_app, _current_app)
 		# If the app has a gamepad profile, set it
 		set_app_gamepad_profile(_current_app)
@@ -388,3 +393,107 @@ func _update_pids(root_id: int):
 			pids[pid] = []
 		pids[pid].append(window)
 	_pid_to_windows = pids
+
+
+# Below functions detect launched game from other processes
+# Returns the process ID
+func _get_pid_from_focused_window(to: int) -> int:
+	var pid := -1
+	pid = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).get_xprop(to, "_NET_WM_PID")
+	logger.debug("PID: " + str(pid))
+	return pid
+
+
+# First method, try to get the name from the window_id using gamescope.
+func _get_app_name_from_window_id(window_id: int) -> String:
+	return Gamescope.get_window_name(window_id)
+
+
+# Last resort, try to use the parent dir of the executable from /proc/pid/cwd to return
+# the name of the game.
+func _get_app_name_from_proc(pid: int) -> String:
+	var process_name: String
+	var path := "/proc/" + str(pid) + "/cwd"
+	var output := []
+	var exit_code := OS.execute("ls", ["-l", path], output)
+	var process_path: PackedStringArray = output[0].strip_edges().split("/")
+	process_name = process_path[process_path.size()-1]
+	return process_name
+
+
+# Identifies the running app from steam's library.vdf files
+func _get_app_from_steam_library(pid: int) -> String:
+	return ""
+
+
+# Identifies the running app from the given window_id.
+func _detect_running_app(window_id: int) -> RunningApp:
+	logger.debug("No known running app in focused window. Attempting to detect the running app.")
+	var app_name: String
+
+	# Identify the process ID. This is used to make the RunningApp as well as
+	# for the backup methods for identifying the app name.
+	var pid := _get_pid_from_focused_window(window_id)
+	if pid < 0:
+		logger.debug("Unable to locate PID for window: " + str(window_id) +  " on XWAYLAND.GAME.")
+		return null
+
+	# Identify the app name
+	logger.debug("Attmpting to identify app from the steam database.")
+	app_name = _get_app_from_steam_library(window_id)
+	if app_name == "":
+		logger.debug("Not found. Attmpting to identify app from the window title.")
+		app_name = _get_app_name_from_window_id(window_id)
+	if app_name == "":
+		logger.debug("Not found. Attmpting to identify app from the process running directory.")
+		app_name = _get_app_name_from_proc(pid)
+	if app_name == "":
+		logger.error("Unable to identify the currently focused app.")
+		return null
+
+	logger.debug("Found app name : " + app_name)
+	return _make_running_app_from_process(app_name, pid, window_id)
+
+
+func _make_running_app_from_process(name: String, pid: int, window_id: int) -> RunningApp:
+	logger.debug("Creating running app from process")
+
+	# Create a dummy LibraryLaunchItem to make our RunningApp.
+	var lauch_dict = {
+		"_id": "",
+		"_provider_id": "",
+		"provider_app_id": "",
+		"name": name,
+		"command": "",
+		"args": [],
+		"tags": [],
+		"categories": [],
+		"installed": true,
+	}
+
+	var launch_item: LibraryLaunchItem = LibraryLaunchItem.from_dict(lauch_dict)
+	var display:= Gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
+	var running_app: RunningApp = _make_running_app(launch_item, pid, display)
+	running_app.window_id = window_id
+	running_app.state = RunningApp.STATE.RUNNING
+	running_app.is_ogui_managed = false
+
+	# Check to see if this game has any gamepad profiles. If so, set our 
+	# gamepads to use them.
+#	var section := ".".join(["game", name])
+#	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
+#	set_gamepad_profile(profile_path)
+
+	# Add the running app to our list and change to the IN_GAME state
+	_add_running(running_app)
+#	state_machine.set_state([in_game_state])
+
+	return running_app
+
+
+func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String) -> RunningApp:
+	var running_app: RunningApp = RunningApp.new(launch_item, pid, display)
+	running_app.launch_item = launch_item
+	running_app.pid = pid
+	running_app.display = display
+	return running_app
