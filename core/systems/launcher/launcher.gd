@@ -3,7 +3,7 @@ extends Node
 class_name Launcher
 
 const LaunchManager := preload("res://core/global/launch_manager.tres")
-const LibraryManager := preload("res://core/global/library_manager.tres")
+var LibraryManager := preload("res://core/global/library_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
 var state_machine := (

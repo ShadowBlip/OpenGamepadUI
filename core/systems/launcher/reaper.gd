@@ -50,7 +50,13 @@ static func get_parent_pid(pid: int) -> int:
 # Returns the PID group the given PID belongs to
 static func get_pid_group(pid: int) -> int:
 	return get_pid_property_int(pid, "NSpgid")
-	
+
+
+# Returns the PID state the given PID is in
+static func get_pid_state(pid: int) -> String:
+	var status: Dictionary = get_pid_status(pid)
+	return status["State"]
+
 
 # Returns the given PID property as an integar
 static func get_pid_property_int(pid: int, key: String) -> int:

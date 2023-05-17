@@ -7,6 +7,7 @@ class_name RunningApp
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 
+
 ## Emitted when all child processes of the app are no longer running
 signal app_killed
 ## Emitted when the given app is gracefully stopped
@@ -89,8 +90,10 @@ var not_running_count := 0
 ## When a steam-launched app has no window, count a few tries before trying
 ## to close Steam
 var steam_close_tries := 0
+## Flag for if OGUI should manage this app. Set to false if app is launched
+## outside OGUI and we just want to track it.
+var is_ogui_managed: bool = true
 var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
-
 
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	launch_item = item
@@ -147,7 +150,7 @@ func update() -> void:
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
 	# so we can kill Steam gracefully
-	if is_steam_app() and state == STATE.MISSING_WINDOW:
+	if is_steam_app() and state == STATE.MISSING_WINDOW and is_ogui_managed:
 		logger.debug("Running app is a Steam game and has no valid window ID. The game may have closed.")
 		# Don't try closing Steam immediately. Wait a few more ticks before attempting
 		# to close Steam.
@@ -197,6 +200,12 @@ func is_running() -> bool:
 	if OS.is_process_running(pid):
 		return true
 
+	# If that failed, check if reaper can get the status.
+	logger.debug("Reaper pid State: " + Reaper.get_pid_state(pid))
+	if Reaper.get_pid_state(pid) in ["R (running)", "S (sleeping)"]:
+		return true
+
+	logger.debug("Original process not running. Checking child PID's...")
 	# If it's not running, let's check to make sure it's REALLY not running
 	# and hasn't re-parented itself
 	var children := get_child_pids()
@@ -204,7 +213,7 @@ func is_running() -> bool:
 		var pids := Array(children)
 		logger.debug("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
 		return true
-
+	logger.debug("Process " + str(pid) + " has died and no child PID's could be found.")
 	return false
 
 
@@ -276,7 +285,7 @@ func kill(sig: Reaper.SIG = Reaper.SIG.TERM) -> void:
 func _ensure_app_id() -> void:
 	# If this is a Steam app, there's no need to set the app ID; Steam will do
 	# it for us.
-	if is_steam_app():
+	if is_steam_app() or not is_ogui_managed:
 		return
 	
 	# Get all windows associated with the running app
