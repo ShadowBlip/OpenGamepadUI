@@ -65,6 +65,22 @@ func populate_keyboard() -> void:
 			var display := key.get_text()
 			button.text = display
 			
+			# Display the joypad icon if this key has controller shortcuts.
+			if key.input:
+				var is_shortcut_key := false
+				if key.input.keycode == KEY_BACKSPACE:
+					button.icon = ControllerIcons.parse_path("joypad/x", 1)
+					is_shortcut_key = true
+				if key.input.keycode == KEY_SHIFT:
+					button.icon = ControllerIcons.parse_path("joypad/lt", 1)
+					is_shortcut_key = true
+				if key.input.keycode == KEY_ENTER:
+					button.icon = ControllerIcons.parse_path("joypad/rt", 1)
+					is_shortcut_key = true
+				if is_shortcut_key:
+					button.expand_icon = true
+					button.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			
 			# Connect the keyboard key to a method to handle key presses
 			button.button_up.connect(_on_key_pressed.bind(key))
 			
