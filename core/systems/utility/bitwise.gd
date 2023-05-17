@@ -17,6 +17,12 @@ static func set_flag(value: int, flag: int) -> int:
 	return value | flag
 
 
+static func set_flag_to(value: int, flag: int, enabled: bool) -> int:
+	if enabled:
+		return set_flag(value, flag)
+	return clear_flag(value, flag)
+
+
 static func clear_flag(value: int, flag: int) -> int:
 	return value & ~flag
 
