@@ -18,6 +18,7 @@ signal nonchild_focused
 @export var is_toggled := false
 
 @onready var label := $%SectionLabel
+@onready var highlight := $%HighlightTexture
 @onready var content_container := $%ContentContainer
 @onready var focus_group_setter := $%FocusGroupSetter as FocusGroupSetter
 
@@ -30,6 +31,7 @@ func _ready() -> void:
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	pressed.connect(_on_pressed)
+	theme_changed.connect(_on_theme_changed)
 	label.text = title
 	
 	# Do nothing if running in the editor
@@ -48,6 +50,13 @@ func _ready() -> void:
 	# Try and find a FocusGroup in the content to focus
 	focus_group = _find_child_focus_group(content_container.get_children())
 	focus_group_setter.target = focus_group
+
+
+func _on_theme_changed() -> void:
+	# Configure the highlight texture from the theme
+	var highlight_texture := get_theme_icon("highlight", "ExpandableCard")
+	if highlight_texture:
+		highlight.texture = highlight_texture
 
 
 # Recursively searches for FocusGroups in the given array of nodes. Returns the

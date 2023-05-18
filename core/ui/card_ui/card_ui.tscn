@@ -68,7 +68,7 @@ _data = {
 "fade": SubResource("Animation_vgwwd")
 }
 
-[node name="CardUI" type="Control"]
+[node name="CardUI" type="Control" groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

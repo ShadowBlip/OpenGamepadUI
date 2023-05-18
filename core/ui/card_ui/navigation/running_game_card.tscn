@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dlouq0b0bnm41"]
+[gd_scene load_steps=15 format=3 uid="uid://dlouq0b0bnm41"]
 
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="1_4m4go"]
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/running_game_card.gd" id="1_vgpef"]
@@ -11,13 +11,6 @@
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="7_yrgt0"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="8_ixs6g"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7abjx"]
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrybk"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
@@ -41,7 +34,7 @@ offset_bottom = 88.0
 grow_horizontal = 2
 focus_mode = 2
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_7abjx")
+theme_type_variation = &"ExpandableCard"
 script = ExtResource("1_vgpef")
 focus_audio = null
 select_audio = null

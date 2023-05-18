@@ -188,8 +188,8 @@ action = 3
 on_signal = "focus_entered"
 
 [node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "pressed"
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
+on_signal = "button_up"
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2

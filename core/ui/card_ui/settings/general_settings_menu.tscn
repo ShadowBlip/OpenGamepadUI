@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dsgrw1grwef4m"]
+[gd_scene load_steps=16 format=3 uid="uid://dsgrw1grwef4m"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/general_settings_menu.gd" id="1_if7xt"]
 [ext_resource type="PackedScene" uid="uid://bnhxravpuheh2" path="res://core/systems/updater/software_updater.tscn" id="2_ogwq4"]
@@ -7,10 +7,14 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_caxj0"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="6_ghdw1"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_qenel"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="8_2m3jw"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="8_58mcr"]
 [ext_resource type="Texture2D" uid="uid://ckbrrln8fngno" path="res://assets/images/platform/ayaneoair-ctr_v1a_1172023.png" id="9_00g0t"]
+[ext_resource type="PackedScene" uid="uid://c6dpw6swmcbw6" path="res://core/systems/user_interface/theme_setter.tscn" id="9_bci6g"]
 [ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="9_sq2rc"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_06mt3"]
+[ext_resource type="Theme" uid="uid://ys6hrfx1ytts" path="res://assets/themes/card_ui-dracula.tres" id="10_b386h"]
+[ext_resource type="Theme" uid="uid://bhdlcd8rvccus" path="res://assets/themes/card_ui-darksoul.tres" id="11_k3kye"]
 
 [node name="GeneralSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -44,15 +48,21 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_36sdt")]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../AutoUpdateToggle")
 focus_stack = ExtResource("4_fyrmg")
+focus_neighbor_bottom = NodePath("../../VBoxContainer2/FocusGroup")
+focus_neighbor_top = NodePath("../../VBoxContainer3/FocusGroup")
 
-[node name="UpdatesLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+[node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
 layout_mode = 2
 text = "Updates"
 
-[node name="AutoUpdateToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("6_ghdw1")]
+[node name="AutoUpdateToggle" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("6_ghdw1")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Automatic Updates"
@@ -60,14 +70,14 @@ separator_visible = false
 description = "Automatically download and apply updates in the background when they are available"
 button_pressed = false
 
-[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_qenel")]
+[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("7_qenel")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Check for Updates"
 uppercase = false
 
-[node name="UpdateButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_qenel")]
+[node name="UpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("7_qenel")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(158, 0)
 layout_mode = 2
@@ -75,32 +85,80 @@ size_flags_horizontal = 4
 text = "Install Update"
 uppercase = false
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HomeLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+[node name="Appearance" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+layout_mode = 2
+text = "Appearance"
+
+[node name="ThemeLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("8_2m3jw")]
+layout_mode = 2
+text = "Theme"
+
+[node name="VBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer2" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
+current_focus = NodePath("../ThemeDraculaButton")
+focus_stack = ExtResource("4_fyrmg")
+focus_neighbor_bottom = NodePath("../../VBoxContainer3/FocusGroup")
+focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
+
+[node name="ThemeDraculaButton" parent="MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource("7_qenel")]
+custom_minimum_size = Vector2(158, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Dracula"
+
+[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/VBoxContainer2/ThemeDraculaButton" instance=ExtResource("9_bci6g")]
+theme = ExtResource("10_b386h")
+on_signal = "button_up"
+
+[node name="ThemeDarkSoulButton" parent="MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource("7_qenel")]
+custom_minimum_size = Vector2(158, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Dark Soul"
+
+[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/VBoxContainer2/ThemeDarkSoulButton" instance=ExtResource("9_bci6g")]
+theme = ExtResource("11_k3kye")
+on_signal = "button_up"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer3" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
+current_focus = NodePath("../MaxRecentAppsSlider")
+focus_stack = ExtResource("4_fyrmg")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/FocusGroup")
+focus_neighbor_top = NodePath("../../VBoxContainer2/FocusGroup")
+
+[node name="HomeLabel" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("8_2m3jw")]
 layout_mode = 2
 text = "Home"
 
-[node name="MaxRecentAppsSlider" parent="MarginContainer/VBoxContainer" instance=ExtResource("8_58mcr")]
+[node name="MaxRecentAppsSlider" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("8_58mcr")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Maximum Recent Apps"
 value = 10.0
 max_value = 30.0
 
-[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer3"]
 layout_mode = 2
 
-[node name="SystemLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+[node name="SystemLabel" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("5_caxj0")]
 layout_mode = 2
 text = "System Information"
 
-[node name="PlatformContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="PlatformContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PlatformImage" type="TextureRect" parent="MarginContainer/VBoxContainer/PlatformContainer"]
+[node name="PlatformImage" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer3/PlatformContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(426, 266)
 layout_mode = 2
@@ -109,48 +167,48 @@ texture = ExtResource("9_00g0t")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PlatformNameLabel" parent="MarginContainer/VBoxContainer/PlatformContainer" instance=ExtResource("5_caxj0")]
+[node name="PlatformNameLabel" parent="MarginContainer/VBoxContainer/VBoxContainer3/PlatformContainer" instance=ExtResource("5_caxj0")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Platform"
 vertical_alignment = 1
 
-[node name="ClientVersionText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="ClientVersionText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Client Version"
 description = ""
 text = "v0.0.0"
 
-[node name="OSText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="OSText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "OS"
 description = ""
 text = "Generic"
 
-[node name="ProductText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="ProductText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Product"
 description = ""
 text = "Generic"
 
-[node name="VendorText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="VendorText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Vendor"
 description = ""
 text = "Generic"
 
-[node name="CPUModelText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="CPUModelText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "CPU Model"
 description = ""
 text = "Generic"
 
-[node name="GPUModelText" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_sq2rc")]
+[node name="GPUModelText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "GPU Model"

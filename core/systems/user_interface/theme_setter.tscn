@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6dpw6swmcbw6"]
+
+[ext_resource type="Script" path="res://core/systems/user_interface/theme_setter.gd" id="1_wn5jf"]
+
+[node name="ThemeSetter" type="Node"]
+script = ExtResource("1_wn5jf")
+on_signal = ""

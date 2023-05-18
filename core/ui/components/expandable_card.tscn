@@ -61,6 +61,7 @@ unique_name_in_owner = true
 on_signal = "effect_finished"
 
 [node name="HighlightTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 texture = SubResource("GradientTexture2D_quvnw")
