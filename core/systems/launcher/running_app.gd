@@ -7,6 +7,7 @@ class_name RunningApp
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 
+
 ## Emitted when all child processes of the app are no longer running
 signal app_killed
 ## Emitted when the given app is gracefully stopped
@@ -160,6 +161,7 @@ func update() -> void:
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
+
 
 
 ## Attempt to discover the window ID from the PID of the given application
