@@ -7,7 +7,6 @@ class_name RunningApp
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 
-
 ## Emitted when all child processes of the app are no longer running
 signal app_killed
 ## Emitted when the given app is gracefully stopped
@@ -105,10 +104,10 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 func update() -> void:
 	# Update all windows related to the app's PID
 	window_ids = get_all_window_ids()
-	
+
 	# Ensure that all windows related to the app have an app ID set
 	_ensure_app_id()
-	
+
 	# Ensure that the running app has a corresponding window ID
 	var has_valid_window := false
 	if needs_window_id():
@@ -119,15 +118,15 @@ func update() -> void:
 			window_id = id
 	else:
 		has_valid_window = true
-	
+
 	# Update the focus state of the app
 	focused = is_focused()
-	
+
 	# Check if the app, or any of its children, are still running
 	var running := is_running()
 	if not running:
 		not_running_count += 1
-	
+
 	# Update the running app's state
 	if not_running_count > 3:
 		state = STATE.STOPPED
@@ -137,7 +136,7 @@ func update() -> void:
 		grab_focus()
 	elif state == STATE.RUNNING and not has_valid_window:
 		state = STATE.MISSING_WINDOW
-	
+
 	var state_str := {
 		STATE.STARTED: "started", 
 		STATE.RUNNING: "running", 
@@ -145,13 +144,13 @@ func update() -> void:
 		STATE.STOPPING: "stopping", 
 		STATE.STOPPED: "stopped"
 	}
-	logger.info("Current state: " + state_str[state])
-	
+	logger.info(launch_item.name + " current state: " + state_str[state])
+
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
 	# so we can kill Steam gracefully
 	if is_steam_app() and state == STATE.MISSING_WINDOW and is_ogui_managed:
-		logger.debug("Running app is a Steam game and has no valid window ID. The game may have closed.")
+		logger.debug(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
 		# Don't try closing Steam immediately. Wait a few more ticks before attempting
 		# to close Steam.
 		if steam_close_tries < 4:
@@ -161,7 +160,6 @@ func update() -> void:
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
-
 
 
 ## Attempt to discover the window ID from the PID of the given application
@@ -287,10 +285,10 @@ func _ensure_app_id() -> void:
 	# it for us.
 	if is_steam_app() or not is_ogui_managed:
 		return
-	
+
 	# Get all windows associated with the running app
 	var possible_windows := window_ids.duplicate()
-	
+
 	# Try setting the app ID on each possible Window. If they are valid windows,
 	# gamescope will make these windows available as focusable windows.
 	var app_name := launch_item.name
@@ -310,14 +308,14 @@ func needs_window_id() -> bool:
 	if not window_id in focusable_windows:
 		logger.debug(str(window_id) + " is not in the list of focusable windows")
 		return true
-	
+
 	# Check if the current window ID exists in the list of open windows
 	var root_window := Gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
 	var all_windows := Gamescope.get_all_windows(root_window, Gamescope.XWAYLAND.GAME)
 	if not window_id in all_windows:
 		logger.debug(str(window_id) + " is not in the list of all windows")
 		return true
-	
+
 	# If this is a Steam app, the only acceptable window will have its STEAM_GAME
 	# property set.
 	if is_steam_app():
@@ -334,7 +332,7 @@ func needs_window_id() -> bool:
 	if not created_window:
 		created_window = true
 	num_created_windows += 1
-		
+
 	return false
 
 
@@ -354,7 +352,7 @@ func _discover_window_id() -> int:
 	for window in possible_windows:
 		if window in focusable:
 			return window
-			
+
 	return -1
 
 
@@ -385,5 +383,5 @@ func find_steam() -> int:
 		if process_name == "steam":
 			logger.debug("Found steam PID: " + str(child_pid))
 			return child_pid
-	
+
 	return -1

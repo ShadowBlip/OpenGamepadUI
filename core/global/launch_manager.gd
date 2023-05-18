@@ -431,6 +431,13 @@ func _detect_running_app(window_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
 	var app_name: String
 
+	# Check if this window ID is a child of an existing RunningApp
+	var running_app := get_running_from_window_id(window_id)
+	if running_app:
+		logger.debug("Process is a child of " + running_app.launch_item.name)
+		return null
+#		return running_app
+
 	# Identify the process ID. This is used to make the RunningApp as well as
 	# for the backup methods for identifying the app name.
 	var pid := _get_pid_from_focused_window(window_id)
@@ -438,7 +445,14 @@ func _detect_running_app(window_id: int) -> RunningApp:
 		logger.debug("Unable to locate PID for window: " + str(window_id) +  " on XWAYLAND.GAME.")
 		return null
 
-	# Identify the app name
+	# Check if we can find the PID in any currently running apps.
+	running_app = _get_app_from_running_pid_groups(pid)
+	if running_app:
+		logger.debug("Process is a child of " + running_app.launch_item.name)
+		return null
+#		return running_app
+
+	# If we couldn't find it, identify the app name and create a new RunningApp
 	logger.debug("Attmpting to identify app from the steam database.")
 	app_name = _get_app_from_steam_library(window_id)
 	if app_name == "":
@@ -497,3 +511,10 @@ func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String
 	running_app.pid = pid
 	running_app.display = display
 	return running_app
+
+
+func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
+	for app in _running:
+		if pid in app.get_child_pids():
+			return app
+	return null
