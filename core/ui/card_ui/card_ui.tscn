@@ -1,8 +1,8 @@
 [gd_scene load_steps=31 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
+[ext_resource type="Theme" uid="uid://ys6hrfx1ytts" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_sbg4l"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="2_600i0"]
 [ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
@@ -75,7 +75,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_sbg4l")
+theme = ExtResource("1_ajgj2")
 script = ExtResource("1_f8851")
 
 [node name="InputManager" parent="." instance=ExtResource("1_34t85")]

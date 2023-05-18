@@ -1,0 +1,110 @@
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://bhdlcd8rvccus"]
+
+[ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_xbfkn"]
+[ext_resource type="Texture2D" uid="uid://b8m8g766k3kay" path="res://assets/styles/darksoul/highlight.tres" id="2_d6a4j"]
+[ext_resource type="StyleBox" uid="uid://dd76k8ra1mthg" path="res://assets/styles/darksoul/button_panel.tres" id="3_7tko4"]
+[ext_resource type="StyleBox" uid="uid://d3i2jatw4hvgb" path="res://assets/styles/darksoul/expandable_card_panel.tres" id="4_dnscv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
+bg_color = Color(0.133333, 0.137255, 0.180392, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_7mvpb"]
+color = Color(1, 1, 1, 0.25098)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rycl"]
+bg_color = Color(0.0823529, 0.0862745, 0.105882, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hj4t8"]
+bg_color = Color(0.113725, 0.129412, 0.137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lko5h"]
+bg_color = Color(0.113725, 0.129412, 0.137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4nys6"]
+bg_color = Color(0.803922, 0.184314, 0.537255, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knf7f"]
+bg_color = Color(0.156863, 0.164706, 0.211765, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 4
+shadow_offset = Vector2(1, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uab83"]
+bg_color = Color(0.113725, 0.129412, 0.137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly0we"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qwdc"]
+bg_color = Color(0.8085, 0.686, 0.98, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hby0t"]
+bg_color = Color(0.699883, 0.4998, 0.98, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ls1is"]
+color = Color(1, 1, 1, 0.25098)
+vertical = true
+
+[resource]
+Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/colors/font_disabled_color = Color(0.384314, 0.447059, 0.643137, 1)
+Button/colors/font_focus_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_s2sy6")
+Button/styles/hover = ExtResource("1_xbfkn")
+CardButton/icons/highlight = ExtResource("2_d6a4j")
+CardButton/styles/panel = ExtResource("3_7tko4")
+CardIconButton/icons/highlight = ExtResource("2_d6a4j")
+ExpandableCard/icons/highlight = ExtResource("2_d6a4j")
+ExpandableCard/styles/panel = ExtResource("4_dnscv")
+General/colors/background = Color(0.156863, 0.164706, 0.211765, 1)
+General/colors/comment = Color(0.384314, 0.447059, 0.643137, 1)
+General/colors/current_line = Color(0.266667, 0.278431, 0.352941, 1)
+General/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
+General/colors/foreground = Color(0.972549, 0.972549, 0.94902, 1)
+General/colors/green = Color(0.313726, 0.980392, 0.482353, 1)
+General/colors/orange = Color(1, 0.721569, 0.423529, 1)
+General/colors/pink = Color(1, 0.47451, 0.776471, 1)
+General/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
+General/colors/red = Color(1, 0.333333, 0.333333, 1)
+General/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
+HSeparator/styles/separator = SubResource("StyleBoxLine_7mvpb")
+LightPanel/base_type = &"Panel"
+LightPanel/styles/panel = SubResource("StyleBoxFlat_4rycl")
+Panel/styles/panel = SubResource("StyleBoxFlat_hj4t8")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_lko5h")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
+RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
+SelectableText/styles/panel = SubResource("StyleBoxFlat_uab83")
+Slider/colors/color = Color(0.976471, 0.901961, 0.309804, 1)
+Status/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
+Status/colors/gray = Color(0.384314, 0.447059, 0.643137, 1)
+Status/colors/green = Color(0.313726, 0.980392, 0.482353, 1)
+Status/colors/orange = Color(1, 0.721569, 0.423529, 1)
+Status/colors/pink = Color(1, 0.47451, 0.776471, 1)
+Status/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
+Status/colors/red = Color(1, 0.333333, 0.333333, 1)
+Status/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
+Toggle/colors/color = Color(0.741176, 0.576471, 0.976471, 1)
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_ly0we")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_4qwdc")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hby0t")
+VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://o0equu1tyr4s"]
+[gd_scene load_steps=10 format=3 uid="uid://o0equu1tyr4s"]
 
 [ext_resource type="Script" path="res://core/ui/components/expandable_card.gd" id="1_63a7d"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_mur57"]
@@ -6,15 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_b75le"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_3aqkt"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="6_cxawo"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [sub_resource type="Gradient" id="Gradient_2e33l"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
@@ -40,7 +31,7 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 focus_mode = 2
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_ptn26")
+theme_type_variation = &"ExpandableCard"
 script = ExtResource("1_63a7d")
 
 [node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_mur57")]

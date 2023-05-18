@@ -36,18 +36,22 @@ func _ready() -> void:
 	description_label.visible = description != ""
 	value_label.text = text
 
-	# Get the style from the set theme so it can be set on the panel container
-	var normal_stylebox := get_theme_stylebox("panel", "Text").duplicate()
-	panel.add_theme_stylebox_override("panel", normal_stylebox)
 	focus_entered.connect(_on_focus.bind(true))
 	focus_exited.connect(_on_focus.bind(false))
+	theme_changed.connect(_on_theme_changed)
+
+
+func _on_theme_changed() -> void:
+	# Get the style from the set theme so it can be set on the panel container
+	var normal_stylebox := get_theme_stylebox("panel", "SelectableText").duplicate()
+	panel.add_theme_stylebox_override("panel", normal_stylebox)
 
 
 func _on_focus(focused: bool) -> void:
 	panel.remove_theme_stylebox_override("panel")
 	if focused:
-		var focus_stylebox := get_theme_stylebox("panel_focus", "Text").duplicate()
+		var focus_stylebox := get_theme_stylebox("panel_focus", "SelectableText").duplicate()
 		panel.add_theme_stylebox_override("panel", focus_stylebox)
 		return
-	var normal_stylebox := get_theme_stylebox("panel", "Text").duplicate()
+	var normal_stylebox := get_theme_stylebox("panel", "SelectableText").duplicate()
 	panel.add_theme_stylebox_override("panel", normal_stylebox)

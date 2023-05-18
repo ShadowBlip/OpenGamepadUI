@@ -1,6 +1,5 @@
-[gd_scene load_steps=18 format=3 uid="uid://lfm3ps837gy5"]
+[gd_scene load_steps=17 format=3 uid="uid://lfm3ps837gy5"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_6y86d"]
 [ext_resource type="Script" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
 [ext_resource type="Shader" path="res://assets/shaders/simple_blur.gdshader" id="3_oe8pc"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="4_7v8tn"]
@@ -45,7 +44,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_6y86d")
 script = ExtResource("2_0vc46")
 
 [node name="BlurRect" type="TextureRect" parent="."]

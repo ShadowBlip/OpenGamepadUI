@@ -1,4 +1,5 @@
 @tool
+@icon("res://assets/editor-icons/icon.svg")
 extends Control
 class_name CardIconButton
 
@@ -39,6 +40,14 @@ func _ready() -> void:
 	focus_exited.connect(_on_unfocus)
 	mouse_entered.connect(_on_focus)
 	mouse_exited.connect(_on_unfocus)
+	theme_changed.connect(_on_theme_changed)
+
+
+func _on_theme_changed() -> void:
+	# Configure the highlight texture from the theme
+	var highlight_texture := get_theme_icon("highlight", "CardIconButton")
+	if highlight_texture:
+		highlight.texture = highlight_texture
 
 
 func _on_focus() -> void:

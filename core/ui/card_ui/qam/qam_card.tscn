@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b5xnora73yd8x"]
+[gd_scene load_steps=10 format=3 uid="uid://b5xnora73yd8x"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
@@ -6,15 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_73cqf"]
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_j0bxm"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_2hyw7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptn26"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[ext_resource type="StyleBox" uid="uid://dv7sobp24f3by" path="res://assets/styles/dracula/inside_panel.tres" id="6_jqrss"]
 
 [sub_resource type="Gradient" id="Gradient_p8snv"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
@@ -23,13 +15,6 @@ colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471,
 gradient = SubResource("Gradient_p8snv")
 fill = 1
 fill_to = Vector2(1, 2)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sh8jt"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="QuickAccessCard" type="PanelContainer"]
 clip_children = 2
@@ -40,7 +25,7 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 focus_mode = 2
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_ptn26")
+theme_type_variation = &"ExpandableCard"
 script = ExtResource("1_nu7eg")
 
 [node name="PlayFocusAudioEffect" parent="." instance=ExtResource("3_8scgv")]
@@ -86,7 +71,7 @@ theme_override_constants/margin_bottom = 4
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sh8jt")
+theme_override_styles/panel = ExtResource("6_jqrss")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

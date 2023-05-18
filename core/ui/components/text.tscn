@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://core/ui/components/text.gd" id="1_lo12x"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="2_mq5ej"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_msjhl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vu8be"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -29,7 +29,7 @@ script = ExtResource("1_lo12x")
 [node name="PanelContainer" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_msjhl")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vu8be")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
