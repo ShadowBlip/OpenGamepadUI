@@ -202,10 +202,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	logger.info("Launched with PID: {0}".format([pid]))
 
 	# Create a running app instance
-	var running_app := RunningApp.new(app, pid, display)
-	running_app.launch_item = app
-	running_app.pid = pid
-	running_app.display = display
+	var running_app := _make_running_app(app, pid, display)
 	running_app.command = command
 	running_app.environment = env
 
