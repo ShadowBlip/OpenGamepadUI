@@ -144,7 +144,7 @@ func update() -> void:
 		STATE.STOPPING: "stopping", 
 		STATE.STOPPED: "stopped"
 	}
-	logger.info(launch_item.name + " current state: " + state_str[state])
+	logger.debug(launch_item.name + " current state: " + state_str[state])
 
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
