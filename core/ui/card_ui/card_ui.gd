@@ -89,7 +89,6 @@ func _on_state_changed(_from: State, _to: State) -> void:
 
 func _on_game_state_entered(_from: State) -> void:
 	panel.visible = false
-	_set_overlay(false)
 	_set_blur(Gamescope.BLUR_MODE.OFF)
 	for child in ui_container.get_children():
 		child.visible = false
@@ -98,7 +97,6 @@ func _on_game_state_entered(_from: State) -> void:
 func _on_game_state_exited(to: State) -> void:
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
-		_set_overlay(true)
 		if to != osk_state:
 			_set_blur(Gamescope.BLUR_MODE.ALWAYS)
 	else:
@@ -108,28 +106,10 @@ func _on_game_state_exited(to: State) -> void:
 
 
 func _on_game_state_removed() -> void:
-	_set_overlay(false)
 	_set_blur(Gamescope.BLUR_MODE.OFF)
 	panel.visible = true
 	if not state_machine.has_state(home_state):
 		state_machine.set_state([home_state])
-
-
-# Set overlay will set the Gamescope atom to indicate that we should be drawn
-# over a running game or not.
-func _set_overlay(enable: bool) -> void:
-	var overlay_enabled = 0
-	if enable:
-		overlay_enabled = 1
-	# Sometimes setting this may fail when Steam closes. Retry several times.
-	for try in range(10):
-		if Gamescope.set_overlay(overlay_window_id, overlay_enabled) != OK:
-			logger.warn("Unable to set overlay atom!")
-		var current := Gamescope.get_overlay(overlay_window_id)
-		if overlay_enabled == current:
-			break
-		logger.warn("Retrying in " + str(try) + "ms")
-		OS.delay_msec(try)
 
 
 # Sets the blur mode in gamescope

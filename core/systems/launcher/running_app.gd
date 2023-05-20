@@ -131,6 +131,7 @@ func update() -> void:
 		app_killed.emit()
 	elif state == STATE.STARTED and has_valid_window:
 		state = STATE.RUNNING
+		grab_focus()
 	elif state == STATE.RUNNING and not has_valid_window:
 		state = STATE.MISSING_WINDOW
 	
