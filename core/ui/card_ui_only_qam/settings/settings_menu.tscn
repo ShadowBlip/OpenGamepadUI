@@ -58,6 +58,7 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="SettingsMenu" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
