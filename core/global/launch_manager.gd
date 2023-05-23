@@ -37,6 +37,7 @@ signal recent_apps_changed()
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
+
 var Gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -394,9 +395,10 @@ func _update_pids(root_id: int):
 
 # Below functions detect launched game from other processes
 # Returns the process ID
-func _get_pid_from_focused_window(to: int) -> int:
+func _get_pid_from_focused_window(window_id: int) -> int:
 	var pid := -1
-	pid = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).get_xprop(to, "_NET_WM_PID")
+	logger.debug(str(Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).list_xprops(window_id)))
+	pid = Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).get_xprop(window_id, "_NET_WM_PID")
 	logger.debug("PID: " + str(pid))
 	return pid
 
@@ -419,9 +421,32 @@ func _get_app_name_from_proc(pid: int) -> String:
 
 
 # Identifies the running app from steam's library.vdf files
-func _get_app_from_steam_library(pid: int) -> String:
+func _get_name_from_steam_library() -> String:
+	var missing_app_id: int = -1
+	var focusable_apps := Gamescope.get_focusable_apps()
+	logger.debug("Focusable apps: " + str(focusable_apps))
+	for app_id in focusable_apps:
+		if app_id == 769:
+			continue
+		if _is_app_id_running(app_id):
+			continue
+		missing_app_id = app_id
+		break
+	if missing_app_id < 0:
+		logger.error("Unable to identify app ID")
+		return ""
+	logger.debug("Found unclaimed app id: " +str(missing_app_id))
+	var library_data := _parse_data_from_file(OS.get_environment("HOME") +"/.steam/steam/steamapps/libraryfolders.vdf")
+
 	return ""
 
+
+func _is_app_id_running(app_id) -> bool:
+	for app in _running:
+		logger.debug(app.launch_item._id)
+		if str(app_id) == app.launch_item._id:
+			return true
+	return false
 
 # Identifies the running app from the given window_id.
 func _detect_running_app(window_id: int) -> RunningApp:
@@ -451,7 +476,7 @@ func _detect_running_app(window_id: int) -> RunningApp:
 
 	# If we couldn't find it, identify the app name and create a new RunningApp
 	logger.debug("Attmpting to identify app from the steam database.")
-	app_name = _get_app_from_steam_library(window_id)
+	app_name = _get_name_from_steam_library()
 	if app_name == "":
 		logger.debug("Not found. Attmpting to identify app from the window title.")
 		app_name = _get_app_name_from_window_id(window_id)
@@ -515,3 +540,60 @@ func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
 		if pid in app.get_child_pids():
 			return app
 	return null
+
+
+func _parse_data_from_file(path: String) -> Dictionary:
+	var library_data: Dictionary
+	var library_raw := []
+
+	# Read the library.vdf
+	var library_file := FileAccess.open(path, FileAccess.READ)
+	while library_file.get_position() < library_file.get_length():
+		var line = library_file.get_line()
+		library_raw.append(line)
+	library_file.close()
+#	library_raw.remove_at(0)
+
+	# Read each line and build a dictionary
+	var index := 0
+	var dict_level := 0
+	var last_top = null
+	var last_sub = null
+	for line in library_raw:
+		logger.debug(line)
+		var broke_line: PackedStringArray = line.split(" ")
+		line.strip_edges()
+		if line == "{":
+			dict_level += 1
+			if dict_level == 2:
+				last_top = library_raw[index]
+			elif dict_level == 3:
+				last_sub = library_raw[index]
+			index +=1
+			continue
+		
+		if line == "}":
+			dict_level -= 1
+			if dict_level == 2:
+				last_sub = null
+			elif dict_level == 1:
+				last_top = null
+			index +=1
+			continue
+		
+		if last_top:
+			if last_sub:
+				if not library_data[last_top].has(last_sub):
+					library_data[last_top][last_sub] = []
+				for part in broke_line:
+					library_data[last_top][last_sub].append(part)
+				index +=1
+				continue
+			if not library_data.has(last_sub):
+				library_data[last_top] = {}
+			library_data[last_top][broke_line][0] = broke_line[1]
+			index +=1
+			continue
+		index +=1
+	logger.debug("Library Data: " +str(library_data))
+	return library_data
