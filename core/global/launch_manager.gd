@@ -436,8 +436,16 @@ func _get_name_from_steam_library() -> String:
 		logger.error("Unable to identify app ID")
 		return ""
 	logger.debug("Found unclaimed app id: " +str(missing_app_id))
-	var library_data := _parse_data_from_file(OS.get_environment("HOME") +"/.steam/steam/steamapps/libraryfolders.vdf")
-
+	var steam_library_path := OS.get_environment("HOME") +"/.steam/steam"
+	var library_data := _parse_data_from_steam_file(steam_library_path + "/steamapps/libraryfolders.vdf")
+	for library in library_data:
+		logger.debug("Library: " + library + " : " + str(library_data[library]))
+		if library_data[library]["apps"].has(str(missing_app_id)):
+			var app_path : String = library_data[library]["path"] +"/steamapps/appmanifest_" + str(missing_app_id) + ".acf"
+			logger.debug("Found app ID in a steam library:" + app_path)
+			var app_data := _parse_data_from_steam_file(app_path, 2)
+			if app_data["AppState"].has("name"):
+				return app_data["AppState"]["name"]
 	return ""
 
 
@@ -542,58 +550,74 @@ func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
 	return null
 
 
-func _parse_data_from_file(path: String) -> Dictionary:
+func _parse_data_from_steam_file(path: String, search_depth = 3) -> Dictionary:
 	var library_data: Dictionary
-	var library_raw := []
-
+	var library_raw: PackedStringArray = []
+	logger.debug("Read from file: " + path)
 	# Read the library.vdf
 	var library_file := FileAccess.open(path, FileAccess.READ)
+	var result := FileAccess.get_open_error()
+	if result != OK:
+		logger.debug("Failed to open " + path + ". Result: " +str(result))
+		return library_data
 	while library_file.get_position() < library_file.get_length():
-		var line = library_file.get_line()
+		var line: String = library_file.get_line()
 		library_raw.append(line)
 	library_file.close()
-#	library_raw.remove_at(0)
+#	logger.debug("Got library: " +str(library_raw))
 
 	# Read each line and build a dictionary
 	var index := 0
 	var dict_level := 0
 	var last_top = null
 	var last_sub = null
-	for line in library_raw:
-		logger.debug(line)
-		var broke_line: PackedStringArray = line.split(" ")
-		line.strip_edges()
-		if line == "{":
+	for raw_line in library_raw:
+		var line := raw_line
+#		logger.debug("raw:" + line)
+		var broke_line := line.split("\t", false) as Array
+		var clean_line : Array = []
+		for line_part in broke_line:
+			clean_line.append(line_part.lstrip("\"").rstrip("\""))
+#		logger.debug("clean line: " +str(clean_line))
+#		logger.debug("split: " + " ".join(broke_line) + " size: " + str(broke_line.size()))
+		if clean_line[0] == "{":
+#			logger.debug("Found '{', increasing indent level")
 			dict_level += 1
-			if dict_level == 2:
-				last_top = library_raw[index]
-			elif dict_level == 3:
-				last_sub = library_raw[index]
+			if dict_level == search_depth - 1:
+				last_top = library_raw[index-1].split("\t", false)[0].lstrip("\"").rstrip("\"")
+#				logger.debug("Found new top level: " + library_raw[index-1].split("\t", false)[0])
+			elif dict_level == search_depth:
+				last_sub = library_raw[index-1].split("\t", false)[0].lstrip("\"").rstrip("\"")
+#				logger.debug("Found new sub level: " + library_raw[index-1].split("\t", false)[0])
 			index +=1
 			continue
-		
-		if line == "}":
+
+		if clean_line[0] == "}":
+#			logger.debug("Found '}', reducing indent level")
 			dict_level -= 1
-			if dict_level == 2:
+			if dict_level == search_depth-1:
 				last_sub = null
-			elif dict_level == 1:
+			elif dict_level == search_depth - 2:
 				last_top = null
 			index +=1
 			continue
-		
 		if last_top:
 			if last_sub:
 				if not library_data[last_top].has(last_sub):
+#					logger.debug("Added new sub level: " + last_sub)
 					library_data[last_top][last_sub] = []
-				for part in broke_line:
+				for part in clean_line:
+#					logger.debug("Added new data: " + " ".join(clean_line))
 					library_data[last_top][last_sub].append(part)
 				index +=1
 				continue
-			if not library_data.has(last_sub):
+			if not library_data.has(last_top):
+#				logger.debug("Added new top level: " + last_top)
 				library_data[last_top] = {}
-			library_data[last_top][broke_line][0] = broke_line[1]
-			index +=1
-			continue
+			if clean_line.size() > 1:
+				library_data[last_top][clean_line[0]] = clean_line[1]
+				index += 1
+				continue
 		index +=1
-	logger.debug("Library Data: " +str(library_data))
+#	logger.debug("Library Data: " +str(library_data))
 	return library_data
