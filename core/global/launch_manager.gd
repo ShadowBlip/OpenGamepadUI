@@ -55,7 +55,7 @@ var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 
 
 # Connect to Gamescope signals
@@ -420,7 +420,8 @@ func _get_app_name_from_proc(pid: int) -> String:
 	return process_name
 
 
-# Identifies the running app from steam's library.vdf files
+# Primary nw app ID method. Identifies the running app from steam's library.vdf
+# and appmanifest_<app_id>.acf files.
 func _get_name_from_steam_library() -> String:
 	var missing_app_id: int = -1
 	var focusable_apps := Gamescope.get_focusable_apps()
@@ -449,14 +450,15 @@ func _get_name_from_steam_library() -> String:
 	return ""
 
 
+# Returns true if the given app_id is the same as a currently running app.
 func _is_app_id_running(app_id) -> bool:
 	for app in _running:
-		logger.debug(app.launch_item._id)
 		if str(app_id) == app.launch_item._id:
 			return true
 	return false
 
-# Identifies the running app from the given window_id.
+# Identifies the running app from the given window_id. If none is found,
+# creates a new RunningApp instance.
 func _detect_running_app(window_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
 	var app_name: String
@@ -499,6 +501,8 @@ func _detect_running_app(window_id: int) -> RunningApp:
 	return _make_running_app_from_process(app_name, pid, window_id)
 
 
+# Creates a new RunningApp instance from a given name, PID, and window_id. Used
+# when an app launch is detcted that wasn't launched by an OGUI library.
 func _make_running_app_from_process(name: String, pid: int, window_id: int) -> RunningApp:
 	logger.debug("Creating running app from process")
 
@@ -524,9 +528,9 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
-#	var section := ".".join(["game", name])
-#	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
-#	set_gamepad_profile(profile_path)
+	var section := ".".join(["game", name])
+	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
+	set_gamepad_profile(profile_path)
 
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
@@ -535,6 +539,8 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 	return running_app
 
 
+# Creates a new RunningApp instance from a given LibraryLaunchItem, PID, and
+# xwayland instance. 
 func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String) -> RunningApp:
 	var running_app: RunningApp = RunningApp.new(launch_item, pid, display)
 	running_app.launch_item = launch_item
@@ -543,6 +549,7 @@ func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String
 	return running_app
 
 
+# Returns the parent app if the focused app is a child of a currently running app.
 func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
 	for app in _running:
 		if pid in app.get_child_pids():
@@ -550,11 +557,12 @@ func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
 	return null
 
 
+# Reads .vdf and .acf files and returns a dictionary of their contents.
 func _parse_data_from_steam_file(path: String, search_depth = 3) -> Dictionary:
 	var library_data: Dictionary
 	var library_raw: PackedStringArray = []
 	logger.debug("Read from file: " + path)
-	# Read the library.vdf
+	# Read the file
 	var library_file := FileAccess.open(path, FileAccess.READ)
 	var result := FileAccess.get_open_error()
 	if result != OK:
