@@ -55,6 +55,10 @@ static func get_pid_group(pid: int) -> int:
 # Returns the PID state the given PID is in
 static func get_pid_state(pid: int) -> String:
 	var status: Dictionary = get_pid_status(pid)
+	if not "State" in status:
+		var logger := Log.get_logger("Reaper")
+		logger.warn("Unable to check state of PID " + str(pid))
+		return ""
 	return status["State"]
 
 
