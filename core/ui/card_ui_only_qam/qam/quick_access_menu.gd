@@ -20,12 +20,9 @@ var qam_focus := preload("res://core/ui/card_ui/qam/quick_access_menu_focus.tres
 func _ready() -> void:
 	qam_state.state_entered.connect(_on_state_entered)
 	qam_state.state_exited.connect(_on_state_exited)
-
+	launch_manager.app_switched.connect(_on_app_switched)
 
 func _on_state_entered(_from: State) -> void:
-	# Update the "playing now" container
-	_update_playing_now()
-
 	if focus_group:
 		focus_group.grab_focus()
 
@@ -34,13 +31,13 @@ func _on_state_exited(_to: State) -> void:
 	qam_focus.pop()
 
 
-func _update_playing_now() -> void:
-	if launch_manager.get_running().size() == 0:
+func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
+	if to == null:
 		playing_container.visible = false
 		return
-	var app := launch_manager.get_current_app()
+
 	playing_container.visible = true
-	game_label.text = app.launch_item.name
+	game_label.text = to.launch_item.name
 	# TODO: Implement fetching game icon and setting it
 
 
