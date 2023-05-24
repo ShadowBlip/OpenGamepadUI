@@ -38,8 +38,8 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/polkit-1/actions/org.shadowblip.powertools.policy
 	install -Dm644 usr/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb \
 		$(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
-	install -Dm644 usr/lib/udev/rules.d/10-opengamepadui-handheld.rules \
-		$(PREFIX)/lib/udev/rules.d/10-opengamepadui-handheld.rules
+	install -Dm644 usr/lib/udev/rules.d/61-opengamepadui-handheld.rules \
+		$(PREFIX)/lib/udev/rules.d/61-opengamepadui-handheld.rules
 	install -Dm644 usr/lib/systemd/user/systemd-sysext-updater.service \
 		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	install -Dm644 usr/lib/systemd/user/ogui-qam.service \
