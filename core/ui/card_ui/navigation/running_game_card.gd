@@ -8,11 +8,14 @@ signal toggled(pressed: bool)
 signal finished_growing
 signal finished_shrinking
 
+const Gamescope := preload("res://core/global/gamescope.tres")
+
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var boxart_manager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := load("res://assets/state/states/in_game.tres") as State
+var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
 
 @export_category("Card")
 @export var is_toggled := false
@@ -40,6 +43,7 @@ var highlight_tween: Tween
 var running_app: RunningApp
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
+var window_buttons := {}
 var logger := Log.get_logger("RunningGameCard", Log.LEVEL.INFO)
 
 
@@ -75,6 +79,40 @@ func set_running_app(app: RunningApp):
 	else:
 		game_label.visible = true
 		game_label.text = item.name
+	
+	# Connect to app signals to allow switching between app windows
+	var on_windows_changed := func(_from: PackedInt32Array, to: PackedInt32Array):
+		var focusable_windows := Gamescope.get_focusable_windows()
+		# Add a button to switch to a given window
+		for window_id in to:
+			# A button already exists for this window
+			if window_id in window_buttons:
+				continue
+			if not window_id in focusable_windows:
+				continue
+			var window_name := app.get_window_title(window_id)
+			if window_name == "":
+				continue
+			var button := button_scene.instantiate() as CardButton
+			button.text = window_name
+			window_buttons[window_id] = button
+			content_container.add_child(button)
+			content_container.move_child(button, 1)
+			
+			# Switch app window when the button is pressed
+			var on_pressed := func():
+				app.switch_window(window_id)
+			button.button_up.connect(on_pressed)
+		
+		# Remove buttons for windows that don't exist anymore
+		for window_id in window_buttons.keys():
+			if window_id in to:
+				continue
+			var button := window_buttons[window_id] as Control
+			button.queue_free()
+			window_buttons.erase(window_id)
+
+	app.window_ids_changed.connect(on_windows_changed)
 
 
 func _on_focus() -> void:
