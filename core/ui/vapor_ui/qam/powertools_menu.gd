@@ -347,26 +347,29 @@ func _on_gpu_temp_limit_changed(value: float) -> void:
 			pass
 
 
-# Called to set the max GPU freq
+# Called when gpu_freq_max_slider.value is changed.
 func _on_max_gpu_freq_changed(value: float) -> void:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
-	match gpu.vendor:
-		"AMD":
-			_setup_callback_exec(powertools_path, ["amdGpuClock", "1", str(value)])
-		"Intel":
-			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_max_freq_mhz", str(value)])
+	_on_gpu_freq_changed(gpu_freq_min_slider.value, value)
 
-
-# Called to set the min GPU freq
+# Called when gpu_freq_min_slider.value is changed.
 func _on_min_gpu_freq_changed(value: float) -> void:
 	if value > gpu_freq_max_slider.value:
 		gpu_freq_max_slider.value = value
+	_on_gpu_freq_changed(value, gpu_freq_max_slider.value)
+
+
+# Set the GPU min/max freq.
+func _on_gpu_freq_changed(min: float, max: float) -> void:
+	var cmd := ""
 	match gpu.vendor:
 		"AMD":
-			_setup_callback_exec(powertools_path, ["amdGpuClock", "0", str(value)])
+			cmd = "amdGpuClock"
 		"Intel":
-			_setup_callback_exec(powertools_path, ["intelGpuClock", "gt_min_freq_mhz", str(value)])
+			cmd = "intelGpuClock"
+
+	_setup_callback_exec(powertools_path, [cmd, str(min), str(max)])
 
 
 # Called to set the base average TDP
