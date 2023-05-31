@@ -427,7 +427,7 @@ func _get_name_from_steam_library() -> String:
 	var focusable_apps := Gamescope.get_focusable_apps()
 	logger.debug("Focusable apps: " + str(focusable_apps))
 	for app_id in focusable_apps:
-		if app_id == 769:
+		if app_id == Gamescope.OVERLAY_GAME_ID:
 			continue
 		if _is_app_id_running(app_id):
 			continue
@@ -456,6 +456,7 @@ func _is_app_id_running(app_id) -> bool:
 		if str(app_id) == app.launch_item._id:
 			return true
 	return false
+
 
 # Identifies the running app from the given window_id. If none is found,
 # creates a new RunningApp instance.
