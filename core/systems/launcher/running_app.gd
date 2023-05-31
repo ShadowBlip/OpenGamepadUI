@@ -281,6 +281,24 @@ func grab_focus() -> void:
 	focused = true
 
 
+## Switches the app window to the given window ID. Returns an error if unable
+## to switch to the window
+func switch_window(win_id: int, focus: bool = true) -> int:
+	# Error if the window does not belong to the running app
+	if not win_id in window_ids:
+		return ERR_DOES_NOT_EXIST
+	
+	# Check if this app is a focusable window.
+	if not win_id in Gamescope.get_focusable_windows():
+		return ERR_UNAVAILABLE
+	
+	# Update the window ID and optionally grab focus
+	window_id = win_id
+	if focus:
+		grab_focus()
+	return OK
+
+
 ## Kill the running app
 func kill(sig: Reaper.SIG = Reaper.SIG.TERM) -> void:
 	state = STATE.STOPPING

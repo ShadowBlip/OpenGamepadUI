@@ -127,6 +127,9 @@ unique_name_in_owner = true
 current_focus = NodePath("../ResumeButton")
 focus_stack = ExtResource("6_xmlue")
 
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/ContentContainer"]
+layout_mode = 2
+
 [node name="ResumeButton" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("8_ixs6g")]
 unique_name_in_owner = true
 layout_mode = 2
