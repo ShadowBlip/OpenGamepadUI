@@ -95,6 +95,7 @@ var steam_close_tries := 0
 var is_ogui_managed: bool = true
 var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
+
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	launch_item = item
 	pid = process_id
@@ -162,6 +163,13 @@ func update() -> void:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
 
+
+## Returns the window title of the given window. If the window ID does not belong to this app,
+## it will return an empty string.
+func get_window_title(win_id: int) -> String:
+	if not win_id in window_ids:
+		return ""
+	return Gamescope.get_window_name(win_id)
 
 
 ## Attempt to discover the window ID from the PID of the given application
