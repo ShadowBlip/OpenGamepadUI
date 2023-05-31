@@ -33,20 +33,13 @@ func _ready():
 
 	_get_system_components()
 
-	# Set UI capabilities from system capabilities
-	cpu_boost_button.visible = cpu.boost_capable
-	cpu_cores_slider.visible = cpu.smt_capable
-	gpu_freq_enable.visible = gpu.clk_capable
-	gpu_temp_slider.visible = gpu.tj_temp_capable
-	smt_button.visible = cpu.smt_capable
-	tdp_boost_slider.visible = gpu.tdp_capable
-	tdp_slider.visible = gpu.tdp_capable
-
 	if gpu.tdp_capable:
 		_set_tdp_range()
 		_get_tdp()
 		tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_changed)
 		tdp_slider.value_changed.connect(_on_tdp_value_changed)
+		tdp_boost_slider.visible = gpu.tdp_capable
+		tdp_slider.visible = gpu.tdp_capable
 
 	if gpu.clk_capable:
 		_get_gpu_perf_level()
@@ -55,23 +48,31 @@ func _ready():
 		gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
 		# Set write mode for power_dpm_force_performance_level
 		_setup_callback_exec(powertools_path, ["pdfpl", "write"])
+		gpu_freq_enable.visible = gpu.clk_capable
 
 
-	if cpu.smt_capable:
-		if _read_sys("/sys/devices/system/cpu/smt/control") == "on":
+	if cpu.smt_capable and FileAccess.file_exists("/sys/devices/system/cpu/smt/control"):
+		var smt_set := _read_sys("/sys/devices/system/cpu/smt/control")
+		logger.debug("SMT is set to" + smt_set)
+		if smt_set == "on":
 			smt_button.button_pressed = true
-#			_on_toggle_smt(true)
+			cpu_cores_slider.visible = true
 		_get_cpu_count()
 		cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
 		smt_button.toggled.connect(_on_toggle_smt)
+		smt_button.visible = cpu.smt_capable
 
-	if cpu.boost_capable:
-		if _read_sys("/sys/devices/system/cpu/cpufreq/boost") == "1":
+	if cpu.boost_capable and FileAccess.file_exists("/sys/devices/system/cpu/cpufreq/boost"):
+		var boost_set :=  _read_sys("/sys/devices/system/cpu/cpufreq/boost")
+		logger.debug("cpu boost is set to" + boost_set)
+		if boost_set == "1":
 			cpu_boost_button.button_pressed = true
 		cpu_boost_button.toggled.connect(_on_toggle_cpu_boost)
+		cpu_boost_button.visible = cpu.boost_capable
 
 	if gpu.tj_temp_capable:
 		gpu_temp_slider.value_changed.connect(_on_gpu_temp_limit_changed)
+		gpu_temp_slider.visible = gpu.tj_temp_capable
 
 
 # Thread safe method of calling _do_exec
@@ -321,20 +322,12 @@ func _on_change_cpu_cores(_value: float):
 # Called to disable/enable cores by count as specified by value. 
 func _do_change_cpu_cores():
 	var args := []
-	if smt_button.button_pressed:
-		for cpu_no in range(1, core_count):
-			if cpu_no >= cpu_cores_slider.value:
-				args = ["cpuToggle", str(cpu_no), "0"]
-			else:
-				args = ["cpuToggle", str(cpu_no), "1"]
-			_async_do_exec(powertools_path, args)
-	else:
-		for cpu_no in range(2, core_count, 2):
-			if cpu_no >= cpu_cores_slider.value * 2:
-				args = ["cpuToggle", str(cpu_no), "0"]
-			else:
-				args = ["cpuToggle", str(cpu_no), "1"]
-			_async_do_exec(powertools_path, args)
+	for cpu_no in range(1, core_count):
+		if cpu_no >= cpu_cores_slider.value:
+			args = ["cpuToggle", str(cpu_no), "0"]
+		else:
+			args = ["cpuToggle", str(cpu_no), "1"]
+		_async_do_exec(powertools_path, args)
 
 
 # Sets the T-junction temp using ryzenadj.
@@ -466,15 +459,15 @@ func _on_toggle_smt(state: bool) -> void:
 	var args := []
 	if state:
 		args = ["smtToggle", "on"]
-		cpu_cores_slider.max_value = core_count
 	else:
 		args = ["smtToggle", "off"]
-		cpu_cores_slider.max_value = core_count / 2
 	var output: Array = _do_exec(powertools_path, args)
 	var exit_code = output[1]
 	if exit_code:
 		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
-	cpu_cores_slider.value = _get_cpus_enabled()
+	cpu_cores_slider.visible = state
+	if state:
+		cpu_cores_slider.value = _get_cpus_enabled()
 
 
 # Used to read values from sysfs
