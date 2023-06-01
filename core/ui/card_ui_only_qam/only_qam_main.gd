@@ -3,6 +3,7 @@ extends Control
 const Gamescope := preload("res://core/global/gamescope.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 const StateMachine := preload("res://assets/state/state_machines/global_state_machine.tres")
+var LaunchManager := preload("res://core/global/launch_manager.tres")
 
 var qam_state = load("res://assets/state/states/quick_access_menu.tres")
 var settings_state = load("res://assets/state/states/settings.tres")
@@ -22,6 +23,7 @@ var logger := Log.get_logger("Main-OnlyQAM", Log.LEVEL.INFO)
 func _init():
 	# Back button wont close windows without this InputManager prevents poping the last state.
 	StateMachine.push_state(home_state)
+	LaunchManager.should_manage_overlay = false
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("qam")]
 	plugin_loader.set_plugin_filters(filters)
