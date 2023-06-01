@@ -51,7 +51,7 @@ func _ready():
 	parent.visibility_changed.connect(_on_visibility_changed)
 	
 	# Try to find a focus node if one was not specified
-	if not current_focus:
+	if not current_focus or not current_focus.is_visible_in_tree():
 		current_focus = _find_focusable(parent.get_children(), parent)
 
 
