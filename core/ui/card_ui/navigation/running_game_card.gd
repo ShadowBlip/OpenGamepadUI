@@ -95,6 +95,7 @@ func set_running_app(app: RunningApp):
 				continue
 			var button := button_scene.instantiate() as CardButton
 			button.text = window_name
+			button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			window_buttons[window_id] = button
 			content_container.add_child(button)
 			content_container.move_child(button, 1)
