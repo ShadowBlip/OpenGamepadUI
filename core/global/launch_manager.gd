@@ -56,7 +56,7 @@ var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/director
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
-
+var should_manage_overlay := true
 
 # Connect to Gamescope signals
 func _init() -> void:
@@ -73,6 +73,11 @@ func _init() -> void:
 		app_switched.emit(last_app, _current_app)
 		# If the app has a gamepad profile, set it
 		set_app_gamepad_profile(_current_app)
+
+		# If we don't want LaunchManager to manage overlay (I.E. --only-qam mode), return false always.
+		if not should_manage_overlay:
+			return
+
 		# Check to see if the overlay property needs updating
 		var focusable_apps := Gamescope.get_focusable_apps()
 		if _should_set_overlay(focusable_apps):
@@ -83,6 +88,11 @@ func _init() -> void:
 	
 	# Ensure that the overlay property is set when other apps are launched.
 	var on_focusable_apps_changed := func(from: PackedInt32Array, to: PackedInt32Array):
+		# If we don't want LaunchManager to manage overlay (I.E. --only-qam mode), return false always.
+		if not should_manage_overlay:
+			return
+
+		# Check to see if the overlay property needs updating
 		logger.debug("Apps changed from " + str(from) + " to " + str(to))
 		var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
 		if _should_set_overlay(to):
