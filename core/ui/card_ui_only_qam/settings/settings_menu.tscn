@@ -30,7 +30,7 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/audio_settings_menu.tscn" id="33_pfgks"]
 [ext_resource type="PackedScene" uid="uid://cliqk7lo4t8ao" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="34_d7pxn"]
 [ext_resource type="PackedScene" uid="uid://cf5bdr4sh2irb" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="35_3lkmf"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_4hy3k"]
+[ext_resource type="PackedScene" uid="uid://bfu4edkk5dqt2" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_4hy3k"]
 [ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/vapor_ui/settings/logging_settings_menu.tscn" id="37_x846v"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ob3o7"]
@@ -167,7 +167,7 @@ action = 3
 on_signal = "focus_entered"
 
 [node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("18_3gorg")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/FocusGroup")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
@@ -245,7 +245,8 @@ state = ExtResource("24_kbvby")
 action = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ProcessesButton" instance=ExtResource("18_3gorg")]
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ProcessesButton" node_paths=PackedStringArray("target") instance=ExtResource("18_3gorg")]
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu/MarginContainer/VBoxContainer/HBoxContainer/FocusGroup")
 on_signal = "pressed"
 
 [node name="WindowsButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_ldgqt")]

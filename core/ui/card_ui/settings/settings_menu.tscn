@@ -35,7 +35,7 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/audio_settings_menu.tscn" id="32_dqi6v"]
 [ext_resource type="PackedScene" uid="uid://cf5bdr4sh2irb" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="35_0u4bv"]
 [ext_resource type="PackedScene" uid="uid://cliqk7lo4t8ao" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_hnokx"]
+[ext_resource type="PackedScene" uid="uid://bfu4edkk5dqt2" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_hnokx"]
 [ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/vapor_ui/settings/logging_settings_menu.tscn" id="37_iwtxk"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ob3o7"]
