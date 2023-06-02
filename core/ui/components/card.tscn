@@ -1,26 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://bkhrcemal7uxo"]
+[gd_scene load_steps=9 format=3 uid="uid://bkhrcemal7uxo"]
 
 [ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_701dj"]
-[ext_resource type="Shader" path="res://assets/shaders/corner_radius.gdshader" id="2_hbj7w"]
 [ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_gyi80"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nfs8d"]
-resource_local_to_scene = true
-shader = ExtResource("2_hbj7w")
-shader_parameter/corner_radius = 80.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_st1t5"]
-resource_local_to_scene = true
-bg_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.486275)
-shadow_size = 20
-shadow_offset = Vector2(0, 5)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygsnb"]
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gtppc"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 0.698039)
@@ -31,6 +20,17 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_st1t5"]
+resource_local_to_scene = true
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+shadow_color = Color(0, 0, 0, 0.486275)
+shadow_size = 20
+shadow_offset = Vector2(0, 5)
 
 [node name="GameCard" type="Control"]
 custom_minimum_size = Vector2(200, 300)
@@ -52,44 +52,31 @@ audio = "res://assets/audio/interface/select_002.ogg"
 on_signal = "pressed"
 
 [node name="RaiseEffect" parent="." node_paths=PackedStringArray("target", "shadow") instance=ExtResource("3_gyi80")]
-target = NodePath("../TextureRect")
-shadow = NodePath("../TextureRect/MarginContainer/Shadow")
+target = NodePath("../PanelContainer")
+shadow = NodePath("../MarginContainer/Shadow")
+scale_on_raised = Vector2(1.02, 1.02)
+shadow_size_on_raised = 26
+shadow_color_on_raised = Color(0.0627451, 0.0627451, 0.0627451, 0.301961)
 on_signal = "highlighted"
 lower_signal = "unhighlighted"
 on_signal = "highlighted"
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
+clip_children = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ygsnb")
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer"]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_nfs8d")
 custom_minimum_size = Vector2(200, 300)
 layout_mode = 2
-offset_right = 200.0
-offset_bottom = 300.0
 texture = ExtResource("2_2hlyj")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="TextureRect"]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="Shadow" type="PanelContainer" parent="TextureRect/MarginContainer"]
-show_behind_parent = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_st1t5")
-
-[node name="NameMargin" type="MarginContainer" parent="TextureRect"]
+[node name="NameMargin" type="MarginContainer" parent="PanelContainer/TextureRect"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -102,23 +89,23 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_bottom = 70
 
-[node name="NamePanel" type="PanelContainer" parent="TextureRect/NameMargin"]
+[node name="NamePanel" type="PanelContainer" parent="PanelContainer/TextureRect/NameMargin"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gtppc")
 
-[node name="MarginContainer" type="MarginContainer" parent="TextureRect/NameMargin/NamePanel"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/TextureRect/NameMargin/NamePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="NameLabel" type="Label" parent="TextureRect/NameMargin/NamePanel/MarginContainer"]
+[node name="NameLabel" type="Label" parent="PanelContainer/TextureRect/NameMargin/NamePanel/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Game Name"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="ProgressBar" type="ProgressBar" parent="TextureRect"]
+[node name="ProgressBar" type="ProgressBar" parent="PanelContainer/TextureRect"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -132,3 +119,23 @@ grow_vertical = 0
 theme_override_styles/fill = SubResource("StyleBoxFlat_up8ek")
 value = 50.0
 rounded = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Shadow" type="PanelContainer" parent="MarginContainer"]
+show_behind_parent = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_st1t5")
