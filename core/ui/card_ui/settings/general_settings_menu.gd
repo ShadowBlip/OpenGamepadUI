@@ -1,5 +1,9 @@
 extends Control
 
+const user_themes_path := "user://themes"
+const card_button_scene := preload("res://core/ui/components/card_button.tscn")
+const theme_setter_scene := preload("res://core/systems/user_interface/theme_setter.tscn")
+
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var Version := load("res://core/global/version.tres") as Version
@@ -13,6 +17,7 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var auto_update_toggle := $%AutoUpdateToggle
 @onready var check_update_button := $%CheckUpdateButton
 @onready var update_button := $%UpdateButton
+@onready var themes_container := $%ThemeButtonContainer
 @onready var max_recent_slider := $%MaxRecentAppsSlider
 @onready var platform_container := $%PlatformContainer
 @onready var platform_image := $%PlatformImage
@@ -41,6 +46,9 @@ func _ready() -> void:
 		platform_name.text = "Steam Deck"
 	else:
 		platform_container.visible = false
+
+	# Add user theme selection buttons
+	_add_user_themes()
 
 	# Configure home menu
 	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
@@ -90,6 +98,45 @@ func _ready() -> void:
 	update_timer.timeout.connect(_on_autoupdate)
 	if auto_update:
 		update_timer.start()
+
+
+# Looks for user defined themes and creates buttons to select those themes
+func _add_user_themes() -> void:
+	# Do nothing if no themes directory exists
+	if not DirAccess.dir_exists_absolute(user_themes_path):
+		logger.debug("No user themes found in: " + user_themes_path)
+		return
+	
+	# Discover theme resources
+	var theme_files := DirAccess.get_files_at(user_themes_path)
+	for filename in theme_files:
+		var path := "/".join([user_themes_path, filename])
+		logger.debug("Discovered possible user theme: " + path)
+		
+		# Load and validate the theme
+		var user_theme := load(path)
+		if not user_theme is Theme:
+			logger.warn("Unable to load theme resource: " + path)
+			continue
+		var theme_name := user_theme.get_meta("name", "") as String
+		if theme_name == "":
+			logger.warn("Theme does not have required 'name' metadata field: " + path)
+			continue
+		
+		# Build the theme switcher button
+		var button := card_button_scene.instantiate() as CardButton
+		button.text = theme_name
+		button.custom_minimum_size.x = 158
+		
+		# Add the theme setter behavior
+		var theme_setter := theme_setter_scene.instantiate() as ThemeSetter
+		theme_setter.theme = user_theme
+		theme_setter.on_signal = "button_up"
+		button.add_child(theme_setter)
+
+		# Add the button to the settings menu
+		themes_container.add_child(button)
+		logger.debug("Add user theme: " + theme_name)
 
 
 func _on_autoupdate() -> void:
