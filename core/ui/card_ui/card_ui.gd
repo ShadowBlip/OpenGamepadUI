@@ -62,13 +62,13 @@ func _ready() -> void:
 	var theme_path := SettingsManager.get_value("general", "theme", "") as String
 	if theme_path == "":
 		logger.debug("No theme set. Using default theme.")
-	if theme_path != "" and not FileAccess.file_exists(theme_path):
-		logger.debug("Theme set, but does not appear to exist: " + theme_path)
 	if theme_path != "":
 		logger.debug("Setting theme to: " + theme_path)
 		var loaded_theme = load(theme_path)
 		if loaded_theme != null:
 			theme = loaded_theme
+		else:
+			logger.debug("Unable to load theme")
 
 	# If this is the first boot, enter the first-boot menu state. Otherwise,
 	# go to the home state.
