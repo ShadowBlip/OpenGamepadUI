@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bcdk1lj6enq3l"]
+[gd_scene load_steps=25 format=3 uid="uid://bcdk1lj6enq3l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
@@ -41,15 +41,6 @@ tracks/0/keys = {
 _data = {
 "fade_in": SubResource("Animation_ou6f5")
 }
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svm8w"]
-bg_color = Color(0.266667, 0.278431, 0.352941, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 5
-shadow_offset = Vector2(4, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7fb8y"]
 bg_color = Color(1, 0.47451, 0.776471, 1)
@@ -154,7 +145,7 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_svm8w")
+theme_type_variation = &"GameLaunchButtons"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/HBoxContainer/ExtraMenu"]
 layout_mode = 2

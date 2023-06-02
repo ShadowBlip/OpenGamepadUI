@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://uqkwpeq7f1o" path="res://core/ui/card_ui/library/library_menu.tscn" id="10_uqodp"]
 [ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/card_ui/navigation/top_button_menu.tscn" id="11_x7ns7"]
 [ext_resource type="PackedScene" uid="uid://cd2p3lu01aric" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
+[ext_resource type="PackedScene" uid="uid://bjocbvjgxlr4s" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="12_yovai"]
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://b30stcxjwk3od" path="res://core/ui/card_ui/ootbe/first_boot_menu.tscn" id="14_dpfu1"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]

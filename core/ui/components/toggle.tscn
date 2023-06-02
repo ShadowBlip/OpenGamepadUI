@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1qb7euwlu7bh"]
+[gd_scene load_steps=4 format=3 uid="uid://d1qb7euwlu7bh"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_3gndo"]
 [ext_resource type="Script" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
 [ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_msehc"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_l7kb7"]
@@ -12,7 +11,6 @@ offset_bottom = 31.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme = ExtResource("1_3gndo")
 script = ExtResource("1_pn5mg")
 separator_visible = true
 button_pressed = true
@@ -29,7 +27,6 @@ label_settings = ExtResource("2_msehc")
 
 [node name="CheckButton" type="CheckButton" parent="ToggleContainer"]
 unique_name_in_owner = true
-modulate = Color(0.741176, 0.576471, 0.976471, 1)
 layout_mode = 2
 button_pressed = true
 

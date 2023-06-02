@@ -3,8 +3,11 @@
 extends Node
 class_name ThemeSetter
 
+var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
+
 @export var node_group := "main"
 @export var theme: Theme
+@export var persist := true
 
 # Signal on our parent to connect to
 var on_signal: String
@@ -28,6 +31,11 @@ func _on_signal():
 	if not node is Control:
 		return
 	(node as Control).theme = theme
+	
+	if not persist:
+		return
+	
+	SettingsManager.set_value("general", "theme", theme.resource_path)
 
 
 # Customize editor properties that we expose. Here we dynamically look up

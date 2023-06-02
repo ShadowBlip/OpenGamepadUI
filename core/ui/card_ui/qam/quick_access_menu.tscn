@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://hroo3ll4inrb"]
+[gd_scene load_steps=26 format=3 uid="uid://hroo3ll4inrb"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/qam/quick_access_menu.gd" id="1_56jo7"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_s7f3g"]
@@ -84,15 +84,6 @@ _data = {
 "enter": SubResource("Animation_5up20"),
 "exit": SubResource("Animation_4xb6e")
 }
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m0pm0"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 z_index = 20
@@ -239,7 +230,6 @@ focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_m0pm0")
 
 [node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("20_17ks0")]
 layout_mode = 2

@@ -76,8 +76,12 @@ func _ready() -> void:
 	check_button.toggled.connect(on_toggled)
 
 	# Set color based on theme
-	if theme:
-		check_button.modulate = theme.get_color("color", "Toggle")
+	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
+
+
+func _on_theme_changed() -> void:
+	check_button.modulate = get_theme_color("color", "Toggle")
 
 
 # Override focus grabbing to grab the child

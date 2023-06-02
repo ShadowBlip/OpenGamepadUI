@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://c6dpw6swmcbw6" path="res://core/systems/user_interface/theme_setter.tscn" id="9_bci6g"]
 [ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="9_sq2rc"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_06mt3"]
-[ext_resource type="Theme" uid="uid://ys6hrfx1ytts" path="res://assets/themes/card_ui-dracula.tres" id="10_b386h"]
+[ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="10_b386h"]
 [ext_resource type="Theme" uid="uid://bhdlcd8rvccus" path="res://assets/themes/card_ui-darksoul.tres" id="11_k3kye"]
 
 [node name="GeneralSettings" type="ScrollContainer"]

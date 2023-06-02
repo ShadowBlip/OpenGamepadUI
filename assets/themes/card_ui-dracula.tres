@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=26 format=3 uid="uid://ehplgpp70vxa"]
+[gd_resource type="Theme" load_steps=28 format=3 uid="uid://ehplgpp70vxa"]
 
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_yyc4b"]
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="2_f7nj8"]
@@ -9,11 +9,13 @@
 [ext_resource type="StyleBox" uid="uid://qm8ys4i5mjm7" path="res://assets/styles/dracula/expandable_card_panel.tres" id="4_aj5oc"]
 [ext_resource type="StyleBox" uid="uid://x0dxx5c8u5rv" path="res://assets/styles/dracula/context_bar_menu_panel.tres" id="4_wqh56"]
 [ext_resource type="StyleBox" uid="uid://c2xl0k66pybg4" path="res://assets/styles/dracula/main_menu_panel.tres" id="7_n80rp"]
+[ext_resource type="StyleBox" uid="uid://c0pprevg50iuy" path="res://assets/styles/dracula/game_launch_buttons_panel.tres" id="8_iqinc"]
 [ext_resource type="StyleBox" uid="uid://br2w1fnanqkfa" path="res://assets/styles/dracula/quick_access_menu_panel.tres" id="9_5igh1"]
 [ext_resource type="StyleBox" uid="uid://dgbhd8b0on3sx" path="res://assets/styles/dracula/notification_panel.tres" id="9_sy73e"]
 [ext_resource type="StyleBox" uid="uid://362ykskskx" path="res://assets/styles/dracula/search_bar_menu_panel.tres" id="10_7w6bt"]
 [ext_resource type="StyleBox" uid="uid://y3qbwgrt2wai" path="res://assets/styles/dracula/settings_menu_panel.tres" id="10_rxp5w"]
 [ext_resource type="StyleBox" uid="uid://dj0ysj0o6beba" path="res://assets/styles/dracula/power_menu_panel.tres" id="10_u1qhh"]
+[ext_resource type="StyleBox" uid="uid://bifp73vg5vmau" path="res://assets/styles/dracula/plugin_store_card_panel.tres" id="11_83cpl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
@@ -44,7 +46,7 @@ shadow_offset = Vector2(1, 3)
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kl1o0"]
-bg_color = Color(0.384314, 0.447059, 0.643137, 1)
+bg_color = Color(0.741176, 0.576471, 0.976471, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly0we"]
 bg_color = Color(0.741176, 0.576471, 0.976471, 1)
@@ -85,6 +87,7 @@ ContextBar/styles/panel = ExtResource("4_wqh56")
 ExpandableCard/icons/highlight = ExtResource("2_j1g2y")
 ExpandableCard/styles/inside_panel = ExtResource("4_aiyld")
 ExpandableCard/styles/panel = ExtResource("4_aj5oc")
+GameLaunchButtons/styles/panel = ExtResource("8_iqinc")
 General/colors/background = Color(0.156863, 0.164706, 0.211765, 1)
 General/colors/comment = Color(0.384314, 0.447059, 0.643137, 1)
 General/colors/current_line = Color(0.266667, 0.278431, 0.352941, 1)
@@ -104,6 +107,7 @@ MainMenu/styles/panel = ExtResource("7_n80rp")
 Notification/styles/panel = ExtResource("9_sy73e")
 Panel/styles/panel = ExtResource("2_f7nj8")
 PanelContainer/styles/panel = ExtResource("2_f7nj8")
+PluginStoreCard/styles/panel = ExtResource("11_83cpl")
 PowerMenu/styles/panel = ExtResource("10_u1qhh")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
 QAM/styles/panel = ExtResource("9_5igh1")

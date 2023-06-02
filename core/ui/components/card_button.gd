@@ -77,6 +77,7 @@ func _ready() -> void:
 	mouse_entered.connect(_on_focus)
 	mouse_exited.connect(_on_unfocus)
 	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
 
 
 func _on_theme_changed() -> void:

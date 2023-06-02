@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://o0equu1tyr4s"]
+[gd_scene load_steps=9 format=3 uid="uid://o0equu1tyr4s"]
 
 [ext_resource type="Script" path="res://core/ui/components/expandable_card.gd" id="1_63a7d"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_mur57"]
@@ -14,13 +14,6 @@ colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471,
 gradient = SubResource("Gradient_2e33l")
 fill = 1
 fill_to = Vector2(1, 2)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sh8jt"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="ExpandableCard" type="PanelContainer"]
 clip_children = 2
@@ -78,7 +71,7 @@ theme_override_constants/margin_bottom = 4
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sh8jt")
+theme_type_variation = &"InsidePanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

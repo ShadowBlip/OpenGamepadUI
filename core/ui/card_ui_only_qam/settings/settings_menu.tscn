@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://c211brlhxmf8k"]
+[gd_scene load_steps=34 format=3 uid="uid://c211brlhxmf8k"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_canfn"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_71hie"]
@@ -40,15 +40,6 @@ color = Color(0.384314, 0.447059, 0.643137, 1)
 grow_begin = -10.0
 grow_end = -10.0
 vertical = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xa6qt"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -370,9 +361,6 @@ state = ExtResource("21_uc0f8")
 [node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("34_d7pxn")]
 visible = false
 layout_mode = 2
-
-[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer" index="2"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_xa6qt")
 
 [node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_3lkmf")]
 visible = false

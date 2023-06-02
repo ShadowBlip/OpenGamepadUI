@@ -1,9 +1,8 @@
-[gd_scene load_steps=37 format=3]
+[gd_scene load_steps=36 format=3 uid="uid://bjocbvjgxlr4s"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.gd" id="1_8xl7t"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_4hsmo"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_wi2wh"]
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="2_wim8p"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_du3xc"]
 [ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="4_0dob8"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_2q6j7"]
@@ -60,7 +59,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_wim8p")
+theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

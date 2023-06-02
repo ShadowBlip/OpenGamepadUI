@@ -1,31 +1,17 @@
-[gd_scene load_steps=15 format=3 uid="uid://dlouq0b0bnm41"]
+[gd_scene load_steps=13 format=3 uid="uid://dlouq0b0bnm41"]
 
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="1_4m4go"]
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/running_game_card.gd" id="1_vgpef"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_ao14v"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_w7u51"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_4x3oi"]
+[ext_resource type="Texture2D" uid="uid://cj14g5onuca3o" path="res://assets/styles/dracula/highlight.tres" id="3_o7ylm"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_smmwr"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_s452c"]
 [ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/card_ui/main-menu/main_menu_focus.tres" id="6_xmlue"]
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="7_yrgt0"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="8_ixs6g"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrybk"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="Gradient" id="Gradient_73o7r"]
-colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_52vof"]
-gradient = SubResource("Gradient_73o7r")
-fill = 1
-fill_to = Vector2(1, 2)
 
 [node name="RunningGameCard" type="PanelContainer"]
 anchors_preset = 10
@@ -48,16 +34,17 @@ unique_name_in_owner = true
 visible = false
 clip_children = 2
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vrybk")
+theme_type_variation = &"InsidePanel"
 
-[node name="HighlightTexture" type="TextureRect" parent="HighlightTexture"]
+[node name="HighlightTextureRect" type="TextureRect" parent="HighlightTexture"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("GradientTexture2D_52vof")
+texture = ExtResource("3_o7ylm")
 expand_mode = 1
 stretch_mode = 6
 
@@ -72,7 +59,7 @@ theme_override_constants/margin_bottom = 4
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vrybk")
+theme_type_variation = &"InsidePanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

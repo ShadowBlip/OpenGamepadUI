@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://cc7a35n2pqmmf"]
 
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_8yjid"]
 [ext_resource type="Script" path="res://core/ui/components/plugin_store_card.gd" id="1_mpwli"]
@@ -10,13 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://dt1r8cyx48k2p" path="res://assets/ui/icons/upgrade.svg" id="6_dsefr"]
 [ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="6_fo8lr"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_43kcj"]
-bg_color = Color(0.105882, 0.113725, 0.145098, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [sub_resource type="Gradient" id="Gradient_2e33l"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
 
@@ -25,20 +18,13 @@ gradient = SubResource("Gradient_2e33l")
 fill = 1
 fill_to = Vector2(1, 2)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i4bpu"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [node name="PluginStoreCard" type="PanelContainer"]
 clip_children = 2
 custom_minimum_size = Vector2(340, 200)
 offset_right = 253.0
 offset_bottom = 143.0
 focus_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_43kcj")
+theme_type_variation = &"PluginStoreCard"
 script = ExtResource("1_mpwli")
 
 [node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_wtj1w")]
@@ -63,7 +49,7 @@ theme_override_constants/margin_bottom = 4
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_i4bpu")
+theme_type_variation = &"InsidePanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
