@@ -55,7 +55,7 @@ theme_override_constants/separation = 10
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../AutoUpdateToggle")
 focus_stack = ExtResource("4_fyrmg")
-focus_neighbor_bottom = NodePath("../../VBoxContainer2/FocusGroup")
+focus_neighbor_bottom = NodePath("../../ThemeButtonContainer/FocusGroup")
 focus_neighbor_top = NodePath("../../VBoxContainer3/FocusGroup")
 
 [node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
@@ -96,33 +96,35 @@ text = "Appearance"
 layout_mode = 2
 text = "Theme"
 
-[node name="VBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ThemeButtonContainer" type="HFlowContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer2" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/ThemeButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../ThemeDraculaButton")
 focus_stack = ExtResource("4_fyrmg")
 focus_neighbor_bottom = NodePath("../../VBoxContainer3/FocusGroup")
 focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
 
-[node name="ThemeDraculaButton" parent="MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource("7_qenel")]
+[node name="ThemeDraculaButton" parent="MarginContainer/VBoxContainer/ThemeButtonContainer" instance=ExtResource("7_qenel")]
 custom_minimum_size = Vector2(158, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Dracula"
 
-[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/VBoxContainer2/ThemeDraculaButton" instance=ExtResource("9_bci6g")]
+[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/ThemeButtonContainer/ThemeDraculaButton" instance=ExtResource("9_bci6g")]
 theme = ExtResource("10_b386h")
 on_signal = "button_up"
 
-[node name="ThemeDarkSoulButton" parent="MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource("7_qenel")]
+[node name="ThemeDarkSoulButton" parent="MarginContainer/VBoxContainer/ThemeButtonContainer" instance=ExtResource("7_qenel")]
 custom_minimum_size = Vector2(158, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Dark Soul"
 
-[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/VBoxContainer2/ThemeDarkSoulButton" instance=ExtResource("9_bci6g")]
+[node name="ThemeSetter" parent="MarginContainer/VBoxContainer/ThemeButtonContainer/ThemeDarkSoulButton" instance=ExtResource("9_bci6g")]
 theme = ExtResource("11_k3kye")
 on_signal = "button_up"
 
@@ -134,7 +136,7 @@ theme_override_constants/separation = 10
 current_focus = NodePath("../MaxRecentAppsSlider")
 focus_stack = ExtResource("4_fyrmg")
 focus_neighbor_bottom = NodePath("../../VBoxContainer/FocusGroup")
-focus_neighbor_top = NodePath("../../VBoxContainer2/FocusGroup")
+focus_neighbor_top = NodePath("../../ThemeButtonContainer/FocusGroup")
 
 [node name="HomeLabel" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("8_2m3jw")]
 layout_mode = 2

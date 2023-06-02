@@ -130,3 +130,4 @@ VScrollBar/styles/grabber = SubResource("StyleBoxFlat_ly0we")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_4qwdc")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hby0t")
 VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")
+metadata/name = "Dracula"
