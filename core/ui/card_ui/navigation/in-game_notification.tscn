@@ -1,18 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cu4l0d1joc37w"]
+[gd_scene load_steps=5 format=3 uid="uid://cu4l0d1joc37w"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_ftn07"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_gymt1"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="2_ljdx2"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5xik1"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 5
-shadow_offset = Vector2(4, 4)
 
 [node name="InGameNotification" type="Control"]
 z_index = 20
@@ -55,7 +46,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_5xik1")
+theme_type_variation = &"Notification"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 layout_mode = 2

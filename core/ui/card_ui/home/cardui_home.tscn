@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://o70x5igrlq30"]
+[gd_scene load_steps=19 format=3 uid="uid://o70x5igrlq30"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/home/cardui_home.gd" id="1_a4a3j"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_u18ot"]
@@ -10,7 +10,6 @@
 [ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="8_dx6pe"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_kvuqp"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="10_mmfgs"]
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="11_jiep4"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="12_h5dxg"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="12_m30ge"]
 [ext_resource type="PackedScene" uid="uid://crsu0vpicq0vh" path="res://core/ui/components/library_deck.tscn" id="13_rxwf5"]
@@ -75,7 +74,6 @@ stretch_mode = 6
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.9
-theme = ExtResource("11_jiep4")
 theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]

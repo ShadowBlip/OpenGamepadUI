@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=11 format=3 uid="uid://d4bmkauhrlhq0"]
 
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_3s0wp"]
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/search_bar_menu.gd" id="1_518qs"]
@@ -11,21 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_uixir"]
 [ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/card_ui/library/library_tabs_state.tres" id="9_dlgkq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 5
-shadow_offset = Vector2(4, 4)
-
 [node name="SearchBarMenu" type="PanelContainer"]
 z_index = 20
 custom_minimum_size = Vector2(0, 48)
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
+theme_type_variation = &"SearchBar"
 script = ExtResource("1_518qs")
 
 [node name="VisibilityManager" type="Node" parent="."]

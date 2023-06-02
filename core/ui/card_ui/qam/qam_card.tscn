@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5xnora73yd8x"]
+[gd_scene load_steps=9 format=3 uid="uid://b5xnora73yd8x"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/qam/qam_card.gd" id="1_nu7eg"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_3ilsd"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_73cqf"]
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_j0bxm"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_2hyw7"]
-[ext_resource type="StyleBox" uid="uid://dv7sobp24f3by" path="res://assets/styles/dracula/inside_panel.tres" id="6_jqrss"]
 
 [sub_resource type="Gradient" id="Gradient_p8snv"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
@@ -72,7 +71,7 @@ theme_override_constants/margin_bottom = 4
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
 visible = false
 layout_mode = 2
-theme_override_styles/panel = ExtResource("6_jqrss")
+theme_type_variation = &"InsidePanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

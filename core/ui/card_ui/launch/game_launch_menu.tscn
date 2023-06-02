@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3]
+[gd_scene load_steps=26 format=3 uid="uid://bcdk1lj6enq3l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
