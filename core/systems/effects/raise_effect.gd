@@ -10,16 +10,19 @@ class_name RaiseEffect
 @export var raise_to_position := Vector2(0, -40)
 @export var scale_on_raised := Vector2(1.01, 1.01)
 @export var shadow_size_on_raised := 20
+@export var shadow_color_on_raised := Color(0, 0, 0, 0.3)
 
 var tween: Tween
 var lower_signal: String
 var orig_shadow_size := 0
+var orig_shadow_color: Color
 
 
 func _ready() -> void:
 	if shadow:
 		var panel_style = shadow.get("theme_override_styles/panel")
 		orig_shadow_size = panel_style.get("shadow_size")
+		orig_shadow_color = panel_style.get("shadow_color")
 	notify_property_list_changed()
 	if lower_signal != "":
 		get_parent().connect(lower_signal, _on_lower_signal)
@@ -44,6 +47,7 @@ func raise() -> void:
 	tween.parallel().tween_property(target, "position", raise_to_position, raise_speed)
 	if shadow:
 		tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", shadow_size_on_raised, raise_speed)
+		tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_color", shadow_color_on_raised, raise_speed)
 
 
 func lower() -> void:
@@ -57,6 +61,7 @@ func lower() -> void:
 	tween.parallel().tween_property(target, "position", Vector2(0, 0), raise_speed)
 	if shadow:
 		tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_size", orig_shadow_size, raise_speed)
+		tween.parallel().tween_property(shadow, "theme_override_styles/panel:shadow_color", orig_shadow_color, raise_speed)
 
 
 # Customize editor properties that we expose. Here we dynamically look up
