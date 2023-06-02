@@ -1,37 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://c71ayw7pcw6u6"]
+[gd_scene load_steps=3 format=3 uid="uid://c71ayw7pcw6u6"]
 
 [ext_resource type="Script" path="res://core/ui/components/card_button.gd" id="1_62nf7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxw8g"]
-bg_color = Color(0.105882, 0.113725, 0.145098, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 2
-shadow_offset = Vector2(0, 1)
-
-[sub_resource type="Gradient" id="Gradient_v5glp"]
-colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_7cyn5"]
-gradient = SubResource("Gradient_v5glp")
-fill = 1
-fill_to = Vector2(1, 2)
+[ext_resource type="Texture2D" uid="uid://cj14g5onuca3o" path="res://assets/styles/dracula/highlight.tres" id="2_seft5"]
 
 [node name="CardButton" type="PanelContainer"]
 clip_children = 2
 offset_right = 103.0
 offset_bottom = 34.0
 focus_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_lxw8g")
+theme_type_variation = &"CardButton"
 script = ExtResource("1_62nf7")
 
 [node name="HighlightTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-texture = SubResource("GradientTexture2D_7cyn5")
+texture = ExtResource("2_seft5")
 expand_mode = 1
 stretch_mode = 6
 

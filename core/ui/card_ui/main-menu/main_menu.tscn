@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://jfacx7uys32r"]
+[gd_scene load_steps=23 format=3 uid="uid://jfacx7uys32r"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/main-menu/main_menu.gd" id="1_3looj"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_256ue"]
@@ -19,12 +19,6 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="11_obt01"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="14_lxab3"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="19_b6ano"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yjrde"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_bottom_right = 10
-shadow_size = 4
-shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Animation" id="Animation_47ope"]
 resource_name = "enter"
@@ -113,7 +107,7 @@ anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 280.0
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_yjrde")
+theme_type_variation = &"MainMenu"
 
 [node name="VisibilityManager" type="Node" parent="PanelContainer"]
 script = ExtResource("2_256ue")

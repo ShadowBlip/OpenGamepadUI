@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://by0i08fw1fwty"]
+[gd_scene load_steps=12 format=3 uid="uid://by0i08fw1fwty"]
 
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="1_te2kv"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_ue0mf"]
@@ -12,21 +12,12 @@
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_5h6sh"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="11_eo1bd"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rxhix"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 5
-shadow_offset = Vector2(4, 4)
-
 [node name="ButtonMenu" type="PanelContainer"]
 z_index = 20
 custom_minimum_size = Vector2(0, 48)
 size_flags_horizontal = 8
 size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_rxhix")
+theme_type_variation = &"ButtonMenu"
 
 [node name="VisibilityManager" type="Node" parent="."]
 script = ExtResource("1_ue0mf")

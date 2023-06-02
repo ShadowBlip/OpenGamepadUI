@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://cemxrvvjgm4g"]
+[gd_scene load_steps=4 format=3 uid="uid://cemxrvvjgm4g"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_6165a"]
 [ext_resource type="Script" path="res://core/ui/components/slider.gd" id="1_khsna"]
 [ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_otvhp"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_q0iwk"]
@@ -13,7 +12,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 focus_mode = 2
-theme = ExtResource("1_6165a")
 script = ExtResource("1_khsna")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -42,7 +40,6 @@ label_settings = ExtResource("3_q0iwk")
 
 [node name="HSlider" type="HSlider" parent="."]
 unique_name_in_owner = true
-modulate = Color(0.741176, 0.576471, 0.976471, 1)
 layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]

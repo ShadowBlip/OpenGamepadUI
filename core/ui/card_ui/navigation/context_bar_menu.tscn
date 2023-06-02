@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cd2p3lu01aric"]
+[gd_scene load_steps=8 format=3 uid="uid://cd2p3lu01aric"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
 [ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="2_7vfu8"]
@@ -8,20 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="5_mcgmc"]
 [ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="7_wroit"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ipcsm"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_size = 5
-shadow_offset = Vector2(3, 3)
-
 [node name="ContextBar" type="PanelContainer"]
 z_index = 20
 custom_minimum_size = Vector2(0, 45)
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_ipcsm")
+theme_type_variation = &"ContextBar"
 script = ExtResource("1_wt5if")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

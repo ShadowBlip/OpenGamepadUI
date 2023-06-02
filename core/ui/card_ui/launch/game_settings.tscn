@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=24 format=3 uid="uid://58qlqqbh58im"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pga6u"]
@@ -18,18 +18,11 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_launch_settings.tscn" id="19_06mfy"]
 [ext_resource type="Resource" uid="uid://1dnelmxp0tuq" path="res://assets/state/state_machines/game_settings_state_machine.tres" id="20_cokg3"]
 [ext_resource type="Resource" uid="uid://d3rbp3ws1ejal" path="res://assets/state/states/game_settings_launch.tres" id="21_tdepl"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_boxart_settings.tscn" id="24_4afdc"]
+[ext_resource type="PackedScene" uid="uid://dl3lxwakvk7l2" path="res://core/ui/vapor_ui/launch/game_boxart_settings.tscn" id="24_4afdc"]
 [ext_resource type="Resource" uid="uid://bn8ih6qafytvi" path="res://assets/state/states/game_settings_boxart.tres" id="25_3xebk"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="27_06vpr"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_voua8"]
 [ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="34_j5cnx"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1dth"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="GameSettingsMenu" type="Control"]
 layout_mode = 3
@@ -73,7 +66,7 @@ theme_override_constants/separation = 20
 
 [node name="VersionContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_p1dth")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer"]
 layout_mode = 2
@@ -97,7 +90,7 @@ uppercase = true
 [node name="ButtonContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_p1dth")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer"]
 layout_mode = 2
@@ -169,7 +162,7 @@ theme_override_constants/separation = 20
 [node name="TitleContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_p1dth")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer"]
 layout_mode = 2
@@ -189,7 +182,7 @@ uppercase = true
 [node name="ContentContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_p1dth")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer"]
 layout_mode = 2

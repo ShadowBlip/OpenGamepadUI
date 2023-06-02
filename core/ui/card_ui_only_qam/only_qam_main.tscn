@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://b13lnfkjbafkj"]
 
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_lsnmg"]
+[ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" path="res://core/ui/card_ui_only_qam/only_qam_main.gd" id="2_stvk6"]
 [ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/only_qam_input_manager.tscn" id="3_klhmb"]
 [ext_resource type="PackedScene" uid="uid://c211brlhxmf8k" path="res://core/ui/card_ui_only_qam/settings/settings_menu.tscn" id="4_13eyr"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_b1ok4"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="5_0bp4q"]
+[ext_resource type="PackedScene" uid="uid://bjocbvjgxlr4s" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="5_0bp4q"]
 [ext_resource type="PackedScene" uid="uid://chq023a11tl3k" path="res://core/ui/card_ui_only_qam/qam/quick_access_menu.tscn" id="6_mqdlv"]
 
 [node name="OnlyQamMain" type="Control"]
@@ -15,7 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_lsnmg")
+theme = ExtResource("1_0qmlq")
 script = ExtResource("2_stvk6")
 
 [node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
@@ -37,6 +37,7 @@ mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
 [node name="SettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("4_13eyr")]
+visible = false
 layout_mode = 2
 
 [node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("5_0bp4q")]

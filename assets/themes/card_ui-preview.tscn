@@ -1,0 +1,157 @@
+[gd_scene load_steps=18 format=3 uid="uid://db177k6q6yhqn"]
+
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_2rr5x"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_3a7s2"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_jglci"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="3_ka5un"]
+[ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="5_c4an7"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="5_em21p"]
+[ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="5_yvkl2"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_63q7k"]
+[ext_resource type="PackedScene" uid="uid://b6c6f3vdwx43s" path="res://core/ui/components/tab_label.tscn" id="6_cdmjx"]
+[ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="6_fb72f"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_i5gpo"]
+[ext_resource type="PackedScene" uid="uid://b5xnora73yd8x" path="res://core/ui/card_ui/qam/qam_card.tscn" id="8_4qcrd"]
+[ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_ybko6"]
+[ext_resource type="PackedScene" uid="uid://dlouq0b0bnm41" path="res://core/ui/card_ui/navigation/running_game_card.tscn" id="9_alt0d"]
+[ext_resource type="PackedScene" uid="uid://d1hlp6c8wrqgv" path="res://core/ui/components/status.tscn" id="10_w1v8b"]
+[ext_resource type="PackedScene" uid="uid://rr8qu8dhnyrf" path="res://core/ui/components/level_indicator.tscn" id="11_65ipo"]
+[ext_resource type="PackedScene" path="res://core/ui/components/plugin_store_card.tscn" id="12_xoo83"]
+
+[node name="CardUIPreview" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"LightPanel"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SectionLabel" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_jglci")]
+layout_mode = 2
+text = "Section Label"
+
+[node name="SubsectionLabel" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_ka5un")]
+layout_mode = 2
+text = "Subsection Label"
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Label"
+
+[node name="CardButton" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("5_em21p")]
+layout_mode = 2
+text = "Card Button"
+
+[node name="CardIconButton" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("6_63q7k")]
+layout_mode = 2
+
+[node name="Text" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("5_c4an7")]
+layout_mode = 2
+title = "Text"
+description = "Text with value description"
+
+[node name="TextInput" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("6_fb72f")]
+layout_mode = 2
+title = "Text Input"
+description = "TextInput Description"
+placeholder_text = "placeholder"
+
+[node name="Tree" type="Tree" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+column_titles_visible = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabsHeader" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("5_yvkl2")]
+layout_mode = 2
+
+[node name="TabLabel" parent="MarginContainer/HBoxContainer/VBoxContainer2/TabsHeader" instance=ExtResource("6_cdmjx")]
+layout_mode = 2
+selected = true
+
+[node name="TabLabel2" parent="MarginContainer/HBoxContainer/VBoxContainer2/TabsHeader" instance=ExtResource("6_cdmjx")]
+layout_mode = 2
+selected = false
+
+[node name="TabLabel3" parent="MarginContainer/HBoxContainer/VBoxContainer2/TabsHeader" instance=ExtResource("6_cdmjx")]
+layout_mode = 2
+selected = false
+
+[node name="Slider" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_2rr5x")]
+layout_mode = 2
+text = "Slider"
+
+[node name="Toggle" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_3a7s2")]
+layout_mode = 2
+text = "Toggle"
+separator_visible = false
+description = "Toggle description"
+
+[node name="Dropdown" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("7_i5gpo")]
+layout_mode = 2
+title = "Dropdown"
+description = "Dropdown Description"
+
+[node name="Status" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("10_w1v8b")]
+layout_mode = 2
+title = "Status"
+description = "Status description"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+text = "Panel container"
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_type_variation = &"LightPanel"
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/PanelContainer2"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+text = "Light Panel container"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("8_ybko6")]
+layout_mode = 2
+
+[node name="QuickAccessCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("8_4qcrd")]
+layout_mode = 2
+title = "QAM Card"
+
+[node name="RunningGameCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("9_alt0d")]
+layout_mode = 2
+
+[node name="LevelIndicator" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("11_65ipo")]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="PluginStoreCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("12_xoo83")]
+layout_mode = 2

@@ -40,11 +40,20 @@ var logger: Log.Logger
 func _ready() -> void:
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
+	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
 	update_button.visible = PluginLoader.is_upgradable(plugin_id)
 	action_button.pressed.connect(_on_install_button)
 	update_button.pressed.connect(_on_update_button)
 	PluginLoader.plugin_upgradable.connect(_on_update_available)
 	_set_installed_state()
+
+
+func _on_theme_changed() -> void:
+	# Configure the highlight texture from the theme
+	var highlight_texture := get_theme_icon("highlight", "ExpandableCard")
+	if highlight_texture:
+		highlight.texture = highlight_texture
 
 
 # Updates the store item based on whether it is installed

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://chq023a11tl3k"]
+[gd_scene load_steps=22 format=3 uid="uid://chq023a11tl3k"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui_only_qam/qam/quick_access_menu.gd" id="1_15b2t"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_14qhq"]
@@ -17,13 +17,7 @@
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="14_6yknl"]
 [ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/qam/quick_settings_card.tscn" id="15_tmqe2"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_bvaah"]
-[ext_resource type="PackedScene" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="17_ohpj3"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s3u8f"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_bottom_left = 10
-shadow_size = 5
-shadow_offset = Vector2(-4, 4)
+[ext_resource type="PackedScene" uid="uid://v751ima8r8vg" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="17_ohpj3"]
 
 [sub_resource type="Animation" id="Animation_5up20"]
 resource_name = "enter"
@@ -87,26 +81,7 @@ _data = {
 "exit": SubResource("Animation_4xb6e")
 }
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sr337"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0hs8y"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
-visible = false
 z_index = 20
 layout_mode = 3
 anchors_preset = 11
@@ -139,7 +114,7 @@ grow_vertical = 2
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s3u8f")
+theme_type_variation = &"QAM"
 
 [node name="VisibilityManager" type="Node" parent="MarginContainer/PanelContainer"]
 script = ExtResource("2_14qhq")
@@ -237,8 +212,6 @@ focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 
 [node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("17_ohpj3")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_sr337")
 
 [node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("15_tmqe2")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_0hs8y")

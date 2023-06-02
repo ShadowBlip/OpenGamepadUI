@@ -3,6 +3,7 @@ extends Control
 const Gamescope := preload("res://core/global/gamescope.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 const StateMachine := preload("res://assets/state/state_machines/global_state_machine.tres")
+const SettingsManager := preload("res://core/global/settings_manager.tres")
 var LaunchManager := preload("res://core/global/launch_manager.tres")
 
 var qam_state = load("res://assets/state/states/quick_access_menu.tres")
@@ -34,6 +35,18 @@ func _init():
 
 ## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
+	# Set the theme if one was set
+	var theme_path := SettingsManager.get_value("general", "theme", "") as String
+	if theme_path == "":
+		logger.debug("No theme set. Using default theme.")
+	if theme_path != "":
+		logger.debug("Setting theme to: " + theme_path)
+		var loaded_theme = load(theme_path)
+		if loaded_theme != null:
+			theme = loaded_theme
+		else:
+			logger.debug("Unable to load theme")
+
 	# Set window size to native resolution
 	var screen_size : Vector2i = DisplayServer.screen_get_size()
 	var window : Window = get_window()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://d2jiecrd5sw4s"]
+[gd_scene load_steps=39 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
@@ -38,13 +38,6 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/debug/processes_menu.tscn" id="36_hnokx"]
 [ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/vapor_ui/settings/logging_settings_menu.tscn" id="37_iwtxk"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oylvd"]
-bg_color = Color(0.156863, 0.164706, 0.211765, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ob3o7"]
 content_margin_top = 20.0
 content_margin_bottom = 20.0
@@ -52,15 +45,6 @@ color = Color(0.384314, 0.447059, 0.643137, 1)
 grow_begin = -10.0
 grow_end = -10.0
 vertical = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xa6qt"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -104,7 +88,7 @@ theme_override_constants/separation = 20
 
 [node name="VersionContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_oylvd")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer"]
 layout_mode = 2
@@ -145,7 +129,7 @@ text = "v0.0.0"
 [node name="ButtonContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_oylvd")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer"]
 layout_mode = 2
@@ -188,8 +172,8 @@ action = 3
 on_signal = "focus_entered"
 
 [node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "pressed"
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
+on_signal = "button_up"
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -325,7 +309,7 @@ theme_override_constants/separation = 20
 [node name="TitleContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_oylvd")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer"]
 layout_mode = 2
@@ -345,7 +329,7 @@ uppercase = true
 [node name="ContentContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_oylvd")
+theme_type_variation = &"SettingsMenu"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer"]
 layout_mode = 2
@@ -396,9 +380,6 @@ state = ExtResource("20_5v03o")
 [node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_dooq8")]
 visible = false
 layout_mode = 2
-
-[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer" index="2"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_xa6qt")
 
 [node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_0u4bv")]
 visible = false

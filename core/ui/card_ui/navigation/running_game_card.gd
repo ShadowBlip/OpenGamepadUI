@@ -35,6 +35,7 @@ var button_scene := load("res://core/ui/components/card_button.tscn") as PackedS
 @onready var resume_button := $%ResumeButton
 @onready var exit_button := $%ExitButton
 @onready var highlight := $%HighlightTexture 
+@onready var highlight_rect := $%HighlightTextureRect
 @onready var inside_panel := $%InsidePanel
 @onready var focus_group := $%FocusGroup as FocusGroup
 
@@ -52,7 +53,9 @@ func _ready() -> void:
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	pressed.connect(_on_pressed)
-	
+	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
+
 	# Connect sub-buttons
 	var on_resume_game := func():
 		state_machine.set_state([in_game_state])
@@ -62,6 +65,13 @@ func _ready() -> void:
 		launch_manager.stop(running_app)
 		state_machine.pop_state()
 	exit_button.pressed.connect(on_exit_game)
+
+
+func _on_theme_changed() -> void:
+	# Configure the highlight texture from the theme
+	var highlight_texture := get_theme_icon("highlight", "ExpandableCard")
+	if highlight_texture:
+		highlight_rect.texture = highlight_texture
 
 
 # Sets the running app for this card

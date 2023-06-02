@@ -57,6 +57,18 @@ func _ready() -> void:
 	
 	# Load any platform-specific logic
 	Platform.load(get_tree().get_root())
+	
+	# Set the theme if one was set
+	var theme_path := SettingsManager.get_value("general", "theme", "") as String
+	if theme_path == "":
+		logger.debug("No theme set. Using default theme.")
+	if theme_path != "":
+		logger.debug("Setting theme to: " + theme_path)
+		var loaded_theme = load(theme_path)
+		if loaded_theme != null:
+			theme = loaded_theme
+		else:
+			logger.debug("Unable to load theme")
 
 	# If this is the first boot, enter the first-boot menu state. Otherwise,
 	# go to the home state.
