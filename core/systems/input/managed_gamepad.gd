@@ -371,8 +371,6 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		"ABS_Y":
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
-			if value == 0 and axis_pressed == 0:
-				return
 
 			# Handle button up
 			if not pressed:
@@ -402,8 +400,6 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		"ABS_X":
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
-			if value == 0 and axis_pressed == 0:
-				return
 
 			# Handle button up
 			if not pressed:
