@@ -301,44 +301,44 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		return
 
 	# Intercept mode ALL will not send *any* input to the virtual gamepad
-	match event.get_code():
-		event.BTN_SOUTH:
+	match event.get_code_name():
+		"BTN_SOUTH":
 			_send_input("ogui_south", event.value == 1, 1)
 			_send_input("ui_accept", event.value == 1, 1)
-		event.BTN_NORTH:
+		"BTN_NORTH":
 			_send_input("ogui_north", event.value == 1, 1)
-		event.BTN_WEST:
+		"BTN_WEST":
 			_send_input("ogui_west", event.value == 1, 1)
 			_send_input("ui_select", event.value == 1, 1)
-		event.BTN_EAST:
+		"BTN_EAST":
 			_send_input("ogui_east", event.value == 1, 1)
-		event.BTN_MODE:
+		"BTN_MODE":
 			_send_input("ogui_guide", event.value == 1, 1)
-		event.BTN_TR:
+		"BTN_TR":
 			_send_input("ogui_tab_right", event.value == 1, 1)
-		event.BTN_TL:
+		"BTN_TL":
 			_send_input("ogui_tab_left", event.value == 1, 1)
-		event.BTN_TRIGGER_HAPPY1:
+		"BTN_TRIGGER_HAPPY1":
 			var pressed := event.value == 1
 			_send_input("ui_left", pressed, 1)
 			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.LEFT, pressed)
 			return
-		event.BTN_TRIGGER_HAPPY2:
+		"BTN_TRIGGER_HAPPY2":
 			var pressed := event.value == 1
 			_send_input("ui_right", pressed, 1)
 			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.RIGHT, pressed)
 			return
-		event.BTN_TRIGGER_HAPPY3:
+		"BTN_TRIGGER_HAPPY3":
 			var pressed := event.value == 1
 			_send_input("ui_up", pressed, 1)
 			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.UP, pressed)
 			return
-		event.BTN_TRIGGER_HAPPY4:
+		"BTN_TRIGGER_HAPPY4":
 			var pressed := event.value == 1
 			_send_input("ui_down", pressed, 1)
 			axis_pressed = Bitwise.set_flag_to(axis_pressed, AXIS_PRESSED.DOWN, pressed)
 			return
-		event.ABS_HAT0Y:
+		"ABS_HAT0Y":
 			if event.value < 0: # UP
 				_send_input("ui_up", true)
 				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.UP)
@@ -353,7 +353,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			else:
 				_send_input("ui_down", false)
 				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.DOWN)
-		event.ABS_HAT0X:
+		"ABS_HAT0X":
 			if event.value < 0: # LEFT
 				_send_input("ui_left", true)
 				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.LEFT)
@@ -368,10 +368,10 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			else:
 				_send_input("ui_right", false)
 				axis_pressed = Bitwise.clear_flag(axis_pressed, AXIS_PRESSED.RIGHT)
-		event.ABS_Y:
+		"ABS_Y":
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
-			if value == 0:
+			if value == 0 and axis_pressed == 0:
 				return
 
 			# Handle button up
@@ -399,10 +399,10 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 				_send_input("ui_up", true)
 				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.UP)
 				return
-		event.ABS_X:
+		"ABS_X":
 			var value := event.value
 			var pressed := _is_axis_pressed(event, value > 0)
-			if value == 0:
+			if value == 0 and axis_pressed == 0:
 				return
 
 			# Handle button up
@@ -430,11 +430,11 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 				_send_input("ui_left", true)
 				axis_pressed = Bitwise.set_flag(axis_pressed, AXIS_PRESSED.LEFT)
 				return
-		event.ABS_RY:
+		"ABS_RY":
 			var value := _normalize_axis(event)
 			_send_joy_input(JOY_AXIS_RIGHT_Y, value)
 			return
-		event.ABS_RX:
+		"ABS_RX":
 			var value := _normalize_axis(event)
 			_send_joy_input(JOY_AXIS_RIGHT_X, value)
 			return
@@ -600,14 +600,16 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 	var threshold := 0.35
 	var value := _normalize_axis(event)
-
+	logger.debug("_is_axis_pressed: " + event.get_code_name() + " code: " + str(event.get_code()) + " value: " + str(value))
 	if is_positive:
 		if value > threshold:
+			logger.debug("_is_axis_pressed: true")
 			return true
 	else:
 		if value < -threshold:
+			logger.debug("_is_axis_pressed: true")
 			return true
-
+	logger.debug("_is_axis_pressed: false")
 	return false
 
 
