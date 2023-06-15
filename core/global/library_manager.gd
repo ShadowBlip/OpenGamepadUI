@@ -30,20 +30,12 @@ const REQUIRED_FIELDS: Array = ["library_id"]
 
 signal library_registered(library: Library)
 signal library_unregistered(library_id: String)
-signal library_reloaded(first_load: bool)
+signal library_reloaded()
 signal library_loaded(library_id: String)
 signal library_item_added(item: LibraryItem)
 signal library_item_removed(item: LibraryItem)
 signal library_launch_item_added(item: LibraryLaunchItem)
 signal library_launch_item_removed(item: LibraryLaunchItem)
-## DEPRECATED - Use InstallManager
-signal item_installed(item: LibraryLaunchItem, success: bool)
-## DEPRECATED - Use InstallManager
-signal item_updated(item: LibraryLaunchItem, success: bool)
-## DEPRECATED - Use InstallManager
-signal item_uninstalled(item: LibraryLaunchItem, success: bool)
-## DEPRECATED - Use InstallManager
-signal item_progressed(item: LibraryLaunchItem, percent_completed: float)
 
 # Dictionary of registered library providers
 # The dictionary is in the form of:
@@ -57,47 +49,8 @@ var _libraries: Dictionary = {}
 #     "game-name": <LibraryItem>
 #   }
 var _available_apps: Dictionary = {}
-# Array of apps that are currently installed
-var _installed_apps: PackedStringArray = []
-var _sorted_apps_by_name: PackedStringArray = []
-var _app_by_category: Dictionary = {}
-var _app_by_tag: Dictionary = {}
 var _app_by_library: Dictionary = {}
-var _initialized := false
-var logger := Log.get_logger("LibraryManager")
-
-
-## DEPRECATED - Use InstallManager
-## Installs the given library launch item using its provider
-func install(item: LibraryLaunchItem) -> void:
-	# Get the library provider for this launch item 
-	var provider := get_library_by_id(item._provider_id)
-	if not provider:
-		logger.error("No provider to install item: " + item.name)
-		return
-	provider.install(item)
-
-
-## DEPRECATED - Use InstallManager
-## Updates the given library launch item using its provider
-func update(item: LibraryLaunchItem) -> void:
-	# Get the library provider for this launch item 
-	var provider := get_library_by_id(item._provider_id)
-	if not provider:
-		logger.error("No provider to update item: " + item.name)
-		return
-	provider.update(item)
-
-
-## DEPRECATED - Use InstallManager
-## Uninstalls the given library launch item using its provider
-func uninstall(item: LibraryLaunchItem) -> void:
-	# Get the library provider for this launch item 
-	var provider := get_library_by_id(item._provider_id)
-	if not provider:
-		logger.error("No provider to uninstall item: " + item.name)
-		return
-	provider.uninstall(item)
+var logger := Log.get_logger("LibraryManager", Log.LEVEL.DEBUG)
 
 
 ## Returns library items based on the given modifiers. A modifier is a [Callable]
@@ -141,11 +94,11 @@ func filter_installed(apps: Array[LibraryItem]) -> Array[LibraryItem]:
 
 
 ## Returns a dictionary of all installed apps
-func get_installed() -> Dictionary:
-	var installed: Dictionary = {}
-	for name in _installed_apps:
-		installed[name] = _available_apps[name]
-	return installed
+#func get_installed() -> Dictionary:
+#	var installed: Dictionary = {}
+#	for name in _installed_apps:
+#		installed[name] = _available_apps[name]
+#	return installed
 	
 
 ## Returns an dictionary of all available apps
@@ -153,20 +106,13 @@ func get_available() -> Dictionary:
 	return _available_apps.duplicate()
 
 
-## Returns whether or not the library has loaded for the first time
-func is_initialized() -> bool:
-	return _initialized
-
-
 ## Loads all library items from each provider and sorts them. This can take
 ## a while, so should be called asyncronously
 func reload_library() -> void:
 	for library in get_libraries():
 		load_library(library.library_id)
-	
-	var first_load := !_initialized
-	_initialized = true
-	library_reloaded.emit(first_load)
+
+	library_reloaded.emit()
 
 
 ## Add the given library launch item to the list of available apps.
@@ -174,7 +120,7 @@ func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> voi
 	if not has_library(library_id):
 		logger.warn("Unable to add library launch item. Library is not registered: " + library_id)
 		return
-
+	
 	# Create a new library item if one does not exist.
 	var is_new := false
 	var library_item: LibraryItem
@@ -188,38 +134,7 @@ func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> voi
 	# Update the provider fields on the library item
 	item._provider_id = library_id
 	library_item.launch_items.push_back(item)
-
-	# Sort apps by installed
-	if item.installed and not item.name in _installed_apps:
-		var idx := _installed_apps.bsearch(item.name)
-		_installed_apps.insert(idx, item.name)
-
-	# Sort apps alphabetically 
-	if is_new:
-		var idx := _sorted_apps_by_name.bsearch(item.name)
-		_sorted_apps_by_name.insert(idx, item.name)
-
-	# Sort apps by provider
-	if not library_id in _app_by_library:
-		_app_by_library[library_id] = []
-	_app_by_library[library_id].push_back(item.name)
 	
-	# Sort by category
-	for category in item.categories:
-		if not category in _app_by_category:
-			_app_by_category[category] = []
-		if is_new:
-			var idx := _app_by_category[category].bsearch(item.name) as int
-			_app_by_category[category].insert(idx, item.name)
-
-	# Sort by tag
-	for tag in item.tags:
-		if not tag in _app_by_tag:
-			_app_by_tag[tag] = []
-		if is_new:
-			var idx := _app_by_tag[tag].bsearch(item.name) as int
-			_app_by_tag[tag].insert(idx, item.name)
-
 	# Send signals to inform about library item
 	if is_new:
 		library_item_added.emit(library_item)
@@ -255,28 +170,6 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 		# Erase from available apps
 		_available_apps.erase(app.name)
 
-		# Erase from installed apps
-		var idx := _installed_apps.find(app.name)
-		if idx != -1:
-			_installed_apps.remove_at(idx)
-
-		# Erase from sorted apps
-		idx = _sorted_apps_by_name.find(app.name)
-		if idx != -1:
-			_sorted_apps_by_name.remove_at(idx)
-
-		# Erase from categories
-		for category in _app_by_category:
-			idx = category.find(app.name)
-			if idx != -1:
-				category.remove_at(idx)
-
-		# Erase from tags
-		for tag in _app_by_tag:
-			idx = tag.find(app.name)
-			if idx != -1:
-				tag.remove_at(idx)
-
 		library_item_removed.emit(app)
 		app.removed_from_library.emit()
 
@@ -287,7 +180,7 @@ func load_library(library_id: String) -> void:
 	var items: Array = await library.get_library_launch_items()
 	for i in items:
 		var item: LibraryLaunchItem = i
-		add_library_launch_item(library_id, item)
+		add_library_launch_item.call_deferred(library_id, item)
 
 
 ## Returns true if the app with the given name exists in the library.
@@ -343,16 +236,9 @@ func register_library(library: Library) -> void:
 		return
 	# Set library properties
 	_libraries[library.library_id] = library
-
-	# Connect to library signals 
-	library.install_completed.connect(_on_install_completed)
-	library.uninstall_completed.connect(_on_uninstall_completed)
-	library.update_completed.connect(_on_update_completed)
-	library.install_progressed.connect(_on_install_progressed)
 	
-	# Load the library if the manager is already initialized
-	if _initialized:
-		load_library(library.library_id)
+	# Load the library
+	load_library(library.library_id)
 		
 	logger.info("Registered library: " + library.library_id)
 	library_registered.emit(library)
@@ -369,24 +255,6 @@ func unregister_library(library: Library) -> void:
 	_libraries.erase(library.library_id)
 	logger.info("Unregistered library: " + library.library_id)
 	library_unregistered.emit(library.library_id)
-
-
-func _on_install_completed(item: LibraryLaunchItem, success: bool) -> void:
-	item_installed.emit(item, success)
-
-
-## DEPRECATED - Use InstallManager
-func _on_update_completed(item: LibraryLaunchItem, success: bool) -> void:
-	item_updated.emit(item, success)
-
-
-func _on_uninstall_completed(item: LibraryLaunchItem, success: bool) -> void:
-	item_uninstalled.emit(item, success)
-
-
-## DEPRECATED - Use InstallManager
-func _on_install_progressed(item: LibraryLaunchItem, percent_completed: float) -> void:
-	item_progressed.emit(item, percent_completed)
 
 
 # Validates the given library and returns true if it has the required properties
