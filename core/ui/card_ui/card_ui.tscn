@@ -160,9 +160,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 
 [node name="SearchBarMenu" parent="MenuContent/TopMargin" instance=ExtResource("10_7bl6b")]
+visible = false
 layout_mode = 2
 
 [node name="ButtonMenu" parent="MenuContent/TopMargin" instance=ExtResource("11_x7ns7")]
+visible = false
 layout_mode = 2
 
 [node name="BottomMargin" type="MarginContainer" parent="MenuContent"]
@@ -234,7 +236,6 @@ layout_mode = 2
 
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
-visible = false
 z_index = 20
 layout_mode = 1
 anchors_preset = 15
