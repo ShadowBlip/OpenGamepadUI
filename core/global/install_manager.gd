@@ -12,19 +12,6 @@ enum REQUEST_TYPE {
 	UPDATE,
 }
 
-class Request extends RefCounted:
-	signal progressed(progress: float)
-	signal completed(success: bool)
-	var provider: Library
-	var item: LibraryLaunchItem
-	var progress: float
-	var success: bool
-	var _type: REQUEST_TYPE
-	
-	func _init(library_provider: Library, launch_item: LibraryLaunchItem) -> void:
-		provider = library_provider
-		item = launch_item
-
 var _current_req: Request
 var _install_queue: Array[Request] = []
 var logger := Log.get_logger("InstallManager")
@@ -121,3 +108,18 @@ func _process_install_queue() -> void:
 	
 	# Process more items in the queue if they exist
 	_process_install_queue.call_deferred()
+
+
+## An InstallManager Request defines a queued or in-progress app install
+class Request extends RefCounted:
+	signal progressed(progress: float)
+	signal completed(success: bool)
+	var provider: Library
+	var item: LibraryLaunchItem
+	var progress: float
+	var success: bool
+	var _type: REQUEST_TYPE
+	
+	func _init(library_provider: Library, launch_item: LibraryLaunchItem) -> void:
+		provider = library_provider
+		item = launch_item
