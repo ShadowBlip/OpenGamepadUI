@@ -1,5 +1,6 @@
 extends Control
 
+signal refresh_completed
 
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
@@ -9,9 +10,13 @@ var library_state := preload("res://assets/state/states/library.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var card_scene := preload("res://core/ui/components/card.tscn") as PackedScene
+
 var tween: Tween
+var refresh_requested := false
+var refresh_in_progress := false
 var _library := {}
 var _current_selection := {}
+var logger := Log.get_logger("LibraryMenu", Log.LEVEL.DEBUG)
 
 @export var tabs_state: TabContainerState
 
@@ -23,31 +28,54 @@ var _current_selection := {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
+	# Clear any example grid items
+	for child in installed_games_grid.get_children():
+		child.queue_free()
+
+	# Connect to state entered signals
 	library_state.state_entered.connect(_on_state_entered)
-	LibraryManager.library_reloaded.connect(_on_library_reloaded)
-	LibraryManager.library_registered.connect(_on_library_registered)
-	LibraryManager.library_unregistered.connect(_on_library_unregistered)
+	
+	# Listen for tab container changes
+	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
+	
+	# Listen for library changes
+	var on_library_changed := func(item: LibraryItem):
+		queue_refresh()
+	LibraryManager.library_item_added.connect(on_library_changed)
+	LibraryManager.library_item_removed.connect(on_library_changed)
+
+	# Listen for app install/uninstall changes
 	InstallManager.install_queued.connect(_on_install_queued)
 	InstallManager.install_completed.connect(_on_installed)
 	InstallManager.uninstall_completed.connect(_on_uninstalled)
 	if global_search != null:
 		global_search.search_submitted.connect(_on_search)
+	
+	# Queue a library refresh
+	queue_refresh()
+
+
+## Queues the library menu to be refreshed
+func queue_refresh() -> void:
+	refresh_requested = true
+	refresh()
+
+
+func refresh() -> void:
+	# Don't process if no refresh is requested or one is in progress
+	if not refresh_requested or refresh_in_progress:
+		return
+	refresh_requested = false
+	refresh_in_progress = true
+	await _reload_library()
+	refresh_in_progress = false
+	refresh_completed.emit()
+	refresh.call_deferred()
 
 
 func _on_state_entered(_from: State):
 	# Focus the first entry on state change
 	_on_tab_container_tab_changed(tab_container.current_tab)
-
-
-func _on_library_unregistered(_library_id: String) -> void:
-	_on_library_reloaded(false)
-
-
-func _on_library_registered(_library: Library) -> void:
-	if not LibraryManager.is_initialized():
-		return
-	_on_library_reloaded(false)
 
 
 # Handle searches
@@ -74,30 +102,43 @@ func _on_search(text: String):
 			item.visible = false
 
 
-func _on_library_reloaded(_first_load: bool) -> void:
-	# Clear our old library entries
-	# TODO: Make this better
-	for child in all_games_grid.get_children():
-		#all_games_grid.remove_child(child)
-		if child is FocusGroup:
-			continue
-		child.queue_free()
-	for child in installed_games_grid.get_children():
-		#all_games_grid.remove_child(child)
-		if child is FocusGroup:
-			continue
-		child.queue_free()
+func _reload_library() -> void:
+	logger.debug("Reloading library")
+
+	# Tab indexes for installed games vs available games
+	const installed_tab_idx := 0
+	const available_tab_idx := 1
 	
 	# Load our library entries and add them to all games
 	var available := LibraryManager.get_library_items()
-	_populate_grid(all_games_grid, available, 1)
+	
+	# If the library has been loaded before, check for removed items
+	if _library.size() > 0:
+		var card_names := _library[available_tab_idx].keys() as Array
 
+		# Delete any library cards that no longer exist in the library
+		for card_name in card_names:
+			if LibraryManager.has_app(card_name):
+				continue
+			var card := _library[available_tab_idx][card_name] as Control
+			_library[available_tab_idx].erase(card_name)
+			
+			if not card_name in _library[installed_tab_idx]:
+				continue
+			card = _library[installed_tab_idx][card_name] as Control
+			_library[installed_tab_idx].erase(card_name)
+			card.queue_free()
+
+	# Populate the all games grid
+	await _populate_grid(all_games_grid, available, available_tab_idx)
+
+	# Populate the installed games grid
 	var modifiers: Array[Callable] = [
 		LibraryManager.filter_installed,
 		LibraryManager.sort_by_name,
 	]
 	var installed := LibraryManager.get_library_items(modifiers)
-	_populate_grid(installed_games_grid, installed, 0)
+	await _populate_grid(installed_games_grid, installed, installed_tab_idx)
 
 
 # Builds a home card from the given library item
@@ -117,8 +158,14 @@ func _build_card(item: LibraryItem) -> GameCard:
 
 # Populates the given grid with library items
 func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
-	for i in library_items:
-		var item: LibraryItem = i
+	for i in range(library_items.size()):
+		var item: LibraryItem = library_items[i]
+		
+		# If the card node already exists, move it to the correct place
+		if tab_num in _library and item.name in _library[tab_num]:
+			var card := _library[tab_num][item.name] as GameCard
+			grid.move_child(card, i)
+			continue
 		
 		# Build a card for each library item
 		var card := await _build_card(item)

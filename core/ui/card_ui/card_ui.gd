@@ -69,16 +69,10 @@ func _ready() -> void:
 			theme = loaded_theme
 		else:
 			logger.debug("Unable to load theme")
-
-	# If this is the first boot, enter the first-boot menu state. Otherwise,
-	# go to the home state.
-	if SettingsManager.get_value("general", "first_boot", true):
-		state_machine.push_state(first_boot_state)
-	else:
-		# Initialize the state machine with its initial state
-		state_machine.push_state(home_state)
+	
+	# Listen for global state changes
 	state_machine.state_changed.connect(_on_state_changed)
-
+	
 	# Show/hide the overlay when we enter/exit the in-game state
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
@@ -140,6 +134,14 @@ func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
 	boot_video.visible = false
+
+	# If this is the first boot, enter the first-boot menu state. Otherwise,
+	# go to the home state.
+	if SettingsManager.get_value("general", "first_boot", true):
+		state_machine.push_state(first_boot_state)
+	else:
+		# Initialize the state machine with its initial state
+		state_machine.push_state(home_state)
 
 
 func _input(event: InputEvent) -> void:
