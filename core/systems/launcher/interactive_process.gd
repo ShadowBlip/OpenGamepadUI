@@ -64,6 +64,11 @@ func stop() -> void:
 	pty = null
 
 
+## Returns whether or not the interactive process is still running
+func is_running() -> bool:
+	return OS.is_process_running(pid)
+
+
 func output_to_log_file(log_file: FileAccess, chunk_size: int = 1024) -> int:
 	if not log_file:
 		logger.warn("Unable to log output. Log file has not been opened.")
