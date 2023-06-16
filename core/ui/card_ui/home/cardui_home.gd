@@ -17,6 +17,7 @@ var refresh_requested := false
 var refresh_in_progress := false
 var recent_apps: Array
 var tween: Tween
+var logger := Log.get_logger("HomeMenu", Log.LEVEL.INFO)
 
 @onready var container: HBoxContainer = $%CardContainer
 @onready var banner: TextureRect = $%BannerTexture
@@ -119,6 +120,7 @@ func _on_install_queued(req: InstallManager.Request) -> void:
 func _on_library_item_changed(item: LibraryItem) -> void:
 	if not item.name in recent_apps:
 		return
+	logger.debug("Recent app changed: " + item.name)
 	queue_refresh()
 
 
@@ -214,6 +216,7 @@ func _build_card(item: LibraryItem) -> GameCard:
 
 # Populates the given grid with library items
 func _repopulate_grid(grid: HBoxContainer, library_items: Array[LibraryItem]) -> void:
+	logger.debug("Repopulating grid: " + grid.name)
 	# Create an array of library item names
 	var item_names := PackedStringArray()
 	for item in library_items:
@@ -223,8 +226,12 @@ func _repopulate_grid(grid: HBoxContainer, library_items: Array[LibraryItem]) ->
 	for card_name in card_nodes.keys():
 		if card_name in item_names:
 			continue
+		if not is_instance_valid(card_nodes[card_name]):
+			continue
+		logger.debug("Game " + card_name + " no longer exists in library. Removing.")
 		var card_to_remove := card_nodes[card_name] as Control
 		card_to_remove.queue_free()
+		card_nodes.erase(card_name)
 	
 	# Organize posters by recently played
 	var i: int = 0
@@ -232,7 +239,7 @@ func _repopulate_grid(grid: HBoxContainer, library_items: Array[LibraryItem]) ->
 		var card: Control
 		
 		# Build a card for each library item if one does not exist
-		if item.name in card_nodes:
+		if item.name in card_nodes and is_instance_valid(card_nodes[item.name]):
 			card = card_nodes[item.name]
 		else:
 			card = await _build_card(item) as Control
