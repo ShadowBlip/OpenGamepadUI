@@ -28,13 +28,21 @@ class_name LibraryManager
 
 const REQUIRED_FIELDS: Array = ["library_id"]
 
+## Emitted when a new [Library] has been registered with the [LibraryManager]
 signal library_registered(library: Library)
+## Emitted when a [Library] unregisters with the [LibraryManager]
 signal library_unregistered(library_id: String)
+## Emitted when 'reload_library()' is called
 signal library_reloaded()
+## Emitted when a [Library] has finished loading
 signal library_loaded(library_id: String)
+## Emitted when a new [LibraryItem] is added to the library
 signal library_item_added(item: LibraryItem)
+## Emitted when a [LibraryItem] is removed from the library
 signal library_item_removed(item: LibraryItem)
+## Emitted when a [LibraryLaunchItem] is added to a [LibraryItem]
 signal library_launch_item_added(item: LibraryLaunchItem)
+## Emitted when a [LibraryLaunchItem] is removed from a [LibraryItem]
 signal library_launch_item_removed(item: LibraryLaunchItem)
 
 # Dictionary of registered library providers
@@ -49,8 +57,7 @@ var _libraries: Dictionary = {}
 #     "game-name": <LibraryItem>
 #   }
 var _available_apps: Dictionary = {}
-var _app_by_library: Dictionary = {}
-var logger := Log.get_logger("LibraryManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("LibraryManager", Log.LEVEL.INFO)
 
 
 ## Returns library items based on the given modifiers. A modifier is a [Callable]
@@ -93,13 +100,11 @@ func filter_installed(apps: Array[LibraryItem]) -> Array[LibraryItem]:
 	return apps.filter(filter)
 
 
-## Returns a dictionary of all installed apps
-#func get_installed() -> Dictionary:
-#	var installed: Dictionary = {}
-#	for name in _installed_apps:
-#		installed[name] = _available_apps[name]
-#	return installed
-	
+## Filter the given array of apps by library provider
+func filter_by_library(apps: Array[LibraryItem], library_id: String) -> Array[LibraryItem]:
+	var filter := func(item: LibraryItem): return item.has_launch_item(library_id)
+	return apps.filter(filter)
+
 
 ## Returns an dictionary of all available apps
 func get_available() -> Dictionary:
@@ -152,20 +157,20 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 		logger.warn("Unable to remove {0}. Item does not exist in library.".format([name]))
 		return
 	
-	# Iterate backwards over the launch items and remove any matches
+	# Get the app from the app registry
 	var app := get_app_by_name(name)
-	var i := app.launch_items.size()
-	while i > 0:
-		var launch_item: LibraryLaunchItem = app.launch_items[i-1]
-		if launch_item._provider_id == library_id:
-			app.launch_items.remove_at(i-1)
-			if library_id in _app_by_library:
-				(_app_by_library[library_id] as Array).erase(name)
-			library_launch_item_removed.emit(launch_item)
-			launch_item.removed_from_library.emit()
-		i -= 1
+	if app == null:
+		logger.warn("Unable to remove launch item from app that doesn't exist: " + name)
+		return
 	
-	# Remove the library item if no launch items exist for it
+	# Remove the LibraryLaunchItem for this library
+	var launch_item := app.get_launch_item(library_id)
+	if launch_item != null:
+		app.erase_launch_item(library_id)
+		library_launch_item_removed.emit(launch_item)
+		launch_item.removed_from_library.emit()
+
+	# Remove the library item if no launch items exist for it anymore
 	if app.launch_items.size() == 0:
 		# Erase from available apps
 		_available_apps.erase(app.name)
@@ -181,6 +186,10 @@ func load_library(library_id: String) -> void:
 	for i in items:
 		var item: LibraryLaunchItem = i
 		add_library_launch_item.call_deferred(library_id, item)
+	
+	var send_signal := func():
+		library_loaded.emit(library_id)
+	send_signal.call_deferred()
 
 
 ## Returns true if the app with the given name exists in the library.
@@ -194,18 +203,6 @@ func get_app_by_name(name: String) -> LibraryItem:
 		logger.warn("App with name {0} not found".format([name]))
 		return null
 	return _available_apps[name]
-
-
-## Returns an array of library items for the given library provider
-func get_apps_by_library(library_id: String) -> Array[LibraryItem]:
-	var apps: Array[LibraryItem] = []
-	if not has_library(library_id):
-		logger.warn("Unable to get apps from library {0}. Library is not registered.".format([library_id]))
-		return apps
-	var app_names := _app_by_library[library_id] as Array
-	for name in app_names:
-		apps.push_back(get_app_by_name(name))
-	return apps
 
 
 ## Returns true if the library with the given id is registered
@@ -237,6 +234,14 @@ func register_library(library: Library) -> void:
 	# Set library properties
 	_libraries[library.library_id] = library
 	
+	# Connect to library signals
+	var on_launch_item_added := func(launch_item: LibraryLaunchItem):
+		add_library_launch_item(library.library_id, launch_item)
+	library.launch_item_added.connect(on_launch_item_added)
+	var on_launch_item_removed := func(launch_item: LibraryLaunchItem):
+		remove_library_launch_item(library.library_id, launch_item.name)
+	library.launch_item_removed.connect(on_launch_item_added)
+	
 	# Load the library
 	load_library(library.library_id)
 		
@@ -249,9 +254,22 @@ func unregister_library(library: Library) -> void:
 	if not library.library_id in _libraries:
 		logger.warn("Library is already unregistered")
 		return
-	if library.library_id in _app_by_library:
-		for app in _app_by_library[library.library_id]:
-			remove_library_launch_item(library.library_id, app)
+	
+	# Find all library/launch items this library is a provider for and remove them
+	var filters: Array[Callable] = [filter_by_library.bind(library.library_id)]
+	var apps := get_library_items(filters)
+	for app in apps:
+		remove_library_launch_item(library.library_id, app.name)
+
+	# Disconnect from library signals
+	for connection in library.launch_item_added.get_connections():
+		var method := connection["callable"] as Callable
+		library.launch_item_added.disconnect(method)
+	for connection in library.launch_item_removed.get_connections():
+		var method := connection["callable"] as Callable
+		library.launch_item_removed.disconnect(method)
+
+	# Remove the library from the library registry
 	_libraries.erase(library.library_id)
 	logger.info("Unregistered library: " + library.library_id)
 	library_unregistered.emit(library.library_id)
