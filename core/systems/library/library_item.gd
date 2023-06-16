@@ -26,7 +26,7 @@ signal upgraded(launch_item: LibraryLaunchItem)
 ## Name of the game
 @export var name: String
 ## An array of [LibraryLaunchItem] resources that this game supports
-@export var launch_items: Array = []
+@export var launch_items: Array[LibraryLaunchItem] = []
 ## An array of tags associated with this game
 @export var tags: PackedStringArray
 ## An array of categories the game belongs to
@@ -49,6 +49,22 @@ func get_launch_item(provider_id: String) -> LibraryLaunchItem:
 		if launch_item._provider_id == provider_id:
 			return launch_item
 	return null
+
+
+## Returns true if the [LibraryItem] has a [LibraryLaunchItem] from the given provider
+func has_launch_item(provider_id: String) -> bool:
+	return get_launch_item(provider_id) != null
+
+
+## Removes the [LibraryLaunchItem] associated with the given launch provider.
+func erase_launch_item(provider_id: String) -> void:
+	var to_erase: Array[LibraryLaunchItem] = []
+	for launch_item in launch_items:
+		if launch_item._provider_id == provider_id:
+			to_erase.append(launch_item)
+	
+	for item in to_erase:
+		launch_items.erase(item)
 
 
 ## Returns true if at least one library provider has this item installed.

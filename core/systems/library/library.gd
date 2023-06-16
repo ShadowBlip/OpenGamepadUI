@@ -19,6 +19,10 @@ signal update_completed(item: LibraryLaunchItem, success: bool)
 signal uninstall_completed(item: LibraryLaunchItem, success: bool)
 ## Should be emitted when a library item install is progressing
 signal install_progressed(item: LibraryLaunchItem, percent_completed: float)
+## Should be emitted when a new library item was added to the library
+signal launch_item_added(item: LibraryLaunchItem)
+## Should be emitted when a library item was removed from the library
+signal launch_item_removed(item: LibraryLaunchItem)
 
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 
