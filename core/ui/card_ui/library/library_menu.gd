@@ -16,7 +16,7 @@ var refresh_requested := false
 var refresh_in_progress := false
 var _library := {}
 var _current_selection := {}
-var logger := Log.get_logger("LibraryMenu", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("LibraryMenu", Log.LEVEL.INFO)
 
 @export var tabs_state: TabContainerState
 
