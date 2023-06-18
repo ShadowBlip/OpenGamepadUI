@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dci64so7q3y67"]
+
+[ext_resource type="Script" path="res://core/ui/components/shortcut_button_icon.gd" id="1_0pf4u"]
+[ext_resource type="Texture2D" uid="uid://dxcfr4bhfw4lq" path="res://addons/controller_icons/assets/key/ctrl.png" id="2_hyqpc"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="2_p81n3"]
+[ext_resource type="Texture2D" uid="uid://b8no45t86rrn6" path="res://addons/controller_icons/assets/key/f1.png" id="3_s205v"]
+
+[node name="ShortcutButtonIcon" type="HBoxContainer"]
+offset_right = 98.0
+offset_bottom = 40.0
+script = ExtResource("1_0pf4u")
+
+[node name="ModifierIcon" type="TextureRect" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_hyqpc")
+expand_mode = 1
+script = ExtResource("2_p81n3")
+path = "key/ctrl"
+force_type = 2
+
+[node name="PlusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "+"
+
+[node name="ButtonIcon" type="TextureRect" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("3_s205v")
+expand_mode = 1
+script = ExtResource("2_p81n3")
+path = "key/f1"
