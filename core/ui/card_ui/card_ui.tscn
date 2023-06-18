@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=32 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://b30stcxjwk3od" path="res://core/ui/card_ui/ootbe/first_boot_menu.tscn" id="14_dpfu1"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="14_lsaok"]
+[ext_resource type="PackedScene" uid="uid://dj1fooc3gh13l" path="res://core/ui/card_ui/help/help_menu.tscn" id="15_m1wp2"]
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
@@ -140,6 +141,10 @@ visible = false
 layout_mode = 2
 
 [node name="FirstBootMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("14_dpfu1")]
+visible = false
+layout_mode = 2
+
+[node name="HelpMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("15_m1wp2")]
 visible = false
 layout_mode = 2
 
