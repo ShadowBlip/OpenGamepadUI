@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlatformAynGen1" load_steps=2 format=3 uid="uid://cjpjdu8imyb7k"]
+
+[ext_resource type="Script" path="res://core/platform/ayn_gen1.gd" id="1_5mlet"]
+
+[resource]
+script = ExtResource("1_5mlet")
+name = ""

@@ -15,6 +15,7 @@ enum PLATFORM {
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
 	AYANEO_GEN5,  ## Includes AIR Plus
+	AYN_GEN1,  ## Includes Loki Max, possibly others at release.
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
 	GPD_GEN2, ## WinMax2
@@ -96,6 +97,8 @@ func _init() -> void:
 		platform = load("res://core/platform/ayaneo_gen4.tres")
 	if PLATFORM.AYANEO_GEN5 in flags:
 		platform = load("res://core/platform/ayaneo_gen5.tres")
+	if PLATFORM.AYN_GEN1 in flags:
+		platform = load("res://core/platform/ayn_gen1.tres")
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
@@ -217,8 +220,11 @@ func _read_dmi() -> PLATFORM:
 		logger.debug("Detected AYANEO Gen5 platform")
 		return PLATFORM.AYANEO_GEN5
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO NEXT platform")
+		logger.debug("Detected AYANEO Gen2 platform")
 		return PLATFORM.AYANEO_GEN2
+	elif product_name.contains("Loki Max") and vendor_name == "ayn":
+		logger.debug("Detected Ayn Gen1 platform")
+		return PLATFORM.AYN_GEN1
 	elif product_name.contains("G1618-03") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen1 platform")
 		return PLATFORM.GPD_GEN1
