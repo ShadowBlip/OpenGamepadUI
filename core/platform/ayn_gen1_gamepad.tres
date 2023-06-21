@@ -69,5 +69,5 @@ script = ExtResource("2_e4xbw")
 mapped_events = Array[ExtResource("1_gd222")]([SubResource("Resource_3n1cn"), SubResource("Resource_b6u2y"), SubResource("Resource_f5833")])
 kb_phys_path = "isa0060/serio0/input0"
 kb_phys_name = "AT Translated Set 2 keyboard"
-gamepad_phys_path = "usb-0000:64:00.3-3/input0"
+gamepad_phys_path = "usb-0000:74:00.0-1/input0"
 gamepad_phys_name = "Microsoft X-Box 360 pad"
