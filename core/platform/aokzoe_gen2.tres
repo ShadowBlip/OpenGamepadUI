@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlatformAOKZOEGen2" load_steps=2 format=3 uid="uid://bycqkgjqwofuy"]
+
+[ext_resource type="Script" path="res://core/platform/aokzoe_gen2.gd" id="1_33ncy"]
+
+[resource]
+script = ExtResource("1_33ncy")
+name = ""
