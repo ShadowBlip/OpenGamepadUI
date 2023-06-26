@@ -2,6 +2,7 @@
 PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
 ROOTFS ?= $(CACHE_DIR)/rootfs
+OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d'"' -f2)
 GODOT_VERSION ?= $(shell godot --version | cut -d'.' -f 1,2,3)
 GODOT_RELEASE ?= $(shell godot --version | cut -d'.' -f 4)
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
@@ -97,17 +98,43 @@ test: ## Run all unit tests
 .PHONY: build
 build: build/opengamepad-ui.x86_64 ## Build and export the project
 build/opengamepad-ui.x86_64: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
+	@echo "Building OpenGamepadUI v$(OGUI_VERSION)"
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
 .PHONY: update-pack
-update-pack: build/update.pck ## Build and export update pack
+update-pack: build/update.pck ## Build and export update pack (DEPRECATED)
 build/update.pck: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Update Pack)" $@
 
+.PHONY: metadata
+metadata: build/metadata.json ## Build update metadata
+build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadui.key
+	@echo "Building update metadata"
+	@FILE_SIGS='{'; \
+	cd build; \
+	# Sign any GDExtension libraries \
+	for lib in `ls *.so`; do \
+		echo "Signing file: $$lib"; \
+		SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key $$lib | base64 -w 0); \
+		FILE_SIGS="$$FILE_SIGS\"$$lib\": \"$$SIG\", "; \
+	done; \
+	# Sign the binary files \
+	echo "Signing file: opengamepad-ui.sh"; \
+	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.sh | base64 -w 0); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.sh\": \"$$SIG\", "; \
+	echo "Signing file: opengamepad-ui.x86_64"; \
+	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.x86_64 | base64 -w 0); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": \"$$SIG\"}"; \
+	# Write out the signatures to metadata.json \
+	echo "{\"version\": \"$(OGUI_VERSION)\", \"engine_version\": \"$(GODOT_REVISION)\", \"files\": $$FILE_SIGS}" > metadata.json
+
+	@echo "Metadata written to $@"
+
+
 .PHONY: plugins
-plugins: build/plugins.zip ## Build and export plugins
+plugins: build/plugins.zip ## Build and export plugins (DEPRECATED)
 build/plugins.zip: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
@@ -182,7 +209,7 @@ deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to 
 
 
 .PHONY: deploy-pack
-deploy-pack: dist/update.pck.sig ## Build and deploy update pack to remote device
+deploy-pack: dist/update.pck.sig ## Build and deploy update pack to remote device (DEPRECATED)
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .local/share/opengamepadui/updates
 	scp dist/update.pck $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
 	scp dist/update.pck.sig $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
@@ -235,8 +262,9 @@ rootfs: build/opengamepad-ui.x86_64
 
 
 .PHONY: dist 
-dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.pck.sig ## Create all redistributable versions of the project
+dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip dist/update.pck.sig ## Create all redistributable versions of the project
 	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
+	cd dist && sha256sum update.zip > update.zip.sha256.txt
 	cd dist && sha256sum update.pck > update.pck.sha256.txt
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
 
@@ -252,8 +280,18 @@ dist/opengamepadui.tar.gz: rootfs
 	mv $(CACHE_DIR)/opengamepadui $(ROOTFS)
 
 
+.PHONY: dist-update-zip
+dist-update-zip: dist/update.zip ## Create an update zip archive
+dist/update.zip: build/metadata.json
+	@echo "Building redistributable update zip"
+	mkdir -p $(CACHE_DIR)
+	cd build && zip -9 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
+	mkdir -p dist
+	cp $(CACHE_DIR)/update.zip $@
+
+
 .PHONY: dist-update-pack
-dist-update-pack: dist/update.pck ## Create an update pack archive
+dist-update-pack: dist/update.pck ## Create an update pack archive (DEPRECATED)
 dist/update.pck: update-pack
 	@echo "Building redistributable update pack"
 	mkdir -p dist
