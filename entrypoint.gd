@@ -118,7 +118,7 @@ func _apply_update_packs() -> void:
 				continue
 	
 		# Write the extracted file from the update pack
-		var extracted_file := FileAccess.open(extracted_path, FileAccess.WRITE_READ)
+		var extracted_file := FileAccess.open(extracted_path, FileAccess.WRITE)
 		extracted_file.store_buffer(file_data)
 		extracted_file.flush()
 		extracted_file.close()
