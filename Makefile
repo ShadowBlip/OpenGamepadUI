@@ -211,6 +211,12 @@ deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to 
 	cd $(SSH_MOUNT_PATH) && tar xvfz opengamepadui.tar.gz
 
 
+.PHONY: deploy-update
+deploy-update: dist/update.zip ## Build and deploy update zip to remote device
+	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .local/share/opengamepadui/updates
+	scp dist/update.zip $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
+
+
 .PHONY: deploy-pack
 deploy-pack: dist/update.pck.sig ## Build and deploy update pack to remote device (DEPRECATED)
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .local/share/opengamepadui/updates
