@@ -271,11 +271,10 @@ rootfs: build/opengamepad-ui.x86_64
 
 
 .PHONY: dist 
-dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip dist/update.pck.sig ## Create all redistributable versions of the project
+dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip ## Create all redistributable versions of the project
 	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
-	cd dist && sha256sum update.zip > update.zip.sha256.txt
-	cd dist && sha256sum update.pck > update.pck.sha256.txt
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
+	cd dist && sha256sum update.zip > update.zip.sha256.txt
 
 
 .PHONY: dist-archive
@@ -294,7 +293,8 @@ dist-update-zip: dist/update.zip ## Create an update zip archive
 dist/update.zip: build/metadata.json
 	@echo "Building redistributable update zip"
 	mkdir -p $(CACHE_DIR)
-	cd build && zip -9 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
+	rm -rf $(CACHE_DIR)/update.zip
+	cd build && zip -5 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
 	mkdir -p dist
 	cp $(CACHE_DIR)/update.zip $@
 
