@@ -8,13 +8,11 @@ signal update_installed(status: int)
 var Version := preload("res://core/global/version.tres") as Version
 var PackageVerifier := preload("res://core/global/package_verifier.tres") as PackageVerifier
 var update_pack_url := ""
-var update_pack_signature_url := ""
 var logger := Log.get_logger("SoftwareUpdater", Log.LEVEL.INFO)
 
 @export var github_project := "ShadowBlip/OpenGamepadUI"
-@export var update_filename := "update.pck"
-@export var update_signature_filename := "update.pck.sig"
-@export var update_hash_filename := "update.pck.sha256.txt"
+@export var update_filename := "update.zip"
+@export var update_hash_filename := "update.zip.sha256.txt"
 @export var update_folder := "user://updates"
 
 @onready var github_client := $GitHubClient as GitHubClient
@@ -54,9 +52,8 @@ func check_for_updates() -> void:
 		return
 	var assets := latest_release["assets"] as Array
 	
-	# Look for the download url for the pack itself and its signature
+	# Look for the download url for the pack itself
 	update_pack_url = ""
-	update_pack_signature_url = ""
 	for asset in assets:
 		if not "name" in asset:
 			continue
@@ -64,10 +61,8 @@ func check_for_updates() -> void:
 			continue
 		if asset["name"] == update_filename:
 			update_pack_url = asset["browser_download_url"]
-		if asset["name"] == update_signature_filename:
-			update_pack_signature_url = asset["browser_download_url"]
 	
-	if update_pack_url == "" or update_pack_signature_url == "":
+	if update_pack_url == "":
 		logger.info("Unable to find update pack in release assets")
 		update_available.emit(false)
 		return
@@ -76,7 +71,7 @@ func check_for_updates() -> void:
 
 
 ## Downloads and installs the given update
-func install_update(download_url: String, signature_url: String) -> void:
+func install_update(download_url: String) -> void:
 	# Download the update pack
 	var update_data := await _download_file(download_url)
 	if update_data.size() == 0:
@@ -84,36 +79,13 @@ func install_update(download_url: String, signature_url: String) -> void:
 		update_installed.emit(FAILED)
 		return
 
-	# Download the update pack signature
-	var signature_data := await _download_file(signature_url)
-	if signature_data.size() == 0:
-		logger.info("Failed to download update pack signature")
-		update_installed.emit(FAILED)
-		return
-
-	# Validate the update pack against its signature
-	var args := OS.get_cmdline_args()
-	if "--skip-verify-packages" in args:
-		logger.warn("Skipping validation of update pack. This could be dangerous!")
-	else:
-		if not PackageVerifier.has_valid_signature(update_data, signature_data):
-			logger.warn("Update pack does not have a valid signature! Not saving update pack.")
-			update_installed.emit(FAILED)
-			return
-
 	# Save the update to the update folder
 	DirAccess.make_dir_recursive_absolute(update_folder)
 	var update_path := "/".join([update_folder, update_filename])
 	var update_file := FileAccess.open(update_path, FileAccess.WRITE)
 	update_file.store_buffer(update_data)
 	update_file.close()
-	
-	# Save the update signature to the update folder
-	var sig_path := "/".join([update_folder, update_signature_filename])
-	var sig_file := FileAccess.open(sig_path, FileAccess.WRITE)
-	sig_file.store_buffer(signature_data)
-	sig_file.close()
-	
+
 	update_installed.emit(OK)
 
 

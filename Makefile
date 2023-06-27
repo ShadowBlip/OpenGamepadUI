@@ -118,15 +118,18 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 	for lib in `ls *.so`; do \
 		echo "Signing file: $$lib"; \
 		SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key $$lib | base64 -w 0); \
-		FILE_SIGS="$$FILE_SIGS\"$$lib\": \"$$SIG\", "; \
+		HASH=$$(sha256sum $$lib | cut -d' ' -f1); \
+		FILE_SIGS="$$FILE_SIGS\"$$lib\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	done; \
 	# Sign the binary files \
 	echo "Signing file: opengamepad-ui.sh"; \
 	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.sh | base64 -w 0); \
-	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.sh\": \"$$SIG\", "; \
+	HASH=$$(sha256sum opengamepad-ui.sh | cut -d' ' -f1); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.sh\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	echo "Signing file: opengamepad-ui.x86_64"; \
 	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.x86_64 | base64 -w 0); \
-	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": \"$$SIG\"}"; \
+	HASH=$$(sha256sum opengamepad-ui.x86_64 | cut -d' ' -f1); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}}"; \
 	# Write out the signatures to metadata.json \
 	echo "{\"version\": \"$(OGUI_VERSION)\", \"engine_version\": \"$(GODOT_REVISION)\", \"files\": $$FILE_SIGS}" > metadata.json
 

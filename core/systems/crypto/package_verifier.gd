@@ -48,3 +48,18 @@ func get_hash(data: PackedByteArray, type: HashingContext.HashType = HashingCont
 ## Get the hash of the given data as a hex encoded string
 func get_hash_string(data: PackedByteArray, type: HashingContext.HashType = HashingContext.HASH_SHA256) -> String:
 	return get_hash(data, type).hex_encode()
+
+
+## Returns the hash of the file at the given path
+func get_file_hash(path: String, type: HashingContext.HashType = HashingContext.HASH_SHA256) -> PackedByteArray:
+	if not FileAccess.file_exists(path):
+		logger.warn("File does not exist at path: " + path)
+		return PackedByteArray()
+	var data := FileAccess.get_file_as_bytes(path)
+	
+	return get_hash(data, type)
+
+
+## Get the hash of the file at the given path as a hex encoded string
+func get_file_hash_string(path: String, type: HashingContext.HashType = HashingContext.HASH_SHA256) -> String:
+	return get_file_hash(path, type).hex_encode()
