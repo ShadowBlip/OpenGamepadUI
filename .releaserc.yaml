@@ -47,7 +47,6 @@ plugins:
       - path: dist/opengamepadui.raw.sha256.txt
       - path: dist/opengamepadui.tar.gz
       - path: dist/opengamepadui.tar.gz.sha256.txt
-      - path: dist/update.pck
-      - path: dist/update.pck.sha256.txt
-      - path: dist/update.pck.sig
+      - path: dist/update.zip
+      - path: dist/update.zip.sha256.txt
       - path: docs/install/opengamepadui_deck_installer.desktop
