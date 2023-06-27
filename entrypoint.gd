@@ -6,15 +6,14 @@ const update_pack_entrypoint := "user://updates/opengamepad-ui.x86_64"
 
 var PackageVerifier := preload("res://core/global/package_verifier.tres") as PackageVerifier
 var args := OS.get_cmdline_args()
+var child_pid := -1
 var logger := Log.get_logger("Entrypoint")
-
-func _init() -> void:
-	var version := load("res://core/global/version.tres") as Version
-	print("OpenGamepadUI v", version.core)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var version := load("res://core/global/version.tres") as Version
+	print("OpenGamepadUI v", version.core)
 	var window := get_viewport()
 	window.transparent_bg = true
 	
@@ -22,9 +21,31 @@ func _ready() -> void:
 	if not "--skip-update-pack" in args:
 		_apply_update_packs()
 	
-	# Launch the main interface
-	get_tree().change_scene_to_file("res://core/main.tscn")
+	# Launch the main interface if no child pid exists
+	if child_pid < 0:
+		get_tree().change_scene_to_file("res://core/main.tscn")
+		return
 	
+	logger.info("Supervising child process")
+	
+	# Resize the window
+	window.title = "OpenGamepadUI Supervisor"
+	window.size = Vector2(4, 4)
+	
+	# On timeout, check the child pid
+	var on_timeout := func():
+		if OS.is_process_running(child_pid):
+			return
+		logger.info("Child process exited")
+		get_tree().quit()
+		
+	# Create a timer to supervise the child pid
+	var timer := Timer.new()
+	timer.timeout.connect(on_timeout)
+	timer.wait_time = 2
+	timer.autostart = true
+	add_child(timer)
+
 
 # Applies any update packs to load newer scripts and resources
 # TODO: Verify that pack version is not older than current version before
@@ -111,10 +132,10 @@ func _apply_update_packs() -> void:
 
 	# Launch the update pack executable and exit
 	var update_bin := ProjectSettings.globalize_path(update_pack_entrypoint)
-	var update_args := PackedStringArray([update_bin])
+	var update_args := PackedStringArray([])
 	update_args.append_array(OS.get_cmdline_args())
 	update_args.append("--skip-update-pack")
-	logger.info("Launching update pack: " + " ".join(update_args))
-	var code := OS.execute("exec", update_args)
-	logger.info("Child exited")
-	get_tree().quit(code)
+	
+	logger.info("Launching update pack: " + update_bin + " " + " ".join(update_args))
+	child_pid = OS.create_process(update_bin, update_args)
+	logger.info("Launched OpenGamepadUI with pid: " + str(child_pid))
