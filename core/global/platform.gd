@@ -81,7 +81,6 @@ func _init() -> void:
 	intel_apu_database = load("res://core/platform/hardware/intel_apu_database.tres")
 	amd_apu_database.init()
 	intel_apu_database.init()
-	_get_system_components()
 
 	var flags := get_platform_flags()
 	
@@ -128,6 +127,8 @@ func _init() -> void:
 		os = load("res://core/platform/steamos.tres")
 	if PLATFORM.CHIMERAOS in flags:
 		os = load("res://core/platform/chimeraos.tres")
+
+	_get_system_components()
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
@@ -384,8 +385,8 @@ func _read_gpu_info() -> GPUInfo:
 			gpu_info.model = str(" ".join(parts))
 	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
 
-	if FileAccess.file_exists("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy"):
-		logger.debug("Thermal Throttle Capable!")
+	if "thermal_policy_path" in platform and FileAccess.file_exists(platform.thermal_policy_path):
+		logger.debug("Platform able to set thermal policy")
 		gpu_info.thermal_mode_capable = true
 
 	if not cpu:
