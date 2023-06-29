@@ -432,7 +432,7 @@ max_boost = 5.0
 
 [sub_resource type="Resource" id="Resource_vyhi3"]
 script = ExtResource("1_a4rxd")
-model_name = "AMD Ryzen 7 7840U with Radeon Graphics"
+model_name = "AMD Ryzen 7 7840U w/ Radeon 780M Graphics"
 min_tdp = 5.0
 max_tdp = 35.0
 max_boost = 5.0
