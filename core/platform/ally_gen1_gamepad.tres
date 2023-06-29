@@ -42,11 +42,21 @@ type = 1
 code = 148
 value = 1
 
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_dh2js"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_lf0i0"]
+type = 1
+code = 304
+value = 1
+
 [sub_resource type="Resource" id="Resource_6mg1t"]
 script = ExtResource("1_x4ifc")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_cnrcv")])
-event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui_qam"
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_dh2js"), SubResource("InputDeviceEvent_lf0i0")])
+ogui_event = ""
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_8lcui"]
@@ -93,21 +103,11 @@ type = 1
 code = 187
 value = 1
 
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5csyo"]
-type = 1
-code = 316
-value = 1
-
-[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5judj"]
-type = 1
-code = 304
-value = 1
-
 [sub_resource type="Resource" id="Resource_kh6ar"]
 script = ExtResource("1_x4ifc")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_lmnpc")])
-event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5csyo"), SubResource("InputDeviceEvent_5judj")])
-ogui_event = ""
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_qam"
 on_release = false
 
 [resource]
