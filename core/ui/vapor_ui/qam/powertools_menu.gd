@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-const Platform := preload("res://core/global/platform.tres")
+var Platform := load("res://core/global/platform.tres")
 const powertools_path : String = "/usr/share/opengamepadui/scripts/powertools"
 
 var command_timer: Timer
@@ -19,6 +19,7 @@ var thread := load("res://core/systems/threading/thread_pool.tres")
 @onready var tdp_boost_slider := $TDPBoostSlider
 @onready var tdp_slider := $TDPSlider
 @onready var thermal_profile_dropdown := $ThermalProfileDropdown
+@onready var platform : PlatformProvider = Platform.platform
 
 var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
@@ -81,7 +82,7 @@ func _ready():
 		thermal_profile_dropdown.add_item("Performance", 1)
 		thermal_profile_dropdown.add_item("Silent", 2)
 		thermal_profile_dropdown.visible = gpu.thermal_mode_capable
-		var thermal_mode := int(_read_sys("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy"))
+		var thermal_mode := int(_read_sys(platform.thermal_policy_path))
 		thermal_profile_dropdown.select(thermal_mode)
 		match thermal_mode:
 			0:
@@ -341,6 +342,8 @@ func _set_amd_tdp_midpoint() -> void:
 	tdp_slider.value = float(midpoint)
 	_do_amd_tdp_change()
 	_do_amd_tdp_boost_change()
+	gpu_temp_slider.value = 85
+	_on_gpu_temp_limit_changed(85)
 
 
 # Called to disable/enable cores by count as specified by value. 
@@ -379,7 +382,7 @@ func _on_thermal_policy_changed(index: int) -> void:
 			"2":
 				logger.debug("Setting thermal throttle policy to Silent")
 	var args := ["setThermalPolicy", str(index)]
-	_setup_callback_exec("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy", args)
+	_setup_callback_exec(platform.thermal_policy_path, args)
 
 
 # Called when gpu_freq_max_slider.value is changed.
