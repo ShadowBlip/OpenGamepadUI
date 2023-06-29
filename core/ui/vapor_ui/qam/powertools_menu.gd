@@ -18,6 +18,7 @@ var thread := load("res://core/systems/threading/thread_pool.tres")
 @onready var smt_button := $SMTButton
 @onready var tdp_boost_slider := $TDPBoostSlider
 @onready var tdp_slider := $TDPSlider
+@onready var thermal_profile_dropdown := $ThermalProfileDropdown
 
 var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
@@ -73,6 +74,23 @@ func _ready():
 	if gpu.tj_temp_capable:
 		gpu_temp_slider.value_changed.connect(_on_gpu_temp_limit_changed)
 		gpu_temp_slider.visible = gpu.tj_temp_capable
+
+	if gpu.thermal_mode_capable:
+		thermal_profile_dropdown.clear()
+		thermal_profile_dropdown.add_item("Balanced", 0)
+		thermal_profile_dropdown.add_item("Performance", 1)
+		thermal_profile_dropdown.add_item("Silent", 2)
+		thermal_profile_dropdown.visible = gpu.thermal_mode_capable
+		var thermal_mode := int(_read_sys("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy"))
+		thermal_profile_dropdown.select(thermal_mode)
+		match thermal_mode:
+			0:
+				logger.debug("Thermal throttle policy currently at Balanced")
+			1:
+				logger.debug("Thermal throttle policy currently at Performance")
+			2:
+				logger.debug("Thermal throttle policy currently at Silent")
+		thermal_profile_dropdown.item_selected.connect(_on_thermal_policy_changed)
 
 
 # Thread safe method of calling _do_exec
@@ -231,6 +249,8 @@ func _get_amd_tdp() -> bool:
 	var output: Array = _do_exec(powertools_path, ["ryzenadj", "-i"])
 	var exit_code = output[1]
 	if exit_code:
+		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
+		_set_amd_tdp_midpoint()
 		return false
 	var result := output[0][0].split("\n") as Array
 	var current_fastppt := 0.0
@@ -314,6 +334,15 @@ func _set_tdp_range() -> void:
 	logger.debug("Found TDP Limits: " + str(gpu.min_tdp) + " - " + str(gpu.max_tdp))
 
 
+# Sets the current TDP to the midpoint of the detected hardware. Used when we're not able to
+# Determine the current settings.
+func _set_amd_tdp_midpoint() -> void:
+	var midpoint = int((tdp_slider.max_value - tdp_slider.min_value) / 2 + tdp_slider.min_value)
+	tdp_slider.value = float(midpoint)
+	_do_amd_tdp_change()
+	_do_amd_tdp_boost_change()
+
+
 # Called to disable/enable cores by count as specified by value. 
 func _on_change_cpu_cores(_value: float):
 	_setup_callback_func(_do_change_cpu_cores)
@@ -340,11 +369,25 @@ func _on_gpu_temp_limit_changed(value: float) -> void:
 			pass
 
 
+# Sets the thermal throttle policy for ASUS devices.
+func _on_thermal_policy_changed(index: int) -> void:
+	match index:
+			"0":
+				logger.debug("Setting thermal throttle policy to Balanced")
+			"1":
+				logger.debug("Setting thermal throttle policy to Performance")
+			"2":
+				logger.debug("Setting thermal throttle policy to Silent")
+	var args := ["setThermalPolicy", str(index)]
+	_setup_callback_exec("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy", args)
+
+
 # Called when gpu_freq_max_slider.value is changed.
 func _on_max_gpu_freq_changed(value: float) -> void:
 	if value < gpu_freq_min_slider.value:
 		gpu_freq_min_slider.value = value
 	_on_gpu_freq_changed(gpu_freq_min_slider.value, value)
+
 
 # Called when gpu_freq_min_slider.value is changed.
 func _on_min_gpu_freq_changed(value: float) -> void:

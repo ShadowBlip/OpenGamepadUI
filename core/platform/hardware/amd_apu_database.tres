@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="APUDatabase" load_steps=63 format=3 uid="uid://hm5433bg4nrm"]
+[gd_resource type="Resource" script_class="APUDatabase" load_steps=65 format=3 uid="uid://hm5433bg4nrm"]
 
 [ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_a4rxd"]
 [ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="2_pbguw"]
@@ -423,7 +423,21 @@ min_tdp = 6.0
 max_tdp = 10.0
 max_boost = 2.0
 
+[sub_resource type="Resource" id="Resource_u78ox"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen Z1 Extreme"
+min_tdp = 5.0
+max_tdp = 35.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_vyhi3"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 7840U with Radeon Graphics"
+min_tdp = 5.0
+max_tdp = 35.0
+max_boost = 37.0
+
 [resource]
 script = ExtResource("2_pbguw")
-apu_list = Array[ExtResource("1_a4rxd")]([SubResource("Resource_wio8w"), SubResource("Resource_tcfff"), SubResource("Resource_wmno8"), SubResource("Resource_b8fpu"), SubResource("Resource_1g34g"), SubResource("Resource_sp41q"), SubResource("Resource_h2si0"), SubResource("Resource_0pmlr"), SubResource("Resource_y8ihm"), SubResource("Resource_bvqtb"), SubResource("Resource_rk6b7"), SubResource("Resource_lnxua"), SubResource("Resource_0u6yf"), SubResource("Resource_6f80n"), SubResource("Resource_lbrm0"), SubResource("Resource_t5d1l"), SubResource("Resource_pnxln"), SubResource("Resource_e6tev"), SubResource("Resource_u52m2"), SubResource("Resource_uwui8"), SubResource("Resource_2ks23"), SubResource("Resource_yv37b"), SubResource("Resource_pwp6g"), SubResource("Resource_chr8q"), SubResource("Resource_2pyvv"), SubResource("Resource_3lvxu"), SubResource("Resource_rct3m"), SubResource("Resource_pps3c"), SubResource("Resource_5xvvv"), SubResource("Resource_pseh1"), SubResource("Resource_b2c3r"), SubResource("Resource_q76ve"), SubResource("Resource_xjgl8"), SubResource("Resource_n363j"), SubResource("Resource_bq0w7"), SubResource("Resource_5k7fn"), SubResource("Resource_msyku"), SubResource("Resource_8qb0g"), SubResource("Resource_ynh34"), SubResource("Resource_b6xme"), SubResource("Resource_soogm"), SubResource("Resource_t80ob"), SubResource("Resource_8p12x"), SubResource("Resource_duhig"), SubResource("Resource_20afn"), SubResource("Resource_cc6u3"), SubResource("Resource_fja1l"), SubResource("Resource_fmue3"), SubResource("Resource_wdxra"), SubResource("Resource_6o1lg"), SubResource("Resource_s24u0"), SubResource("Resource_nn84a"), SubResource("Resource_n0x5x"), SubResource("Resource_rj5oh"), SubResource("Resource_jnmf4"), SubResource("Resource_6crrv"), SubResource("Resource_a0hyt"), SubResource("Resource_4nd4h"), SubResource("Resource_fyb6g"), SubResource("Resource_bw227")])
+apu_list = Array[ExtResource("1_a4rxd")]([SubResource("Resource_wio8w"), SubResource("Resource_tcfff"), SubResource("Resource_wmno8"), SubResource("Resource_b8fpu"), SubResource("Resource_1g34g"), SubResource("Resource_sp41q"), SubResource("Resource_h2si0"), SubResource("Resource_0pmlr"), SubResource("Resource_y8ihm"), SubResource("Resource_bvqtb"), SubResource("Resource_rk6b7"), SubResource("Resource_lnxua"), SubResource("Resource_0u6yf"), SubResource("Resource_6f80n"), SubResource("Resource_lbrm0"), SubResource("Resource_t5d1l"), SubResource("Resource_pnxln"), SubResource("Resource_e6tev"), SubResource("Resource_u52m2"), SubResource("Resource_uwui8"), SubResource("Resource_2ks23"), SubResource("Resource_yv37b"), SubResource("Resource_pwp6g"), SubResource("Resource_chr8q"), SubResource("Resource_2pyvv"), SubResource("Resource_3lvxu"), SubResource("Resource_rct3m"), SubResource("Resource_pps3c"), SubResource("Resource_5xvvv"), SubResource("Resource_pseh1"), SubResource("Resource_b2c3r"), SubResource("Resource_q76ve"), SubResource("Resource_xjgl8"), SubResource("Resource_n363j"), SubResource("Resource_bq0w7"), SubResource("Resource_5k7fn"), SubResource("Resource_msyku"), SubResource("Resource_8qb0g"), SubResource("Resource_ynh34"), SubResource("Resource_b6xme"), SubResource("Resource_soogm"), SubResource("Resource_t80ob"), SubResource("Resource_8p12x"), SubResource("Resource_duhig"), SubResource("Resource_20afn"), SubResource("Resource_cc6u3"), SubResource("Resource_fja1l"), SubResource("Resource_fmue3"), SubResource("Resource_wdxra"), SubResource("Resource_6o1lg"), SubResource("Resource_s24u0"), SubResource("Resource_nn84a"), SubResource("Resource_n0x5x"), SubResource("Resource_rj5oh"), SubResource("Resource_jnmf4"), SubResource("Resource_6crrv"), SubResource("Resource_a0hyt"), SubResource("Resource_4nd4h"), SubResource("Resource_fyb6g"), SubResource("Resource_bw227"), SubResource("Resource_u78ox"), SubResource("Resource_vyhi3")])
 database_name = "Intel"

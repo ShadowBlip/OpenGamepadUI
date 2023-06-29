@@ -11,6 +11,7 @@ enum PLATFORM {
 	ABERNIC_GEN1,
 	AOKZOE_GEN1,  ## A1 AR07
 	AOKZOE_GEN2,  ## A1 Pro
+	ALLY_GEN1,    ## ASUS ROG Ally RC71L
 	AYANEO_GEN1,  ## Includes Founders Edition, Pro, and Retro Power models.
 	AYANEO_GEN2,  ## Includes NEXT models.
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
@@ -53,6 +54,7 @@ class GPUInfo extends Resource:
 	var model: String
 	var vendor: String
 	var tdp_capable: bool = false
+	var thermal_mode_capable: bool = false
 	var tj_temp_capable: bool = false
 	var clk_capable: bool = false
 	var min_tdp: float = -1
@@ -86,6 +88,8 @@ func _init() -> void:
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/abernic_gen1.tres")
+	if PLATFORM.ALLY_GEN1 in flags:
+		platform = load("res://core/platform/ally_gen1.tres")
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/aokzoe_gen1.tres")
 	if PLATFORM.AOKZOE_GEN2 in flags:
@@ -211,6 +215,10 @@ func _read_dmi() -> PLATFORM:
 	elif product_name == "AOKZOE A1 Pro" and vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE Gen2 platform")
 		return PLATFORM.AOKZOE_GEN2
+	# ASUS
+	elif product_name == "ROG Ally RC71L_RC71L" and vendor_name == "ASUSTeK COMPUTER INC.":
+		logger.debug("Detected ROG Ally Gen1 platform")
+		return PLATFORM.ALLY_GEN1
 	# AYANEO
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen4 platform")
@@ -376,6 +384,10 @@ func _read_gpu_info() -> GPUInfo:
 			gpu_info.model = str(" ".join(parts))
 	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
 
+	if FileAccess.file_exists("/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy"):
+		logger.debug("Thermal Throttle Capable!")
+		gpu_info.thermal_mode_capable = true
+
 	if not cpu:
 		return gpu_info
 
@@ -398,6 +410,7 @@ func _read_gpu_info() -> GPUInfo:
 	gpu_info.clk_capable = true
 	gpu_info.tdp_capable = true
 	logger.debug("Found all APU data")
+
 	return gpu_info
 
 # Run glxinfo and return the data from it.
