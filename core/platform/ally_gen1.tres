@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlatformAllyGen1" load_steps=2 format=3 uid="uid://dy81o102wj6j5"]
+
+[ext_resource type="Script" path="res://core/platform/ally_gen1.gd" id="1_rib2o"]
+
+[resource]
+script = ExtResource("1_rib2o")
+name = ""

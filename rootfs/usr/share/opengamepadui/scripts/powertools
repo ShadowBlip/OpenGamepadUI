@@ -46,6 +46,10 @@ setAmdPerfLevelWrite() { # set power_dpm_force_performace_level write
   /usr/bin/chmod a+w /sys/class/drm/card0/device/power_dpm_force_performance_level
 }
 
+setThermalPolicy(){
+  /usr/bin/echo $1 > /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
+}
+
 ## INTEL iGPU
 setRapl(){ #TDP Control
   /usr/bin/echo $1 > /sys/class/powercap/intel-rapl/intel-rapl:0/gt_min_freq_mhz
@@ -94,4 +98,7 @@ elif [[ $1 == "setRapl" ]]; then
 elif [[ $1 == "intelGpuClock" ]]; then
   intelGpuClock $2 $3
 
+## ASUS Specific
+elif [[ $1 == "setThermalPolicy" ]]; then
+  setThermalPolicy $2
 fi

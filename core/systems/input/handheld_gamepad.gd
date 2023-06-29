@@ -57,12 +57,14 @@ func process_input() -> void:
 			continue
 		if not _process_event(event):
 			stop_after_process = true
-	# If no keys are active we can stop here.
-	if stop_after_process:
-		return
-	if active_keys.size() == 0:
-		return
-	_check_mapped_events()
+		# If no keys are active we can stop here.
+		if stop_after_process:
+			logger.debug("We were told to stop after process")
+			continue
+		if active_keys.size() == 0:
+			logger.debug("No active keys")
+			continue
+		_check_mapped_events()
 
 
 ## Called to handle an individual event. Sets the active keys.

@@ -6,6 +6,10 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAbernic:*
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAOKZOE:*
   FORCE_INPUT_UACCESS=1
 
+## ASUS DEVICES
+evdev:name:Asus Keyboard:*:svnASUSTeKCOMPUTERINC.:pnROGAllyRC71L_RC71L:*
+  FORCE_INPUT_UACCESS=1
+
 ## AYANEO DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYA NEO:*
   FORCE_INPUT_UACCESS=1

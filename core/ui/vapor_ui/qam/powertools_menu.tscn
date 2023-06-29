@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://dv3dt0j3jketh"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/qam/powertools_menu.gd" id="1_8v1ke"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_nb5h3"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5n8hq"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_v2d1e"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="4_yqywg"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_4faqm"]
 
 [node name="PowerTools" type="VBoxContainer"]
 anchors_preset = 15
@@ -133,6 +134,12 @@ focus_previous = NodePath("../GPUFreqMinSlider")
 text = "Max Freq"
 max_value = 0.0
 step = 100.0
+
+[node name="ThermalProfileDropdown" parent="." instance=ExtResource("7_4faqm")]
+visible = false
+layout_mode = 2
+title = "Thermal Throttle Profile"
+description = ""
 
 [node name="GPUTempSlider" parent="." instance=ExtResource("2_ygeel")]
 visible = false
