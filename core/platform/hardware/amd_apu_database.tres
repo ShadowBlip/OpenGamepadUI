@@ -435,7 +435,7 @@ script = ExtResource("1_a4rxd")
 model_name = "AMD Ryzen 7 7840U with Radeon Graphics"
 min_tdp = 5.0
 max_tdp = 35.0
-max_boost = 37.0
+max_boost = 5.0
 
 [resource]
 script = ExtResource("2_pbguw")
