@@ -17,6 +17,7 @@ enum PLATFORM {
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
 	AYANEO_GEN5,  ## Includes AIR Plus
+	AYANEO_GEN6,  ## Includes 2S and GEEK 1S
 	AYN_GEN1,  ## Includes Loki Max, possibly others at release.
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
@@ -224,6 +225,9 @@ func _read_dmi() -> PLATFORM:
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen4 platform")
 		return PLATFORM.AYANEO_GEN4
+	elif product_name in ["AYANEO 2S", "GEEK 1S"] and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO Gen6 platform")
+		return PLATFORM.AYANEO_GEN6
 	elif (
 		(product_name.contains("2021") or product_name.contains("FOUNDER"))
 		and vendor_name.begins_with("AYA")
