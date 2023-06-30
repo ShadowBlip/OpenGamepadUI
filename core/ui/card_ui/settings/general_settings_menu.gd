@@ -56,10 +56,13 @@ func _ready() -> void:
 
 	# Configure check updates
 	var on_check_updates := func():
+		var check_update_text := check_update_button.text as String
+		check_update_button.text = "Checking..."
 		check_update_button.disabled = true
 		updater.check_for_updates()
 		var available := await updater.update_available as bool
 		check_update_button.disabled = false
+		check_update_button.text = check_update_text
 		if not available:
 			var notify := Notification.new("Client is already up to date")
 			NotificationManager.show(notify)
@@ -73,7 +76,7 @@ func _ready() -> void:
 	# Configure install update
 	var on_install_update := func():
 		update_button.disabled = true
-		updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
+		updater.install_update(updater.update_pack_url)
 		var status := await updater.update_installed as int
 		if status == OK:
 			var notify := Notification.new("Client update installed successfully")
@@ -151,7 +154,7 @@ func _on_autoupdate() -> void:
 
 	logger.info("New update was found. Trying to install it.")
 	update_button.disabled = true
-	updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
+	updater.install_update(updater.update_pack_url)
 	var status := await updater.update_installed as int
 	if status == OK:
 		update_installed = true
