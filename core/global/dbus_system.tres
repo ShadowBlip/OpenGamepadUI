@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="DBusManager" load_steps=2 format=3 uid="uid://dskqww1130rb2"]
+
+[ext_resource type="Script" path="res://core/global/dbus_manager.gd" id="1_6xf1o"]
+
+[resource]
+script = ExtResource("1_6xf1o")
