@@ -8,7 +8,7 @@ class_name Platform
 ## Platforms we support
 enum PLATFORM {
 	# Hardware platforms
-	ABERNIC_GEN1,
+	ABERNIC_GEN1, ## Win600
 	AOKZOE_GEN1,  ## A1 AR07
 	AOKZOE_GEN2,  ## A1 Pro
 	ALLY_GEN1,    ## ASUS ROG Ally RC71L
@@ -16,7 +16,7 @@ enum PLATFORM {
 	AYANEO_GEN2,  ## Includes NEXT models.
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
-	AYANEO_GEN5,  ## Includes AIR Plus
+	AYANEO_GEN5,  ## AIR Plus 6800U
 	AYANEO_GEN6,  ## Includes 2S and GEEK 1S
 	AYN_GEN1,  ## Includes Loki Max, possibly others at release.
 	GENERIC,  ## Generic platform doesn't do anything special
@@ -83,6 +83,8 @@ func _init() -> void:
 	amd_apu_database.init()
 	intel_apu_database.init()
 
+	_get_system_components()
+
 	var flags := get_platform_flags()
 	
 	# Set hardware platform provider
@@ -90,6 +92,9 @@ func _init() -> void:
 		platform = load("res://core/platform/abernic_gen1.tres")
 	if PLATFORM.ALLY_GEN1 in flags:
 		platform = load("res://core/platform/ally_gen1.tres")
+		if FileAccess.file_exists(platform.thermal_policy_path):
+			logger.debug("Platform able to set thermal policy")
+			gpu.thermal_mode_capable = true
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/aokzoe_gen1.tres")
 	if PLATFORM.AOKZOE_GEN2 in flags:
@@ -129,7 +134,6 @@ func _init() -> void:
 	if PLATFORM.CHIMERAOS in flags:
 		os = load("res://core/platform/chimeraos.tres")
 
-	_get_system_components()
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
@@ -161,12 +165,14 @@ func get_platform_flags() -> Array[PLATFORM]:
 ## Returns the hardware product name
 func get_product_name() -> String:
 	var product_name := _read_sys("/sys/devices/virtual/dmi/id/product_name")
+	logger.debug("Product Name: " + product_name)
 	return product_name
 
 
 ## Returns the hardware vendor name
 func get_vendor_name() -> String:
 	var vendor_name := _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
+	logger.debug("Vendor Name: " + vendor_name)
 	return vendor_name
 
 
@@ -204,8 +210,6 @@ func _do_exec(command: String, args: Array) -> Array:
 func _read_dmi() -> PLATFORM:
 	var product_name := get_product_name()
 	var vendor_name := get_vendor_name()
-	logger.debug("Product: " + product_name)
-	logger.debug("Vendor: " + vendor_name)
 	# ANBERNIC
 	if product_name == "Win600" and vendor_name == "ABERNIC":
 		logger.debug("Detected Win600 platform")
@@ -388,10 +392,6 @@ func _read_gpu_info() -> GPUInfo:
 			parts.remove_at(0)
 			gpu_info.model = str(" ".join(parts))
 	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
-
-	if "thermal_policy_path" in platform and FileAccess.file_exists(platform.thermal_policy_path):
-		logger.debug("Platform able to set thermal policy")
-		gpu_info.thermal_mode_capable = true
 
 	if not cpu:
 		return gpu_info
