@@ -13,7 +13,7 @@ script = ExtResource("1_3pddg")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_l0qhs")])
 event_list = Array[InputDeviceEvent]([])
 ogui_event = "ogui_qam"
-on_release = true
+on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_ssbxj"]
 type = 1
@@ -148,7 +148,7 @@ value = 1
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_7m3fw"]
 type = 1
 code = 115
-value = 4
+value = 1
 
 [sub_resource type="Resource" id="Resource_b6u2y"]
 script = ExtResource("1_3pddg")
