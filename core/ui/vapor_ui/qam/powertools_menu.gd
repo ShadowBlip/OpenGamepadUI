@@ -210,10 +210,10 @@ func _get_amd_gpu_clock_limits() -> void:
 				current_max =  int(part[1].rstrip("Mhz"))
 
 	gpu_freq_max_slider.max_value = max_value
-	gpu_freq_max_slider.min_value = min_value
+	gpu_freq_max_slider.min_value = 200
 	gpu_freq_max_slider.value = current_max
 	gpu_freq_min_slider.max_value = max_value
-	gpu_freq_min_slider.min_value = min_value
+	gpu_freq_min_slider.min_value = 200
 	gpu_freq_min_slider.value = current_min
 	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
 
