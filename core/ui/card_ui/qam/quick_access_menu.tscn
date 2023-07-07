@@ -1,11 +1,9 @@
-[gd_scene load_steps=27 format=3 uid="uid://hroo3ll4inrb"]
+[gd_scene load_steps=22 format=3 uid="uid://hroo3ll4inrb"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/qam/quick_access_menu.gd" id="1_56jo7"]
 [ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_s7f3g"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="3_cxjne"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_a56vb"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_ro2hl"]
-[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="6_agpm1"]
 [ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_xtcf0"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_5082k"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="9_6qs1m"]
@@ -24,68 +22,6 @@
 [ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/qam/performance_card.tscn" id="21_uw510"]
 [ext_resource type="PackedScene" uid="uid://v751ima8r8vg" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="22_dtanu"]
 
-[sub_resource type="Animation" id="Animation_5up20"]
-resource_name = "enter"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(400, 0), Vector2(1, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, true]
-}
-
-[sub_resource type="Animation" id="Animation_4xb6e"]
-resource_name = "exit"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(400, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cdpfs"]
-_data = {
-"enter": SubResource("Animation_5up20"),
-"exit": SubResource("Animation_4xb6e")
-}
-
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 z_index = 20
 layout_mode = 3
@@ -101,9 +37,6 @@ script = ExtResource("1_56jo7")
 script = ExtResource("2_s7f3g")
 state = ExtResource("3_cxjne")
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_a56vb")]
-root_node = NodePath("../..")
-
 [node name="BackInputHandler" parent="." instance=ExtResource("5_ro2hl")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_cxjne")])
 
@@ -113,6 +46,7 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -300.0
 grow_horizontal = 0
 grow_vertical = 2
 
@@ -124,13 +58,6 @@ theme_type_variation = &"QAM"
 [node name="VisibilityManager" type="Node" parent="MarginContainer/PanelContainer"]
 script = ExtResource("2_s7f3g")
 state = ExtResource("3_cxjne")
-
-[node name="TransitionSlideRight" type="AnimationPlayer" parent="MarginContainer/PanelContainer/VisibilityManager"]
-root_node = NodePath("../..")
-libraries = {
-"": SubResource("AnimationLibrary_cdpfs")
-}
-script = ExtResource("6_agpm1")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 layout_mode = 2
