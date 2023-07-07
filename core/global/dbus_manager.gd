@@ -86,6 +86,17 @@ class Proxy:
 			return null
 		
 		return args[0]
+	
+	## Get all properties for the given interface
+	func get_properties(iface: String) -> Dictionary:
+		var response := call_method(IFACE_PROPERTIES, "GetAll", [iface])
+		if not response:
+			return {}
+		var args := response.get_args()
+		if args.size() == 0:
+			return {}
+		
+		return args[0]
 
 
 ## A ManagedObject is a simple structure used with GetManagedObjects

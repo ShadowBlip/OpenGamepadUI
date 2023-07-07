@@ -9,7 +9,6 @@ class_name BluetoothManager
 const BLUEZ_BUS := "org.bluez"
 const BLUES_PREFIX := "/org/bluez"
 
-const IFACE_PROPERTIES := "org.freedesktop.DBus.Properties"
 const IFACE_ADAPTER := "org.bluez.Adapter1"
 const IFACE_DEVICE := "org.bluez.Device1"
 
@@ -65,21 +64,34 @@ func get_discovered_devices() -> Array[Device]:
 	return devices
 
 
+## Container for a bluetooth adapter
+## https://github.com/luetzel/bluez/blob/master/doc/adapter-api.txt
+class Adapter:
+	var _proxy: DBusManager.Proxy
+	
+
+
 ## Container for a bluetooth device
 ## https://github.com/luetzel/bluez/blob/master/doc/device-api.txt
 class Device:
 	var _proxy: DBusManager.Proxy
+	var adapter: String:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Adapter" in properties:
+				return properties["Adapter"]
+			return ""
 	var address: String:
 		get:
-			var value = _proxy.get_property(IFACE_DEVICE, "Address")
-			if value is String:
-				return value
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Address" in properties:
+				return properties["Address"]
 			return ""
 	var name: String:
 		get:
-			var value = _proxy.get_property(IFACE_DEVICE, "Name")
-			if value is String:
-				return value
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Name" in properties:
+				return properties["Name"]
 			return ""
 
 	func _init(proxy: DBusManager.Proxy) -> void:

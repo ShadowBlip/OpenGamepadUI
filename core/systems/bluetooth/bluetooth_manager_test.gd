@@ -16,4 +16,6 @@ func _on_timeout() -> void:
 	var devices := bluetooth.get_discovered_devices()
 	for device in devices:
 		print("Discovered device: ", device)
-		print(device.address)
+		print("  Name: ", device.name)
+		print("  Address: ", device.address)
+		print("  Adapter: ", device.adapter)
