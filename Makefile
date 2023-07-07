@@ -3,8 +3,8 @@ PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
 ROOTFS ?= $(CACHE_DIR)/rootfs
 OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d'"' -f2)
-GODOT_VERSION ?= $(shell godot --version | cut -d'.' -f 1,2,3)
-GODOT_RELEASE ?= $(shell godot --version | cut -d'.' -f 4)
+GODOT_VERSION ?= $(shell godot --version | cut -d'.' -f 1,2)
+GODOT_RELEASE ?= $(shell godot --version | cut -d'.' -f 3)
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
@@ -149,7 +149,7 @@ import: ## Import project assets
 
 .PHONY: edit
 edit: ## Open the project in the Godot editor
-	$(GODOT) --editor .
+	$(GODOT) --editor --single-window .
 
 .PHONY: clean
 clean: ## Remove build artifacts
