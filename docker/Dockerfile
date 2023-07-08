@@ -43,8 +43,8 @@ RUN mkdir -p /home/build/.local/share/godot/export_templates && chmod -R 777 /ho
 
 # Download the Godot export template
 RUN export GODOT_VERSION=$(godot --version) && \
-	export RELEASE=$(echo ${GODOT_VERSION} | cut -d'.' -f 4) && \
-	export VERSION=$(echo ${GODOT_VERSION} | cut -d'.' -f 1,2,3) && \
+	export RELEASE=$(echo ${GODOT_VERSION} | cut -d'.' -f 3) && \
+	export VERSION=$(echo ${GODOT_VERSION} | cut -d'.' -f 1,2) && \
 	export TEMPLATE_DIR=/home/build/.local/share/godot/export_templates/${VERSION}.${RELEASE} && \
 	export URL="https://github.com/godotengine/godot/releases/download/${VERSION}-${RELEASE}/Godot_v${VERSION}-${RELEASE}_export_templates.tpz" && \
 	wget "${URL}" -O /home/build/.local/share/godot/export_templates/templates.zip && \
