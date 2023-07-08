@@ -6,10 +6,14 @@ signal slide_out_started
 signal slide_out_finished
 
 @export_category("Target")
+## The target node to slide
 @export var target: Control = get_parent()
 @export_category("Animation")
+## Time in seconds to complete the slide effect
 @export var slide_speed := 0.1
+## Margin in pixels to start from
 @export var margin := 20
+## Direction to slide into view from.
 @export_enum("left", "right", "up", "down") var direction := "right"
 
 var tween: Tween

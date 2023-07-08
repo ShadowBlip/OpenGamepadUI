@@ -89,6 +89,8 @@ func exec(method: Callable) -> Variant:
 ## Each thread in the pool waits for tasks and executes methods from the queue
 func _process(id: int) -> void:
 	logger.info("Started thread: " + str(id))
+	# TODO: Fix unsafe thread operations
+	Thread.set_thread_safety_checks_enabled(false)
 	while true:
 		semaphore.wait()
 		mutex.lock()

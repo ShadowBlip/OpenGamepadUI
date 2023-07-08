@@ -10,9 +10,11 @@ var qam_state = load("res://assets/state/states/quick_access_menu.tres")
 var settings_state = load("res://assets/state/states/settings.tres")
 var home_state = load("res://assets/state/states/home.tres")
 
+var args := OS.get_cmdline_user_args()
+var cmdargs := OS.get_cmdline_args()
 var display := Gamescope.XWAYLAND.OGUI
 var qam_window_id: int
-var pid: int
+var pid: int = OS.get_process_id()
 var shared_thread: SharedThread
 var underlay_log: FileAccess
 var underlay_process: InteractiveProcess
@@ -35,6 +37,12 @@ func _init():
 
 ## Starts the --only-qam/--qam-only session.
 func _ready() -> void:
+	# Workaround old versions that don't pass launch args via update pack
+	# TODO: Parse the parent PID's CLI args and use those instead.
+	if "--skip-update-pack" in cmdargs and args.size() == 0:
+		logger.warn("Launched via update pack without arguments! Falling back to default.")
+		args = ["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"]
+
 	# Set the theme if one was set
 	var theme_path := SettingsManager.get_value("general", "theme", "") as String
 	if theme_path == "":
@@ -53,13 +61,11 @@ func _ready() -> void:
 	window.set_size(screen_size)
 
 	# Set up the session
-	var args := OS.get_cmdline_user_args()
 	_setup_qam_only(args)
 
 
 ## Finds needed PID's and global vars, Starts the user defined program in the sandbox.
 func _setup_qam_only(args: Array) -> void:
-	pid = OS.get_process_id()
 	qam_window_id = Gamescope.get_window_id(pid, display)
 	qam_state.state_entered.connect(_on_window_open)
 	qam_state.state_exited.connect(_on_window_closed)

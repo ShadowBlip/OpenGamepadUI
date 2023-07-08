@@ -105,6 +105,8 @@ func remove_process(method: Callable) -> void:
 
 
 func _run() -> void:
+	# TODO: Fix unsafe thread operations
+	Thread.set_thread_safety_checks_enabled(false)
 	var exited := false
 	var current_tick_rate = target_tick_rate
 	var target_frame_time_us := get_target_frame_time()

@@ -302,13 +302,13 @@ func _single_set_focus_tree(child: Control) -> void:
 	child.focus_neighbor_top = child.get_path()
 	child.focus_neighbor_left = child.get_path()
 	child.focus_neighbor_right = child.get_path()
-	if focus_neighbor_top:
+	if focus_neighbor_top and focus_neighbor_top.neighbor_control.is_inside_tree():
 		child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
-	if focus_neighbor_bottom:
+	if focus_neighbor_bottom and focus_neighbor_bottom.neighbor_control.is_inside_tree():
 		child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
-	if focus_neighbor_left:
+	if focus_neighbor_left and focus_neighbor_left.neighbor_control.is_inside_tree():
 		child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
-	if focus_neighbor_right:
+	if focus_neighbor_right and focus_neighbor_right.neighbor_control.is_inside_tree():
 		child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
 	_on_child_focused(child)
 
@@ -401,13 +401,13 @@ func _hbox_set_focus_tree(control_children: Array[Control]) -> void:
 		child.focus_neighbor_bottom = control_children[i].get_path()
 		
 		# Set the focus group neighbors if they are defined
-		if focus_neighbor_top:
+		if focus_neighbor_top and focus_neighbor_top.neighbor_control.is_inside_tree():
 			child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
-		if focus_neighbor_bottom:
+		if focus_neighbor_bottom and focus_neighbor_bottom.neighbor_control.is_inside_tree():
 			child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
-		if focus_neighbor_left and i == 0:
+		if focus_neighbor_left and i == 0 and focus_neighbor_left.neighbor_control.is_inside_tree():
 			child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
-		if focus_neighbor_right and i == control_children.size() - 1:
+		if focus_neighbor_right and i == control_children.size() - 1 and focus_neighbor_right.neighbor_control.is_inside_tree():
 			child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
 		
 		i += 1
@@ -433,13 +433,13 @@ func _vbox_set_focus_tree(control_children: Array[Control]) -> void:
 		child.focus_neighbor_right = control_children[i].get_path()
 		
 		# Set the focus group neighbors if they are defined
-		if is_instance_valid(focus_neighbor_top) and i == 0:
+		if is_instance_valid(focus_neighbor_top) and i == 0 and focus_neighbor_top.neighbor_control.is_inside_tree():
 			child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
-		if is_instance_valid(focus_neighbor_bottom) and i == control_children.size() - 1:
+		if is_instance_valid(focus_neighbor_bottom) and i == control_children.size() - 1 and focus_neighbor_bottom.neighbor_control.is_inside_tree():
 			child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
-		if is_instance_valid(focus_neighbor_left):
+		if is_instance_valid(focus_neighbor_left) and focus_neighbor_left.neighbor_control.is_inside_tree():
 			child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
-		if is_instance_valid(focus_neighbor_right):
+		if is_instance_valid(focus_neighbor_right) and focus_neighbor_right.neighbor_control.is_inside_tree():
 			child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
 
 		i += 1

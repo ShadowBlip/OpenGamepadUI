@@ -4,6 +4,7 @@ class_name VisibilityManager
 
 ## Update visibility based on [State] changes to a [StateMachine]
 ##
+## DEPRECATED in favor of [StateWatcher] with a child [Effect].
 ## The [VisibilityManager] manages the visibility of its parent node based on
 ## the current [State] of a [StateMachine]. This enables nodes to be visible or
 ## invisible only during the correct state(s), allowing menus to hide themselves

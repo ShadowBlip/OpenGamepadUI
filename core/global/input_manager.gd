@@ -386,10 +386,6 @@ func _main_menu_input(event: InputEvent) -> void:
 	var state := state_machine.current_state()
 	var menu_state := main_menu_state
 
-	# Handle cases where a game is running
-	if state_machine.has_state(in_game_state):
-		menu_state = in_game_menu_state
-
 	if state == menu_state:
 		state_machine.pop_state()
 	elif state in [qam_state, osk_state]:

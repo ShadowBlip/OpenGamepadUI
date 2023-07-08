@@ -1,11 +1,11 @@
-[gd_scene load_steps=22 format=3 uid="uid://chq023a11tl3k"]
+[gd_scene load_steps=19 format=3 uid="uid://chq023a11tl3k"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui_only_qam/qam/quick_access_menu.gd" id="1_15b2t"]
-[ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="2_14qhq"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_ifnah"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="2_xf32g"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="3_wfvum"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_po62f"]
-[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="5_kyjm7"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_5vf07"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="5_fn6s7"]
 [ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_4nd6m"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="7_npuoo"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="8_a6ggx"]
@@ -19,68 +19,6 @@
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_bvaah"]
 [ext_resource type="PackedScene" uid="uid://v751ima8r8vg" path="res://core/ui/card_ui/qam/power_tools_card.tscn" id="17_ohpj3"]
 
-[sub_resource type="Animation" id="Animation_5up20"]
-resource_name = "enter"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(400, 0), Vector2(1, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, true]
-}
-
-[sub_resource type="Animation" id="Animation_4xb6e"]
-resource_name = "exit"
-length = 0.2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(400, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cdpfs"]
-_data = {
-"enter": SubResource("Animation_5up20"),
-"exit": SubResource("Animation_4xb6e")
-}
-
 [node name="QuickAccessMenu" type="Control" groups=["qam"]]
 z_index = 20
 layout_mode = 3
@@ -92,12 +30,22 @@ grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("1_15b2t")
 
-[node name="VisibilityManager" type="Node" parent="."]
-script = ExtResource("2_14qhq")
+[node name="StateWatcher" parent="." instance=ExtResource("2_ifnah")]
 state = ExtResource("3_wfvum")
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_po62f")]
-root_node = NodePath("../..")
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_5vf07")]
+target = NodePath("../..")
+fade_speed = 0.15
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="SlideEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_fn6s7")]
+target = NodePath("../../MarginContainer/PanelContainer")
+slide_speed = 0.15
+on_signal = "state_entered"
+slide_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("2_xf32g")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wfvum")])
@@ -116,17 +64,6 @@ custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_type_variation = &"QAM"
 
-[node name="VisibilityManager" type="Node" parent="MarginContainer/PanelContainer"]
-script = ExtResource("2_14qhq")
-state = ExtResource("3_wfvum")
-
-[node name="TransitionSlideRight" type="AnimationPlayer" parent="MarginContainer/PanelContainer/VisibilityManager"]
-root_node = NodePath("../..")
-libraries = {
-"": SubResource("AnimationLibrary_cdpfs")
-}
-script = ExtResource("5_kyjm7")
-
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
@@ -144,8 +81,7 @@ layout_mode = 2
 [node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("13_kyb0u")]
-current_focus = NodePath("")
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("13_kyb0u")]
 focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
 
 [node name="Spacer" type="Control" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer"]
