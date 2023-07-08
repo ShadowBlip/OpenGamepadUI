@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://shvyhrv5sx3v"]
+
+[ext_resource type="Script" path="res://core/systems/state/state_watcher.gd" id="1_f2wg3"]
+
+[node name="StateWatcher" type="Node"]
+editor_description = "Watch for state changes and fire signals"
+script = ExtResource("1_f2wg3")
