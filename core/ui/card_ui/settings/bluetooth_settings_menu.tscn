@@ -1,0 +1,67 @@
+[gd_scene load_steps=4 format=3 uid="uid://6ygxdkvh1hib"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.gd" id="1_7sjpd"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_36ef6"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="4_isnhb"]
+
+[node name="BluetoothSettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7sjpd")
+
+[node name="DiscoverTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_36ef6")]
+
+[node name="EnableToggle" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enabled"
+button_pressed = false
+
+[node name="DiscoverToggle" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enable Discovery"
+button_pressed = false
+
+[node name="Tree" type="Tree" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+column_titles_visible = true
+hide_root = true
+select_mode = 1

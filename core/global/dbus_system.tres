@@ -1,6 +1,9 @@
-[gd_resource type="Resource" script_class="DBusManager" load_steps=2 format=3 uid="uid://dskqww1130rb2"]
+[gd_resource type="Resource" script_class="DBusManager" load_steps=3 format=3 uid="uid://dskqww1130rb2"]
 
 [ext_resource type="Script" path="res://core/global/dbus_manager.gd" id="1_6xf1o"]
+[ext_resource type="Resource" uid="uid://ct7pi0cx0r832" path="res://core/systems/threading/system_thread.tres" id="2_p3brt"]
 
 [resource]
 script = ExtResource("1_6xf1o")
+bus_type = 1
+thread = ExtResource("2_p3brt")

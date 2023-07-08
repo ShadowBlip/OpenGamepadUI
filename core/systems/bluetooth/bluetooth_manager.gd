@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/bluetooth.svg")
 extends Resource
 class_name BluetoothManager
 
@@ -20,28 +21,13 @@ func supports_bluetooth() -> bool:
 	return true
 
 
-## Start discovering bluetooth devices using the given bluetooth adapter
-func start_discovery(adapter_name: String = "hci0") -> int:
-	var device_path := "/".join([BLUES_PREFIX, adapter_name])
-	var adapter := dbus.create_proxy(BLUEZ_BUS, device_path)
-	
-	var result := adapter.call_method(IFACE_ADAPTER, "StartDiscovery", [])
-	if not result:
-		return -1
-	
-	return OK
+## Returns the bluetooth adapter with the given name.
+func get_adapter(adapter_name: String = "hci0") -> Adapter:
+	var adapter_path := "/".join([BLUES_PREFIX, adapter_name])
+	var proxy := dbus.create_proxy(BLUEZ_BUS, adapter_path)
+	var adapter := Adapter.new(proxy)
 
-
-## Stop discovering bluetooth devices using the given bluetooth adapter
-func stop_discovery(adapter_name: String = "hci0") -> int:
-	var device_path := "/".join([BLUES_PREFIX, adapter_name])
-	var adapter := dbus.create_proxy(BLUEZ_BUS, device_path)
-	
-	var result := adapter.call_method(IFACE_ADAPTER, "StopDiscovery", [])
-	if not result:
-		return -1
-	
-	return OK
+	return adapter
 
 
 ## Return a list of currently discovered devices
@@ -68,12 +54,46 @@ func get_discovered_devices() -> Array[Device]:
 ## https://github.com/luetzel/bluez/blob/master/doc/adapter-api.txt
 class Adapter:
 	var _proxy: DBusManager.Proxy
+	var address: String:
+		get:
+			var properties := _proxy.get_properties(IFACE_ADAPTER)
+			if "Address" in properties:
+				return properties["Address"]
+			return ""
+	var name: String:
+		get:
+			var properties := _proxy.get_properties(IFACE_ADAPTER)
+			if "Name" in properties:
+				return properties["Name"]
+			return ""
+	var powered: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_ADAPTER)
+			if "Powered" in properties:
+				return properties["Powered"]
+			return false
+	var discovering: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_ADAPTER)
+			if "Discovering" in properties:
+				return properties["Discovering"]
+			return false
+
+	func _init(proxy: DBusManager.Proxy) -> void:
+		_proxy = proxy
 	
+	func start_discovery() -> void:
+		_proxy.call_method(IFACE_ADAPTER, "StartDiscovery")
+	
+	func stop_discovery() -> void:
+		_proxy.call_method(IFACE_ADAPTER, "StopDiscovery")
 
 
 ## Container for a bluetooth device
 ## https://github.com/luetzel/bluez/blob/master/doc/device-api.txt
 class Device:
+	signal connection_changed(is_connected: bool)
+	signal paired_changed(is_paired: bool)
 	var _proxy: DBusManager.Proxy
 	var adapter: String:
 		get:
@@ -87,18 +107,73 @@ class Device:
 			if "Address" in properties:
 				return properties["Address"]
 			return ""
+	var alias: String:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Alias" in properties:
+				return properties["Alias"]
+			return ""
 	var name: String:
 		get:
 			var properties := _proxy.get_properties(IFACE_DEVICE)
 			if "Name" in properties:
 				return properties["Name"]
 			return ""
+	var icon: String:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Icon" in properties:
+				return properties["Icon"]
+			return ""
+	var paired: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Paired" in properties:
+				return properties["Paired"]
+			return false
+	var connected: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Connected" in properties:
+				return properties["Connected"]
+			return false
+	var trusted: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Trusted" in properties:
+				return properties["Trusted"]
+			return false
+	var blocked: bool:
+		get:
+			var properties := _proxy.get_properties(IFACE_DEVICE)
+			if "Blocked" in properties:
+				return properties["Blocked"]
+			return false
 
 	func _init(proxy: DBusManager.Proxy) -> void:
 		_proxy = proxy
-	
+		_proxy.properties_changed.connect(_on_properties_changed)
+
+	func _on_properties_changed(iface: String, props: Dictionary) -> void:
+		if "Connected" in props:
+			connection_changed.emit(props["Connected"])
+		if "Paired" in props:
+			paired_changed.emit(props["Paired"])
+
 	func connect_to() -> void:
 		_proxy.call_method(IFACE_DEVICE, "Connect")
 	
 	func disconnect_from() -> void:
 		_proxy.call_method(IFACE_DEVICE, "Disconnect")
+
+	func connect_profile(uuid: String) -> void:
+		_proxy.call_method(IFACE_DEVICE, "ConnectProfile", [uuid])
+
+	func disconnect_profile(uuid: String) -> void:
+		_proxy.call_method(IFACE_DEVICE, "DisconnectProfile", [uuid])
+
+	func pair() -> void:
+		_proxy.call_method(IFACE_DEVICE, "Pair")
+
+	func cancel_pairing() -> void:
+		_proxy.call_method(IFACE_DEVICE, "CancelPairing")
