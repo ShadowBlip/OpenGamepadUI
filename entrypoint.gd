@@ -135,6 +135,8 @@ func _apply_update_packs() -> void:
 	var update_args := PackedStringArray([])
 	update_args.append_array(OS.get_cmdline_args())
 	update_args.append("--skip-update-pack")
+	update_args.append("--")
+	update_args.append_array(OS.get_cmdline_user_args())
 	
 	logger.info("Launching update pack: " + update_bin + " " + " ".join(update_args))
 	child_pid = OS.create_process(update_bin, update_args)
