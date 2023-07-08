@@ -102,12 +102,6 @@ build/opengamepad-ui.x86_64: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) --headless --export-debug "Linux/X11"
 
-.PHONY: update-pack
-update-pack: build/update.pck ## Build and export update pack (DEPRECATED)
-build/update.pck: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
-	mkdir -p build
-	$(GODOT) --headless --export-pack "Linux/X11 (Update Pack)" $@
-
 .PHONY: metadata
 metadata: build/metadata.json ## Build update metadata
 build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadui.key
@@ -135,12 +129,6 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 
 	@echo "Metadata written to $@"
 
-
-.PHONY: plugins
-plugins: build/plugins.zip ## Build and export plugins (DEPRECATED)
-build/plugins.zip: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
-	mkdir -p build
-	$(GODOT) --headless --export-pack "Linux/X11 (Plugins)" $@
 
 .PHONY: import
 import: ## Import project assets
@@ -217,13 +205,6 @@ deploy-update: dist/update.zip ## Build and deploy update zip to remote device
 	scp dist/update.zip $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
 
 
-.PHONY: deploy-pack
-deploy-pack: dist/update.pck.sig ## Build and deploy update pack to remote device (DEPRECATED)
-	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .local/share/opengamepadui/updates
-	scp dist/update.pck $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
-	scp dist/update.pck.sig $(SSH_USER)@$(SSH_HOST):~/.local/share/opengamepadui/updates
-
-
 .PHONY: deploy-ext
 deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user
@@ -297,18 +278,6 @@ dist/update.zip: build/metadata.json
 	cd build && zip -5 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
 	mkdir -p dist
 	cp $(CACHE_DIR)/update.zip $@
-
-
-.PHONY: dist-update-pack
-dist-update-pack: dist/update.pck ## Create an update pack archive (DEPRECATED)
-dist/update.pck: update-pack
-	@echo "Building redistributable update pack"
-	mkdir -p dist
-	cp build/update.pck $@
-
-dist/update.pck.sig: dist/update.pck assets/crypto/keys/opengamepadui.key
-	@echo "Signing update pack $<"
-	openssl dgst -sha256 -sign assets/crypto/keys/opengamepadui.key -out $@ $<
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
