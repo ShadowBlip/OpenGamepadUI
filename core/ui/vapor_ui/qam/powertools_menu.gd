@@ -1,7 +1,9 @@
 extends VBoxContainer
 
 var Platform := load("res://core/global/platform.tres")
-const powertools_path : String = "/usr/share/opengamepadui/scripts/powertools"
+
+const AMD_GPU_MIN_MHZ: float = 200
+const POWERTOOLS_PATH : String = "/usr/share/opengamepadui/scripts/powertools"
 
 var command_timer: Timer
 var core_count := 0
@@ -49,7 +51,7 @@ func _ready():
 		gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_changed)
 		gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
 		# Set write mode for power_dpm_force_performance_level
-		_setup_callback_exec(powertools_path, ["pdfpl", "write"])
+		_setup_callback_exec(POWERTOOLS_PATH, ["pdfpl", "write"])
 		gpu_freq_enable.visible = gpu.clk_capable
 
 
@@ -210,10 +212,10 @@ func _get_amd_gpu_clock_limits() -> void:
 				current_max =  int(part[1].rstrip("Mhz"))
 
 	gpu_freq_max_slider.max_value = max_value
-	gpu_freq_max_slider.min_value = 200
+	gpu_freq_max_slider.min_value = AMD_GPU_MIN_MHZ
 	gpu_freq_max_slider.value = current_max
 	gpu_freq_min_slider.max_value = max_value
-	gpu_freq_min_slider.min_value = 200
+	gpu_freq_min_slider.min_value = AMD_GPU_MIN_MHZ
 	gpu_freq_min_slider.value = current_min
 	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
 
@@ -247,7 +249,7 @@ func _get_tdp() -> bool:
 
 # Retrieves the current TDP from ryzenadj for AMD APU's.
 func _get_amd_tdp() -> bool:
-	var output: Array = _do_exec(powertools_path, ["ryzenadj", "-i"])
+	var output: Array = _do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
 	var exit_code = output[1]
 	if exit_code:
 		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
@@ -359,7 +361,7 @@ func _do_change_cpu_cores():
 			args = ["cpuToggle", str(cpu_no), "0"]
 		else:
 			args = ["cpuToggle", str(cpu_no), "1"]
-		_async_do_exec(powertools_path, args)
+		_async_do_exec(POWERTOOLS_PATH, args)
 
 
 # Sets the T-junction temp using ryzenadj.
@@ -367,7 +369,7 @@ func _do_change_cpu_cores():
 func _on_gpu_temp_limit_changed(value: float) -> void:
 	match gpu.vendor:
 		"AMD":
-			_setup_callback_exec(powertools_path, ["ryzenadj", "-f", str(value)])
+			_setup_callback_exec(POWERTOOLS_PATH, ["ryzenadj", "-f", str(value)])
 		"Intel":
 			pass
 
@@ -408,7 +410,7 @@ func _on_gpu_freq_changed(min: float, max: float) -> void:
 		"Intel":
 			cmd = "intelGpuClock"
 
-	_setup_callback_exec(powertools_path, [cmd, str(min), str(max)])
+	_setup_callback_exec(POWERTOOLS_PATH, [cmd, str(min), str(max)])
 
 
 # Called to set the base average TDP
@@ -433,7 +435,7 @@ func _on_tdp_boost_value_changed(_value: float) -> void:
 func _do_amd_tdp_change() -> void:
 	logger.debug("Doing callback func _do_amd_tdp_change")
 	var value: int = tdp_slider.value
-	await _async_do_exec(powertools_path, ["ryzenadj", "-a", str(value * 1000)])
+	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-a", str(value * 1000)])
 	_do_amd_tdp_boost_change()
 
 
@@ -443,15 +445,15 @@ func _do_amd_tdp_boost_change() -> void:
 	var value: int = tdp_boost_slider.value
 	var slowPPT: float = (floor(value/2) + tdp_slider.value) * 1000
 	var fastPPT: float = (value + tdp_slider.value) * 1000
-	await _async_do_exec(powertools_path, ["ryzenadj", "-b", str(fastPPT)])
-	await _async_do_exec(powertools_path, ["ryzenadj", "-c", str(slowPPT)])
+	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-b", str(fastPPT)])
+	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-c", str(slowPPT)])
 
 
 # Set long TDP on Intel iGPU's
 func _do_intel_tdp_change() -> void:
 	logger.debug("Doing callback func _do_intel_tdp_change")
 	var value: int = tdp_slider.value
-	var results := await _async_do_exec(powertools_path, ["setRapl", "constraint_0_power_limit_uw", str(value * 1000000)])
+	var results := await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_0_power_limit_uw", str(value * 1000000)])
 	for result in results:
 		logger.debug("Result: " +str(result))
 	_do_intel_tdp_boost_change()
@@ -463,10 +465,10 @@ func _do_intel_tdp_boost_change() -> void:
 	var value: int = tdp_boost_slider.value
 	var shortTDP: float = (floor(value/2) + tdp_slider.value) * 1000000
 	var peakTDP: float = (value + tdp_slider.value) * 1000000
-	var results := await _async_do_exec(powertools_path, ["set_rapl", "constraint_1_power_limit_uw", str(shortTDP)])
+	var results := await _async_do_exec(POWERTOOLS_PATH, ["set_rapl", "constraint_1_power_limit_uw", str(shortTDP)])
 	for result in results:
 		logger.debug("Result: " +str(result))
-	results =await _async_do_exec(powertools_path, ["set_rapl", "constraint_2_power_limit_uw", str(peakTDP)])
+	results =await _async_do_exec(POWERTOOLS_PATH, ["set_rapl", "constraint_2_power_limit_uw", str(peakTDP)])
 	for result in results:
 		logger.debug("Result: " +str(result))
 
@@ -476,7 +478,7 @@ func _on_toggle_cpu_boost(state: bool) -> void:
 	var args := ["cpuBoost", "0"]
 	if state:
 		args = ["cpuBoost", "1"]
-	_setup_callback_exec(powertools_path, args)
+	_setup_callback_exec(POWERTOOLS_PATH, args)
 
 
 # Called to toggle auo/manual gpu clocking
@@ -486,7 +488,7 @@ func _on_toggle_gpu_freq(state: bool) -> void:
 			var args := ["pdfpl", "auto"]
 			if state:
 				args = ["pdfpl", "manual"]
-			var output: Array = _do_exec(powertools_path, args)
+			var output: Array = _do_exec(POWERTOOLS_PATH, args)
 			var exit_code = output[1]
 			if exit_code:
 				logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
@@ -507,7 +509,7 @@ func _on_toggle_smt(state: bool) -> void:
 		args = ["smtToggle", "on"]
 	else:
 		args = ["smtToggle", "off"]
-	var output: Array = _do_exec(powertools_path, args)
+	var output: Array = _do_exec(POWERTOOLS_PATH, args)
 	var exit_code = output[1]
 	if exit_code:
 		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
