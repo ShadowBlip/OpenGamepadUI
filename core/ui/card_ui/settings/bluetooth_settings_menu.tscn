@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://6ygxdkvh1hib"]
+[gd_scene load_steps=5 format=3 uid="uid://6ygxdkvh1hib"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.gd" id="1_7sjpd"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_36ef6"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="3_rx42r"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="4_isnhb"]
 
 [node name="BluetoothSettingsMenu" type="Control"]
@@ -43,7 +44,9 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_36ef6")]
+[node name="FocusGroup" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_36ef6")]
+current_focus = NodePath("../EnableToggle")
+focus_stack = ExtResource("3_rx42r")
 
 [node name="EnableToggle" parent="MarginContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
 unique_name_in_owner = true

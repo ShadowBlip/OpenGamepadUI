@@ -159,6 +159,10 @@ class Proxy extends Resource:
 		logger.debug("Calling method: " + iface + "::" + method + "(" + str(args) + ")")
 		return _dbus.send_with_reply_and_block(bus_name, path, iface, method, args)
 
+	## Set the given property
+	func set_property(iface: String, property: String, value: Variant) -> void:
+		call_method(IFACE_PROPERTIES, "Set", [iface, property, value])
+
 	## Get the given property
 	func get_property(iface: String, property: String) -> Variant:
 		var response := call_method(IFACE_PROPERTIES, "Get", [iface, property])

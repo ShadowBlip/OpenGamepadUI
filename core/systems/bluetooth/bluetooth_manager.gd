@@ -67,6 +67,8 @@ class Adapter:
 				return properties["Name"]
 			return ""
 	var powered: bool:
+		set(v):
+			_proxy.set_property(IFACE_ADAPTER, "Powered", v)
 		get:
 			var properties := _proxy.get_properties(IFACE_ADAPTER)
 			if "Powered" in properties:

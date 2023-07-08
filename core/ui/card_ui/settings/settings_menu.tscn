@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://d2jiecrd5sw4s"]
+[gd_scene load_steps=41 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
@@ -22,6 +22,7 @@
 [ext_resource type="Resource" uid="uid://2efht48q7i6v" path="res://assets/state/states/settings_network.tres" id="19_l8vuu"]
 [ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="20_5v03o"]
 [ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="21_6lg2v"]
+[ext_resource type="Resource" uid="uid://5r7ehi4t5mri" path="res://assets/state/states/settings_bluetooth.tres" id="21_cbayw"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="22_ntyf3"]
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="23_ilbjf"]
 [ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="24_oscnu"]
@@ -213,12 +214,12 @@ text = "Bluetooth"
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/BluetoothButton" instance=ExtResource("14_cid64")]
 state_machine = ExtResource("15_cb33u")
-state = ExtResource("19_l8vuu")
+state = ExtResource("21_cbayw")
 action = 3
 on_signal = "focus_entered"
 
 [node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/BluetoothButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings/MarginContainer/VBoxContainer/FocusGroup")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
 [node name="AudioButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
@@ -386,6 +387,12 @@ state = ExtResource("19_l8vuu")
 visible = false
 layout_mode = 2
 
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu" instance=ExtResource("2_xwevg")]
+state_machine = ExtResource("15_cb33u")
+state = ExtResource("21_cbayw")
+
+[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
+
 [node name="AudioSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("32_dqi6v")]
 visible = false
 layout_mode = 2
@@ -427,6 +434,7 @@ state = ExtResource("25_nijem")
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings"]
+[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu"]

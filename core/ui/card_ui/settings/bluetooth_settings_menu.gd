@@ -6,12 +6,18 @@ var tree_items := {}
 var logger := Log.get_logger("BluetoothMenu")
 
 @onready var timer := $%DiscoverTimer as Timer
+@onready var enabled_toggle := $%EnableToggle as Toggle
 @onready var discover_toggle := $%DiscoverToggle as Toggle
 @onready var tree := $%Tree as Tree
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Set the initial toggled states
+	enabled_toggle.button_pressed = adapter.powered
+	discover_toggle.button_pressed = adapter.discovering
+	
 	# Connect signals
+	enabled_toggle.toggled.connect(_on_enable)
 	discover_toggle.toggled.connect(_on_discover)
 	timer.timeout.connect(_on_timer_timeout)
 	tree.item_activated.connect(_on_item_activated)
@@ -20,6 +26,11 @@ func _ready() -> void:
 	tree.create_item()
 	tree.set_column_title(0, "Device")
 	tree.set_column_title(1, "Status")
+
+
+## Invoked when the enabled toggle is toggled
+func _on_enable(toggled: bool) -> void:
+	adapter.powered = toggled
 
 
 ## Invoked when the discover toggle is toggled
