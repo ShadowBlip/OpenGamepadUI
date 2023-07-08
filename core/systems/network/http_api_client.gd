@@ -1,32 +1,10 @@
 extends Node
 class_name HTTPAPIClient
 
-var base_url := ""
-var headers := PackedStringArray()
-var cache_folder := "HTTPAPIClient"
+@export var base_url := ""
+@export var headers := PackedStringArray()
+@export var cache_folder := "HTTPAPIClient"
 var logger := Log.get_logger("HTTPAPIClient")
-
-
-class Response:
-	var result: int
-	var code: int
-	var header: PackedStringArray
-	var body: PackedByteArray
-
-	# Returns the JSON decoded body. Returns null if parse error.
-	func get_json() -> Variant:
-		var json := JSON.new()
-		if json.parse(body.get_string_from_utf8()) != OK:
-			return null
-		return json.get_data()
-
-	static func from_cached_result(result: Array) -> Response:
-		var res := Response.new()
-		res.result = result[0]
-		res.code = result[1]
-		res.header = result[2]
-		res.body = Marshalls.base64_to_raw(result[3])
-		return res
 
 
 func request(
@@ -55,7 +33,9 @@ func request(
 
 	# Make the request
 	var http := HTTPRequest.new()
-	add_child(http)
+	http.timeout = 30.0
+	add_child.call_deferred(http)
+	await http.ready
 	var err := http.request(url, hdrs, method, data)
 	if err != OK:
 		logger.warn("Unable to query API: " + str(err))
@@ -81,3 +61,26 @@ func request(
 
 	http.queue_free()
 	return response
+
+
+class Response:
+	var result: int
+	var code: int
+	var header: PackedStringArray
+	var body: PackedByteArray
+
+	# Returns the JSON decoded body. Returns null if parse error.
+	func get_json() -> Variant:
+		var json := JSON.new()
+		if json.parse(body.get_string_from_utf8()) != OK:
+			return null
+		return json.get_data()
+
+	static func from_cached_result(result: Array) -> Response:
+		var res := Response.new()
+		res.result = result[0]
+		res.code = result[1]
+		res.header = result[2]
+		res.body = Marshalls.base64_to_raw(result[3])
+		return res
+

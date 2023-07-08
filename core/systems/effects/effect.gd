@@ -8,10 +8,12 @@ class_name Effect
 ## This class is meant to act as a base class for other effects. Effects listen
 ## for a given signal and perform some action when that signal is triggered.
 
+## Emitted when the effect starts
 signal effect_started
+## Emitted when the effect finishes
 signal effect_finished
 
-# Signal on our parent to connect to
+## Signal on our parent node to connect to
 var on_signal: String
 
 

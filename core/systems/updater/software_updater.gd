@@ -94,7 +94,8 @@ func install_update(download_url: String) -> void:
 func _download_file(download_url: String) -> PackedByteArray:
 	# Build the request
 	var http: HTTPRequest = HTTPRequest.new()
-	add_child(http)
+	add_child.call_deferred(http)
+	await http.ready
 	if http.request(download_url) != OK:
 		logger.info("Error downloading file: " + download_url)
 		http.queue_free()

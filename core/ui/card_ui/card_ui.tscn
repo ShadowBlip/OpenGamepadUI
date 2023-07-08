@@ -192,6 +192,7 @@ visible = false
 layout_mode = 2
 
 [node name="QuickAccessMenu" parent="MenuContent/MenuContainer" instance=ExtResource("14_lsaok")]
+visible = false
 layout_mode = 2
 
 [node name="GameLoading" parent="." instance=ExtResource("22_morxu")]

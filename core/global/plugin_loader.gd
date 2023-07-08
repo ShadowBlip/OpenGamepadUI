@@ -100,7 +100,8 @@ func get_plugin_store_items() -> Variant:
 		logger.error("Plugin loader has not been initialized!")
 		return
 	var http: HTTPRequest = HTTPRequest.new()
-	parent.add_child(http)
+	parent.add_child.call_deferred(http)
+	await http.ready
 	if http.request(PLUGIN_STORE_URL) != OK:
 		logger.error("Error making http request to plugin store")
 		parent.remove_child(http)
@@ -133,7 +134,8 @@ func install_plugin(plugin_id: String, download_url: String, sha256: String) -> 
 		return
 	# Build the request
 	var http: HTTPRequest = HTTPRequest.new()
-	parent.add_child(http)
+	parent.add_child.call_deferred(http)
+	await http.ready
 	if http.request(download_url) != OK:
 		logger.error("Error making http request for plugin package: " + download_url)
 		parent.remove_child(http)

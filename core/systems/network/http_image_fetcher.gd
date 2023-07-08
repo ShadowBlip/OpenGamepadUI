@@ -21,7 +21,8 @@ func fetch(url: String, caching_flags: int = Cache.FLAGS.LOAD | Cache.FLAGS.SAVE
 
 	# Build the request
 	var http: HTTPRequest = HTTPRequest.new()
-	add_child(http)
+	add_child.call_deferred(http)
+	await http.ready
 	if http.request(url) != OK:
 		logger.debug("Error making http request for image: " + url)
 		_remove(http)

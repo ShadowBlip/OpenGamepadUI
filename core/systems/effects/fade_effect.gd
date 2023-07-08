@@ -2,14 +2,19 @@
 extends Effect
 class_name FadeEffect
 
+## Emitted when the effect finishes
 signal fade_out_finished
 
 @export_category("Target")
+## The target node to fade the opacity in/out
 @export var target: Control = get_parent()
 @export_category("Animation")
+## Fade speed in seconds
 @export var fade_speed := 0.1
 
 var tween: Tween
+
+## Signal to connect to to trigger a fade out
 var fade_out_signal: String
 
 
