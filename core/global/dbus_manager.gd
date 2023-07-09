@@ -83,6 +83,11 @@ func create_proxy(bus: String, path: String) -> Proxy:
 	return proxy
 
 
+## Returns true if the given well-known name has an owner.
+func bus_exists(name: String) -> bool:
+	return dbus.name_has_owner(name)
+
+
 ## Returns a dictionary of manages objects for the given bus and path
 func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 	var obj := create_proxy(bus, path)

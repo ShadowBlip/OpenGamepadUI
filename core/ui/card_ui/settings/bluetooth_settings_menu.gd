@@ -9,6 +9,8 @@ var logger := Log.get_logger("BluetoothMenu")
 @onready var enabled_toggle := $%EnableToggle as Toggle
 @onready var discover_toggle := $%DiscoverToggle as Toggle
 @onready var tree := $%Tree as Tree
+@onready var container_avail := $%AvailableContainer as Control
+@onready var container_unavail := $%UnavailableContainer as Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,6 +19,7 @@ func _ready() -> void:
 	discover_toggle.button_pressed = adapter.discovering
 	
 	# Connect signals
+	visibility_changed.connect(_on_visibility_changed)
 	enabled_toggle.toggled.connect(_on_enable)
 	discover_toggle.toggled.connect(_on_discover)
 	timer.timeout.connect(_on_timer_timeout)
@@ -26,6 +29,25 @@ func _ready() -> void:
 	tree.create_item()
 	tree.set_column_title(0, "Device")
 	tree.set_column_title(1, "Status")
+
+
+## Invoked when the menu becomes visible
+func _on_visibility_changed():
+	if not is_visible_in_tree():
+		# Disable discovery if not visible
+		if discover_toggle.button_pressed:
+			adapter.stop_discovery()
+		return
+	
+	# Show/hide parts of the menu if bluetooth is available
+	var supports_bluetooth := bluetooth.supports_bluetooth()
+	container_unavail.visible = not supports_bluetooth
+	container_avail.visible = supports_bluetooth
+	if not supports_bluetooth:
+		return
+
+	enabled_toggle.button_pressed = adapter.powered
+	discover_toggle.button_pressed = adapter.discovering
 
 
 ## Invoked when the enabled toggle is toggled

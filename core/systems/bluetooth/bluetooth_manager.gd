@@ -18,11 +18,12 @@ var dbus := load("res://core/global/dbus_system.tres") as DBusManager
 
 ## Returns true if bluetooth can be used on this system
 func supports_bluetooth() -> bool:
-	return true
+	return dbus.bus_exists(BLUEZ_BUS)
 
 
 ## Returns the bluetooth adapter with the given name.
 func get_adapter(adapter_name: String = "hci0") -> Adapter:
+	print(supports_bluetooth())
 	var adapter_path := "/".join([BLUES_PREFIX, adapter_name])
 	var proxy := dbus.create_proxy(BLUEZ_BUS, adapter_path)
 	var adapter := Adapter.new(proxy)
@@ -56,30 +57,30 @@ class Adapter:
 	var _proxy: DBusManager.Proxy
 	var address: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_ADAPTER)
-			if "Address" in properties:
-				return properties["Address"]
-			return ""
+			var property = _proxy.get_property(IFACE_ADAPTER, "Address")
+			if not property is String:
+				return ""
+			return property
 	var name: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_ADAPTER)
-			if "Name" in properties:
-				return properties["Name"]
-			return ""
+			var property = _proxy.get_property(IFACE_ADAPTER, "Name")
+			if not property is String:
+				return ""
+			return property
 	var powered: bool:
 		set(v):
 			_proxy.set_property(IFACE_ADAPTER, "Powered", v)
 		get:
-			var properties := _proxy.get_properties(IFACE_ADAPTER)
-			if "Powered" in properties:
-				return properties["Powered"]
-			return false
+			var property = _proxy.get_property(IFACE_ADAPTER, "Powered")
+			if not property is bool:
+				return false
+			return property
 	var discovering: bool:
 		get:
-			var properties := _proxy.get_properties(IFACE_ADAPTER)
-			if "Discovering" in properties:
-				return properties["Discovering"]
-			return false
+			var property = _proxy.get_property(IFACE_ADAPTER, "Discovering")
+			if not property is bool:
+				return false
+			return property
 
 	func _init(proxy: DBusManager.Proxy) -> void:
 		_proxy = proxy
@@ -99,58 +100,58 @@ class Device:
 	var _proxy: DBusManager.Proxy
 	var adapter: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Adapter" in properties:
-				return properties["Adapter"]
-			return ""
+			var property = _proxy.get_property(IFACE_DEVICE, "Adapter")
+			if not property is String:
+				return ""
+			return property
 	var address: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Address" in properties:
-				return properties["Address"]
-			return ""
+			var property = _proxy.get_property(IFACE_DEVICE, "Address")
+			if not property is String:
+				return ""
+			return property
 	var alias: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Alias" in properties:
-				return properties["Alias"]
-			return ""
+			var property = _proxy.get_property(IFACE_DEVICE, "Alias")
+			if not property is String:
+				return ""
+			return property
 	var name: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Name" in properties:
-				return properties["Name"]
-			return ""
+			var property = _proxy.get_property(IFACE_DEVICE, "Name")
+			if not property is String:
+				return ""
+			return property
 	var icon: String:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Icon" in properties:
-				return properties["Icon"]
-			return ""
+			var property = _proxy.get_property(IFACE_DEVICE, "Icon")
+			if not property is String:
+				return ""
+			return property
 	var paired: bool:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Paired" in properties:
-				return properties["Paired"]
-			return false
+			var property = _proxy.get_property(IFACE_DEVICE, "Paired")
+			if not property is bool:
+				return false
+			return property
 	var connected: bool:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Connected" in properties:
-				return properties["Connected"]
-			return false
+			var property = _proxy.get_property(IFACE_DEVICE, "Connected")
+			if not property is bool:
+				return false
+			return property
 	var trusted: bool:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Trusted" in properties:
-				return properties["Trusted"]
-			return false
+			var property = _proxy.get_property(IFACE_DEVICE, "Trusted")
+			if not property is bool:
+				return false
+			return property
 	var blocked: bool:
 		get:
-			var properties := _proxy.get_properties(IFACE_DEVICE)
-			if "Blocked" in properties:
-				return properties["Blocked"]
-			return false
+			var property = _proxy.get_property(IFACE_DEVICE, "Blocked")
+			if not property is bool:
+				return false
+			return property
 
 	func _init(proxy: DBusManager.Proxy) -> void:
 		_proxy = proxy
