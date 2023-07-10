@@ -27,16 +27,17 @@ func _ready() -> void:
 	
 	# Configure the tree
 	tree.create_item()
-	tree.set_column_title(0, "Name")
 	tree.set_column_title_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
-	tree.set_column_title(1, "Address")
+	tree.set_column_title(1, "Name")
 	tree.set_column_title_alignment(1, HORIZONTAL_ALIGNMENT_CENTER)
-	tree.set_column_title(2, "Paired")
+	tree.set_column_title(2, "Address")
 	tree.set_column_title_alignment(2, HORIZONTAL_ALIGNMENT_CENTER)
-	tree.set_column_title(3, "Connected")
+	tree.set_column_title(3, "Paired")
 	tree.set_column_title_alignment(3, HORIZONTAL_ALIGNMENT_CENTER)
-#	tree.set_column_title(4, "Signal Strength")
-#	tree.set_column_title_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)
+	tree.set_column_title(4, "Connected")
+	tree.set_column_title_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)
+#	tree.set_column_title(5, "Signal Strength")
+#	tree.set_column_title_alignment(5, HORIZONTAL_ALIGNMENT_CENTER)
 
 
 ## Invoked when the menu becomes visible
@@ -82,15 +83,6 @@ func _on_item_activated() -> void:
 	# Do nothing if already connected
 	if device.connected:
 		return
-	
-	# Update the UI when connected
-	selected.set_text(3, "Connecting")
-	var on_connected := func(connected: bool):
-		if connected:
-			selected.set_text(3, "Yes")
-			return
-		selected.set_text(3, "No")
-	device.connection_changed.connect(on_connected)
 	
 	# Try connecting to the device
 	device.connect_to()
@@ -143,14 +135,26 @@ func _on_device_updated(item: TreeItem) -> void:
 	var address := device.address
 	var paired := device.paired
 	var connected := device.connected
-		
-	item.set_text(0, device_name)
-	item.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
-	item.set_text(1, address)
+	var icon := device.icon
+	
+	item.set_text(1, device_name)
 	item.set_text_alignment(1, HORIZONTAL_ALIGNMENT_CENTER)
-	item.set_text(2, "Yes" if paired else "No")
+	item.set_text(2, address)
 	item.set_text_alignment(2, HORIZONTAL_ALIGNMENT_CENTER)
-	item.set_text(3, "Yes" if connected else "No")
+	item.set_text(3, "Yes" if paired else "No")
 	item.set_text_alignment(3, HORIZONTAL_ALIGNMENT_CENTER)
+	item.set_text(4, "Yes" if connected else "No")
+	item.set_text_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)
 	#item.set_text(4, "")
 	#item.set_text_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)
+	
+	# Set the icon
+	var texture: Texture2D = load("res://assets/editor-icons/bluetooth.svg")
+	match icon:
+		"input-gaming":
+			texture = load("res://assets/ui/icons/gamepad-bold.svg")
+		"audio-headphones":
+			texture = load("res://assets/ui/icons/headphones.svg")
+	item.set_icon(0, texture)
+	item.set_icon_max_width(0, 24)
+	item.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
