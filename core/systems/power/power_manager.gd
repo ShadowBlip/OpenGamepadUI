@@ -1,10 +1,10 @@
 extends Resource
 class_name PowerManager
 
-var dbus := load("res://core/global/dbus_system.tres") as DBusManager
-
 const POWER_BUS := "org.freedesktop.UPower"
+const UPOWER_PATH := "/org/freedesktop/UPower"
 const POWER_PREFIX := "/org/freedesktop/UPower/devices"
+const IFACE_UPOWER := "org.freedesktop.UPower"
 const IFACE_DEVICE := "org.freedesktop.UPower.Device"
 
 enum DEVICE_TYPE {
@@ -58,19 +58,18 @@ enum DEVICE_TECHNOLOGY {
 	NICKLE_METAL_HYDRIDE,
 }
 
+var dbus := load("res://core/global/dbus_system.tres") as DBusManager
+var upower := UPower.new(dbus.create_proxy(POWER_BUS, UPOWER_PATH))
+
 
 func get_devices() -> Array[Device]:
 	var devices: Array[Device] = []
-	var objects := dbus.get_managed_objects(POWER_BUS, "/")
+	var device_paths := upower.enumerate_devices()
 
 	# Loop through all objects on the bus
-	for obj in objects:
-		# Skip any DBus objects that aren't devices
-		if not obj.has_interface_attr(IFACE_DEVICE, "Address"):
-			continue
-
-		# Create a bluetooth Device from this object
-		var proxy := dbus.create_proxy(POWER_BUS, obj.path)
+	for path in device_paths:
+		# Create a power Device from this object
+		var proxy := dbus.create_proxy(POWER_BUS, path)
 		var device := Device.new(proxy)
 		
 		devices.append(device)
@@ -82,7 +81,6 @@ func get_devices_by_type(type: DEVICE_TYPE) -> Array[Device]:
 	var all_devices := get_devices()
 	var type_devices : Array[Device]
 	for device in all_devices:
-		print(device)
 		if device.type == type:
 			type_devices.append(device)
 	return type_devices
@@ -101,7 +99,34 @@ func supports_power() -> bool:
 	return dbus.bus_exists(POWER_BUS)
 
 
-class Device:
+class UPower extends Resource:
+	signal updated
+	var _proxy: DBusManager.Proxy
+	var on_battery: bool:
+		get:
+			var property = _proxy.get_property(IFACE_UPOWER, "OnBattery")
+			if not property is bool:
+				return false
+			return property
+
+	func _init(proxy: DBusManager.Proxy) -> void:
+		_proxy = proxy
+		_proxy.properties_changed.connect(_on_properties_changed)
+
+	func _on_properties_changed(iface: String, props: Dictionary) -> void:
+		updated.emit()
+	
+	func enumerate_devices() -> Array:
+		var result := _proxy.call_method(IFACE_UPOWER, "EnumerateDevices")
+		var args := result.get_args()
+		if args.size() != 1:
+			return []
+		if not args[0] is Array:
+			return []
+		return args[0]
+	
+
+class Device extends Resource:
 	signal porperties_changed
 	signal updated
 	var _proxy: DBusManager.Proxy
