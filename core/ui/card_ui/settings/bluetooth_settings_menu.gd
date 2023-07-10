@@ -80,8 +80,9 @@ func _on_item_activated() -> void:
 	var selected := tree.get_selected()
 	var device := selected.get_metadata(0) as BluetoothManager.Device
 	
-	# Do nothing if already connected
+	# Disconnect if already connected
 	if device.connected:
+		device.disconnect_from()
 		return
 	
 	# Try connecting to the device
