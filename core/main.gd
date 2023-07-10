@@ -11,6 +11,9 @@ func _ready() -> void:
 		get_tree().quit()
 		return
 	
+	# Set global max FPS for better power consumption
+	Engine.max_fps = 60
+	
 	# Launch old ui
 	if "--vapor-ui" in args:
 		# in only-qam mode

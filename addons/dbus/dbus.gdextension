@@ -1,0 +1,9 @@
+[configuration]
+
+entry_symbol = "dbus_library_init"
+compatibility_minimum = 4.1
+
+[libraries]
+
+linux.debug.x86_64 = "res://addons/dbus/bin/libdbus.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/dbus/bin/libdbus.linux.template_release.x86_64.so"
