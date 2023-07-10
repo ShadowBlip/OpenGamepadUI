@@ -23,7 +23,7 @@ const IFACE_OBJECT_MANAGER := "org.freedesktop.DBus.ObjectManager"
 ## Shared thread to process DBus messages on
 @export var thread: SharedThread = load("res://core/systems/threading/system_thread.tres")
 
-var logger := Log.get_logger("DBusManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("DBusManager")
 var well_known_names := []
 var dbus := DBus.new()
 var dbus_proxy := DBusProxy.new(create_proxy(DBUS_BUS, DBUS_PATH))
@@ -91,7 +91,7 @@ func bus_exists(name: String) -> bool:
 ## Returns a dictionary of manages objects for the given bus and path
 func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 	var obj := create_proxy(bus, path)
-	var result := obj.call_method(IFACE_OBJECT_MANAGER, "GetManagedObjects", [])
+	var result := obj.call_method(IFACE_OBJECT_MANAGER, "GetManagedObjects", [], "")
 	if not result:
 		return []
 	var args := result.get_args()
@@ -160,17 +160,17 @@ class Proxy extends Resource:
 			_dbus.remove_match(rule)
 
 	## Call the given method
-	func call_method(iface: String, method: String, args: Array = []) -> DBusMessage:
+	func call_method(iface: String, method: String, args: Array = [], signature: String = "") -> DBusMessage:
 		logger.debug("Calling method: " + iface + "::" + method + "(" + str(args) + ")")
-		return _dbus.send_with_reply_and_block(bus_name, path, iface, method, args)
+		return _dbus.send_with_reply_and_block(bus_name, path, iface, method, args, signature)
 
 	## Set the given property
 	func set_property(iface: String, property: String, value: Variant) -> void:
-		call_method(IFACE_PROPERTIES, "Set", [iface, property, value])
+		call_method(IFACE_PROPERTIES, "Set", [iface, property, value], "ssv")
 
 	## Get the given property
 	func get_property(iface: String, property: String) -> Variant:
-		var response := call_method(IFACE_PROPERTIES, "Get", [iface, property])
+		var response := call_method(IFACE_PROPERTIES, "Get", [iface, property], "ss")
 		if not response:
 			return null
 		var args := response.get_args()
@@ -181,7 +181,7 @@ class Proxy extends Resource:
 	
 	## Get all properties for the given interface
 	func get_properties(iface: String) -> Dictionary:
-		var response := call_method(IFACE_PROPERTIES, "GetAll", [iface])
+		var response := call_method(IFACE_PROPERTIES, "GetAll", [iface], "s")
 		if not response:
 			return {}
 		var args := response.get_args()
@@ -189,7 +189,7 @@ class Proxy extends Resource:
 			return {}
 		
 		return args[0]
-
+   
 	## Watch the bus for particular signals
 	func watch(iface: String, member: String = "PropertiesChanged") -> int:
 		var rule := "type='signal',interface='{0}',path='{1}',member='{2}'".format(
@@ -229,7 +229,7 @@ class DBusProxy:
 
 	## Return the connection name (e.g. ":1.1270") from the given well-known name
 	func get_name_owner(name: String) -> String:
-		var msg := _proxy.call_method(IFACE_DBUS, "GetNameOwner", [name])
+		var msg := _proxy.call_method(IFACE_DBUS, "GetNameOwner", [name], "s")
 		if not msg:
 			return ""
 		var args := msg.get_args()

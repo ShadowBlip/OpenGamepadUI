@@ -27,8 +27,16 @@ func _ready() -> void:
 	
 	# Configure the tree
 	tree.create_item()
-	tree.set_column_title(0, "Device")
-	tree.set_column_title(1, "Status")
+	tree.set_column_title(0, "Name")
+	tree.set_column_title_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
+	tree.set_column_title(1, "Address")
+	tree.set_column_title_alignment(1, HORIZONTAL_ALIGNMENT_CENTER)
+	tree.set_column_title(2, "Paired")
+	tree.set_column_title_alignment(2, HORIZONTAL_ALIGNMENT_CENTER)
+	tree.set_column_title(3, "Connected")
+	tree.set_column_title_alignment(3, HORIZONTAL_ALIGNMENT_CENTER)
+#	tree.set_column_title(4, "Signal Strength")
+#	tree.set_column_title_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)
 
 
 ## Invoked when the menu becomes visible
@@ -46,6 +54,7 @@ func _on_visibility_changed():
 	if not supports_bluetooth:
 		return
 
+	_on_timer_timeout()
 	enabled_toggle.button_pressed = adapter.powered
 	discover_toggle.button_pressed = adapter.discovering
 
@@ -75,12 +84,12 @@ func _on_item_activated() -> void:
 		return
 	
 	# Update the UI when connected
-	selected.set_text(1, "Connecting")
+	selected.set_text(3, "Connecting")
 	var on_connected := func(connected: bool):
 		if connected:
-			selected.set_text(1, "Connected")
+			selected.set_text(3, "Yes")
 			return
-		selected.set_text(1, "")
+		selected.set_text(3, "No")
 	device.connection_changed.connect(on_connected)
 	
 	# Try connecting to the device
@@ -97,6 +106,7 @@ func _on_timer_timeout() -> void:
 	for device in discovered:
 		var device_name := device.name
 		var address := device.address
+		var paired := device.paired
 		var connected := device.connected
 		addresses.append(address)
 		logger.debug("Discovered device: " + address)
@@ -111,9 +121,9 @@ func _on_timer_timeout() -> void:
 
 		# Create a tree item for this device
 		var item := root.create_child()
-		item.set_text(0, "{0} ({1})".format([device_name, address]))
-		item.set_text(1, "Connected" if connected else "")
 		item.set_metadata(0, device)
+		_on_device_updated(item)
+		device.updated.connect(_on_device_updated.bind(item))
 		
 		# Add the item
 		tree_items[address] = item
@@ -125,3 +135,22 @@ func _on_timer_timeout() -> void:
 		var item := tree_items[address] as TreeItem
 		root.remove_child(item)
 		tree_items.erase(address)
+
+
+func _on_device_updated(item: TreeItem) -> void:
+	var device := item.get_metadata(0) as BluetoothManager.Device
+	var device_name := device.name
+	var address := device.address
+	var paired := device.paired
+	var connected := device.connected
+		
+	item.set_text(0, device_name)
+	item.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
+	item.set_text(1, address)
+	item.set_text_alignment(1, HORIZONTAL_ALIGNMENT_CENTER)
+	item.set_text(2, "Yes" if paired else "No")
+	item.set_text_alignment(2, HORIZONTAL_ALIGNMENT_CENTER)
+	item.set_text(3, "Yes" if connected else "No")
+	item.set_text_alignment(3, HORIZONTAL_ALIGNMENT_CENTER)
+	#item.set_text(4, "")
+	#item.set_text_alignment(4, HORIZONTAL_ALIGNMENT_CENTER)

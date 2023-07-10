@@ -23,7 +23,6 @@ func supports_bluetooth() -> bool:
 
 ## Returns the bluetooth adapter with the given name.
 func get_adapter(adapter_name: String = "hci0") -> Adapter:
-	print(supports_bluetooth())
 	var adapter_path := "/".join([BLUES_PREFIX, adapter_name])
 	var proxy := dbus.create_proxy(BLUEZ_BUS, adapter_path)
 	var adapter := Adapter.new(proxy)
@@ -54,6 +53,7 @@ func get_discovered_devices() -> Array[Device]:
 ## Container for a bluetooth adapter
 ## https://github.com/luetzel/bluez/blob/master/doc/adapter-api.txt
 class Adapter:
+	signal updated
 	var _proxy: DBusManager.Proxy
 	var address: String:
 		get:
@@ -84,7 +84,11 @@ class Adapter:
 
 	func _init(proxy: DBusManager.Proxy) -> void:
 		_proxy = proxy
-	
+		_proxy.properties_changed.connect(_on_properties_changed)
+
+	func _on_properties_changed(iface: String, props: Dictionary) -> void:
+		updated.emit()
+
 	func start_discovery() -> void:
 		_proxy.call_method(IFACE_ADAPTER, "StartDiscovery")
 	
@@ -97,6 +101,7 @@ class Adapter:
 class Device:
 	signal connection_changed(is_connected: bool)
 	signal paired_changed(is_paired: bool)
+	signal updated
 	var _proxy: DBusManager.Proxy
 	var adapter: String:
 		get:
@@ -158,6 +163,7 @@ class Device:
 		_proxy.properties_changed.connect(_on_properties_changed)
 
 	func _on_properties_changed(iface: String, props: Dictionary) -> void:
+		updated.emit()
 		if "Connected" in props:
 			connection_changed.emit(props["Connected"])
 		if "Paired" in props:
@@ -170,10 +176,10 @@ class Device:
 		_proxy.call_method(IFACE_DEVICE, "Disconnect")
 
 	func connect_profile(uuid: String) -> void:
-		_proxy.call_method(IFACE_DEVICE, "ConnectProfile", [uuid])
+		_proxy.call_method(IFACE_DEVICE, "ConnectProfile", [uuid], "s")
 
 	func disconnect_profile(uuid: String) -> void:
-		_proxy.call_method(IFACE_DEVICE, "DisconnectProfile", [uuid])
+		_proxy.call_method(IFACE_DEVICE, "DisconnectProfile", [uuid], "s")
 
 	func pair() -> void:
 		_proxy.call_method(IFACE_DEVICE, "Pair")
