@@ -33,17 +33,25 @@ func _init() -> void:
 	if dbus.connect(bus_type) != OK:
 		logger.warn("Unable to connect to dbus")
 		return
-	thread.add_process(process)
+	thread.add_process(_process)
 	thread.start()
 
 
 ## Process messages on the bus that are being watched and dispatch them.
-func process(_delta: float):
+func _process(_delta: float):
+	var messages: Array[DBusMessage] = []
 	var msg := dbus.pop_message()
-	if not msg:
-		return
-	logger.debug("Received DBus message on " + msg.get_sender() + " from " + msg.get_path() + ": " + str(msg.get_args()))
-	
+	while msg != null:
+		logger.debug("Received DBus message on " + msg.get_sender() + " from " + msg.get_path() + ": " + str(msg.get_args()))
+		messages.append(msg)
+		msg = dbus.pop_message()
+
+	for message in messages:
+		_process_message(message)
+
+
+## Dispatch the given message to any proxy objects
+func _process_message(msg: DBusMessage) -> void:
 	# Try looking up the well-known name of the message sender
 	var known_names := get_names_for_owner(msg.get_sender())
 	
