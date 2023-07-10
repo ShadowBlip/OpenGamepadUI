@@ -71,12 +71,14 @@ focus_stack = ExtResource("3_rx42r")
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enabled"
+separator_visible = false
 button_pressed = false
 
 [node name="DiscoverToggle" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enable Discovery"
+separator_visible = false
 button_pressed = false
 
 [node name="Tree" type="Tree" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer"]

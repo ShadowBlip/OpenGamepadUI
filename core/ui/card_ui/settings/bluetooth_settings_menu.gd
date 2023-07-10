@@ -1,5 +1,6 @@
 extends Control
 
+var thread_pool := load("res://core/systems/threading/thread_pool.tres") as ThreadPool
 var bluetooth := load("res://core/systems/bluetooth/bluetooth_manager.tres") as BluetoothManager
 var adapter := bluetooth.get_adapter() # TODO: allow choosing adapter
 var tree_items := {}
@@ -69,10 +70,10 @@ func _on_enable(toggled: bool) -> void:
 func _on_discover(toggled: bool) -> void:
 	if toggled:
 		timer.start()
-		adapter.start_discovery()
+		thread_pool.exec(adapter.start_discovery)
 		return
 	timer.stop()
-	adapter.stop_discovery()
+	thread_pool.exec(adapter.stop_discovery)
 
 
 ## Invoked when the user selects a bluetooth device from the tree view
@@ -82,11 +83,13 @@ func _on_item_activated() -> void:
 	
 	# Disconnect if already connected
 	if device.connected:
-		device.disconnect_from()
+		selected.set_text(4, "Disconnecting")
+		thread_pool.exec(device.disconnect_from)
 		return
 	
 	# Try connecting to the device
-	device.connect_to()
+	selected.set_text(4, "Connecting")
+	thread_pool.exec(device.connect_to)
 
 
 ## Invoked when the discovery timer times out
