@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcrx6jkhn0o7u"]
+
+[ext_resource type="Script" path="res://core/ui/components/battery_container.gd" id="1_duqs8"]
+[ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="1_forsh"]
+
+[node name="BatteryContainer" type="HBoxContainer"]
+alignment = 1
+script = ExtResource("1_duqs8")
+
+[node name="BatteryIcon" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(48, 24)
+layout_mode = 2
+texture = ExtResource("1_forsh")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="BatteryLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "100%"

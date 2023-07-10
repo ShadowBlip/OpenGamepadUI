@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
 [ext_resource type="Texture2D" uid="uid://bp58drjdgvxsi" path="res://addons/controller_icons/assets/key/enter_alt.png" id="2_7vfu8"]
 [ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="2_hvl7j"]
-[ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="4_ticck"]
 [ext_resource type="Texture2D" uid="uid://cnghdqiitl0fu" path="res://addons/controller_icons/assets/key/esc.png" id="4_tlvqf"]
 [ext_resource type="Texture2D" uid="uid://doih0kf30x8db" path="res://addons/controller_icons/assets/xbox360/home.png" id="5_mcgmc"]
+[ext_resource type="PackedScene" uid="uid://dcrx6jkhn0o7u" path="res://core/ui/components/battery_container.tscn" id="5_ts3bb"]
 [ext_resource type="Texture2D" uid="uid://cebpb6c42ooem" path="res://addons/controller_icons/assets/key/f2.png" id="7_wroit"]
 
 [node name="ContextBar" type="PanelContainer"]
@@ -73,25 +73,9 @@ text = "12:00AM"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BatteryContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="BatteryContainer" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("5_ts3bb")]
 unique_name_in_owner = true
 layout_mode = 2
-alignment = 1
-
-[node name="BatteryIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer/BatteryContainer"]
-unique_name_in_owner = true
-modulate = Color(1, 0, 0, 1)
-custom_minimum_size = Vector2(48, 24)
-layout_mode = 2
-texture = ExtResource("4_ticck")
-expand_mode = 1
-stretch_mode = 5
-flip_h = true
-
-[node name="BatteryLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/BatteryContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "100%"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
