@@ -17,7 +17,6 @@ var logger := Log.get_logger("BatteryContainer", Log.LEVEL.INFO)
 
 
 func _ready():
-	logger.info("You made it!")
 	batteries = power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
 	if batteries.size() > 1:
 		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
@@ -26,19 +25,25 @@ func _ready():
 		visible = false
 		return
 
-	batteries[0].updated.connect(_on_update_device.bind(batteries[0]))
+	var battery := batteries[0]
+	_on_update_device(battery)
+	battery.updated.connect(_on_update_device.bind(battery))
 
 
 func _on_update_device(item: PowerManager.Device):
-	var capacity := item.capacity
+	var capacity := item.percentage
 	var state := item.state
 	battery_icon.texture = get_capacity_texture(capacity, state)
 	battery_label.text = str(capacity)+"%"
+	if capacity > 5:
+		battery_icon.modulate = Color(1, 1, 1)
+	else:
+		battery_icon.modulate = Color(1, 0, 0)
 
 
 ## Returns the texture reflecting the given battery capacity
 static func get_capacity_texture(capacity: int, state: PowerManager.DEVICE_STATE) -> Texture2D:
-	if state == PowerManager.DEVICE_STATE.CHARGING:
+	if state in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED]:
 		return icon_charging
 	if capacity >= 90:
 		return icon_full
