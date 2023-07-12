@@ -28,7 +28,7 @@ func _on_state_entered(_from: State) -> void:
 	# If no plugin settings are available, skip to the next state
 	if menus.size() == 0:
 		logger.info("No plugin settings, skipping.")
-		state_machine.replace_state(next_state)
+		state_machine.replace_state.call_deferred(next_state)
 		return
 	
 	# Add the plugin settings menus
