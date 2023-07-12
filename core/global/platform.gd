@@ -28,7 +28,7 @@ enum PLATFORM {
 	STEAMDECK,
 	
 	# OS Platforms
-	CHIMERAOS,
+#	CHIMERAOS,
 	STEAMOS,
 	ARCH_LIKE,
 }
@@ -128,9 +128,8 @@ func _init() -> void:
 	# Set OS platform provider
 	if PLATFORM.STEAMOS in flags:
 		os = load("res://core/platform/steamos.tres")
-	if PLATFORM.CHIMERAOS in flags:
-		os = load("res://core/platform/chimeraos.tres")
-
+#	if PLATFORM.CHIMERAOS in flags:
+#		os = load("res://core/platform/chimeraos.tres")
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
@@ -282,8 +281,8 @@ func _read_os() -> Array[PLATFORM]:
 		return flags
 	if os_info.id == "steamos":
 		flags.append(PLATFORM.STEAMOS)
-	if os_info.id == "chimeraos":
-		flags.append(PLATFORM.CHIMERAOS)
+#	if os_info.id == "chimeraos":
+#		flags.append(PLATFORM.CHIMERAOS)
 	if os_info.id_like == "arch":
 		flags.append(PLATFORM.ARCH_LIKE)
 	return flags
