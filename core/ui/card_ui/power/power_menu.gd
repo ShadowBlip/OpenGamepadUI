@@ -33,6 +33,20 @@ func _ready() -> void:
 func _on_state_entered(_from: State) -> void:
 	if focus_group:
 		focus_group.grab_focus()
+	
+	# TODO: Fix this
+	# HACK to prevent giant pink texture from flashing for a second on first run
+	# in OpenGL renderer
+	if blur.has_meta("first_run"):
+		return
+	blur.set_meta("first_run", true)
+
+	# Move the blur rect out of view for a few frames
+	blur.position = Vector2(get_tree().get_root().size)
+	
+	# Create a timer and wait for a bit before moving the rect back
+	await get_tree().create_timer(0.2).timeout
+	blur.position = Vector2.ZERO
 
 
 func _on_systemctl_cmd(command: String) -> void:
