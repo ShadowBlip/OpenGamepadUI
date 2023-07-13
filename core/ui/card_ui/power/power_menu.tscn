@@ -85,9 +85,8 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 alignment = 1
 
-[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_vlbso")]
+[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_vlbso")]
 unique_name_in_owner = true
-current_focus = NodePath("")
 focus_stack = SubResource("Resource_fafkw")
 
 [node name="SectionLabel" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_y3iyf")]
