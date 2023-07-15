@@ -20,6 +20,9 @@ var underlay_log: FileAccess
 var underlay_process: InteractiveProcess
 var underlay_window_id: int
 
+@onready var quick_access_menu := $%QuickAccessMenu
+@onready var settings_menu := $%SettingsMenu
+
 var logger := Log.get_logger("Main-OnlyQAM", Log.LEVEL.INFO)
 
 ## Sets up PluginManager for QAM only mode.
@@ -85,6 +88,35 @@ func _setup_qam_only(args: Array) -> void:
 		var log_path := OS.get_environment("HOME") + "/.underlay-stdout.log"
 		_start_underlay_process(args, log_path)
 
+	# Establish overlay focus in gamescope.
+	Gamescope.set_overlay(qam_window_id, 1, display)
+
+	# Remove unneeded/conflicting elements from default menues
+	var qam_remove_list := ["PerformanceCard", "NotifyButton", "HelpButton"]
+	_run_child_killer(qam_remove_list, quick_access_menu)
+	var settings_remove_list := ["NetworkButton", "BluetoothButton", "AudioButton"]
+	_run_child_killer(settings_remove_list, settings_menu)
+
+
+func _run_child_killer(remove_list: Array, parent:Node) -> void:
+	var child_count := parent.get_child_count()
+	var to_remove_list := []
+	for child_idx in child_count:
+		var child = parent.get_child(child_idx)
+		logger.debug("Checking if " + child.name + " in remove list...")
+		if child.name in remove_list:
+			logger.debug(child.name + " queued for removal!")
+			to_remove_list.append(child)
+			continue
+		logger.debug(child.name + " is not a node we are looking for.")
+		var grandchild_count := child.get_child_count()
+		if grandchild_count > 0:
+			logger.debug("Checking " + child.name + "'s children...")
+			_run_child_killer(remove_list, child)
+	for child in to_remove_list:
+		logger.debug("Removing " + child.name)
+		parent.remove_child(child)
+
 
 func _start_steam_process(args: Array) -> void:
 	# Setup steam
@@ -143,9 +175,6 @@ func _on_window_open(_from: State) -> void:
 	if _from:
 		logger.info("_on_qam_open state: " + _from.name)
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
-	Gamescope.set_overlay(qam_window_id, 1, display)
-	if underlay_window_id:
-		Gamescope.set_overlay(underlay_window_id, 0, display)
 
 
 ## Called when "qam_state" is exited.
@@ -153,9 +182,6 @@ func _on_window_closed(_to: State) -> void:
 	if _to:
 		logger.info("_on_qam_closed state: " + _to.name)
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
-	Gamescope.set_overlay(qam_window_id, 0, display)
-	if underlay_window_id:
-		Gamescope.set_overlay(underlay_window_id, 1, display)
 
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.

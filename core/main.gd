@@ -25,7 +25,7 @@ func _ready() -> void:
 
 	# Launch CardUI in only-qam mode
 	if "--qam-only" in args or "--only-qam" in args:
-		get_tree().change_scene_to_file("res://core/ui/card_ui_only_qam/only_qam_main.tscn")
+		get_tree().change_scene_to_file("res://core/ui/card_ui_only_qam/card_ui_only_qam.tscn")
 		return
 	# Launch the main interface
 	get_tree().change_scene_to_file("res://core/ui/card_ui/card_ui.tscn")
