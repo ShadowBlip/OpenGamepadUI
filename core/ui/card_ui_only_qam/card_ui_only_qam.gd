@@ -92,15 +92,16 @@ func _setup_qam_only(args: Array) -> void:
 	Gamescope.set_overlay(qam_window_id, 1, display)
 
 	# Remove unneeded/conflicting elements from default menues
-	var qam_remove_list := ["PerformanceCard", "NotifyButton", "HelpButton"]
+	var qam_remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
 	_run_child_killer(qam_remove_list, quick_access_menu)
-	var settings_remove_list := ["NetworkButton", "BluetoothButton", "AudioButton"]
+	var settings_remove_list: PackedStringArray = ["NetworkButton", "BluetoothButton", "AudioButton"]
 	_run_child_killer(settings_remove_list, settings_menu)
 
 
-func _run_child_killer(remove_list: Array, parent:Node) -> void:
+func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 	var child_count := parent.get_child_count()
 	var to_remove_list := []
+
 	for child_idx in child_count:
 		var child = parent.get_child(child_idx)
 		logger.debug("Checking if " + child.name + " in remove list...")
@@ -108,14 +109,16 @@ func _run_child_killer(remove_list: Array, parent:Node) -> void:
 			logger.debug(child.name + " queued for removal!")
 			to_remove_list.append(child)
 			continue
+
 		logger.debug(child.name + " is not a node we are looking for.")
 		var grandchild_count := child.get_child_count()
 		if grandchild_count > 0:
 			logger.debug("Checking " + child.name + "'s children...")
 			_run_child_killer(remove_list, child)
+
 	for child in to_remove_list:
 		logger.debug("Removing " + child.name)
-		parent.remove_child(child)
+		child.queue_free()
 
 
 func _start_steam_process(args: Array) -> void:
