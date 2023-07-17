@@ -123,6 +123,8 @@ func _init() -> void:
 		platform = load("res://core/platform/onexplayer_gen2.tres")
 	if PLATFORM.ONEXPLAYER_GEN3 in flags:
 		platform = load("res://core/platform/onexplayer_gen3.tres")
+	if PLATFORM.ONEXPLAYER_GEN4 in flags:
+		platform = load("res://core/platform/onexplayer_gen4.tres")
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/steamdeck.tres")
 	
@@ -148,7 +150,7 @@ func load(root: Window) -> void:
 func get_handheld_gamepad() -> HandheldGamepad:
 	if not platform:
 		return null
-	return platform.get_handheld_gamepad()
+	return await platform.get_handheld_gamepad()
 
 
 ## Returns all detected platform flags

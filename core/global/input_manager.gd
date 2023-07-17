@@ -68,7 +68,7 @@ func init() -> void:
 
 	# If running on a platform with a built-in gamepad, get the device
 	# to process input on it.
-	handheld_gamepad = Platform.get_handheld_gamepad()
+	handheld_gamepad = await Platform.get_handheld_gamepad()
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
