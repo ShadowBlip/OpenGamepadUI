@@ -4,15 +4,16 @@ const Gamescope := preload("res://core/global/gamescope.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 const StateMachine := preload("res://assets/state/state_machines/global_state_machine.tres")
 const SettingsManager := preload("res://core/global/settings_manager.tres")
-var LaunchManager := preload("res://core/global/launch_manager.tres")
 
 var qam_state = load("res://assets/state/states/quick_access_menu.tres")
 var settings_state = load("res://assets/state/states/settings.tres")
 var home_state = load("res://assets/state/states/home.tres")
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
 var args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
 var display := Gamescope.XWAYLAND.OGUI
+var game_running: bool = false
 var qam_window_id: int
 var pid: int = OS.get_process_id()
 var shared_thread: SharedThread
@@ -29,7 +30,7 @@ var logger := Log.get_logger("Main-OnlyQAM", Log.LEVEL.INFO)
 func _init():
 	# Back button wont close windows without this InputManager prevents poping the last state.
 	StateMachine.push_state(home_state)
-	LaunchManager.should_manage_overlay = false
+	launch_manager.should_manage_overlay = false
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("qam")]
 	plugin_loader.set_plugin_filters(filters)
@@ -65,7 +66,7 @@ func _ready() -> void:
 
 	# Set up the session
 	_setup_qam_only(args)
-
+	launch_manager.app_switched.connect(_on_app_switched)
 
 ## Finds needed PID's and global vars, Starts the user defined program in the sandbox.
 func _setup_qam_only(args: Array) -> void:
@@ -178,6 +179,9 @@ func _on_window_open(_from: State) -> void:
 	if _from:
 		logger.info("_on_qam_open state: " + _from.name)
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+	if game_running:
+		Gamescope.set_overlay(qam_window_id, 1, display)
+		Gamescope.set_overlay(underlay_window_id, 0, display)
 
 
 ## Called when "qam_state" is exited.
@@ -185,6 +189,21 @@ func _on_window_closed(_to: State) -> void:
 	if _to:
 		logger.info("_on_qam_closed state: " + _to.name)
 	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
+	if game_running:
+		Gamescope.set_overlay(qam_window_id, 0, display)
+		Gamescope.set_overlay(underlay_window_id, 1, display)
+
+
+func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
+	if to == null:
+		# Establish overlay focus in gamescope.
+		Gamescope.set_overlay(qam_window_id, 1, display)
+		Gamescope.set_overlay(underlay_window_id, 0, display)
+		game_running = false
+		return
+	Gamescope.set_overlay(qam_window_id, 0, display)
+	Gamescope.set_overlay(underlay_window_id, 1, display)
+	game_running = true
 
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.
