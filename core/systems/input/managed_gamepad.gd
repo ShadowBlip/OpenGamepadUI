@@ -228,6 +228,11 @@ func process_input() -> void:
 		_move_mouse(delta)
 
 
+## Inject the given event into the physical event processing queue.
+func inject_event(event: InputDeviceEvent) -> void:
+	_process_phys_event(event, 0)
+
+
 ## Processes a single physical gamepad event. Depending on the intercept mode,
 ## this usually means forwarding events from the physical gamepad to the
 ## virtual gamepad. In other cases we want to translate physical input into
