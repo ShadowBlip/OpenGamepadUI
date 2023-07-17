@@ -116,6 +116,19 @@ func enable(enabled: bool) -> void:
 	_proxy.call_method(IFACE_NETWORK_MANAGER, "Enable", [enabled], "b")
 
 
+## Control the NetworkManager daemon's sleep state. When asleep, all interfaces 
+## that it manages are deactivated. When awake, devices are available to be 
+## activated. This command should not be called directly by users or clients; it
+## is intended for system suspend/resume tracking. 
+func sleep(enabled: bool) -> void:
+	_proxy.call_method(IFACE_NETWORK_MANAGER, "Sleep", [enabled], "b")
+
+
+## Activate a connection using the supplied device.
+func activate_connection():
+	pass
+
+
 ## List of object paths of network devices known to the system. This list does 
 ## not include device placeholders (see GetAllDevices()).
 func get_device_paths() -> PackedStringArray:
@@ -265,6 +278,9 @@ class Device extends Resource:
 
 	func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
 		updated.emit()
+	
+	func get_object_path() -> String:
+		return _proxy.path
 
 
 ## https://people.freedesktop.org/~lkundrak/nm-docs/gdbus-org.freedesktop.NetworkManager.Device.Wireless.html
@@ -353,6 +369,9 @@ class WirelessDevice extends Device:
 
 	func request_scan(options: Dictionary = {}) -> void:
 		_proxy.call_method(IFACE_WIRELESS, "RequestScan", [options], "a{sv}")
+	
+	func get_object_path() -> String:
+		return _proxy.path
 
 
 ## https://people.freedesktop.org/~lkundrak/nm-docs/gdbus-org.freedesktop.NetworkManager.IP4Config.html
@@ -366,6 +385,9 @@ class IP4Config extends Resource:
 
 	func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
 		updated.emit()
+	
+	func get_object_path() -> String:
+		return _proxy.path
 
 
 ## https://people.freedesktop.org/~lkundrak/nm-docs/gdbus-org.freedesktop.NetworkManager.AccessPoint.html
@@ -442,3 +464,38 @@ class AccessPoint extends Resource:
 
 	func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
 		updated.emit()
+	
+	func get_object_path() -> String:
+		return _proxy.path
+
+
+## https://people.freedesktop.org/~lkundrak/nm-docs/gdbus-org.freedesktop.NetworkManager.Settings.html
+class Settings extends Resource:
+	signal updated
+	var _proxy: DBusManager.Proxy
+
+	func _init(proxy: DBusManager.Proxy) -> void:
+		_proxy = proxy
+		_proxy.properties_changed.connect(_on_properties_changed)
+
+	func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
+		updated.emit()
+	
+	func get_object_path() -> String:
+		return _proxy.path
+
+
+## https://people.freedesktop.org/~lkundrak/nm-docs/gdbus-org.freedesktop.NetworkManager.Settings.Connection.html
+class Connection extends Resource:
+	signal updated
+	var _proxy: DBusManager.Proxy
+
+	func _init(proxy: DBusManager.Proxy) -> void:
+		_proxy = proxy
+		_proxy.properties_changed.connect(_on_properties_changed)
+
+	func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
+		updated.emit()
+	
+	func get_object_path() -> String:
+		return _proxy.path
