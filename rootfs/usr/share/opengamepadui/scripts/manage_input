@@ -20,6 +20,11 @@ restore() {
   mv /dev/input/.hidden/${1} /dev/input/${1}
 }
 
+turbo_takeover() {
+  value=${1}
+  echo ${value} > /sys/devices/platform/oxp-platform/tt_toggle
+}
+
 ensure_hidden_exists
 
 if [[ $1 == "hide" ]]; then
@@ -35,4 +40,11 @@ elif [[ $1 == "restore" ]]; then
     exit 1
   fi
   restore $2
-fi
+ 
+elif [[ $1 == "turbo_takeover" ]]; then
+  if [[ ! -f /sys/devices/platform/oxp-platform/tt_toggle ]]; then
+    echo "Turbo toggle does not exist."
+    exit 1
+  fi
+  turbo_takeover $2
+fi 
