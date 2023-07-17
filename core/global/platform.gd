@@ -24,7 +24,8 @@ enum PLATFORM {
 	GPD_GEN3, ## Win4
 	ONEXPLAYER_GEN1,  ## Intel OXP Devices
 	ONEXPLAYER_GEN2,  ## AMD OXP Devices 5800U and older.
-	ONEXPLAYER_GEN3,  ## AMD OXP Mini Pro 6800U.
+	ONEXPLAYER_GEN3,  ## AMD OXP Mini A07.
+	ONEXPLAYER_GEN4,  ## AMD OXP Mini Pro 6800U.
 	STEAMDECK,
 	
 	# OS Platforms
@@ -257,9 +258,12 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.GPD_GEN3
 	# OneXPlayer
 	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 4 platform")
+		return PLATFORM.ONEXPLAYER_GEN4
+	elif product_name in ["ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
 		logger.debug("Detected OneXPlayer Gen 3 platform")
 		return PLATFORM.ONEXPLAYER_GEN3
-	elif product_name in ["ONE XPLAYER", "ONEXPLAYER", "ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
+	elif product_name in ["ONE XPLAYER", "ONEXPLAYER"] and vendor_name.contains("ONE-NETBOOK"):
 		match cpu.vendor:
 			"GenuineIntel":
 				logger.debug("Detected OneXPlayer Gen 1 platform")
