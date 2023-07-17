@@ -176,7 +176,14 @@ func _emit_event(type: int, code: int, value: int) -> int:
 		logger.debug("Virtual gamepad does not have event type: " + str(type) + " code: " + str(code) +
 		". Sending audio event instead.")
 		return ERR_PARAMETER_RANGE_ERROR
-	gamepad_device.virt_device.write_event(type, code, value)
+
+	# Inject the event into the gamepad's event queue
+	var event := InputDeviceEvent.new()
+	event.type = type
+	event.code = code
+	event.value = value
+	gamepad_device.inject_event(event)
+
 	return OK
 
 
