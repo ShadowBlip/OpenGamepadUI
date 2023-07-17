@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=31 format=3 uid="uid://ccg7gb5glokyd"]
+[gd_resource type="Resource" script_class="HandheldGamepad" load_steps=37 format=3 uid="uid://ccg7gb5glokyd"]
 
 [ext_resource type="Script" path="res://core/platform/mapped_event.gd" id="1_553p5"]
 [ext_resource type="Script" path="res://core/systems/input/handheld_gamepad.gd" id="2_wvjc7"]
@@ -96,11 +96,21 @@ type = 1
 code = 125
 value = 1
 
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_01ov3"]
+type = 1
+code = 316
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_lnwji"]
+type = 1
+code = 311
+value = 1
+
 [sub_resource type="Resource" id="Resource_g2coo"]
 script = ExtResource("1_553p5")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_6254a"), SubResource("InputDeviceEvent_4xywv")])
-event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui_osk"
+event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_01ov3"), SubResource("InputDeviceEvent_lnwji")])
+ogui_event = ""
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_5ctcb"]
@@ -122,7 +132,7 @@ value = 1
 script = ExtResource("1_553p5")
 activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_5ctcb"), SubResource("InputDeviceEvent_1rgfv"), SubResource("InputDeviceEvent_lsc4n")])
 event_list = Array[InputDeviceEvent]([])
-ogui_event = "ogui_qam"
+ogui_event = "ogui_osk"
 on_release = false
 
 [sub_resource type="InputDeviceEvent" id="InputDeviceEvent_v7xis"]
@@ -157,9 +167,31 @@ event_list = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_hh3mv"), Sub
 ogui_event = ""
 on_release = false
 
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_7h34c"]
+type = 1
+code = 29
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_6s7om"]
+type = 1
+code = 56
+value = 1
+
+[sub_resource type="InputDeviceEvent" id="InputDeviceEvent_8yoe8"]
+type = 1
+code = 125
+value = 1
+
+[sub_resource type="Resource" id="Resource_w6ik8"]
+script = ExtResource("1_553p5")
+activation_keys = Array[InputDeviceEvent]([SubResource("InputDeviceEvent_7h34c"), SubResource("InputDeviceEvent_6s7om"), SubResource("InputDeviceEvent_8yoe8")])
+event_list = Array[InputDeviceEvent]([])
+ogui_event = "ogui_qam"
+on_release = false
+
 [resource]
 script = ExtResource("2_wvjc7")
-mapped_events = Array[ExtResource("1_553p5")]([SubResource("Resource_tlos7"), SubResource("Resource_d8xax"), SubResource("Resource_41xpa"), SubResource("Resource_obsvw"), SubResource("Resource_g2coo"), SubResource("Resource_10i1v"), SubResource("Resource_5ly0u")])
+mapped_events = Array[ExtResource("1_553p5")]([SubResource("Resource_tlos7"), SubResource("Resource_d8xax"), SubResource("Resource_41xpa"), SubResource("Resource_obsvw"), SubResource("Resource_g2coo"), SubResource("Resource_10i1v"), SubResource("Resource_5ly0u"), SubResource("Resource_w6ik8")])
 kb_phys_path = "isa0060/serio0/input0"
 kb_phys_name = "AT Translated Set 2 keyboard"
 gamepad_phys_path = "usb-0000:e3:00.3-4/input0"
