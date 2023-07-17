@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="5_4sdt1"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="7_e54f8"]
 
-[node name="OnlyQamMain" type="Control"]
+[node name="OnlyQamMain" type="Control" groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
