@@ -70,6 +70,9 @@ func _ready() -> void:
 		else:
 			logger.debug("Unable to load theme")
 	
+	# Set the FPS limit
+	Engine.max_fps = SettingsManager.get_value("general", "max_fps", 60) as int
+	
 	# Listen for global state changes
 	state_machine.state_changed.connect(_on_state_changed)
 	

@@ -5,6 +5,7 @@ class_name PowerSaver
 ## TODO: Use inputmanager to send power_save events for every input!!
 
 var DisplayManager := preload("res://core/global/display_manager.tres") as DisplayManager
+var settings := load("res://core/global/settings_manager.tres") as SettingsManager
 
 const MINUTE := 60
 
@@ -58,6 +59,7 @@ func _on_dim_timer_timeout() -> void:
 	# Set the brightness
 	var percent: float = dim_percent * 0.01
 	DisplayManager.set_brightness(percent)
+	Engine.max_fps = 10
 	dimmed = true
 
 
@@ -84,6 +86,8 @@ func _input(event: InputEvent) -> void:
 			for percent in prev_brightness.values():
 				DisplayManager.set_brightness(percent)
 				break
+			# Set the FPS limit
+			Engine.max_fps = settings.get_value("general", "max_fps", 60) as int
 		dim_timer.start(dim_after_inactivity_mins * MINUTE)
 	if auto_suspend_enabled:
 		suspend_timer.start(suspend_after_inactivity_mins * MINUTE)

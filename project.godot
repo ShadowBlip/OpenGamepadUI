@@ -21,6 +21,7 @@ run/main_scene="res://entrypoint.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="opengamepadui"
 config/features=PackedStringArray("4.1", "Forward Plus")
+run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/show_image=false
 config/icon="res://icon.svg"
