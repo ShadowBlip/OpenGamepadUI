@@ -312,6 +312,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			_send_input("ui_accept", event.value == 1, 1)
 		"BTN_NORTH":
 			_send_input("ogui_north", event.value == 1, 1)
+			_send_input("ogui_search", event.value == 1, 1)
 		"BTN_WEST":
 			_send_input("ogui_west", event.value == 1, 1)
 			_send_input("ui_select", event.value == 1, 1)

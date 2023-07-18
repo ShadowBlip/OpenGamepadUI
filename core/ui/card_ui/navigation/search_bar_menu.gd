@@ -73,3 +73,18 @@ func _hide_library_tabs() -> void:
 	library_tween.tween_property(tabs_container, "visible", false, 0)
 	library_tween.tween_property(self, "custom_minimum_size", Vector2(default_size.x - tabs_container.size.x, default_size.y), animate_time)
 
+
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree():
+		return
+	if not event.is_action("ogui_search"):
+		return
+	
+	# Don't focus if the keyboard is open
+	var osk := get_tree().get_first_node_in_group("osk")
+	if osk and osk.is_visible_in_tree():
+		return
+
+	if event.is_action_released("ogui_search"):
+		search_bar.grab_focus.call_deferred()
+		get_viewport().set_input_as_handled()
