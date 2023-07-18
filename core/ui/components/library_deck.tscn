@@ -53,3 +53,8 @@ theme_override_constants/margin_left = 80
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true

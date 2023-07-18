@@ -1,0 +1,149 @@
+[gd_scene load_steps=5 format=3 uid="uid://rosd00fxjrs8"]
+
+[ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="1_5oyqx"]
+[ext_resource type="Script" path="res://core/ui/components/library_banner.gd" id="1_yhxxp"]
+
+[sub_resource type="Gradient" id="Gradient_yij5a"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vkfnk"]
+gradient = SubResource("Gradient_yij5a")
+width = 1920
+height = 620
+
+[node name="LibraryBanner" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yhxxp")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vkfnk")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Spacer" type="Control" parent="TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.10472
+pivot_offset = Vector2(400, 600)
+
+[node name="MarginContainer" type="MarginContainer" parent="TextureRect/Spacer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = -200
+theme_override_constants/margin_top = -100
+theme_override_constants/margin_right = -200
+theme_override_constants/margin_bottom = -100
+
+[node name="HFlowContainer" type="HFlowContainer" parent="TextureRect/Spacer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect1" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect2" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect3" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect4" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect5" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect6" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect7" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect8" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect9" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect10" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect11" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TextureRect12" type="TextureRect" parent="TextureRect/Spacer/MarginContainer/HFlowContainer"]
+custom_minimum_size = Vector2(460, 215)
+layout_mode = 2
+texture = ExtResource("1_5oyqx")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Timer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 5.0
+one_shot = true

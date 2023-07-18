@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://o70x5igrlq30"]
+[gd_scene load_steps=20 format=3 uid="uid://o70x5igrlq30"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/home/cardui_home.gd" id="1_a4a3j"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_u18ot"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://bfoequ6xb7csn" path="res://assets/state/states/qam_button_submenu.tres" id="8_dx6pe"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="9_kvuqp"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="10_mmfgs"]
+[ext_resource type="PackedScene" uid="uid://rosd00fxjrs8" path="res://core/ui/components/library_banner.tscn" id="11_16gcd"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="12_h5dxg"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="12_m30ge"]
 [ext_resource type="PackedScene" uid="uid://crsu0vpicq0vh" path="res://core/ui/components/library_deck.tscn" id="13_rxwf5"]
@@ -69,6 +70,11 @@ size_flags_stretch_ratio = 1.1
 texture = ExtResource("10_mmfgs")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="LibraryBanner" parent="VBoxContainer/BannerTexture" instance=ExtResource("11_16gcd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2

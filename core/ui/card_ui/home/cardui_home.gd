@@ -21,6 +21,7 @@ var logger := Log.get_logger("HomeMenu", Log.LEVEL.INFO)
 
 @onready var container: HBoxContainer = $%CardContainer
 @onready var banner: TextureRect = $%BannerTexture
+@onready var library_banner := $%LibraryBanner
 @onready var player: AnimationPlayer = $%AnimationPlayer
 @onready var scroll_container: ScrollContainer = $%ScrollContainer
 @onready var library_deck: LibraryDeck = $%LibraryDeck
@@ -51,6 +52,15 @@ func _ready() -> void:
 	LaunchManager.recent_apps_changed.connect(queue_refresh)
 	InstallManager.install_queued.connect(_on_install_queued)
 	
+	# Show the library banner when the library deck is focused
+	var on_library_focused := func():
+		if state_machine.current_state() != home_state:
+			return
+		player.stop()
+		player.play("fade_in")
+		library_banner.visible = true
+	library_deck.focus_entered.connect(on_library_focused)
+	
 	# Queue a home menu refresh
 	queue_refresh()
 
@@ -75,6 +85,7 @@ func refresh() -> void:
 
 func _on_state_entered(from: State) -> void:
 	set_process_input(true)
+	library_banner.visible = false
 	_grab_focus()
 
 
@@ -118,6 +129,12 @@ func _on_install_queued(req: InstallManager.Request) -> void:
 
 
 func _on_library_item_changed(item: LibraryItem) -> void:
+	var update_deck := func():
+		if not library_deck.timer.is_stopped():
+			return
+		_update_library_deck()
+		library_deck.timer.start()
+	update_deck.call_deferred()
 	if not item.name in recent_apps:
 		return
 	logger.debug("Recent app changed: " + item.name)
@@ -181,6 +198,7 @@ func _on_card_focused(item: LibraryItem, card: Control) -> void:
 	player.stop()
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)
+	library_banner.visible = false
 	_scroll_to(card)
 
 

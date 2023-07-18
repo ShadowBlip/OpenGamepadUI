@@ -12,6 +12,7 @@ signal unhighlighted
 @onready var card_1 := $%GameCard1 as GameCard
 @onready var card_2 := $%GameCard2 as GameCard
 @onready var card_3 := $%GameCard3 as GameCard
+@onready var timer := $%Timer as Timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
