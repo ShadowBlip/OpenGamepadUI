@@ -138,12 +138,14 @@ func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> voi
 
 	# Update the provider fields on the library item
 	item._provider_id = library_id
-	library_item.launch_items.push_back(item)
+	if not library_item.has_launch_item(library_id):
+		library_item.launch_items.push_back(item)
 	
 	# Send signals to inform about library item
 	if is_new:
 		library_item_added.emit(library_item)
 		library_item.added_to_library.emit()
+		logger.debug("New library item added: " + library_item.name)
 	library_launch_item_added.emit(item)
 	item.added_to_library.emit()
 
