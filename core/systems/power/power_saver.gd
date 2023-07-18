@@ -48,7 +48,8 @@ func _on_dim_timer_timeout() -> void:
 	# If dimming is disabled when charging, check the battery state
 	if has_battery and not dim_when_charging:
 		var status: int = batteries[0].state
-		if status in [power_manager.DEVICE_STATE.CHARGING, power_manager.DEVICE_STATE.FULLY_CHARGED]:
+		if status in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED]:
+			logger.debug("Not dimming because battery is charging")
 			return
 	if not has_battery and not dim_when_charging:
 		return
@@ -60,8 +61,10 @@ func _on_dim_timer_timeout() -> void:
 		prev_brightness[backlight] = display.get_brightness(backlight)
 
 	# Set the brightness
+	logger.debug("Dimming screen due to inactivty")
 	var percent: float = dim_percent * 0.01
 	display.set_brightness(percent)
+	logger.debug("Lowering FPS due to inactivity")
 	Engine.max_fps = 10
 	dimmed = true
 
@@ -70,7 +73,7 @@ func _on_suspend_timer_timeout() -> void:
 	# If suspend is disabled when charging, check the battery state
 	if has_battery and not suspend_when_charging:
 		var status: int = batteries[0].state
-		if status in [power_manager.DEVICE_STATE.CHARGING, power_manager.DEVICE_STATE.FULLY_CHARGED]:
+		if status in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED]:
 			logger.debug("Not suspending because battery is charging")
 			return
 	if not has_battery and not suspend_when_charging:
@@ -86,10 +89,12 @@ func _input(event: InputEvent) -> void:
 	if dim_screen_enabled and supports_brightness:
 		if dimmed:
 			dimmed = false
+			logger.debug("Reverting brightness setting from activity")
 			for percent in prev_brightness.values():
 				display.set_brightness(percent)
 				break
 			# Set the FPS limit
+			logger.debug("Reverting FPS from activity")
 			Engine.max_fps = settings.get_value("general", "max_fps", 60) as int
 		dim_timer.start(dim_after_inactivity_mins * MINUTE)
 	if auto_suspend_enabled:
