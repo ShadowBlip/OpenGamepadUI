@@ -136,6 +136,7 @@ text = "Playing Now"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Game Name"
+autowrap_mode = 3
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
 layout_mode = 2
