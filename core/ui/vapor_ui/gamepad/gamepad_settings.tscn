@@ -34,7 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="21_w70ku"]
 [ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="22_s4o5a"]
 [ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="23_3ml07"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.tscn" id="35_m3mp8"]
+[ext_resource type="PackedScene" uid="uid://bwjgxpfga64uf" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.tscn" id="35_m3mp8"]
 
 [node name="GamepadSettings" type="Control"]
 layout_mode = 3
