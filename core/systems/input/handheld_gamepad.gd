@@ -1,3 +1,4 @@
+@icon("res://assets/ui/icons/gamepad-bold.svg")
 extends Resource
 class_name HandheldGamepad
 
