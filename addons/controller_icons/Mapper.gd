@@ -7,6 +7,8 @@ func _convert_joypad_path(path: String, fallback) -> String:
 	match _get_joypad_type(fallback):
 		ControllerSettings.Devices.LUNA:
 			return _convert_joypad_to_luna(path)
+		ControllerSettings.Devices.OXP:
+			return _convert_joypad_to_oxp(path)
 		ControllerSettings.Devices.PS3:
 			return _convert_joypad_to_ps3(path)
 		ControllerSettings.Devices.PS4:
@@ -36,6 +38,8 @@ func _get_joypad_type(fallback):
 	var controller_name = Input.get_joy_name(0)
 	if "Luna Controller" in controller_name:
 		return ControllerSettings.Devices.LUNA
+	elif "8BitDo Adapter" in controller_name:
+		return ControllerSettings.Devices.OXP
 	elif "PS3 Controller" in controller_name:
 		return ControllerSettings.Devices.PS3
 	elif "PS4 Controller" in controller_name:
@@ -298,6 +302,18 @@ func _convert_joypad_to_steamdeck(path: String):
 			return path.replace("/start", "/menu")
 		"home":
 			return path.replace("/home", "/steam")
+		"share":
+			return path.replace("/share", "/dots")
+		_:
+			return path
+
+func _convert_joypad_to_oxp(path: String):
+	path = path.replace("joypad", "oxp")
+	match path.substr(path.find("/") + 1):
+		"select":
+			return path.replace("/select", "/square")
+		"start":
+			return path.replace("/start", "/menu")
 		"share":
 			return path.replace("/share", "/dots")
 		_:
