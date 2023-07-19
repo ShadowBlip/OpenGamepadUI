@@ -19,6 +19,7 @@ var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 @onready var focus_node: Control = $%NewButton
 
 @onready var profile_label := $%ProfileNameLabel as Label
+@onready var diagram := $%DiagramTextureRect as TextureRect
 @onready var new_button := $%NewButton as Button
 @onready var delete_button := $%DeleteButton as Button
 @onready var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
@@ -127,6 +128,24 @@ func _open_mapping_window(button: Button) -> void:
 	gamepad_mapper.mapping = mapping
 
 	state_machine.push_state(change_input_state)
+
+
+# Updates the center controller diagram with the appropriate texture
+func _update_diagram() -> void:
+	var mapper := ControllerMapper.new()
+	var fallback := ControllerSettings.Devices.XBOX360
+	logger.debug("Found gamepad type: " + Input.get_joy_name(0))
+	var gamepad_type := mapper._get_joypad_type(fallback) as ControllerSettings.Devices
+	match gamepad_type:
+		ControllerSettings.Devices.XBOX360:
+			diagram.texture = load("res://assets/images/gamepad/xbox360/XboxOne_Diagram.png")
+			return
+		ControllerSettings.Devices.STEAM_DECK:
+			diagram.texture = load("res://assets/images/gamepad/steamdeck/diagram.png")
+			return
+
+	# Fallback if we have no diagram
+	diagram.texture = load("res://assets/images/gamepad/xbox360/XboxOne_Diagram.png")
 
 
 # Enables/Disables all mapping buttons

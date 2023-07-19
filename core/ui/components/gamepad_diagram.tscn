@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2v6vl2a8mjfb"]
+
+[ext_resource type="Texture2D" uid="uid://cvyo2q5qjpamv" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_efksm"]
+[ext_resource type="Script" path="res://core/ui/components/gamepad_diagram.gd" id="2_5usns"]
+
+[node name="GamepadDiagram" type="TextureRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_efksm")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("2_5usns")
