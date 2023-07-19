@@ -51,10 +51,7 @@ func _ready():
 	# Wait a frame to give a chance for the app to initialize
 	await get_tree().process_frame
 	# Set input type to what's likely being used currently
-	if Input.get_connected_joypads().is_empty():
-		_set_last_input_type(InputType.KEYBOARD_MOUSE)
-	else:
-		_set_last_input_type(InputType.CONTROLLER)
+	_set_last_input_type(InputType.CONTROLLER)
 
 
 func _on_joy_connection_changed(device, connected):
@@ -72,14 +69,8 @@ func _on_joy_connection_changed(device, connected):
 func _input(event: InputEvent):
 	var input_type = _last_input_type
 	match event.get_class():
-		"InputEventKey", "InputEventMouseButton":
+		"InputEventKey":
 			input_type = InputType.KEYBOARD_MOUSE
-		"InputEventMouseMotion":
-			if (
-				_settings.allow_mouse_remap
-				and event.velocity.length() > _settings.mouse_min_movement
-			):
-				input_type = InputType.KEYBOARD_MOUSE
 		"InputEventJoypadButton", "InputEventAction":
 			input_type = InputType.CONTROLLER
 		"InputEventJoypadMotion":
