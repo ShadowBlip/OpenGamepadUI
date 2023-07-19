@@ -232,10 +232,10 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("G1618-03") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen1 platform")
 		return PLATFORM.GPD_GEN1
-	elif product_name.contains("G1618-04") and vendor_name == "GPD":
+	elif product_name.contains("G1619-04") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen2 platform")
 		return PLATFORM.GPD_GEN2
-	elif product_name.contains("G1619-04") and vendor_name == "GPD":
+	elif product_name.contains("G1618-04") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen3 platform")
 		return PLATFORM.GPD_GEN3
 	# OneXPlayer
