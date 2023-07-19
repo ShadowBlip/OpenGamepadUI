@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=6 format=3 uid="uid://dw8ivc5au3e6b"]
+
+[ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp-mini/diagram.png" id="1_6cmpw"]
+[ext_resource type="Resource" uid="uid://c00ituv1eqxl6" path="res://core/platform/handheld/onexplayer/onexplayer_gen3_gamepad.tres" id="1_oywyq"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_v6ayv"]
+[ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="4_5jo3q"]
+
+[sub_resource type="Resource" id="Resource_twspj"]
+script = ExtResource("4_5jo3q")
+
+[resource]
+script = ExtResource("1_v6ayv")
+gamepad = ExtResource("1_oywyq")
+diagram = ExtResource("1_6cmpw")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = "OneXPlayer Gen 3"
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_twspj")])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

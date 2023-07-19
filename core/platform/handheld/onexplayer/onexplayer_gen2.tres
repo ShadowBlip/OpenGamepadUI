@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=3 format=3 uid="uid://ccof7ecqrcf54"]
+
+[ext_resource type="Resource" uid="uid://bmr5judtlo3om" path="res://core/platform/handheld/onexplayer/onexplayer_gen2_gamepad.tres" id="1_mxa5j"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="2_w1c5p"]
+
+[resource]
+script = ExtResource("2_w1c5p")
+gamepad = ExtResource("1_mxa5j")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = "OneXPlayer Gen 2"
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
