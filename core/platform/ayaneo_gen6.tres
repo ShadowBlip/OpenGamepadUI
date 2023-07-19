@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="PlatformAyaneoGen4" load_steps=2 format=3 uid="uid://eylc0kvbdnh1"]
-
-[ext_resource type="Script" path="res://core/platform/ayaneo_gen6.gd" id="1_qqqbv"]
-
-[resource]
-script = ExtResource("1_qqqbv")
-name = ""

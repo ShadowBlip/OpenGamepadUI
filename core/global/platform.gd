@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/platform.svg")
 extends Resource
 class_name Platform
 
@@ -34,34 +35,6 @@ enum PLATFORM {
 	ARCH_LIKE,
 }
 
-## Data container for OS information
-class OSInfo extends Resource:
-	var name: String
-	var id: String
-	var id_like: String
-	var pretty_name: String
-	var version_codename: String
-	var variant_id: String
-
-## Data container for CPU information
-class CPUInfo extends Resource:
-	var model: String
-	var vendor: String
-	var smt_capable: bool = false
-	var boost_capable: bool = false
-
-## Data container for GPU information
-class GPUInfo extends Resource:
-	var model: String
-	var vendor: String
-	var tdp_capable: bool = false
-	var thermal_mode_capable: bool = false
-	var tj_temp_capable: bool = false
-	var clk_capable: bool = false
-	var min_tdp: float = -1
-	var max_tdp: float = -1
-	var max_boost: float = -1
-
 const APUDatabase := preload("res://core/platform/hardware/apu_database.gd")
 const APUEntry := preload("res://core/platform/hardware/apu_entry.gd")
 var amd_apu_database: APUDatabase
@@ -77,6 +50,7 @@ var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
 var cpu: CPUInfo
 var gpu: GPUInfo
 
+
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
 	intel_apu_database = load("res://core/platform/hardware/intel_apu_database.tres")
@@ -89,51 +63,56 @@ func _init() -> void:
 	
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
-		platform = load("res://core/platform/abernic_gen1.tres")
+		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres")
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/ally_gen1.tres")
+		platform = load("res://core/platform/handheld/ally/ally_gen1.tres")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
 			gpu.thermal_mode_capable = true
 	if PLATFORM.AOKZOE_GEN1 in flags:
-		platform = load("res://core/platform/aokzoe_gen1.tres")
+		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres")
 	if PLATFORM.AYANEO_GEN1 in flags:
-		platform = load("res://core/platform/ayaneo_gen1.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen1.tres")
 	if PLATFORM.AYANEO_GEN2 in flags:
-		platform = load("res://core/platform/ayaneo_gen2.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen2.tres")
 	if PLATFORM.AYANEO_GEN3 in flags:
-		platform = load("res://core/platform/ayaneo_gen3.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen3.tres")
 	if PLATFORM.AYANEO_GEN4 in flags:
-		platform = load("res://core/platform/ayaneo_gen4.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres")
 	if PLATFORM.AYANEO_GEN5 in flags:
-		platform = load("res://core/platform/ayaneo_gen5.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen5.tres")
 	if PLATFORM.AYN_GEN1 in flags:
-		platform = load("res://core/platform/ayn_gen1.tres")
+		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres")
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
-		platform = load("res://core/platform/gpd_gen1.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen1.tres")
 	if PLATFORM.GPD_GEN2 in flags:
-		platform = load("res://core/platform/gpd_gen2.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen2.tres")
 	if PLATFORM.GPD_GEN3 in flags:
-		platform = load("res://core/platform/gpd_gen3.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen3.tres")
 	if PLATFORM.ONEXPLAYER_GEN1 in flags:
-		platform = load("res://core/platform/onexplayer_gen1.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen1.tres")
 	if PLATFORM.ONEXPLAYER_GEN2 in flags:
-		platform = load("res://core/platform/onexplayer_gen2.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen2.tres")
 	if PLATFORM.ONEXPLAYER_GEN3 in flags:
-		platform = load("res://core/platform/onexplayer_gen3.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen3.tres")
 	if PLATFORM.ONEXPLAYER_GEN4 in flags:
-		platform = load("res://core/platform/onexplayer_gen4.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres")
 	if PLATFORM.STEAMDECK in flags:
-		platform = load("res://core/platform/steamdeck.tres")
-	
+		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres")
+
+	for action in platform.startup_actions:
+		action.execute()
+
 	# Set OS platform provider
 	if PLATFORM.STEAMOS in flags:
-		os = load("res://core/platform/steamos.tres")
+		os = load("res://core/platform/os/steamos.tres")
 	if PLATFORM.CHIMERAOS in flags:
-		os = load("res://core/platform/chimeraos.tres")
+		os = load("res://core/platform/os/chimeraos.tres")
 
+	for action in os.startup_actions:
+		action.execute()
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
@@ -183,6 +162,7 @@ func get_cpu_info() -> CPUInfo:
 
 func get_cpu_model() -> String:
 	return cpu.model
+
 
 ## Returns the GPUInfo
 func get_gpu_info() -> GPUInfo:
@@ -418,6 +398,7 @@ func _read_gpu_info() -> GPUInfo:
 
 	return gpu_info
 
+
 # Run glxinfo and return the data from it.
 # TODO: Maybe use vulkaninfo? Need a way to get vendor string in that. It can
 # output to JSON so it might be easier to get more info like driver name and info,
@@ -429,3 +410,34 @@ func _get_glxinfo() -> Array:
 	if exit_code:
 		return []
 	return  output[0][0].split("\n") as Array
+
+
+## Data container for OS information
+class OSInfo extends Resource:
+	var name: String
+	var id: String
+	var id_like: String
+	var pretty_name: String
+	var version_codename: String
+	var variant_id: String
+
+
+## Data container for CPU information
+class CPUInfo extends Resource:
+	var model: String
+	var vendor: String
+	var smt_capable: bool = false
+	var boost_capable: bool = false
+
+
+## Data container for GPU information
+class GPUInfo extends Resource:
+	var model: String
+	var vendor: String
+	var tdp_capable: bool = false
+	var thermal_mode_capable: bool = false
+	var tj_temp_capable: bool = false
+	var clk_capable: bool = false
+	var min_tdp: float = -1
+	var max_tdp: float = -1
+	var max_boost: float = -1

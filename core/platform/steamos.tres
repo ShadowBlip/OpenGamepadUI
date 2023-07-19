@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="PlatformSteamOS" load_steps=2 format=3 uid="uid://dqn1kkcjpdi56"]
-
-[ext_resource type="Script" path="res://core/platform/steamos.gd" id="1_6glao"]
-
-[resource]
-script = ExtResource("1_6glao")
-name = "SteamOS"

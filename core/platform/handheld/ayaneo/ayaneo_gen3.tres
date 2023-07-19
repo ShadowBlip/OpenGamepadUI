@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=3 format=3 uid="uid://dyth3evmtq04d"]
+
+[ext_resource type="Resource" uid="uid://dhegdi5fhmvf3" path="res://core/platform/handheld/ayaneo/ayaneo_gen3_gamepad.tres" id="1_ahd5p"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="2_r47yu"]
+
+[resource]
+script = ExtResource("2_r47yu")
+gamepad = ExtResource("1_ahd5p")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = "AYANEO Gen 3"

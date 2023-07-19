@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=5 format=3 uid="uid://btihsq01c4udc"]
+
+[ext_resource type="Resource" uid="uid://ccg7gb5glokyd" path="res://core/platform/handheld/onexplayer/onexplayer_gen4_gamepad.tres" id="1_aqbxa"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="2_y7o2s"]
+[ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="3_hhdlh"]
+
+[sub_resource type="Resource" id="Resource_u0b22"]
+script = ExtResource("3_hhdlh")
+
+[resource]
+script = ExtResource("2_y7o2s")
+gamepad = ExtResource("1_aqbxa")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = "OneXPlayer Gen 4"
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_u0b22")])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
