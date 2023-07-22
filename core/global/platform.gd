@@ -191,7 +191,7 @@ func _read_dmi() -> PLATFORM:
 	var product_name := get_product_name()
 	var vendor_name := get_vendor_name()
 	# ANBERNIC
-	if product_name == "Win600" and vendor_name == "ABERNIC":
+	if product_name == "Win600" and vendor_name == "ANBERNIC":
 		logger.debug("Detected Win600 platform")
 		return PLATFORM.ABERNIC_GEN1
 	# AOKZOE
