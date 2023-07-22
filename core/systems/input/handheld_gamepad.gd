@@ -135,27 +135,27 @@ func _on_key_up(event: EvdevEvent) -> bool:
 
 
 ## Translates the given event to an AudioManager event.
-func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void:
-	# Ignore key up events.
-	if event_value == 0:
-		logger.debug("Got key_up event for audio_event")
-		return
-	logger.debug("Got audio event: " + str(event_code) + str(event_value))
-	var return_code: int
-	match event_code:
-		InputDeviceEvent.KEY_MUTE:
-			AudioManager.call_deferred("toggle_mute")
-		InputDeviceEvent.KEY_VOLUMEDOWN:
-			AudioManager.call_deferred("set_volume", -0.06, AudioManager.VOLUME.RELATIVE)
-		InputDeviceEvent.KEY_VOLUMEUP:
-			AudioManager.call_deferred("set_volume", 0.06, AudioManager.VOLUME.RELATIVE)
-		_:
-			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")
+#func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void:
+#	# Ignore key up events.
+#	if event_value == 0:
+#		logger.debug("Got key_up event for audio_event")
+#		return
+#	logger.debug("Got audio event: " + str(event_code) + str(event_value))
+#	var return_code: int
+#	match event_code:
+#		InputDeviceEvent.KEY_MUTE:
+#			AudioManager.call_deferred("toggle_mute")
+#		InputDeviceEvent.KEY_VOLUMEDOWN:
+#			AudioManager.call_deferred("set_volume", -0.06, AudioManager.VOLUME.RELATIVE)
+#		InputDeviceEvent.KEY_VOLUMEUP:
+#			AudioManager.call_deferred("set_volume", 0.06, AudioManager.VOLUME.RELATIVE)
+#		_:
+#			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")
 
 
 ## Called after processing all events in the event loop. Checks if our current
 ## active_keys matches any of our mapped events.
-func _check_mapped_events() -> void:
+func _check_mapped_events(value: float) -> void:
 	if not platform or not platform.platform is HandheldPlatform:
 		logger.debug("No handheld platform was defined!")
 		return
@@ -166,24 +166,19 @@ func _check_mapped_events() -> void:
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
 		
-		logger.debug("Found a matching event")
-		inject_event(mapped_event.emits)
-
-
-# Sends an ogui_event input action to the event queue
-#func _send_input(input_action: InputEventAction, action: String, pressed: bool, strength: float = 1.0) -> void:
-#	input_action.action = action
-#	input_action.pressed = pressed
-#	input_action.strength = strength
-#	Input.parse_input_event(input_action)
+		logger.debug("Found a matching event. Emitting event: " + mapped_event.emits.name)
+		var event := HandheldEvent.new()
+		event.name = mapped_event.emits.name
+		event.value = value
+		inject_event(event)
 
 
 ## Returns the index of an active key.
 func _find_active_key(event: EvdevEvent) -> int:
 	for i in active_keys.size():
-		if active_keys[i].type == event.type and \
-		active_keys[i].code == event.code and \
-		active_keys[i].value == event.value:
+		if active_keys[i].type == event.get_type() and \
+		active_keys[i].code == event.get_code() and \
+		active_keys[i].value == event.get_value():
 			return i
 	return -1
 

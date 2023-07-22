@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=8 format=3 uid="uid://d32tckesp4ndm"]
+
+[ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_2f7yt"]
+[ext_resource type="Script" path="res://core/systems/input/evdev_event.gd" id="1_mx1h1"]
+[ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="2_n3r6l"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_event.gd" id="3_3nwbv"]
+
+[sub_resource type="Resource" id="Resource_ow8of"]
+script = ExtResource("1_mx1h1")
+type = 1
+code = 114
+value = 0
+
+[sub_resource type="Resource" id="Resource_y55l8"]
+script = ExtResource("3_3nwbv")
+name = "volume_up"
+
+[sub_resource type="Resource" id="Resource_xdyc4"]
+script = ExtResource("2_n3r6l")
+source_event = SubResource("Resource_y55l8")
+output_events = Array[Resource("res://core/systems/input/mappable_event.gd")]([SubResource("Resource_ow8of")])
+
+[resource]
+script = ExtResource("1_2f7yt")
+name = "Default QAM Only"
+mapping = Array[ExtResource("2_n3r6l")]([SubResource("Resource_xdyc4")])

@@ -1,16 +1,63 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=6 format=3 uid="uid://dw8ivc5au3e6b"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=17 format=3 uid="uid://dw8ivc5au3e6b"]
 
 [ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp-mini/diagram.png" id="1_6cmpw"]
-[ext_resource type="Resource" uid="uid://c00ituv1eqxl6" path="res://core/platform/handheld/onexplayer/onexplayer_gen3_gamepad.tres" id="1_oywyq"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_v6ayv"]
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="2_ch1og"]
+[ext_resource type="Script" path="res://core/systems/input/evdev_event.gd" id="3_jtr6e"]
 [ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="4_5jo3q"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="4_dwj4k"]
+[ext_resource type="Script" path="res://core/systems/input/handheld_event.gd" id="4_s7fam"]
+
+[sub_resource type="Resource" id="Resource_w7c1k"]
+script = ExtResource("2_ch1og")
+phys_path = "usb-0000:03:00.3-4/input0"
+name = "Microsoft X-Box 360 pad"
+
+[sub_resource type="Resource" id="Resource_f6g57"]
+script = ExtResource("3_jtr6e")
+type = 1
+code = 114
+
+[sub_resource type="Resource" id="Resource_14o6l"]
+script = ExtResource("4_s7fam")
+name = "volume_up"
+
+[sub_resource type="Resource" id="Resource_uvof5"]
+script = ExtResource("4_dwj4k")
+name = "volume_up"
+activation_keys = Array[ExtResource("3_jtr6e")]([SubResource("Resource_f6g57")])
+emits = SubResource("Resource_14o6l")
+on_release = false
+
+[sub_resource type="Resource" id="Resource_enofv"]
+script = ExtResource("3_jtr6e")
+type = 1
+code = 113
+
+[sub_resource type="Resource" id="Resource_ord15"]
+script = ExtResource("4_s7fam")
+name = "volume_down"
+
+[sub_resource type="Resource" id="Resource_o2ju3"]
+script = ExtResource("4_dwj4k")
+name = "volume_down"
+activation_keys = Array[ExtResource("3_jtr6e")]([SubResource("Resource_enofv")])
+emits = SubResource("Resource_ord15")
+on_release = false
+
+[sub_resource type="Resource" id="Resource_s3rhi"]
+script = ExtResource("2_ch1og")
+phys_path = "isa0060/serio0/input0"
+name = "AT Translated Set 2 keyboard"
 
 [sub_resource type="Resource" id="Resource_twspj"]
 script = ExtResource("4_5jo3q")
 
 [resource]
 script = ExtResource("1_v6ayv")
-gamepad = ExtResource("1_oywyq")
+key_map = Array[ExtResource("4_dwj4k")]([SubResource("Resource_uvof5"), SubResource("Resource_o2ju3")])
+keypads = Array[ExtResource("2_ch1og")]([SubResource("Resource_s3rhi")])
+gamepad = SubResource("Resource_w7c1k")
 diagram = ExtResource("1_6cmpw")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
 thermal_policy_path = ""
