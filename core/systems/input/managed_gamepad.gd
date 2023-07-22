@@ -5,6 +5,8 @@ class_name ManagedGamepad
 ##
 ## ManagedGamepad will convert physical gamepad input into virtual gamepad input.
 
+signal profile_updated
+
 ## Intercept mode defines how we intercept gamepad events
 enum INTERCEPT_MODE {
 	NONE,
@@ -21,10 +23,13 @@ enum AXIS_PRESSED {
 	RIGHT = 8,
 }
 
-var profile: GamepadProfile
-var xwayland: Xlib
-var event_map := {}
+var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var mode := INTERCEPT_MODE.ALL
+var profile: GamepadProfile
+var xwayland := gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
+var mutex := Mutex.new()
+
+var event_map := {}
 var phys: String
 var phys_path: String
 var virt_path: String
@@ -72,7 +77,7 @@ var echo_last_event_time := {
 
 var mode_event: InputDeviceEvent
 var _last_time := 0
-var logger := Log.get_logger("ManagedGamepad", Log.LEVEL.INFO)
+var logger: Log.Logger
 
 # List of events to consume the BTN_MODE event in PASS_QAM mode. This enables the
 # use of default button combo's in Steam.
@@ -91,6 +96,11 @@ var use_mode_list: Array = [
 	InputDeviceEvent.BTN_SELECT,
 	InputDeviceEvent.BTN_START
 ]
+
+
+func _init() -> void:
+	profile_updated.connect(_on_profile_updated)
+	logger = Log.get_logger("ManagedGamepad")
 
 
 ## Opens the given physical gamepad with exclusive access and creates a virtual
@@ -163,33 +173,26 @@ func reopen(path: String) -> int:
 	return OK
 
 
-## Grab exclusive access over the physical device
-func grab() -> void:
-	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
-		phys_device.grab(true)
+## Set the intercept mode on the gamepad
+func set_mode(intercept_mode: INTERCEPT_MODE) -> void:
+	mutex.lock()
+	mode = intercept_mode
+	mutex.unlock()
 
 
 ## Set the managed gamepad to use the given gamepad profile for translating
 ## input events into other input events
 func set_profile(gamepad_profile: GamepadProfile) -> void:
+	mutex.lock()
 	profile = gamepad_profile
-	event_map = {}
-	should_process_mouse = false
-	if not profile:
-		return
+	mutex.unlock()
+	profile_updated.emit()
 
-	logger.info("Setting gamepad profile: " + profile.name)
-	# Map the profile mappings with the events to translate
-	for m in profile.mapping:
-		var mapping := m as GamepadMapping
-		if not mapping.source_event in event_map:
-			event_map[mapping.source_event] = []
-		event_map[mapping.source_event].append(mapping)
 
-		# If there is a mapping that does mouse motion, enable
-		# processing of mouse motion in process_input()
-		if mapping.target is InputEventMouseMotion:
-			should_process_mouse = true
+## Grab exclusive access over the physical device
+func grab() -> void:
+	if not "--disable-grab-gamepad" in OS.get_cmdline_args():
+		phys_device.grab(true)
 
 
 ## Processes all physical and virtual inputs for this controller. This should be
@@ -229,8 +232,32 @@ func process_input() -> void:
 
 
 ## Inject the given event into the physical event processing queue.
-func inject_event(event: InputDeviceEvent) -> void:
-	_process_phys_event(event, 0)
+func inject_event(event: MappableEvent) -> void:
+	if event is EvdevEvent:
+		_process_phys_event(event.to_input_device_event(), 0)
+	if event is HandheldEvent:
+		pass
+	# TODO: Handle other types of events
+
+
+func _on_profile_updated() -> void:
+	event_map = {}
+	should_process_mouse = false
+	if not profile:
+		return
+
+	logger.info("Setting gamepad profile: " + profile.name)
+	# Map the profile mappings with the events to translate
+	for m in profile.mapping:
+		var mapping := m as GamepadMapping
+		if not mapping.source_event in event_map:
+			event_map[mapping.source_event] = []
+		event_map[mapping.source_event].append(mapping)
+
+		# If there is a mapping that does mouse motion, enable
+		# processing of mouse motion in process_input()
+		if mapping.target is InputEventMouseMotion:
+			should_process_mouse = true
 
 
 ## Processes a single physical gamepad event. Depending on the intercept mode,
@@ -531,8 +558,9 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 
 			# Check to see if the event source is an ABS axis event
 			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
-				var is_positive := mapping.axis == mapping.AXIS.POSITIVE
-				pressed = _is_axis_pressed(event, is_positive)
+				#var is_positive := mapping.axis == mapping.AXIS.POSITIVE
+				#pressed = _is_axis_pressed(event, is_positive)
+				pass
 
 			# Translate gamepad button events
 			else:
@@ -550,8 +578,9 @@ func _translate_event(event: InputDeviceEvent, delta: float) -> void:
 
 			# Check to see if the event source is an ABS axis event
 			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
-				var is_positive := mapping.axis == mapping.AXIS.POSITIVE
-				pressed = _is_axis_pressed(event, is_positive)
+				#var is_positive := mapping.axis == mapping.AXIS.POSITIVE
+				#pressed = _is_axis_pressed(event, is_positive)
+				pass
 
 			# Translate gamepad button events
 			else:

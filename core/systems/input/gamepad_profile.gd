@@ -1,3 +1,4 @@
+@icon("res://assets/ui/icons/gamepad-bold.svg")
 extends Resource
 class_name GamepadProfile
 
@@ -8,4 +9,4 @@ class_name GamepadProfile
 
 ## Name of the gamepad profile
 @export var name: String
-@export var mapping: Array[Resource]
+@export var mapping: Array[GamepadMapping]
