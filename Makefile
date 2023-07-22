@@ -1,9 +1,9 @@
 PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
 ROOTFS ?= $(CACHE_DIR)/rootfs
-OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d'"' -f2)
-GODOT_VERSION ?= $(shell godot --version | cut -d'.' -f 1,2)
-GODOT_RELEASE ?= $(shell godot --version | cut -d'.' -f 3)
+OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d '"' -f2)
+GODOT_VERSION ?= $(shell godot --version | grep -o '[0-9].*[0-9]')
+GODOT_RELEASE ?= $(shell godot --version | rev | cut -d '.' -f2 | rev)
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
@@ -50,6 +50,7 @@ SYSEXT_VERSION_ID ?= 3.4.8
 .PHONY: help
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	echo $(GODOT_VERSION)
 
 .PHONY: install 
 install: rootfs ## Install OpenGamepadUI (default: ~/.local)
