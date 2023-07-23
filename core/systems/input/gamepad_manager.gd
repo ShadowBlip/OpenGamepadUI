@@ -302,8 +302,8 @@ class GamepadArray:
 	func add(gamepad: ManagedGamepad) -> void:
 		mutex.lock()
 		gamepads.append(gamepad)
-		gamepad_phys_paths.append(gamepad.get_phys_path())
-		gamepad_virt_paths.append(gamepad.get_virt_path())
+		gamepad_phys_paths.append(gamepad.phys_path)
+		gamepad_virt_paths.append(gamepad.virt_path)
 		if gamepad is HandheldGamepad:
 			handheld = gamepad
 		mutex.unlock()

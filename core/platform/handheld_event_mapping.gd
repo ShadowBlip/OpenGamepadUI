@@ -7,9 +7,7 @@ class_name HandheldEventMapping
 @export var activation_keys: Array[EvdevEvent]
 ## Emits this event when the activation keys are triggered
 @export var emits: HandheldEvent
-## Set true if event should be queued during "press" event and fired during
-## "release" event. Only applies to the event_list.
-@export var on_release: bool = false
+
 
 ## Will show logger statements in the event log with the prefix [HandheldEventMapping].
 var logger := Log.get_logger("HandheldEventMapping", Log.LEVEL.INFO)

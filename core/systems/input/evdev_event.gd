@@ -69,11 +69,12 @@ static func from_input_device_event(event: InputDeviceEvent) -> EvdevEvent:
 	var evdev_event := EvdevEvent.new()
 	evdev_event.input_device_event = event
 	
-	var type_str := event.get_type_name()
-	var codes = TYPES_TO_CODES[type_str]
-	evdev_event.type = TYPES.find(type_str)
-	evdev_event.code = codes.find(event.get_code_name())
-	evdev_event.value = event.value
+#	var type_str := event.get_type_name()
+#	print("Type String: " + type_str)
+#	var codes = TYPES_TO_CODES[type_str]
+#	evdev_event.type = TYPES.find(type_str)
+#	evdev_event.code = codes.find(event.get_code_name())
+#	evdev_event.value = event.value
 	
 	return evdev_event
 

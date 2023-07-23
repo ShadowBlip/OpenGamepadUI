@@ -38,6 +38,8 @@ const SettingsManager := preload("res://core/global/settings_manager.tres")
 const InputManager := preload("res://core/global/input_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
+var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
+
 var Gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -304,8 +306,8 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 func set_gamepad_profile(path: String) -> void:
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
-		for gamepad in InputManager.get_managed_gamepads():
-			InputManager.set_gamepad_profile(gamepad, null)
+		for gamepad in gamepad_manager.get_gamepad_paths():
+			gamepad_manager.set_gamepad_profile(gamepad, null)
 		return
 	
 	# Try to load the profile and set it
