@@ -49,23 +49,24 @@ func _ready() -> void:
 
 	# Listen to see if a mapping was selected 
 	var on_mapping_selected := func(mapping: GamepadMapping):
-		var source_event := mapping.get_source_event_name()
-		# Remove old mappings
-		var to_remove := []
-		for m in profile.mapping:
-			# TODO: Handle cases where ABS events are specified. 
-			# We could have from 2-4 of these
-			if source_event.begins_with("ABS"):
-				continue
-			if m.get_source_event_name() == source_event:
-				to_remove.append(m)
-		for m in to_remove:
-			logger.debug("Removing old mapping: " + str(m.target))
-			profile.mapping.erase(m)
-		logger.debug("Adding mapping: " + mapping.get_source_event_name())
-		profile.mapping.append(mapping)
-		logger.debug("Reloading profile")
-		_load_profile()
+		pass
+#		var source_event := mapping.get_source_event_name()
+#		# Remove old mappings
+#		var to_remove := []
+#		for m in profile.mapping:
+#			# TODO: Handle cases where ABS events are specified. 
+#			# We could have from 2-4 of these
+#			if source_event.begins_with("ABS"):
+#				continue
+#			if m.get_source_event_name() == source_event:
+#				to_remove.append(m)
+#		for m in to_remove:
+#			logger.debug("Removing old mapping: " + str(m.target))
+#			profile.mapping.erase(m)
+#		logger.debug("Adding mapping: " + mapping.get_source_event_name())
+#		profile.mapping.append(mapping)
+#		logger.debug("Reloading profile")
+#		_load_profile()
 	gamepad_mapper.mapping_selected.connect(on_mapping_selected)
 
 

@@ -4,6 +4,7 @@ class_name HandheldGamepad
 
 const AudioManager := preload("res://core/global/audio_manager.tres")
 var platform := load("res://core/global/platform.tres") as Platform
+var device_hider := load("res://core/systems/input/device_hider.tres") as DeviceHider
 
 ## List of keys and their values that are currently pressed.
 var active_keys: Array[EvdevEvent]
@@ -21,6 +22,14 @@ func setup(keyboards: Array[InputDevice]) -> void:
 		var keypad := Keypad.new()
 		keypad.device = keyboard
 		keypad.event_path = keyboard.get_path()
+		
+		# Try to hide the keyboard device
+		var hidden_path := await device_hider.hide_event_device(keypad.event_path)
+		if hidden_path == "":
+			logger.warn("Unable to hide handheld keypad: " + keypad.event_path)
+			logger.warn("Opening the raw handheld keypad instead")
+			# Try to open the non-hidden device instead
+			hidden_path = keypad.event_path
 
 		# Grab exclusive access over the physical device
 		if not "--disable-grab-gamepad" in OS.get_cmdline_args():
@@ -57,6 +66,7 @@ func process_input() -> void:
 		for event in events:
 			if not event or not event is InputDeviceEvent:
 				continue
+			logger.debug("event: type " + str(event.type) + " code " + str(event.code))
 			var evdev_event := EvdevEvent.from_input_device_event(event)
 			_process_event(evdev_event)
 
@@ -64,15 +74,15 @@ func process_input() -> void:
 ## Called to handle an individual event. Sets the active keys.
 func _process_event(event: EvdevEvent) -> void:
 	# Always skip anything thats not a button
-	if event.get_type() not in [event.EV_KEY]:
+	if event.get_event_type() != InputDeviceEvent.EV_KEY:
 		return
 		# Ignore this code, its linux kernel reserved and causes issues.
-	if event.get_code() == 0:
+	if event.get_event_code() == 0:
 		return
 
 	# release event, remove active keys
-	logger.debug("event: type " + str(event.type) + " event: code " + str(event.code) + " value " + str(event.value))
-	if event.value == 0:
+	logger.debug("event: type " + str(event.get_event_type()) + " event: code " + str(event.get_event_code()) + " value " + str(event.get_event_value()))
+	if event.get_event_value() == 0:
 		_on_key_up(event)
 		return
 
@@ -80,7 +90,7 @@ func _process_event(event: EvdevEvent) -> void:
 	if _find_active_key(event) >= 0:
 		logger.debug("Already Active! Keys:")
 		for key in active_keys:
-			logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
+			logger.debug(str(key.get_event_type()) + " : " +str(key.get_event_code()) + " : " +str(key.get_event_value()))
 		return
 
 	_on_key_down(event)
@@ -92,8 +102,8 @@ func _on_key_down(event: EvdevEvent) -> void:
 	active_keys.insert(active_keys.bsearch_custom(event, _sort_events), event)
 	logger.debug("Active keys:")
 	for key in active_keys:
-		logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
-	_check_mapped_events(event.get_value())
+		logger.debug(str(key.get_event_type()) + " : " +str(key.get_event_code()) + " : " +str(key.get_event_value()))
+	_check_mapped_events(event.get_event_value())
 
 
 ## Called for key up events.
@@ -107,7 +117,7 @@ func _on_key_up(event: EvdevEvent) -> bool:
 	for active_key in active_keys:
 		if not event.matches(active_key):
 			continue
-		_check_mapped_events(event.get_value())
+		_check_mapped_events(event.get_event_value())
 		to_remove.append(active_key)
 		
 	for key in to_remove:
@@ -115,7 +125,7 @@ func _on_key_up(event: EvdevEvent) -> bool:
 
 	logger.debug("Active keys:")
 	for key in active_keys:
-		logger.debug(str(key.get_type()) + " : " +str(key.get_code()) + " : " +str(key.get_value()))
+		logger.debug(str(key.get_event_type()) + " : " +str(key.get_event_code()) + " : " +str(key.get_event_value()))
 
 	return false
 
@@ -162,9 +172,9 @@ func _check_mapped_events(value: float) -> void:
 ## Returns the index of an active key.
 func _find_active_key(event: EvdevEvent) -> int:
 	for i in active_keys.size():
-		if active_keys[i].type == event.get_type() and \
-		active_keys[i].code == event.get_code() and \
-		active_keys[i].value == event.get_value():
+		if active_keys[i].get_event_type() == event.get_event_type() and \
+		active_keys[i].get_event_code() == event.get_event_code() and \
+		active_keys[i].get_event_value() == event.get_event_value():
 			return i
 	return -1
 
@@ -172,11 +182,11 @@ func _find_active_key(event: EvdevEvent) -> int:
 ## Custom sort method that returns true if the first EvdevEvent is less 
 ## than the second EvdevEvent.  Checks type, then code, then value.
 func _sort_events(event1: EvdevEvent, event2: EvdevEvent) -> bool:
-	if event1.get_type() != event2.get_type():
-		return event1.get_type() < event2.get_type()
-	if event1.get_code() != event2.get_code():
-		return event1.get_code() < event2.get_code()
-	return event1.get_value() < event2.get_value()
+	if event1.get_event_type() != event2.get_event_type():
+		return event1.get_event_type() < event2.get_event_type()
+	if event1.get_event_code() != event2.get_event_code():
+		return event1.get_event_code() < event2.get_event_code()
+	return event1.get_event_value() < event2.get_event_value()
 
 
 ## Structure representing a handheld keypad device

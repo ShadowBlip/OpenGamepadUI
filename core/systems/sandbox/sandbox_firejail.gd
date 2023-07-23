@@ -1,7 +1,7 @@
 extends Sandbox
 class_name SandboxFirejail
 
-const InputManager := preload("res://core/global/input_manager.tres")
+var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
 
 
 ## Returns an array defining the command line to launch the given application
@@ -11,7 +11,7 @@ func get_command(app: LibraryLaunchItem) -> PackedStringArray:
 	var sandbox := PackedStringArray()
 	if is_available():
 		sandbox.append_array(["firejail", "--noprofile"])
-		var blacklist := InputManager.get_managed_gamepads()
+		var blacklist := gamepad_manager.get_gamepad_paths()
 		for device in blacklist:
 			sandbox.append("--blacklist=%s" % device)
 		sandbox.append("--")

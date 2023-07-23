@@ -26,7 +26,7 @@ class_name HandheldPlatform
 
 func is_handheld_gamepad(device: InputDevice) -> bool:
 	if device.get_phys() == gamepad.phys_path and device.get_name() == gamepad.name:
-		logger.info("Found handheld gamepad device: " + device.get_name())
+		logger.info("Found handheld gamepad device " + device.get_path() + ": " + device.get_name())
 		return true
 	return false
 
@@ -34,6 +34,6 @@ func is_handheld_gamepad(device: InputDevice) -> bool:
 func is_handheld_keyboard(device: InputDevice) -> bool:
 	for keypad in keypads:
 		if device.get_phys() == keypad.phys_path and device.get_name() == keypad.name:
-			logger.info("Found handheld input device: " + device.get_name())
+			logger.info("Found handheld input device " + device.get_path() + ": " + device.get_name())
 			return true
 	return false

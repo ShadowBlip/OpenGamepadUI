@@ -48,15 +48,15 @@ func matches(event: MappableEvent) -> bool:
 		event.input_device_event.type == input_device_event.type
 
 
-func get_type() -> int:
+func get_event_type() -> int:
 	return input_device_event.type
 
 
-func get_code() -> int:
+func get_event_code() -> int:
 	return input_device_event.code
 
 
-func get_value() -> int:
+func get_event_value() -> int:
 	return input_device_event.value
 
 

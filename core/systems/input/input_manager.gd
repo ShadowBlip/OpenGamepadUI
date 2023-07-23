@@ -2,11 +2,7 @@
 extends Node
 
 var input_manager := preload("res://core/global/input_manager.tres") as InputManager
-
 var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
-
-func _ready() -> void:
-	input_manager.init()
 
 
 func _input(event: InputEvent) -> void:

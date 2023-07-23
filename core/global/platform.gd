@@ -111,8 +111,9 @@ func _init() -> void:
 	if PLATFORM.CHIMERAOS in flags:
 		os = load("res://core/platform/os/chimeraos.tres")
 
-	for action in os.startup_actions:
-		action.execute()
+	if os:
+		for action in os.startup_actions:
+			action.execute()
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI

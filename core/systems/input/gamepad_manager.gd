@@ -193,7 +193,9 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 	# Setup any handheld gamepads if they are discovered and not yet configured
 	if not gamepads.has_handheld() and discovered_handheld:
 		var path := discovered_handheld.get_path()
+		logger.info("A handheld gamepad was discovered at: " + path)
 		# Hide the device from other processes
+		logger.debug("Trying to hide handheld gamepad")
 		var hidden_path := await device_hider.hide_event_device(path)
 		if hidden_path == "":
 			logger.warn("Unable to hide handheld gamepad: " + path)
@@ -202,10 +204,12 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			hidden_path = path
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
+		logger.debug("Opening handheld gamepad at: " + hidden_path)
 		var gamepad := HandheldGamepad.new()
 		if gamepad.open(hidden_path) != OK:
 			logger.error("Unable to create handheld gamepad for: " + hidden_path)
 			if hidden_path != path:
+				logger.debug("Restoring device back to its regular path")
 				device_hider.restore_event_device(hidden_path)
 		else:
 			gamepad.setup(discovered_keyboards)
