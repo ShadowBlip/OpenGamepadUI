@@ -16,6 +16,9 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYA NEO:*
 
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYANEO:*
   FORCE_INPUT_UACCESS=1
+  KEYBOARD_KEY_66=f15
+  KEYBOARD_KEY_67=f16
+  KEYBOARD_KEY_68=f17
 
 ## ONEXPLAYER DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnONE-NETBOOK*:pnONE*:
