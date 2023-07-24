@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="HandheldPlatform" load_steps=14 format=3 uid="uid://bhf1ab3adrkpl"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_ap3er"]
-[ext_resource type="Script" path="res://core/systems/input/evdev_event.gd" id="1_vgbrp"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_7exy4"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="2_177c2"]
-[ext_resource type="Script" path="res://core/systems/input/handheld_event.gd" id="2_b7dld"]
+[ext_resource type="Script" path="res://core/systems/input/events/handheld_event.gd" id="2_b7dld"]
 [ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_pxtbl"]
 
 [sub_resource type="Resource" id="Resource_6fm3n"]
@@ -11,10 +11,9 @@ script = ExtResource("1_ap3er")
 phys_path = "usb-0000:e4:00.3-4/input0"
 name = "Microsoft X-Box 360 pad"
 
-[sub_resource type="Resource" id="Resource_tclxq"]
-script = ExtResource("1_vgbrp")
-type = 1
-code = 114
+[sub_resource type="Resource" id="Resource_duihv"]
+script = ExtResource("2_7exy4")
+code = "KEY_VOLUMEUP"
 
 [sub_resource type="Resource" id="Resource_scfnm"]
 script = ExtResource("2_b7dld")
@@ -22,14 +21,13 @@ name = "volume_up"
 
 [sub_resource type="Resource" id="Resource_gg5sq"]
 script = ExtResource("3_pxtbl")
-name = "volume_up"
-activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_tclxq")])
+name = "Volume Up"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_duihv")])
 emits = SubResource("Resource_scfnm")
 
-[sub_resource type="Resource" id="Resource_2m2lg"]
-script = ExtResource("1_vgbrp")
-type = 1
-code = 113
+[sub_resource type="Resource" id="Resource_33aby"]
+script = ExtResource("2_7exy4")
+code = "KEY_VOLUMEDOWN"
 
 [sub_resource type="Resource" id="Resource_oloh7"]
 script = ExtResource("2_b7dld")
@@ -37,8 +35,8 @@ name = "volume_down"
 
 [sub_resource type="Resource" id="Resource_emic8"]
 script = ExtResource("3_pxtbl")
-name = "volume_down"
-activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_2m2lg")])
+name = "Volume Down"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_33aby")])
 emits = SubResource("Resource_oloh7")
 
 [sub_resource type="Resource" id="Resource_53la2"]
@@ -53,6 +51,6 @@ keypads = Array[ExtResource("1_ap3er")]([SubResource("Resource_53la2")])
 gamepad = SubResource("Resource_6fm3n")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
 thermal_policy_path = ""
-name = "AYANEO Gen4"
+name = "AYANEO Gen 4"
 startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
 shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

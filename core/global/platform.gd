@@ -114,16 +114,6 @@ func _init() -> void:
 	if os:
 		for action in os.startup_actions:
 			action.execute()
-	var not_platform :=  load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres")
-	logger.debug("Where this is going wrong? ")
-	logger.debug(not_platform.key_map[0].activation_keys[0].type)
-	logger.debug(not_platform.key_map[0].activation_keys[0].code)
-	logger.debug(not_platform.key_map[0].activation_keys[0].value)
-	for mapped_event in not_platform.key_map:
-		logger.debug("LOOP")
-		logger.debug(mapped_event.activation_keys[0].type)
-		logger.debug(mapped_event.activation_keys[0].code)
-		logger.debug(mapped_event.activation_keys[0].value)
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
