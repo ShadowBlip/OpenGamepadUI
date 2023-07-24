@@ -49,7 +49,7 @@ func restore_all_hidden() -> void:
 		if not file_name.begins_with("event"):
 			continue
 		logger.debug("Found hidden file: " + file_name)
-		restore_event_device(file_name)
+		await restore_event_device(file_name)
 
 	logger.info("Restore hidden UInput devices completed.")
 

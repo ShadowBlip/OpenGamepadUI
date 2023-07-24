@@ -52,7 +52,7 @@ func _init() -> void:
 	in_game_state.state_removed.connect(_on_game_state_removed)
 
 	# If we crashed, unhide any device events that were orphaned
-	device_hider.restore_all_hidden()
+	await device_hider.restore_all_hidden()
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
@@ -88,12 +88,14 @@ func discover_devices() -> Array[InputDevice]:
 	var files := DirAccess.get_files_at(input_path)
 	for file in files:
 		if not file.begins_with("event"):
+			logger.debug("Ignoring device " + file)
 			continue
 		var path := "/".join([input_path, file])
 		var dev := InputDevice.new()
 		if dev.open(path) != OK:
 			logger.debug("Unable to open event device: " + path)
 			continue
+		logger.debug("Added " + path + " to the list of discovered devices.")
 		devices.append(dev)
 
 	return devices
@@ -231,8 +233,6 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 		logger.debug("Gamepad disconnected: " + gamepad.get_phys_path())
 		gamepads.erase(gamepad)
-
-		return
 
 	# Add any newly found gamepads
 	for dev in discovered_gamepads:

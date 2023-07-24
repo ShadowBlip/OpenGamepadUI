@@ -66,7 +66,6 @@ func process_input() -> void:
 		for event in events:
 			if not event or not event is InputDeviceEvent:
 				continue
-			logger.debug("event: type " + str(event.type) + " code " + str(event.code))
 			var evdev_event := EvdevEvent.from_input_device_event(event)
 			_process_event(evdev_event)
 
@@ -158,7 +157,11 @@ func _check_mapped_events(value: float) -> void:
 	var handheld_platform := platform.platform as HandheldPlatform
 
 	logger.debug("Checking events for matches")
+	
 	for mapped_event in handheld_platform.key_map:
+		logger.debug(mapped_event.activation_keys[0].type)
+		logger.debug(mapped_event.activation_keys[0].code)
+		logger.debug(mapped_event.activation_keys[0].value)
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
 

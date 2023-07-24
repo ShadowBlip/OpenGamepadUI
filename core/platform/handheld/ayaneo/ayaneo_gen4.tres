@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=14 format=3 uid="uid://d0r5af76fca0d"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=14 format=3 uid="uid://bhf1ab3adrkpl"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_ap3er"]
 [ext_resource type="Script" path="res://core/systems/input/evdev_event.gd" id="1_vgbrp"]
@@ -11,35 +11,35 @@ script = ExtResource("1_ap3er")
 phys_path = "usb-0000:e4:00.3-4/input0"
 name = "Microsoft X-Box 360 pad"
 
-[sub_resource type="Resource" id="Resource_utwyt"]
+[sub_resource type="Resource" id="Resource_tclxq"]
 script = ExtResource("1_vgbrp")
 type = 1
 code = 114
 
-[sub_resource type="Resource" id="Resource_q82lw"]
+[sub_resource type="Resource" id="Resource_scfnm"]
 script = ExtResource("2_b7dld")
 name = "volume_up"
 
-[sub_resource type="Resource" id="Resource_ulb4o"]
+[sub_resource type="Resource" id="Resource_gg5sq"]
 script = ExtResource("3_pxtbl")
 name = "volume_up"
-activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_utwyt")])
-emits = SubResource("Resource_q82lw")
+activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_tclxq")])
+emits = SubResource("Resource_scfnm")
 
-[sub_resource type="Resource" id="Resource_v4pa7"]
+[sub_resource type="Resource" id="Resource_2m2lg"]
 script = ExtResource("1_vgbrp")
 type = 1
 code = 113
 
-[sub_resource type="Resource" id="Resource_aj0bd"]
+[sub_resource type="Resource" id="Resource_oloh7"]
 script = ExtResource("2_b7dld")
 name = "volume_down"
 
-[sub_resource type="Resource" id="Resource_y3r0f"]
+[sub_resource type="Resource" id="Resource_emic8"]
 script = ExtResource("3_pxtbl")
 name = "volume_down"
-activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_v4pa7")])
-emits = SubResource("Resource_aj0bd")
+activation_keys = Array[ExtResource("1_vgbrp")]([SubResource("Resource_2m2lg")])
+emits = SubResource("Resource_oloh7")
 
 [sub_resource type="Resource" id="Resource_53la2"]
 script = ExtResource("1_ap3er")
@@ -48,7 +48,7 @@ name = "AT Translated Set 2 keyboard"
 
 [resource]
 script = ExtResource("2_177c2")
-key_map = Array[ExtResource("3_pxtbl")]([SubResource("Resource_ulb4o"), SubResource("Resource_y3r0f")])
+key_map = Array[ExtResource("3_pxtbl")]([SubResource("Resource_gg5sq"), SubResource("Resource_emic8")])
 keypads = Array[ExtResource("1_ap3er")]([SubResource("Resource_53la2")])
 gamepad = SubResource("Resource_6fm3n")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

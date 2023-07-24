@@ -13,36 +13,35 @@ class_name HandheldEventMapping
 var logger := Log.get_logger("HandheldEventMapping", Log.LEVEL.INFO)
 
 
-## Checks if the given Array of InputDeviceEvent's matches the event_list array.
+## Checks if the given Array of EvdevEvents matches the activation_keys array.
 func output_events_match(active_event: Array[EvdevEvent]) -> bool:
 #	logger.debug("Checking active events against event list.")
 	if active_event.size() != activation_keys.size() or active_event.size() == 0:
 #		logger.debug("Event list too short")
 		return false
 	for i in active_event.size():
-		if not _is_same_event(active_event[i], activation_keys[i]):
+		if not active_event[i].matches(activation_keys[i]):
 #			logger.debug("Event list doesn't match active event")
 			return false
 	return true
 
 
-## Checks if the given Array of InputDeviceEvent's matches the activation_keys array.
+## Checks if the given Array of EvdevEvents matches the activation_keys array.
 func trigger_events_match(active_keys: Array[EvdevEvent]) -> bool:
-#	logger.debug("Checking active keys against key actvation keys.")
+	logger.debug("Checking active keys against key actvation keys.")
 	if active_keys.size() != activation_keys.size() or active_keys.size() == 0:
-#		logger.debug("Event list too short")
+		logger.debug("Event list too short")
 		return false
 	for i in active_keys.size():
-		if not _is_same_event(activation_keys[i], active_keys[i]):
-#			logger.debug("Activation list doesn't match active keys.")
+		var target_event:= EvdevEvent.new()
+		target_event.type = activation_keys[i].type
+		target_event.code = activation_keys[i].code
+		target_event.value = activation_keys[i].value
+		logger.debug("Huge list of information (activation_keys[0]): " + str(activation_keys[i].type) + " "  + str(activation_keys[i].code) + " "  + str(activation_keys[i].value))
+		logger.debug("Checking event " + str(active_keys[i].get_event_type()) + " " + str(active_keys[i].get_event_code()))
+		logger.debug("Against event " + str(target_event.get_event_type()) + " " + str(target_event.get_event_code()))
+		if not target_event.matches(active_keys[i]):
+			logger.debug("Activation list doesn't match active keys.")
 			return false
 	return true
 
-
-## Checks if event1 matches event2
-func _is_same_event(event1: EvdevEvent, event2: EvdevEvent) -> bool:
-	if event1.type == event2.type:
-		if event1.code == event2.code:
-			if event1.value == event2.value:
-				return true
-	return false

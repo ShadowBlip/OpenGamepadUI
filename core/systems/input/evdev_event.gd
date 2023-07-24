@@ -19,6 +19,7 @@ var type: int = 1:
 		input_device_event.type = input_device_event.get(ev_str)
 		
 		notify_property_list_changed()
+
 ## The evdev event ID source
 var code: int:
 	set(v):
@@ -30,6 +31,7 @@ var code: int:
 		var codes = TYPES_TO_CODES[type_str]
 		var ev_str := codes[v] as String
 		input_device_event.code = input_device_event.get(ev_str)
+
 ## The value of the event
 var value: int:
 	set(v):
