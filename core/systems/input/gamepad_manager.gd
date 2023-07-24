@@ -34,15 +34,10 @@ var input_thread := load("res://core/systems/threading/input_thread.tres") as Sh
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
 var gamepads := GamepadArray.new()
-var orphan_gamepads := GamepadArray.new()
-#var gamepads: Array[Gamepad] = []
-#var gamepad_phys_paths: Array[String] = []
-#var gamepad_virt_path: Array[String] = []
-#var managed_gamepads := {}  # {"/dev/input/event1": <ManagedGamepad>}
-#var orphaned_gamepads := {} # {"event1" : <ManagedGamepad>}
-#var virtual_gamepads := []  # ["/dev/input/event2"]
-#var gamepad_mutex := Mutex.new()
 var logger := Log.get_logger("GamepadManager", Log.LEVEL.INFO)
+
+## Default gamepad profile to use
+@export var default_profile := "res://assets/gamepad/profiles/default.tres"
 
 
 ## Initializes the gamepad manager and starts the gamepad interecpt thread. 
@@ -77,6 +72,9 @@ func set_gamepad_profile(device: String, profile: GamepadProfile) -> void:
 	if not gamepad:
 		logger.warn("Unable to set profile on non-managed device: " + device)
 		return
+	if not profile:
+		logger.debug("No profile set. Using default profile.")
+		profile = load(default_profile)
 	gamepad.set_profile(profile)
 
 

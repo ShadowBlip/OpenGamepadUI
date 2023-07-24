@@ -1,26 +1,25 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=8 format=3 uid="uid://d32tckesp4ndm"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=8 format=3 uid="uid://doq3ewvgm4bb8"]
 
-[ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_2f7yt"]
-[ext_resource type="Script" path="res://core/systems/input/evdev_event.gd" id="1_mx1h1"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="1_s6sij"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="2_n3r6l"]
-[ext_resource type="Script" path="res://core/systems/input/handheld_event.gd" id="3_3nwbv"]
+[ext_resource type="Script" path="res://core/systems/input/events/handheld_event.gd" id="3_3nwbv"]
+[ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="4_8luto"]
 
-[sub_resource type="Resource" id="Resource_ow8of"]
-script = ExtResource("1_mx1h1")
-type = 1
-code = 114
-value = 0
+[sub_resource type="Resource" id="Resource_pqmya"]
+script = ExtResource("1_s6sij")
+code = "KEY_VOLUMEUP"
 
-[sub_resource type="Resource" id="Resource_y55l8"]
+[sub_resource type="Resource" id="Resource_m8sup"]
 script = ExtResource("3_3nwbv")
-name = "volume_up"
+name = "mode"
 
-[sub_resource type="Resource" id="Resource_xdyc4"]
+[sub_resource type="Resource" id="Resource_7o3jd"]
 script = ExtResource("2_n3r6l")
-source_event = SubResource("Resource_y55l8")
-output_events = Array[Resource("res://core/systems/input/mappable_event.gd")]([SubResource("Resource_ow8of")])
+name = "Guide Button"
+source_event = SubResource("Resource_m8sup")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_pqmya")])
 
 [resource]
-script = ExtResource("1_2f7yt")
+script = ExtResource("4_8luto")
 name = "Default QAM Only"
-mapping = Array[ExtResource("2_n3r6l")]([SubResource("Resource_xdyc4")])
+mapping = Array[ExtResource("2_n3r6l")]([SubResource("Resource_7o3jd")])

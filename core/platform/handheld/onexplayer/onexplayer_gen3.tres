@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=25 format=3 uid="uid://dovokv0cb3hwr"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=30 format=3 uid="uid://dovokv0cb3hwr"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="2_ch1og"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_yuimw"]
@@ -80,6 +80,28 @@ name = "Keyboard Button"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_xghyy"), SubResource("Resource_cjbm7"), SubResource("Resource_612eh")])
 emits = SubResource("Resource_d7or8")
 
+[sub_resource type="Resource" id="Resource_btry2"]
+script = ExtResource("2_yuimw")
+code = "KEY_LEFTCTRL"
+
+[sub_resource type="Resource" id="Resource_nmvjt"]
+script = ExtResource("2_yuimw")
+code = "KEY_LEFTALT"
+
+[sub_resource type="Resource" id="Resource_y3yxu"]
+script = ExtResource("2_yuimw")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_4bgbp"]
+script = ExtResource("3_tyhrl")
+name = "qam"
+
+[sub_resource type="Resource" id="Resource_47c2u"]
+script = ExtResource("4_u5dfo")
+name = "Turbo Button"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_btry2"), SubResource("Resource_nmvjt"), SubResource("Resource_y3yxu")])
+emits = SubResource("Resource_4bgbp")
+
 [sub_resource type="Resource" id="Resource_n8g32"]
 script = ExtResource("2_ch1og")
 phys_path = "isa0060/serio0/input0"
@@ -90,7 +112,7 @@ script = ExtResource("6_rpyus")
 
 [resource]
 script = ExtResource("5_lwx34")
-key_map = Array[ExtResource("4_u5dfo")]([SubResource("Resource_odcuy"), SubResource("Resource_pytt3"), SubResource("Resource_ihw37"), SubResource("Resource_b1qd4")])
+key_map = Array[ExtResource("4_u5dfo")]([SubResource("Resource_odcuy"), SubResource("Resource_pytt3"), SubResource("Resource_ihw37"), SubResource("Resource_b1qd4"), SubResource("Resource_47c2u")])
 keypads = Array[ExtResource("2_ch1og")]([SubResource("Resource_n8g32")])
 gamepad = SubResource("Resource_6dj5i")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

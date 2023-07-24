@@ -35,6 +35,8 @@ const input_thread := preload("res://core/systems/threading/input_thread.tres")
 const input_default_path := "/dev/input"
 const input_hidden_path := "/dev/input/.hidden"
 
+var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
+
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -82,6 +84,11 @@ func input(event: InputEvent) -> bool:
 	# Main menu events
 	if event.is_action("ogui_menu"):
 		_main_menu_input(event)
+		return true
+
+	# Audio events
+	if event.is_action("ogui_volume_down") or event.is_action("ogui_volume_up") or event.is_action("ogui_volume_mute"):
+		_audio_input(event)
 		return true
 
 	# Handle guide action release events
@@ -173,6 +180,22 @@ func _osk_input(event: InputEvent) -> void:
 		state_machine.replace_state(osk_state)
 	else:
 		state_machine.push_state(osk_state)
+
+
+func _audio_input(event: InputEvent) -> void:
+	# Only act on press events
+	if not event.is_pressed():
+		return
+	
+	if event.is_action("ogui_volume_mute"):
+		audio_manager.call_deferred("toggle_mute")
+		return
+	if event.is_action("ogui_volume_down"):
+		audio_manager.call_deferred("set_volume", -0.06, audio_manager.VOLUME.RELATIVE)
+		return
+	if event.is_action("ogui_volume_up"):
+		audio_manager.call_deferred("set_volume", 0.06, audio_manager.VOLUME.RELATIVE)
+		return
 
 
 func _action_release(action: String, strength: float = 1.0) -> void:

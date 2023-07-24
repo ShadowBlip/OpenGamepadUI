@@ -25,7 +25,7 @@ enum AXIS_PRESSED {
 
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var mode := INTERCEPT_MODE.ALL
-var profile: GamepadProfile
+var profile := load("res://assets/gamepad/profiles/default.tres") as GamepadProfile
 var xwayland := gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 var mutex := Mutex.new()
 
@@ -183,6 +183,10 @@ func set_mode(intercept_mode: INTERCEPT_MODE) -> void:
 ## Set the managed gamepad to use the given gamepad profile for translating
 ## input events into other input events
 func set_profile(gamepad_profile: GamepadProfile) -> void:
+	var profile_name := "null"
+	if gamepad_profile:
+		profile_name = gamepad_profile.name
+	logger.debug("Setting gamepad profile to: " + profile_name)
 	mutex.lock()
 	profile = gamepad_profile
 	mutex.unlock()
@@ -267,7 +271,7 @@ func _process_mappable_event(event: MappableEvent, delta: float) -> void:
 		_process_phys_event(event.to_input_device_event(), delta)
 		return
 	if event is NativeEvent:
-		pass
+		_send_input_event(event.event)
 	if event is HandheldEvent:
 		# TODO: fix this
 		#inject_event(event) #?
@@ -564,6 +568,11 @@ func _translate_event(event: MappableEvent, delta: float) -> Array[MappableEvent
 			continue
 		if not mapping.source_event.matches(event):
 			continue
+		
+		# Set the value from the source event
+		for out_event in mapping.output_events:
+			out_event.set_value(event.get_value())
+		
 		return mapping.output_events
 	
 	return [event]
@@ -816,6 +825,12 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.strength = strength
 	input_action.set_meta("managed_gamepad", phys_path)
 	Input.parse_input_event(input_action)
+
+
+# Sends an input action to the event queue
+func _send_input_event(event: InputEvent) -> void:
+	event.set_meta("managed_gamepad", phys_path)
+	Input.parse_input_event(event)
 
 
 # Sends joy motion input to the event queue

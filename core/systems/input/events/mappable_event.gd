@@ -10,3 +10,11 @@ class_name MappableEvent
 ## child implementation.
 func matches(event: MappableEvent) -> bool:
 	return false
+
+
+func set_value(value: float) -> void:
+	pass
+
+
+func get_value() -> float:
+	return 0

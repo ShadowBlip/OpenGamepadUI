@@ -14,3 +14,11 @@ func matches(event: MappableEvent) -> bool:
 	if event.name == name:
 		return true
 	return false
+
+
+func set_value(v: float) -> void:
+	value = v
+
+
+func get_value() -> float:
+	return value

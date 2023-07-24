@@ -24,6 +24,14 @@ func equals(event: MappableEvent) -> bool:
 		event.input_device_event.value == input_device_event.value
 
 
+func set_value(value: float) -> void:
+	input_device_event.value = value
+
+
+func get_value() -> float:
+	return input_device_event.value
+
+
 func get_event_type() -> int:
 	return input_device_event.type
 

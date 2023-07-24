@@ -8,6 +8,9 @@ class_name GamepadMapping
 ## GamepadMappings are part of a [GamepadProfile], which defines the input
 ## mapping of gamepad input to another type of input.
 
+## Optional name of the gamepad mapping
+@export var name: String
+
 ## A mappable event to translate from
 @export var source_event: MappableEvent
 

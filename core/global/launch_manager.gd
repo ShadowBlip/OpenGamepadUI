@@ -314,8 +314,8 @@ func set_gamepad_profile(path: String) -> void:
 	var profile := load(path)
 
 	# TODO: Save profiles for individual controllers?
-	for gamepad in InputManager.get_managed_gamepads():
-		InputManager.set_gamepad_profile(gamepad, profile)
+	for gamepad in gamepad_manager.get_gamepad_paths():
+		gamepad_manager.set_gamepad_profile(gamepad, profile)
 	if not profile:
 		logger.warn("Gamepad profile not found: " + path)
 		return
