@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=30 format=3 uid="uid://dovokv0cb3hwr"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=42 format=3 uid="uid://dovokv0cb3hwr"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="2_ch1og"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_yuimw"]
-[ext_resource type="Script" path="res://core/systems/input/events/handheld_event.gd" id="3_tyhrl"]
 [ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="4_u5dfo"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="5_lwx34"]
 [ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="6_rpyus"]
@@ -16,29 +15,29 @@ name = "Microsoft X-Box 360 pad"
 script = ExtResource("2_yuimw")
 code = "KEY_VOLUMEUP"
 
-[sub_resource type="Resource" id="Resource_v2mf8"]
-script = ExtResource("3_tyhrl")
-name = "volume_up"
+[sub_resource type="Resource" id="Resource_mcl67"]
+script = ExtResource("2_yuimw")
+code = "KEY_VOLUMEUP"
 
 [sub_resource type="Resource" id="Resource_odcuy"]
 script = ExtResource("4_u5dfo")
 name = "Volume Up"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_vl35m")])
-emits = SubResource("Resource_v2mf8")
+emits = SubResource("Resource_mcl67")
 
 [sub_resource type="Resource" id="Resource_p2okv"]
 script = ExtResource("2_yuimw")
 code = "KEY_VOLUMEDOWN"
 
-[sub_resource type="Resource" id="Resource_5g2tu"]
-script = ExtResource("3_tyhrl")
-name = "volume_down"
+[sub_resource type="Resource" id="Resource_bbfva"]
+script = ExtResource("2_yuimw")
+code = "KEY_VOLUMEDOWN"
 
 [sub_resource type="Resource" id="Resource_pytt3"]
 script = ExtResource("4_u5dfo")
 name = "Volume Down"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_p2okv")])
-emits = SubResource("Resource_5g2tu")
+emits = SubResource("Resource_bbfva")
 
 [sub_resource type="Resource" id="Resource_lsrmj"]
 script = ExtResource("2_yuimw")
@@ -48,15 +47,15 @@ code = "KEY_D"
 script = ExtResource("2_yuimw")
 code = "KEY_LEFTMETA"
 
-[sub_resource type="Resource" id="Resource_55vbm"]
-script = ExtResource("3_tyhrl")
-name = "mode"
+[sub_resource type="Resource" id="Resource_x0hly"]
+script = ExtResource("2_yuimw")
+code = "BTN_MODE"
 
 [sub_resource type="Resource" id="Resource_ihw37"]
 script = ExtResource("4_u5dfo")
-name = "Orange Button"
+name = "Orange Button (Short Press)"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_lsrmj"), SubResource("Resource_e25ui")])
-emits = SubResource("Resource_55vbm")
+emits = SubResource("Resource_x0hly")
 
 [sub_resource type="Resource" id="Resource_xghyy"]
 script = ExtResource("2_yuimw")
@@ -70,15 +69,15 @@ code = "KEY_RIGHTCTRL"
 script = ExtResource("2_yuimw")
 code = "KEY_LEFTMETA"
 
-[sub_resource type="Resource" id="Resource_d7or8"]
-script = ExtResource("3_tyhrl")
-name = "keyboard"
+[sub_resource type="Resource" id="Resource_7nqv7"]
+script = ExtResource("2_yuimw")
+code = "KEY_KEYBOARD"
 
 [sub_resource type="Resource" id="Resource_b1qd4"]
 script = ExtResource("4_u5dfo")
 name = "Keyboard Button"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_xghyy"), SubResource("Resource_cjbm7"), SubResource("Resource_612eh")])
-emits = SubResource("Resource_d7or8")
+emits = SubResource("Resource_7nqv7")
 
 [sub_resource type="Resource" id="Resource_btry2"]
 script = ExtResource("2_yuimw")
@@ -92,15 +91,73 @@ code = "KEY_LEFTALT"
 script = ExtResource("2_yuimw")
 code = "KEY_LEFTMETA"
 
-[sub_resource type="Resource" id="Resource_4bgbp"]
-script = ExtResource("3_tyhrl")
-name = "qam"
+[sub_resource type="Resource" id="Resource_6y0pk"]
+script = ExtResource("2_yuimw")
+code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_47c2u"]
 script = ExtResource("4_u5dfo")
 name = "Turbo Button"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_btry2"), SubResource("Resource_nmvjt"), SubResource("Resource_y3yxu")])
-emits = SubResource("Resource_4bgbp")
+emits = SubResource("Resource_6y0pk")
+
+[sub_resource type="Resource" id="Resource_fce2w"]
+script = ExtResource("2_yuimw")
+code = "KEY_G"
+
+[sub_resource type="Resource" id="Resource_64y4m"]
+script = ExtResource("2_yuimw")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_681q5"]
+script = ExtResource("2_yuimw")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_xa2m0"]
+script = ExtResource("4_u5dfo")
+name = "Orange Button (Long Press)"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_fce2w"), SubResource("Resource_64y4m")])
+emits = SubResource("Resource_681q5")
+
+[sub_resource type="Resource" id="Resource_0jt6t"]
+script = ExtResource("2_yuimw")
+code = "KEY_RIGHTCTRL"
+
+[sub_resource type="Resource" id="Resource_s8u3r"]
+script = ExtResource("2_yuimw")
+code = "KEY_RIGHTALT"
+
+[sub_resource type="Resource" id="Resource_86jev"]
+script = ExtResource("2_yuimw")
+code = "KEY_DELETE"
+
+[sub_resource type="Resource" id="Resource_7v81q"]
+script = ExtResource("2_yuimw")
+code = "BTN_BASE3"
+
+[sub_resource type="Resource" id="Resource_y72yf"]
+script = ExtResource("4_u5dfo")
+name = "Keyboard Button + Orange Button"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_0jt6t"), SubResource("Resource_s8u3r"), SubResource("Resource_86jev")])
+emits = SubResource("Resource_7v81q")
+
+[sub_resource type="Resource" id="Resource_eii0f"]
+script = ExtResource("2_yuimw")
+code = "KEY_SYSRQ"
+
+[sub_resource type="Resource" id="Resource_1tjua"]
+script = ExtResource("2_yuimw")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_27k3p"]
+script = ExtResource("2_yuimw")
+code = "BTN_BASE4"
+
+[sub_resource type="Resource" id="Resource_60tpn"]
+script = ExtResource("4_u5dfo")
+name = "Turbo Button + Orange Button"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_eii0f"), SubResource("Resource_1tjua")])
+emits = SubResource("Resource_27k3p")
 
 [sub_resource type="Resource" id="Resource_n8g32"]
 script = ExtResource("2_ch1og")
@@ -112,7 +169,7 @@ script = ExtResource("6_rpyus")
 
 [resource]
 script = ExtResource("5_lwx34")
-key_map = Array[ExtResource("4_u5dfo")]([SubResource("Resource_odcuy"), SubResource("Resource_pytt3"), SubResource("Resource_ihw37"), SubResource("Resource_b1qd4"), SubResource("Resource_47c2u")])
+key_map = Array[ExtResource("4_u5dfo")]([SubResource("Resource_odcuy"), SubResource("Resource_pytt3"), SubResource("Resource_ihw37"), SubResource("Resource_b1qd4"), SubResource("Resource_47c2u"), SubResource("Resource_xa2m0"), SubResource("Resource_y72yf"), SubResource("Resource_60tpn")])
 keypads = Array[ExtResource("2_ch1og")]([SubResource("Resource_n8g32")])
 gamepad = SubResource("Resource_6dj5i")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

@@ -2,14 +2,15 @@ extends Control
 
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var qam_state = preload("res://assets/state/states/quick_access_menu.tres") as State
+var settings_state = preload("res://assets/state/states/settings.tres") as State
+var home_state = preload("res://assets/state/states/home.tres") as State
+
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
 var input_manager := load("res://core/global/input_manager.tres") as InputManager
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-
-var qam_state = preload("res://assets/state/states/quick_access_menu.tres")
-var settings_state = preload("res://assets/state/states/settings.tres")
-var home_state = preload("res://assets/state/states/home.tres")
+var default_gamepad_profile := load("res://assets/gamepad/profiles/default_only_qam.tres") as GamepadProfile
 
 var args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
@@ -38,6 +39,11 @@ func _init():
 	var plugin_manager_scene := load("res://core/systems/plugin/plugin_manager.tscn") as PackedScene
 	var plugin_manager := plugin_manager_scene.instantiate()
 	add_child(plugin_manager)
+
+	# Set up our default gamepad profiles.
+	gamepad_manager.default_profile = "res://assets/gamepad/profiles/default_only_qam.tres"
+	for gamepad in gamepad_manager.get_gamepad_paths():
+		gamepad_manager.set_gamepad_profile(gamepad, default_gamepad_profile)
 
 
 ## Starts the --only-qam/--qam-only session.

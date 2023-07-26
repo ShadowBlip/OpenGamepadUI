@@ -85,24 +85,30 @@ func _process_event(event: EvdevEvent) -> void:
 		_on_key_up(event)
 		return
 
+	_on_key_down(event)
+	_check_mapped_events(event.get_event_value())
+
+## Called for key down events.
+func _on_key_down(event: EvdevEvent) -> void:
 	# Block adding the same active event twice
 	if _find_active_key(event) >= 0:
 		logger.debug("Already Active! Keys:")
 		for key in active_keys:
 			logger.debug(str(key.get_event_type()) + " : " +str(key.get_event_code()) + " : " +str(key.get_event_value()))
 		return
-
-	_on_key_down(event)
-
-
-## Called for key down events.
-func _on_key_down(event: EvdevEvent) -> void:
+	
+	# Update existing keys if the value changed
+	var idx := _find_updatable_key(event)
+	if idx >= 0:
+		logger.debug("Found updatable key!")
+		active_keys[idx].set_value(event.get_value())
+		return
+		
 	logger.debug("______ Key __DOWN__ event ______")
 	active_keys.insert(active_keys.bsearch_custom(event, _sort_events), event)
 	logger.debug("Active keys:")
 	for key in active_keys:
 		logger.debug(str(key.get_event_type()) + " : " +str(key.get_event_code()) + " : " +str(key.get_event_value()))
-	_check_mapped_events(event.get_event_value())
 
 
 ## Called for key up events.
@@ -129,25 +135,6 @@ func _on_key_up(event: EvdevEvent) -> bool:
 	return false
 
 
-## Translates the given event to an AudioManager event.
-#func _do_audio_event(event_type: int, event_code: int, event_value: int) -> void:
-#	# Ignore key up events.
-#	if event_value == 0:
-#		logger.debug("Got key_up event for audio_event")
-#		return
-#	logger.debug("Got audio event: " + str(event_code) + str(event_value))
-#	var return_code: int
-#	match event_code:
-#		InputDeviceEvent.KEY_MUTE:
-#			AudioManager.call_deferred("toggle_mute")
-#		InputDeviceEvent.KEY_VOLUMEDOWN:
-#			AudioManager.call_deferred("set_volume", -0.06, AudioManager.VOLUME.RELATIVE)
-#		InputDeviceEvent.KEY_VOLUMEUP:
-#			AudioManager.call_deferred("set_volume", 0.06, AudioManager.VOLUME.RELATIVE)
-#		_:
-#			logger.warn("Event with type" + str(event_type) + " and code: " + str(event_code) + " is not supported.")
-
-
 ## Called after processing all events in the event loop. Checks if our current
 ## active_keys matches any of our mapped events.
 func _check_mapped_events(value: float) -> void:
@@ -162,10 +149,9 @@ func _check_mapped_events(value: float) -> void:
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
 
-		logger.debug("Found a matching event. Emitting event: " + mapped_event.emits.name)
-		var event := HandheldEvent.new()
-		event.name = mapped_event.emits.name
-		event.value = value
+		logger.debug("Found a matching event. Emitting event: " + str(mapped_event.emits.code))
+		var event := mapped_event.emits.duplicate(true)
+		event.set_value(value)
 		inject_event(event)
 
 
@@ -175,6 +161,16 @@ func _find_active_key(event: EvdevEvent) -> int:
 		if active_keys[i].get_event_type() == event.get_event_type() and \
 		active_keys[i].get_event_code() == event.get_event_code() and \
 		active_keys[i].get_event_value() == event.get_event_value():
+			return i
+	return -1
+
+
+## Returns the index of an active key who's value does not match.
+func _find_updatable_key(event: EvdevEvent) -> int:
+	for i in active_keys.size():
+		if active_keys[i].get_event_type() == event.get_event_type() and \
+		active_keys[i].get_event_code() == event.get_event_code() and \
+		active_keys[i].get_event_value() != event.get_event_value():
 			return i
 	return -1
 

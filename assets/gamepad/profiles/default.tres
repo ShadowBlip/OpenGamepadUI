@@ -1,58 +1,9 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=25 format=3 uid="uid://cyle0fus6d240"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=28 format=3 uid="uid://cyle0fus6d240"]
 
 [ext_resource type="Script" path="res://core/systems/input/events/native_event.gd" id="1_4tblf"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_bqbkr"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="1_s8n2e"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="2_immjq"]
-[ext_resource type="Script" path="res://core/systems/input/events/handheld_event.gd" id="3_x57y8"]
-
-[sub_resource type="Resource" id="Resource_omind"]
-script = ExtResource("1_s8n2e")
-code = "BTN_MODE"
-
-[sub_resource type="Resource" id="Resource_00ch8"]
-script = ExtResource("3_x57y8")
-name = "mode"
-
-[sub_resource type="Resource" id="Resource_3q33q"]
-script = ExtResource("2_immjq")
-name = "Guide Button"
-source_event = SubResource("Resource_00ch8")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_omind")])
-
-[sub_resource type="InputEventAction" id="InputEventAction_ex07q"]
-action = &"ogui_osk"
-
-[sub_resource type="Resource" id="Resource_yh2u0"]
-script = ExtResource("1_4tblf")
-event = SubResource("InputEventAction_ex07q")
-
-[sub_resource type="Resource" id="Resource_a6dd6"]
-script = ExtResource("3_x57y8")
-name = "keyboard"
-
-[sub_resource type="Resource" id="Resource_401l7"]
-script = ExtResource("2_immjq")
-name = "Keyboard Button"
-source_event = SubResource("Resource_a6dd6")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_yh2u0")])
-
-[sub_resource type="InputEventAction" id="InputEventAction_eo3yu"]
-action = &"ogui_qam"
-
-[sub_resource type="Resource" id="Resource_efdbu"]
-script = ExtResource("1_4tblf")
-event = SubResource("InputEventAction_eo3yu")
-
-[sub_resource type="Resource" id="Resource_5onen"]
-script = ExtResource("3_x57y8")
-name = "qam"
-
-[sub_resource type="Resource" id="Resource_qbxr4"]
-script = ExtResource("2_immjq")
-name = "Quick Access Menu"
-source_event = SubResource("Resource_5onen")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_efdbu")])
 
 [sub_resource type="InputEventAction" id="InputEventAction_ebcdv"]
 action = &"ogui_volume_up"
@@ -61,14 +12,14 @@ action = &"ogui_volume_up"
 script = ExtResource("1_4tblf")
 event = SubResource("InputEventAction_ebcdv")
 
-[sub_resource type="Resource" id="Resource_atjka"]
-script = ExtResource("3_x57y8")
-name = "volume_up"
+[sub_resource type="Resource" id="Resource_2ds8y"]
+script = ExtResource("1_s8n2e")
+code = "KEY_VOLUMEUP"
 
 [sub_resource type="Resource" id="Resource_rk08e"]
 script = ExtResource("2_immjq")
 name = "Volume Up"
-source_event = SubResource("Resource_atjka")
+source_event = SubResource("Resource_2ds8y")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_u3ilf")])
 
 [sub_resource type="InputEventAction" id="InputEventAction_r05o1"]
@@ -78,17 +29,82 @@ action = &"ogui_volume_down"
 script = ExtResource("1_4tblf")
 event = SubResource("InputEventAction_r05o1")
 
-[sub_resource type="Resource" id="Resource_wddvb"]
-script = ExtResource("3_x57y8")
-name = "volume_down"
+[sub_resource type="Resource" id="Resource_b17py"]
+script = ExtResource("1_s8n2e")
+code = "KEY_VOLUMEDOWN"
 
 [sub_resource type="Resource" id="Resource_8rua7"]
 script = ExtResource("2_immjq")
 name = "Volume Down"
-source_event = SubResource("Resource_wddvb")
+source_event = SubResource("Resource_b17py")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_v4kpr")])
+
+[sub_resource type="InputEventAction" id="InputEventAction_tylts"]
+action = &"ogui_mute"
+
+[sub_resource type="Resource" id="Resource_elxlw"]
+script = ExtResource("1_4tblf")
+event = SubResource("InputEventAction_tylts")
+
+[sub_resource type="Resource" id="Resource_xr4s0"]
+script = ExtResource("1_s8n2e")
+code = "KEY_MUTE"
+
+[sub_resource type="Resource" id="Resource_eprhf"]
+script = ExtResource("2_immjq")
+name = "Mute"
+source_event = SubResource("Resource_xr4s0")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_elxlw")])
+
+[sub_resource type="Resource" id="Resource_omind"]
+script = ExtResource("1_s8n2e")
+code = "BTN_MODE"
+
+[sub_resource type="Resource" id="Resource_h2fn4"]
+script = ExtResource("1_s8n2e")
+code = "BTN_MODE"
+
+[sub_resource type="Resource" id="Resource_3q33q"]
+script = ExtResource("2_immjq")
+name = "Guide Button"
+source_event = SubResource("Resource_h2fn4")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_omind")])
+
+[sub_resource type="InputEventAction" id="InputEventAction_ex07q"]
+action = &"ogui_osk"
+
+[sub_resource type="Resource" id="Resource_yh2u0"]
+script = ExtResource("1_4tblf")
+event = SubResource("InputEventAction_ex07q")
+
+[sub_resource type="Resource" id="Resource_besls"]
+script = ExtResource("1_s8n2e")
+code = "KEY_KEYBOARD"
+
+[sub_resource type="Resource" id="Resource_401l7"]
+script = ExtResource("2_immjq")
+name = "Keyboard Button"
+source_event = SubResource("Resource_besls")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_yh2u0")])
+
+[sub_resource type="InputEventAction" id="InputEventAction_eo3yu"]
+action = &"ogui_qam"
+
+[sub_resource type="Resource" id="Resource_efdbu"]
+script = ExtResource("1_4tblf")
+event = SubResource("InputEventAction_eo3yu")
+
+[sub_resource type="Resource" id="Resource_l5wf1"]
+script = ExtResource("1_s8n2e")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_qbxr4"]
+script = ExtResource("2_immjq")
+name = "Quick Access Menu"
+source_event = SubResource("Resource_l5wf1")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_efdbu")])
 
 [resource]
 script = ExtResource("1_bqbkr")
 name = "Default"
-mapping = Array[ExtResource("2_immjq")]([SubResource("Resource_3q33q"), SubResource("Resource_401l7"), SubResource("Resource_qbxr4"), SubResource("Resource_rk08e"), SubResource("Resource_8rua7")])
+mapping = Array[ExtResource("2_immjq")]([SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_401l7"), SubResource("Resource_qbxr4")])

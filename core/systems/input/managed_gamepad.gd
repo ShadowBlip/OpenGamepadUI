@@ -272,10 +272,6 @@ func _process_mappable_event(event: MappableEvent, delta: float) -> void:
 		return
 	if event is NativeEvent:
 		_send_input_event(event.event)
-	if event is HandheldEvent:
-		# TODO: fix this
-		#inject_event(event) #?
-		logger.warn("Key mapped to handheld event. Possible race condition.")
 
 
 ## Processes a single physical gamepad event. Depending on the intercept mode,
