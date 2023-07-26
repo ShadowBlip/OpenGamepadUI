@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="APUDatabase" load_steps=7 format=3 uid="uid://bgmsf64bjnhxg"]
+[gd_resource type="Resource" script_class="APUDatabase" load_steps=8 format=3 uid="uid://bgmsf64bjnhxg"]
 
 [ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_7rewb"]
 [ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="2_k20lo"]
@@ -31,7 +31,14 @@ min_tdp = 3.0
 max_tdp = 8.0
 max_boost = 2.0
 
+[sub_resource type="Resource" id="Resource_046e8"]
+script = ExtResource("1_7rewb")
+model_name = "Intel(R) Core(TM) m3-7Y30 CPU @ 1.00GHz"
+min_tdp = 3.0
+max_tdp = 7.0
+max_boost = 2.0
+
 [resource]
 script = ExtResource("2_k20lo")
-apu_list = Array[ExtResource("1_7rewb")]([SubResource("Resource_7mppk"), SubResource("Resource_bceey"), SubResource("Resource_xo814"), SubResource("Resource_fq6fk")])
+apu_list = Array[ExtResource("1_7rewb")]([SubResource("Resource_7mppk"), SubResource("Resource_bceey"), SubResource("Resource_xo814"), SubResource("Resource_fq6fk"), SubResource("Resource_046e8")])
 database_name = ""
