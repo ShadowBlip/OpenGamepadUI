@@ -42,6 +42,19 @@ func setup(keyboards: Array[InputDevice]) -> void:
 		keypads.append(keypad)
 
 
+## Returns the capabilities of the gamepad
+func get_capabilities() -> Array[MappableEvent]:
+	# Get the gamepad capabilities to start with. This is implemented by
+	# [ManagedGamepad].
+	var capabilities := super()
+	var handheld_platform := platform.platform as HandheldPlatform
+	
+	for mapped_event in handheld_platform.key_map:
+		capabilities.append(mapped_event.emits)
+
+	return capabilities
+
+
 ## Main process thread for input translation from one device to another.
 func process_input() -> void:
 	# Call the gamepad's process input

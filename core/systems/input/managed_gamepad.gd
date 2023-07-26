@@ -23,6 +23,14 @@ enum AXIS_PRESSED {
 	RIGHT = 8,
 }
 
+enum ACTION {
+	MENU = InputDeviceEvent.BTN_MODE,
+	QAM = InputDeviceEvent.BTN_BASE,
+	STEAM_QAM = InputDeviceEvent.BTN_BASE2,
+	OSK = InputDeviceEvent.KEY_KEYBOARD,
+	SCREENSHOT = InputDeviceEvent.KEY_PRINT,
+}
+
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var mode := INTERCEPT_MODE.ALL
 var profile := load("res://assets/gamepad/profiles/default.tres") as GamepadProfile
@@ -243,6 +251,35 @@ func inject_event(event: MappableEvent) -> void:
 	var translated_events := _translate_event(event, 0)
 	for translated in translated_events:
 		_process_mappable_event(translated, 0)
+
+
+## Returns the capabilities of the gamepad
+func get_capabilities() -> Array[MappableEvent]:
+	var capabilities: Array[MappableEvent] = []
+	var types := [InputDeviceEvent.EV_KEY, InputDeviceEvent.EV_REL, InputDeviceEvent.EV_ABS]
+	var maxes := [InputDeviceEvent.KEY_MAX, InputDeviceEvent.REL_MAX, InputDeviceEvent.ABS_MAX]
+
+	# Loop through all types we care about
+	var idx := 0
+	for type in types:
+		# Get the total number of codes for this event type
+		var max = maxes[idx]
+
+		# Check every code to see if this gamepad has the event type
+		for code in range(max):
+			if not phys_device.has_event_code(type, code):
+				continue
+			
+			# If the gamepad has the code, add it to our list of capabilities
+			var event := InputDeviceEvent.new()
+			event.type = type
+			event.code = code
+			var evdev_event := EvdevEvent.from_input_device_event(event)
+			capabilities.append(evdev_event)
+		
+		idx += 1
+
+	return capabilities
 
 
 func _on_profile_updated() -> void:
