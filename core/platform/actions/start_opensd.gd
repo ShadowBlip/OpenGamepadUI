@@ -2,6 +2,7 @@ extends PlatformAction
 class_name ActionStartOpenSD
 
 var opensd: OpenSD
+var thread: Thread
 
 
 func execute() -> void:
@@ -24,6 +25,6 @@ func execute() -> void:
 	user_profile.store_buffer(profile_bytes)
 
 	logger.info("Starting OpenSD input thread")
-	var thread := Thread.new()
+	thread = Thread.new()
 	opensd = OpenSD.new()
 	thread.start(opensd.run)
