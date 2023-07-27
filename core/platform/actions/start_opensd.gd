@@ -26,5 +26,6 @@ func execute() -> void:
 
 	logger.info("Starting OpenSD input thread")
 	thread = Thread.new()
+	thread.set_thread_safety_checks_enabled(false)
 	opensd = OpenSD.new()
 	thread.start(opensd.run)
