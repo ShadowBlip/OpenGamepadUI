@@ -5,6 +5,7 @@ var opensd: OpenSD
 
 
 func execute() -> void:
+	DirAccess.make_dir_recursive_absolute("user://data/gamepad/opensd/config")
 	var config := FileAccess.open("res://assets/gamepad/opensd/config/config.ini", FileAccess.READ)
 	var config_bytes := config.get_buffer(20480)
 	var user_config := (
@@ -12,6 +13,7 @@ func execute() -> void:
 	)
 	user_config.store_buffer(config_bytes)
 
+	DirAccess.make_dir_recursive_absolute("user://data/gamepad/opensd/profiles")
 	var profile := (
 		FileAccess.open("res://assets/gamepad/opensd/profiles/default.profile", FileAccess.READ)
 	)
