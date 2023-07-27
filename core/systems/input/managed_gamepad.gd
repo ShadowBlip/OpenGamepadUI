@@ -23,14 +23,6 @@ enum AXIS_PRESSED {
 	RIGHT = 8,
 }
 
-enum ACTION {
-	MENU = InputDeviceEvent.BTN_MODE,
-	QAM = InputDeviceEvent.BTN_BASE,
-	STEAM_QAM = InputDeviceEvent.BTN_BASE2,
-	OSK = InputDeviceEvent.KEY_KEYBOARD,
-	SCREENSHOT = InputDeviceEvent.KEY_PRINT,
-}
-
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var mode := INTERCEPT_MODE.ALL
 var profile := load("res://assets/gamepad/profiles/default.tres") as GamepadProfile
@@ -247,10 +239,14 @@ func process_input() -> void:
 
 
 ## Inject the given event into the event processing queue.
-func inject_event(event: MappableEvent) -> void:
-	var translated_events := _translate_event(event, 0)
+func inject_event(event: MappableEvent, delta: float) -> void:
+	var translated_events := _translate_event(event, delta)
 	for translated in translated_events:
-		_process_mappable_event(translated, 0)
+		if translated is EvdevEvent:
+			logger.debug("Emitting EvdevEvent event: " + str(translated.get_event_type()) + " "+ str(translated.get_event_code()) + " "+ str(translated.get_event_value()))
+		if translated is NativeEvent:
+			logger.debug("Emitting NativeEvent event.")
+		_process_mappable_event(translated, delta)
 
 
 ## Returns the capabilities of the gamepad

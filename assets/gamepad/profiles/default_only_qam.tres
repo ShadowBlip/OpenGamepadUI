@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=40 format=3 uid="uid://6jltbb0duv1f"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=31 format=3 uid="uid://6jltbb0duv1f"]
 
 [ext_resource type="Script" path="res://core/systems/input/events/native_event.gd" id="1_0m7bp"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="2_2nsia"]
@@ -43,17 +43,14 @@ output_events = Array[Resource("res://core/systems/input/events/mappable_event.g
 script = ExtResource("3_u18e3")
 code = "KEY_MUTE"
 
-[sub_resource type="InputEventAction" id="InputEventAction_uw7bc"]
-action = &"ogui_mute"
-
-[sub_resource type="Resource" id="Resource_pafg1"]
-script = ExtResource("1_0m7bp")
-event = SubResource("InputEventAction_uw7bc")
+[sub_resource type="Resource" id="Resource_7gtha"]
+script = ExtResource("3_u18e3")
+code = "KEY_MUTE"
 
 [sub_resource type="Resource" id="Resource_eprhf"]
 script = ExtResource("2_2nsia")
 name = "Mute"
-source_event = SubResource("Resource_pafg1")
+source_event = SubResource("Resource_7gtha")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_3bx2g")])
 
 [sub_resource type="Resource" id="Resource_omind"]
@@ -70,40 +67,6 @@ name = "Guide Button"
 source_event = SubResource("Resource_h2fn4")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_omind")])
 
-[sub_resource type="InputEventAction" id="InputEventAction_ex07q"]
-action = &"ogui_osk"
-
-[sub_resource type="Resource" id="Resource_yh2u0"]
-script = ExtResource("1_0m7bp")
-event = SubResource("InputEventAction_ex07q")
-
-[sub_resource type="Resource" id="Resource_besls"]
-script = ExtResource("3_u18e3")
-code = "KEY_KEYBOARD"
-
-[sub_resource type="Resource" id="Resource_401l7"]
-script = ExtResource("2_2nsia")
-name = "Keyboard Button"
-source_event = SubResource("Resource_besls")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_yh2u0")])
-
-[sub_resource type="InputEventAction" id="InputEventAction_eo3yu"]
-action = &"ogui_qam"
-
-[sub_resource type="Resource" id="Resource_efdbu"]
-script = ExtResource("1_0m7bp")
-event = SubResource("InputEventAction_eo3yu")
-
-[sub_resource type="Resource" id="Resource_l5wf1"]
-script = ExtResource("3_u18e3")
-code = "BTN_BASE"
-
-[sub_resource type="Resource" id="Resource_qbxr4"]
-script = ExtResource("2_2nsia")
-name = "Quick Access Menu"
-source_event = SubResource("Resource_l5wf1")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_efdbu")])
-
 [sub_resource type="Resource" id="Resource_68j88"]
 script = ExtResource("3_u18e3")
 code = "BTN_MODE"
@@ -114,7 +77,7 @@ code = "BTN_SOUTH"
 
 [sub_resource type="Resource" id="Resource_4imjf"]
 script = ExtResource("3_u18e3")
-code = "BTN_BASE2"
+code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_bfjp4"]
 script = ExtResource("2_2nsia")
@@ -122,43 +85,42 @@ name = "Steam QAM"
 source_event = SubResource("Resource_4imjf")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_68j88"), SubResource("Resource_b71yn")])
 
-[sub_resource type="Resource" id="Resource_14fir"]
+[sub_resource type="InputEventAction" id="InputEventAction_eo3yu"]
+action = &"ogui_qam"
+
+[sub_resource type="Resource" id="Resource_efdbu"]
+script = ExtResource("1_0m7bp")
+event = SubResource("InputEventAction_eo3yu")
+
+[sub_resource type="Resource" id="Resource_l5wf1"]
+script = ExtResource("3_u18e3")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_qbxr4"]
+script = ExtResource("2_2nsia")
+name = "Quick Access Menu"
+source_event = SubResource("Resource_l5wf1")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_efdbu")])
+
+[sub_resource type="Resource" id="Resource_r2fk4"]
 script = ExtResource("3_u18e3")
 code = "BTN_MODE"
 
-[sub_resource type="Resource" id="Resource_2f6i1"]
+[sub_resource type="Resource" id="Resource_pbhsi"]
 script = ExtResource("3_u18e3")
 code = "BTN_NORTH"
 
-[sub_resource type="Resource" id="Resource_mbcpt"]
+[sub_resource type="Resource" id="Resource_toqh3"]
 script = ExtResource("3_u18e3")
-code = "BTN_BASE3"
+code = "KEY_KEYBOARD"
 
-[sub_resource type="Resource" id="Resource_jij6y"]
+[sub_resource type="Resource" id="Resource_y7ey2"]
 script = ExtResource("2_2nsia")
-name = "Steam OSK"
-source_event = SubResource("Resource_mbcpt")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_14fir"), SubResource("Resource_2f6i1")])
-
-[sub_resource type="Resource" id="Resource_bwp41"]
-script = ExtResource("3_u18e3")
-code = "BTN_MODE"
-
-[sub_resource type="Resource" id="Resource_bu53d"]
-script = ExtResource("3_u18e3")
-code = "BTN_TR"
-
-[sub_resource type="Resource" id="Resource_j75cg"]
-script = ExtResource("3_u18e3")
-code = "BTN_BASE4"
-
-[sub_resource type="Resource" id="Resource_2a7as"]
-script = ExtResource("2_2nsia")
-name = "Steam Screenshot"
-source_event = SubResource("Resource_j75cg")
-output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_bwp41"), SubResource("Resource_bu53d")])
+name = "OSK"
+source_event = SubResource("Resource_toqh3")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_r2fk4"), SubResource("Resource_pbhsi")])
 
 [resource]
 script = ExtResource("5_dw2tg")
 name = "Default"
-mapping = Array[ExtResource("2_2nsia")]([SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_401l7"), SubResource("Resource_qbxr4"), SubResource("Resource_bfjp4"), SubResource("Resource_jij6y"), SubResource("Resource_2a7as")])
+mapping = Array[ExtResource("2_2nsia")]([SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_bfjp4"), SubResource("Resource_qbxr4"), SubResource("Resource_y7ey2")])

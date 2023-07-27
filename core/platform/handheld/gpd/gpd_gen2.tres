@@ -1,0 +1,83 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=19 format=3 uid="uid://dm6yeoute2xgc"]
+
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_lc231"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_n1mvd"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_y41h5"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_6sx5t"]
+
+[sub_resource type="Resource" id="Resource_gba37"]
+script = ExtResource("1_lc231")
+phys_path = "usb-0000:74:00.3-3/input0"
+name = "Microsoft X-Box 360 pad"
+
+[sub_resource type="Resource" id="Resource_efbap"]
+script = ExtResource("2_n1mvd")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_skaxw"]
+script = ExtResource("2_n1mvd")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_gmed6"]
+script = ExtResource("3_y41h5")
+name = "Volume Up"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_efbap")])
+emits = SubResource("Resource_skaxw")
+
+[sub_resource type="Resource" id="Resource_l8u3c"]
+script = ExtResource("2_n1mvd")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_d2nwm"]
+script = ExtResource("2_n1mvd")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_2pekw"]
+script = ExtResource("3_y41h5")
+name = "Volume Down"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_l8u3c")])
+emits = SubResource("Resource_d2nwm")
+
+[sub_resource type="Resource" id="Resource_gc4ci"]
+script = ExtResource("2_n1mvd")
+code = "KEY_0"
+
+[sub_resource type="Resource" id="Resource_14g7q"]
+script = ExtResource("2_n1mvd")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_yo3b5"]
+script = ExtResource("3_y41h5")
+name = "Back L"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_gc4ci")])
+emits = SubResource("Resource_14g7q")
+
+[sub_resource type="Resource" id="Resource_hppkg"]
+script = ExtResource("2_n1mvd")
+code = "KEY_9"
+
+[sub_resource type="Resource" id="Resource_ljqav"]
+script = ExtResource("2_n1mvd")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_pmg1b"]
+script = ExtResource("3_y41h5")
+name = "Back R"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_hppkg")])
+emits = SubResource("Resource_ljqav")
+
+[sub_resource type="Resource" id="Resource_14far"]
+script = ExtResource("1_lc231")
+phys_path = "usb-0000:74:00.3-4/input0"
+name = "  Mouse for Windows"
+
+[resource]
+script = ExtResource("4_6sx5t")
+key_map = Array[ExtResource("3_y41h5")]([SubResource("Resource_gmed6"), SubResource("Resource_2pekw"), SubResource("Resource_yo3b5"), SubResource("Resource_pmg1b")])
+keypads = Array[ExtResource("1_lc231")]([SubResource("Resource_14far")])
+gamepad = SubResource("Resource_gba37")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

@@ -14,7 +14,7 @@ var keypads: Array[Keypad]
 
 func _init() -> void:
 	logger = Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
-
+	
 
 ## Setup the given keyboard devices for the handheld gamepad
 func setup(keyboards: Array[InputDevice]) -> void:
@@ -59,6 +59,11 @@ func get_capabilities() -> Array[MappableEvent]:
 func process_input() -> void:
 	# Call the gamepad's process input
 	super()
+	# Calculate the amount of time that has passed since last invocation
+	var current_time := Time.get_ticks_usec()
+	var delta_us := current_time - _last_time
+	_last_time = current_time
+	var delta := delta_us / 1000000.0  # Convert to seconds
 
 	# Process the input for all handheld keypads
 	for keypad in keypads:
@@ -80,11 +85,11 @@ func process_input() -> void:
 			if not event or not event is InputDeviceEvent:
 				continue
 			var evdev_event := EvdevEvent.from_input_device_event(event)
-			_process_event(evdev_event)
+			_process_event(evdev_event, delta)
 
 
 ## Called to handle an individual event. Sets the active keys.
-func _process_event(event: EvdevEvent) -> void:
+func _process_event(event: EvdevEvent, delta: float) -> void:
 	# Always skip anything thats not a button
 	if event.get_event_type() != InputDeviceEvent.EV_KEY:
 		return
@@ -95,11 +100,11 @@ func _process_event(event: EvdevEvent) -> void:
 	# release event, remove active keys
 	logger.debug("event: type " + str(event.get_event_type()) + " event: code " + str(event.get_event_code()) + " value " + str(event.get_event_value()))
 	if event.get_event_value() == 0:
-		_on_key_up(event)
+		_on_key_up(event, delta)
 		return
 
 	_on_key_down(event)
-	_check_mapped_events(event.get_event_value())
+	_check_mapped_events(event.get_event_value(), delta)
 
 ## Called for key down events.
 func _on_key_down(event: EvdevEvent) -> void:
@@ -125,7 +130,7 @@ func _on_key_down(event: EvdevEvent) -> void:
 
 
 ## Called for key up events.
-func _on_key_up(event: EvdevEvent) -> bool:
+func _on_key_up(event: EvdevEvent, delta: float) -> bool:
 	# Ignore if the active keys list is empty.
 	if active_keys.size() == 0:
 		return false
@@ -135,7 +140,7 @@ func _on_key_up(event: EvdevEvent) -> bool:
 	for active_key in active_keys:
 		if not event.matches(active_key):
 			continue
-		_check_mapped_events(event.get_event_value())
+		_check_mapped_events(event.get_event_value(), delta)
 		to_remove.append(active_key)
 		
 	for key in to_remove:
@@ -150,7 +155,7 @@ func _on_key_up(event: EvdevEvent) -> bool:
 
 ## Called after processing all events in the event loop. Checks if our current
 ## active_keys matches any of our mapped events.
-func _check_mapped_events(value: float) -> void:
+func _check_mapped_events(value: float, delta: float) -> void:
 	if not platform or not platform.platform is HandheldPlatform:
 		logger.debug("No handheld platform was defined!")
 		return
@@ -165,7 +170,7 @@ func _check_mapped_events(value: float) -> void:
 		logger.debug("Found a matching event. Emitting event: " + str(mapped_event.emits.code))
 		var event := mapped_event.emits.duplicate(true)
 		event.set_value(value)
-		inject_event(event)
+		inject_event(event, delta)
 
 
 ## Returns the index of an active key.

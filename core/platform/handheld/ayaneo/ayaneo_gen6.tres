@@ -1,136 +1,136 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=32 format=3 uid="uid://bc0rt8d4se0yn"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=32 format=3 uid="uid://bvja1hpq8op60"]
 
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_b43aa"]
-[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_h6gu1"]
-[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_x88xb"]
-[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_jjdtm"]
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_woe8e"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_patfy"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_pfftb"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_ja36v"]
 
 [sub_resource type="Resource" id="Resource_a2xky"]
-script = ExtResource("1_h6gu1")
-phys_path = "usb-0000:e4:00.3-4/input0"
+script = ExtResource("1_woe8e")
+phys_path = "usb-0000:c4:00.3-4/input0"
 name = "Microsoft X-Box 360 pad"
 
 [sub_resource type="Resource" id="Resource_ksrde"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_VOLUMEUP"
 
 [sub_resource type="Resource" id="Resource_pynbt"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_VOLUMEUP"
 
 [sub_resource type="Resource" id="Resource_vh16k"]
-script = ExtResource("3_jjdtm")
+script = ExtResource("3_pfftb")
 name = "Volume Up"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_ksrde")])
 emits = SubResource("Resource_pynbt")
 
 [sub_resource type="Resource" id="Resource_j8ifh"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_VOLUMEDOWN"
 
 [sub_resource type="Resource" id="Resource_5kiqp"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_VOLUMEDOWN"
 
-[sub_resource type="Resource" id="Resource_nmcdc"]
-script = ExtResource("3_jjdtm")
+[sub_resource type="Resource" id="Resource_rv0n8"]
+script = ExtResource("3_pfftb")
 name = "Volume Down"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_j8ifh")])
 emits = SubResource("Resource_5kiqp")
 
 [sub_resource type="Resource" id="Resource_g8dtl"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_RIGHTCTRL"
 
 [sub_resource type="Resource" id="Resource_etscv"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_LEFTMETA"
 
 [sub_resource type="Resource" id="Resource_hpe38"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_F17"
 
 [sub_resource type="Resource" id="Resource_vt8ps"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "BTN_MODE"
 
 [sub_resource type="Resource" id="Resource_a8808"]
-script = ExtResource("3_jjdtm")
+script = ExtResource("3_pfftb")
 name = "Aya Space"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_g8dtl"), SubResource("Resource_etscv"), SubResource("Resource_hpe38")])
 emits = SubResource("Resource_vt8ps")
 
 [sub_resource type="Resource" id="Resource_w24iw"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_D"
 
 [sub_resource type="Resource" id="Resource_dt4ei"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_LEFTMETA"
 
 [sub_resource type="Resource" id="Resource_ko31g"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_clufh"]
-script = ExtResource("3_jjdtm")
+script = ExtResource("3_pfftb")
 name = "Small Buttton"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_w24iw"), SubResource("Resource_dt4ei")])
 emits = SubResource("Resource_ko31g")
 
 [sub_resource type="Resource" id="Resource_tp3ty"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_RIGHTCTRL"
 
 [sub_resource type="Resource" id="Resource_bxrkn"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_LEFTMETA"
 
 [sub_resource type="Resource" id="Resource_fpy0o"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_F15"
 
 [sub_resource type="Resource" id="Resource_jwpf3"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_KEYBOARD"
 
 [sub_resource type="Resource" id="Resource_wmiya"]
-script = ExtResource("3_jjdtm")
+script = ExtResource("3_pfftb")
 name = "LC"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_tp3ty"), SubResource("Resource_bxrkn"), SubResource("Resource_fpy0o")])
 emits = SubResource("Resource_jwpf3")
 
 [sub_resource type="Resource" id="Resource_ul1m7"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_RIGHTCTRL"
 
 [sub_resource type="Resource" id="Resource_qjyik"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_LEFTMETA"
 
 [sub_resource type="Resource" id="Resource_uxqrk"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "KEY_F16"
 
 [sub_resource type="Resource" id="Resource_rmd8q"]
-script = ExtResource("2_x88xb")
+script = ExtResource("2_patfy")
 code = "BTN_BASE2"
 
 [sub_resource type="Resource" id="Resource_0dj2j"]
-script = ExtResource("3_jjdtm")
+script = ExtResource("3_pfftb")
 name = "RC"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_ul1m7"), SubResource("Resource_qjyik"), SubResource("Resource_uxqrk")])
 emits = SubResource("Resource_rmd8q")
 
 [sub_resource type="Resource" id="Resource_hfr1a"]
-script = ExtResource("1_h6gu1")
+script = ExtResource("1_woe8e")
 phys_path = "isa0060/serio0/input0"
 name = "AT Translated Set 2 keyboard"
 
 [resource]
-script = ExtResource("1_b43aa")
-key_map = Array[ExtResource("3_jjdtm")]([SubResource("Resource_vh16k"), SubResource("Resource_nmcdc"), SubResource("Resource_a8808"), SubResource("Resource_clufh"), SubResource("Resource_wmiya"), SubResource("Resource_0dj2j")])
-keypads = Array[ExtResource("1_h6gu1")]([SubResource("Resource_hfr1a")])
+script = ExtResource("4_ja36v")
+key_map = Array[ExtResource("3_pfftb")]([SubResource("Resource_vh16k"), SubResource("Resource_rv0n8"), SubResource("Resource_a8808"), SubResource("Resource_clufh"), SubResource("Resource_wmiya"), SubResource("Resource_0dj2j")])
+keypads = Array[ExtResource("1_woe8e")]([SubResource("Resource_hfr1a")])
 gamepad = SubResource("Resource_a2xky")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
 thermal_policy_path = ""
