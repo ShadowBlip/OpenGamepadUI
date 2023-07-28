@@ -494,9 +494,7 @@ func set_allow_tearing(allow: bool, display: XWAYLAND = XWAYLAND.PRIMARY) -> int
 	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
-	var value := 0
-	if allow:
-		value = 1
+	var value := 1 if allow else 0
 	var root_id := xwayland.get_root_window_id()
 	return _set_xprop(xwayland, root_id, "GAMESCOPE_ALLOW_TEARING", value)
 
@@ -526,6 +524,29 @@ func remove_baselayer_window(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 		return -1
 	var root_id := xwayland.get_root_window_id()
 	return _remove_xprop(xwayland, root_id, "GAMESCOPECTRL_BASELAYER_WINDOW")
+
+
+## Request a screenshot from gamescope
+func request_screenshot(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	return _set_xprop(xwayland, root_id, "GAMESCOPECTRL_REQUEST_SCREENSHOT", 1)
+
+
+## Sets the xwayland mode resolution on the given xwayland display 
+## number (default: XWAYLAND.GAME).
+func set_resolution(resolution: Vector2i, allow_super: bool = false, display: XWAYLAND = XWAYLAND.GAME) -> int:
+	var xwayland := get_xwayland(XWAYLAND.PRIMARY)
+	if not xwayland:
+		return -1
+	
+	var target_display := get_display_number(display)
+	var root_id := xwayland.get_root_window_id()
+	var allow_super_value := 1 if allow_super else 0
+	var args := PackedInt32Array([target_display, resolution.x, resolution.y, allow_super_value])
+	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_XWAYLAND_MODE_CONTROL", args)
 
 
 ## Returns the currently set gamescope saturation
@@ -607,6 +628,16 @@ func get_display_type(name: String) -> XWAYLAND:
 	if xwayland_ogui.get_name() == name:
 		return XWAYLAND.OGUI
 	return XWAYLAND.GAME
+
+
+## Returns the name of the given xwayland display
+func get_display_number(display: XWAYLAND) -> int:
+	var name := get_display_name(display)
+	var clean_name := name.replace(":", "")
+	if clean_name.is_valid_int():
+		return clean_name.to_int()
+	logger.error("Unable to determine display number from name: " + name)
+	return 0
 
 
 ## Returns the xwayland instance for the given display type
