@@ -23,6 +23,7 @@ enum AXIS_PRESSED {
 	RIGHT = 8,
 }
 
+var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var mode := INTERCEPT_MODE.ALL
 var profile := load("res://assets/gamepad/profiles/default.tres") as GamepadProfile
@@ -100,7 +101,7 @@ var use_mode_list: Array = [
 
 func _init() -> void:
 	profile_updated.connect(_on_profile_updated)
-	logger = Log.get_logger("ManagedGamepad")
+	logger = Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 
 ## Opens the given physical gamepad with exclusive access and creates a virtual
@@ -175,6 +176,7 @@ func reopen(path: String) -> int:
 
 ## Set the intercept mode on the gamepad
 func set_mode(intercept_mode: INTERCEPT_MODE) -> void:
+	logger.debug("Setting intercept mode to: " + str(intercept_mode))
 	mutex.lock()
 	mode = intercept_mode
 	mutex.unlock()
@@ -241,12 +243,25 @@ func process_input() -> void:
 ## Inject the given event into the event processing queue.
 func inject_event(event: MappableEvent, delta: float) -> void:
 	var translated_events := _translate_event(event, delta)
+	
+	# Determine the order in which translated events should be emitted.
+	if event.get_value() == 0:
+		translated_events.reverse()
+	
+	# Emit any translated events
 	for translated in translated_events:
 		if translated is EvdevEvent:
-			logger.debug("Emitting EvdevEvent event: " + str(translated.get_event_type()) + " "+ str(translated.get_event_code()) + " "+ str(translated.get_event_value()))
+			var input_device_event := translated.to_input_device_event() as InputDeviceEvent
+			logger.debug("Emitting EvdevEvent event: " + str(input_device_event.get_type_name()) + " "+ input_device_event.get_code_name() + " "+ str(input_device_event.value))
 		if translated is NativeEvent:
 			logger.debug("Emitting NativeEvent event.")
-		_process_mappable_event(translated, delta)
+		
+		# Defer processing this event
+		#input_thread.exec.call_deferred(_process_mappable_event.bind(translated, delta))
+		_process_mappable_event(translated.duplicate(true), delta)
+		#if translated_events.size() > 1:
+		#	virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+		#	OS.delay_msec(80)
 
 
 ## Returns the capabilities of the gamepad
@@ -374,6 +389,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		return
 
 	# Intercept mode ALL will not send *any* input to the virtual gamepad
+	#logger.debug("Processing event in intercept ALL")
 	match event.get_code_name():
 		"BTN_SOUTH":
 			_send_input("ogui_south", event.value == 1, 1)

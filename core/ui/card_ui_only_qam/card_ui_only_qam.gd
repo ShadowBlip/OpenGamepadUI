@@ -44,6 +44,14 @@ func _init():
 	gamepad_manager.default_profile = "res://assets/gamepad/profiles/default_only_qam.tres"
 	for gamepad in gamepad_manager.get_gamepad_paths():
 		gamepad_manager.set_gamepad_profile(gamepad, default_gamepad_profile)
+	
+	# Whenever a gamepad is added/removed, set the correct intercept mode on it
+	var on_gamepads_changed := func():
+		var intercept := ManagedGamepad.INTERCEPT_MODE.PASS_QAM
+		if state_machine.has_state(qam_state):
+			intercept = ManagedGamepad.INTERCEPT_MODE.ALL
+		gamepad_manager.set_intercept(intercept)
+	gamepad_manager.gamepads_changed.connect(on_gamepads_changed)
 
 
 ## Starts the --only-qam/--qam-only session.
@@ -83,7 +91,7 @@ func _setup_qam_only(args: Array) -> void:
 	settings_state.state_entered.connect(_on_window_open)
 	settings_state.state_exited.connect(_on_window_closed)
 
-	gamepad_manager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
+	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
 
 	# Don't crash if we're not launching another program.
 	if args == []:
@@ -185,7 +193,7 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 func _on_window_open(_from: State) -> void:
 	if _from:
 		logger.info("_on_qam_open state: " + _from.name)
-	gamepad_manager._set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
 	if game_running:
 		gamescope.set_overlay(qam_window_id, 1, display)
 		gamescope.set_overlay(underlay_window_id, 0, display)
@@ -195,7 +203,7 @@ func _on_window_open(_from: State) -> void:
 func _on_window_closed(_to: State) -> void:
 	if _to:
 		logger.info("_on_qam_closed state: " + _to.name)
-	gamepad_manager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
+	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
 	if game_running:
 		gamescope.set_overlay(qam_window_id, 0, display)
 		gamescope.set_overlay(underlay_window_id, 1, display)

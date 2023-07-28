@@ -122,5 +122,5 @@ output_events = Array[Resource("res://core/systems/input/events/mappable_event.g
 
 [resource]
 script = ExtResource("5_dw2tg")
-name = "Default"
+name = "Default (Only QAM)"
 mapping = Array[ExtResource("2_2nsia")]([SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_bfjp4"), SubResource("Resource_qbxr4"), SubResource("Resource_y7ey2")])

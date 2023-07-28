@@ -3,49 +3,31 @@ class_name GamepadManager
 
 ## Manages virtual controllers
 ##
-## The InputManager class is responsible for handling global input that should
-## happen everywhere in the application. The input manager discovers gamepads
-## and interepts their input so OpenGamepadUI can control what inputs should get
-## passed on to the game and what only OpenGamepadUI should process. This works
-## by grabbing exclusive access to the physical gamepads and creating a virtual
-## gamepad that games can see.[br][br]
-##
-## This class should be loaded and managed by a single node in the scene tree.
-## It requires to be initialized and passed input events:
-##     [codeblock]
-##     const InputManager := preload("res://core/global/input_manager.tres")
-##
-##     func _ready() -> void:
-##         InputManager.init()
-##
-##     func _input(event: InputEvent) -> void:
-##     	   if not InputManager.input(event):
-##     	       return
-##     	   get_viewport().set_input_as_handled()
-##
-##     func _exit_tree() -> void:
-##     	   InputManager.exit()
-##     [/codeblock]
+## The [GamepadManager]  discovers gamepads and interepts their input so 
+## OpenGamepadUI can control what inputs should get passed on to the game and 
+## what only OpenGamepadUI should process. This works by grabbing exclusive 
+## access to the physical gamepads and creating a virtual
+## gamepad that games can see.
 
+
+signal gamepads_changed
+signal gamepad_added(gamepad: ManagedGamepad)
+signal gamepad_removed
 
 var platform := load("res://core/global/platform.tres") as Platform
 var device_hider := load("res://core/systems/input/device_hider.tres") as DeviceHider
 var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
-var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 
 var gamepads := GamepadArray.new()
 var logger := Log.get_logger("GamepadManager", Log.LEVEL.INFO)
 
 ## Default gamepad profile to use
+@export_category("Gamepad Profile")
 @export var default_profile := "res://assets/gamepad/profiles/default.tres"
 
 
 ## Initializes the gamepad manager and starts the gamepad interecpt thread. 
 func _init() -> void:
-	in_game_state.state_entered.connect(_on_game_state_entered)
-	in_game_state.state_exited.connect(_on_game_state_exited)
-	in_game_state.state_removed.connect(_on_game_state_removed)
-
 	# If we crashed, unhide any device events that were orphaned
 	await device_hider.restore_all_hidden()
 
@@ -63,6 +45,13 @@ func _init() -> void:
 ## Returns a list of gamepad devices that are being exclusively managed.
 func get_gamepad_paths() -> Array[String]:
 	return gamepads.phys_paths()
+
+
+## Sets the given gamepad profile on ALL managed gamepads
+func set_gamepads_profile(profile: GamepadProfile) -> void:
+	var devices := get_gamepad_paths()
+	for path in devices:
+		set_gamepad_profile(path, profile)
 
 
 ## Sets the given gamepad profile on the given managed gamepad.
@@ -151,7 +140,7 @@ func exit() -> void:
 
 
 ## Sets the gamepad intercept mode
-func _set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
+func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	logger.debug("Setting gamepad intercept mode: " + str(mode))
 	for gamepad in gamepads.items():
 		gamepad.set_mode(mode)
@@ -214,6 +203,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		else:
 			gamepad.setup(discovered_keyboards)
 			gamepads.add(gamepad)
+			gamepad_added.emit(gamepad)
 
 	# Remove all gamepads that no longer exist
 	var hidden_devices := device_hider.get_hidden_devices()
@@ -231,6 +221,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 		logger.debug("Gamepad disconnected: " + gamepad.get_phys_path())
 		gamepads.erase(gamepad)
+		gamepad_removed.emit()
 
 	# Add any newly found gamepads
 	for dev in discovered_gamepads:
@@ -263,29 +254,13 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 
 		gamepads.add(gamepad)
+		gamepad_added.emit(gamepad)
 		logger.debug("Discovered gamepad at: " + gamepad.get_phys_path())
 		logger.debug("Created virtual gamepad at: " + gamepad.get_virt_path())
 
 	logger.debug("Finished configuring detected controllers")
 	logger.debug("Updated Managed gamepads: " + str(gamepads.phys_paths()))
-
-
-func _on_game_state_entered(_from: State) -> void:
-	logger.debug("Ungrabbing gamepad interception")
-	_set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
-
-
-func _on_game_state_exited(_to: State) -> void:
-	_on_game_state_removed()
-
-
-func _on_game_state_removed() -> void:
-	_set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
-
-	# Clear any gamepad profiles when no games are running
-	logger.debug("Resetting gamepad profiles")
-	for gamepad in gamepads.items():
-		gamepad.set_profile(null)
+	gamepads_changed.emit()
 
 
 func _get_event_from_phys(phys_path: String)  -> String:

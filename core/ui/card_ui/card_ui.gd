@@ -1,12 +1,13 @@
 extends Control
 
-const Platform := preload("res://core/global/platform.tres")
-const Gamescope := preload("res://core/global/gamescope.tres")
-const LibraryManager := preload("res://core/global/library_manager.tres")
-const SettingsManager := preload("res://core/global/settings_manager.tres")
-
 var PID: int = OS.get_process_id()
-var overlay_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
+var platform := load("res://core/global/platform.tres") as Platform
+var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
+
+var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -40,10 +41,10 @@ func _setup(window_id: int) -> void:
 		return
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	if Gamescope.set_main_app(window_id) != OK:
+	if gamescope.set_main_app(window_id) != OK:
 		logger.error("Unable to set STEAM_GAME atom!")
 	# Sets ourselves to the input focus
-	if Gamescope.set_input_focus(window_id, 1) != OK:
+	if gamescope.set_input_focus(window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 
@@ -56,10 +57,10 @@ func _ready() -> void:
 	boot_video.finished.connect(_on_boot_video_player_finished)
 	
 	# Load any platform-specific logic
-	Platform.load(get_tree().get_root())
+	platform.load(get_tree().get_root())
 	
 	# Set the theme if one was set
-	var theme_path := SettingsManager.get_value("general", "theme", "") as String
+	var theme_path := settings_manager.get_value("general", "theme", "") as String
 	if theme_path == "":
 		logger.debug("No theme set. Using default theme.")
 	if theme_path != "":
@@ -71,7 +72,7 @@ func _ready() -> void:
 			logger.debug("Unable to load theme")
 	
 	# Set the FPS limit
-	Engine.max_fps = SettingsManager.get_value("general", "max_fps", 60) as int
+	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
 	
 	# Listen for global state changes
 	state_machine.state_changed.connect(_on_state_changed)
@@ -82,7 +83,7 @@ func _ready() -> void:
 	in_game_state.state_removed.connect(_on_game_state_removed)
 
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
-	LibraryManager.reload_library()
+	library_manager.reload_library()
 
 
 func _on_focus_changed(control: Control) -> void:
@@ -96,27 +97,50 @@ func _on_state_changed(_from: State, _to: State) -> void:
 		state_machine.push_state.call_deferred(home_state)
 
 
+## Invoked when the in-game state was entered
 func _on_game_state_entered(_from: State) -> void:
+	# Pass all gamepad input to the game
+	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
+
+	# Turn off gamescope blur effect
+	_set_blur(gamescope.BLUR_MODE.OFF)
+	
+	# Ensure panel is invisible
 	panel.visible = false
-	_set_blur(Gamescope.BLUR_MODE.OFF)
 	for child in ui_container.get_children():
 		child.visible = false
 
 
+## Invoked when the in-game state is exited
 func _on_game_state_exited(to: State) -> void:
+	# Intercept all gamepad input when not in-game
+	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+	
+	# Revert back to the default gamepad profile
+	gamepad_manager.set_gamepads_profile(null)
+	
+	# If the in-game state still exists in the stack, set the blur state.
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
 		if to != osk_state:
-			_set_blur(Gamescope.BLUR_MODE.ALWAYS)
+			_set_blur(gamescope.BLUR_MODE.ALWAYS)
 	else:
 		_on_game_state_removed()
+	
+	# Un-hide all UI elements
 	for child in ui_container.get_children():
 		child.visible = true
 
 
+## Invoked when the in-game state is removed
 func _on_game_state_removed() -> void:
-	_set_blur(Gamescope.BLUR_MODE.OFF)
+	# Turn off gamescope blur
+	_set_blur(gamescope.BLUR_MODE.OFF)
+	
+	# Un-hide the background panel
 	panel.visible = true
+	
+	# Reset the state stack if no home state exists
 	if not state_machine.has_state(home_state):
 		state_machine.set_state([home_state])
 
@@ -125,28 +149,30 @@ func _on_game_state_removed() -> void:
 func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
 	# Sometimes setting this may fail when Steam closes. Retry several times.
 	for try in range(10):
-		if Gamescope.set_blur_mode(mode) != OK:
+		if gamescope.set_blur_mode(mode) != OK:
 			logger.warn("Unable to set blur mode atom!")
-		var current := Gamescope.get_blur_mode()
+		var current := gamescope.get_blur_mode()
 		if mode == current:
 			break
 		logger.warn("Retrying in " + str(try) + "ms")
 		OS.delay_msec(try)
 
 
+## Invoked when the boot video finishes playing
 func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
 	boot_video.visible = false
 
 	# If this is the first boot, enter the first-boot menu state. Otherwise,
 	# go to the home state.
-	if SettingsManager.get_value("general", "first_boot", true):
+	if settings_manager.get_value("general", "first_boot", true):
 		state_machine.push_state(first_boot_state)
 	else:
 		# Initialize the state machine with its initial state
 		state_machine.push_state(home_state)
 
 
+## Called when any unhandled input reaches the main node
 func _input(event: InputEvent) -> void:
 	if not event.is_action("ogui_power"):
 		return

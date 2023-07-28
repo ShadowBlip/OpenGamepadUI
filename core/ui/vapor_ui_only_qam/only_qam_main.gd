@@ -43,7 +43,7 @@ func _setup_qam_only(args: Array) -> void:
 	qam_state.state_entered.connect(_on_qam_open)
 	qam_state.state_exited.connect(_on_qam_closed)
 
-	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
+	InputManager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
 
 	# Don't crash if we're not launching another program.
 	if args == []:
@@ -111,7 +111,7 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 
 ## Called when "qam_state" is entered.
 func _on_qam_open(_from: State) -> void:
-	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+	InputManager.set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
 	Gamescope.set_overlay(qam_window_id, 1, display)
 	if underlay_window_id:
 		Gamescope.set_overlay(underlay_window_id, 0, display)
@@ -119,7 +119,7 @@ func _on_qam_open(_from: State) -> void:
 
 ## Called when "qam_state" is exited.
 func _on_qam_closed(_to: State) -> void:
-	InputManager._set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
+	InputManager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QAM)
 	Gamescope.set_overlay(qam_window_id, 0, display)
 	if underlay_window_id:
 		Gamescope.set_overlay(underlay_window_id, 1, display)
