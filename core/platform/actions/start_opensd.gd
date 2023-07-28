@@ -1,10 +1,12 @@
 extends PlatformAction
 class_name ActionStartOpenSD
 
+var opensd := OpenSD.new()
 var thread: Thread
 
 
 func execute() -> void:
+	logger.debug("Running OpenSD action")
 	DirAccess.make_dir_recursive_absolute("user://data/gamepad/opensd/config")
 	var config := FileAccess.open("res://assets/gamepad/opensd/config/config.ini", FileAccess.READ)
 	var config_bytes := config.get_buffer(20480)
@@ -23,12 +25,11 @@ func execute() -> void:
 	)
 	user_profile.store_buffer(profile_bytes)
 
-	logger.info("Starting OpenSD input thread")
 	thread = Thread.new()
 	thread.start(_run)
 
 
 func _run() -> void:
+	logger.info("Starting OpenSD input thread")
 	Thread.set_thread_safety_checks_enabled(false)
-	var opensd := OpenSD.new()
 	opensd.run()
