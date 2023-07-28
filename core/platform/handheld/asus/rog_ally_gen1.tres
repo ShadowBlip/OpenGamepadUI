@@ -210,23 +210,23 @@ name = "Paddle + A"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_usy36")])
 emits = SubResource("Resource_gtox1")
 
-[sub_resource type="Resource" id="Resource_inttm"]
-script = ExtResource("1_axpce")
-phys_path = "usb-0000:0a:00.3-3/input0"
-name = "Asus Keyboard"
-
-[sub_resource type="Resource" id="Resource_ngp5y"]
+[sub_resource type="Resource" id="Resource_vrwpa"]
 script = ExtResource("1_axpce")
 phys_path = "usb-0000:0a:00.3-3/input2"
+name = "Asus Keyboard"
+
+[sub_resource type="Resource" id="Resource_f5xpk"]
+script = ExtResource("1_axpce")
+phys_path = "usb-0000:0a:00.3-3/input0"
 name = "Asus Keyboard"
 
 [resource]
 script = ExtResource("1_id3r8")
 key_map = Array[ExtResource("2_i7tm2")]([SubResource("Resource_dwdqb"), SubResource("Resource_8y4kr"), SubResource("Resource_mw23h"), SubResource("Resource_cjdu4"), SubResource("Resource_3m31m"), SubResource("Resource_ylk53"), SubResource("Resource_q7p5v"), SubResource("Resource_mpcxg"), SubResource("Resource_newxp"), SubResource("Resource_0k5rj"), SubResource("Resource_js4wk"), SubResource("Resource_tivas")])
-keypads = Array[ExtResource("1_axpce")]([SubResource("Resource_inttm"), SubResource("Resource_ngp5y")])
+keypads = Array[ExtResource("1_axpce")]([SubResource("Resource_vrwpa"), SubResource("Resource_f5xpk")])
 gamepad = SubResource("Resource_xwstp")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
-thermal_policy_path = ""
+thermal_policy_path = "/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy"
 name = ""
 startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
 shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

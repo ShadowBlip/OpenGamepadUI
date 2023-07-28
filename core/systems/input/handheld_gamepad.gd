@@ -69,7 +69,8 @@ func process_input() -> void:
 	for keypad in keypads:
 		# Only process input if we have a valid handle
 		if not keypad.device or not keypad.device.is_open():
-			return
+			logger.warn("Problem with keypad!")
+			continue
 
 		# Process all physical input events
 		var events := keypad.device.get_events()
@@ -78,8 +79,9 @@ func process_input() -> void:
 		# released leaves an active_keys array that matches a trigger event.
 		# Any time a key is pressed there is always an EV_KEY with code 0 and value 0.
 		if events.size() <= 1:
-			return
+			continue
 
+		logger.debug(keypad.device.get_name() + " : " + keypad.device.get_phys())
 		# Loop through events and check if we need to do anything, then do it.
 		for event in events:
 			if not event or not event is InputDeviceEvent:

@@ -65,7 +65,7 @@ func _init() -> void:
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres")
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/handheld/ally/ally_gen1.tres")
+		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
 			gpu.thermal_mode_capable = true

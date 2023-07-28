@@ -1,9 +1,26 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=28 format=3 uid="uid://cyle0fus6d240"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=32 format=3 uid="uid://cyle0fus6d240"]
 
 [ext_resource type="Script" path="res://core/systems/input/events/native_event.gd" id="1_4tblf"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_bqbkr"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="1_s8n2e"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="2_immjq"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_f82g2"]
+action = &"ogui_volume_mute"
+
+[sub_resource type="Resource" id="Resource_a5psa"]
+script = ExtResource("1_4tblf")
+event = SubResource("InputEventAction_f82g2")
+
+[sub_resource type="Resource" id="Resource_dndc8"]
+script = ExtResource("1_s8n2e")
+code = "KEY_MUTE"
+
+[sub_resource type="Resource" id="Resource_431lh"]
+script = ExtResource("2_immjq")
+name = "Mute"
+source_event = SubResource("Resource_dndc8")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_a5psa")])
 
 [sub_resource type="InputEventAction" id="InputEventAction_ebcdv"]
 action = &"ogui_volume_up"
@@ -107,4 +124,4 @@ output_events = Array[Resource("res://core/systems/input/events/mappable_event.g
 [resource]
 script = ExtResource("1_bqbkr")
 name = "Default"
-mapping = Array[ExtResource("2_immjq")]([SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_401l7"), SubResource("Resource_qbxr4")])
+mapping = Array[ExtResource("2_immjq")]([SubResource("Resource_431lh"), SubResource("Resource_rk08e"), SubResource("Resource_8rua7"), SubResource("Resource_eprhf"), SubResource("Resource_3q33q"), SubResource("Resource_401l7"), SubResource("Resource_qbxr4")])

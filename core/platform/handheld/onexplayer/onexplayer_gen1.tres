@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=27 format=3 uid="uid://hbki3lawed3e"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=30 format=3 uid="uid://hbki3lawed3e"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_xukjt"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_wal8b"]
@@ -8,7 +8,21 @@
 [sub_resource type="Resource" id="Resource_r7met"]
 script = ExtResource("1_xukjt")
 phys_path = "usb-0000:00:14.0-9/input0"
-name = "neXPlayer Gamepad"
+name = "OneXPlayer Gamepad"
+
+[sub_resource type="Resource" id="Resource_021fm"]
+script = ExtResource("2_wal8b")
+code = "KEY_MUTE"
+
+[sub_resource type="Resource" id="Resource_ubaf4"]
+script = ExtResource("2_wal8b")
+code = "KEY_MUTE"
+
+[sub_resource type="Resource" id="Resource_orvbw"]
+script = ExtResource("3_sg83j")
+name = "Mute"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_021fm")])
+emits = SubResource("Resource_ubaf4")
 
 [sub_resource type="Resource" id="Resource_efbap"]
 script = ExtResource("2_wal8b")
@@ -107,7 +121,7 @@ name = "AT Translated Set 2 keyboard"
 
 [resource]
 script = ExtResource("4_yyql1")
-key_map = Array[ExtResource("3_sg83j")]([SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_1kjkk")])
+key_map = Array[ExtResource("3_sg83j")]([SubResource("Resource_orvbw"), SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_1kjkk")])
 keypads = Array[ExtResource("1_xukjt")]([SubResource("Resource_4ysgf")])
 gamepad = SubResource("Resource_r7met")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

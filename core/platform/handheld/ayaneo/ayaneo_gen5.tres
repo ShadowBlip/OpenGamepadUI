@@ -40,7 +40,7 @@ emits = SubResource("Resource_5kiqp")
 
 [sub_resource type="Resource" id="Resource_g8dtl"]
 script = ExtResource("2_pkn07")
-code = "KEY_RIGHTCTRL"
+code = "KEY_LEFTCTRL"
 
 [sub_resource type="Resource" id="Resource_etscv"]
 script = ExtResource("2_pkn07")
@@ -80,7 +80,7 @@ emits = SubResource("Resource_ko31g")
 
 [sub_resource type="Resource" id="Resource_tp3ty"]
 script = ExtResource("2_pkn07")
-code = "KEY_RIGHTCTRL"
+code = "KEY_LEFTCTRL"
 
 [sub_resource type="Resource" id="Resource_bxrkn"]
 script = ExtResource("2_pkn07")
@@ -102,7 +102,7 @@ emits = SubResource("Resource_jwpf3")
 
 [sub_resource type="Resource" id="Resource_ul1m7"]
 script = ExtResource("2_pkn07")
-code = "KEY_RIGHTCTRL"
+code = "KEY_LEFTCTRL"
 
 [sub_resource type="Resource" id="Resource_qjyik"]
 script = ExtResource("2_pkn07")
