@@ -79,3 +79,20 @@ func add_to_qam(qam_item: Control, icon: Texture2D, focus_node: Control = null) 
 		return
 
 	qam.add_child_menu(qam_item, icon, focus_node)
+
+
+## Adds the given overlay
+func add_overlay(overlay: OverlayProvider) -> void:
+	# Find the overlay container node
+	var container := get_tree().get_first_node_in_group("overlay") as OverlayContainer
+	if not container:
+		logger.warn("Unable to find overlay container to add overlay")
+		return
+
+	# If the overlay is already in the scene tree, reparent it to the overlay
+	# container
+	if overlay.is_inside_tree():
+		overlay.get_parent().remove_child(overlay)
+
+	# Add the overlay to the overlay container
+	container.add_overlay(overlay)

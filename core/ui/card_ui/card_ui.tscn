@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=33 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://lfm3ps837gy5" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
+[ext_resource type="PackedScene" uid="uid://ccwn4n40imfg8" path="res://core/ui/components/containers/overlay_container.tscn" id="23_h8glb"]
 
 [sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
@@ -215,6 +216,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="OverlayContainer" parent="AlwaysVisibleContent" instance=ExtResource("23_h8glb")]
+layout_mode = 2
 
 [node name="PowerMenu" parent="AlwaysVisibleContent" instance=ExtResource("20_noim3")]
 visible = false
