@@ -66,6 +66,7 @@ func set_focus(focused: bool) -> void:
 ## Returns whether or not get_viewport().set_input_as_handled() should be called
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func input(event: InputEvent) -> bool:
+	logger.debug("Too much data: " + str(event))
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
 		_guide_input(event)
@@ -188,12 +189,15 @@ func _audio_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action("ogui_volume_mute"):
+		logger.debug("Mute!")
 		audio_manager.call_deferred("toggle_mute")
 		return
 	if event.is_action("ogui_volume_down"):
+		logger.debug("Volume Down!")
 		audio_manager.call_deferred("set_volume", -0.06, audio_manager.VOLUME.RELATIVE)
 		return
 	if event.is_action("ogui_volume_up"):
+		logger.debug("Volume Up!")
 		audio_manager.call_deferred("set_volume", 0.06, audio_manager.VOLUME.RELATIVE)
 		return
 

@@ -251,17 +251,19 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 	# Emit any translated events
 	for translated in translated_events:
 		if translated is EvdevEvent:
-			var input_device_event := translated.to_input_device_event() as InputDeviceEvent
-			logger.debug("Emitting EvdevEvent event: " + str(input_device_event.get_type_name()) + " "+ input_device_event.get_code_name() + " "+ str(input_device_event.value))
+			logger.debug("Emitting EvdevEvent: " + str(translated))
 		if translated is NativeEvent:
-			logger.debug("Emitting NativeEvent event.")
+			# Duplicate to avoid attempting to transmit the same object in the same frame multiple times
+			translated.event = translated.event.duplicate()
+			logger.debug("Emitting NativeEvent: " + str(translated))
 		
 		# Defer processing this event
-		#input_thread.exec.call_deferred(_process_mappable_event.bind(translated, delta))
-		_process_mappable_event(translated.duplicate(true), delta)
-		#if translated_events.size() > 1:
-		#	virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
-		#	OS.delay_msec(80)
+		_process_mappable_event(translated, delta)
+		# Important to delay before writing syn report when multiple key's are being sent. Otherwise
+		# we get issues with button passthrough.
+		if translated_events.size() > 1:
+			OS.delay_msec(80)
+		virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 
 ## Returns the capabilities of the gamepad
@@ -330,7 +332,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 	# Always skip passing FF events to the virtual gamepad
 	if event.get_type() == event.EV_FF:
 		return
-
+	
 	# Intercept mode NONE will pass all input to the virtual gamepad
 	if mode == INTERCEPT_MODE.NONE:
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
@@ -358,21 +360,24 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 	# for guide + south button combo presses.
 	if mode == INTERCEPT_MODE.PASS_QAM:
 		if event.get_code() == event.BTN_MODE:
+			logger.debug("Mode Pressed!")
 			if event.value == 1:
+				logger.debug("Mode DOWN (Catch)!")
 				mode_event = event
 				return
 			else:
 				if mode_event:
+					logger.debug("Mode DOWN! (Out)")
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					OS.delay_msec(80)  # Give steam time to accept the input
+					logger.debug("Mode UP! (Out)")
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 0)
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					mode_event = null
 
 		if event.get_code() == event.BTN_EAST and mode_event:
-			if event.value == 1:
-				mode = INTERCEPT_MODE.ALL
+			logger.debug("Open dat QAM BB")
 			_send_input("ogui_qam", event.value == 1, 1)
 			mode_event = null
 			return
@@ -380,11 +385,13 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		# Process button combos that use BTN_MODE and another button
 		if event.get_code() in use_mode_list and mode_event:
 			if event.value == 1:
+				logger.debug("Mode DOWN! (Out)")
 				virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
 				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				OS.delay_msec(80)  # Give steam time to accept the input
 				mode_event = null
-
+		if event.get_type() == event.EV_KEY:
+			logger.debug("Event out: " + event.get_code_name() + " " + str(event.get_value()))
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 

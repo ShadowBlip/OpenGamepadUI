@@ -47,6 +47,9 @@ func get_event_value() -> int:
 func to_input_device_event() -> InputDeviceEvent:
 	return input_device_event
 
+func _to_string() -> String:
+	return "<EvdevEvent-Type: " + str(get_event_type()) + ", Code: " + str(get_event_code()) + ", Value: " + str(get_event_value()) + ">"
+
 
 ## Create a new [EvdevEvent] from the given [InputDeviceEvent]
 static func from_input_device_event(event: InputDeviceEvent) -> EvdevEvent:

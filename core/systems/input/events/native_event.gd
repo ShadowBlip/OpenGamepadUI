@@ -25,3 +25,7 @@ func get_value() -> float:
 	if event is InputEventAction:
 		return event.pressed
 	return 0
+
+
+func _to_string() -> String:
+	return "<NativeEvent: " + str(event) + ">"
