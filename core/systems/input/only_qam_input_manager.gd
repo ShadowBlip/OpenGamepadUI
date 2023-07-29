@@ -23,25 +23,27 @@ func _ready() -> void:
 # Only process input when the given states are active
 func _on_state_changed(_from: State, to: State) -> void:
 	if to in process_input_during:
-		logger.debug("Handle Back")
+		logger.debug("Start handle Back")
 		handle_back = true
 		return
-	logger.debug("Don't handle back.")
+	logger.debug("Stop handle back.")
 	handle_back = false
 
 
 func _input(event: InputEvent) -> void:
+
 	var valid_events: Array = [
-		event.is_action_pressed("ogui_qam"), 
-		event.is_action_pressed("ogui_east"),
+		event.is_action("ogui_qam"),
+		event.is_action("ogui_east"),
 		event.is_action("ogui_volume_down"),
 		event.is_action("ogui_volume_up"),
 		event.is_action("ogui_volume_mute"),
 		]
 	if not true in valid_events:
 		return
+
 	logger.debug("Incoming event: " + str(event))
-	if event.is_action_pressed("ogui_qam"):
+	if event.is_action("ogui_qam"):
 		input_manager._qam_input(event)
 		get_viewport().set_input_as_handled()
 		return
@@ -67,12 +69,15 @@ func _audio_input(event: InputEvent) -> void:
 	if event.is_action("ogui_volume_mute"):
 		logger.debug("Mute!")
 		audio_manager.call_deferred("toggle_mute")
+		get_viewport().set_input_as_handled()
 		return
 	if event.is_action("ogui_volume_down"):
 		logger.debug("Volume Down!")
 		audio_manager.call_deferred("set_volume", -0.06, audio_manager.VOLUME.RELATIVE)
+		get_viewport().set_input_as_handled()
 		return
 	if event.is_action("ogui_volume_up"):
 		logger.debug("Volume Up!")
 		audio_manager.call_deferred("set_volume", 0.06, audio_manager.VOLUME.RELATIVE)
+		get_viewport().set_input_as_handled()
 		return

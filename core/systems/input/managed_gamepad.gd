@@ -255,7 +255,9 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 			logger.debug("Emitting EvdevEvent: " + str(translated))
 		if translated is NativeEvent:
 			# Duplicate to avoid attempting to transmit the same object in the same frame multiple times
-			translated.event = translated.event.duplicate()
+			var t_event = translated.event.duplicate()
+			translated = translated.duplicate()
+			translated.event = t_event
 			logger.debug("Emitting NativeEvent: " + str(translated))
 		
 		# Defer processing this event
@@ -322,6 +324,7 @@ func _process_mappable_event(event: MappableEvent, delta: float) -> void:
 		_process_phys_event(event.to_input_device_event(), delta)
 		return
 	if event is NativeEvent:
+		logger.debug("process_mappable_event: " + str(event))
 		_send_input_event(event.event)
 
 
@@ -792,12 +795,14 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.pressed = pressed
 	input_action.strength = strength
 	input_action.set_meta("managed_gamepad", phys_path)
+	logger.debug("send_input: " + str(input_action))
 	Input.parse_input_event(input_action)
 
 
 # Sends an input action to the event queue
 func _send_input_event(event: InputEvent) -> void:
 	event.set_meta("managed_gamepad", phys_path)
+	logger.debug("send_input_event: " + str(event))
 	Input.parse_input_event(event)
 
 
@@ -807,4 +812,5 @@ func _send_joy_input(axis: int, value: float) -> void:
 	joy_action.axis = axis
 	joy_action.axis_value = value
 	joy_action.set_meta("managed_gamepad", phys_path)
+	logger.debug("_send_joy_input: " + str(joy_action))
 	Input.parse_input_event(joy_action)

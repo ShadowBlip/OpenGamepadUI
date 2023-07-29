@@ -216,5 +216,6 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 	input_action.action = action
 	input_action.pressed = pressed
 	input_action.strength = strength
+	logger.debug("Send input: " + str(input_action))
 	Input.parse_input_event(input_action)
 
