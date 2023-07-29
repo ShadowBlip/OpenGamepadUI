@@ -120,20 +120,20 @@ func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 
 	for child_idx in child_count:
 		var child = parent.get_child(child_idx)
-		logger.debug("Checking if " + child.name + " in remove list...")
+		#logger.debug("Checking if " + child.name + " in remove list...")
 		if child.name in remove_list:
-			logger.debug(child.name + " queued for removal!")
+			#logger.debug(child.name + " queued for removal!")
 			to_remove_list.append(child)
 			continue
 
-		logger.debug(child.name + " is not a node we are looking for.")
+		#logger.debug(child.name + " is not a node we are looking for.")
 		var grandchild_count := child.get_child_count()
 		if grandchild_count > 0:
-			logger.debug("Checking " + child.name + "'s children...")
+			#logger.debug("Checking " + child.name + "'s children...")
 			_run_child_killer(remove_list, child)
 
 	for child in to_remove_list:
-		logger.debug("Removing " + child.name)
+		#logger.debug("Removing " + child.name)
 		child.queue_free()
 
 

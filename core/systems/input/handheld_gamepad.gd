@@ -95,8 +95,11 @@ func _process_event(event: EvdevEvent, delta: float) -> void:
 	# Always skip anything thats not a button
 	if event.get_event_type() != InputDeviceEvent.EV_KEY:
 		return
-		# Ignore this code, its linux kernel reserved and causes issues.
+	# Ignore this code, its linux kernel reserved and causes issues.
 	if event.get_event_code() == 0:
+		return
+	# Ignore this event if we want to filter it
+	if _filter_event(event):
 		return
 
 	# release event, remove active keys
@@ -173,6 +176,25 @@ func _check_mapped_events(value: float, delta: float) -> void:
 		var event := mapped_event.emits.duplicate(true)
 		event.set_value(value)
 		inject_event(event, delta)
+
+
+# Checks if the given event is part of the handheld_platform's filter_events array.
+func _filter_event(event: EvdevEvent) -> bool:
+	if not platform or not platform.platform is HandheldPlatform:
+		logger.debug("No handheld platform was defined!")
+		return false
+
+	var handheld_platform := platform.platform as HandheldPlatform
+	if handheld_platform.filtered_events.size() == 0:
+		return false
+
+	logger.debug("Checking if event should be filtered.")
+	for filtered_event in handheld_platform.filtered_events:
+		if filtered_event.matches(event):
+			logger.debug("Event will be filtered: " + str(event))
+			return true
+
+	return false
 
 
 ## Returns the index of an active key.

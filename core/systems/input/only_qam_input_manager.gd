@@ -17,6 +17,7 @@ var logger := Log.get_logger("OnlyQAMInputManager", Log.LEVEL.INFO)
 func _ready() -> void:
 	state_machine.state_changed.connect(_on_state_changed)
 	process_input_during = [load("res://assets/state/states/quick_access_menu.tres") as State]
+	logger.debug("Input manager ready.")
 
 
 # Only process input when the given states are active
@@ -39,7 +40,7 @@ func _input(event: InputEvent) -> void:
 		]
 	if not true in valid_events:
 		return
-	logger.debug("Too much data: " + str(event))
+	logger.debug("Incoming event: " + str(event))
 	if event.is_action_pressed("ogui_qam"):
 		input_manager._qam_input(event)
 		get_viewport().set_input_as_handled()

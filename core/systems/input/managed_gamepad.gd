@@ -367,12 +367,11 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 				return
 			else:
 				if mode_event:
-					logger.debug("Mode DOWN! (Out)")
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
-					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					OS.delay_msec(80)  # Give steam time to accept the input
-					logger.debug("Mode UP! (Out)")
+					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 0)
+					OS.delay_msec(80)  # Give steam time to accept the input
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					mode_event = null
 
@@ -387,8 +386,8 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			if event.value == 1:
 				logger.debug("Mode DOWN! (Out)")
 				virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
-				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				OS.delay_msec(80)  # Give steam time to accept the input
+				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 				mode_event = null
 		if event.get_type() == event.EV_KEY:
 			logger.debug("Event out: " + event.get_code_name() + " " + str(event.get_value()))
@@ -628,90 +627,6 @@ func _translate_event(event: MappableEvent, delta: float) -> Array[MappableEvent
 		return mapping.output_events
 	
 	return [event]
-
-
-## Translates the given event based on the gamepad profile.
-#func _translate_event(event: InputDeviceEvent, delta: float) -> void:
-#	var mappings := event_map[event.get_code()] as Array
-#
-#	# Loop through the translation mappings for this event
-#	for m in mappings:
-#		var mapping := m as GamepadMapping
-#
-#		# Handle keyboard event translation targets
-#		if mapping.target is InputEventKey:
-#			var target_event := mapping.target as InputEventKey
-#			var pressed := false
-#
-#			# Check to see if the event source is an ABS axis event
-#			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
-#				#var is_positive := mapping.axis == mapping.AXIS.POSITIVE
-#				#pressed = _is_axis_pressed(event, is_positive)
-#				pass
-#
-#			# Translate gamepad button events
-#			else:
-#				if event.get_value() == 1:
-#					pressed = true
-#
-#			#logger.debug("Sending key: " + OS.get_keycode_string(target_event.keycode))
-#			xwayland.send_key(target_event.keycode, pressed)
-#			continue
-#
-#		# Handle mouse button event translations
-#		if mapping.target is InputEventMouseButton:
-#			var target_event := mapping.target as InputEventMouseButton
-#			var pressed := false
-#
-#			# Check to see if the event source is an ABS axis event
-#			if mapping.SOURCE_EVENTS[mapping.source].begins_with("ABS"):
-#				#var is_positive := mapping.axis == mapping.AXIS.POSITIVE
-#				#pressed = _is_axis_pressed(event, is_positive)
-#				pass
-#
-#			# Translate gamepad button events
-#			else:
-#				if event.get_value() == 1:
-#					pressed = true
-#
-#			# Set the button pressed value
-#			var value := 0
-#			if pressed:
-#				value = 1
-#
-#			# Set the button to send
-#			var button := -1
-#			match target_event.button_index:
-#				MOUSE_BUTTON_LEFT:
-#					button = event.BTN_LEFT
-#				MOUSE_BUTTON_RIGHT:
-#					button = event.BTN_RIGHT
-#				MOUSE_BUTTON_MIDDLE:
-#					button = event.BTN_MIDDLE
-#			if button > 0:
-#				virt_mouse.write_event(event.EV_KEY, button, value)
-#				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-#
-#			# Handle mousewheel events
-#			if target_event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-#				if not pressed:
-#					continue
-#				if target_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-#					virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, 1)
-#					virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-#				if target_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-#					virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, -1)
-#					virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-#				continue
-#
-#			continue
-#
-#		# Handle mouse motion event translation targets
-#		if mapping.target is InputEventMouseMotion:
-#			# TODO: Get mouse speed from mapping target
-#			var target_event := mapping.target as InputEventMouseMotion
-#			_set_current_axis_value(event)
-#			continue
 
 
 # Tries to determine if an axis is "pressed" enough to send a key press event

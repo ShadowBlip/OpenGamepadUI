@@ -4,11 +4,9 @@ class_name HandheldPlatform
 
 
 @export_category("Gamepad Profile")
-#@export var gamepad: HandheldGamepad ## The handheld gamepad profile associated with this handheld
-# Override below in device specific implementation
-## List of MappedEvent's that are activated by a specific Array[InputDeviceEvent].
-## that activates either an ogui_event or another Array[InputDeviceEvent]
+
 @export var key_map: Array[HandheldEventMapping]
+@export var filtered_events: Array[EvdevEvent]
 @export var keypads: Array[SysfsDevice]
 @export var gamepad: SysfsDevice
 
@@ -25,21 +23,15 @@ class_name HandheldPlatform
 
 
 func is_handheld_gamepad(device: InputDevice) -> bool:
-	logger.info("Test input device: " + device.get_path() + ": " + device.get_name())
-	logger.info("Looking for: " + gamepad.phys_path + ": " + gamepad.name)
 	if device.get_phys() == gamepad.phys_path and device.get_name() == gamepad.name:
 		logger.info("Found handheld gamepad device: " + device.get_path() + ": " + device.get_name())
 		return true
-	logger.info("Rejected input device: " + device.get_path() + ": " + device.get_name())
 	return false
 
 
 func is_handheld_keyboard(device: InputDevice) -> bool:
-	logger.info("Test input device: " + device.get_path() + ": " + device.get_name())
 	for keypad in keypads:
-		logger.info("Looking for: " + keypad.phys_path + ": " + keypad.name)
 		if device.get_phys() == keypad.phys_path and device.get_name() == keypad.name:
 			logger.info("Found handheld input device: " + device.get_path() + ": " + device.get_name())
 			return true
-	logger.info("Rejected input device: " + device.get_path() + ": " + device.get_name())
 	return false
