@@ -170,6 +170,7 @@ script = ExtResource("5_tlsi8")
 [resource]
 script = ExtResource("4_hsh11")
 key_map = Array[ExtResource("3_3evgw")]([SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_ythr7"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_lulcw"), SubResource("Resource_1bh5u"), SubResource("Resource_1kjkk")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_27d2q")]([SubResource("Resource_4ysgf")])
 gamepad = SubResource("Resource_r7met")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

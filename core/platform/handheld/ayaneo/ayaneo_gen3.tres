@@ -130,6 +130,7 @@ name = "AT Translated Set 2 keyboard"
 [resource]
 script = ExtResource("4_hgqaa")
 key_map = Array[ExtResource("3_safm6")]([SubResource("Resource_vh16k"), SubResource("Resource_8ytgs"), SubResource("Resource_a8808"), SubResource("Resource_clufh"), SubResource("Resource_wmiya"), SubResource("Resource_0dj2j")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_nfr5j")]([SubResource("Resource_hfr1a")])
 gamepad = SubResource("Resource_a2xky")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

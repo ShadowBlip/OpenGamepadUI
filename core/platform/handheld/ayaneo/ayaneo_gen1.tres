@@ -54,25 +54,25 @@ emits = SubResource("Resource_jiir2")
 
 [sub_resource type="Resource" id="Resource_hpe38"]
 script = ExtResource("2_o30kp")
-code = "KEY_F12"
+code = "KEY_RIGHTCTRL"
 
 [sub_resource type="Resource" id="Resource_e5qhq"]
 script = ExtResource("2_o30kp")
-code = "KEY_KPENTER"
+code = "KEY_RIGHTALT"
 
 [sub_resource type="Resource" id="Resource_qnbxs"]
 script = ExtResource("2_o30kp")
-code = "KEY_COPY"
+code = "KEY_DELETE"
 
-[sub_resource type="Resource" id="Resource_vt8ps"]
+[sub_resource type="Resource" id="Resource_yg5dh"]
 script = ExtResource("2_o30kp")
-code = "BTN_MODE"
+code = "BTN_BASE"
 
-[sub_resource type="Resource" id="Resource_fskpg"]
+[sub_resource type="Resource" id="Resource_succ7"]
 script = ExtResource("3_mdycj")
 name = "TM"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_hpe38"), SubResource("Resource_e5qhq"), SubResource("Resource_qnbxs")])
-emits = SubResource("Resource_vt8ps")
+emits = SubResource("Resource_yg5dh")
 
 [sub_resource type="Resource" id="Resource_h7djh"]
 script = ExtResource("2_o30kp")
@@ -117,7 +117,8 @@ name = "AT Translated Set 2 keyboard"
 
 [resource]
 script = ExtResource("4_uhj62")
-key_map = Array[ExtResource("3_mdycj")]([SubResource("Resource_hkgph"), SubResource("Resource_n3npp"), SubResource("Resource_8h6c8"), SubResource("Resource_fskpg"), SubResource("Resource_fexjm"), SubResource("Resource_hwhbf")])
+key_map = Array[ExtResource("3_mdycj")]([SubResource("Resource_hkgph"), SubResource("Resource_n3npp"), SubResource("Resource_8h6c8"), SubResource("Resource_succ7"), SubResource("Resource_fexjm"), SubResource("Resource_hwhbf")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_4omoc")]([SubResource("Resource_eoggm")])
 gamepad = SubResource("Resource_n8ucg")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])

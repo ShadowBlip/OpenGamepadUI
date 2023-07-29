@@ -82,6 +82,7 @@ name = "  Mouse for Windows"
 [resource]
 script = ExtResource("4_hqtbi")
 key_map = Array[ExtResource("3_qviiu")]([SubResource("Resource_gmed6"), SubResource("Resource_2pekw"), SubResource("Resource_yo3b5"), SubResource("Resource_pmg1b")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_mu4q1")]([SubResource("Resource_14far")])
 gamepad = SubResource("Resource_gba37")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
