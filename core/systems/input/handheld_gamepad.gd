@@ -98,6 +98,7 @@ func _process_event(event: EvdevEvent, delta: float) -> void:
 	# Ignore this code, its linux kernel reserved and causes issues.
 	if event.get_event_code() == 0:
 		return
+
 	# Ignore this event if we want to filter it
 	if _filter_event(event):
 		return

@@ -245,7 +245,8 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 	var translated_events := _translate_event(event, delta)
 	
 	# Determine the order in which translated events should be emitted.
-	if event.get_value() == 0:
+	if event.get_value() == 0 and translated_events.size() > 1:
+		translated_events = translated_events.duplicate()
 		translated_events.reverse()
 	
 	# Emit any translated events
