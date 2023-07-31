@@ -314,14 +314,18 @@ func _on_profile_updated() -> void:
 	# Map the profile mappings with the events to translate
 	for m in profile.mapping:
 		var mapping := m as GamepadMapping
+		# TODO: Do we need this anymore?
 		if not mapping.source_event in event_map:
 			event_map[mapping.source_event] = []
 		event_map[mapping.source_event].append(mapping)
 
 		# If there is a mapping that does mouse motion, enable
 		# processing of mouse motion in process_input()
-		if mapping.target is InputEventMouseMotion:
-			should_process_mouse = true
+		for output_event in mapping.output_events:
+			if not output_event is NativeEvent:
+				continue
+			if output_event.event is InputEventMouseMotion:
+				should_process_mouse = true
 
 
 ## Processes a single mappable event.

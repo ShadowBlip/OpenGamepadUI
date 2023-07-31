@@ -255,8 +255,8 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 
 		gamepads.add(gamepad)
 		gamepad_added.emit(gamepad)
-		logger.debug("Discovered gamepad at: " + gamepad.get_phys_path())
-		logger.debug("Created virtual gamepad at: " + gamepad.get_virt_path())
+		logger.debug("Discovered gamepad at: " + gamepad.phys_path)
+		logger.debug("Created virtual gamepad at: " + gamepad.virt_path)
 
 	logger.debug("Finished configuring detected controllers")
 	logger.debug("Updated Managed gamepads: " + str(gamepads.phys_paths()))

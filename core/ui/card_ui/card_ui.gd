@@ -105,6 +105,10 @@ func _on_game_state_entered(_from: State) -> void:
 	# Turn off gamescope blur effect
 	_set_blur(gamescope.BLUR_MODE.OFF)
 	
+	# Set gamescope input focus to off so the user can interact with the game
+	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	
 	# Ensure panel is invisible
 	panel.visible = false
 	for child in ui_container.get_children():
@@ -118,6 +122,10 @@ func _on_game_state_exited(to: State) -> void:
 	
 	# Revert back to the default gamepad profile
 	gamepad_manager.set_gamepads_profile(null)
+	
+	# Set gamescope input focus to on so the user can interact with the UI
+	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 	
 	# If the in-game state still exists in the stack, set the blur state.
 	if state_machine.has_state(in_game_state):

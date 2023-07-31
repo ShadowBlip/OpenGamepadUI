@@ -22,6 +22,9 @@ var logger := Log.get_logger("GamepadProfile")
 ## the kind of event it is (e.g. an EvdevEvent with EV_KEY and BTN_SOUTH)
 func load_mappings() -> void:
 	for item in mapping:
+		if not item.source_event:
+			logger.warn("No source event specified for mapping!")
+			continue
 		var signature := item.source_event.get_signature()
 		if signature in _mapping_dict:
 			logger.debug("Signature already exists in mapping cache")
