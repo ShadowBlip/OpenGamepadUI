@@ -19,7 +19,7 @@ var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 @onready var focus_node: Control = $%NewButton
 
 @onready var profile_label := $%ProfileNameLabel as Label
-@onready var new_button := $%NewButton as Button
+@onready var new_button := $%NewButton as CardButton
 @onready var delete_button := $%DeleteButton as Button
 @onready var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
 @onready var gamepad_mapper := $%GamepadMapper

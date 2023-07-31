@@ -2,7 +2,6 @@
 extends ManagedGamepad
 class_name HandheldGamepad
 
-const AudioManager := preload("res://core/global/audio_manager.tres")
 var platform := load("res://core/global/platform.tres") as Platform
 var device_hider := load("res://core/systems/input/device_hider.tres") as DeviceHider
 
@@ -111,6 +110,7 @@ func _process_event(event: EvdevEvent, delta: float) -> void:
 
 	_on_key_down(event)
 	_check_mapped_events(event.get_event_value(), delta)
+
 
 ## Called for key down events.
 func _on_key_down(event: EvdevEvent) -> void:

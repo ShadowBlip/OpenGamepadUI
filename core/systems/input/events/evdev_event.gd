@@ -47,8 +47,17 @@ func get_event_value() -> int:
 func to_input_device_event() -> InputDeviceEvent:
 	return input_device_event
 
+
+## Returns a signature of the event to aid with faster matching. This signature
+## should return a unique string based on the kind of event but not the value.
+## E.g. "Evdev:1,215"
+func get_signature() -> String:
+	return "Evdev:" + str(get_event_type()) + "," + str(get_event_code())
+
+
 func _to_string() -> String:
-	return "<EvdevEvent-Type: " + str(get_event_type()) + ", Code: " + str(get_event_code()) + ", Value: " + str(get_event_value()) + ">"
+	return "<EvdevEvent: " + input_device_event.get_type_name() + " " + \
+		input_device_event.get_code_name() + " " + str(get_event_value()) + ">"
 
 
 ## Create a new [EvdevEvent] from the given [InputDeviceEvent]

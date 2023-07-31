@@ -2,6 +2,12 @@
 extends Resource
 class_name PlatformProvider
 
+## Base class that defines a particular platform
+##
+## A "platform" can be a particular set of hardware (i.e. a handheld PC), an
+## OS platform, etc. Anything that requires special consideration for
+## OpenGamepadUI to run correctly.
+
 @export var name: String ## Name of the platform
 @export var startup_actions: Array[PlatformAction] ## Actions to take upon startup
 @export var shutdown_actions: Array[PlatformAction] ## Actions to take upon shutdown 
@@ -15,6 +21,7 @@ func ready(root: Window) -> void:
 	pass
 
 
+## DEPRECATED
 ## If implemented, return a HandheldGamepad implementation for hardware platforms
 ## with embedded controllers.
 func get_handheld_gamepad() -> HandheldGamepad:

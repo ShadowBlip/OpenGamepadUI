@@ -1,6 +1,12 @@
 extends EvdevEvent
 class_name EvdevAbsEvent
 
+enum AXIS {
+	BOTH,     ## Event applies to both halfs of the axis (i.e. for mouse)
+	POSITIVE, ## Event only applies to positive axis values
+	NEGATIVE, ## Event only applies to negative axis values
+}
+
 @export_enum(
 	"ABS_X",
 	"ABS_Y",
@@ -53,7 +59,35 @@ var code: String:
 		code = v
 		input_device_event.code = input_device_event.get(v)
 
+## Axis that this event applies to
+@export var axis: AXIS = AXIS.BOTH
 
 func _init() -> void:
 	super()
 	input_device_event.type = InputDeviceEvent.EV_ABS
+
+
+func matches(event: MappableEvent) -> bool:
+	if not event is EvdevEvent:
+		return false
+	if event.input_device_event.code != input_device_event.code or \
+			event.input_device_event.type != input_device_event.type:
+		return false
+	
+	if axis == AXIS.POSITIVE:
+		return event.input_device_event.value >= 0
+	if axis == AXIS.NEGATIVE:
+		return event.input_device_event.value < 0
+		
+	return true
+
+
+## Returns a signature of the event to aid with faster matching. This signature
+## should return a unique string based on the kind of event but not the value.
+## E.g. "Evdev:1,215"
+func get_signature() -> String:
+	return "Evdev:" + str(get_event_type()) + "," + str(get_event_code()) # + "," + str(axis)
+
+
+func is_binary_event() -> bool:
+	return false

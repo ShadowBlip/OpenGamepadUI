@@ -1,13 +1,9 @@
-[gd_scene load_steps=37 format=3 uid="uid://cwarv58ju0sow"]
+[gd_scene load_steps=33 format=3 uid="uid://cwarv58ju0sow"]
 
-[ext_resource type="Script" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.gd" id="1_ouh0o"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_m8usa"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_3x6ad"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_wyv83"]
-[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_qa0wi"]
-[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="5_71exm"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_1anym"]
-[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_bxkdb"]
-[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_clwto"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_8f1hr"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_lxfig"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_5ao07"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="10_db4e0"]
 [ext_resource type="Texture2D" uid="uid://x6dny0j4ow2n" path="res://assets/ui/icons/plus-circle.svg" id="11_v40pu"]
@@ -35,7 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="32_p62t3"]
 [ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="33_iycnj"]
 [ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="34_r4o6a"]
-[ext_resource type="PackedScene" uid="uid://bwjgxpfga64uf" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.tscn" id="35_3g7p1"]
+[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.tscn" id="35_3g7p1"]
 
 [node name="GamepadSettings" type="Control"]
 layout_mode = 3
@@ -44,11 +40,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ouh0o")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_m8usa")]
+[node name="StateWatcher" parent="." instance=ExtResource("2_3x6ad")]
 state = ExtResource("3_wyv83")
-visible_during = Array[Resource]([ExtResource("4_qa0wi"), ExtResource("5_71exm"), ExtResource("6_1anym"), ExtResource("7_bxkdb"), ExtResource("8_clwto")])
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("9_5ao07")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wyv83")])
@@ -85,15 +85,10 @@ theme_override_constants/margin_top = 10
 [node name="ProfileNameContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
 layout_mode = 2
 
-[node name="NewButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("10_db4e0")]
+[node name="NewButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 25)
 layout_mode = 2
-size_flags_horizontal = 1
-icon = ExtResource("11_v40pu")
-flat = true
-icon_alignment = 1
-expand_icon = true
+texture = ExtResource("11_v40pu")
 
 [node name="DeleteButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("10_db4e0")]
 unique_name_in_owner = true

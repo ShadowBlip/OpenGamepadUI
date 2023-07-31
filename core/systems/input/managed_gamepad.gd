@@ -132,6 +132,10 @@ func open(path: String) -> int:
 
 	# Grab exclusive access over the physical device
 	grab()
+	
+	# If a default profile exists, load its mappings
+	if profile:
+		profile.load_mappings()
 
 	return OK
 
@@ -192,6 +196,7 @@ func set_profile(gamepad_profile: GamepadProfile) -> void:
 	mutex.lock()
 	profile = gamepad_profile
 	mutex.unlock()
+	profile.load_mappings()
 	profile_updated.emit()
 
 
@@ -255,13 +260,14 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 			logger.debug("Emitting EvdevEvent: " + str(translated))
 		if translated is NativeEvent:
 			# Duplicate to avoid attempting to transmit the same object in the same frame multiple times
-			var t_event = translated.event.duplicate()
+			var t_event := translated.event.duplicate() as InputEvent
 			translated = translated.duplicate()
 			translated.event = t_event
 			logger.debug("Emitting NativeEvent: " + str(translated))
 		
 		# Defer processing this event
 		_process_mappable_event(translated, delta)
+		
 		# Important to delay before writing syn report when multiple key's are being sent. Otherwise
 		# we get issues with button passthrough.
 		if translated_events.size() > 1:
@@ -324,8 +330,7 @@ func _process_mappable_event(event: MappableEvent, delta: float) -> void:
 		_process_phys_event(event.to_input_device_event(), delta)
 		return
 	if event is NativeEvent:
-		logger.debug("process_mappable_event: " + str(event))
-		_send_input_event(event.event)
+		_process_native_event(event.event, delta)
 
 
 ## Processes a single physical gamepad event. Depending on the intercept mode,
@@ -610,27 +615,123 @@ func _process_virt_event(event: InputDeviceEvent) -> void:
 		return
 
 
+## Process native Godot input events
+func _process_native_event(event: InputEvent, delta: float) -> void:
+	# Handle OpenGamepadUI action events (e.g. "ogui_qam")
+	if event is InputEventAction:
+		_send_input_event(event)
+		return
+
+	# Handle keyboard event translations
+	if event is InputEventKey:
+		logger.debug("Sending key: " + OS.get_keycode_string(event.keycode))
+		var value := 1 if event.is_pressed() else 0
+		xwayland.send_key(event.keycode, value)
+		return
+
+	# Handle mouse button event translations
+	if event is InputEventMouseButton:
+		# Set the value to send
+		var value := 1 if event.is_pressed() else 0
+		
+		# Set the button to send
+		var button := -1
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				button = InputDeviceEvent.BTN_LEFT
+			MOUSE_BUTTON_RIGHT:
+				button = InputDeviceEvent.BTN_RIGHT
+			MOUSE_BUTTON_MIDDLE:
+				button = InputDeviceEvent.BTN_MIDDLE
+		if button > 0:
+			virt_mouse.write_event(event.EV_KEY, button, value)
+			virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+
+		# Handle mousewheel events
+		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			if not event.is_pressed():
+				return
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, 1)
+				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, -1)
+				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+			return
+
+		return
+
+	# Handle mouse motion event translation targets
+	if event is InputEventMouseMotion:
+		#_set_current_axis_value(event)
+		return
+
+
 ## Translates the given event based on the gamepad profile.
 func _translate_event(event: MappableEvent, delta: float) -> Array[MappableEvent]:
 	# If no gamepad profile is set, do no translation
 	if not profile:
 		return [event]
 	
-	# Check to see if this event has a mapping in the profile.
-	# TODO: is there a more efficient way to match?
-	for mapping in profile.mapping:
-		if not mapping.source_event:
-			continue
-		if not mapping.source_event.matches(event):
-			continue
-		
-		# Set the value from the source event
-		for out_event in mapping.output_events:
-			out_event.set_value(event.get_value())
-		
-		return mapping.output_events
+	# Get the event mapping from the gamepad profile
+	var mapping := profile.get_mapping_for(event)
 	
-	return [event]
+	# If no mapping exists, do no translation
+	if not mapping:
+		return [event]
+	if not mapping.source_event:
+		return [event]
+	if not mapping.source_event.matches(event):
+		return [event]
+	
+	# Get the value from the source event
+	var value := event.get_value()
+	
+	# If this is an EvdevAbsEvent, we need to normalize the value by
+	# using the axis minimum and maximum values to return a value from -1.0 - 1.0
+	# reflecting how far the axis has been pushed from the center
+	if event is EvdevAbsEvent:
+		value = _normalize_axis(event.input_device_event)
+	
+	# Loop through each event in the mapping and translate the source event
+	# to the target event.
+	var translated: Array[MappableEvent] = []
+	for out_event in mapping.output_events:
+		var translated_event := out_event.duplicate() as MappableEvent
+		var translated_value := value
+		
+		# If this is an evdev event, duplicate the object
+		if out_event is EvdevKeyEvent:
+			var input_device_event := out_event.input_device_event.duplicate() as InputDeviceEvent
+			translated_event.input_device_event = input_device_event
+		
+		# If we are translating to a native event, duplicate the event object
+		# so it is not processed twice.
+		elif out_event is NativeEvent:
+			var input_event := out_event.event.duplicate() as InputEvent
+			translated_event.event = input_event
+		
+		# If we're translating to an analog event, we need to denormalize the
+		# value. Converting a percentage into the real value. E.g. translate 1.0 -> 35433
+		if translated_event is EvdevAbsEvent:
+			translated_value = _denormalize_axis(translated_event.get_event_code(), value)
+		
+		# If we're translating from a non-binary value (e.g. 0.75) to a binary event
+		# (e.g. 1 or 0), we need to convert the value based on some threshold.
+		var is_binary_value := translated_value == 0 or translated_value == 1
+		if translated_event.is_binary_event() and not is_binary_value:
+			var threshold := 0.35
+			if translated_value > threshold or translated_value < -threshold:
+				translated_value = 1
+			else:
+				translated_value = 0
+		
+		# Set the value of the event from the source event
+		translated_event.set_value(translated_value)
+		translated.append(translated_event)
+		logger.debug("Translated event " + str(event) + " into " + str(translated_event))
+	
+	return translated
 
 
 # Tries to determine if an axis is "pressed" enough to send a key press event
@@ -783,6 +884,69 @@ func _normalize_axis(event: InputDeviceEvent) -> float:
 			if event.value <= 0:
 				var minimum := abs_rz_min
 				var value := event.value / float(minimum)
+				return -value
+
+	return 0
+
+
+# Uses the given normalized value and returns the real value between the minimum
+# and maximum values for the given axis. This does the opposite of _normalize_axis().
+# E.g. _denormalize_axis(event.get_code(), 0.75)
+func _denormalize_axis(axis_code: int, normalized_value: float) -> float:
+	match axis_code:
+		InputDeviceEvent.ABS_Y:
+			if normalized_value > 0:
+				var maximum := abs_y_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_y_min
+				var value := normalized_value * float(minimum)
+				return -value
+		InputDeviceEvent.ABS_X:
+			if normalized_value > 0:
+				var maximum := abs_x_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_x_min
+				var value := normalized_value * float(minimum)
+				return -value
+		InputDeviceEvent.ABS_Z:
+			if normalized_value > 0:
+				var maximum := abs_z_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_z_min
+				var value := normalized_value * float(minimum)
+				return -value
+		InputDeviceEvent.ABS_RY:
+			if normalized_value > 0:
+				var maximum := abs_ry_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_ry_min
+				var value := normalized_value * float(minimum)
+				return -value
+		InputDeviceEvent.ABS_RX:
+			if normalized_value > 0:
+				var maximum := abs_rx_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_rx_min
+				var value := normalized_value * float(minimum)
+				return -value
+		InputDeviceEvent.ABS_RZ:
+			if normalized_value > 0:
+				var maximum := abs_rz_max
+				var value := normalized_value * float(maximum)
+				return value
+			if normalized_value <= 0:
+				var minimum := abs_rz_min
+				var value := normalized_value * float(minimum)
 				return -value
 
 	return 0

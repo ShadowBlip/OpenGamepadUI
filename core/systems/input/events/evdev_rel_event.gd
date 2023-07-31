@@ -27,3 +27,7 @@ var code: String:
 func _init() -> void:
 	super()
 	input_device_event.type = InputDeviceEvent.EV_REL
+
+
+func is_binary_event() -> bool:
+	return false
