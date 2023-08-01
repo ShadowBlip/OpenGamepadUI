@@ -11,6 +11,9 @@ class_name GamepadProfile
 @export var name: String
 @export var mapping: Array[GamepadMapping]
 
+@export_category("Mouse")
+@export var mouse_speed_pps := 800
+
 # Map of an event signature to a gamepad mapping. This is used to try and do
 # fast lookups of events.
 var _mapping_dict: Dictionary = {}
@@ -36,6 +39,8 @@ func load_mappings() -> void:
 ## if no mapping was found.
 func get_mapping_for(event: MappableEvent) -> GamepadMapping:
 	var signature := event.get_signature()
+	
+	# Lookup the mapping for the event
 	if signature in _mapping_dict:
 		return _mapping_dict[signature]
 	return null

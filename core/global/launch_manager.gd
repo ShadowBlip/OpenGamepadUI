@@ -109,6 +109,12 @@ func _init() -> void:
 	var on_focused_app_changed := func(from: int, to: int) -> void:
 		logger.debug("Focused app changed from " + str(from) + " to " + str(to))
 	Gamescope.focused_app_updated.connect(on_focused_app_changed)
+	
+	# Whenever the in-game state is entered, set the gamepad profile
+	var on_game_state_entered := func(from: State):
+		if _current_app:
+			set_app_gamepad_profile(_current_app)
+	in_game_state.state_entered.connect(on_game_state_entered)
 
 
 # Returns true if the 'STEAM_OVERLAY' prop should be set. This property should
@@ -538,12 +544,6 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 	running_app.window_id = window_id
 	running_app.state = RunningApp.STATE.RUNNING
 	running_app.is_ogui_managed = false
-
-	# Check to see if this game has any gamepad profiles. If so, set our 
-	# gamepads to use them.
-	var section := ".".join(["game", name])
-	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
-	set_gamepad_profile(profile_path)
 
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)

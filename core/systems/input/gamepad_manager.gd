@@ -213,13 +213,13 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 		# Get the file name of the event device for the gamepad and see if it
 		# exists in the hidden devices folder.
-		if _get_event_from_phys(gamepad.get_phys_path()) in hidden_devices:
+		if _get_event_from_phys(gamepad.phys_path) in hidden_devices:
 			continue
 		# If the gamepad exists and the device wasn't hidden, do not remove it.
-		if _get_event_from_phys(gamepad.get_phys_path()) in DirAccess.get_files_at("/dev/input"):
+		if _get_event_from_phys(gamepad.phys_path) in DirAccess.get_files_at("/dev/input"):
 			continue
 
-		logger.debug("Gamepad disconnected: " + gamepad.get_phys_path())
+		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		gamepads.erase(gamepad)
 		gamepad_removed.emit()
 

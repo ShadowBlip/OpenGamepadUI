@@ -12,18 +12,49 @@ func matches(event: MappableEvent) -> bool:
 	return false
 
 
+## Set the given value on the event. How this gets set depends on the underlying
+## Godot event.
 func set_value(value: float) -> void:
 	if not event:
 		return
 	if event is InputEventAction:
 		event.pressed = value == 1
+	elif event is InputEventKey:
+		event.pressed = value == 1
+	elif event is InputEventJoypadButton:
+		event.pressed = value == 1
+	elif event is InputEventMouseButton:
+		event.pressed = value == 1
+	elif event is InputEventMouseMotion:
+		# The "relative" property acts as a mask to determine which values should
+		# be set.
+		var position := Vector2.ZERO
+		if event.relative.x == 1:
+			position.x = value
+		if event.relative.y == 1:
+			position.y = value
+		event.position = position
 
 
 func get_value() -> float:
 	if not event:
 		return 0
 	if event is InputEventAction:
-		return event.pressed
+		return 1 if event.pressed else 0
+	elif event is InputEventKey:
+		return 1 if event.pressed else 0
+	elif event is InputEventJoypadButton:
+		return 1 if event.pressed else 0
+	elif event is InputEventMouseButton:
+		return 1 if event.pressed else 0
+	elif event is InputEventMouseMotion:
+		# The "relative" property acts as a mask to determine which values should
+		# be returned.
+		if event.relative.x == 1:
+			return event.position.x
+		elif event.relative.y == 1:
+			return event.position.y
+		return 0
 	return 0
 
 

@@ -62,6 +62,27 @@ func _to_string() -> String:
 
 ## Create a new [EvdevEvent] from the given [InputDeviceEvent]
 static func from_input_device_event(event: InputDeviceEvent) -> EvdevEvent:
-	var evdev_event := EvdevEvent.new()
+	var evdev_event: EvdevEvent
+	var type := event.type
+	if type == InputDeviceEvent.EV_ABS:
+		evdev_event = EvdevAbsEvent.new()
+	elif type == InputDeviceEvent.EV_KEY:
+		evdev_event = EvdevKeyEvent.new()
+	elif type == InputDeviceEvent.EV_REL:
+		evdev_event = EvdevRelEvent.new()
+	elif type == InputDeviceEvent.EV_LED:
+		evdev_event = EvdevLedEvent.new()
+	elif type == InputDeviceEvent.EV_MSC:
+		evdev_event = EvdevMscEvent.new()
+	elif type == InputDeviceEvent.EV_SYN:
+		evdev_event = EvdevSynEvent.new()
+	elif type == InputDeviceEvent.EV_REP:
+		evdev_event = EvdevRepEvent.new()
+	elif type == InputDeviceEvent.EV_SND:
+		evdev_event = EvdevSndEvent.new()
+	elif type == InputDeviceEvent.EV_SW:
+		evdev_event = EvdevSwEvent.new()
+	else:
+		evdev_event = EvdevEvent.new()
 	evdev_event.input_device_event = event
 	return evdev_event

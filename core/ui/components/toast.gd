@@ -1,6 +1,6 @@
 extends Control
 
-var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
+var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var default_icon := preload("res://icon.svg")
 
 @onready var notification_container := $ToastContainer/NotificationContainer
@@ -17,7 +17,7 @@ func _ready() -> void:
 	dismiss_button.pressed.connect(dismiss)
 
 	# Subscribe to any notifications
-	NotificationManager.notification_queued.connect(_on_notification_queued)
+	notification_manager.notification_queued.connect(_on_notification_queued)
 	_on_notification_queued(null)
 
 
@@ -31,7 +31,7 @@ func dismiss() -> void:
 func _on_notification_queued(_notify: Notification) -> void:
 	if is_showing():
 		return
-	var notify := NotificationManager.next()
+	var notify := notification_manager.next()
 	if not notify:
 		return
 	show_toast(notify.text, notify.icon, notify.timeout, notify.action_text != "")
@@ -40,7 +40,7 @@ func _on_notification_queued(_notify: Notification) -> void:
 func _on_animation_finished(anim_name: String):
 	if anim_name != "hide":
 		return
-	if NotificationManager.has_next():
+	if notification_manager.has_next():
 		_on_notification_queued(null)
 
 

@@ -3,8 +3,11 @@ extends Control
 signal notification_received
 signal notification_finished
 
-var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
+var PID: int = OS.get_process_id()
+var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var default_icon := preload("res://icon.svg")
+var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
 @onready var panel := $%PanelContainer as PanelContainer
 @onready var texture := $%TextureRect as TextureRect
@@ -17,11 +20,12 @@ var default_icon := preload("res://icon.svg")
 func _ready() -> void:
 	panel.visible = false
 	# Subscribe to any notifications
-	NotificationManager.notification_queued.connect(_on_notification_queued)
+	notification_manager.notification_queued.connect(_on_notification_queued)
 	_on_notification_queued.call_deferred(null)
 	
 	# Continue showing any other queued messages
 	var on_finished := func():
+		gamescope.set_notification(overlay_window_id, 0)
 		_on_notification_queued(null)
 	effect.slide_out_finished.connect(on_finished)
 
@@ -31,9 +35,10 @@ func _on_notification_queued(_notify: Notification) -> void:
 	if _is_showing():
 		return
 	# TODO: Only consume the notification if in in-game state
-	var notify := NotificationManager.next()
+	var notify := notification_manager.next()
 	if not notify:
 		return
+	gamescope.set_notification(overlay_window_id, 1)
 	show_toast(notify.text, notify.icon, notify.timeout)
 
 

@@ -30,14 +30,12 @@ var profile := load("res://assets/gamepad/profiles/default.tres") as GamepadProf
 var xwayland := gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
 var mutex := Mutex.new()
 
-var event_map := {}
 var phys: String
 var phys_path: String
 var virt_path: String
-var mouse_path: String
 var phys_device: InputDevice
 var virt_device: VirtualInputDevice
-var virt_mouse: VirtualInputDevice
+var virt_mouse := GamepadMouse.new()
 var abs_y_max: int
 var abs_y_min: int
 var abs_x_max: int
@@ -50,13 +48,8 @@ var abs_rx_max: int
 var abs_rx_min: int
 var abs_rz_max: int
 var abs_rz_min: int
-var cur_x: float
-var cur_y: float
-var cur_rx: float
-var cur_ry: float
 ## Bitwise flags indicating what left-stick axis directions are currently being pressed.
 var axis_pressed: AXIS_PRESSED
-var mouse_remainder := Vector2()
 var should_process_mouse := false
 var _ff_effects := {}  # Current force feedback effect ids
 
@@ -100,7 +93,6 @@ var use_mode_list: Array = [
 
 
 func _init() -> void:
-	profile_updated.connect(_on_profile_updated)
 	logger = Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 
@@ -122,13 +114,9 @@ func open(path: String) -> int:
 	virt_path = virt_device.get_devnode()
 
 	# Create a virtual mouse associated with this gamepad
-	virt_mouse = InputDevice.create_mouse()
-	if not virt_mouse:
+	if virt_mouse.open() != OK:
 		logger.warn("Unable to create virtual mouse for: " + phys_path)
 		return ERR_CANT_CREATE
-
-	# Set the path to the virtual mouse
-	mouse_path = virt_mouse.get_devnode()
 
 	# Grab exclusive access over the physical device
 	grab()
@@ -192,11 +180,29 @@ func set_profile(gamepad_profile: GamepadProfile) -> void:
 	var profile_name := "null"
 	if gamepad_profile:
 		profile_name = gamepad_profile.name
+		
 	logger.debug("Setting gamepad profile to: " + profile_name)
 	mutex.lock()
+	should_process_mouse = false
 	profile = gamepad_profile
-	mutex.unlock()
+	if profile:
+		virt_mouse.mouse_speed_pps = profile.mouse_speed_pps
+
+		# Map the profile mappings with the events to translate
+		for mapping in profile.mapping:
+			# If there is a mapping that does mouse motion, enable
+			# processing of mouse motion in process_input()
+			for output_event in mapping.output_events:
+				if not output_event is NativeEvent:
+					continue
+				if output_event.event is InputEventMouseMotion:
+					logger.debug("Profile contains a mouse mapping")
+					should_process_mouse = true
+	
+	# Load the profile mappings
 	profile.load_mappings()
+	mutex.unlock()
+	
 	profile_updated.emit()
 
 
@@ -242,7 +248,7 @@ func process_input() -> void:
 
 	# If we need to process mouse movement, do it
 	if mode == INTERCEPT_MODE.PASS and should_process_mouse:
-		_move_mouse(delta)
+		virt_mouse.process(delta)
 
 
 ## Inject the given event into the event processing queue.
@@ -302,30 +308,6 @@ func get_capabilities() -> Array[MappableEvent]:
 		idx += 1
 
 	return capabilities
-
-
-func _on_profile_updated() -> void:
-	event_map = {}
-	should_process_mouse = false
-	if not profile:
-		return
-
-	logger.info("Setting gamepad profile: " + profile.name)
-	# Map the profile mappings with the events to translate
-	for m in profile.mapping:
-		var mapping := m as GamepadMapping
-		# TODO: Do we need this anymore?
-		if not mapping.source_event in event_map:
-			event_map[mapping.source_event] = []
-		event_map[mapping.source_event].append(mapping)
-
-		# If there is a mapping that does mouse motion, enable
-		# processing of mouse motion in process_input()
-		for output_event in mapping.output_events:
-			if not output_event is NativeEvent:
-				continue
-			if output_event.event is InputEventMouseMotion:
-				should_process_mouse = true
 
 
 ## Processes a single mappable event.
@@ -634,40 +616,9 @@ func _process_native_event(event: InputEvent, delta: float) -> void:
 		return
 
 	# Handle mouse button event translations
-	if event is InputEventMouseButton:
-		# Set the value to send
-		var value := 1 if event.is_pressed() else 0
-		
-		# Set the button to send
-		var button := -1
-		match event.button_index:
-			MOUSE_BUTTON_LEFT:
-				button = InputDeviceEvent.BTN_LEFT
-			MOUSE_BUTTON_RIGHT:
-				button = InputDeviceEvent.BTN_RIGHT
-			MOUSE_BUTTON_MIDDLE:
-				button = InputDeviceEvent.BTN_MIDDLE
-		if button > 0:
-			virt_mouse.write_event(event.EV_KEY, button, value)
-			virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-
-		# Handle mousewheel events
-		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-			if not event.is_pressed():
-				return
-			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, 1)
-				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				virt_mouse.write_event(event.EV_REL, event.REL_WHEEL, -1)
-				virt_mouse.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-			return
-
-		return
-
-	# Handle mouse motion event translation targets
-	if event is InputEventMouseMotion:
-		#_set_current_axis_value(event)
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		logger.debug("Sending mouse input")
+		virt_mouse.process_mouse_event(event)
 		return
 
 
@@ -696,46 +647,86 @@ func _translate_event(event: MappableEvent, delta: float) -> Array[MappableEvent
 	# reflecting how far the axis has been pushed from the center
 	if event is EvdevAbsEvent:
 		value = _normalize_axis(event.input_device_event)
-	
+		logger.debug("Normalized EV_ABS value " + str(event.get_event_value()) + " to: " + str(value))
+
+	# Handle axis output behavior. This type of translation is usually to map analog
+	# source events to multiple outputs. E.g. ABS_Y to 'W' and 'S' keys
+	if mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.AXIS:
+		# If there is only one output event, treat this accordingly
+		if mapping.output_events.size() == 1:
+			var out_event := mapping.output_events[0]
+			var translated_event := _translate_output_event(out_event, value)
+			return [translated_event]
+		
+		# If there are two events defined, choose one based on the source value
+		if mapping.output_events.size() == 2:
+			var pos_axis_event: MappableEvent
+			var neg_axis_event: MappableEvent
+			
+			# If the value is positive, we only care about the positive axis
+			if value >= 0:
+				pos_axis_event = _translate_output_event(mapping.output_events[0], value)
+				neg_axis_event = _translate_output_event(mapping.output_events[1], 0)
+			# If the value is negative, we only care about the negative axis
+			else:
+				pos_axis_event = _translate_output_event(mapping.output_events[0], 0)
+				neg_axis_event = _translate_output_event(mapping.output_events[1], value)
+			
+			logger.debug("Translated event " + str(event) + " into " + str(pos_axis_event))
+			logger.debug("Translated event " + str(event) + " into " + str(neg_axis_event))
+			return [pos_axis_event, neg_axis_event]
+		
+		logger.warn("No axis output defined. Not translating event")
+		return [event]
+
+	# Default behavior is to return a sequence of events
 	# Loop through each event in the mapping and translate the source event
 	# to the target event.
 	var translated: Array[MappableEvent] = []
 	for out_event in mapping.output_events:
-		var translated_event := out_event.duplicate() as MappableEvent
-		var translated_value := value
-		
-		# If this is an evdev event, duplicate the object
-		if out_event is EvdevKeyEvent:
-			var input_device_event := out_event.input_device_event.duplicate() as InputDeviceEvent
-			translated_event.input_device_event = input_device_event
-		
-		# If we are translating to a native event, duplicate the event object
-		# so it is not processed twice.
-		elif out_event is NativeEvent:
-			var input_event := out_event.event.duplicate() as InputEvent
-			translated_event.event = input_event
-		
-		# If we're translating to an analog event, we need to denormalize the
-		# value. Converting a percentage into the real value. E.g. translate 1.0 -> 35433
-		if translated_event is EvdevAbsEvent:
-			translated_value = _denormalize_axis(translated_event.get_event_code(), value)
-		
-		# If we're translating from a non-binary value (e.g. 0.75) to a binary event
-		# (e.g. 1 or 0), we need to convert the value based on some threshold.
-		var is_binary_value := translated_value == 0 or translated_value == 1
-		if translated_event.is_binary_event() and not is_binary_value:
-			var threshold := 0.35
-			if translated_value > threshold or translated_value < -threshold:
-				translated_value = 1
-			else:
-				translated_value = 0
-		
-		# Set the value of the event from the source event
-		translated_event.set_value(translated_value)
+		var translated_event := _translate_output_event(out_event, value)
 		translated.append(translated_event)
 		logger.debug("Translated event " + str(event) + " into " + str(translated_event))
 	
 	return translated
+
+
+## Creates a new translated event from the given gamepad profile event mapping
+## and value.
+func _translate_output_event(out_event: MappableEvent, value: float) -> MappableEvent:
+	var translated_event := out_event.duplicate() as MappableEvent
+	var translated_value := value
+	
+	# If this is an evdev event, duplicate the object
+	if out_event is EvdevKeyEvent:
+		var input_device_event := out_event.input_device_event.duplicate() as InputDeviceEvent
+		translated_event.input_device_event = input_device_event
+	
+	# If we are translating to a native event, duplicate the event object
+	# so it is not processed twice.
+	elif out_event is NativeEvent:
+		var input_event := out_event.event.duplicate() as InputEvent
+		translated_event.event = input_event
+	
+	# If we're translating to an axis event, we need to denormalize the
+	# value. Converting a percentage into the real value. E.g. translate 1.0 -> 35433
+	if translated_event is EvdevAbsEvent:
+		translated_value = _denormalize_axis(translated_event.get_event_code(), value)
+	
+	# If we're translating from a non-binary value (e.g. 0.75) to a binary event
+	# (e.g. 1 or 0), we need to convert the value based on some threshold.
+	var is_binary_value := translated_value == 0 or translated_value == 1
+	if translated_event.is_binary_event() and not is_binary_value:
+		var threshold := 0.45
+		if translated_value > threshold or translated_value < -threshold:
+			translated_value = 1
+		else:
+			translated_value = 0
+	
+	# Set the value of the event from the source event
+	translated_event.set_value(translated_value)
+	
+	return translated_event
 
 
 # Tries to determine if an axis is "pressed" enough to send a key press event
@@ -753,82 +744,6 @@ func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 			return true
 	logger.debug("_is_axis_pressed: false")
 	return false
-
-
-# Updates the current axis values
-func _set_current_axis_value(event: InputDeviceEvent) -> void:
-	var value := _normalize_axis(event)
-	match event.get_code():
-		event.ABS_X:
-			cur_x = value
-		event.ABS_Y:
-			cur_y = value
-		event.ABS_RX:
-			cur_rx = value
-		event.ABS_RY:
-			cur_ry = value
-
-
-# Move the mouse based on the given input event translation
-# TODO: Don't assume the source is a joystick
-func _move_mouse(delta: float) -> void:
-	var pixels_to_move := Vector2()
-
-	var lx := _calculate_mouse_move(delta, cur_x)
-	var ly := _calculate_mouse_move(delta, cur_y)
-	var rx := _calculate_mouse_move(delta, cur_rx)
-	var ry := _calculate_mouse_move(delta, cur_ry)
-
-	# Add the left and right joystick inputs
-	pixels_to_move.x = lx + rx
-	pixels_to_move.y = ly + ry
-
-	# Get the fractional value of the position so we can accumulate them
-	# in between invocations
-	var x: int = pixels_to_move.x  # E.g. 3.14 -> 3
-	var y: int = pixels_to_move.y
-	var remainder_x: float = pixels_to_move.x - float(x)
-	var remainder_y: float = pixels_to_move.y - float(y)
-
-	# Keep track of relative mouse movements to keep around fractional values
-	mouse_remainder.x += remainder_x
-	if mouse_remainder.x >= 1:
-		x += 1
-		mouse_remainder.x -= 1
-	if mouse_remainder.x <= -1:
-		x -= 1
-		mouse_remainder.x += 1
-	mouse_remainder.y += remainder_y
-	if mouse_remainder.y >= 1:
-		y += 1
-		mouse_remainder.y -= 1
-	if mouse_remainder.y <= -1:
-		y -= 1
-		mouse_remainder.y += 1
-
-	# Write the mouse motion event to the virtual device
-	var EV_REL := InputDeviceEvent.EV_REL
-	var EV_SYN := InputDeviceEvent.EV_SYN
-	var REL_X := InputDeviceEvent.REL_X
-	var REL_Y := InputDeviceEvent.REL_Y
-	var SYN_REPORT := InputDeviceEvent.SYN_REPORT
-	if x != 0:
-		virt_mouse.write_event(EV_REL, REL_X, x)
-		virt_mouse.write_event(EV_SYN, SYN_REPORT, 0)
-	if y != 0:
-		virt_mouse.write_event(EV_REL, REL_Y, y)
-		virt_mouse.write_event(EV_SYN, SYN_REPORT, 0)
-
-
-# Calculate how much the mouse should move based on the current axis value
-func _calculate_mouse_move(delta: float, value: float) -> float:
-	var threshold := 0.20
-	if abs(value) < threshold:
-		return 0
-	var mouse_speed_pps := 800
-	var pixels_to_move := mouse_speed_pps * value * delta
-
-	return pixels_to_move
 
 
 # Uses the axis minimum and maximum values to return a value from -1.0 - 1.0

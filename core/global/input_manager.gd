@@ -51,22 +51,9 @@ var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 var guide_action := false
 
 
-## Set focus will use Gamescope to focus OpenGamepadUI
-func set_focus(focused: bool) -> void:
-	# Sets ourselves to the input focus
-	var window_id = overlay_window_id
-	if focused:
-		logger.debug("Focusing overlay")
-		Gamescope.set_input_focus(window_id, 1)
-		return
-	logger.debug("Un-focusing overlay")
-	Gamescope.set_input_focus(window_id, 0)
-
-
 ## Returns whether or not get_viewport().set_input_as_handled() should be called
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func input(event: InputEvent) -> bool:
-	logger.debug("Too much data: " + str(event))
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
 		_guide_input(event)
