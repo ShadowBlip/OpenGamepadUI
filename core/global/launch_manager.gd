@@ -225,11 +225,6 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	running_app.command = command
 	running_app.environment = env
 
-	# Check to see if this game has any gamepad profiles. If so, set our 
-	# gamepads to use them.
-	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
-	set_gamepad_profile(profile_path)
-
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
