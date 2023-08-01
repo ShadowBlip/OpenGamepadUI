@@ -9,7 +9,7 @@ var mouse_remainder := Vector2()
 var mouse_position := Vector2.ZERO
 var should_process := false
 
-var logger := Log.get_logger("GamepadMouse", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadMouse")
 
 
 ## Creates and opens the gamepad mouse device

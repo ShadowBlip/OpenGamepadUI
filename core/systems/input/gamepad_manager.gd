@@ -3,11 +3,16 @@ class_name GamepadManager
 
 ## Manages virtual controllers
 ##
-## The [GamepadManager]  discovers gamepads and interepts their input so 
+## The [GamepadManager] discovers gamepads and interepts their input so 
 ## OpenGamepadUI can control what inputs should get passed on to the game and 
 ## what only OpenGamepadUI should process. This works by grabbing exclusive 
 ## access to the physical gamepads and creating a virtual
 ## gamepad that games can see.
+##
+## SteamInput does this differently. It instead sets the 'SDL_GAMECONTROLLER_IGNORE_DEVICES'
+## environment variable whenever it launches a game to make the game ignore all
+## physical gamepads EXCEPT for Steam virtual gamepads.
+## https://github.com/godotengine/godot/pull/76045
 
 
 signal gamepads_changed
@@ -19,7 +24,7 @@ var device_hider := load("res://core/systems/input/device_hider.tres") as Device
 var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
 
 var gamepads := GamepadArray.new()
-var logger := Log.get_logger("GamepadManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("GamepadManager")
 
 ## Default gamepad profile to use
 @export_category("Gamepad Profile")
@@ -138,7 +143,6 @@ func exit() -> void:
 			device_hider.restore_event_device(gamepad.kb_event_path)
 
 
-
 ## Sets the gamepad intercept mode
 func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 	logger.debug("Setting gamepad intercept mode: " + str(mode))
@@ -160,6 +164,19 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 	
 	logger.debug("Current Managed gamepads: " + str(gamepads.phys_paths()))
 	
+	# Get all currently detected sysfs input devices
+	var sysfs_devices := SysfsDevice.get_all()
+	
+	# Get a list of all currently detected event devices (e.g. ["event1", "event2"])
+	var detected_event_handlers := PackedStringArray()
+	for sysfs_device in sysfs_devices:
+		logger.debug("Detected device: " + str(sysfs_device))
+		for handler in sysfs_device.handlers:
+			if not handler.begins_with("event"):
+				continue
+			detected_event_handlers.append(handler)
+	logger.debug("Detected device handlers: " + str(detected_event_handlers))
+	
 	# Discover any new gamepads
 	var discovered_devices := discover_devices()
 	var discovered_gamepads: Array[InputDevice] = []
@@ -170,14 +187,44 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			var handheld_platform := platform.platform as HandheldPlatform
 			if handheld_platform.is_handheld_keyboard(dev):
 				discovered_keyboards.append(dev)
+				continue
 			if handheld_platform.is_handheld_gamepad(dev):
 				discovered_handheld = dev
-			continue
+				continue
 		if dev.has_event_code(InputDeviceEvent.EV_KEY, InputDeviceEvent.BTN_MODE):
 			discovered_gamepads.append(dev)
 			continue
 
-	# TODO: Handle handheld gamepad reconnecting
+	# Remove all gamepads that no longer exist
+	for gamepad in gamepads.items():
+		# Get the file name of the event device for the gamepad and see if it
+		# exists in the hidden devices folder.
+		if _get_event_from_phys(gamepad.phys_path) in detected_event_handlers:
+			continue
+
+		# Do not delete physically unremovable gamepads that might virtually be 
+		# disconnected, but delete their physical device reference
+		if gamepad is HandheldGamepad:
+			logger.debug("Handheld gamepad was disconnected")
+			gamepad.phys_device = null
+			continue
+		
+		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
+		gamepads.erase(gamepad)
+		gamepad_removed.emit()
+
+	# Handle any handheld gamepads that were reconnected
+	if gamepads.handheld and gamepads.handheld.phys_device == null and discovered_handheld:
+		logger.debug("Handheld gamepad was reconnected")
+		gamepads.handheld.phys_device = discovered_handheld
+		gamepads.handheld.grab()
+		
+		# Hide the device from other processes
+		var path := discovered_handheld.get_path()
+		logger.debug("Trying to re-hide handheld gamepad")
+		var hidden_path := await device_hider.hide_event_device(path)
+		if hidden_path == "":
+			logger.warn("Unable to re-hide handheld gamepad: " + path)
 
 	# Setup any handheld gamepads if they are discovered and not yet configured
 	if not gamepads.has_handheld() and discovered_handheld:
@@ -204,24 +251,6 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			gamepad.setup(discovered_keyboards)
 			gamepads.add(gamepad)
 			gamepad_added.emit(gamepad)
-
-	# Remove all gamepads that no longer exist
-	var hidden_devices := device_hider.get_hidden_devices()
-	for gamepad in gamepads.items():
-		# Do not delete physically unremovable gamepads that might virtually be disconnected
-		if gamepad is HandheldGamepad:
-			continue
-		# Get the file name of the event device for the gamepad and see if it
-		# exists in the hidden devices folder.
-		if _get_event_from_phys(gamepad.phys_path) in hidden_devices:
-			continue
-		# If the gamepad exists and the device wasn't hidden, do not remove it.
-		if _get_event_from_phys(gamepad.phys_path) in DirAccess.get_files_at("/dev/input"):
-			continue
-
-		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
-		gamepads.erase(gamepad)
-		gamepad_removed.emit()
 
 	# Add any newly found gamepads
 	for dev in discovered_gamepads:
