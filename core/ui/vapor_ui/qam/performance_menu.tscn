@@ -42,9 +42,17 @@ text = "Per-game Profile"
 separator_visible = false
 
 [node name="FramerateLimitSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
-visible = false
+unique_name_in_owner = true
 layout_mode = 2
 text = "FPS Limit"
+value = 60.0
+max_value = 240.0
+step = 10.0
+
+[node name="FramerateChangeTimer" type="Timer" parent="VBoxContainer/FramerateLimitSlider"]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true
 
 [node name="RefreshRateSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
 visible = false
