@@ -36,21 +36,21 @@ class_name HandheldPlatform
 
 
 func is_handheld_gamepad(device: InputDevice) -> bool:
-	logger.info("Test input device: " + device.get_path() + ": " + device.get_name())
-	logger.info("Looking for: " + gamepad.phys_path + ": " + gamepad.name)
+	logger.debug("Test input device: " + device.get_path() + ": " + device.get_name())
+	logger.debug("Looking for: " + gamepad.phys_path + ": " + gamepad.name)
 	if device.get_phys() == gamepad.phys_path and device.get_name() == gamepad.name:
-		logger.info("Found handheld gamepad device: " + device.get_path() + ": " + device.get_name())
+		logger.debug("Found handheld gamepad device: " + device.get_path() + ": " + device.get_name())
 		return true
-	logger.info("Rejected input device: " + device.get_path() + ": " + device.get_name())
+	logger.debug("Rejected input device: " + device.get_path() + ": " + device.get_name())
 	return false
 
 
 func is_handheld_keyboard(device: InputDevice) -> bool:
-	logger.info("Test input device: " + device.get_path() + ": " + device.get_name())
+	logger.debug("Test input device: " + device.get_path() + ": " + device.get_name())
 	for keypad in keypads:
-		logger.info("Looking for: " + keypad.phys_path + ": " + keypad.name)
+		logger.debug("Looking for: " + keypad.phys_path + ": " + keypad.name)
 		if device.get_phys() == keypad.phys_path and device.get_name() == keypad.name:
-			logger.info("Found handheld input device: " + device.get_path() + ": " + device.get_name())
+			logger.debug("Found handheld input device: " + device.get_path() + ": " + device.get_name())
 			return true
-	logger.info("Rejected input device: " + device.get_path() + ": " + device.get_name())
+	logger.debug("Rejected input device: " + device.get_path() + ": " + device.get_name())
 	return false

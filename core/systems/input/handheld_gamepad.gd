@@ -58,6 +58,7 @@ func get_capabilities() -> Array[MappableEvent]:
 func process_input() -> void:
 	# Call the gamepad's process input
 	super()
+
 	# Calculate the amount of time that has passed since last invocation
 	var current_time := Time.get_ticks_usec()
 	var delta_us := current_time - _last_time
@@ -173,7 +174,7 @@ func _check_mapped_events(value: float, delta: float) -> void:
 		if not mapped_event.trigger_events_match(active_keys):
 			continue
 
-		logger.debug("Found a matching event. Emitting event: " + str(mapped_event.emits.code))
+		logger.debug("Found a matching event. Emitting event: " + str(mapped_event.emits))
 		var event := mapped_event.emits.duplicate(true)
 		event.set_value(value)
 		inject_event(event, delta)

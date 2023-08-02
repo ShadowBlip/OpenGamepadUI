@@ -215,21 +215,32 @@ func grab() -> void:
 ## Processes all physical and virtual inputs for this controller. This should be
 ## called in a tight loop to process input events.
 func process_input() -> void:
+	# Only process input if we have a valid handle
+	if not phys_device or not phys_device.is_open():
+		return
+
 	# Calculate the amount of time that has passed since last invocation
 	var current_time := Time.get_ticks_usec()
 	var delta_us := current_time - _last_time
 	_last_time = current_time
 	var delta := delta_us / 1000000.0  # Convert to seconds
 
-	# Only process input if we have a valid handle
-	if not phys_device or not phys_device.is_open():
-		return
-
 	# Process all physical input events
 	var events = phys_device.get_events()
 	for event in events:
 		if not event or not event is InputDeviceEvent:
 			continue
+		
+		# TODO: Find a better way
+		# Hack to get the QAM button working on Steam Deck OpenSD devices
+		if event.type == event.EV_KEY and event.code == event.KEY_F20:
+			var qam_event := InputDeviceEvent.new()
+			qam_event.type = event.EV_KEY
+			qam_event.code = event.BTN_BASE
+			qam_event.value = event.value
+			event = qam_event
+		
+		# Possibly translate the physical event and process it
 		var mappable_event := EvdevEvent.from_input_device_event(event)
 		var translated_events := _translate_event(mappable_event, delta)
 		for translated in translated_events:
