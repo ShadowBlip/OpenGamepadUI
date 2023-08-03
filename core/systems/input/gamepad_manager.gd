@@ -72,6 +72,14 @@ func set_gamepad_profile(device: String, profile: GamepadProfile) -> void:
 	gamepad.set_profile(profile)
 
 
+## Returns a list of all supported output events provided by the given gamepad.
+func get_gamepad_capabilities(device: String) -> Array[MappableEvent]:
+	var gamepad := gamepads.get_by_phys(device)
+	if not gamepad:
+		return []
+	return gamepad.get_capabilities()
+
+
 ## Returns an array of input devices discovered under '/dev/input'
 func discover_devices() -> Array[InputDevice]:
 	var input_path := "/dev/input"

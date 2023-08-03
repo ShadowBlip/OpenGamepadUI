@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://dbll03tbmw3ps"]
+
+[ext_resource type="Script" path="res://core/ui/components/card_mapping_button.gd" id="1_qi6wi"]
+[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="2_5k08q"]
+[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="3_nvy41"]
+[ext_resource type="Texture2D" uid="uid://da6kcs5mhssov" path="res://assets/ui/icons/arrow-right-bold.svg" id="4_gjhmn"]
+
+[sub_resource type="Gradient" id="Gradient_o06mv"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6uv3n"]
+gradient = SubResource("Gradient_o06mv")
+
+[node name="CardMappingButton" type="PanelContainer"]
+editor_description = "Button used for mapping gamepad inputs"
+clip_children = 2
+offset_right = 82.0
+offset_bottom = 34.0
+focus_mode = 2
+theme_type_variation = &"CardButton"
+script = ExtResource("1_qi6wi")
+
+[node name="HighlightTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture1D_6uv3n")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ControllerTextureRect" type="TextureRect" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_5k08q")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("3_nvy41")
+path = "joypad/a"
+show_only = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Button"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="ArrowRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_gjhmn")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="Label" type="Label" parent="HBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "-"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
