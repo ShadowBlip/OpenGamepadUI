@@ -17,7 +17,8 @@ enum PLATFORM {
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
 	AYANEO_GEN5,  ## AIR Plus 6800U
-	AYANEO_GEN6,  ## Includes 2S and GEEK 1S
+	AYANEO_GEN6,  ## Includes 2S,GEEK 1S, AIR 1S
+	AYANEO_GEN7,  ## AIR Plus i3 1215U
 	AYN_GEN1,  ## Includes Loki Max, possibly others at release.
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
@@ -81,6 +82,10 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres")
 	if PLATFORM.AYANEO_GEN5 in flags:
 		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen5.tres")
+	if PLATFORM.AYANEO_GEN6 in flags:
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen6.tres")
+	if PLATFORM.AYANEO_GEN7 in flags:
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen7.tres")
 	if PLATFORM.AYN_GEN1 in flags:
 		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres")
 	if PLATFORM.GENERIC in flags:
@@ -208,7 +213,7 @@ func _read_dmi() -> PLATFORM:
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 4 platform")
 		return PLATFORM.AYANEO_GEN4
-	elif product_name in ["AYANEO 2S", "GEEK 1S"] and vendor_name == "AYANEO":
+	elif product_name in ["AYANEO 2S", "GEEK 1S", "AIR 1S"] and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 6 platform")
 		return PLATFORM.AYANEO_GEN6
 	elif (
@@ -221,8 +226,13 @@ func _read_dmi() -> PLATFORM:
 		logger.debug("Detected AYANEO Gen 3 platform")
 		return PLATFORM.AYANEO_GEN3
 	elif product_name.contains("AIR Plus") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen 5 platform")
-		return PLATFORM.AYANEO_GEN5
+		match cpu.vendor:
+			"GenuineIntel":
+				logger.debug("Detected AYANEO Gen 7 platform")
+				return PLATFORM.AYANEO_GEN7
+			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
+				logger.debug("Detected AYANEO Gen 5 platform")
+				return PLATFORM.AYANEO_GEN5
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 2 platform")
 		return PLATFORM.AYANEO_GEN2
