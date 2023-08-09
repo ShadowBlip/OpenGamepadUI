@@ -55,10 +55,11 @@ signal button_down
 var tween: Tween
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
+var mappings: Array[MappableEvent] = []
 
 @onready var label := $%Label as Label
 @onready var highlight := $%HighlightTexture as TextureRect
-@onready var texture := $%ControllerTextureRect
+@onready var texture := $%ControllerTextureRect as ControllerTextureRect
 
 
 # Called when the node enters the scene tree for the first time.
@@ -82,65 +83,25 @@ func _ready() -> void:
 
 
 ## Configures the button for the given mappable event
-func set_mapping(event: MappableEvent) -> void:
+func set_mapping(events: Array[MappableEvent]) -> void:
+	if events.size() == 0:
+		return
+	set_icon(events[0])
+
+
+## Configures the button for the given mappable event
+func set_icon(event: MappableEvent) -> void:
 	if not texture or not event:
 		return
 	if event is EvdevEvent:
-		texture.path = get_controller_icon_from_event(event)
+		texture.path = ControllerMapper.get_joypad_path_from_event(event)
 
 
 ## Returns true if the given event has a controller icon
 func has_controller_icon(event: MappableEvent) -> bool:
 	if event is EvdevEvent:
-		return get_controller_icon_from_event(event) != ""
+		return ControllerMapper.get_joypad_path_from_event(event) != ""
 	return false
-
-
-## Returns the controller icon path from the given evdev event
-func get_controller_icon_from_event(event: EvdevEvent) -> String:
-	var type := event.get_event_type()
-	var code := event.get_event_code()
-
-	# Defines the event mappings
-	var mapping := {
-		InputDeviceEvent.EV_KEY: {
-			InputDeviceEvent.BTN_SOUTH: "joypad/a",
-			InputDeviceEvent.BTN_NORTH: "joypad/x",
-			InputDeviceEvent.BTN_EAST: "joypad/b",
-			InputDeviceEvent.BTN_WEST: "joypad/y",
-			InputDeviceEvent.BTN_TL: "joypad/lb",
-			InputDeviceEvent.BTN_TR: "joypad/rb",
-			InputDeviceEvent.BTN_TL2: "joypad/lt",
-			InputDeviceEvent.BTN_TR2: "joypad/rt",
-			InputDeviceEvent.BTN_START: "joypad/start",
-			InputDeviceEvent.BTN_SELECT: "joypad/select",
-			InputDeviceEvent.BTN_THUMBL: "joypad/l_stick_click",
-			InputDeviceEvent.BTN_THUMBR: "joypad/r_stick_click",
-			InputDeviceEvent.BTN_MODE: "joypad/home",
-			InputDeviceEvent.BTN_BASE: "joypad/share",
-			InputDeviceEvent.BTN_Z: "joypad/share",
-			InputDeviceEvent.BTN_TRIGGER_HAPPY1: "joypad/dpad_left",
-			InputDeviceEvent.BTN_TRIGGER_HAPPY2: "joypad/dpad_right",
-			InputDeviceEvent.BTN_TRIGGER_HAPPY3: "joypad/dpad_up",
-			InputDeviceEvent.BTN_TRIGGER_HAPPY4: "joypad/dpad_down",
-		},
-		InputDeviceEvent.EV_ABS: {
-			InputDeviceEvent.ABS_X: "joypad/l_stick",
-			InputDeviceEvent.ABS_Y: "joypad/l_stick",
-			InputDeviceEvent.ABS_RX: "joypad/r_stick",
-			InputDeviceEvent.ABS_RY: "joypad/r_stick",
-			InputDeviceEvent.ABS_Z: "joypad/lt",
-			InputDeviceEvent.ABS_RZ: "joypad/rt",
-			InputDeviceEvent.ABS_HAT0X: "joypad/dpad", # left/right
-			InputDeviceEvent.ABS_HAT0Y: "joypad/dpad", # up/down
-		},
-	}
-
-	if type in mapping and code in mapping[type]:
-		print("Found mapping: ", mapping[type][code])
-		return mapping[type][code]
-
-	return ""
 
 
 func _on_theme_changed() -> void:

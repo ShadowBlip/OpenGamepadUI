@@ -30,6 +30,12 @@ config/icon="res://icon.svg"
 
 ControllerIcons="*res://addons/controller_icons/ControllerIcons.gd"
 
+[debug]
+
+gdscript/warnings/unsafe_property_access=1
+gdscript/warnings/unsafe_method_access=1
+gdscript/warnings/unsafe_call_argument=1
+
 [display]
 
 window/size/viewport_width=1280
@@ -45,6 +51,10 @@ window/per_pixel_transparency/allowed=true
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 
@@ -203,3 +213,4 @@ pointing/emulate_touch_from_mouse=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+viewport/transparent_background=true

@@ -39,12 +39,11 @@ func _ready() -> void:
 
 	# Setup the mouse input select
 	var on_mouse_button := func():
-		pass
-#		mouse_container.visible = true
-#		mouse_left_button.grab_focus.call_deferred()
-#		var event_name := mapping.get_source_event_name()
-#		if not event_name.begins_with("ABS"):
-#			mouse_motion_button.disabled = true
+		mouse_container.visible = true
+		mouse_left_button.grab_focus.call_deferred()
+		var event_name := mapping.get_source_event_name()
+		if not event_name.begins_with("ABS"):
+			mouse_motion_button.disabled = true
 	mouse_button.pressed.connect(on_mouse_button)
 
 	# Handle selecting a mouse input

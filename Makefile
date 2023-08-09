@@ -137,7 +137,7 @@ import: ## Import project assets
 
 .PHONY: edit
 edit: ## Open the project in the Godot editor
-	$(GODOT) --editor --single-window .
+	$(GODOT) --editor .
 
 .PHONY: clean
 clean: ## Remove build artifacts

@@ -1,26 +1,18 @@
-[gd_scene load_steps=20 format=3 uid="uid://b3o3wo40sfih1"]
+[gd_scene load_steps=12 format=3 uid="uid://b3o3wo40sfih1"]
 
-[ext_resource type="Script" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.gd" id="1_lha2g"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_r3ndu"]
+[ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_4osef"]
 [ext_resource type="Resource" uid="uid://c4er7pfmn7x50" path="res://assets/state/state_machines/gamepad_settings_state_machine.tres" id="3_wgp64"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_scwwv"]
 [ext_resource type="Resource" uid="uid://46cu324n427u" path="res://assets/state/states/gamepad_change_input.tres" id="4_sv30y"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_i6uqd"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_roi3c"]
-[ext_resource type="PackedScene" uid="uid://b6p2lrkowintj" path="res://core/ui/components/transition_container.tscn" id="6_ycyue"]
-[ext_resource type="PackedScene" uid="uid://cy5e2igwgkygf" path="res://core/ui/components/transition_fade.tscn" id="7_sxqi8"]
-[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="8_k1fmc"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="9_0om7o"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_an8os"]
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="10_g6xyt"]
-[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="11_2y2xx"]
-[ext_resource type="Texture2D" uid="uid://p3lsljjgjnv7" path="res://assets/ui/icons/keyboard-rounded.svg" id="12_ld2j5"]
-[ext_resource type="Texture2D" uid="uid://lvshyo57c5tr" path="res://assets/ui/icons/mouse.svg" id="13_o5pqi"]
-[ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="14_xoyuj"]
-[ext_resource type="Texture2D" uid="uid://br1jb8stgoucn" path="res://addons/controller_icons/assets/key/Mouse_Left_Key_Dark.png" id="15_cbd3o"]
-[ext_resource type="Texture2D" uid="uid://ciij2ysnubdv7" path="res://addons/controller_icons/assets/key/Mouse_Simple_Key_Dark.png" id="16_2wdbe"]
-[ext_resource type="Texture2D" uid="uid://gexca1lofuac" path="res://assets/ui/icons/arrows-counter-clockwise-fill.svg" id="17_km6ky"]
-[ext_resource type="Texture2D" uid="uid://dq6ojsfee1hsx" path="res://addons/controller_icons/assets/key/Mouse_Right_Key_Dark.png" id="18_to6xx"]
-[ext_resource type="Texture2D" uid="uid://bctbscdb1xk0k" path="res://addons/controller_icons/assets/key/Mouse_Middle_Key_Dark.png" id="19_ykvsw"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="10_w3t8m"]
 
-[node name="GamepadMapper" type="Control" node_paths=PackedStringArray("focus_node")]
+[node name="GamepadMapper" type="Control"]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -29,22 +21,25 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_lha2g")
-focus_node = NodePath("VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer/KeyboardButton")
+script = ExtResource("1_alala")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_r3ndu")]
-state_machine = ExtResource("3_wgp64")
+[node name="StateWatcher" parent="." instance=ExtResource("2_4osef")]
 state = ExtResource("4_sv30y")
-visible_during = Array[Resource]([ExtResource("4_sv30y")])
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_scwwv")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_i6uqd")]
+target = NodePath("../../VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("5_roi3c")]
 state_machine = ExtResource("3_wgp64")
-process_input_during = Array[Resource]([ExtResource("4_sv30y")])
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_sv30y")])
 minimum_states = 0
-
-[node name="TransitionContainer" parent="." instance=ExtResource("6_ycyue")]
-
-[node name="TransitionFade" parent="TransitionContainer" instance=ExtResource("7_sxqi8")]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -57,8 +52,6 @@ theme_override_constants/separation = 0
 
 [node name="ChangeInputContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("8_k1fmc")
-theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ChangeInputContainer"]
 layout_mode = 2
@@ -85,8 +78,6 @@ stretch_mode = 5
 
 [node name="InputTypeContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("8_k1fmc")
-theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InputTypeContainer"]
 layout_mode = 2
@@ -99,48 +90,38 @@ theme_override_constants/margin_bottom = 10
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="KeyboardButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_2y2xx")]
+[node name="FocusGroup" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
+current_focus = NodePath("../KeyboardButton")
+
+[node name="KeyboardButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath(".")
-focus_neighbor_top = NodePath("../GamepadButton")
-focus_neighbor_right = NodePath(".")
-focus_neighbor_bottom = NodePath("../MouseButton")
-focus_next = NodePath("../MouseButton")
-focus_previous = NodePath("../GamepadButton")
 text = "Keyboard"
-icon = ExtResource("12_ld2j5")
+uppercase = false
 
-[node name="MouseButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_2y2xx")]
+[node name="MouseButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath(".")
-focus_neighbor_top = NodePath("../KeyboardButton")
-focus_neighbor_right = NodePath(".")
-focus_neighbor_bottom = NodePath("../GamepadButton")
-focus_next = NodePath("../GamepadButton")
-focus_previous = NodePath("../KeyboardButton")
 text = "Mouse"
-icon = ExtResource("13_o5pqi")
+uppercase = false
 
-[node name="GamepadButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("11_2y2xx")]
+[node name="GamepadButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Gamepad"
+uppercase = false
+
+[node name="ClearButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath(".")
-focus_neighbor_top = NodePath("../MouseButton")
-focus_neighbor_right = NodePath(".")
-focus_neighbor_bottom = NodePath("../KeyboardButton")
-focus_next = NodePath("../KeyboardButton")
-focus_previous = NodePath("../MouseButton")
-disabled = true
-text = "Gamepad"
-icon = ExtResource("14_xoyuj")
+text = "Clear"
+uppercase = false
 
 [node name="MouseContainer" type="PanelContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-theme = ExtResource("8_k1fmc")
-theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MouseContainer"]
 layout_mode = 2
@@ -152,148 +133,42 @@ theme_override_constants/margin_bottom = 20
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="LeftClickContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="LeftButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftClickContainer" instance=ExtResource("11_2y2xx")]
+[node name="MouseFocusGroup" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
 unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../RightClickContainer/RightButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer2/VBoxContainer3/WheelUpButton")
-focus_neighbor_right = NodePath("../../MouseMotionContainer/MotionButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer2/VBoxContainer3/WheelUpButton")
-focus_next = NodePath("../../MouseMotionContainer/MotionButton")
-focus_previous = NodePath("../../../HBoxContainer2/VBoxContainer5/WheelDownButton")
-icon = ExtResource("15_cbd3o")
-flat = true
+current_focus = NodePath("../LeftClickButton")
 
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/LeftClickContainer"]
+[node name="LeftClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Left Click"
-horizontal_alignment = 1
+uppercase = false
 
-[node name="MouseMotionContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="MotionButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer" instance=ExtResource("11_2y2xx")]
+[node name="RightClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../LeftClickContainer/LeftButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer2/VBoxContainer4/MiddleButton")
-focus_neighbor_right = NodePath("../../RightClickContainer/RightButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer2/VBoxContainer4/MiddleButton")
-focus_next = NodePath("../../RightClickContainer/RightButton")
-focus_previous = NodePath("../../LeftClickContainer/LeftButton")
-icon = ExtResource("16_2wdbe")
-flat = true
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer/MotionButton"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -40.0
-grow_horizontal = 0
-grow_vertical = 0
-texture = ExtResource("17_km6ky")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/MouseMotionContainer"]
-layout_mode = 2
-text = "Mouse Motion"
-horizontal_alignment = 1
-
-[node name="RightClickContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="RightButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/RightClickContainer" instance=ExtResource("11_2y2xx")]
-unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../MouseMotionContainer/MotionButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer2/VBoxContainer5/WheelDownButton")
-focus_neighbor_right = NodePath("../../LeftClickContainer/LeftButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer2/VBoxContainer5/WheelDownButton")
-focus_next = NodePath("../../../HBoxContainer2/VBoxContainer3/WheelUpButton")
-focus_previous = NodePath("../../MouseMotionContainer/MotionButton")
-icon = ExtResource("18_to6xx")
-flat = true
-
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer/RightClickContainer"]
 layout_mode = 2
 text = "Right Click"
-horizontal_alignment = 1
+uppercase = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-
-[node name="WheelUpButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer3" instance=ExtResource("11_2y2xx")]
+[node name="MouseMotionButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
-focus_neighbor_left = NodePath("../../VBoxContainer5/WheelDownButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer/LeftClickContainer/LeftButton")
-focus_neighbor_right = NodePath("../../VBoxContainer4/MiddleButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer/LeftClickContainer")
-focus_next = NodePath("../../VBoxContainer4/MiddleButton")
-focus_previous = NodePath("../../../HBoxContainer/RightClickContainer/RightButton")
-icon = ExtResource("19_ykvsw")
-flat = true
-icon_alignment = 1
+text = "Mouse Motion"
+uppercase = false
 
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer3"]
+[node name="WheelUpButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Wheel Up"
-horizontal_alignment = 1
+uppercase = false
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-
-[node name="MiddleButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer4" instance=ExtResource("11_2y2xx")]
+[node name="WheelDownButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../VBoxContainer3/WheelUpButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer/MouseMotionContainer/MotionButton")
-focus_neighbor_right = NodePath("../../VBoxContainer5/WheelDownButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer/MouseMotionContainer/MotionButton")
-focus_next = NodePath("../../VBoxContainer5/WheelDownButton")
-focus_previous = NodePath("../../VBoxContainer3/WheelUpButton")
-icon = ExtResource("19_ykvsw")
-flat = true
-icon_alignment = 1
-
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer4"]
-layout_mode = 2
-text = "Middle Click"
-horizontal_alignment = 1
-
-[node name="VBoxContainer5" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-
-[node name="WheelDownButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer5" instance=ExtResource("11_2y2xx")]
-unique_name_in_owner = true
-layout_mode = 2
-focus_neighbor_left = NodePath("../../VBoxContainer4/MiddleButton")
-focus_neighbor_top = NodePath("../../../HBoxContainer/RightClickContainer/RightButton")
-focus_neighbor_right = NodePath("../../VBoxContainer3/WheelUpButton")
-focus_neighbor_bottom = NodePath("../../../HBoxContainer/RightClickContainer/RightButton")
-focus_next = NodePath("../../../HBoxContainer/LeftClickContainer/LeftButton")
-focus_previous = NodePath("../../VBoxContainer4/MiddleButton")
-icon = ExtResource("19_ykvsw")
-flat = true
-icon_alignment = 1
-
-[node name="Label" type="Label" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer5"]
 layout_mode = 2
 text = "Wheel Down"
-horizontal_alignment = 1
+uppercase = false
+
+[node name="MiddleClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Middle Click"
+uppercase = false

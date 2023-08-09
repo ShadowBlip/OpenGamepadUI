@@ -25,3 +25,7 @@ enum OUTPUT_BEHAVIOR {
 
 ## Determines how output events should be executed during input translation
 @export var output_behavior := OUTPUT_BEHAVIOR.SEQUENCE
+
+
+func _to_string() -> String:
+	return "<GamepadMapping: {0} -> {1}>".format([str(source_event), str(output_events)])

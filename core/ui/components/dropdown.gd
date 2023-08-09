@@ -1,5 +1,6 @@
 @tool
 extends BoxContainer
+class_name Dropdown
 
 signal item_focused(index: int)
 signal item_selected(index: int)

@@ -21,6 +21,8 @@ class_name EvdevRelEvent
 var code: String:
 	set(v):
 		code = v
+		if v == "":
+			return
 		input_device_event.code = input_device_event.get(v)
 
 

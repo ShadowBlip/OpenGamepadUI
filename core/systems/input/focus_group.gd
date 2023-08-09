@@ -302,13 +302,13 @@ func _single_set_focus_tree(child: Control) -> void:
 	child.focus_neighbor_top = child.get_path()
 	child.focus_neighbor_left = child.get_path()
 	child.focus_neighbor_right = child.get_path()
-	if focus_neighbor_top and focus_neighbor_top.neighbor_control.is_inside_tree():
+	if is_instance_valid(focus_neighbor_top) and focus_neighbor_top.neighbor_control.is_inside_tree():
 		child.focus_neighbor_top = focus_neighbor_top.neighbor_control.get_path()
-	if focus_neighbor_bottom and focus_neighbor_bottom.neighbor_control.is_inside_tree():
+	if is_instance_valid(focus_neighbor_bottom) and focus_neighbor_bottom.neighbor_control.is_inside_tree():
 		child.focus_neighbor_bottom = focus_neighbor_bottom.neighbor_control.get_path()
-	if focus_neighbor_left and focus_neighbor_left.neighbor_control.is_inside_tree():
+	if is_instance_valid(focus_neighbor_left) and focus_neighbor_left.neighbor_control.is_inside_tree():
 		child.focus_neighbor_left = focus_neighbor_left.neighbor_control.get_path()
-	if focus_neighbor_right and focus_neighbor_right.neighbor_control.is_inside_tree():
+	if is_instance_valid(focus_neighbor_right) and focus_neighbor_right.neighbor_control.is_inside_tree():
 		child.focus_neighbor_right = focus_neighbor_right.neighbor_control.get_path()
 	_on_child_focused(child)
 
