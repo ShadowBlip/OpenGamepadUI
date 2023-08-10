@@ -11,6 +11,7 @@ var state_machine := load("res://assets/state/state_machines/gamepad_settings_st
 var change_input_state := preload("res://assets/state/states/gamepad_change_input.tres") as State
 var button_scene := load("res://core/ui/components/card_mapping_button.tscn") as PackedScene
 var pairs: Array[MappableEvent]
+var axes_mapping := GamepadAxesMapping.new()
 var buttons: Dictionary = {}
 
 @onready var dropdown := $%Dropdown as Dropdown
@@ -32,6 +33,36 @@ func set_mapping(events: Array[MappableEvent]) -> void:
 func set_mode(mode: MODE) -> void:
 	dropdown.select(mode)
 	_on_selected(mode)
+
+
+func determine_mode(profile: GamepadProfile) -> MODE:
+	if pairs.size() != 2:
+		return MODE.JOYSTICK
+
+	var mapping_x := profile.get_mapping_for(pairs[0])
+	var mapping_y := profile.get_mapping_for(pairs[1])
+	if mapping_x:
+		print("Mx ", mapping_x, " Behavior: ", mapping_x.output_behavior)
+	if mapping_y:
+		print("My ", mapping_y, " Behavior: ", mapping_y.output_behavior)
+
+	if mapping_x and mapping_x.output_behavior == GamepadMapping.OUTPUT_BEHAVIOR.AXIS:
+		return MODE.BUTTON
+	if mapping_y and mapping_y.output_behavior == GamepadMapping.OUTPUT_BEHAVIOR.AXIS:
+		return MODE.BUTTON
+	
+	if mapping_x and mapping_y and mapping_x.output_events.size() == 1 and mapping_y.output_events.size() == 1:
+		return MODE.JOYSTICK
+
+	return MODE.AXIS
+
+
+func set_mappings_from(profile: GamepadProfile) -> void:
+	axes_mapping = profile.get_axes_mapping_for(pairs[0], pairs[1])
+	if not axes_mapping.x:
+		axes_mapping.x = GamepadMapping.new()
+	if not axes_mapping.y:
+		axes_mapping.y = GamepadMapping.new()
 
 
 func _clear_buttons() -> void:
@@ -60,20 +91,18 @@ func _on_joystick_mode_selected() -> void:
 	button.text = "-"
 	button.set_mapping.call_deferred(pairs)
 
-	var mapping1 := GamepadMapping.new()
-	mapping1.source_event = pairs[0]
-	mapping1.output_events.resize(1)
-	mapping1.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
-	var mapping2 := GamepadMapping.new()
-	mapping2.source_event = pairs[1]
-	mapping2.output_events.resize(1)
-	mapping2.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
+	axes_mapping.x.source_event = pairs[0]
+	axes_mapping.x.output_events.resize(1)
+	axes_mapping.x.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
+	axes_mapping.y.source_event = pairs[1]
+	axes_mapping.y.output_events.resize(1)
+	axes_mapping.y.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
 
-	button.set_meta("mappings", [mapping1, mapping2] as Array[GamepadMapping])
+	button.set_meta("mappings", [axes_mapping.x, axes_mapping.y] as Array[GamepadMapping])
 	button.button_up.connect(_on_button_pressed.bind(button))
 	add_child(button)
 
-	buttons[pairs[0].get_signature()] = button
+	buttons[pairs[0].get_signature()] = [button] as Array[CardMappingButton]
 
 
 func _on_axis_mode_selected() -> void:
@@ -85,27 +114,25 @@ func _on_axis_mode_selected() -> void:
 	left_button.text = "-"
 	left_button.set_mapping.call_deferred([pairs[0]] as Array[MappableEvent])
 
-	var left_mapping := GamepadMapping.new()
-	left_mapping.source_event = pairs[0]
-	left_mapping.output_events.resize(2)
-	left_mapping.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
-	left_button.set_meta("mappings", [left_mapping] as Array[GamepadMapping])
+	axes_mapping.x.source_event = pairs[0]
+	axes_mapping.x.output_events.resize(2)
+	axes_mapping.x.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
+	left_button.set_meta("mappings", [axes_mapping.x] as Array[GamepadMapping])
 	left_button.button_up.connect(_on_button_pressed.bind(left_button))
 	add_child(left_button)
-	buttons[pairs[0].get_signature()] = left_button
+	buttons[pairs[0].get_signature()] = [left_button] as Array[CardMappingButton]
 
 	var right_button := button_scene.instantiate() as CardMappingButton
 	right_button.text = "-"
 	right_button.set_mapping.call_deferred([pairs[1]] as Array[MappableEvent])
 
-	var right_mapping := GamepadMapping.new()
-	right_mapping.source_event = pairs[1]
-	right_mapping.output_events.resize(2)
-	right_mapping.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
-	right_button.set_meta("mappings", [right_mapping] as Array[GamepadMapping])
+	axes_mapping.y.source_event = pairs[1]
+	axes_mapping.y.output_events.resize(2)
+	axes_mapping.y.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.SEQUENCE
+	right_button.set_meta("mappings", [axes_mapping.y] as Array[GamepadMapping])
 	right_button.button_up.connect(_on_button_pressed.bind(right_button))
 	add_child(right_button)
-	buttons[pairs[1].get_signature()] = right_button
+	buttons[pairs[1].get_signature()] = [right_button] as Array[CardMappingButton]
 
 
 func _on_button_mode_selected() -> void:
@@ -113,14 +140,12 @@ func _on_button_mode_selected() -> void:
 	if pairs.size() != 2:
 		return
 
-	var mapping1 := GamepadMapping.new()
-	mapping1.source_event = pairs[0]
-	mapping1.output_events.resize(2)
-	mapping1.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.AXIS
-	var mapping2 := GamepadMapping.new()
-	mapping2.source_event = pairs[1]
-	mapping2.output_events.resize(2)
-	mapping2.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.AXIS
+	axes_mapping.x.source_event = pairs[0]
+	axes_mapping.x.output_events.resize(2)
+	axes_mapping.x.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.AXIS
+	axes_mapping.y.source_event = pairs[1]
+	axes_mapping.y.output_events.resize(2)
+	axes_mapping.y.output_behavior = GamepadMapping.OUTPUT_BEHAVIOR.AXIS
 
 	for i in range(4):
 		var button := button_scene.instantiate() as CardMappingButton
@@ -128,21 +153,23 @@ func _on_button_mode_selected() -> void:
 		if i == 0:
 			button.set_mapping.call_deferred([pairs[0]] as Array[MappableEvent])
 			button.set_meta("output_index", 0)
-			button.set_meta("mappings", [mapping1] as Array[GamepadMapping])
-			buttons[pairs[0].get_signature()] = button
+			button.set_meta("mappings", [axes_mapping.x] as Array[GamepadMapping])
+			buttons[pairs[0].get_signature()] = [button] as Array[CardMappingButton]
 		if i == 1:
 			button.set_mapping.call_deferred([pairs[0]] as Array[MappableEvent])
 			button.set_meta("output_index", 1)
-			button.set_meta("mappings", [mapping1] as Array[GamepadMapping])
+			button.set_meta("mappings", [axes_mapping.x] as Array[GamepadMapping])
+			buttons[pairs[0].get_signature()].append(button)
 		if i == 2:
 			button.set_mapping.call_deferred([pairs[1]] as Array[MappableEvent])
 			button.set_meta("output_index", 0)
-			button.set_meta("mappings", [mapping2] as Array[GamepadMapping])
-			buttons[pairs[1].get_signature()] = button
+			button.set_meta("mappings", [axes_mapping.y] as Array[GamepadMapping])
+			buttons[pairs[1].get_signature()] = [button] as Array[CardMappingButton]
 		if i == 3:
 			button.set_mapping.call_deferred([pairs[1]] as Array[MappableEvent])
 			button.set_meta("output_index", 1)
-			button.set_meta("mappings", [mapping2] as Array[GamepadMapping])
+			button.set_meta("mappings", [axes_mapping.y] as Array[GamepadMapping])
+			buttons[pairs[1].get_signature()].append(button)
 		button.button_up.connect(_on_button_pressed.bind(button))
 		add_child(button)
 

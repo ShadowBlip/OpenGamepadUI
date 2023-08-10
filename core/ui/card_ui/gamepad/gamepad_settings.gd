@@ -38,7 +38,7 @@ func _ready() -> void:
 	# On delete button pressed, reset profile to default
 	var on_delete := func():
 		profile = _load_profile()
-		_load_profile_ui()
+		_update_buttons()
 	delete_button.button_up.connect(on_delete)
 	
 	# Grab focus when the mapper exits
@@ -64,12 +64,12 @@ func _on_mapping_selected(mappings: Array[GamepadMapping]) -> void:
 				to_remove.append(map)
 		for map in to_remove:
 			logger.debug("Removing old mapping: " + str(map))
-			profile.mapping.erase(map)
+			profile.erase(map)
 		if mapping.output_events.size() > 0:
-			logger.debug("Adding mapping: " + str(mapping))
-			profile.mapping.append(mapping)
+			logger.debug("Adding mapping: " + str(mapping) + ", behavior: " + str(mapping.output_behavior))
+			profile.add(mapping)
 		logger.debug("Reloading profile")
-	_load_profile_ui()
+	_update_buttons()
 
 
 ## Called when the gamepad settings state is entered
@@ -91,9 +91,10 @@ func _on_state_entered(_from: State) -> void:
 		var profile_path := settings_manager.get_value("input", "gamepad_profile", "") as String
 		if profile_path == "":
 			profile = load(gamepad_manager.default_profile)
+			_update_buttons()
 			return
 		profile = _load_profile(profile_path)
-		_load_profile_ui()
+		_update_buttons()
 		return
 
 	# Set the profile text to the game name
@@ -102,7 +103,7 @@ func _on_state_entered(_from: State) -> void:
 	# Check to see if the given game has a gamepad profile
 	var profile_path := settings_manager.get_library_value(library_item, "gamepad_profile", "") as String
 	profile = _load_profile(profile_path)
-	_load_profile_ui()
+	_update_buttons()
 
 
 ## Populates the button mappings for the given gamepad
@@ -183,7 +184,7 @@ func _add_button_for_event(event: EvdevEvent, parent: Node) -> CardMappingButton
 	button.set_mapping.call_deferred([event] as Array[MappableEvent])
 
 	# Add the button to our button map
-	buttons[event.get_signature()] = button
+	buttons[event.get_signature()] = [button] as Array[CardMappingButton]
 
 	# Create a gamepad profile mapping when pressed
 	var on_pressed := func():
@@ -231,32 +232,59 @@ func _set_axis_container_focus(axes_container: Control) -> void:
 
 
 # Syncs the UI to the given profile
-func _load_profile_ui() -> void:
+func _update_buttons() -> void:
 	if not profile:
 		return
 	profile_label.text = profile.name
 
 	# Reset the button text
-	for button in buttons.values():
-		button.text = "-"
+	for button_array in buttons.values():
+		for button in button_array:
+			button.text = "-"
+
+	# Collect all the UI elements to update
+	var all_buttons := [buttons] as Array[Dictionary]
+	for axes_container in axes_containers:
+		axes_container.set_mappings_from(profile)
+		var mode := axes_container.determine_mode(profile)
+		axes_container.set_mode(mode)
+		all_buttons.append(axes_container.buttons)
 
 	# Set the button text based on the loaded profile
 	for mapping in profile.mapping:
 		var source_event := mapping.source_event
-		var all_buttons := [buttons] as Array[Dictionary]
-		for axes_container in axes_containers:
-			all_buttons.append(axes_container.buttons)
 		for buttons_dict in all_buttons:
 			if not source_event.get_signature() in buttons_dict:
 				continue
-			var button := buttons_dict[source_event.get_signature()] as CardMappingButton
+			var button_array := buttons_dict[source_event.get_signature()] as Array[CardMappingButton]
+			for button in button_array:
+				_update_button(button, mapping)
 
-			# Set the text depending on the kind of output event
-			var mapped_text := PackedStringArray()
-			for event in mapping.output_events:
-				var text := _get_display_string_for(event)
-				mapped_text.append(text)
-			button.text = " + ".join(mapped_text)
+
+func _update_button(button: CardMappingButton, mapping: GamepadMapping) -> void:
+	var mapped_text := PackedStringArray()
+
+	# Handle updating the UI for sequential
+	if mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.SEQUENCE:
+		# Set the text depending on the kind of output event
+		for event in mapping.output_events:
+			var text := _get_display_string_for(event)
+			if text == "":
+				continue
+			mapped_text.append(text)
+
+	elif mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.AXIS:
+		if not button.has_meta("output_index"):
+			return
+		var output_index := button.get_meta("output_index") as int
+		if mapping.output_events.size() < output_index + 1:
+			return
+		var event := mapping.output_events[output_index]
+		var text := _get_display_string_for(event)
+		if text != "":
+			mapped_text.append(text)
+
+	button.text = " + ".join(mapped_text)
 
 
 ## Get the text to display on the mapping button from the given event
@@ -339,11 +367,14 @@ func _load_profile(profile_path: String = "") -> GamepadProfile:
 			loaded = GamepadProfile.new()
 		else:
 			loaded = loaded.duplicate(true)
+		loaded.load_mappings()
 		if library_item:
 			loaded.name = library_item.name
 		return loaded
 
 	loaded = load(profile_path) as GamepadProfile
+	if loaded:
+		loaded.load_mappings()
 	return loaded
 
 

@@ -33,7 +33,7 @@ fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
 [node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_i6uqd")]
-target = NodePath("../../VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer/FocusGroup")
+target = NodePath("../../PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer/FocusGroup")
 on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("5_roi3c")]
@@ -41,34 +41,41 @@ state_machine = ExtResource("3_wgp64")
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_sv30y")])
 minimum_states = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"RoundedPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="ChangeInputContainer" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ChangeInputContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ChangeInputContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="SubsectionLabel" parent="VBoxContainer/ChangeInputContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_0om7o")]
+[node name="SubsectionLabel" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_0om7o")]
 layout_mode = 2
 text = "Change Input"
 horizontal_alignment = 1
 
-[node name="InputTexture" type="TextureRect" parent="VBoxContainer/ChangeInputContainer/MarginContainer/VBoxContainer"]
+[node name="InputTexture" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -76,98 +83,92 @@ texture = ExtResource("10_g6xyt")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InputTypeContainer" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InputTypeContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ButtonContainer" type="VBoxContainer" parent="VBoxContainer/InputTypeContainer/MarginContainer"]
+[node name="ButtonContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="FocusGroup" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
+[node name="FocusGroup" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
 current_focus = NodePath("../KeyboardButton")
 
-[node name="KeyboardButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="KeyboardButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Keyboard"
 uppercase = false
 
-[node name="MouseButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="MouseButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Mouse"
 uppercase = false
 
-[node name="GamepadButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="GamepadButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Gamepad"
 uppercase = false
 
-[node name="ClearButton" parent="VBoxContainer/InputTypeContainer/MarginContainer/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="ClearButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Clear"
 uppercase = false
 
-[node name="MouseContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="MouseContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MouseContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MouseContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MouseContainer"]
 layout_mode = 2
 
-[node name="MouseFocusGroup" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
+[node name="MouseFocusGroup" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
 unique_name_in_owner = true
 current_focus = NodePath("../LeftClickButton")
 
-[node name="LeftClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="LeftClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Left Click"
 uppercase = false
 
-[node name="RightClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="RightClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Right Click"
 uppercase = false
 
-[node name="MouseMotionButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="MouseMotionButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Mouse Motion"
 uppercase = false
 
-[node name="WheelUpButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="WheelUpButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Wheel Up"
 uppercase = false
 
-[node name="WheelDownButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="WheelDownButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Wheel Down"
 uppercase = false
 
-[node name="MiddleClickButton" parent="VBoxContainer/MouseContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="MiddleClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Middle Click"
