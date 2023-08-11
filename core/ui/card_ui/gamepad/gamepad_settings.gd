@@ -18,7 +18,7 @@ var profile: GamepadProfile
 var library_item: LibraryItem
 var buttons: Dictionary = {}
 var axes_containers: Array[CardAxesMappingContainer] = []
-var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 
 @onready var container := $%ButtonMappingContainer as Container
 @onready var mapping_focus_group := $%MappingFocusGroup as FocusGroup
@@ -205,17 +205,13 @@ func _add_button_for_event(event: EvdevEvent, parent: Node) -> CardMappingButton
 func _add_container_for_axis_pair(pair: AxisPair, parent: Node) -> CardAxesMappingContainer:
 	var idx := parent.get_parent().get_child_count()
 	var axes_container := axes_container_scene.instantiate() as CardAxesMappingContainer
-	var mode := axes_container.MODE.JOYSTICK
 
 	# Add the container to our container list
 	axes_containers.append(axes_container)
-
-	# Handle trigger types
-	if pair.type == pair.TYPE.TRIGGER:
-		mode = axes_container.MODE.AXIS
-
 	axes_container.set_mapping([pair.x_axis, pair.y_axis] as Array[MappableEvent])
-	axes_container.set_mode.call_deferred(mode)
+	axes_container.set_meta("pair_type", pair.type)
+	if pair.type == AxisPair.TYPE.TRIGGER:
+		axes_container.set_as_trigger.call_deferred()
 	container.add_child(axes_container)
 	container.move_child(axes_container, idx)
 	_set_axis_container_focus.call_deferred(axes_container)
@@ -321,8 +317,7 @@ func _save_profile() -> void:
 		logger.debug("No profile loaded to save")
 		return
 	if not library_item:
-		# TODO: Fix typo v
-		# TODO: Fix for gloabl
+		# TODO: Fix for global
 		logger.debug("No library item loaded to associate profile with")
 		return
 

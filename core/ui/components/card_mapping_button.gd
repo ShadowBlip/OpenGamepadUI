@@ -7,6 +7,18 @@ signal pressed
 signal button_up
 signal button_down
 
+enum AXIS_TYPE {
+	NONE,
+	X_FULL,
+	X_LEFT,
+	X_RIGHT,
+	Y_FULL,
+	Y_UP,
+	Y_DOWN,
+}
+
+var axis := AXIS_TYPE.NONE
+
 @export_category("Button")
 @export var disabled := false
 
@@ -60,7 +72,8 @@ var mappings: Array[MappableEvent] = []
 @onready var label := $%Label as Label
 @onready var highlight := $%HighlightTexture as TextureRect
 @onready var texture := $%ControllerTextureRect as ControllerTextureRect
-
+@onready var direction_arrow := $%ArrowTextureRect as TextureRect
+@onready var direction_arrow2 := $%ArrowTextureRect2 as TextureRect
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -102,6 +115,47 @@ func has_controller_icon(event: MappableEvent) -> bool:
 	if event is EvdevEvent:
 		return ControllerMapper.get_joypad_path_from_event(event) != ""
 	return false
+
+
+## Configures the button for the given axis type.
+func set_axis_type(type: AXIS_TYPE) -> void:
+	axis = type
+	match axis:
+		AXIS_TYPE.NONE:
+			direction_arrow.visible = false
+			direction_arrow2.visible = false
+		AXIS_TYPE.X_FULL:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-right-bold.svg")
+			direction_arrow.flip_h = false
+			direction_arrow2.visible = true
+			direction_arrow2.texture = load("res://assets/ui/icons/arrow-right-bold.svg")
+		AXIS_TYPE.X_LEFT:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-right-bold.svg")
+			direction_arrow.flip_h = true
+			direction_arrow2.visible = false
+		AXIS_TYPE.X_RIGHT:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-right-bold.svg")
+			direction_arrow.flip_h = false
+			direction_arrow2.visible = false
+		AXIS_TYPE.Y_FULL:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-up-bold.svg")
+			direction_arrow.flip_v = false
+			direction_arrow2.visible = true
+			direction_arrow2.texture = load("res://assets/ui/icons/arrow-up-bold.svg")
+		AXIS_TYPE.Y_UP:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-up-bold.svg")
+			direction_arrow.flip_v = false
+			direction_arrow2.visible = false
+		AXIS_TYPE.Y_DOWN:
+			direction_arrow.visible = true
+			direction_arrow.texture = load("res://assets/ui/icons/arrow-up-bold.svg")
+			direction_arrow.flip_v = true
+			direction_arrow2.visible = false
 
 
 func _on_theme_changed() -> void:

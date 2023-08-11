@@ -69,7 +69,13 @@ func _on_state_entered(_from: State) -> void:
 	output_index = change_input_state.get_meta("output_index") as int
 	input_texture_node.texture = texture
 	mouse_container.visible = false
-	mouse_motion_button.disabled = false
+	
+	var mouse_motion_disabled := false
+	for mapping in mappings:
+		if not mapping.source_event is EvdevAbsEvent:
+			mouse_motion_disabled = true
+	mouse_motion_button.disabled = mouse_motion_disabled
+	mouse_motion_button.visible = !mouse_motion_disabled
 
 
 func _on_state_exited(_to: State) -> void:
@@ -90,13 +96,25 @@ func _on_mouse_button(button: MouseButton) -> void:
 
 
 func _on_mouse_motion() -> void:
-	var input_event := InputEventMouseMotion.new()
-	var mappable_event := NativeEvent.new()
-	mappable_event.event = input_event
 	for mapping in mappings:
+		var input_event := InputEventMouseMotion.new()
+		var mappable_event := NativeEvent.new()
+		mappable_event.event = input_event
+		print("Mapping: " + str(mapping))
 		if mapping.output_events.size() - 1 < output_index:
 			mapping.output_events.resize(output_index+1)
 		mapping.output_events[output_index] = mappable_event
+		
+		# Set the relative x/y. This is used in ManagedGamepad to determine which axis should be moved.
+		var source_event := mapping.source_event as EvdevEvent
+		var event := mapping.output_events[output_index].event as InputEventMouseMotion
+		if source_event.input_device_event.get_code_name().contains("X"):
+			event.relative.x = 1
+			event.relative.y = 0
+		elif source_event.input_device_event.get_code_name().contains("Y"):
+			event.relative.x = 0
+			event.relative.y = 1
+
 	mappings_selected.emit(mappings)
 	state_machine.pop_state()
 

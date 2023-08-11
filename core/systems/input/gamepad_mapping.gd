@@ -11,7 +11,7 @@ class_name GamepadMapping
 ## Defines possible output event behaviors from this gamepad mapping
 enum OUTPUT_BEHAVIOR {
 	SEQUENCE, ## Execute each output event one after another
-	AXIS, ## Execute the first output event if the source event's value is 1. Execute the second output event if the source event's value is -1.
+	AXIS, ## Execute the first output event if the source event's value is -1. Execute the second output event if the source event's value is 1.
 }
 
 ## Optional name of the gamepad mapping

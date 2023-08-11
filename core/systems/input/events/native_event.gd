@@ -5,12 +5,10 @@ class_name NativeEvent
 @export var event: InputEvent
 
 
-func matches(event: MappableEvent) -> bool:
-	if not event is NativeEvent:
+func matches(check_event: MappableEvent) -> bool:
+	if not check_event is NativeEvent:
 		return false
-	
-	return false
-
+	return get_signature() == check_event.get_signature()
 
 ## Set the given value on the event. How this gets set depends on the underlying
 ## Godot event.
@@ -66,6 +64,15 @@ func get_signature() -> String:
 		kind = "Action:" + event.action
 	elif event is InputEventKey:
 		kind = "Key:" + str(event.keycode)
+	elif event is InputEventMouseMotion:
+		kind = "Mouse Motion"
+	elif event is InputEventMouseButton:
+		kind = "Mouse Button:" + str(event.button_index)
+	elif event is InputEventJoypadButton:
+		kind = "Joypad Button:" + str(event.button_index)
+	elif event is InputEventJoypadMotion:
+		kind = "Joypad Motion:" + str(event.axis)
+	
 	# TODO: Do we need to make a signature for other native events?
 	return "Native:" + kind
 

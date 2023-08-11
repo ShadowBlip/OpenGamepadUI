@@ -676,12 +676,12 @@ func _translate_event(event: MappableEvent, delta: float) -> Array[MappableEvent
 			
 			# If the value is positive, we only care about the positive axis
 			if value >= 0:
-				pos_axis_event = _translate_output_event(mapping.output_events[0], value)
-				neg_axis_event = _translate_output_event(mapping.output_events[1], 0)
+				pos_axis_event = _translate_output_event(mapping.output_events[1], value)
+				neg_axis_event = _translate_output_event(mapping.output_events[0], 0)
 			# If the value is negative, we only care about the negative axis
 			else:
-				pos_axis_event = _translate_output_event(mapping.output_events[0], 0)
-				neg_axis_event = _translate_output_event(mapping.output_events[1], value)
+				pos_axis_event = _translate_output_event(mapping.output_events[1], 0)
+				neg_axis_event = _translate_output_event(mapping.output_events[0], value)
 			
 			logger.debug("Translated event " + str(event) + " into " + str(pos_axis_event))
 			logger.debug("Translated event " + str(event) + " into " + str(neg_axis_event))
@@ -723,6 +723,10 @@ func _translate_output_event(out_event: MappableEvent, value: float) -> Mappable
 	# value. Converting a percentage into the real value. E.g. translate 1.0 -> 35433
 	if translated_event is EvdevAbsEvent:
 		translated_value = _denormalize_axis(translated_event.get_event_code(), value)
+	
+	# TODO: Maybe this?
+#	if translated_event is EvdevRelEvent:
+#		translated_value = 0.0
 	
 	# If we're translating from a non-binary value (e.g. 0.75) to a binary event
 	# (e.g. 1 or 0), we need to convert the value based on some threshold.
