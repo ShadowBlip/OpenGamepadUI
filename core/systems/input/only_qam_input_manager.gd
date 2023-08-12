@@ -55,6 +55,10 @@ func _input(event: InputEvent) -> void:
 
 	if not handle_back:
 		return
+
+	if not event.is_pressed():
+		return
+
 	logger.debug("Pop state")
 	# Pop the state machine stack to go back
 	state_machine.pop_state()
