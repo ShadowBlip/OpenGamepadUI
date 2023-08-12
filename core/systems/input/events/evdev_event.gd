@@ -2,7 +2,7 @@
 extends MappableEvent
 class_name EvdevEvent
 
-@export var input_device_event: InputDeviceEvent
+var input_device_event: InputDeviceEvent
 
 
 func _init() -> void:
