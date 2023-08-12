@@ -7,7 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_gba37"]
 script = ExtResource("1_vfnim")
-phys_path = "usb-0000:73:00.3-4/input0"
+phys_path = "usb-0000:73:00.3-4.1/input0"
 name = "Microsoft X-Box 360 pad"
 
 [sub_resource type="Resource" id="Resource_efbap"]
@@ -68,7 +68,7 @@ emits = SubResource("Resource_ljqav")
 
 [sub_resource type="Resource" id="Resource_14far"]
 script = ExtResource("1_vfnim")
-phys_path = "usb-0000:73:00.4-2/input0"
+phys_path = "usb-0000:73:00.3-4.2/input0"
 name = "  Mouse for Windows"
 
 [resource]
