@@ -272,6 +272,7 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 		translated_events.reverse()
 	
 	# Emit any translated events
+	var count := 0
 	for translated in translated_events:
 		if translated is EvdevEvent:
 			logger.debug("Emitting EvdevEvent: " + str(translated))
@@ -282,14 +283,27 @@ func inject_event(event: MappableEvent, delta: float) -> void:
 			translated.event = t_event
 			logger.debug("Emitting NativeEvent: " + str(translated))
 		
+		# Just process the event immediately if only one event is injected
+		if translated_events.size() == 1:
+			_process_mappable_event(translated, delta)
+			virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+			continue
+
 		# Defer processing this event
-		_process_mappable_event(translated, delta)
-		
+		var delay := 80
+		input_thread.scheduled_exec(_process_mappable_event.bind(translated, delta), delay * count)
+		count += 1
+
 		# Important to delay before writing syn report when multiple key's are being sent. Otherwise
 		# we get issues with button passthrough.
-		if translated_events.size() > 1:
-			OS.delay_msec(80)
-		virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
+		input_thread.scheduled_exec(virt_device.write_event.bind(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0), delay * count)
+		count += 1
+
+
+## Processes the given injected event
+func _process_injected_event(translated: MappableEvent, delta: float) -> void:
+	_process_mappable_event(translated, delta)
+	virt_device.write_event(InputDeviceEvent.EV_SYN, InputDeviceEvent.SYN_REPORT, 0)
 
 
 ## Returns the capabilities of the gamepad
@@ -374,11 +388,9 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			else:
 				if mode_event:
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
-					OS.delay_msec(80)  # Give steam time to accept the input
 					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
 					virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 0)
-					OS.delay_msec(80)  # Give steam time to accept the input
-					virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+					input_thread.scheduled_exec(virt_device.write_event.bind(event.EV_SYN, event.SYN_REPORT, 0), 80)
 					mode_event = null
 
 		if event.get_code() == event.BTN_EAST and mode_event:
@@ -392,8 +404,7 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			if event.value == 1:
 				logger.debug("Mode DOWN! (Out)")
 				virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
-				OS.delay_msec(80)  # Give steam time to accept the input
-				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+				input_thread.scheduled_exec(virt_device.write_event.bind(event.EV_SYN, event.SYN_REPORT, 0), 80)
 				mode_event = null
 		if event.get_type() == event.EV_KEY:
 			logger.debug("Event out: " + event.get_code_name() + " " + str(event.get_value()))
