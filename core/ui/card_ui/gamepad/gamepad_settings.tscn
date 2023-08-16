@@ -1,41 +1,21 @@
-[gd_scene load_steps=37 format=3 uid="uid://cwarv58ju0sow"]
+[gd_scene load_steps=17 format=3 uid="uid://cwarv58ju0sow"]
 
-[ext_resource type="Script" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.gd" id="1_ouh0o"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_m8usa"]
+[ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_settings.gd" id="1_o4hh5"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_3x6ad"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_wyv83"]
-[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_qa0wi"]
-[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="5_71exm"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_1anym"]
-[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_bxkdb"]
-[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_clwto"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_8f1hr"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_7qogg"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_lxfig"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="7_fyh3u"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_5ao07"]
-[ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="10_db4e0"]
-[ext_resource type="Texture2D" uid="uid://x6dny0j4ow2n" path="res://assets/ui/icons/plus-circle.svg" id="11_v40pu"]
+[ext_resource type="Texture2D" uid="uid://cfpaw2eck4ftr" path="res://assets/ui/icons/save-fill.svg" id="10_y71gk"]
+[ext_resource type="PackedScene" uid="uid://dbll03tbmw3ps" path="res://core/ui/components/card_mapping_button.tscn" id="11_unkgl"]
 [ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="12_64hbv"]
 [ext_resource type="Texture2D" uid="uid://bfkjkvs3n12cu" path="res://assets/ui/icons/page-template.svg" id="13_4xnt2"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="14_b37ub"]
-[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="15_yt5jo"]
-[ext_resource type="Texture2D" uid="uid://dhhjoq01cc2oh" path="res://addons/controller_icons/assets/xbox360/lt.png" id="16_r6hb5"]
-[ext_resource type="Script" path="res://addons/controller_icons/objects/IconSetter.gd" id="17_fvu8u"]
-[ext_resource type="Texture2D" uid="uid://de4v68g8x5ygf" path="res://addons/controller_icons/assets/xbox360/back_alt.png" id="17_wuvur"]
-[ext_resource type="Texture2D" uid="uid://dq0eirc22li66" path="res://addons/controller_icons/assets/xbox360/start_alt.png" id="18_u44ge"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="14_vtep2"]
+[ext_resource type="PackedScene" uid="uid://b3o3wo40sfih1" path="res://core/ui/card_ui/gamepad/gamepad_mapper.tscn" id="16_1g7gi"]
 [ext_resource type="PackedScene" uid="uid://c2v6vl2a8mjfb" path="res://core/ui/components/gamepad_diagram.tscn" id="19_f8l1b"]
-[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="20_23d6w"]
-[ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="21_7j6n6"]
-[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="22_jwc0g"]
-[ext_resource type="Texture2D" uid="uid://bh66fibu352gl" path="res://addons/controller_icons/assets/xbox360/dpad_up.png" id="23_0j6gp"]
-[ext_resource type="Texture2D" uid="uid://dt4m6u4nau82r" path="res://addons/controller_icons/assets/xbox360/dpad_down.png" id="24_qtwcb"]
-[ext_resource type="Texture2D" uid="uid://7r70kxgen0mv" path="res://addons/controller_icons/assets/xbox360/dpad_left.png" id="25_jc1g6"]
-[ext_resource type="Texture2D" uid="uid://7qkn2dva6jv" path="res://addons/controller_icons/assets/xbox360/dpad_right.png" id="26_gf2sd"]
-[ext_resource type="Texture2D" uid="uid://fxgoiilpipsd" path="res://addons/controller_icons/assets/xbox360/l_stick.png" id="27_tnxhy"]
-[ext_resource type="Texture2D" uid="uid://mh6if65g6eob" path="res://addons/controller_icons/assets/xbox360/l_stick_click.png" id="28_jpsrc"]
-[ext_resource type="Texture2D" uid="uid://d6jwqg6mq8dk" path="res://addons/controller_icons/assets/xbox360/r_stick.png" id="29_lwsjo"]
-[ext_resource type="Texture2D" uid="uid://db7d0vqnfyuin" path="res://addons/controller_icons/assets/xbox360/r_stick_click.png" id="30_mewh4"]
-[ext_resource type="Texture2D" uid="uid://bva4iswwvta5d" path="res://addons/controller_icons/assets/xbox360/y.png" id="31_0hd71"]
-[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="32_p62t3"]
-[ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="33_iycnj"]
-[ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="34_r4o6a"]
-[ext_resource type="PackedScene" uid="uid://bwjgxpfga64uf" path="res://core/ui/vapor_ui/gamepad/gamepad_mapper.tscn" id="35_3g7p1"]
 
 [node name="GamepadSettings" type="Control"]
 layout_mode = 3
@@ -44,23 +24,24 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ouh0o")
+mouse_filter = 2
+script = ExtResource("1_o4hh5")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_m8usa")]
+[node name="StateWatcher" parent="." instance=ExtResource("2_3x6ad")]
 state = ExtResource("3_wyv83")
-visible_during = Array[Resource]([ExtResource("4_qa0wi"), ExtResource("5_71exm"), ExtResource("6_1anym"), ExtResource("7_bxkdb"), ExtResource("8_clwto")])
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
+target = NodePath("../../MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("9_5ao07")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wyv83")])
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_type_variation = &"LightPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -78,484 +59,102 @@ theme_override_constants/margin_bottom = 25
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TopLevelContainer"]
-layout_mode = 2
-theme_override_constants/margin_top = 10
-
-[node name="ProfileNameContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
-layout_mode = 2
-
-[node name="NewButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 25)
-layout_mode = 2
-size_flags_horizontal = 1
-icon = ExtResource("11_v40pu")
-flat = true
-icon_alignment = 1
-expand_icon = true
-
-[node name="DeleteButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 25)
-layout_mode = 2
-size_flags_horizontal = 1
-icon = ExtResource("12_64hbv")
-flat = true
-icon_alignment = 1
-expand_icon = true
-
-[node name="TemplateButton" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 25)
-layout_mode = 2
-size_flags_horizontal = 1
-disabled = true
-icon = ExtResource("13_4xnt2")
-flat = true
-icon_alignment = 1
-expand_icon = true
-
-[node name="ProfileNameLabel" parent="MarginContainer/TopLevelContainer/ProfileNameContainer" instance=ExtResource("14_b37ub")]
+[node name="ProfileNameLabel" parent="MarginContainer/TopLevelContainer" instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Profile Name"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-
-[node name="Spacer2" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-
-[node name="Spacer3" type="Control" parent="MarginContainer/TopLevelContainer/ProfileNameContainer"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-
-[node name="GamepadContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
 
-[node name="MarginContainerLeft" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LeftGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="BTN_TL" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="FocusGroup" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
+current_focus = NodePath("../SaveButton")
+focus_neighbor_bottom = NodePath("../../ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer/MappingFocusGroup")
+
+[node name="SaveButton" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Left Bumper"
-icon = ExtResource("15_yt5jo")
-flat = true
-alignment = 0
-expand_icon = true
-metadata/event = "BTN_TL"
+texture = ExtResource("10_y71gk")
 
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer/BTN_TL"]
-script = ExtResource("17_fvu8u")
-path = "joypad/lb"
-force_type = 2
-
-[node name="ABS_Z_POSITIVE" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="DeleteButton" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Left Trigger	"
-icon = ExtResource("16_r6hb5")
-flat = true
-alignment = 0
-expand_icon = true
-metadata/event = "ABS_Z"
+texture = ExtResource("12_64hbv")
 
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerLeft/LeftGamepadContainer/ABS_Z_POSITIVE"]
-script = ExtResource("17_fvu8u")
-path = "joypad/lt"
-force_type = 2
+[node name="TemplateButton" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = ExtResource("13_4xnt2")
 
-[node name="MarginContainerCenter" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
-
-[node name="CenterGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter"]
-layout_mode = 2
-theme_override_constants/separation = 40
-
-[node name="CenterButtonsContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer"]
-layout_mode = 2
-
-[node name="BTN_SELECT" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Select Key"
-icon = ExtResource("17_wuvur")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer/BTN_SELECT"]
-script = ExtResource("17_fvu8u")
-path = "joypad/select"
-force_type = 2
-
-[node name="BTN_START" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Start Key"
-icon = ExtResource("18_u44ge")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer/CenterButtonsContainer/BTN_START"]
-script = ExtResource("17_fvu8u")
-path = "joypad/start"
-force_type = 2
-
-[node name="DiagramTextureRect" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerCenter/CenterGamepadContainer" instance=ExtResource("19_f8l1b")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="MarginContainerRight" type="MarginContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RightGamepadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight"]
-layout_mode = 2
-
-[node name="BTN_TR" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Right Bumper"
-icon = ExtResource("20_23d6w")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer/BTN_TR"]
-script = ExtResource("17_fvu8u")
-path = "joypad/rb"
-force_type = 2
-
-[node name="ABS_RZ_POSITIVE" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Right Trigger	"
-icon = ExtResource("21_7j6n6")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/GamepadContainer/MarginContainerRight/RightGamepadContainer/ABS_RZ_POSITIVE"]
-script = ExtResource("17_fvu8u")
-path = "joypad/rt"
-force_type = 2
-
-[node name="ButtonsContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer"]
-layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.5
+follow_focus = true
+horizontal_scroll_mode = 0
 
-[node name="DPadContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"SettingsMenu"
 
-[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" instance=ExtResource("22_jwc0g")]
-layout_mode = 2
-text = "Directional Pad"
-
-[node name="BTN_TRIGGER_HAPPY3" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Up"
-icon = ExtResource("23_0j6gp")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="BTN_TRIGGER_HAPPY4" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Down"
-icon = ExtResource("24_qtwcb")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="BTN_TRIGGER_HAPPY1" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Left"
-icon = ExtResource("25_jc1g6")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="BTN_TRIGGER_HAPPY2" parent="MarginContainer/TopLevelContainer/ButtonsContainer/DPadContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Right"
-icon = ExtResource("26_gf2sd")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="LJoyContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" instance=ExtResource("22_jwc0g")]
-layout_mode = 2
-text = "Left Analog Stick"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
-layout_mode = 2
-
-[node name="ABS_Y_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="ButtonMappingContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Up"
-icon = ExtResource("27_tnxhy")
-flat = true
-alignment = 0
-expand_icon = true
 
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Up)"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
-layout_mode = 2
-
-[node name="ABS_Y_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer2" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="MappingFocusGroup" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" node_paths=PackedStringArray("focus_neighbor_top") instance=ExtResource("7_fyh3u")]
 unique_name_in_owner = true
-layout_mode = 2
-text = "Down"
-icon = ExtResource("27_tnxhy")
-flat = true
-alignment = 0
-expand_icon = true
+focus_neighbor_top = NodePath("../../../../../HBoxContainer/FocusGroup")
 
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Down)"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
-layout_mode = 2
-
-[node name="ABS_X_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer3" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="ButtonsLabel" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
-layout_mode = 2
-text = "Left"
-icon = ExtResource("27_tnxhy")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Left)"
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer"]
-layout_mode = 2
-
-[node name="ABS_X_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer4" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Right"
-icon = ExtResource("27_tnxhy")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer/HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Right)"
-
-[node name="BTN_THUMBL" parent="MarginContainer/TopLevelContainer/ButtonsContainer/LJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Click"
-icon = ExtResource("28_jpsrc")
-flat = true
-alignment = 0
-expand_icon = true
-
-[node name="RJoyContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" instance=ExtResource("22_jwc0g")]
-layout_mode = 2
-text = "Right Analog Stick"
-horizontal_alignment = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Up)"
-horizontal_alignment = 2
-
-[node name="ABS_RY_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Up"
-icon = ExtResource("29_lwsjo")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Down)"
-horizontal_alignment = 2
-
-[node name="ABS_RY_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer2" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Down"
-icon = ExtResource("29_lwsjo")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Left)"
-horizontal_alignment = 2
-
-[node name="ABS_RX_NEGATIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer3" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Left"
-icon = ExtResource("29_lwsjo")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "(Right)"
-horizontal_alignment = 2
-
-[node name="ABS_RX_POSITIVE" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer/HBoxContainer4" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Right"
-icon = ExtResource("29_lwsjo")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="BTN_THUMBR" parent="MarginContainer/TopLevelContainer/ButtonsContainer/RJoyContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Click"
-icon = ExtResource("30_mewh4")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ButtonsContainer" type="VBoxContainer" parent="MarginContainer/TopLevelContainer/ButtonsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SubsectionLabel" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" instance=ExtResource("22_jwc0g")]
 layout_mode = 2
 text = "Buttons"
-horizontal_alignment = 2
 
-[node name="BTN_WEST" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="CardMappingButton" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("11_unkgl")]
+layout_mode = 2
+
+[node name="AxesLabel" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "West"
-icon = ExtResource("31_0hd71")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
+text = "Axes"
 
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer/BTN_WEST"]
-script = ExtResource("17_fvu8u")
-path = "joypad/y"
-force_type = 2
+[node name="ScrollerJoystick" parent="MarginContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer" instance=ExtResource("14_vtep2")]
 
-[node name="BTN_SOUTH" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/TopLevelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="DiagramTextureRect" parent="MarginContainer/TopLevelContainer/HBoxContainer/MarginContainer" instance=ExtResource("19_f8l1b")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "South"
-icon = ExtResource("32_p62t3")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer/BTN_SOUTH"]
-script = ExtResource("17_fvu8u")
-path = "joypad/a"
-force_type = 2
-
-[node name="BTN_EAST" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "East"
-icon = ExtResource("33_iycnj")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer/BTN_EAST"]
-script = ExtResource("17_fvu8u")
-path = "joypad/b"
-force_type = 2
-
-[node name="BTN_NORTH" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer" groups=["gamepad_mapping"] instance=ExtResource("10_db4e0")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "North"
-icon = ExtResource("34_r4o6a")
-flat = true
-alignment = 2
-icon_alignment = 2
-expand_icon = true
-
-[node name="ControllerIconSetter" type="Node" parent="MarginContainer/TopLevelContainer/ButtonsContainer/ButtonsContainer/BTN_NORTH"]
-script = ExtResource("17_fvu8u")
-path = "joypad/x"
-force_type = 2
+size_flags_stretch_ratio = 2.0
 
 [node name="MapperContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -565,7 +164,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GamepadMapper" parent="MapperContainer" instance=ExtResource("35_3g7p1")]
+[node name="GamepadMapper" parent="MapperContainer" instance=ExtResource("16_1g7gi")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

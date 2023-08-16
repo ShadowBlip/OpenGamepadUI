@@ -260,7 +260,7 @@ R5                  = None
 Menu                = Gamepad   BTN_START
 Options             = Gamepad   BTN_SELECT
 Steam               = Gamepad   BTN_MODE
-QuickAccess         = Gamepad   None
+QuickAccess         = Gamepad   KEY_F20
 # Triggers
 LTrigg              = Gamepad   ABS_Z       +
 RTrigg              = Gamepad   ABS_RZ      +

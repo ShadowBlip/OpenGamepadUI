@@ -22,6 +22,8 @@ signal submitted
 signal entered
 ## Emitted when the keyboard is closed with this context
 signal exited
+## Emitted when the user has selected a keymap input key
+signal keymap_input_selected(key_event: NativeEvent)
 
 ## The type of keyboard context
 var type: TYPE
@@ -29,8 +31,8 @@ var type: TYPE
 var target: Control
 ## Whether or not the keyboard should close after submition
 var close_on_submit: bool = true
-## If this is a TYPE.INPUT_MAPPER, then it is the GamepadMapping to update
-var mapping: GamepadMapping
+## If this is a TYPE.INPUT_MAPPER, then it is the GamepadMappings to update
+var mappings: Array[GamepadMapping]
 
 
 func _init(t: TYPE = TYPE.GODOT, tgt: Control = null, close_after_submit: bool = true) -> void:

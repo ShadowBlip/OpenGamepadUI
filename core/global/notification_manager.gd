@@ -22,10 +22,10 @@ signal notification_sent(notify: Notification)
 ## Emitted when a notification has been queued
 signal notification_queued(notify: Notification)
 
-var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 
 # Keep around a history of notifications
-var _max_history := SettingsManager.get_value("general.notification", "max_history", 5) as int
+var _max_history := settings_manager.get_value("general.notification", "max_history", 5) as int
 var _history := [] as Array[Notification]
 var _queue := [] as Array[Notification]
 var ready := false

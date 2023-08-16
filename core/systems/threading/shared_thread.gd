@@ -15,6 +15,7 @@ var mutex := Mutex.new()
 var running := false
 var nodes: Array[NodeThread] = []
 var process_funcs: Array[Callable] = []
+var scheduled_funcs: Array[ScheduledTask] = []
 var one_shots: Array[Callable] = []
 var last_time: int
 var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
@@ -89,6 +90,17 @@ func exec(method: Callable) -> Variant:
 	return out[1]
 
 
+## Calls the given method from the thread after 'wait_time_ms' has passed.
+func scheduled_exec(method: Callable, wait_time_ms: int) -> void:
+	var task := ScheduledTask.new()
+	task.method = method
+	task.wait_time_ms = wait_time_ms
+	task.start_time = Time.get_ticks_msec()
+	mutex.lock()
+	scheduled_funcs.append(task)
+	mutex.unlock()
+
+
 ## Adds the given method to the thread process loop. This method will be called
 ## every thread tick.
 func add_process(method: Callable) -> void:
@@ -151,6 +163,7 @@ func _process(delta: float) -> void:
 	mutex.lock()
 	var process_nodes := nodes.duplicate()
 	var process_methods := one_shots.duplicate()
+	var process_scheduled := scheduled_funcs.duplicate()
 	var process_loops := process_funcs.duplicate()
 	mutex.unlock()
 
@@ -163,16 +176,22 @@ func _process(delta: float) -> void:
 		node._thread_process(delta)
 	
 	# Call any one-shot thread methods
-	var to_remove := []
 	for method in process_methods:
 		_async_call(method)
-		to_remove.append(method)
-	
-	# Lock when mutating our list
-	mutex.lock()
-	for method in to_remove:
+		mutex.lock()
 		one_shots.erase(method)
-	mutex.unlock()
+		mutex.unlock()
+	
+	# Call any scheduled methods
+	for task in process_scheduled:
+		var current_time := Time.get_ticks_msec()
+		if current_time - task.start_time < task.wait_time_ms:
+			continue
+		var method := task.method as Callable
+		method.call()
+		mutex.lock()
+		scheduled_funcs.erase(task)
+		mutex.unlock()
 
 
 func _async_call(method: Callable) -> void:
@@ -183,3 +202,10 @@ func _async_call(method: Callable) -> void:
 ## Returns the target frame time in microseconds of the SharedThread
 func get_target_frame_time() -> int:
 	return int((1.0 / target_tick_rate) * 1000000.0)
+
+
+## Container for holding a scheduled task to run in a thread
+class ScheduledTask:
+	var start_time: int
+	var wait_time_ms: int
+	var method: Callable

@@ -19,7 +19,7 @@ var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 @onready var focus_node: Control = $%NewButton
 
 @onready var profile_label := $%ProfileNameLabel as Label
-@onready var new_button := $%NewButton as Button
+@onready var new_button := $%NewButton as CardButton
 @onready var delete_button := $%DeleteButton as Button
 @onready var mapping_nodes := get_tree().get_nodes_in_group("gamepad_mapping")
 @onready var gamepad_mapper := $%GamepadMapper
@@ -49,23 +49,24 @@ func _ready() -> void:
 
 	# Listen to see if a mapping was selected 
 	var on_mapping_selected := func(mapping: GamepadMapping):
-		var source_event := mapping.get_source_event_name()
-		# Remove old mappings
-		var to_remove := []
-		for m in profile.mapping:
-			# TODO: Handle cases where ABS events are specified. 
-			# We could have from 2-4 of these
-			if source_event.begins_with("ABS"):
-				continue
-			if m.get_source_event_name() == source_event:
-				to_remove.append(m)
-		for m in to_remove:
-			logger.debug("Removing old mapping: " + str(m.target))
-			profile.mapping.erase(m)
-		logger.debug("Adding mapping: " + mapping.get_source_event_name())
-		profile.mapping.append(mapping)
-		logger.debug("Reloading profile")
-		_load_profile()
+		pass
+#		var source_event := mapping.get_source_event_name()
+#		# Remove old mappings
+#		var to_remove := []
+#		for m in profile.mapping:
+#			# TODO: Handle cases where ABS events are specified. 
+#			# We could have from 2-4 of these
+#			if source_event.begins_with("ABS"):
+#				continue
+#			if m.get_source_event_name() == source_event:
+#				to_remove.append(m)
+#		for m in to_remove:
+#			logger.debug("Removing old mapping: " + str(m.target))
+#			profile.mapping.erase(m)
+#		logger.debug("Adding mapping: " + mapping.get_source_event_name())
+#		profile.mapping.append(mapping)
+#		logger.debug("Reloading profile")
+#		_load_profile()
 	gamepad_mapper.mapping_selected.connect(on_mapping_selected)
 
 

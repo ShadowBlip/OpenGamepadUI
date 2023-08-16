@@ -4,8 +4,8 @@
 [ext_resource type="Script" path="res://core/ui/card_ui_only_qam/card_ui_only_qam.gd" id="2_3ptao"]
 [ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/only_qam_input_manager.tscn" id="3_klhmb"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_b1ok4"]
-[ext_resource type="PackedScene" uid="uid://bjocbvjgxlr4s" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="5_0bp4q"]
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="5_4sdt1"]
+[ext_resource type="PackedScene" uid="uid://cwarv58ju0sow" path="res://core/ui/card_ui/gamepad/gamepad_settings.tscn" id="6_oddte"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/qam/quick_access_menu.tscn" id="7_e54f8"]
 
 [node name="OnlyQamMain" type="Control" groups=["main"]]
@@ -41,7 +41,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("5_0bp4q")]
+[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("6_oddte")]
 visible = false
 layout_mode = 2
 

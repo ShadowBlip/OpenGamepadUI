@@ -27,7 +27,8 @@ class Logger extends Resource:
 	func _format_prefix(level: String, caller: Dictionary) -> String:
 		var file: String = caller["source"].split("/")[-1]
 		var line: int = caller["line"]
-		var prefix := "[{0}] [{1}] {2}:{3}: ".format([level, self.resource_name, file, line])
+		var time := Time.get_ticks_msec()
+		var prefix := "{0} [{1}] [{2}] {3}:{4}: ".format([time, level, self.resource_name, file, line])
 		return prefix
 	
 	func set_level(level: LEVEL) -> void:

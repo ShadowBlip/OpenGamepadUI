@@ -354,6 +354,8 @@ func _handle_input_map(key: KeyboardKeyConfig) -> void:
 		set_mode_shift(MODE_SHIFT.ONE_SHOT)
 		return
 
-	instance.context.mapping.target = event
+	var mappable_event := NativeEvent.new()
+	mappable_event.event = event
 	set_mode_shift(MODE_SHIFT.OFF)
+	instance.context.keymap_input_selected.emit(mappable_event)
 	instance.close()

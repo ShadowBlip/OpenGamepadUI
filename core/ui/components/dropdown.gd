@@ -1,5 +1,6 @@
 @tool
 extends BoxContainer
+class_name Dropdown
 
 signal item_focused(index: int)
 signal item_selected(index: int)
@@ -73,6 +74,10 @@ func clear() -> void:
 
 func select(idx: int) -> void:
 	option_button.select(idx)
+
+
+func set_option_disabled(idx: int, disabled: bool) -> void:
+	option_button.set_item_disabled(idx, disabled)
 
 
 # Override certain properties and pass them to child objects

@@ -1,250 +1,357 @@
-[gd_resource type="Resource" script_class="GamepadProfile" load_steps=47 format=3 uid="uid://b4q245bedg0xu"]
+[gd_resource type="Resource" script_class="GamepadProfile" load_steps=78 format=3 uid="uid://b4q245bedg0xu"]
 
+[ext_resource type="Script" path="res://core/systems/input/events/native_event.gd" id="1_kiwpl"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_mapping.gd" id="1_sic6g"]
 [ext_resource type="Script" path="res://core/systems/input/gamepad_profile.gd" id="1_w1gcb"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_abs_event.gd" id="3_knnyg"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="4_rglw4"]
 
-[sub_resource type="InputEventKey" id="InputEventKey_8j70b"]
-device = -1
-keycode = 65
-unicode = 97
-
-[sub_resource type="Resource" id="Resource_biul7"]
-script = ExtResource("1_sic6g")
-source_event = 0
-axis = 2
-target = SubResource("InputEventKey_8j70b")
-source = 134
-
-[sub_resource type="InputEventKey" id="InputEventKey_5uvfp"]
-device = -1
-keycode = 68
-unicode = 100
-
-[sub_resource type="Resource" id="Resource_caws3"]
-script = ExtResource("1_sic6g")
-source_event = 0
-axis = 1
-target = SubResource("InputEventKey_5uvfp")
-source = 134
-
-[sub_resource type="InputEventKey" id="InputEventKey_binup"]
-device = -1
-keycode = 87
-unicode = 119
-
-[sub_resource type="Resource" id="Resource_0eipr"]
-script = ExtResource("1_sic6g")
-source_event = 1
-axis = 2
-target = SubResource("InputEventKey_binup")
-source = 135
-
-[sub_resource type="InputEventKey" id="InputEventKey_xbxo4"]
+[sub_resource type="InputEventKey" id="InputEventKey_vompy"]
 device = -1
 keycode = 83
 unicode = 115
 
-[sub_resource type="Resource" id="Resource_hlad4"]
-script = ExtResource("1_sic6g")
-source_event = 1
-axis = 1
-target = SubResource("InputEventKey_xbxo4")
-source = 135
+[sub_resource type="Resource" id="Resource_a5hh5"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_vompy")
 
-[sub_resource type="InputEventKey" id="InputEventKey_aii3x"]
+[sub_resource type="InputEventKey" id="InputEventKey_3c2xd"]
+device = -1
+keycode = 87
+unicode = 119
+
+[sub_resource type="Resource" id="Resource_k131l"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_3c2xd")
+
+[sub_resource type="Resource" id="Resource_g0u0a"]
+script = ExtResource("3_knnyg")
+code = "ABS_Y"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_biul7"]
+script = ExtResource("1_sic6g")
+name = "Left Joystick (Up/Down)"
+source_event = SubResource("Resource_g0u0a")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_a5hh5"), SubResource("Resource_k131l")])
+output_behavior = 1
+
+[sub_resource type="InputEventKey" id="InputEventKey_sieot"]
+device = -1
+keycode = 68
+unicode = 100
+
+[sub_resource type="Resource" id="Resource_of4d6"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_sieot")
+
+[sub_resource type="InputEventKey" id="InputEventKey_lswd2"]
+device = -1
+keycode = 65
+unicode = 97
+
+[sub_resource type="Resource" id="Resource_7sfib"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_lswd2")
+
+[sub_resource type="Resource" id="Resource_gidcm"]
+script = ExtResource("3_knnyg")
+code = "ABS_X"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_0eipr"]
+script = ExtResource("1_sic6g")
+name = "Left Joystick (Left/Right)"
+source_event = SubResource("Resource_gidcm")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_of4d6"), SubResource("Resource_7sfib")])
+output_behavior = 1
+
+[sub_resource type="InputEventKey" id="InputEventKey_2qsa5"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Resource" id="Resource_8ak3u"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_2qsa5")
+
+[sub_resource type="Resource" id="Resource_b3hga"]
+script = ExtResource("4_rglw4")
+code = "BTN_START"
+
+[sub_resource type="Resource" id="Resource_k22hr"]
+script = ExtResource("1_sic6g")
+name = "Menu"
+source_event = SubResource("Resource_b3hga")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_8ak3u")])
+output_behavior = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_yov8b"]
+device = -1
+keycode = 4194306
+
+[sub_resource type="Resource" id="Resource_uqnxu"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_yov8b")
+
+[sub_resource type="Resource" id="Resource_vm25j"]
+script = ExtResource("4_rglw4")
+code = "BTN_SELECT"
+
+[sub_resource type="Resource" id="Resource_5mw7f"]
+script = ExtResource("1_sic6g")
+name = "Select"
+source_event = SubResource("Resource_vm25j")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_uqnxu")])
+output_behavior = 0
+
+[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_wcyrt"]
+relative = Vector2(1, 0)
+
+[sub_resource type="Resource" id="Resource_e75l3"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseMotion_wcyrt")
+
+[sub_resource type="Resource" id="Resource_mvtvg"]
+script = ExtResource("3_knnyg")
+code = "ABS_RX"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_485ch"]
+script = ExtResource("1_sic6g")
+name = "Right Joystick (X-axis)"
+source_event = SubResource("Resource_mvtvg")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_e75l3")])
+output_behavior = 0
+
+[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_jir2l"]
+relative = Vector2(0, 1)
+
+[sub_resource type="Resource" id="Resource_4jp4k"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseMotion_jir2l")
+
+[sub_resource type="Resource" id="Resource_c7olc"]
+script = ExtResource("3_knnyg")
+code = "ABS_RY"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_b538r"]
+script = ExtResource("1_sic6g")
+name = "Right Joystick (Y-axis)"
+source_event = SubResource("Resource_c7olc")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_4jp4k")])
+output_behavior = 0
+
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_mu26t"]
+button_index = 1
+
+[sub_resource type="Resource" id="Resource_8gacr"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseButton_mu26t")
+
+[sub_resource type="Resource" id="Resource_n0ff0"]
+script = ExtResource("3_knnyg")
+code = "ABS_RZ"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_r0uvm"]
+script = ExtResource("1_sic6g")
+name = "Right Trigger"
+source_event = SubResource("Resource_n0ff0")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_8gacr")])
+output_behavior = 1
+
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_shtfy"]
+button_index = 2
+
+[sub_resource type="Resource" id="Resource_be5p7"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseButton_shtfy")
+
+[sub_resource type="Resource" id="Resource_2ljku"]
+script = ExtResource("3_knnyg")
+code = "ABS_Z"
+axis = 0
+
+[sub_resource type="Resource" id="Resource_qbcis"]
+script = ExtResource("1_sic6g")
+name = "Left Trigger"
+source_event = SubResource("Resource_2ljku")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_be5p7")])
+output_behavior = 1
+
+[sub_resource type="InputEventKey" id="InputEventKey_3iajv"]
 device = -1
 keycode = 32
 unicode = 32
 
-[sub_resource type="Resource" id="Resource_8q07a"]
-script = ExtResource("1_sic6g")
-source_event = 304
-axis = 0
-target = SubResource("InputEventKey_aii3x")
-source = 35
+[sub_resource type="Resource" id="Resource_phqiq"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_3iajv")
 
-[sub_resource type="InputEventKey" id="InputEventKey_l8iyg"]
+[sub_resource type="Resource" id="Resource_flw3t"]
+script = ExtResource("4_rglw4")
+code = "BTN_SOUTH"
+
+[sub_resource type="Resource" id="Resource_lyjeb"]
+script = ExtResource("1_sic6g")
+name = "A Button"
+source_event = SubResource("Resource_flw3t")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_phqiq")])
+output_behavior = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ncrby"]
 device = -1
 keycode = 82
 unicode = 114
 
-[sub_resource type="Resource" id="Resource_fbq04"]
-script = ExtResource("1_sic6g")
-source_event = 307
-axis = 0
-target = SubResource("InputEventKey_l8iyg")
-source = 40
+[sub_resource type="Resource" id="Resource_1ik66"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_ncrby")
 
-[sub_resource type="InputEventKey" id="InputEventKey_dt6yk"]
+[sub_resource type="Resource" id="Resource_dpf7c"]
+script = ExtResource("4_rglw4")
+code = "BTN_NORTH"
+
+[sub_resource type="Resource" id="Resource_fw3nf"]
+script = ExtResource("1_sic6g")
+name = "X Button"
+source_event = SubResource("Resource_dpf7c")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_1ik66")])
+output_behavior = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_ak45d"]
 device = -1
 keycode = 70
 unicode = 102
 
-[sub_resource type="Resource" id="Resource_gym5j"]
-script = ExtResource("1_sic6g")
-source_event = 308
-axis = 0
-target = SubResource("InputEventKey_dt6yk")
-source = 42
+[sub_resource type="Resource" id="Resource_xdlqv"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_ak45d")
 
-[sub_resource type="InputEventKey" id="InputEventKey_3lcy5"]
+[sub_resource type="Resource" id="Resource_bcj2w"]
+script = ExtResource("4_rglw4")
+code = "BTN_WEST"
+
+[sub_resource type="Resource" id="Resource_tpg3t"]
+script = ExtResource("1_sic6g")
+name = "Y Button"
+source_event = SubResource("Resource_bcj2w")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_xdlqv")])
+output_behavior = 0
+
+[sub_resource type="InputEventKey" id="InputEventKey_bnn1n"]
 device = -1
 keycode = 69
 unicode = 101
 
-[sub_resource type="Resource" id="Resource_n84h4"]
+[sub_resource type="Resource" id="Resource_4u04c"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventKey_bnn1n")
+
+[sub_resource type="Resource" id="Resource_e34yv"]
+script = ExtResource("4_rglw4")
+code = "BTN_EAST"
+
+[sub_resource type="Resource" id="Resource_h5lqu"]
 script = ExtResource("1_sic6g")
-source_event = 305
-axis = 0
-target = SubResource("InputEventKey_3lcy5")
-source = 37
+name = "B Button"
+source_event = SubResource("Resource_e34yv")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_4u04c")])
+output_behavior = 0
 
-[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_432qt"]
-
-[sub_resource type="Resource" id="Resource_c6yk8"]
-script = ExtResource("1_sic6g")
-source_event = 3
-axis = 3
-target = SubResource("InputEventMouseMotion_432qt")
-source = 137
-
-[sub_resource type="InputEventMouseMotion" id="InputEventMouseMotion_0x5pl"]
-
-[sub_resource type="Resource" id="Resource_ytybu"]
-script = ExtResource("1_sic6g")
-source_event = 4
-axis = 3
-target = SubResource("InputEventMouseMotion_0x5pl")
-source = 138
-
-[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_f222n"]
-button_index = 1
-
-[sub_resource type="Resource" id="Resource_23cvb"]
-script = ExtResource("1_sic6g")
-source_event = 5
-axis = 1
-target = SubResource("InputEventMouseButton_f222n")
-source = 139
-
-[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_pf6qo"]
-button_index = 2
-
-[sub_resource type="Resource" id="Resource_wv4u8"]
-script = ExtResource("1_sic6g")
-source_event = 2
-axis = 1
-target = SubResource("InputEventMouseButton_pf6qo")
-source = 136
-
-[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_jwrha"]
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_qqnjr"]
 button_index = 4
 
-[sub_resource type="Resource" id="Resource_s5v1a"]
-script = ExtResource("1_sic6g")
-source_event = 311
-axis = 0
-target = SubResource("InputEventMouseButton_jwrha")
-source = 46
+[sub_resource type="Resource" id="Resource_nr488"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseButton_qqnjr")
 
-[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_885g1"]
+[sub_resource type="Resource" id="Resource_lq1uf"]
+script = ExtResource("4_rglw4")
+code = "BTN_TR"
+
+[sub_resource type="Resource" id="Resource_oey4x"]
+script = ExtResource("1_sic6g")
+name = "RB"
+source_event = SubResource("Resource_lq1uf")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_nr488")])
+output_behavior = 0
+
+[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_7u512"]
 button_index = 5
 
-[sub_resource type="Resource" id="Resource_6brqr"]
+[sub_resource type="Resource" id="Resource_n5upu"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventMouseButton_7u512")
+
+[sub_resource type="Resource" id="Resource_rcrq2"]
+script = ExtResource("4_rglw4")
+code = "BTN_TL"
+
+[sub_resource type="Resource" id="Resource_rse50"]
 script = ExtResource("1_sic6g")
-source_event = 310
-axis = 0
-target = SubResource("InputEventMouseButton_885g1")
-source = 45
+name = "LB"
+source_event = SubResource("Resource_rcrq2")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_n5upu")])
+output_behavior = 0
 
-[sub_resource type="InputEventKey" id="InputEventKey_1i3ge"]
-device = -1
-keycode = 4194305
+[sub_resource type="InputEventAction" id="InputEventAction_sp18x"]
+action = &"ogui_qam"
 
-[sub_resource type="Resource" id="Resource_dhr82"]
+[sub_resource type="Resource" id="Resource_sqj6d"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventAction_sp18x")
+
+[sub_resource type="Resource" id="Resource_ciolg"]
+script = ExtResource("4_rglw4")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_ti26c"]
 script = ExtResource("1_sic6g")
-source_event = 315
-axis = 0
-target = SubResource("InputEventKey_1i3ge")
-source = 50
+name = "QAM"
+source_event = SubResource("Resource_ciolg")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_sqj6d")])
+output_behavior = 0
 
-[sub_resource type="InputEventKey" id="InputEventKey_3i4p2"]
-device = -1
-keycode = 4194306
+[sub_resource type="InputEventAction" id="InputEventAction_sneme"]
+action = &"ogui_volume_up"
 
-[sub_resource type="Resource" id="Resource_2v2n7"]
+[sub_resource type="Resource" id="Resource_yxj10"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventAction_sneme")
+
+[sub_resource type="Resource" id="Resource_c336q"]
+script = ExtResource("4_rglw4")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_ohkl0"]
 script = ExtResource("1_sic6g")
-source_event = 314
-axis = 0
-target = SubResource("InputEventKey_3i4p2")
-source = 49
+name = "Volume Up"
+source_event = SubResource("Resource_c336q")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_yxj10")])
+output_behavior = 0
 
-[sub_resource type="InputEventKey" id="InputEventKey_comin"]
-device = -1
-keycode = 4194320
+[sub_resource type="InputEventAction" id="InputEventAction_7wr3r"]
+action = &"ogui_volume_down"
 
-[sub_resource type="Resource" id="Resource_cue5u"]
+[sub_resource type="Resource" id="Resource_d073h"]
+script = ExtResource("1_kiwpl")
+event = SubResource("InputEventAction_7wr3r")
+
+[sub_resource type="Resource" id="Resource_iqi7v"]
+script = ExtResource("4_rglw4")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_532kj"]
 script = ExtResource("1_sic6g")
-source_event = 706
-axis = 0
-target = SubResource("InputEventKey_comin")
-source = 81
-
-[sub_resource type="InputEventKey" id="InputEventKey_0uv8o"]
-device = -1
-keycode = 4194322
-
-[sub_resource type="Resource" id="Resource_6unb4"]
-script = ExtResource("1_sic6g")
-source_event = 707
-axis = 0
-target = SubResource("InputEventKey_0uv8o")
-source = 82
-
-[sub_resource type="InputEventKey" id="InputEventKey_0j6q2"]
-device = -1
-keycode = 4194319
-
-[sub_resource type="Resource" id="Resource_wv6ie"]
-script = ExtResource("1_sic6g")
-source_event = 704
-axis = 0
-target = SubResource("InputEventKey_0j6q2")
-source = 79
-
-[sub_resource type="InputEventKey" id="InputEventKey_vcb4o"]
-device = -1
-keycode = 4194321
-
-[sub_resource type="Resource" id="Resource_cmov8"]
-script = ExtResource("1_sic6g")
-source_event = 705
-axis = 0
-target = SubResource("InputEventKey_vcb4o")
-source = 80
-
-[sub_resource type="InputEventKey" id="InputEventKey_2qfk8"]
-device = -1
-keycode = 4194325
-
-[sub_resource type="Resource" id="Resource_67nhw"]
-script = ExtResource("1_sic6g")
-source_event = 317
-axis = 0
-target = SubResource("InputEventKey_2qfk8")
-source = 52
-
-[sub_resource type="InputEventMouseButton" id="InputEventMouseButton_vwg4i"]
-button_index = 1
-
-[sub_resource type="Resource" id="Resource_kkqqs"]
-script = ExtResource("1_sic6g")
-source_event = 318
-axis = 0
-target = SubResource("InputEventMouseButton_vwg4i")
-source = 53
+name = "Volume Down"
+source_event = SubResource("Resource_iqi7v")
+output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_d073h")])
+output_behavior = 0
 
 [resource]
 script = ExtResource("1_w1gcb")
 name = "Mouse and Keyboard  (WASD)"
-mapping = Array[Resource]([SubResource("Resource_biul7"), SubResource("Resource_caws3"), SubResource("Resource_0eipr"), SubResource("Resource_hlad4"), SubResource("Resource_8q07a"), SubResource("Resource_fbq04"), SubResource("Resource_gym5j"), SubResource("Resource_n84h4"), SubResource("Resource_c6yk8"), SubResource("Resource_ytybu"), SubResource("Resource_23cvb"), SubResource("Resource_wv4u8"), SubResource("Resource_s5v1a"), SubResource("Resource_6brqr"), SubResource("Resource_dhr82"), SubResource("Resource_2v2n7"), SubResource("Resource_cue5u"), SubResource("Resource_6unb4"), SubResource("Resource_wv6ie"), SubResource("Resource_cmov8"), SubResource("Resource_67nhw"), SubResource("Resource_kkqqs")])
+mapping = Array[ExtResource("1_sic6g")]([SubResource("Resource_biul7"), SubResource("Resource_0eipr"), SubResource("Resource_k22hr"), SubResource("Resource_5mw7f"), SubResource("Resource_485ch"), SubResource("Resource_b538r"), SubResource("Resource_r0uvm"), SubResource("Resource_qbcis"), SubResource("Resource_lyjeb"), SubResource("Resource_fw3nf"), SubResource("Resource_tpg3t"), SubResource("Resource_h5lqu"), SubResource("Resource_oey4x"), SubResource("Resource_rse50"), SubResource("Resource_ti26c"), SubResource("Resource_ohkl0"), SubResource("Resource_532kj")])
+mouse_speed_pps = 800

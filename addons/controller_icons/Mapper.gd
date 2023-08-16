@@ -3,6 +3,52 @@ class_name ControllerMapper
 
 var logger := Log.get_logger("ControllerMapper", Log.LEVEL.INFO)
 
+## Returns the controller icon path from the given evdev event
+static func get_joypad_path_from_event(event: EvdevEvent) -> String:
+	var type := event.get_event_type()
+	var code := event.get_event_code()
+
+	# Defines the event mappings
+	var mapping := {
+		InputDeviceEvent.EV_KEY: {
+			InputDeviceEvent.BTN_SOUTH: "joypad/a",
+			InputDeviceEvent.BTN_NORTH: "joypad/x",
+			InputDeviceEvent.BTN_EAST: "joypad/b",
+			InputDeviceEvent.BTN_WEST: "joypad/y",
+			InputDeviceEvent.BTN_TL: "joypad/lb",
+			InputDeviceEvent.BTN_TR: "joypad/rb",
+			InputDeviceEvent.BTN_TL2: "joypad/lt",
+			InputDeviceEvent.BTN_TR2: "joypad/rt",
+			InputDeviceEvent.BTN_START: "joypad/start",
+			InputDeviceEvent.BTN_SELECT: "joypad/select",
+			InputDeviceEvent.BTN_THUMBL: "joypad/l_stick_click",
+			InputDeviceEvent.BTN_THUMBR: "joypad/r_stick_click",
+			InputDeviceEvent.BTN_MODE: "joypad/home",
+			InputDeviceEvent.BTN_BASE: "joypad/share",
+			InputDeviceEvent.BTN_Z: "joypad/share",
+			InputDeviceEvent.BTN_TRIGGER_HAPPY1: "joypad/dpad_left",
+			InputDeviceEvent.BTN_TRIGGER_HAPPY2: "joypad/dpad_right",
+			InputDeviceEvent.BTN_TRIGGER_HAPPY3: "joypad/dpad_up",
+			InputDeviceEvent.BTN_TRIGGER_HAPPY4: "joypad/dpad_down",
+		},
+		InputDeviceEvent.EV_ABS: {
+			InputDeviceEvent.ABS_X: "joypad/l_stick",
+			InputDeviceEvent.ABS_Y: "joypad/l_stick",
+			InputDeviceEvent.ABS_RX: "joypad/r_stick",
+			InputDeviceEvent.ABS_RY: "joypad/r_stick",
+			InputDeviceEvent.ABS_Z: "joypad/lt",
+			InputDeviceEvent.ABS_RZ: "joypad/rt",
+			InputDeviceEvent.ABS_HAT0X: "joypad/dpad", # left/right
+			InputDeviceEvent.ABS_HAT0Y: "joypad/dpad", # up/down
+		},
+	}
+
+	if type in mapping and code in mapping[type]:
+		return mapping[type][code]
+
+	return ""
+
+
 func _convert_joypad_path(path: String, fallback) -> String:
 	match _get_joypad_type(fallback):
 		ControllerSettings.Devices.LUNA:

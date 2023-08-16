@@ -81,7 +81,8 @@ func _on_state_entered(_from: State) -> void:
 	game_settings_state.data = launcher_state.data
 
 	# Configure the controller settings state with this game 
-	gamepad_settings_state.data = launcher_state.data
+	gamepad_settings_state.data = launcher_state.data ## DEPRECATED, use meta
+	gamepad_settings_state.set_meta("item", library_item)
 
 	# Check if the app is installed or not
 	_update_launch_button()

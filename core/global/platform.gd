@@ -17,7 +17,8 @@ enum PLATFORM {
 	AYANEO_GEN3,  ## Includes AIR and AIR Pro models
 	AYANEO_GEN4,  ## Includes 2 and GEEK models
 	AYANEO_GEN5,  ## AIR Plus 6800U
-	AYANEO_GEN6,  ## Includes 2S and GEEK 1S
+	AYANEO_GEN6,  ## Includes 2S,GEEK 1S, AIR 1S
+	AYANEO_GEN7,  ## AIR Plus i3 1215U
 	AYN_GEN1,  ## Includes Loki Max, possibly others at release.
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
@@ -65,7 +66,7 @@ func _init() -> void:
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres")
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/handheld/ally/ally_gen1.tres")
+		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
 			gpu.thermal_mode_capable = true
@@ -81,6 +82,10 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres")
 	if PLATFORM.AYANEO_GEN5 in flags:
 		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen5.tres")
+	if PLATFORM.AYANEO_GEN6 in flags:
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen6.tres")
+	if PLATFORM.AYANEO_GEN7 in flags:
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen7.tres")
 	if PLATFORM.AYN_GEN1 in flags:
 		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres")
 	if PLATFORM.GENERIC in flags:
@@ -101,9 +106,10 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres")
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres")
-
-	for action in platform.startup_actions:
-		action.execute()
+	
+	if platform:
+		for action in platform.startup_actions:
+			action.execute()
 
 	# Set OS platform provider
 	if PLATFORM.STEAMOS in flags:
@@ -111,8 +117,9 @@ func _init() -> void:
 	if PLATFORM.CHIMERAOS in flags:
 		os = load("res://core/platform/os/chimeraos.tres")
 
-	for action in os.startup_actions:
-		action.execute()
+	if os:
+		for action in os.startup_actions:
+			action.execute()
 
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
@@ -196,18 +203,18 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.ABERNIC_GEN1
 	# AOKZOE
 	elif product_name in ["AOKZOE A1 AR07", "AOKZOE A1 Pro"] and vendor_name == "AOKZOE":
-		logger.debug("Detected AOKZOE Gen1 platform")
+		logger.debug("Detected AOKZOE Gen 1 platform")
 		return PLATFORM.AOKZOE_GEN1
 	# ASUS
 	elif product_name == "ROG Ally RC71L_RC71L" and vendor_name == "ASUSTeK COMPUTER INC.":
-		logger.debug("Detected ROG Ally Gen1 platform")
+		logger.debug("Detected ROG Ally Gen 1 platform")
 		return PLATFORM.ALLY_GEN1
 	# AYANEO
 	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen4 platform")
+		logger.debug("Detected AYANEO Gen 4 platform")
 		return PLATFORM.AYANEO_GEN4
-	elif product_name in ["AYANEO 2S", "GEEK 1S"] and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen6 platform")
+	elif product_name in ["AYANEO 2S", "GEEK 1S", "AIR 1S"] and vendor_name == "AYANEO":
+		logger.debug("Detected AYANEO Gen 6 platform")
 		return PLATFORM.AYANEO_GEN6
 	elif (
 		(product_name.contains("2021") or product_name.contains("FOUNDER"))
@@ -216,27 +223,32 @@ func _read_dmi() -> PLATFORM:
 		logger.debug("Detected AYANEO 2021 platform")
 		return PLATFORM.AYANEO_GEN1
 	elif product_name in ["AIR", "AIR Pro"] and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen3 platform")
+		logger.debug("Detected AYANEO Gen 3 platform")
 		return PLATFORM.AYANEO_GEN3
 	elif product_name.contains("AIR Plus") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen5 platform")
-		return PLATFORM.AYANEO_GEN5
+		match cpu.vendor:
+			"GenuineIntel":
+				logger.debug("Detected AYANEO Gen 7 platform")
+				return PLATFORM.AYANEO_GEN7
+			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
+				logger.debug("Detected AYANEO Gen 5 platform")
+				return PLATFORM.AYANEO_GEN5
 	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
-		logger.debug("Detected AYANEO Gen2 platform")
+		logger.debug("Detected AYANEO Gen 2 platform")
 		return PLATFORM.AYANEO_GEN2
 	# AYN
 	elif product_name.contains("Loki Max") and vendor_name == "ayn":
-		logger.debug("Detected Ayn Gen1 platform")
+		logger.debug("Detected Ayn Gen 1 platform")
 		return PLATFORM.AYN_GEN1
 	# GPD
 	elif product_name.contains("G1618-03") and vendor_name == "GPD":
-		logger.debug("Detected GPD Gen1 platform")
+		logger.debug("Detected GPD Gen 1 platform")
 		return PLATFORM.GPD_GEN1
 	elif product_name.contains("G1619-04") and vendor_name == "GPD":
-		logger.debug("Detected GPD Gen2 platform")
+		logger.debug("Detected GPD Gen 2 platform")
 		return PLATFORM.GPD_GEN2
 	elif product_name.contains("G1618-04") and vendor_name == "GPD":
-		logger.debug("Detected GPD Gen3 platform")
+		logger.debug("Detected GPD Gen 3 platform")
 		return PLATFORM.GPD_GEN3
 	# OneXPlayer
 	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):

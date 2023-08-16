@@ -380,7 +380,8 @@ func set_main_app(window_id: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 	return _set_xprop(xwayland, window_id, "STEAM_GAME", OVERLAY_GAME_ID)
 
 
-## Set the given window as the primary overlay input focus
+## Set the given window as the primary overlay input focus. This should be set to
+## "1" whenever the overlay wants to intercept input from a game.
 func set_input_focus(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
 	var xwayland := get_xwayland(display)
 	if not xwayland:
@@ -407,6 +408,15 @@ func set_overlay(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) 
 	if not xwayland:
 		return -1
 	return _set_xprop(xwayland, window_id, "STEAM_OVERLAY", value)
+
+
+## Set the given window as a notification. This should be set to "1" when some
+## UI wants to be shown but not intercept input.
+func set_notification(window_id: int, value: int, display: XWAYLAND = XWAYLAND.OGUI) -> int:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	return _set_xprop(xwayland, window_id, "STEAM_NOTIFICATION", value)
 
 
 ## Set the given window as an external overlay
