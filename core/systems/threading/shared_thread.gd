@@ -101,6 +101,28 @@ func scheduled_exec(method: Callable, wait_time_ms: int) -> void:
 	mutex.unlock()
 
 
+## Cancels a given Sheduled Task before it is executed.
+func cancel_scheduled_exec(task: ScheduledTask) -> void:
+	mutex.lock()
+	if task not in scheduled_funcs:
+		logger.warn("Scheduled Task " + task.method.get_method() + " canceled but not found in scheduled functions."  )
+		return
+	scheduled_funcs.erase(task)
+	mutex.unlock()
+
+
+## Finds all SheduledTask's who's method matches the given method.
+func find_scheduled_exec(method: Callable) -> Array[ScheduledTask]:
+	mutex.lock()
+	var all_sched_funcs := scheduled_funcs.duplicate()
+	mutex.unlock()
+	var matching_tasks: Array[ScheduledTask] = []
+	for task in all_sched_funcs:
+		if task.method == method:
+			matching_tasks.append(task)
+	return matching_tasks
+
+
 ## Adds the given method to the thread process loop. This method will be called
 ## every thread tick.
 func add_process(method: Callable) -> void:
@@ -111,6 +133,9 @@ func add_process(method: Callable) -> void:
 
 ## Removes the given method from the thread process loop.
 func remove_process(method: Callable) -> void:
+	if method not in process_funcs:
+		logger.warn("Method " + method.get_method() + " canceled but not found in processing functions."  )
+		return
 	mutex.lock()
 	process_funcs.erase(method)
 	mutex.unlock()
