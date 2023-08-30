@@ -1,15 +1,19 @@
 extends Resource
 class_name PerformanceManager
 
+signal smt_updated
+signal gpu_clk_limits_updated
+
 var Platform := load("res://core/global/platform.tres")
 var thread_pool := load("res://core/systems/threading/thread_pool.tres") as ThreadPool
 
 const POWERTOOLS_PATH : String = "/usr/share/opengamepadui/scripts/powertools"
 
 var cpu: Platform.CPUInfo
-var cpu_core_count := 1
-var cpu_core_count_current: int = 1
 var cpu_boost_enabled: bool = false
+var cpu_core_count := 1
+var cpu_core_count_current := 1
+var cpu_cores_available := 1
 var cpu_smt_enabled: bool = false
 var gpu: Platform.GPUInfo
 var gpu_freq_max : float
@@ -37,6 +41,7 @@ func _ready():
 ## Looks at system file decriptors to update components and their capabilities
 ## and current settings. 
 func update_system_components() -> void:
+	logger.debug("Update system components started")
 	if not cpu:
 		cpu = Platform.get_cpu_info()
 	if not gpu:
@@ -60,6 +65,7 @@ func update_system_components() -> void:
 
 	if gpu.thermal_mode_capable:
 		await _update_thermal_mode()
+	logger.debug("Update system components completed")
 
 
 func set_cpu_core_count(value: int) -> void:
@@ -77,7 +83,7 @@ func set_cpu_boost_enabled(state: bool) -> void:
 	var args := ["cpuBoost", "0"]
 	if cpu_boost_enabled:
 		args = ["cpuBoost", "1"]
-	await _do_exec(POWERTOOLS_PATH, args)
+	_do_exec(POWERTOOLS_PATH, args)
 
 
 ## Called to enable/disable CPU SMT.
@@ -90,12 +96,13 @@ func set_cpu_smt_enabled(state: bool) -> void:
 		args = ["smtToggle", "on"]
 	else:
 		args = ["smtToggle", "off"]
-	var output: Array = await _do_exec(POWERTOOLS_PATH, args)
+	var output: Array = _do_exec(POWERTOOLS_PATH, args)
 	var exit_code = output[1]
 	if exit_code:
 		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
+	await _update_cpu_count()
 	await _update_cpus_enabled()
-
+	smt_updated.emit()
 
 ## Called when gpu_freq_max_slider.value is changed.
 func set_gpu_freq_max(value: float) -> void:
@@ -126,7 +133,7 @@ func set_gpu_manual_mode_enabled(state: bool) -> void:
 		var args := ["pdfpl", "auto"]
 		if gpu_manual_mode:
 			args = ["pdfpl", "manual"]
-		var output: Array = await _do_exec(POWERTOOLS_PATH, args)
+		var output: Array = _do_exec(POWERTOOLS_PATH, args)
 		var exit_code = output[1]
 		if exit_code:
 			logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
@@ -185,7 +192,7 @@ func set_thermal_mode(index: int) -> void:
 func _amd_tdp_change() -> void:
 	logger.debug("Doing callback func _do_amd_tdp_change")
 	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-a", str(tdp_current * 1000)])
-	await _amd_tdp_boost_change()
+
 
 
 ## Set long/short PPT on AMD APU's
@@ -202,11 +209,14 @@ func _amd_tdp_boost_change() -> void:
 func _change_cpu_cores():
 	var args := []
 	for cpu_no in range(1, cpu_core_count):
-		if cpu_no >= cpu_core_count_current:
-			args = ["cpuToggle", str(cpu_no), "0"]
-		else:
-			args = ["cpuToggle", str(cpu_no), "1"]
-		await _do_exec(POWERTOOLS_PATH, args)
+		args = ["cpuToggle", str(cpu_no), "1"]
+		if cpu_smt_enabled and cpu_no >= cpu_core_count_current:
+			args[2] = "0"
+		elif not cpu_smt_enabled:
+			if cpu_no % 2 != 0 or cpu_no >= (cpu_core_count_current * 2) - 1:
+				args[2] = "0"
+		logger.debug("Set CPU No: " + str(args[1]) + " to " + args[2])
+		_do_exec(POWERTOOLS_PATH, args)
 
 
 ## Called to set write permissions to power_dpm_force_performace_level
@@ -278,7 +288,6 @@ func _intel_tdp_change() -> void:
 	var results := await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_0_power_limit_uw", str(tdp_current * 1000000)])
 	for result in results:
 		logger.debug("Result: " +str(result))
-	await _intel_tdp_boost_change()
 
 
 # Sets the current TDP to the midpoint of the detected hardware. Used when we're not able to
@@ -313,12 +322,8 @@ func _tdp_value_change() -> void:
 ## be empty if not in "manual" for pp_od_performance_level.
 func _update_amd_gpu_clock_limits() -> void:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
-	var output: Array = await _do_exec("cat", args)
+	var output: Array = _do_exec("cat", args)
 	var result := output[0][0].split("\n") as Array
-	var current_max := 0
-	var current_min := 0
-	var max_value := 0
-	var min_value := 0
 
 	for param in result:
 		var parts := param.split("\n") as Array
@@ -333,7 +338,7 @@ func _update_amd_gpu_clock_limits() -> void:
 				gpu_freq_min_current =  int(part[1].rstrip("Mhz"))
 			elif part[0] == "1:":
 				gpu_freq_max_current =  int(part[1].rstrip("Mhz"))
-	logger.debug("Found GPU CLK Limits: " + str(min_value) + " - " + str(max_value))
+	logger.debug("Found GPU CLK Limits: " + str(gpu_freq_min) + " - " + str(gpu_freq_max))
 
 
 func _update_amd_gpu_perf_level() -> String:
@@ -342,7 +347,7 @@ func _update_amd_gpu_perf_level() -> String:
 
 ## Retrieves the current TDP from ryzenadj for AMD APU's.
 func _update_amd_tdp() -> void:
-	var output: Array = await _do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
+	var output: Array = _do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
 	var exit_code = output[1]
 	if exit_code:
 		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
@@ -386,32 +391,36 @@ func _update_cpus_enabled() -> void:
 	var active_cpus := 1
 	for i in range(1, cpu_core_count):
 		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
-		var output: Array = await _do_exec("bash", args)
+		var output: Array = _do_exec("bash", args)
+		logger.debug("Add to count: " + str(output[0][0].strip_edges()))
 		active_cpus += int(output[0][0].strip_edges())
-	logger.debug("Active CPU's: " + str(active_cpus))
+		logger.debug("Detected Active CPU's: " + str(active_cpus))
 	cpu_core_count_current = active_cpus
+	logger.debug("Total Active CPU's: " + str(cpu_core_count_current))
 
-
-## updates the total number of cores and total enabled cores.
-func _update_cpu_count() -> int:
+## Updates the total number of cores
+func _update_cpu_count() -> void:
 	var args = ["-c", "ls /sys/bus/cpu/devices/ | wc -l"]
-	var output: Array = await _do_exec("bash", args)
+	var output: Array = _do_exec("bash", args)
 	var exit_code = output[1]
 	if exit_code:
 		logger.warn("Unable to update CPU count. Received exit code: " +str(exit_code))
-		return 0
-	var result := output[0][0].split("\n") as Array
-	return int(result[0])
+		return
+	cpu_core_count = output[0][0].split("\n")[0] as int
+	cpu_cores_available = cpu_core_count
+	if not cpu_smt_enabled:
+		cpu_cores_available = cpu_core_count / 2
 
+	logger.debug("Total CPU's: " + str(cpu_core_count) + " Available CPU's: " + str(cpu_cores_available))
 
-## reads the current and absolute min/max gpu clocks.
+## Reads the current and absolute min/max gpu clocks.
 func _update_gpu_clk_limits() -> void:
 	match gpu.vendor:
 		"AMD":
 			await _update_amd_gpu_clock_limits()
 		"Intel":
 			await _update_intel_gpu_clock_limits()
-
+	gpu_clk_limits_updated.emit()
 
 ## Called to read the current performance level and set the UI as needed.
 func _update_gpu_perf_level() -> void:
@@ -480,7 +489,7 @@ func _update_thermal_mode() -> int:
 
 # Used to read values from sysfs
 func _read_sys(path: String) -> String:
-	var output: Array = await _do_exec("cat", [path])
+	var output: Array = _do_exec("cat", [path])
 	return output[0][0].strip_escapes()
 
 

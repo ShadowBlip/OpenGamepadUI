@@ -32,8 +32,10 @@ func _ready():
 	command_timer.set_autostart(false)
 	command_timer.set_one_shot(true)
 	add_child(command_timer)
-	
+	logger.debug("Alive")
+	await performance_manager.update_system_components()
 	_setup_interface()
+	logger.debug("Setup completed")
 #	update_timer = Timer.new()
 #	update_timer.set_autostart(true)
 #	update_timer.timeout.connect()
@@ -41,23 +43,28 @@ func _ready():
 
 
 func _setup_interface() -> void:
-	performance_manager.update_system_components()
 	if performance_manager.cpu.smt_capable:
+		logger.debug("CPU is SMT Capable")
 		_setup_cpu_core_range()
 	if performance_manager.cpu.boost_capable:
+		logger.debug("CPU is Boost Capable")
 		_setup_cpu_boost()
 	if performance_manager.gpu.tdp_capable:
+		logger.debug("SOC is TDP Capable")
 		_setup_tdp_range()
 	if performance_manager.gpu.clk_capable:
+		logger.debug("GPU is Reclock Capable")
 		_setup_gpu_freq_range()
 	if performance_manager.gpu.tj_temp_capable:
+		logger.debug("GPU is TJ Temp Configurable")
 		_setup_gpu_temp_range()
 	if performance_manager.gpu.thermal_mode_capable:
+		logger.debug("GPU is Thermal Mode Configurable")
 		_setup_thermal_profile()
 
 
 func _update_interface() -> void:
-	performance_manager.update_system_components()
+	await performance_manager.update_system_components()
 	_update_cpu_core_range()
 	_update_cpu_boost()
 	_update_tdp_range()
@@ -83,19 +90,21 @@ func _clear_callbacks() -> void:
 
 
 func _setup_cpu_core_range() -> void:
+	_update_cpu_core_range()
 	if performance_manager.cpu_smt_enabled:
 		smt_button.button_pressed = true
 	smt_button.visible = true
-	smt_button.toggled.connect(_on_toggle_smt)
-
-	_update_cpu_core_range()
 	cpu_cores_slider.visible = true
+	smt_button.toggled.connect(_on_toggle_smt)
 	cpu_cores_slider.value_changed.connect(_on_change_cpu_cores)
+	performance_manager.smt_updated.connect(_update_cpu_core_range)
 
 
 func _update_cpu_core_range() -> void:
-	cpu_cores_slider.max_value = performance_manager.cpu_core_count
+	cpu_cores_slider.max_value = performance_manager.cpu_cores_available
 	cpu_cores_slider.value = performance_manager.cpu_core_count_current
+	logger.debug("Detected CPU Range: " + str(cpu_cores_slider.min_value) + "-" + str(cpu_cores_slider.max_value))
+	logger.debug("Current CPU Limit: " + str(cpu_cores_slider.value))
 
 
 func _setup_cpu_boost() -> void:
@@ -110,6 +119,7 @@ func _update_cpu_boost() -> void:
 		cpu_boost_button.button_pressed = true
 	else:
 		cpu_boost_button.button_pressed = false
+	logger.debug("CPU Boost Enabled: " + str(cpu_boost_button.button_pressed))
 
 
 # Gets the TDP Range for the detected hardware.
@@ -127,23 +137,31 @@ func _setup_tdp_range() -> void:
 func _update_tdp_range() -> void:
 	tdp_slider.value = performance_manager.tdp_current
 	tdp_boost_slider.value = performance_manager.tdp_boost_current
+	logger.debug("Detected TDP Range: " + str(tdp_slider.min_value) + "-" + str(tdp_slider.max_value))
+	logger.debug("Current TDP Limit: " + str(tdp_slider.value))
 
 
 func _setup_gpu_freq_range() -> void:
+	_update_gpu_freq_range()
+	gpu_freq_enable.button_pressed = performance_manager.gpu_manual_mode
+	gpu_freq_max_slider.visible = performance_manager.gpu_manual_mode
+	gpu_freq_min_slider.visible = performance_manager.gpu_manual_mode
+	gpu_freq_enable.visible = true
+	gpu_freq_enable.toggled.connect(_on_toggle_gpu_freq)
+	gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_changed)
+	gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
+	performance_manager.gpu_clk_limits_updated.connect(_update_gpu_freq_range)
+
+
+func _update_gpu_freq_range() -> void:
 	gpu_freq_max_slider.max_value = performance_manager.gpu_freq_max
 	gpu_freq_max_slider.min_value = performance_manager.gpu_freq_min
 	gpu_freq_min_slider.max_value = performance_manager.gpu_freq_max
 	gpu_freq_min_slider.min_value = performance_manager.gpu_freq_min
-	_update_gpu_freq_range()
-	gpu_freq_enable.toggled.connect(_on_toggle_gpu_freq)
-	gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_changed)
-	gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_changed)
-	gpu_freq_enable.visible = true
-
-
-func _update_gpu_freq_range() -> void:
 	gpu_freq_max_slider.value = performance_manager.gpu_freq_max_current
 	gpu_freq_min_slider.value = performance_manager.gpu_freq_min_current
+	logger.debug("Detected GPU Freq Range: " + str(gpu_freq_max_slider.min_value) + "-" + str(gpu_freq_max_slider.max_value))
+	logger.debug("Current GPU Limit: " + str(gpu_freq_max_slider.value))
 
 
 # Gets the TDP Range for the detected hardware.
@@ -156,6 +174,8 @@ func _setup_gpu_temp_range() -> void:
 # Gets the TDP Range for the detected hardware.
 func _update_gpu_temp_range() -> void:
 	gpu_temp_slider.value = performance_manager.gpu_temp_current
+	logger.debug("Detected TJ Temp Range: " + str(gpu_temp_slider.min_value) + "-" + str(gpu_temp_slider.max_value))
+	logger.debug("Current TJ Temp Limit: " + str(gpu_temp_slider.value))
 
 
 func _setup_thermal_profile() -> void:
@@ -170,7 +190,13 @@ func _setup_thermal_profile() -> void:
 
 func _update_thermal_profile() -> void:
 	thermal_profile_dropdown.select(performance_manager.thermal_mode)
-
+	match performance_manager.thermal_mode:
+		0:
+			logger.debug("Thermal throttle policy currently at Balanced")
+		1:
+			logger.debug("Thermal throttle policy currently at Performance")
+		2:
+			logger.debug("Thermal throttle policy currently at Silent")
 
 func _on_change_cpu_cores(value: float)-> void:
 	_setup_callback_func(performance_manager.set_cpu_core_count, value)
@@ -218,9 +244,10 @@ func _on_toggle_cpu_boost(state: bool) -> void:
 # Called to toggle auo/manual gpu clocking
 func _on_toggle_gpu_freq(state: bool) -> void:
 	_setup_callback_func(performance_manager.set_gpu_manual_mode_enabled, state)
+	gpu_freq_max_slider.visible = state
+	gpu_freq_min_slider.visible = state
 
 
 # Called to toggle SMT
 func _on_toggle_smt(state: bool) -> void:
 	_setup_callback_func(performance_manager.set_cpu_smt_enabled, state)
-

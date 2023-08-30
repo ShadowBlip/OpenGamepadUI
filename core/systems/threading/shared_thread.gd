@@ -104,9 +104,12 @@ func scheduled_exec(method: Callable, wait_time_ms: int) -> void:
 ## Cancels a given Sheduled Task before it is executed.
 func cancel_scheduled_exec(task: ScheduledTask) -> void:
 	mutex.lock()
-	if task not in scheduled_funcs:
+	var all_sched_funcs := scheduled_funcs.duplicate()
+	mutex.unlock()
+	if task not in all_sched_funcs:
 		logger.warn("Scheduled Task " + task.method.get_method() + " canceled but not found in scheduled functions."  )
 		return
+	mutex.lock()
 	scheduled_funcs.erase(task)
 	mutex.unlock()
 
