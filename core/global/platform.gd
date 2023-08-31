@@ -395,6 +395,7 @@ func _read_gpu_info() -> GPUInfo:
 			apu_data = amd_apu_database.get_apu(cpu.model)
 			if apu_data:
 				gpu_info.tj_temp_capable = true
+				gpu_info.power_profile_capable = true
 		"GenuineIntel":
 			apu_data = intel_apu_database.get_apu(cpu.model)
 	if not apu_data:
@@ -453,3 +454,4 @@ class GPUInfo extends Resource:
 	var min_tdp: float = -1
 	var max_tdp: float = -1
 	var max_boost: float = -1
+	var power_profile_capable: bool = false

@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://dv3dt0j3jketh"]
 
-[ext_resource type="Script" path="res://core/ui/vapor_ui/qam/powertools_menu.gd" id="1_8v1ke"]
-[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="2_nb5h3"]
-[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_ygeel"]
-[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5n8hq"]
-[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_v2d1e"]
-[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="4_yqywg"]
-[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_4faqm"]
+[ext_resource type="Script" path="res://core/ui/common/qam/powertools_menu.gd" id="1_qncpn"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_h0jgv"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qam/quick_access_menu_focus.tres" id="3_0iyf7"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_1pfjc"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="5_xig3u"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="6_7aip6"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_0kvsa"]
 
 [node name="PowerTools" type="VBoxContainer"]
 anchors_preset = 15
@@ -18,17 +18,17 @@ offset_right = 66.0
 offset_bottom = -116.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_8v1ke")
+script = ExtResource("1_qncpn")
 
-[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("3_5n8hq")]
+[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_h0jgv")]
 current_focus = NodePath("../CPUBoostButton")
-focus_stack = ExtResource("4_yqywg")
+focus_stack = ExtResource("3_0iyf7")
 
-[node name="CPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
+[node name="CPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
 layout_mode = 2
 text = "CPU Settings"
 
-[node name="CPUBoostButton" parent="." instance=ExtResource("2_nb5h3")]
+[node name="CPUBoostButton" parent="." instance=ExtResource("5_xig3u")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUTempSlider")
@@ -41,7 +41,7 @@ text = "CPU Boost"
 separator_visible = false
 button_pressed = false
 
-[node name="SMTButton" parent="." instance=ExtResource("2_nb5h3")]
+[node name="SMTButton" parent="." instance=ExtResource("5_xig3u")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../CPUBoostButton")
@@ -54,7 +54,7 @@ text = "SMT Enabled"
 separator_visible = false
 button_pressed = false
 
-[node name="CPUCoresSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="CPUCoresSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../SMTButton")
@@ -68,11 +68,11 @@ value = 1.0
 max_value = 1.0
 min_value = 1.0
 
-[node name="GPUSectionLabel" parent="." instance=ExtResource("3_v2d1e")]
+[node name="GPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
 layout_mode = 2
 text = "GPU Settings"
 
-[node name="TDPSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="TDPSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../CPUCoresSlider")
@@ -84,19 +84,16 @@ focus_previous = NodePath("../CPUCoresSlider")
 text = "TDP"
 max_value = 0.0
 
-[node name="TDPBoostSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="TDPBoostSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../TDPSlider")
 focus_neighbor_top = NodePath("../TDPSlider")
-focus_neighbor_right = NodePath("../GPUFreqButton")
-focus_neighbor_bottom = NodePath("../GPUFreqButton")
-focus_next = NodePath("../GPUFreqButton")
 focus_previous = NodePath("../TDPSlider")
 text = "TDP Boost"
 max_value = 0.0
 
-[node name="GPUFreqButton" parent="." instance=ExtResource("2_nb5h3")]
+[node name="GPUFreqButton" parent="." instance=ExtResource("5_xig3u")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../TDPBoostSlider")
@@ -109,20 +106,17 @@ text = "Manual Freq"
 separator_visible = false
 button_pressed = false
 
-[node name="GPUFreqMinSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="GPUFreqMinSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
-focus_neighbor_left = NodePath("../GPUFreqButton")
-focus_neighbor_top = NodePath("../GPUFreqButton")
 focus_neighbor_right = NodePath("../GPUFreqMaxSlider")
 focus_neighbor_bottom = NodePath("../GPUFreqMaxSlider")
 focus_next = NodePath("../GPUFreqMaxSlider")
-focus_previous = NodePath("../GPUFreqButton")
 text = "Min Freq"
 max_value = 0.0
 step = 100.0
 
-[node name="GPUFreqMaxSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="GPUFreqMaxSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUFreqMinSlider")
@@ -135,13 +129,7 @@ text = "Max Freq"
 max_value = 0.0
 step = 100.0
 
-[node name="ThermalProfileDropdown" parent="." instance=ExtResource("7_4faqm")]
-visible = false
-layout_mode = 2
-title = "Thermal Throttle Profile"
-description = ""
-
-[node name="GPUTempSlider" parent="." instance=ExtResource("2_ygeel")]
+[node name="GPUTempSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUFreqMaxSlider")
@@ -154,3 +142,15 @@ text = "GPU Temp Limit"
 value = 70.0
 max_value = 105.0
 min_value = 70.0
+
+[node name="PowerProfileDropdown" parent="." instance=ExtResource("7_0kvsa")]
+visible = false
+layout_mode = 2
+title = "Power Profile"
+description = ""
+
+[node name="ThermalProfileDropdown" parent="." instance=ExtResource("7_0kvsa")]
+visible = false
+layout_mode = 2
+title = "Thermal Throttle Profile"
+description = ""
