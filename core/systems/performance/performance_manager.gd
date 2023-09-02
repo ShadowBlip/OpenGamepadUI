@@ -122,13 +122,12 @@ func save_profile() -> void:
 
 	settings_manager.set_value(section, "performace_profile", path)
 	logger.info("Saved performance profile to: " + path)
-	notify.text = "Performance profile saved"
-	notification_manager.show(notify)
 	perf_profile_saved.emit()
 
 
 ## Loads a PerformanceProfile from the given path.
 func load_profile(profile_path: String = "") -> void:
+	var notify := Notification.new("")
 	var loaded: PerformanceProfile
 	# If no path was specified, try to identify it.
 	if profile_path == "":
@@ -144,14 +143,18 @@ func load_profile(profile_path: String = "") -> void:
 		profile = loaded
 		if library_item: 
 			profile.name = library_item.name.to_lower()
-		logger.debug("Created new profile for " + profile.name)
+		notify.text = "Created new profile for " + profile.name
+		logger.debug(notify.text)
+		notification_manager.show(notify)
 		save_profile()
 		return
 
 	else:
 		loaded = load(profile_path) as PerformanceProfile
 	if not loaded:
-		logger.warn("Unable to load profile at: " + profile_path)
+		notify.text = "Unable to load profile at: " + profile_path
+		logger.warn(notify.text)
+		notification_manager.show(notify)
 		return
 
 	if profile == loaded:
@@ -159,7 +162,9 @@ func load_profile(profile_path: String = "") -> void:
 		return
 
 	profile = loaded
-	logger.info("Loaded Performance Profile: " + profile.name)
+	notify.text = "Loaded Performance Profile: " + profile.name
+	logger.info(notify.text)
+	notification_manager.show(notify)
 	await _apply_profile()
 	
 

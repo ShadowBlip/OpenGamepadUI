@@ -1,7 +1,8 @@
 extends Resource
 
 class_name PerformanceProfile
-var name: String = "default"
+
+@export var name: String = "default"
 
 @export var cpu_boost_enabled: bool
 @export var cpu_core_count_current: float
