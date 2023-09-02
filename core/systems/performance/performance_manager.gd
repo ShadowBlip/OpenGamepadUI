@@ -399,6 +399,7 @@ func _amd_tdp_boost_change() -> void:
 
 # Called to disable/enable cores by count as specified by value. 
 func _change_cpu_cores():
+	logger.debug("Enable cpu_cores: " +str(cpu_core_count_current) + "/" + str(cpu_core_count))
 	var args := []
 	for cpu_no in range(1, cpu_core_count):
 		args = ["cpuToggle", str(cpu_no), "1"]

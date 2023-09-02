@@ -72,7 +72,7 @@ func _setup_callback_func(callable: Callable, arg: Variant) -> void:
 	logger.debug("Setting callback func")
 	_clear_callbacks()
 	command_timer.timeout.connect(callable.bind(arg), CONNECT_ONE_SHOT)
-	command_timer.start(1.5)
+	command_timer.start(.55)
 
 
 # Removes any existing signal connections to command_timer.timeout.
@@ -227,7 +227,7 @@ func _update_thermal_profile(index: int) -> void:
 ### UI Callback functions
 
 func _on_cpu_cores_slider_changed(value: float)-> void:
-	if value == performance_manager.cpu_core_count:
+	if value == performance_manager.cpu_core_count_current:
 		return
 	logger.debug("cpu_cores_slider_changed: " + str (value))
 	_setup_callback_func(performance_manager.set_cpu_core_count, value)
