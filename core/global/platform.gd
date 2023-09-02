@@ -69,7 +69,7 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
-			gpu.thermal_mode_capable = true
+			gpu.thermal_profile_capable = true
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres")
 	if PLATFORM.AYANEO_GEN1 in flags:
@@ -448,7 +448,7 @@ class GPUInfo extends Resource:
 	var model: String
 	var vendor: String
 	var tdp_capable: bool = false
-	var thermal_mode_capable: bool = false
+	var thermal_profile_capable: bool = false
 	var tj_temp_capable: bool = false
 	var clk_capable: bool = false
 	var min_tdp: float = -1
