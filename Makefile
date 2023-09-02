@@ -29,7 +29,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
-SYSEXT_VERSION_ID ?= 3.4.8
+SYSEXT_VERSION_ID ?= 3.4.10
 
 # Include any user defined settings
 -include settings.mk
@@ -100,7 +100,7 @@ build: build/opengamepad-ui.x86_64 ## Build and export the project
 build/opengamepad-ui.x86_64: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	@echo "Building OpenGamepadUI v$(OGUI_VERSION)"
 	mkdir -p build
-	$(GODOT) --headless --export-debug "Linux/X11"
+	$(GODOT) --headless --export-release "Linux/X11"
 
 .PHONY: metadata
 metadata: build/metadata.json ## Build update metadata
