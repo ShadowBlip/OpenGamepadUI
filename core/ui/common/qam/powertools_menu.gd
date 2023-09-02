@@ -64,18 +64,23 @@ func _setup_interface() -> void:
 
 # Overrides or sets the command_timer.timeout signal connection function and
 # (re)starts the timer.
-func _setup_callback_func(callable: Callable, arg: Variant) -> void:
-	logger.debug("Setting callback func")
-	_clear_callbacks()
+func _setup_callback_func(callable: Callable, arg: Variant, delay: float = 1.2) -> void:
+	logger.debug("Setting callback func: " + callable.get_method() + " args: " + str(arg))
+	_clear_callbacks(callable)
 	command_timer.timeout.connect(callable.bind(arg), CONNECT_ONE_SHOT)
-	command_timer.start(.65)
+	command_timer.start(delay)
 
 
 # Removes any existing signal connections to command_timer.timeout.
-func _clear_callbacks() -> void:
+func _clear_callbacks(callable: Callable) -> void:
 	for connection in command_timer.timeout.get_connections():
-		var callable := connection["callable"] as Callable
-		command_timer.timeout.disconnect(callable)
+		var old_callable := connection["callable"] as Callable
+		# Only clear methods that interfere with eachother. Otherwise we might miss
+		# a callback if multiple UI elements are used in less time than the delay
+		# in _setup_callback_func. (I.E. set toggle after slider)
+		if old_callable.get_method() == callable.get_method():
+			command_timer.timeout.disconnect(old_callable)
+			logger.debug("Removed " + callable.get_method() + " as callback func.")
 
 
 func _on_app_switched(from: RunningApp, to: RunningApp) -> void:
@@ -234,7 +239,7 @@ func _on_cpu_boost_button_toggled(state: bool) -> void:
 	if state == performance_manager.cpu_boost_enabled:
 		return
 	logger.debug("cpu_boost_button_toggled: " + str (state))
-	_setup_callback_func(performance_manager.set_cpu_boost_enabled, state)
+	_setup_callback_func(performance_manager.set_cpu_boost_enabled, state, 0)
 
 
 # Called to toggle auo/manual gpu clocking
@@ -242,7 +247,7 @@ func _on_gpu_freq_enable_button_toggled(state: bool) -> void:
 	if state == performance_manager.gpu_manual_enabled:
 		return
 	logger.debug("gpu_freq_enable_button_toggled: " + str (state))
-	_setup_callback_func(performance_manager.set_gpu_manual_enabled, state)
+	_setup_callback_func(performance_manager.set_gpu_manual_enabled, state, 0)
 
 
 # Sets the T-junction temp using ryzenadj.
@@ -250,7 +255,7 @@ func _on_gpu_temp_limit_slider_changed(value: float) -> void:
 	if value == performance_manager.gpu_temp_current:
 		return
 	logger.debug("gpu_temp_limit_slider_changed: " + str (value))
-	_setup_callback_func(performance_manager.set_gpu_temp_current, value)
+	_setup_callback_func(performance_manager.set_gpu_temp_current, value, 0)
 
 
 # Called when gpu_freq_max_slider.value is changed.
@@ -277,7 +282,7 @@ func _on_power_profile_dropdown_changed(index: int) -> void:
 	if index == performance_manager.gpu_power_profile:
 		return
 	logger.debug("power_profile_dropdown_changed: " + str (index))
-	_setup_callback_func(performance_manager.set_gpu_power_profile, index)
+	_setup_callback_func(performance_manager.set_gpu_power_profile, index, 0)
 
 
 # Called to set the flow and fast boost TDP
@@ -301,7 +306,7 @@ func _on_thermal_policy_dropdown_changed(index: int) -> void:
 	if index == performance_manager.thermal_mode:
 		return
 	logger.debug("thermal_policy_dropdown_changed: " + str (index))
-	_setup_callback_func(performance_manager.set_thermal_mode, index)
+	_setup_callback_func(performance_manager.set_thermal_mode, index, 0)
 
 
 # Called to toggle SMT
@@ -309,4 +314,4 @@ func _on_smt_button_toggled(state: bool) -> void:
 	if state == performance_manager.cpu_smt_enabled:
 		return
 	logger.debug("smt_button_toggled: " + str (state))
-	_setup_callback_func(performance_manager.set_cpu_smt_enabled, state)
+	_setup_callback_func(performance_manager.set_cpu_smt_enabled, state, 0)
