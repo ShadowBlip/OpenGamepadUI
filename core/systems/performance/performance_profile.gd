@@ -14,4 +14,4 @@ class_name PerformanceProfile
 @export var gpu_temp_current: float
 @export var tdp_boost_current: float
 @export var tdp_current: float
-@export var thermal_mode: int
+@export var thermal_profile: int

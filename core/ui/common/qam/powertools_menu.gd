@@ -1,7 +1,5 @@
 extends VBoxContainer
 
-var Platform := load("res://core/global/platform.tres")
-
 const AMD_GPU_MIN_MHZ: float = 200
 const POWERTOOLS_PATH : String = "/usr/share/opengamepadui/scripts/powertools"
 
@@ -11,19 +9,17 @@ const POWERTOOLS_PATH : String = "/usr/share/opengamepadui/scripts/powertools"
 var command_timer: Timer
 var update_timer: Timer
 
-@onready var cpu_boost_button := $CPUBoostButton
-@onready var cpu_cores_slider := $CPUCoresSlider
-@onready var gpu_freq_enable := $GPUFreqButton
-@onready var gpu_freq_max_slider := $GPUFreqMaxSlider
-@onready var gpu_freq_min_slider := $GPUFreqMinSlider
-@onready var gpu_temp_slider := $GPUTempSlider
-@onready var power_profile_dropdown := $PowerProfileDropdown
-@onready var tdp_boost_slider := $TDPBoostSlider
-@onready var tdp_slider := $TDPSlider
-@onready var thermal_profile_dropdown := $ThermalProfileDropdown
-@onready var smt_button := $SMTButton
-
-@onready var platform : PlatformProvider = Platform.platform
+@onready var cpu_boost_button := $CPUBoostButton as Toggle
+@onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
+@onready var gpu_freq_enable := $GPUFreqButton as Toggle
+@onready var gpu_freq_max_slider := $GPUFreqMaxSlider as ValueSlider
+@onready var gpu_freq_min_slider := $GPUFreqMinSlider as ValueSlider
+@onready var gpu_temp_slider := $GPUTempSlider as ValueSlider
+@onready var power_profile_dropdown := $PowerProfileDropdown as Dropdown
+@onready var tdp_boost_slider := $TDPBoostSlider as ValueSlider
+@onready var tdp_slider := $TDPSlider as ValueSlider
+@onready var thermal_profile_dropdown := $ThermalProfileDropdown as Dropdown
+@onready var smt_button := $SMTButton as Toggle
 
 var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
@@ -61,7 +57,7 @@ func _setup_interface() -> void:
 	if performance_manager.gpu.tj_temp_capable:
 		logger.debug("GPU is TJ Temp Configurable")
 		_setup_gpu_temp()
-	if performance_manager.gpu.thermal_mode_capable:
+	if performance_manager.gpu.thermal_profile_capable:
 		logger.debug("GPU is Thermal Mode Configurable")
 		_setup_thermal_profile()
 
@@ -72,7 +68,7 @@ func _setup_callback_func(callable: Callable, arg: Variant) -> void:
 	logger.debug("Setting callback func")
 	_clear_callbacks()
 	command_timer.timeout.connect(callable.bind(arg), CONNECT_ONE_SHOT)
-	command_timer.start(.55)
+	command_timer.start(.65)
 
 
 # Removes any existing signal connections to command_timer.timeout.
@@ -83,10 +79,10 @@ func _clear_callbacks() -> void:
 
 
 func _on_app_switched(from: RunningApp, to: RunningApp) -> void:
-	var name = "default"
+	var app_name = "default"
 	if to:
-		name = to.launch_item.name
-	logger.debug("Detected app switch to " + name)
+		app_name = to.launch_item.name
+	logger.debug("Detected app switch to " + app_name)
 	performance_manager.on_app_switched(from, to)
 
 
