@@ -15,17 +15,19 @@ signal thermal_profile_updated(index: int)
 const USER_PROFILES := "user://data/performance/profiles"
 const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
 
-var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
+var _notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var _platform := load("res://core/global/platform.tres") as Platform
-var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var shared_thread := load("res://core/systems/threading/perfman_thread.tres") as SharedThread
+var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
+var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var _shared_thread := load("res://core/systems/threading/perfman_thread.tres") as SharedThread
 
+var batteries: Array[PowerManager.Device]
 var cpu: Platform.CPUInfo
 var gpu: Platform.GPUInfo
 var library_item: LibraryLaunchItem
 var platform_provider: PlatformProvider
 var profile: PerformanceProfile
+var profile_state: String
 
 var cpu_boost_enabled: bool = false
 var cpu_core_count := 1
@@ -47,8 +49,31 @@ var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
 
 
 func _init():
-	shared_thread.start()
+	_shared_thread.start()
 	platform_provider = _platform.platform
+
+	batteries = _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
+	if batteries.size() > 1:
+		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
+	if batteries.size() > 0:
+		var battery := batteries[0]
+		_update_profile_state(battery)
+		battery.updated.connect(_on_update_battery.bind(battery))
+
+
+func _on_update_battery(item: PowerManager.Device):
+	_update_profile_state(item)
+	load_profile()
+
+
+func _update_profile_state(item: PowerManager.Device) -> void:
+	var to_state: String = "undocked"
+	if item.state in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED, PowerManager.DEVICE_STATE.PENDING_CHARGE]:
+		to_state = "docked"
+
+	if profile_state != to_state:
+		logger.debug("Setting system to " + to_state)
+		profile_state = to_state
 
 
 ## Looks at system file decriptors to update components and their capabilities
@@ -99,18 +124,13 @@ func save_profile() -> void:
 	if DirAccess.make_dir_recursive_absolute(USER_PROFILES) != OK:
 		logger.debug("Unable to create performance profiles directory")
 		notify.text = "Unable to save performance profile"
-		notification_manager.show(notify)
+		_notification_manager.show(notify)
 		return
-
-	var filename: String = _platform.get_product_name().replace(" ", "_") + "_default_profile.tres"
-	if library_item:
-		filename = _platform.get_product_name().replace(" ", "_") + "_" + library_item.name.sha256_text() + ".tres"
-		profile.name = library_item.name.to_lower()
-	var path := "/".join([USER_PROFILES, filename])
-	if ResourceSaver.save(profile, path) != OK:
-		logger.error("Failed to save performance profile to: " + path)
+	var profile_path := "/".join([USER_PROFILES, _get_profile_name()])
+	if ResourceSaver.save(profile, profile_path) != OK:
+		logger.error("Failed to save performance profile to: " + profile_path)
 		notify.text = "Failed to save performance profile"
-		notification_manager.show(notify)
+		_notification_manager.show(notify)
 		return
 
 	# Update the game settings to use this performance profile
@@ -118,8 +138,8 @@ func save_profile() -> void:
 	if library_item:
 		section = "game.{0}".format([library_item.name.to_lower()])
 
-	settings_manager.set_value(section, "performace_profile", path)
-	logger.info("Saved performance profile to: " + path)
+	_settings_manager.set_value(section, "performace_profile", profile_path)
+	logger.info("Saved performance profile to: " + profile_path)
 
 
 ## Loads a PerformanceProfile from the given path.
@@ -128,10 +148,7 @@ func load_profile(profile_path: String = "") -> void:
 	var loaded: PerformanceProfile
 	# If no path was specified, try to identify it.
 	if profile_path == "":
-		var path = _platform.get_product_name().replace(" ", "_") + "_default_profile.tres"
-		if library_item:
-			path = _platform.get_product_name().replace(" ", "_") + "_" + library_item.name.sha256_text() + ".tres"
-		profile_path = "/".join([USER_PROFILES, path])
+		profile_path = "/".join([USER_PROFILES, _get_profile_name()])
 
 	# Check if given profile exists
 	logger.debug("Load Profile: " + profile_path)
@@ -142,7 +159,7 @@ func load_profile(profile_path: String = "") -> void:
 			profile.name = library_item.name.to_lower()
 		notify.text = "Created new profile for " + profile.name
 		logger.debug(notify.text)
-		notification_manager.show(notify)
+		_notification_manager.show(notify)
 		save_profile()
 		return
 
@@ -151,7 +168,7 @@ func load_profile(profile_path: String = "") -> void:
 	if not loaded:
 		notify.text = "Unable to load profile at: " + profile_path
 		logger.warn(notify.text)
-		notification_manager.show(notify)
+		_notification_manager.show(notify)
 		return
 
 	if profile == loaded:
@@ -161,9 +178,17 @@ func load_profile(profile_path: String = "") -> void:
 	profile = loaded
 	notify.text = "Loaded Performance Profile: " + profile.name
 	logger.info(notify.text)
-	notification_manager.show(notify)
+	_notification_manager.show(notify)
 	await _apply_profile()
-	
+
+
+func _get_profile_name() -> String:
+	var prefix: String = _platform.get_product_name().replace(" ", "_") + "_" + profile_state
+	var postfix: String = "_default_profile.tres"
+	if library_item:
+		postfix = "_" + library_item.name.sha256_text() + ".tres"
+		profile.name = library_item.name.to_lower()
+	return prefix+postfix
 
 
 func _update_profile(do_save: bool = true) -> void:
@@ -190,6 +215,7 @@ func _update_profile(do_save: bool = true) -> void:
 		profile.thermal_profile = thermal_profile
 	if do_save:
 		save_profile()
+
 
 func _apply_profile() -> void:
 	if cpu.boost_capable:
@@ -378,10 +404,9 @@ func _apply_cpu_smt_state() -> void:
 	if exit_code:
 		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
 		return
-	await _read_cpus_enabled()
-	await _read_cpu_count()
 	smt_toggled.emit(cpu_smt_enabled)
-
+	await _read_cpu_count()
+	await _read_cpus_enabled()
 
 ## Set STAPM on AMD APU's
 func _amd_tdp_change() -> void:
@@ -750,7 +775,7 @@ func _async_do_exec(command: String, args: Array)-> Array:
 	logger.debug("Start async_do_exec : " + command)
 	for arg in args:
 		logger.debug(str(arg))
-	return await shared_thread.exec(_do_exec.bind(command, args))
+	return await _shared_thread.exec(_do_exec.bind(command, args))
 
 
 ## Calls OS.execute with the provided command and args and returns an array with
