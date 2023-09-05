@@ -572,10 +572,10 @@ func _read_amd_gpu_clock_limits() -> void:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
 	@warning_ignore("unsafe_method_access")
-	var result := output[0][0].split("\n") as Array[String]
+	var result := (output[0][0] as String).split("\n")
 
 	for param in result:
-		var parts := param.split("\n") as Array[String]
+		var parts := param.split("\n")
 		for part in parts:
 			var fixed_part := part.strip_edges().split(" ", false)
 			if fixed_part.is_empty():
@@ -611,7 +611,7 @@ func _read_amd_tdp() -> void:
 		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
 		await _set_tdp_midpoint()
 		return
-	var result := (output[0][0] as String).split("\n") as Array[String]
+	var result := (output[0][0] as String).split("\n")
 	var current_fastppt := 0.0
 	for setting in result:
 		var parts := setting.split("|")
