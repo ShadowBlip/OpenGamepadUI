@@ -217,4 +217,18 @@ title = "GPU Model"
 description = ""
 text = "Generic"
 
+[node name="GPUDriverText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Driver Version"
+description = ""
+text = "Generic"
+
+[node name="KernelVerText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Kernel Version"
+description = ""
+text = "Generic"
+
 [node name="ScrollerJoystick" parent="." instance=ExtResource("10_06mt3")]

@@ -50,6 +50,7 @@ var platform: PlatformProvider
 var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
 var cpu: CPUInfo
 var gpu: GPUInfo
+var kernel: String
 
 
 func _init() -> void:
@@ -175,9 +176,14 @@ func get_cpu_model() -> String:
 func get_gpu_info() -> GPUInfo:
 	return gpu
 
-
 func get_gpu_model() -> String:
 	return gpu.model
+	
+func get_gpu_driver() -> String:
+	return gpu.driver
+	
+func get_kernel_version() -> String:
+	return kernel
 
 
 ## Used to read values from sysfs
@@ -322,6 +328,7 @@ func _detect_os() -> OSInfo:
 func _get_system_components():
 	cpu = _read_cpu_info()
 	gpu = _read_gpu_info()
+	kernel = _get_kernel_info()
 
 
 # Provides info on the CPU vendor, model, and capabilities.
@@ -368,7 +375,7 @@ func _read_gpu_info() -> GPUInfo:
 	var gpu_info := GPUInfo.new()
 	var gpu_raw := _get_glxinfo()
 
-	# Get the GPU Vendor and Model
+	# Get the GPU Vendor, Model, and Driver
 	for param in gpu_raw:
 		var parts := param.split(" ", false) as Array
 		if parts.is_empty():
@@ -383,6 +390,11 @@ func _read_gpu_info() -> GPUInfo:
 			parts.remove_at(1)
 			parts.remove_at(0)
 			gpu_info.model = str(" ".join(parts))
+		if parts[0] == "OpenGL" and parts[1] == "version" and parts[2] == "string:":
+			parts.remove_at(2)
+			parts.remove_at(1)
+			parts.remove_at(0)
+			gpu_info.driver = str(" ".join(parts))
 	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
 
 	if not cpu:
@@ -410,6 +422,10 @@ func _read_gpu_info() -> GPUInfo:
 
 	return gpu_info
 
+# Read kernel information
+func _get_kernel_info() -> String:
+	var uname := _get_uname()
+	return uname
 
 # Run glxinfo and return the data from it.
 # TODO: Maybe use vulkaninfo? Need a way to get vendor string in that. It can
@@ -422,7 +438,15 @@ func _get_glxinfo() -> Array:
 	if exit_code:
 		return []
 	return  output[0][0].split("\n") as Array
-
+	
+# Run uname and return the data from it.
+func _get_uname() -> String:
+	var output: Array = _do_exec("uname", ["-s", "-r", "-m"]) # Fetches kernel name, version, and machine
+	var exit_code = output[1]
+	if exit_code:
+		return "Unknown"
+	return output[0][0] as String
+	
 
 ## Data container for OS information
 class OSInfo extends Resource:
@@ -446,6 +470,7 @@ class CPUInfo extends Resource:
 class GPUInfo extends Resource:
 	var model: String
 	var vendor: String
+	var driver: String
 	var tdp_capable: bool = false
 	var thermal_mode_capable: bool = false
 	var tj_temp_capable: bool = false
