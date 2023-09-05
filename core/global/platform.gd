@@ -444,8 +444,9 @@ func _get_kernel_version() -> String:
 		return "Unknown"
 	return output[0][0] as String
 	
+# Queries /sys/class for BIOS information
 func _get_bios_version() -> String:
-	var output: Array = _do_exec("cat", ["/sys/class/dmi/id/bios_version"]) # Fetches BIOS version
+	var output: Array = _do_exec("cat", ["/sys/class/dmi/id/bios_version"])
 	var exit_code = output[1]
 	if exit_code:
 		return "Unknown"
