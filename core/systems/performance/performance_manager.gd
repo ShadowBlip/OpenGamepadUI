@@ -156,8 +156,8 @@ func load_profile(profile_path: String = "") -> void:
 		loaded = PerformanceProfile.new()
 		profile = loaded
 		if library_item: 
-			profile.name = library_item.name.to_lower()
-		notify.text = "Created new profile for " + profile.name
+			profile.name = library_item.name
+		notify.text = "Created new performance profile for " + profile.name
 		logger.debug(notify.text)
 		_notification_manager.show(notify)
 		save_profile()
@@ -176,7 +176,7 @@ func load_profile(profile_path: String = "") -> void:
 		return
 
 	profile = loaded
-	notify.text = "Loaded Performance Profile: " + profile.name
+	notify.text = "Loaded performance profile: " + profile.name
 	logger.info(notify.text)
 	_notification_manager.show(notify)
 	await _apply_profile()
@@ -187,7 +187,7 @@ func _get_profile_name() -> String:
 	var postfix: String = "_default_profile.tres"
 	if library_item:
 		postfix = "_" + library_item.name.sha256_text() + ".tres"
-		profile.name = library_item.name.to_lower()
+		profile.name = library_item.name
 	return prefix+postfix
 
 
