@@ -28,6 +28,9 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var vendor_text := $%VendorText
 @onready var cpu_text := $%CPUModelText
 @onready var gpu_text := $%GPUModelText
+@onready var driver_text := $%GPUDriverText
+@onready var kernel_text := $%KernelVerText
+@onready var bios_text := $%BIOSVerText
 
 
 # Called when the node enters the scene tree for the first time.
@@ -39,6 +42,9 @@ func _ready() -> void:
 	vendor_text.text = Platform.get_vendor_name()
 	cpu_text.text = Platform.get_cpu_model()
 	gpu_text.text = Platform.get_gpu_model()
+	driver_text.text = Platform.get_gpu_driver()
+	kernel_text.text = Platform.get_kernel_version()
+	bios_text.text = Platform.get_bios_version()
 	
 	# Try to detect the platform and platform image
 	if product_text.text == "Jupiter" and vendor_text.text == "Valve":
