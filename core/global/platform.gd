@@ -396,8 +396,10 @@ func _read_gpu_info() -> GPUInfo:
 			if apu_data:
 				gpu_info.tj_temp_capable = true
 				gpu_info.power_profile_capable = true
+				gpu_info.clk_capable = true
 		"GenuineIntel":
 			apu_data = intel_apu_database.get_apu(cpu.model)
+			# TODO: gpu_info.clk_capable = true
 	if not apu_data:
 		logger.info("No APU data for " + cpu.model)
 		return gpu_info
@@ -405,7 +407,6 @@ func _read_gpu_info() -> GPUInfo:
 	gpu_info.min_tdp = apu_data.min_tdp
 	gpu_info.max_tdp = apu_data.max_tdp
 	gpu_info.max_boost = apu_data.max_boost
-	gpu_info.clk_capable = true
 	gpu_info.tdp_capable = true
 	logger.debug("Found all APU data")
 
