@@ -196,17 +196,17 @@ title = "Kernel Version"
 description = ""
 text = "Generic"
 
-[node name="ProductText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
-unique_name_in_owner = true
-layout_mode = 2
-title = "Product"
-description = ""
-text = "Generic"
-
 [node name="VendorText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Vendor"
+description = ""
+text = "Generic"
+
+[node name="ProductText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Product"
 description = ""
 text = "Generic"
 
