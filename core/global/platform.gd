@@ -69,7 +69,7 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
-			gpu.thermal_mode_capable = true
+			gpu.thermal_profile_capable = true
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres")
 	if PLATFORM.AYANEO_GEN1 in flags:
@@ -395,8 +395,11 @@ func _read_gpu_info() -> GPUInfo:
 			apu_data = amd_apu_database.get_apu(cpu.model)
 			if apu_data:
 				gpu_info.tj_temp_capable = true
+				gpu_info.power_profile_capable = true
+				gpu_info.clk_capable = true
 		"GenuineIntel":
 			apu_data = intel_apu_database.get_apu(cpu.model)
+			# TODO: gpu_info.clk_capable = true
 	if not apu_data:
 		logger.info("No APU data for " + cpu.model)
 		return gpu_info
@@ -404,7 +407,6 @@ func _read_gpu_info() -> GPUInfo:
 	gpu_info.min_tdp = apu_data.min_tdp
 	gpu_info.max_tdp = apu_data.max_tdp
 	gpu_info.max_boost = apu_data.max_boost
-	gpu_info.clk_capable = true
 	gpu_info.tdp_capable = true
 	logger.debug("Found all APU data")
 
@@ -447,9 +449,10 @@ class GPUInfo extends Resource:
 	var model: String
 	var vendor: String
 	var tdp_capable: bool = false
-	var thermal_mode_capable: bool = false
+	var thermal_profile_capable: bool = false
 	var tj_temp_capable: bool = false
 	var clk_capable: bool = false
 	var min_tdp: float = -1
 	var max_tdp: float = -1
 	var max_boost: float = -1
+	var power_profile_capable: bool = false

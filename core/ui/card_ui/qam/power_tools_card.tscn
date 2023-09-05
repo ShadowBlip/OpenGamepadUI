@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://v751ima8r8vg"]
 
 [ext_resource type="PackedScene" uid="uid://b5xnora73yd8x" path="res://core/ui/card_ui/qam/qam_card.tscn" id="1_443ce"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/powertools_menu.tscn" id="2_rv5f4"]
+[ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/qam/powertools_menu.tscn" id="2_rv5f4"]
 
 [sub_resource type="Image" id="Image_485yv"]
 data = {

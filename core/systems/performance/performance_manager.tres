@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PerformanceManager" load_steps=2 format=3 uid="uid://df64ad6idkxlh"]
+
+[ext_resource type="Script" path="res://core/systems/performance/performance_manager.gd" id="1_56qul"]
+
+[resource]
+script = ExtResource("1_56qul")

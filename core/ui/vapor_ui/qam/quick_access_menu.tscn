@@ -13,14 +13,14 @@
 [ext_resource type="Script" path="res://core/ui/components/transition.gd" id="8_0cjgl"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="8_c20ym"]
 [ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/qam_notifications.tres" id="8_ktmf6"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/powertools_menu.tscn" id="9_aug1r"]
+[ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/qam/powertools_menu.tscn" id="9_aug1r"]
 [ext_resource type="Texture2D" uid="uid://btq2ih8opi8i7" path="res://assets/ui/icons/performance-fill.svg" id="9_ric4q"]
 [ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/qam_quick_settings.tres" id="9_uygax"]
 [ext_resource type="Resource" uid="uid://b2ruoxboq5k6e" path="res://assets/state/states/qam_powertools.tres" id="10_4ijxt"]
 [ext_resource type="Resource" uid="uid://xw3l4h1vt0oa" path="res://assets/state/states/qam_performance.tres" id="10_ft1gj"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_3dgt5"]
 [ext_resource type="Resource" uid="uid://bo7k4h2yc3d6q" path="res://assets/state/states/qam_help.tres" id="11_dhes6"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/performance_menu.tscn" id="13_gsdkm"]
+[ext_resource type="PackedScene" uid="uid://b7piua3snox4i" path="res://core/ui/vapor_ui/qam/performance_menu.tscn" id="13_gsdkm"]
 [ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://assets/ui/icons/powertools_icon.svg" id="15_77afh"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/qam/help_menu.tscn" id="17_nk7fc"]
 [ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="18_cwnr0"]
@@ -249,8 +249,7 @@ state_machine = ExtResource("7_6iqch")
 state = ExtResource("9_uygax")
 on_signal = "focus_entered"
 
-[node name="FocusSetter" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/QuickSettingsButton" node_paths=PackedStringArray("target") instance=ExtResource("18_cwnr0")]
-target = NodePath("../../../../ViewportMargin/Viewport/QuickSettingsMenu")
+[node name="FocusSetter" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/QuickSettingsButton" instance=ExtResource("18_cwnr0")]
 on_signal = "pressed"
 
 [node name="PerformanceButton" type="Button" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar"]
