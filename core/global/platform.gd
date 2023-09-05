@@ -51,7 +51,7 @@ var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
 var cpu: CPUInfo
 var gpu: GPUInfo
 var kernel: String
-
+var bios: String
 
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
@@ -185,6 +185,8 @@ func get_gpu_driver() -> String:
 func get_kernel_version() -> String:
 	return kernel
 
+func get_bios_version() -> String:
+	return bios
 
 ## Used to read values from sysfs
 func _read_sys(path: String) -> String:
@@ -329,7 +331,7 @@ func _get_system_components():
 	cpu = _read_cpu_info()
 	gpu = _read_gpu_info()
 	kernel = _get_kernel_info()
-
+	bios = _get_bios_version()
 
 # Provides info on the CPU vendor, model, and capabilities.
 func _read_cpu_info() -> CPUInfo:
@@ -447,6 +449,12 @@ func _get_uname() -> String:
 		return "Unknown"
 	return output[0][0] as String
 	
+func _get_bios_version() -> String:
+	var output: Array = _do_exec("cat", ["/sys/class/dmi/id/bios_version"]) # Fetches BIOS version
+	var exit_code = output[1]
+	if exit_code:
+		return "Unknown"
+	return output[0][0] as String
 
 ## Data container for OS information
 class OSInfo extends Resource:
