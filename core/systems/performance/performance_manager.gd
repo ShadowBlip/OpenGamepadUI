@@ -27,12 +27,12 @@ var gpu: Platform.GPUInfo
 var library_item: LibraryLaunchItem
 var platform_provider: PlatformProvider
 var profile: PerformanceProfile
-var profile_state: String
+var profile_state: String # docked or undocked
 
 var cpu_boost_enabled: bool = false
-var cpu_core_count := 1
-var cpu_core_count_current := 1
-var cpu_cores_available := 1
+var cpu_core_count: int = 1
+var cpu_core_count_current: int = 1
+var cpu_cores_available: int = 1
 var cpu_smt_enabled: bool = false
 var gpu_freq_max: float
 var gpu_freq_max_current: float
@@ -257,6 +257,7 @@ func _apply_profile() -> void:
 		await _apply_thermal_profile()
 	logger.info("Applied Performance Profile: " + profile.name)
 
+
 func on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 	logger.debug("Detected app switch")
 	library_item = null
@@ -265,7 +266,7 @@ func on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 	load_profile()
 
 
-### Adjsut sysfs and update profile funcs
+### Adjust sysfs and update profile funcs
 
 ## Called to set the number of enabled CPU's
 func set_cpu_core_count(value: int) -> void:
@@ -381,6 +382,9 @@ func _apply_cpu_boost_state() -> void:
 
 
 func _apply_thermal_profile() -> void:
+	if not platform_provider is HandheldPlatform:
+		logger.warn("Attempt to apply thermoal profile on platform that is not HandheldPlatform.")
+		return
 	match thermal_profile:
 			"0":
 				logger.debug("Setting thermal throttle policy to Balanced")
@@ -389,7 +393,7 @@ func _apply_thermal_profile() -> void:
 			"2":
 				logger.debug("Setting thermal throttle policy to Silent")
 	var args := ["setThermalPolicy", str(thermal_profile)]
-	await _async_do_exec(platform_provider.thermal_policy_path, args)
+	await _async_do_exec((platform_provider as HandheldPlatform).thermal_policy_path, args)
 	thermal_profile_updated.emit(thermal_profile)
 
 
@@ -478,7 +482,8 @@ func _gpu_manual_change() -> void:
 		var exit_code = output[1]
 		if exit_code:
 			logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
-	gpu_manual_enabled_updated.emit(gpu_manual_enabled)
+
+		gpu_manual_enabled_updated.emit(gpu_manual_enabled)
 
 
 # TODO: Support more than AMD APU's
@@ -566,21 +571,22 @@ func _set_tdp_midpoint() -> void:
 func _read_amd_gpu_clock_limits() -> void:
 	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
-	var result := output[0][0].split("\n") as Array
+	@warning_ignore("unsafe_method_access")
+	var result := output[0][0].split("\n") as Array[String]
 
 	for param in result:
-		var parts := param.split("\n") as Array
+		var parts := param.split("\n") as Array[String]
 		for part in parts:
-			part = part.strip_edges().split(" ", false)
-			if part.is_empty():
+			var fixed_part := part.strip_edges().split(" ", false)
+			if fixed_part.is_empty():
 				continue
-			if part[0] == "SCLK:":
-				gpu_freq_max = int(part[2].rstrip("Mhz"))
-				gpu_freq_min = int(part[1].rstrip("Mhz"))
-			elif part[0] == "0:":
-				gpu_freq_min_current =  int(part[1].rstrip("Mhz"))
-			elif part[0] == "1:":
-				gpu_freq_max_current =  int(part[1].rstrip("Mhz"))
+			if fixed_part[0] == "SCLK:":
+				gpu_freq_max = int(fixed_part[2].rstrip("Mhz"))
+				gpu_freq_min = int(fixed_part[1].rstrip("Mhz"))
+			elif fixed_part[0] == "0:":
+				gpu_freq_min_current =  int(fixed_part[1].rstrip("Mhz"))
+			elif fixed_part[0] == "1:":
+				gpu_freq_max_current =  int(fixed_part[1].rstrip("Mhz"))
 	logger.debug("Found GPU CLK Limits: " + str(gpu_freq_min) + " - " + str(gpu_freq_max))
 
 
@@ -600,15 +606,15 @@ func _read_amd_gpu_power_profile() -> void:
 ## Retrieves the current TDP from ryzenadj for AMD APU's.
 func _read_amd_tdp() -> void:
 	var output: Array = await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
-	var exit_code = output[1]
+	var exit_code := output[1] as int
 	if exit_code:
 		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
 		await _set_tdp_midpoint()
 		return
-	var result := output[0][0].split("\n") as Array
+	var result := (output[0][0] as String).split("\n") as Array[String]
 	var current_fastppt := 0.0
 	for setting in result:
-		var parts := setting.split("|") as Array
+		var parts := setting.split("|")
 		var i := 0
 		for part in parts:
 			parts[i] = part.strip_edges()
@@ -623,7 +629,7 @@ func _read_amd_tdp() -> void:
 			"THM LIMIT CORE":
 				gpu_temp_current = float(parts[2])
 	tdp_boost_current = current_fastppt - tdp_current
-	await _ensure_tdp_boost_limited()
+	_ensure_tdp_boost_limited()
 	await _tdp_boost_value_change()
 
 
@@ -644,8 +650,8 @@ func _read_cpus_enabled() -> void:
 	for i in range(1, cpu_core_count):
 		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
 		var output: Array = await _async_do_exec("bash", args)
-		logger.debug("Add to count: " + str(output[0][0].strip_edges()))
-		active_cpus += int(output[0][0].strip_edges())
+		logger.debug("Add to count: " + str((output[0][0] as String).strip_edges()))
+		active_cpus += int((output[0][0] as String).strip_edges())
 		logger.debug("Detected Active CPU's: " + str(active_cpus))
 	cpu_core_count_current = active_cpus
 	logger.debug("Total Active CPU's: " + str(cpu_core_count_current))
@@ -660,9 +666,10 @@ func _read_cpu_count() -> void:
 	if exit_code:
 		logger.warn("Unable to update CPU count. Received exit code: " +str(exit_code))
 		return
-	cpu_core_count = output[0][0].split("\n")[0] as int
+	cpu_core_count = (output[0][0] as String).split("\n")[0] as int
 	cpu_cores_available = cpu_core_count
 	if not cpu_smt_enabled:
+		@warning_ignore("integer_division")
 		cpu_cores_available = cpu_core_count / 2
 	logger.debug("Total CPU's: " + str(cpu_core_count) + " Available CPU's: " + str(cpu_cores_available))
 	cpu_cores_available_updated.emit(cpu_cores_available)
@@ -691,7 +698,7 @@ func _read_gpu_perf_level() -> void:
 func _read_gpu_power_profile() -> void:
 	match gpu.vendor:
 		"AMD":
-			await _read_amd_gpu_power_profile()
+			_read_amd_gpu_power_profile()
 		_:
 			return
 	gpu_power_profile_updated.emit(gpu_power_profile)
@@ -753,7 +760,7 @@ func _read_thermal_profile() -> void:
 		logger.warn("Attempted to call thermal profile property on a Platform that is not thermal profile capable.")
 		return
 
-	thermal_profile = int(await _read_sys(platform_provider.thermal_policy_path))
+	thermal_profile = int(await _read_sys((platform_provider as HandheldPlatform).thermal_policy_path))
 	match thermal_profile:
 		0:
 			logger.debug("Thermal throttle policy currently at Balanced")
@@ -767,7 +774,7 @@ func _read_thermal_profile() -> void:
 # Used to read values from sysfs
 func _read_sys(path: String) -> String:
 	var output: Array = await _async_do_exec("cat", [path])
-	return output[0][0].strip_escapes()
+	return (output[0][0] as String).strip_escapes()
 
 
 # Thread safe method of calling _do_exec

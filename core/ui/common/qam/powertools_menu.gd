@@ -1,13 +1,9 @@
 extends VBoxContainer
 
-const AMD_GPU_MIN_MHZ: float = 200
-const POWERTOOLS_PATH : String = "/usr/share/opengamepadui/scripts/powertools"
-
 @onready var performance_manager := load("res://core/systems/performance/performance_manager.tres") as PerformanceManager
 @onready var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
 var command_timer: Timer
-var update_timer: Timer
 
 @onready var cpu_boost_button := $CPUBoostButton as Toggle
 @onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
@@ -154,12 +150,12 @@ func _setup_gpu_freq_range() -> void:
 	performance_manager.gpu_manual_enabled_updated.connect(_update_gpu_manual_enabled)
 
 
-func _update_gpu_freq_range(min: float, max: float, current_min: float, current_max: float)-> void:
-	logger.debug("Received update for gpu_clk_limits_updated: " + str(min) + "  " + str(max) + "  " + str(current_min) + "  " + str(current_max)) 
-	gpu_freq_max_slider.max_value = max
-	gpu_freq_max_slider.min_value = min
-	gpu_freq_min_slider.max_value = max
-	gpu_freq_min_slider.min_value = min
+func _update_gpu_freq_range(gpu_freq_min: float, gpu_freq_max: float, current_min: float, current_max: float) -> void:
+	logger.debug("Received update for gpu_clk_limits_updated: " + str(gpu_freq_min) + "  " + str(gpu_freq_max) + "  " + str(current_min) + "  " + str(current_max))
+	gpu_freq_max_slider.max_value = gpu_freq_max
+	gpu_freq_max_slider.min_value = gpu_freq_min
+	gpu_freq_min_slider.max_value = gpu_freq_max
+	gpu_freq_min_slider.min_value = gpu_freq_min
 	gpu_freq_max_slider.value = current_max
 	gpu_freq_min_slider.value = current_min
 
@@ -227,7 +223,7 @@ func _update_thermal_profile(index: int) -> void:
 
 ### UI Callback functions
 
-func _on_cpu_cores_slider_changed(value: float)-> void:
+func _on_cpu_cores_slider_changed(value: float) -> void:
 	if value == performance_manager.cpu_core_count_current:
 		return
 	logger.debug("cpu_cores_slider_changed: " + str (value))
@@ -303,10 +299,10 @@ func _on_tdp_value_slider_changed(value: float) -> void:
 
 # Sets the thermal throttle policy for ASUS devices.
 func _on_thermal_policy_dropdown_changed(index: int) -> void:
-	if index == performance_manager.thermal_mode:
+	if index == performance_manager.thermal_profile:
 		return
 	logger.debug("thermal_policy_dropdown_changed: " + str (index))
-	_setup_callback_func(performance_manager.set_thermal_mode, index, 0)
+	_setup_callback_func(performance_manager.set_thermal_profile, index, 0)
 
 
 # Called to toggle SMT
