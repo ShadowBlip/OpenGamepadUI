@@ -19,7 +19,7 @@ var _notification_manager := load("res://core/global/notification_manager.tres")
 var _platform := load("res://core/global/platform.tres") as Platform
 var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var _shared_thread := load("res://core/systems/threading/perfman_thread.tres") as SharedThread
+var _thread_pool := load("res://core/systems/threading/thread_pool.tres") as ThreadPool
 
 var batteries: Array[PowerManager.Device]
 var cpu: Platform.CPUInfo
@@ -49,7 +49,7 @@ var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
 
 
 func _init():
-	_shared_thread.start()
+	_thread_pool.start()
 	platform_provider = _platform.platform
 
 	batteries = _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
@@ -782,7 +782,7 @@ func _async_do_exec(command: String, args: Array)-> Array:
 	logger.debug("Start async_do_exec : " + command)
 	for arg in args:
 		logger.debug(str(arg))
-	return await _shared_thread.exec(_do_exec.bind(command, args))
+	return await _thread_pool.exec(_do_exec.bind(command, args))
 
 
 ## Calls OS.execute with the provided command and args and returns an array with

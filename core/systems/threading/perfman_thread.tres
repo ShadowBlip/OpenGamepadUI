@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="SharedThread" load_steps=2 format=3 uid="uid://q3q02bf4oc0j"]
-
-[ext_resource type="Script" path="res://core/systems/threading/shared_thread.gd" id="1_8sgut"]
-
-[resource]
-script = ExtResource("1_8sgut")
-name = "SharedThread"
-target_tick_rate = 60
