@@ -436,19 +436,8 @@ func _get_app_name_from_proc(pid: int) -> String:
 # Primary nw app ID method. Identifies the running app from steam's library.vdf
 # and appmanifest_<app_id>.acf files.
 func _get_name_from_steam_library() -> String:
-	var missing_app_id: int = -1
-	var focusable_apps := Gamescope.get_focusable_apps()
-	logger.debug("Focusable apps: " + str(focusable_apps))
-	for app_id in focusable_apps:
-		if app_id == Gamescope.OVERLAY_GAME_ID:
-			continue
-		if _is_app_id_running(app_id):
-			continue
-		missing_app_id = app_id
-		break
-	if missing_app_id < 0:
-		logger.error("Unable to identify app ID")
-		return ""
+	var missing_app_id := Gamescope.get_focused_app()
+
 	logger.debug("Found unclaimed app id: " +str(missing_app_id))
 	var steam_library_path := OS.get_environment("HOME") +"/.steam/steam"
 	var library_data := _parse_data_from_steam_file(steam_library_path + "/steamapps/libraryfolders.vdf")
