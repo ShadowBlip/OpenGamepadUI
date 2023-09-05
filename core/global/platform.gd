@@ -330,7 +330,7 @@ func _detect_os() -> OSInfo:
 func _get_system_components():
 	cpu = _read_cpu_info()
 	gpu = _read_gpu_info()
-	kernel = _get_kernel_info()
+	kernel = _get_kernel_version()
 	bios = _get_bios_version()
 
 # Provides info on the CPU vendor, model, and capabilities.
@@ -424,11 +424,6 @@ func _read_gpu_info() -> GPUInfo:
 
 	return gpu_info
 
-# Read kernel information
-func _get_kernel_info() -> String:
-	var uname := _get_uname()
-	return uname
-
 # Run glxinfo and return the data from it.
 # TODO: Maybe use vulkaninfo? Need a way to get vendor string in that. It can
 # output to JSON so it might be easier to get more info like driver name and info,
@@ -442,7 +437,7 @@ func _get_glxinfo() -> Array:
 	return  output[0][0].split("\n") as Array
 	
 # Run uname and return the data from it.
-func _get_uname() -> String:
+func _get_kernel_version() -> String:
 	var output: Array = _do_exec("uname", ["-s", "-r", "-m"]) # Fetches kernel name, version, and machine
 	var exit_code = output[1]
 	if exit_code:
