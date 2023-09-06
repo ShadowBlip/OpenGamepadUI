@@ -11,6 +11,7 @@ signal gpu_temp_limit_updated(current: float)
 signal smt_toggled(state: bool)
 signal tdp_updated(tdp_current: float, boost_current: float)
 signal thermal_profile_updated(index: int)
+signal perfomance_profile_applied(profile: PerformanceProfile)
 
 const USER_PROFILES := "user://data/performance/profiles"
 const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
@@ -19,7 +20,7 @@ var _notification_manager := load("res://core/global/notification_manager.tres")
 var _platform := load("res://core/global/platform.tres") as Platform
 var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var _thread_pool := load("res://core/systems/threading/thread_pool.tres") as ThreadPool
+var _shared_thread := load("res://core/systems/threading/utility_thread.tres") as SharedThread
 
 var batteries: Array[PowerManager.Device]
 var cpu: Platform.CPUInfo
@@ -49,8 +50,9 @@ var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
 
 
 func _init():
-	_thread_pool.start()
+	_shared_thread.start()
 	platform_provider = _platform.platform
+	await read_system_components()
 
 	batteries = _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
 	if batteries.size() > 1:
@@ -107,7 +109,8 @@ func read_system_components(power_profile: int = 1) -> void:
 	# There's currently no known way to detect the set profile. Default to
 	# setting power_saving at startup for now. #TODO: Fix this?
 	if gpu.power_profile_capable:
-		await set_gpu_power_profile(power_profile)
+		gpu_power_profile = power_profile
+		await _gpu_power_profile_change()
 	logger.debug("Update system components completed")
 
 
@@ -161,6 +164,7 @@ func load_profile(profile_path: String = "") -> void:
 		logger.debug(notify.text)
 		_notification_manager.show(notify)
 		save_profile()
+		perfomance_profile_applied.emit(profile)
 		return
 
 	else:
@@ -256,7 +260,7 @@ func _apply_profile() -> void:
 		thermal_profile = profile.thermal_profile
 		await _apply_thermal_profile()
 	logger.info("Applied Performance Profile: " + profile.name)
-
+	perfomance_profile_applied.emit(profile)
 
 func on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 	logger.debug("Detected app switch")
@@ -559,8 +563,9 @@ func _tdp_value_change() -> void:
 # Determine the current settings.
 func _set_tdp_midpoint() -> void:
 	tdp_current = float((gpu.max_tdp - gpu.min_tdp) / 2 + gpu.min_tdp)
-	await _amd_tdp_change()
-	await _amd_tdp_boost_change()
+	tdp_boost_current = 0
+	gpu_temp_current = 80
+	await _tdp_value_change()
 	await _gpu_temp_limit_change()
 
 
@@ -782,7 +787,7 @@ func _async_do_exec(command: String, args: Array)-> Array:
 	logger.debug("Start async_do_exec : " + command)
 	for arg in args:
 		logger.debug(str(arg))
-	return await _thread_pool.exec(_do_exec.bind(command, args))
+	return await _shared_thread.exec(_do_exec.bind(command, args))
 
 
 ## Calls OS.execute with the provided command and args and returns an array with

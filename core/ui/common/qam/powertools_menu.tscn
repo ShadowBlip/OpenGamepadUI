@@ -24,7 +24,14 @@ script = ExtResource("1_qncpn")
 current_focus = NodePath("../CPUBoostButton")
 focus_stack = ExtResource("3_0iyf7")
 
+[node name="WaitLabel" parent="." instance=ExtResource("4_1pfjc")]
+layout_mode = 2
+text = "Reading system info.
+Please wait..."
+horizontal_alignment = 1
+
 [node name="CPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
+visible = false
 layout_mode = 2
 text = "CPU Settings"
 
@@ -69,6 +76,7 @@ max_value = 1.0
 min_value = 1.0
 
 [node name="GPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
+visible = false
 layout_mode = 2
 text = "GPU Settings"
 
