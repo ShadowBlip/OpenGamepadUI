@@ -3,7 +3,6 @@ extends VBoxContainer
 @onready var performance_manager := load("res://core/systems/performance/performance_manager.tres") as PerformanceManager
 @onready var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
-var command_timer: Timer
 
 @onready var cpu_boost_button := $CPUBoostButton as Toggle
 @onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
@@ -16,15 +15,20 @@ var command_timer: Timer
 @onready var tdp_slider := $TDPSlider as ValueSlider
 @onready var thermal_profile_dropdown := $ThermalProfileDropdown as Dropdown
 @onready var smt_button := $SMTButton as Toggle
+@onready var cpu_label := $CPUSectionLabel as Control
+@onready var gpu_label := $GPUSectionLabel as Control
+@onready var wait_label := $WaitLabel as Control
+@onready var _to_visible: Array[Control] = [cpu_label, gpu_label]
 
+var command_timer: Timer
 var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
 
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready() -> void:
-	await performance_manager.read_system_components()
 	_setup_interface()
+	performance_manager.perfomance_profile_applied.connect(_set_initial_visibility, CONNECT_ONE_SHOT)
 	performance_manager.load_profile()
 	launch_manager.app_switched.connect(_on_app_switched)
 
@@ -58,6 +62,13 @@ func _setup_interface() -> void:
 		_setup_thermal_profile()
 
 
+func _set_initial_visibility(_profile: PerformanceProfile) -> void:
+	wait_label.visible = false
+	for control in _to_visible:
+		control.visible = true
+		logger.debug(control.name + " set to visible.")
+
+
 # Overrides or sets the command_timer.timeout signal connection function and
 # (re)starts the timer.
 func _setup_callback_func(callable: Callable, arg: Variant, delay: float = 1.2) -> void:
@@ -88,7 +99,7 @@ func _on_app_switched(from: RunningApp, to: RunningApp) -> void:
 
 
 func _setup_cpu_boost() -> void:
-	cpu_boost_button.visible = true
+	_to_visible.append(cpu_boost_button)
 	cpu_boost_button.toggled.connect(_on_cpu_boost_button_toggled)
 	performance_manager.cpu_boost_toggled.connect(_update_cpu_boost)
 
@@ -99,8 +110,8 @@ func _update_cpu_boost(state: bool) -> void:
 
 
 func _setup_cpu_core_range() -> void:
-	smt_button.visible = true
-	cpu_cores_slider.visible = true
+	_to_visible.append(smt_button)
+	_to_visible.append(cpu_cores_slider)
 	smt_button.toggled.connect(_on_smt_button_toggled)
 	cpu_cores_slider.value_changed.connect(_on_cpu_cores_slider_changed)
 	performance_manager.smt_toggled.connect(_update_smt_enabled)
@@ -125,11 +136,11 @@ func _update_cpu_cores_used(count: int) -> void:
 
 # Gets the TDP Range for the detected hardware.
 func _setup_tdp_range() -> void:
+	_to_visible.append(tdp_boost_slider)
+	_to_visible.append(tdp_slider)
 	tdp_slider.max_value = performance_manager.gpu.max_tdp
 	tdp_slider.min_value = performance_manager.gpu.min_tdp
 	tdp_boost_slider.max_value = performance_manager.gpu.max_boost
-	tdp_boost_slider.visible = true
-	tdp_slider.visible = true
 	tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_slider_changed)
 	tdp_slider.value_changed.connect(_on_tdp_value_slider_changed)
 	performance_manager.tdp_updated.connect(_update_tdp)
@@ -142,7 +153,7 @@ func _update_tdp(tdp_current: float, boost_current: float) -> void:
 
 
 func _setup_gpu_freq_range() -> void:
-	gpu_freq_enable.visible = true
+	_to_visible.append(gpu_freq_enable)
 	gpu_freq_enable.toggled.connect(_on_gpu_freq_enable_button_toggled)
 	gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_slider_changed)
 	gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_slider_changed)
@@ -169,7 +180,7 @@ func _update_gpu_manual_enabled(state: bool) -> void:
 
 # Gets the TDP Range for the detected hardware.
 func _setup_gpu_temp() -> void:
-	gpu_temp_slider.visible = true
+	_to_visible.append(gpu_temp_slider)
 	gpu_temp_slider.value_changed.connect(_on_gpu_temp_limit_slider_changed)
 	performance_manager.gpu_temp_limit_updated.connect(_update_gpu_temp)
 
@@ -181,7 +192,7 @@ func _update_gpu_temp(current: float) -> void:
 
 
 func _setup_power_profile() -> void:
-	power_profile_dropdown.visible = true
+	_to_visible.append(power_profile_dropdown)
 	power_profile_dropdown.clear()
 	power_profile_dropdown.add_item("Max Performance", 0)
 	power_profile_dropdown.add_item("Power Saving", 1)
@@ -200,7 +211,7 @@ func _update_power_profile(index: int) -> void:
 
 
 func _setup_thermal_profile() -> void:
-	thermal_profile_dropdown.visible = true
+	_to_visible.append(thermal_profile_dropdown)
 	thermal_profile_dropdown.clear()
 	thermal_profile_dropdown.add_item("Balanced", 0)
 	thermal_profile_dropdown.add_item("Performance", 1)

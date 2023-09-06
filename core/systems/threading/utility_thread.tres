@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_svd22")
-name = "AudioThread"
-target_tick_rate = 60
+name = "UtilityThread"
+target_tick_rate = 10
