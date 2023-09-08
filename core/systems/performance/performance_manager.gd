@@ -561,10 +561,13 @@ func _tdp_value_change() -> void:
 
 # Sets the current TDP to the midpoint of the detected hardware. Used when we're not able to
 # Determine the current settings.
-func _set_tdp_midpoint() -> void:
-	tdp_current = float((gpu.max_tdp - gpu.min_tdp) / 2 + gpu.min_tdp)
-	tdp_boost_current = 0
-	gpu_temp_current = 80
+func _set_sane_defaults() -> void:
+	if not tdp_current:
+		tdp_current = float((gpu.max_tdp - gpu.min_tdp) / 2 + gpu.min_tdp)
+	if not tdp_boost_current:
+		tdp_boost_current = 0
+	if not gpu_temp_current:
+		gpu_temp_current = 80
 	await _tdp_value_change()
 	await _gpu_temp_limit_change()
 
@@ -610,31 +613,55 @@ func _read_amd_gpu_power_profile() -> void:
 
 ## Retrieves the current TDP from ryzenadj for AMD APU's.
 func _read_amd_tdp() -> void:
+	var set_sane_defaults: bool = false
+
 	var output: Array = await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
 	var exit_code := output[1] as int
 	if exit_code:
 		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
-		await _set_tdp_midpoint()
+		await _set_sane_defaults()
 		return
+
 	var result := (output[0][0] as String).split("\n")
 	var current_fastppt := 0.0
+
 	for setting in result:
 		var parts := setting.split("|")
-		var i := 0
-		for part in parts:
-			parts[i] = part.strip_edges()
-			i+=1
+		for index in parts.size():
+			parts[index] = parts[index].strip_edges()
+
 		if len(parts) < 3:
 			continue
-		match parts[1]:
-			"PPT LIMIT FAST":
-				current_fastppt = float(parts[2])
-			"STAPM LIMIT":
-				tdp_current = float(parts[2])
-			"THM LIMIT CORE":
-				gpu_temp_current = float(parts[2])
+
+		if parts[2] != "nan":
+			logger.debug("RyzenAdj reports " + parts[1] + " is currently set to " + parts[2] + ".")
+			match parts[1]:
+				"PPT LIMIT FAST":
+					current_fastppt = float(parts[2])
+				"STAPM LIMIT":
+					tdp_current = float(parts[2])
+				"THM LIMIT CORE":
+					gpu_temp_current = float(parts[2])
+		else:
+			match parts[1]:
+				"PPT LIMIT FAST":
+					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
+					set_sane_defaults = true
+					current_fastppt = float((gpu.max_tdp - gpu.min_tdp) / 2 + gpu.min_tdp)
+				"STAPM LIMIT":
+					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
+					set_sane_defaults = true
+					tdp_current = float((gpu.max_tdp - gpu.min_tdp) / 2 + gpu.min_tdp)
+				"THM LIMIT CORE":
+					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
+					set_sane_defaults = true
+					gpu_temp_current = 80
+
 	tdp_boost_current = current_fastppt - tdp_current
 	_ensure_tdp_boost_limited()
+	if set_sane_defaults:
+		await _set_sane_defaults()
+		return
 	await _tdp_boost_value_change()
 
 
@@ -798,6 +825,6 @@ func _do_exec(command: String, args: Array)-> Array:
 		logger.debug(str(arg))
 	var output = []
 	var exit_code := OS.execute(command, args, output)
-	logger.debug("Output: " + str(output))
-	logger.debug("Exit code: " +str(exit_code))
+#	logger.debug("Output: " + str(output))
+#	logger.debug("Exit code: " +str(exit_code))
 	return [output, exit_code]
