@@ -6,3 +6,4 @@
 script = ExtResource("1_qvlys")
 name = "IOThread"
 target_tick_rate = 30
+niceness = 0

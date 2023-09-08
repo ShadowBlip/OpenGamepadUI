@@ -6,3 +6,4 @@
 script = ExtResource("1_rbhla")
 name = "InputThread"
 target_tick_rate = 600
+niceness = -20
