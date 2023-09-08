@@ -6,3 +6,4 @@
 script = ExtResource("1_svd22")
 name = "UtilityThread"
 target_tick_rate = 10
+niceness = 0

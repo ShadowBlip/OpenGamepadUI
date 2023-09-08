@@ -6,3 +6,4 @@
 script = ExtResource("1_fg543")
 name = "WatchdogThread"
 target_tick_rate = 1
+warn_after_num_missed_frames = 20

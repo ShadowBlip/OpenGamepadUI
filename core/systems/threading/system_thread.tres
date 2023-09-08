@@ -6,3 +6,4 @@
 script = ExtResource("1_hqprx")
 name = "SystemThread"
 target_tick_rate = 600
+niceness = 0

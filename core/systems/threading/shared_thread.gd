@@ -12,6 +12,7 @@ const watchdog := preload("res://core/systems/threading/watchdog_thread.tres")
 
 var thread: Thread
 var mutex := Mutex.new()
+var tid := -1
 var running := false
 var nodes: Array[NodeThread] = []
 var process_funcs: Array[Callable] = []
@@ -24,6 +25,8 @@ var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 @export var name := "SharedThread"
 ## Target rate to run at in ticks per second
 @export var target_tick_rate := 60
+## Priority (niceness) of the thread
+@export var niceness := 0
 
 
 func _init() -> void:
@@ -42,7 +45,7 @@ func start() -> void:
 	running = true
 	thread = Thread.new()
 	thread.start(_run)
-	logger.info("Thread group started: " + name)
+	logger.info("Shared thread started: " + name)
 
 
 ## Stops the thread for the thread group
@@ -53,7 +56,28 @@ func stop() -> void:
 	running = false
 	mutex.unlock()
 	thread.wait_to_finish()
-	logger.info("Thread group stopped: " + name)
+	logger.info("Shared thread stopped: " + name)
+
+
+## Set the given thread niceness to the given value.
+## Note: in order to set negative nice value, this must be run:
+## setcap 'cap_sys_nice=eip' <opengamepadui binary>
+func set_priority(value: int) -> int:
+	# If this was called from another thread, schedule it to run on the thread
+	mutex.lock()
+	var thread_id := tid
+	mutex.unlock()
+	if LinuxThread.get_tid() != thread_id:
+		logger.debug("Set thread priority was called from another thread")
+		return await exec(set_priority.bind(value))
+	
+	# Set the thread priority if this function was called from the SharedThread
+	var err := LinuxThread.set_thread_priority(value)
+	if err == OK:
+		niceness = value
+		logger.info("Set thread niceness on {0} ({1}) to: {2}".format([name, thread_id, value]))
+	
+	return err
 
 
 ## Add the given [NodeThread] to the list of nodes to process. This should
@@ -145,6 +169,17 @@ func remove_process(method: Callable) -> void:
 
 
 func _run() -> void:
+	# Update the thread ID
+	mutex.lock()
+	tid = LinuxThread.get_tid()
+	mutex.unlock()
+	logger.info("Started thread with thread ID: " + str(LinuxThread.get_tid()))
+	
+	# If the nice value isn't default, reassign the thread priority
+	if niceness != 0:
+		if await set_priority(niceness) != OK:
+			logger.warn("Unable to set niceness on thread: " + name)
+	
 	# TODO: Fix unsafe thread operations
 	Thread.set_thread_safety_checks_enabled(false)
 	var exited := false

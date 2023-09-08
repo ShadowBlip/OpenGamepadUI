@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+if [[ $EUID -ne 0 ]]; then
+  exec pkexec --disable-internal-agent "$0" "$HOME" "$@"
+fi
+
+USER_HOME="$1"
+UPDATE_PATH="${USER_HOME}/.local/share/opengamepadui/updates/opengamepad-ui.x86_64"
+setcap 'cap_sys_nice=eip' "${UPDATE_PATH}"

@@ -129,6 +129,10 @@ func _apply_update_packs() -> void:
 			if OS.execute("chmod", ["+x", file_path]) != OK:
 				logger.warn("Failed to set execute permissions. Not loading update pack")
 				return
+			
+			# Try to run setcap to allow setting thread priorities
+			if OS.execute("/usr/share/opengamepadui/scripts/make_nice", []) != OK:
+				logger.warn("Unable to run setcap to enable thread priorities")
 
 	# Launch the update pack executable and exit
 	var update_bin := ProjectSettings.globalize_path(update_pack_entrypoint)
