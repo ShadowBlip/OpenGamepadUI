@@ -27,10 +27,11 @@ var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready() -> void:
-	_setup_interface()
-	performance_manager.perfomance_profile_applied.connect(_set_initial_visibility, CONNECT_ONE_SHOT)
-	performance_manager.load_profile()
-	launch_manager.app_switched.connect(_on_app_switched)
+	
+	if not performance_manager.initialized:
+		performance_manager.pm_ready.connect(_set_initial_visibility.bind(performance_manager.profile), CONNECT_ONE_SHOT)
+	else:
+		_set_initial_visibility(performance_manager.profile)
 
 	command_timer = Timer.new()
 	command_timer.set_autostart(false)
@@ -61,12 +62,16 @@ func _setup_interface() -> void:
 		logger.debug("GPU is Thermal Mode Configurable")
 		_setup_thermal_profile()
 
+	launch_manager.app_switched.connect(_on_app_switched)
+
 
 func _set_initial_visibility(_profile: PerformanceProfile) -> void:
+	_setup_interface()
 	wait_label.visible = false
 	for control in _to_visible:
 		control.visible = true
 		logger.debug(control.name + " set to visible.")
+	performance_manager.emit_profile_signals()
 
 
 # Overrides or sets the command_timer.timeout signal connection function and
@@ -120,7 +125,7 @@ func _setup_cpu_core_range() -> void:
 
 
 func _update_smt_enabled(smt_enabled) -> void:
-	logger.debug("Received update for cpu_core_range: " + str(smt_enabled))
+	logger.debug("Received update for smt_enabled: " + str(smt_enabled))
 	smt_button.button_pressed = smt_enabled
 
 
@@ -138,8 +143,8 @@ func _update_cpu_cores_used(count: int) -> void:
 func _setup_tdp_range() -> void:
 	_to_visible.append(tdp_boost_slider)
 	_to_visible.append(tdp_slider)
-	tdp_slider.max_value = performance_manager.gpu.max_tdp
-	tdp_slider.min_value = performance_manager.gpu.min_tdp
+	tdp_slider.max_value = performance_manager.gpu.tdp_max
+	tdp_slider.min_value = performance_manager.gpu.tdp_min
 	tdp_boost_slider.max_value = performance_manager.gpu.max_boost
 	tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_slider_changed)
 	tdp_slider.value_changed.connect(_on_tdp_value_slider_changed)
@@ -158,17 +163,22 @@ func _setup_gpu_freq_range() -> void:
 	gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_slider_changed)
 	gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_slider_changed)
 	performance_manager.gpu_clk_limits_updated.connect(_update_gpu_freq_range)
+	performance_manager.gpu_clk_current_updated.connect(_update_gpu_freq_current)
 	performance_manager.gpu_manual_enabled_updated.connect(_update_gpu_manual_enabled)
 
 
-func _update_gpu_freq_range(gpu_freq_min: float, gpu_freq_max: float, current_min: float, current_max: float) -> void:
-	logger.debug("Received update for gpu_clk_limits_updated: " + str(gpu_freq_min) + "  " + str(gpu_freq_max) + "  " + str(current_min) + "  " + str(current_max))
+func _update_gpu_freq_current(current_min: float, current_max: float) -> void:
+	logger.debug("Received update for gpu_clk_limits_updated: " + str(current_min) + "  " + str(current_max))
+	gpu_freq_max_slider.value = current_max
+	gpu_freq_min_slider.value = current_min
+
+
+func _update_gpu_freq_range(gpu_freq_min: float, gpu_freq_max: float) -> void:
+	logger.debug("Received update for gpu_clk_limits_updated: " + str(gpu_freq_min) + "  " + str(gpu_freq_max))
 	gpu_freq_max_slider.max_value = gpu_freq_max
 	gpu_freq_max_slider.min_value = gpu_freq_min
 	gpu_freq_min_slider.max_value = gpu_freq_max
 	gpu_freq_min_slider.min_value = gpu_freq_min
-	gpu_freq_max_slider.value = current_max
-	gpu_freq_min_slider.value = current_min
 
 
 func _update_gpu_manual_enabled(state: bool) -> void:
@@ -235,7 +245,7 @@ func _update_thermal_profile(index: int) -> void:
 ### UI Callback functions
 
 func _on_cpu_cores_slider_changed(value: float) -> void:
-	if value == performance_manager.cpu_core_count_current:
+	if value == performance_manager.profile.cpu_core_count_current:
 		return
 	logger.debug("cpu_cores_slider_changed: " + str (value))
 	_setup_callback_func(performance_manager.set_cpu_core_count, value)
@@ -243,7 +253,7 @@ func _on_cpu_cores_slider_changed(value: float) -> void:
 
 # Called to toggle cpu boost
 func _on_cpu_boost_button_toggled(state: bool) -> void:
-	if state == performance_manager.cpu_boost_enabled:
+	if state == performance_manager.profile.cpu_boost_enabled:
 		return
 	logger.debug("cpu_boost_button_toggled: " + str (state))
 	_setup_callback_func(performance_manager.set_cpu_boost_enabled, state, 0)
@@ -251,7 +261,7 @@ func _on_cpu_boost_button_toggled(state: bool) -> void:
 
 # Called to toggle auo/manual gpu clocking
 func _on_gpu_freq_enable_button_toggled(state: bool) -> void:
-	if state == performance_manager.gpu_manual_enabled:
+	if state == performance_manager.profile.gpu_manual_enabled:
 		return
 	logger.debug("gpu_freq_enable_button_toggled: " + str (state))
 	_setup_callback_func(performance_manager.set_gpu_manual_enabled, state, 0)
@@ -259,7 +269,7 @@ func _on_gpu_freq_enable_button_toggled(state: bool) -> void:
 
 # Sets the T-junction temp using ryzenadj.
 func _on_gpu_temp_limit_slider_changed(value: float) -> void:
-	if value == performance_manager.gpu_temp_current:
+	if value == performance_manager.profile.gpu_temp_current:
 		return
 	logger.debug("gpu_temp_limit_slider_changed: " + str (value))
 	_setup_callback_func(performance_manager.set_gpu_temp_current, value, 0)
@@ -267,7 +277,7 @@ func _on_gpu_temp_limit_slider_changed(value: float) -> void:
 
 # Called when gpu_freq_max_slider.value is changed.
 func _on_max_gpu_freq_slider_changed(value: float) -> void:
-	if value == performance_manager.gpu_freq_max_current:
+	if value == performance_manager.profile.gpu_freq_max_current:
 		return
 	logger.debug("max_gpu_freq_slider_changed: " + str (value))
 	if value < gpu_freq_min_slider.value:
@@ -277,7 +287,7 @@ func _on_max_gpu_freq_slider_changed(value: float) -> void:
 
 # Called when gpu_freq_min_slider.value is changed.
 func _on_min_gpu_freq_slider_changed(value: float) -> void:
-	if value == performance_manager.gpu_freq_min_current:
+	if value == performance_manager.profile.gpu_freq_min_current:
 		return
 	logger.debug("min_gpu_freq_slider_changed: " + str (value))
 	if value > gpu_freq_max_slider.value:
@@ -286,7 +296,7 @@ func _on_min_gpu_freq_slider_changed(value: float) -> void:
 
 
 func _on_power_profile_dropdown_changed(index: int) -> void:
-	if index == performance_manager.gpu_power_profile:
+	if index == performance_manager.profile.gpu_power_profile:
 		return
 	logger.debug("power_profile_dropdown_changed: " + str (index))
 	_setup_callback_func(performance_manager.set_gpu_power_profile, index, 0)
@@ -294,7 +304,7 @@ func _on_power_profile_dropdown_changed(index: int) -> void:
 
 # Called to set the flow and fast boost TDP
 func _on_tdp_boost_value_slider_changed(value: float) -> void:
-	if value == performance_manager.tdp_boost_current:
+	if value == performance_manager.profile.tdp_boost_current:
 		return
 	logger.debug("tdp_boost_value_slider_changed: " + str (value))
 	_setup_callback_func(performance_manager.set_tdp_boost_value, value)
@@ -302,7 +312,7 @@ func _on_tdp_boost_value_slider_changed(value: float) -> void:
 
 # Called to set the base average TDP
 func _on_tdp_value_slider_changed(value: float) -> void:
-	if value == performance_manager.tdp_current:
+	if value == performance_manager.profile.tdp_current:
 		return
 	logger.debug("tdp_value_slider_changed: " + str (value))
 	_setup_callback_func(performance_manager.set_tdp_value, value)
@@ -310,7 +320,7 @@ func _on_tdp_value_slider_changed(value: float) -> void:
 
 # Sets the thermal throttle policy for ASUS devices.
 func _on_thermal_policy_dropdown_changed(index: int) -> void:
-	if index == performance_manager.thermal_profile:
+	if index == performance_manager.profile.thermal_profile:
 		return
 	logger.debug("thermal_policy_dropdown_changed: " + str (index))
 	_setup_callback_func(performance_manager.set_thermal_profile, index, 0)
@@ -318,7 +328,7 @@ func _on_thermal_policy_dropdown_changed(index: int) -> void:
 
 # Called to toggle SMT
 func _on_smt_button_toggled(state: bool) -> void:
-	if state == performance_manager.cpu_smt_enabled:
+	if state == performance_manager.profile.cpu_smt_enabled:
 		return
 	logger.debug("smt_button_toggled: " + str (state))
 	_setup_callback_func(performance_manager.set_cpu_smt_enabled, state, 0)

@@ -2,6 +2,7 @@
 extends Resource
 class_name Platform
 
+signal platform_loaded
 ## Platform specific methods
 ##
 ## Used to perform platform-specific functions
@@ -53,6 +54,7 @@ var cpu: CPUInfo
 var gpu: GPUInfo
 var kernel: String
 var bios: String
+var loaded: bool
 
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
@@ -124,7 +126,9 @@ func _init() -> void:
 	if os:
 		for action in os.startup_actions:
 			action.execute()
-
+	logger.debug("Platform loaded.")
+	platform_loaded.emit()
+	loaded = true
 
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
 ## first starts. It takes the root window to give platform providers the
@@ -351,7 +355,7 @@ func _read_cpu_info() -> CPUInfo:
 		if parts[0] == "Flags:":
 			if "ht" in parts:
 				cpu_info.smt_capable = true
-			if "cpb" in parts:
+			if "cpb" in parts and FileAccess.file_exists("/sys/devices/system/cpu/cpufreq/boost"):
 				cpu_info.boost_capable = true
 		if parts[0] == "Vendor" and parts[1] == "ID:":
 			# Delete parts of the string we don't want
@@ -424,8 +428,8 @@ func _read_gpu_info() -> GPUInfo:
 		logger.info("No APU data for " + cpu.model)
 		return gpu_info
 
-	gpu_info.min_tdp = apu_data.min_tdp
-	gpu_info.max_tdp = apu_data.max_tdp
+	gpu_info.tdp_min = apu_data.min_tdp
+	gpu_info.tdp_max = apu_data.max_tdp
 	gpu_info.max_boost = apu_data.max_boost
 	gpu_info.tdp_capable = true
 	logger.debug("Found all APU data")
@@ -472,22 +476,26 @@ class OSInfo extends Resource:
 
 ## Data container for CPU information
 class CPUInfo extends Resource:
-	var model: String
-	var vendor: String
-	var smt_capable: bool = false
+	var core_count: int = 1
+	var cores_available: int = 1
 	var boost_capable: bool = false
+	var vendor: String
+	var model: String
+	var smt_capable: bool = false
 
 
 ## Data container for GPU information
 class GPUInfo extends Resource:
-	var model: String
-	var vendor: String
+	var clk_capable: bool = false
 	var driver: String
+	var freq_max: float
+	var freq_min: float
+	var max_boost: float = -1
+	var model: String
+	var power_profile_capable: bool = false
 	var tdp_capable: bool = false
+	var tdp_max: float = -1
+	var tdp_min: float = -1
 	var thermal_profile_capable: bool = false
 	var tj_temp_capable: bool = false
-	var clk_capable: bool = false
-	var min_tdp: float = -1
-	var max_tdp: float = -1
-	var max_boost: float = -1
-	var power_profile_capable: bool = false
+	var vendor: String
