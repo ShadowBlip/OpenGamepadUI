@@ -15,7 +15,7 @@ signal perfomance_profile_applied(profile: PerformanceProfile)
 
 const USER_PROFILES := "user://data/performance/profiles"
 const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
-
+const FALLBACK_GPU_TEMP: float = 80
 var _notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var _platform := load("res://core/global/platform.tres") as Platform
 var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
@@ -567,7 +567,7 @@ func _set_sane_defaults() -> void:
 	if not tdp_boost_current:
 		tdp_boost_current = 0
 	if not gpu_temp_current:
-		gpu_temp_current = 80
+		gpu_temp_current = FALLBACK_GPU_TEMP
 	await _tdp_value_change()
 	await _gpu_temp_limit_change()
 
@@ -632,16 +632,16 @@ func _read_amd_tdp() -> void:
 
 		if len(parts) < 3:
 			continue
-
-		if parts[2] != "nan":
-			logger.debug("RyzenAdj reports " + parts[1] + " is currently set to " + parts[2] + ".")
+		var value := parts[2] as String
+		if value.is_valid_float():
+			logger.debug("RyzenAdj reports " + parts[1] + " is currently set to " + value + ".")
 			match parts[1]:
 				"PPT LIMIT FAST":
-					current_fastppt = float(parts[2])
+					current_fastppt = float(value)
 				"STAPM LIMIT":
-					tdp_current = float(parts[2])
+					tdp_current = float(value)
 				"THM LIMIT CORE":
-					gpu_temp_current = float(parts[2])
+					gpu_temp_current = float(value)
 		else:
 			match parts[1]:
 				"PPT LIMIT FAST":
@@ -655,7 +655,7 @@ func _read_amd_tdp() -> void:
 				"THM LIMIT CORE":
 					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
 					set_sane_defaults = true
-					gpu_temp_current = 80
+					gpu_temp_current = FALLBACK_GPU_TEMP
 
 	tdp_boost_current = current_fastppt - tdp_current
 	_ensure_tdp_boost_limited()
