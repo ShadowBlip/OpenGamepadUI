@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c02r5ym6x7he3"]
+
+[ext_resource type="Script" path="res://core/systems/screenshot/screenshotter.gd" id="1_eqvtv"]
+
+[node name="Screenshotter" type="Node"]
+script = ExtResource("1_eqvtv")
+on_signal = ""
