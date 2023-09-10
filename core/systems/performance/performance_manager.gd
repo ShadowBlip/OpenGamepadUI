@@ -24,6 +24,7 @@ var _power_manager := load("res://core/systems/power/power_manager.tres") as Pow
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var _shared_thread := load("res://core/systems/threading/utility_thread.tres") as SharedThread
 
+var ryzenadj := RyzenAdj.new()
 var batteries: Array[PowerManager.Device]
 var cpu: Platform.CPUInfo
 var gpu: Platform.GPUInfo
@@ -57,6 +58,7 @@ func _setup():
 		battery.updated.connect(_on_update_battery.bind(battery))
 
 	_shared_thread.exec(read_system_components)
+
 
 func _on_update_battery(item: PowerManager.Device):
 	_update_profile_state(item)
@@ -122,6 +124,7 @@ func _get_profile_name() -> String:
 		postfix = "_" + library_item.name.sha256_text() + ".tres"
 		profile.name = library_item.name
 	return prefix+postfix
+
 
 ## Saves a PerformanceProfile to the given path.
 func save_profile() -> void:
@@ -397,10 +400,11 @@ func _apply_cpu_smt_state() -> void:
 	await _read_cpu_count()
 	await _read_cpus_enabled()
 
+
 ## Set STAPM on AMD APU's
 func _amd_tdp_change() -> void:
 	logger.debug("Doing callback func _do_amd_tdp_change")
-	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-a", str(profile.tdp_current * 1000)])
+	await ryzenadj.set_stapm_limit(profile.tdp_current * 1000)
 
 
 ## Set long/short PPT on AMD APU's
@@ -409,8 +413,8 @@ func _amd_tdp_boost_change() -> void:
 	
 	var slowPPT: float = (floor(profile.tdp_boost_current/2) + profile.tdp_current) * 1000
 	var fastPPT: float = (profile.tdp_boost_current + profile.tdp_current) * 1000
-	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-b", str(fastPPT)])
-	await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-c", str(slowPPT)])
+	await ryzenadj.set_fast_limit(fastPPT)
+	await ryzenadj.set_slow_limit(slowPPT)
 
 
 # Called to disable/enable cores by count as specified by value. 
@@ -474,12 +478,12 @@ func _gpu_manual_change() -> void:
 # TODO: Support more than AMD APU's
 ## Sets the ryzenadj power profile
 func _gpu_power_profile_change() -> void:
-	var power_profile := "--max-performance"
+	var power_profile := ryzenadj.POWER_PROFILE.MAX_PERFORMANCE
 	if profile.gpu_power_profile == 1:
-		power_profile = "--power-saving"
+		power_profile = ryzenadj.POWER_PROFILE.POWER_SAVINGS
 	match gpu.vendor:
 		"AMD":
-			await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", power_profile])
+			await ryzenadj.set_power_profile(power_profile)
 		"Intel":
 			pass
 	gpu_power_profile_updated.emit(profile.gpu_power_profile)
@@ -490,7 +494,7 @@ func _gpu_power_profile_change() -> void:
 func _gpu_temp_limit_change() -> void:
 	match gpu.vendor:
 		"AMD":
-			await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-f", str(profile.gpu_temp_current)])
+			await ryzenadj.set_tctl_temp(profile.gpu_temp_current)
 		"Intel":
 			pass
 	gpu_temp_limit_updated.emit(profile.gpu_temp_current)
@@ -611,50 +615,39 @@ func _read_amd_gpu_power_profile() -> void:
 
 ## Retrieves the current TDP from ryzenadj for AMD APU's.
 func _read_amd_tdp() -> void:
-	var set_sane_defaults: bool = false
+	var set_sane_defaults := false
 
-	var output: Array = await _async_do_exec(POWERTOOLS_PATH, ["ryzenadj", "-i"])
-	var exit_code := output[1] as int
-	if exit_code:
-		logger.info("Got exit code: " +str(exit_code) +". Unable to verify current tdp. Setting TDP to midpoint of range")
+	# Fetch the current info from ryzenadj
+	var info := await ryzenadj.get_info()
+	if not info:
+		logger.info("Unable to verify current tdp. Setting TDP to midpoint of range")
 		await _set_sane_defaults()
 		return
 
-	var result := (output[0][0] as String).split("\n")
+	# Handle cases where ryzenadj failed to read particular values
 	var current_fastppt := 0.0
+	if info.ppt_limit_fast > 0:
+		current_fastppt = info.ppt_limit_fast
+	else:
+		logger.warn("RyzenAdj unable to read current PPT LIMIT FAST value. Setting to sane default.")
+		current_fastppt = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
+		set_sane_defaults = true
 
-	for setting in result:
-		var parts := setting.split("|")
-		for index in parts.size():
-			parts[index] = parts[index].strip_edges()
+	if info.stapm_limit > 0:
+		profile.tdp_current = info.stapm_limit
+	else:
+		logger.warn("RyzenAdj unable to read current STAPM value. Setting to sane default.")
+		profile.tdp_current = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
+		set_sane_defaults = true
+	
+	if info.thm_limit_core > 0:
+		profile.gpu_temp_current = info.thm_limit_core
+	else:
+		logger.warn("RyzenAdj unable to read current THM value. Setting to sane default.")
+		profile.gpu_temp_current = FALLBACK_GPU_TEMP
+		set_sane_defaults = true
 
-		if len(parts) < 3:
-			continue
-		var value := parts[2] as String
-		if value.is_valid_float():
-			logger.debug("RyzenAdj reports " + parts[1] + " is currently set to " + value + ".")
-			match parts[1]:
-				"PPT LIMIT FAST":
-					current_fastppt = float(value)
-				"STAPM LIMIT":
-					profile.tdp_current = float(value)
-				"THM LIMIT CORE":
-					profile.gpu_temp_current = float(value)
-		else:
-			match parts[1]:
-				"PPT LIMIT FAST":
-					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
-					set_sane_defaults = true
-					current_fastppt = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
-				"STAPM LIMIT":
-					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
-					set_sane_defaults = true
-					profile.tdp_current = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
-				"THM LIMIT CORE":
-					logger.warn("RyzenAdj unable to read current " + parts[1] + " value. Setting to sane default.")
-					set_sane_defaults = true
-					profile.gpu_temp_current = FALLBACK_GPU_TEMP
-
+	# Set the TDP boost
 	profile.tdp_boost_current = current_fastppt - profile.tdp_current
 	_ensure_tdp_boost_limited()
 	if set_sane_defaults:
