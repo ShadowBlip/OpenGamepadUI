@@ -24,3 +24,7 @@ func execute() -> int:
 	stdout = output[0]
 	
 	return ret
+
+
+func _to_string() -> String:
+	return "Command<{0} {1}>".format([cmd, " ".join(args)])
