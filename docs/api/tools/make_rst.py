@@ -820,6 +820,7 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
 
     ### INHERITANCE TREE ###
 
+    print(class_name)
     # Ascendants
     if class_def.inherits:
         inherits = class_def.inherits.strip()
@@ -837,6 +838,13 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                 inherits = inode.strip()
             else:
                 break
+
+        # Assume we inherit from a Godot class if not found
+        if inherits not in state.classes:
+            if not first:
+                f.write(" **<** ")
+            f.write(make_type(inherits, state))
+
         f.write("\n\n")
 
     # Descendants
@@ -1322,8 +1330,10 @@ def make_type(klass: str, state: State) -> str:
         link_type = link_type[:-2]
     if link_type in state.classes:
         return f":ref:`{klass}<class_{link_type}>`"
-    print_error(f'{state.current_class}.xml: Unresolved type "{klass}".', state)
-    return klass
+    # Assume failures should link to Godot docs
+    return f"`{link_type} <https://docs.godotengine.org/en/stable/classes/class_{link_type.lower()}.html>`_"
+    #print_error(f'{state.current_class}.xml: Unresolved type "{klass}".', state)
+    #return klass
 
 
 def make_enum(t: str, is_bitfield: bool, state: State) -> str:
@@ -1348,6 +1358,17 @@ def make_enum(t: str, is_bitfield: bool, state: State) -> str:
             return f"|bitfield|\<:ref:`{e}<enum_{c}_{e}>`\>"
         else:
             return f":ref:`{e}<enum_{c}_{e}>`"
+
+    # HashingContext.HashType
+    # https://docs.godotengine.org/en/stable/classes/class_hashingcontext.html#enum-hashingcontext-hashtype
+    parts = t.split(".")
+    if len(parts) > 1:
+        class_name = parts[0]
+        child = parts[1]
+        return f"`{t} <https://docs.godotengine.org/en/stable/classes/class_{class_name.lower()}.html#enum-{class_name.lower()}-{child.lower()}>`_"
+
+    # Assume failures will link to Godot docs
+    return f"`{t} <https://docs.godotengine.org/en/stable/classes/class_%40globalscope.html#enum-globalscope-{t.lower()}>`_"
 
     # Don't fail for `Vector3.Axis`, as this enum is a special case which is expected not to be resolved.
     if f"{c}.{e}" != "Vector3.Axis":
