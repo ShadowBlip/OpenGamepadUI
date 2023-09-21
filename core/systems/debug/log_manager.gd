@@ -23,7 +23,7 @@ func register(logger: Log.Logger) -> void:
 	mutex.lock()
 	if not logger.get_name() in loggers_by_name:
 		loggers_by_name[logger.get_name()] = []
-	loggers_by_name[logger.get_name()].append(logger)
+	(loggers_by_name[logger.get_name()] as Array).append(logger)
 	mutex.unlock()
 
 	# If the global log level variable was set on start, update the logger's log level.

@@ -16,6 +16,10 @@ var logger := Log.get_logger(name)
 
 
 func _init() -> void:
+	# Don't initialize if run from the editor (during doc generation)
+	if Engine.is_editor_hint():
+		logger.info("Not initializing. Ran from editor.")
+		return
 	thread.start(_run)
 	logger.info("Watchdog thread started")
 

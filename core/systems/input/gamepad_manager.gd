@@ -33,6 +33,11 @@ var logger := Log.get_logger("GamepadManager")
 
 ## Initializes the gamepad manager and starts the gamepad interecpt thread. 
 func _init() -> void:
+	# Don't initialize if run from the editor (during doc generation)
+	if Engine.is_editor_hint():
+		logger.info("Not initializing. Ran from editor.")
+		return
+
 	# If we crashed, unhide any device events that were orphaned
 	await device_hider.restore_all_hidden()
 
