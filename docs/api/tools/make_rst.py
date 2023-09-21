@@ -748,7 +748,7 @@ def get_git_branch() -> str:
 
 
 def get_class_group(class_def: ClassDef, state: State) -> str:
-    group_name = "variant"
+    group_name = "node"
     class_name = class_def.name
 
     if class_name.startswith("@"):
@@ -772,6 +772,16 @@ def get_class_group(class_def: ClassDef, state: State) -> str:
                 inherits = inode.strip()
             else:
                 break
+
+        # Assume the group
+        if inherits == "Node":
+            group_name = "node"
+        if inherits == "Resource":
+            group_name = "resource"
+        if inherits == "Object":
+            group_name = "object"
+        if inherits == "RefCounted":
+            group_name = "object"
 
     return group_name
 
@@ -820,7 +830,6 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
 
     ### INHERITANCE TREE ###
 
-    print(class_name)
     # Ascendants
     if class_def.inherits:
         inherits = class_def.inherits.strip()
