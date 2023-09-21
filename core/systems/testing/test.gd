@@ -1,8 +1,13 @@
 extends Node
 class_name Test
 
+## Base class for running tests
+##
+## This class provides some built-in methods to aid in writing and running
+## tests.
+
 ## Emitted after tests havev been completed
-signal test_finished
+signal test_finished()
 ## Emitted when a test assertion fails
 signal assert_failed(assertion: Assertion)
 
@@ -32,6 +37,7 @@ func _init() -> void:
 	assert_failed.connect(print_assertion)
 
 
+## Emits 'assert_failed' signal if the given expression is false
 func assert_true(expr: bool) -> void:
 	if not expr:
 		var assertion := Assertion.new()
@@ -42,6 +48,7 @@ func assert_true(expr: bool) -> void:
 		assert_failed.emit(assertion)
 
 
+## Emits 'assert_failed' signal if the given variants are not equal
 func assert_equals(v1: Variant, v2: Variant) -> void:
 	if v1 != v2:
 		var assertion := Assertion.new()
@@ -59,6 +66,7 @@ func _get_caller() -> Dictionary:
 	return stack[2]
 
 
+## Prints the given assertion
 func print_assertion(assertion: Test.Assertion) -> void:
 	if not print_assertions:
 		return
@@ -68,7 +76,7 @@ func print_assertion(assertion: Test.Assertion) -> void:
 		assertion.caller["line"],
 		assertion.reason,
 	])
-	logger.error(msg)
+	#logger.error(msg)
 
 
 func _is_running_standalone() -> bool:

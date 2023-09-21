@@ -36,6 +36,10 @@ func _notification(what: int):
 
 ## Starts the threads for the thread pool
 func start() -> void:
+	# Don't start if run from the editor (during doc generation)
+	if Engine.is_editor_hint():
+		logger.info("Not starting. Ran from editor.")
+		return
 	if is_running():
 		return
 	for i in range(size):

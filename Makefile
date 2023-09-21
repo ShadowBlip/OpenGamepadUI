@@ -174,6 +174,20 @@ debug-qam: ## Run the project in debug mode in gamescope with --only-qam
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn --only-qam -- steam -gamepadui -steamos3 -steampal -steamdeck
 
+.PHONY: docs
+docs: docs/api/classes/.generated ## Generate docs
+docs/api/classes/.generated: $(ALL_GDSCRIPT)
+	rm -rf docs/api/classes
+	$(GODOT) \
+		--editor \
+		--path $(PWD) \
+		--quit \
+		--doctool docs/api/classes \
+		--no-docbase \
+		--gdscript-docs core
+	rm -rf docs/api/classes/core--*
+	$(MAKE) -C docs/api rst
+
 .PHONY: inspect
 inspect: ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn

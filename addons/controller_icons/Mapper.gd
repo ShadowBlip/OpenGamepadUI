@@ -1,7 +1,7 @@
 extends Node
 class_name ControllerMapper
 
-var logger := Log.get_logger("ControllerMapper", Log.LEVEL.INFO)
+#var logger := Log.get_logger("ControllerMapper", Log.LEVEL.INFO)
 
 ## Returns the controller icon path from the given evdev event
 static func get_joypad_path_from_event(event: EvdevEvent) -> String:

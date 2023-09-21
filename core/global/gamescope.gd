@@ -100,6 +100,11 @@ var cursor_visible_feedback: int
 
 # Connects to all gamescope xwayland instances
 func _init() -> void:
+	# Don't initialize if run from the editor (during doc generation)
+	if Engine.is_editor_hint():
+		logger.info("Not initializing. Ran from editor.")
+		return
+	
 	# Connect to the xwayland instance that OGUI is running on
 	var ogui_display := OS.get_environment("DISPLAY")
 	xwayland_ogui = Xlib.new()
