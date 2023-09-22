@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=19 format=3 uid="uid://cyeeptbigdvby"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=22 format=3 uid="uid://cyeeptbigdvby"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_huulp"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_ghbd5"]
@@ -60,9 +60,23 @@ code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_yo3b5"]
 script = ExtResource("3_f8q88")
-name = "AYN "
+name = "Turbo"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_281wj"), SubResource("Resource_gc4ci"), SubResource("Resource_txukw"), SubResource("Resource_pymwp")])
 emits = SubResource("Resource_14g7q")
+
+[sub_resource type="Resource" id="Resource_hsfpc"]
+script = ExtResource("2_ghbd5")
+code = "KEY_DELETE"
+
+[sub_resource type="Resource" id="Resource_617l0"]
+script = ExtResource("2_ghbd5")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_q1xca"]
+script = ExtResource("3_f8q88")
+name = "Home + Turbo"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_hsfpc")])
+emits = SubResource("Resource_617l0")
 
 [sub_resource type="Resource" id="Resource_14far"]
 script = ExtResource("1_huulp")
@@ -71,7 +85,7 @@ name = "AT Translated Set 2 keyboard"
 
 [resource]
 script = ExtResource("4_epau8")
-key_map = Array[ExtResource("3_f8q88")]([SubResource("Resource_gmed6"), SubResource("Resource_2pekw"), SubResource("Resource_yo3b5")])
+key_map = Array[ExtResource("3_f8q88")]([SubResource("Resource_gmed6"), SubResource("Resource_2pekw"), SubResource("Resource_yo3b5"), SubResource("Resource_q1xca")])
 filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_huulp")]([SubResource("Resource_14far")])
 gamepad = SubResource("Resource_gba37")

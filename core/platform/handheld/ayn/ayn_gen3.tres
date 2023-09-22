@@ -1,0 +1,96 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=22 format=3 uid="uid://drlluud7w32ue"]
+
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_xtb0q"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_dn2h5"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_th268"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_t5sys"]
+
+[sub_resource type="Resource" id="Resource_gba37"]
+script = ExtResource("1_xtb0q")
+phys_path = "usb-0000:04:00.4-2/input0"
+name = "Microsoft X-Box 360 pad"
+
+[sub_resource type="Resource" id="Resource_efbap"]
+script = ExtResource("2_dn2h5")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_i5n5w"]
+script = ExtResource("2_dn2h5")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_hddtk"]
+script = ExtResource("3_th268")
+name = "Volume Up"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_efbap")])
+emits = SubResource("Resource_i5n5w")
+
+[sub_resource type="Resource" id="Resource_l8u3c"]
+script = ExtResource("2_dn2h5")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_glh8s"]
+script = ExtResource("2_dn2h5")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_udjn7"]
+script = ExtResource("3_th268")
+name = "Volume Down"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_l8u3c")])
+emits = SubResource("Resource_glh8s")
+
+[sub_resource type="Resource" id="Resource_281wj"]
+script = ExtResource("2_dn2h5")
+code = "KEY_T"
+
+[sub_resource type="Resource" id="Resource_gc4ci"]
+script = ExtResource("2_dn2h5")
+code = "KEY_LEFTCTRL"
+
+[sub_resource type="Resource" id="Resource_txukw"]
+script = ExtResource("2_dn2h5")
+code = "KEY_LEFTSHIFT"
+
+[sub_resource type="Resource" id="Resource_pymwp"]
+script = ExtResource("2_dn2h5")
+code = "KEY_LEFTALT"
+
+[sub_resource type="Resource" id="Resource_6y0ve"]
+script = ExtResource("2_dn2h5")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_y03mt"]
+script = ExtResource("3_th268")
+name = "Turbo"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_281wj"), SubResource("Resource_gc4ci"), SubResource("Resource_txukw"), SubResource("Resource_pymwp")])
+emits = SubResource("Resource_6y0ve")
+
+[sub_resource type="Resource" id="Resource_66ae7"]
+script = ExtResource("2_dn2h5")
+code = "KEY_DELETE"
+
+[sub_resource type="Resource" id="Resource_tkmym"]
+script = ExtResource("2_dn2h5")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_gmi3v"]
+script = ExtResource("3_th268")
+name = "Home + Turbo"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_66ae7")])
+emits = SubResource("Resource_tkmym")
+
+[sub_resource type="Resource" id="Resource_14far"]
+script = ExtResource("1_xtb0q")
+phys_path = "isa0060/serio0/input0"
+name = "AT Translated Set 2 keyboard"
+
+[resource]
+script = ExtResource("4_t5sys")
+key_map = Array[ExtResource("3_th268")]([SubResource("Resource_hddtk"), SubResource("Resource_udjn7"), SubResource("Resource_y03mt"), SubResource("Resource_gmi3v")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
+keypads = Array[ExtResource("1_xtb0q")]([SubResource("Resource_14far")])
+gamepad = SubResource("Resource_gba37")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
