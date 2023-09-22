@@ -20,8 +20,9 @@ enum PLATFORM {
 	AYANEO_GEN5,  ## AIR Plus 6800U
 	AYANEO_GEN6,  ## Includes 2S,GEEK 1S, AIR 1S
 	AYANEO_GEN7,  ## AIR Plus i3 1215U
-	AYN_GEN1,  ## Loki Max
-	AYN_GEN2,  ## Loki Zero
+	AYN_GEN1, ## Loki Max
+	AYN_GEN2, ## Loki Zero
+	AYN_GEN3, ## Loki MiniPro
 	GENERIC,  ## Generic platform doesn't do anything special
 	GPD_GEN1, ## Win3
 	GPD_GEN2, ## WinMax2
@@ -94,6 +95,8 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres")
 	if PLATFORM.AYN_GEN2 in flags:
 		platform = load("res://core/platform/handheld/ayn/ayn_gen2.tres")
+	if PLATFORM.AYN_GEN3 in flags:
+		platform = load("res://core/platform/handheld/ayn/ayn_gen3.tres")
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
@@ -258,6 +261,9 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.contains("Loki Zero") and vendor_name == "ayn":
 		logger.debug("Detected Ayn Gen 2 platform")
 		return PLATFORM.AYN_GEN2
+	elif product_name.contains("Loki MiniPro") and vendor_name == "ayn":
+		logger.debug("Detected Ayn Gen 3 platform")
+		return PLATFORM.AYN_GEN3
 	# GPD
 	elif product_name.contains("G1618-03") and vendor_name == "GPD":
 		logger.debug("Detected GPD Gen 1 platform")
