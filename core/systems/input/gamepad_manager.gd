@@ -277,10 +277,10 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 
 		# See if we've identified the gamepad defined by the device platform.
-		if dev.get_phys() == "":
-			logger.debug("Device appears to be virtual, skipping " + path)
+		if _is_device_virtual(dev):
+			logger.debug("Device appears to be virtual , skipping " + path)
 			continue
-			
+
 		# Hide the device from other processes
 		var hidden_path := await device_hider.hide_event_device(path)
 		if hidden_path == "":
@@ -310,6 +310,35 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 func _get_event_from_phys(phys_path: String)  -> String:
 	var event := phys_path.split("/")[-1] as String
 	return event 
+
+
+## Returns true if the InputDevice is a virtual device.
+func _is_device_virtual(device: InputDevice) -> bool:
+	var event := device.get_path()
+	logger.debug("Checking if " + event + " is a virtual device.")
+
+	if not device.get_phys() == "":
+		logger.debug(event + " is real, it has a physical address: " + device.get_phys())
+		return false
+
+	var sysfs_devices := SysfsDevice.get_all()
+	for sysfs_device in sysfs_devices:
+		for handler in sysfs_device.handlers:
+			logger.debug("Checking sysfs device: " + sysfs_device.sysfs_path + " handler: " + handler)
+
+			if event != "/dev/input/" + handler:
+				logger.debug("Handler " + handler + " not part of path. Skipping.")
+				continue
+
+			if "/devices/virtual" in sysfs_device.sysfs_path:
+				logger.debug("Device appears to be virtual")
+				return true
+
+			logger.debug("Device is not in /devices/virtual. Treating as real.")
+			return false
+
+	logger.debug("Unable to match device to any sysfs device.")
+	return true
 
 
 ## Structure for looking up and maintaining Gamepads objects
