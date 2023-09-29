@@ -1,11 +1,14 @@
 @icon("res://assets/icons/navigation.svg")
 extends Node
 
-var input_manager := load("res://core/global/input_manager.tres") as InputManager
 var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 
-@onready var state_machine: StateMachine = preload("res://assets/state/state_machines/global_state_machine.tres")
+var state_machine: StateMachine = preload("res://assets/state/state_machines/global_state_machine.tres")
+var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
+var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
+var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 
 var process_input_during: Array[State] = []
 
@@ -44,7 +47,7 @@ func _input(event: InputEvent) -> void:
 
 	logger.debug("Incoming event: " + str(event))
 	if event.is_action("ogui_qam"):
-		input_manager._qam_input(event)
+		_qam_input(event)
 		get_viewport().set_input_as_handled()
 		return
 
@@ -63,6 +66,21 @@ func _input(event: InputEvent) -> void:
 	# Pop the state machine stack to go back
 	state_machine.pop_state()
 	get_viewport().set_input_as_handled()
+
+
+## Handle quick access menu events to open the quick access menu
+func _qam_input(event: InputEvent) -> void:
+	# Only act on press events
+	if not event.is_pressed():
+		return
+
+	var state := state_machine.current_state()
+	if state == qam_state:
+		state_machine.pop_state()
+	elif state in [main_menu_state, in_game_menu_state, osk_state]:
+		state_machine.replace_state(qam_state)
+	else:
+		state_machine.push_state(qam_state)
 
 
 func _audio_input(event: InputEvent) -> void:
