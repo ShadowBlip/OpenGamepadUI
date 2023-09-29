@@ -8,7 +8,6 @@ var home_state = preload("res://assets/state/states/home.tres") as State
 
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
-var input_manager := load("res://core/global/input_manager.tres") as InputManager
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var default_gamepad_profile := load("res://assets/gamepad/profiles/default_only_qam.tres") as GamepadProfile
 

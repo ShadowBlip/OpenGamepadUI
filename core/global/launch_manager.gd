@@ -35,7 +35,6 @@ signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
 const SettingsManager := preload("res://core/global/settings_manager.tres")
-const InputManager := preload("res://core/global/input_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
 var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
