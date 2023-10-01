@@ -51,6 +51,10 @@ func _init():
 			intercept = ManagedGamepad.INTERCEPT_MODE.ALL
 		gamepad_manager.set_intercept(intercept)
 	gamepad_manager.gamepads_changed.connect(on_gamepads_changed)
+	
+	# Listen for QAM state changes
+	qam_state.state_entered.connect(_on_qam_state_entered)
+	qam_state.state_exited.connect(_on_qam_state_exited)
 
 
 ## Starts the --only-qam/--qam-only session.
@@ -226,3 +230,15 @@ func _check_exit() -> void:
 		return
 	logger.debug("Steam closed. Shutting down.")
 	get_tree().quit()
+
+
+func _on_qam_state_entered(_from: State) -> void:
+	# Set gamescope input focus to on so the user can interact with the UI
+	if gamescope.set_input_focus(qam_window_id, 1) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+
+func _on_qam_state_exited(_to: State) -> void:
+	# Set gamescope input focus to off so the user can interact with the game
+	if gamescope.set_input_focus(qam_window_id, 0) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
