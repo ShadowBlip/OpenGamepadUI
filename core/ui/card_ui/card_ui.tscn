@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=35 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -28,6 +28,8 @@
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="22_morxu"]
 [ext_resource type="PackedScene" uid="uid://ccwn4n40imfg8" path="res://core/ui/components/containers/overlay_container.tscn" id="23_h8glb"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="27_jq430"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="28_ex7w4"]
 
 [sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
@@ -244,6 +246,22 @@ size_flags_vertical = 0
 visible = false
 layout_mode = 2
 
+[node name="FadeEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("27_jq430")]
+target = NodePath("..")
+fade_speed = 0.2
+on_signal = "opened"
+fade_out_signal = "closed"
+on_signal = "opened"
+
+[node name="SlideEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("28_ex7w4")]
+target = NodePath("../MarginContainer/PanelContainer")
+slide_speed = 0.15
+margin = 60
+direction = "down"
+on_signal = "opened"
+slide_out_signal = "closed"
+on_signal = "opened"
+
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
 z_index = 20
@@ -278,3 +296,5 @@ grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("21_s3peg")
 autoplay = true
+
+[editable path="AlwaysVisibleContent/OnScreenKeyboard"]
