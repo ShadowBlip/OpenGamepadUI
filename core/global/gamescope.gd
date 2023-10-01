@@ -21,6 +21,7 @@ signal display_is_external_updated(from: int, to: int)
 signal focused_window_updated(from: int, to: int)
 signal focusable_windows_updated(from: PackedInt32Array, to: PackedInt32Array)
 signal focused_app_updated(from: int, to: int)
+signal focused_app_gfx_updated(from: int, to: int)
 signal focusable_apps_updated(from: PackedInt32Array, to: PackedInt32Array)
 
 ## Gamescope Blur modes
@@ -76,7 +77,12 @@ var focused_window: int:
 		focused_window = v
 		if prev_value != v:
 			focused_window_updated.emit(prev_value, v)
-var focused_app_gfx: int
+var focused_app_gfx: int:
+	set(v):
+		var prev_value := focused_app_gfx
+		focused_app_gfx = v
+		if prev_value != v:
+			focused_app_gfx_updated.emit(prev_value, v)
 var focused_app: int:
 	set(v):
 		var prev_value := focused_app
@@ -189,6 +195,7 @@ func update() -> void:
 	blur_mode = get_blur_mode()
 	focused_window = get_focused_window()
 	focused_app = get_focused_app()
+	focused_app_gfx = get_focused_app_gfx()
 	focusable_windows = get_focusable_windows()
 	focusable_apps = get_focusable_apps()
 	baselayer_window = get_baselayer_window()
@@ -371,6 +378,18 @@ func get_focused_app(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
 		return -1
 	var root_id := xwayland.get_root_window_id()
 	var results := _get_xprop_array(xwayland, root_id, "GAMESCOPE_FOCUSED_APP")
+	if results.size() == 0:
+		return 0
+	return results[0]
+
+
+## Return the currently focused gfx app id.
+func get_focused_app_gfx(display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(display)
+	if not xwayland:
+		return -1
+	var root_id := xwayland.get_root_window_id()
+	var results := _get_xprop_array(xwayland, root_id, "GAMESCOPE_FOCUSED_APP_GFX")
 	if results.size() == 0:
 		return 0
 	return results[0]
