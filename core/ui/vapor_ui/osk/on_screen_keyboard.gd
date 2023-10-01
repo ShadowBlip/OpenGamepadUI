@@ -5,6 +5,8 @@ class_name OnScreenKeyboard
 
 signal layout_changed
 signal mode_shifted(mode: MODE_SHIFT)
+signal opened
+signal closed
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 const key_scene := preload("res://core/ui/components/button.tscn")
@@ -156,11 +158,14 @@ func open() -> void:
 			key.grab_focus.call_deferred()
 			break
 		break
+	
+	opened.emit()
 
 
 # Closes the OSK
 func close() -> void:
 	visible = false
+	closed.emit()
 
 
 # Sets the given keyboard layout and re-populates the keyboard

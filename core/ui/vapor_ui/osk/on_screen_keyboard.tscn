@@ -7,27 +7,32 @@
 [node name="OnScreenKeyboard" type="Control" groups=["osk"]]
 z_index = 21
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-script = ExtResource("1_3r64j")
-layout = ExtResource("2_0han2")
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-modulate = Color(1, 1, 1, 0.92549)
-layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 1
+script = ExtResource("1_3r64j")
+layout = ExtResource("2_0han2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -300.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+modulate = Color(1, 1, 1, 0.92549)
+layout_mode = 2
 theme = ExtResource("3_crr8i")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -35,6 +40,6 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="KeyboardRowsContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="KeyboardRowsContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
