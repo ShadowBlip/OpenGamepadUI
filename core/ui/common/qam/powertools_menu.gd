@@ -160,25 +160,44 @@ func _update_tdp(tdp_current: float, boost_current: float) -> void:
 func _setup_gpu_freq_range() -> void:
 	_to_visible.append(gpu_freq_enable)
 	gpu_freq_enable.toggled.connect(_on_gpu_freq_enable_button_toggled)
-	gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_slider_changed)
-	gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_slider_changed)
 	performance_manager.gpu_clk_limits_updated.connect(_update_gpu_freq_range)
 	performance_manager.gpu_clk_current_updated.connect(_update_gpu_freq_current)
 	performance_manager.gpu_manual_enabled_updated.connect(_update_gpu_manual_enabled)
 
 
 func _update_gpu_freq_current(current_min: float, current_max: float) -> void:
-	logger.debug("Received update for gpu_clk_limits_updated: " + str(current_min) + "  " + str(current_max))
+	logger.debug("Received update for gpu_clk_current_updated: " + str(current_min) + "  " + str(current_max))
 	gpu_freq_max_slider.value = current_max
 	gpu_freq_min_slider.value = current_min
+	logger.debug("gpu_clk_current_updated done.")
 
 
 func _update_gpu_freq_range(gpu_freq_min: float, gpu_freq_max: float) -> void:
 	logger.debug("Received update for gpu_clk_limits_updated: " + str(gpu_freq_min) + "  " + str(gpu_freq_max))
+	# By default the sliders will set to the new mininum value if thier current value is
+	# less than the new minimim. On first run we dont want to override the max_freq so
+	# we connect the value changed signals after we have modified the min/max values.
+	# This can also happen the first time the slider is enabled.
+	var first_run: bool = false
+	if gpu_freq_max_slider.value == 0:
+		first_run = true
+		if gpu_freq_max_slider.value_changed.is_connected(_on_max_gpu_freq_slider_changed):
+			gpu_freq_max_slider.value_changed.disconnect(_on_max_gpu_freq_slider_changed)
+		if gpu_freq_min_slider.value_changed.is_connected(_on_min_gpu_freq_slider_changed):
+			gpu_freq_min_slider.value_changed.disconnect(_on_min_gpu_freq_slider_changed)
+
 	gpu_freq_max_slider.max_value = gpu_freq_max
 	gpu_freq_max_slider.min_value = gpu_freq_min
 	gpu_freq_min_slider.max_value = gpu_freq_max
 	gpu_freq_min_slider.min_value = gpu_freq_min
+
+	if first_run:
+		logger.debug("Set first run values: "  + str(gpu_freq_min) + "  " + str(gpu_freq_max))
+		gpu_freq_max_slider.value = gpu_freq_max
+		gpu_freq_min_slider.value = gpu_freq_min
+		gpu_freq_max_slider.value_changed.connect(_on_max_gpu_freq_slider_changed)
+		gpu_freq_min_slider.value_changed.connect(_on_min_gpu_freq_slider_changed)
+	logger.debug("gpu_clk_limits_updated done.")
 
 
 func _update_gpu_manual_enabled(state: bool) -> void:

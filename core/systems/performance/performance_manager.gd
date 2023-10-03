@@ -437,7 +437,7 @@ func _change_cpu_cores():
 func _enable_performance_write() -> void:
 	match gpu.vendor:
 		"AMD":
-			await _async_do_exec(POWERTOOLS_PATH, ["pdfpl", "write"])
+			await _async_do_exec(POWERTOOLS_PATH, ["pdfpl", "write", gpu.card.name])
 		"Intel":
 			pass
 
@@ -458,20 +458,23 @@ func _gpu_freq_change() -> void:
 			cmd = "amdGpuClock"
 		"Intel":
 			cmd = "intelGpuClock"
-	await _async_do_exec(POWERTOOLS_PATH, [cmd, str(profile.gpu_freq_min_current), str(profile.gpu_freq_max_current)])
+	await _async_do_exec(POWERTOOLS_PATH, [cmd, str(profile.gpu_freq_min_current), str(profile.gpu_freq_max_current), gpu.card.name])
 	gpu_clk_current_updated.emit(profile.gpu_freq_min_current, profile.gpu_freq_max_current)
 
 
 func _gpu_manual_change() -> void:
 	if gpu.vendor == "AMD":
-		var args := ["pdfpl", "auto"]
+		var args := ["pdfpl", "auto", gpu.card.name]
 		if profile.gpu_manual_enabled:
-			args = ["pdfpl", "manual"]
+			args = ["pdfpl", "manual", gpu.card.name]
 		var output: Array = await _async_do_exec(POWERTOOLS_PATH, args)
 		var exit_code = output[1]
 		if exit_code:
 			logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
 
+		gpu_manual_enabled_updated.emit(profile.gpu_manual_enabled)
+
+	if gpu.vendor == "Intel":
 		gpu_manual_enabled_updated.emit(profile.gpu_manual_enabled)
 
 
@@ -505,10 +508,10 @@ func _intel_tdp_boost_change() -> void:
 	logger.debug("Doing callback func _do_intel_tdp_boost_change")
 	var shortTDP: float = (floor(profile.tdp_boost_current/2) + profile.tdp_current) * 1000000
 	var peakTDP: float = (profile.tdp_boost_current + profile.tdp_current) * 1000000
-	var results := await _async_do_exec(POWERTOOLS_PATH, ["set_rapl", "constraint_1_power_limit_uw", str(shortTDP)])
+	var results := await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_1_power_limit_uw", str(shortTDP)])
 	for result in results:
 		logger.debug("Result: " +str(result))
-	results = await _async_do_exec(POWERTOOLS_PATH, ["set_rapl", "constraint_2_power_limit_uw", str(peakTDP)])
+	results = await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_2_power_limit_uw", str(peakTDP)])
 	for result in results:
 		logger.debug("Result: " +str(result))
 
@@ -562,7 +565,7 @@ func _set_sane_defaults() -> void:
 ## Reads the pp_od_clk_voltage from sysfs and returns the OD_RANGE values. This file will 
 ## be empty if not in "manual" for pp_od_performance_level.
 func _read_amd_gpu_clock_limits() -> void:
-	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
+	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
 	@warning_ignore("unsafe_method_access")
 	var result := (output[0][0] as String).split("\n")
@@ -582,7 +585,7 @@ func _read_amd_gpu_clock_limits() -> void:
 ## Reads the pp_od_clk_voltage from sysfs and returns the OD_SCLK values. This file will 
 ## be empty if not in "manual" for pp_od_performance_level.
 func _read_amd_gpu_clock_current() -> void:
-	var args := ["/sys/class/drm/card0/device/pp_od_clk_voltage"]
+	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
 	@warning_ignore("unsafe_method_access")
 	var result := (output[0][0] as String).split("\n")
@@ -601,7 +604,7 @@ func _read_amd_gpu_clock_current() -> void:
 
 
 func _read_amd_gpu_perf_level() -> void:
-	var performance_level = await  _read_sys("/sys/class/drm/card0/device/power_dpm_force_performance_level")
+	var performance_level = await  _read_sys("/sys/class/drm/" + gpu.card.name + "/device/power_dpm_force_performance_level")
 	if performance_level == "manual":
 		profile.gpu_manual_enabled = true
 	else:
@@ -738,15 +741,14 @@ func _read_gpu_power_profile() -> void:
 
 ## Reads the following sysfs paths to update the current and mix/max gpu frequencies.
 func _read_intel_gpu_clock_limits() -> void:
-	gpu.freq_max = float(await _read_sys("/sys/class/drm/card0/gt_RP0_freq_mhz"))
-	gpu.freq_min = float(await _read_sys("/sys/class/drm/card0/gt_RPn_freq_mhz"))
-	
+	gpu.freq_max = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RP0_freq_mhz"))
+	gpu.freq_min = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RPn_freq_mhz"))
 	logger.debug("Found GPU CLK Limits: " + str(gpu.freq_min) + " - " + str(gpu.freq_max))
 
 
 func _read_intel_gpu_clock_current() -> void:
-	profile.gpu_freq_max_current = float(await _read_sys("/sys/class/drm/card0/gt_max_freq_mhz"))
-	profile.gpu_freq_min_current = float(await _read_sys("/sys/class/drm/card0/gt_min_freq_mhz"))
+	profile.gpu_freq_max_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_max_freq_mhz"))
+	profile.gpu_freq_min_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_min_freq_mhz"))
 	logger.debug("Found GPU CLK Current: " + str(profile.gpu_freq_min_current) + " - " + str(profile.gpu_freq_max_current))
 
 

@@ -41,6 +41,8 @@ enum PLATFORM {
 
 const APUDatabase := preload("res://core/platform/hardware/apu_database.gd")
 const APUEntry := preload("res://core/platform/hardware/apu_entry.gd")
+const pci_ids_path := "/usr/share/hwdata/pci.ids"
+
 var amd_apu_database: APUDatabase
 var intel_apu_database: APUDatabase
 
@@ -53,6 +55,7 @@ var platform: PlatformProvider
 var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
 var cpu: CPUInfo
 var gpu: GPUInfo
+var cards: Array[CardInfo]
 var kernel: String
 var bios: String
 var loaded: bool
@@ -342,14 +345,15 @@ func _detect_os() -> OSInfo:
 	return info
 
 
-# Reads the hardware.
+## Reads the hardware.
 func _get_system_components():
 	cpu = _read_cpu_info()
 	gpu = _read_gpu_info()
 	kernel = _get_kernel_version()
 	bios = _get_bios_version()
 
-# Provides info on the CPU vendor, model, and capabilities.
+
+## Provides info on the CPU vendor, model, and capabilities.
 func _read_cpu_info() -> CPUInfo:
 	var cpu_info := CPUInfo.new()
 	var cpu_raw := _get_lscpu_info()
@@ -374,11 +378,11 @@ func _read_cpu_info() -> CPUInfo:
 			parts.remove_at(0)
 			cpu_info.model = str(" ".join(parts))
 		# TODO: We can get min/max CPU freq here.
-	logger.debug("Found CPU: Vendor: " + cpu_info.vendor + " Model: " + cpu_info.model)
+	logger.debug("Found CPU: Vendor: " + cpu_info.vendor + ", Model: " + cpu_info.model)
 	return cpu_info
 
 
-# Provides info on the GPU vendor, model, and capabilities.
+## Provides info on the GPU vendor, model, and capabilities.
 func _get_lscpu_info() -> Array:
 	var args = ["-c", "lscpu"]
 	var output: Array = _do_exec("bash", args)
@@ -388,72 +392,171 @@ func _get_lscpu_info() -> Array:
 	return  output[0][0].split("\n") as Array
 
 
-# Reads system files and tools to fill out the GPUInfo
+## Reads system files and tools to fill out the GPUInfo
 func _read_gpu_info() -> GPUInfo:
+	var gpu_list: Array[GPUInfo]
 	var gpu_info := GPUInfo.new()
-	var gpu_raw := _get_glxinfo()
 
-	# Get the GPU Vendor, Model, and Driver
-	for param in gpu_raw:
-		var parts := param.split(" ", false) as Array
-		if parts.is_empty():
-			continue
-		if parts[0] == "OpenGL" and parts[1] == "vendor" and parts[2] == "string:":
-			parts.remove_at(2)
-			parts.remove_at(1)
-			parts.remove_at(0)
-			gpu_info.vendor = str(" ".join(parts))
-		if parts[0] == "OpenGL" and parts[1] == "renderer" and parts[2] == "string:":
-			parts.remove_at(2)
-			parts.remove_at(1)
-			parts.remove_at(0)
-			gpu_info.model = str(" ".join(parts))
-		if parts[0] == "OpenGL" and parts[1] == "version" and parts[2] == "string:":
-			parts.remove_at(2)
-			parts.remove_at(1)
-			parts.remove_at(0)
-			gpu_info.driver = str(" ".join(parts))
-	logger.debug("Found GPU: Vendor: " + gpu_info.vendor + "Model: " + gpu_info.model)
+	# Get the info reported by the current rendering driver.
+	# TODO: This is much more simple than glxinfo but we need
+	# to look into vulkaninfo as this can only gather the data
+	# for the currently active GPU. Vulkaninfo can provide data
+	# on all detected GPU devices.
+	match RenderingServer.get_video_adapter_vendor():
+		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
+			gpu_info.vendor = "AMD"
+		"Intel", "GenuineIntel", "Intel Corporation":
+			gpu_info.vendor = "Intel"
+		"Nvidia":
+			gpu_info.vendor = "Trash" # :D
+			logger.info("Nvidia devices are not suppored.")
+			return null
+		_:
+			logger.warn("Device vendor string not recognized: " + RenderingServer.get_video_adapter_vendor())
+			return null
+
+	gpu_info.model = RenderingServer.get_video_adapter_name()
+	gpu_info.driver = RenderingServer.get_video_adapter_api_version()
+
+	# TODO: This is bad and lazy. We need to identify a correct way to link the
+	# PCI Address to the rendering info
+	# Assume the first card is the one we are using.
+	cards = _get_gpu_cards()
+	if cards.size() <= 0:
+		logger.warn("GPU Data could not be derived.")
+		return null
+
+	logger.debug("Assuming " + cards[0].name + " is the correct card!")
+	gpu_info.card = cards[0]
+
+	logger.debug("*** Current GPU: " + gpu_info.model + " ***")
 
 	if not cpu:
 		return gpu_info
 
 	# Get APU data, if it exists
 	var apu_data: APUEntry = null
-	match cpu.vendor:
-		"AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.':
+	match gpu_info.vendor:
+
+		"AMD":
 			apu_data = amd_apu_database.get_apu(cpu.model)
 			if apu_data:
 				gpu_info.tj_temp_capable = true
 				gpu_info.power_profile_capable = true
 				gpu_info.clk_capable = true
-		"GenuineIntel":
-			apu_data = intel_apu_database.get_apu(cpu.model)
-			# TODO: gpu_info.clk_capable = true
-	if not apu_data:
-		logger.info("No APU data for " + cpu.model)
-		return gpu_info
+				gpu_info.tdp_min = apu_data.min_tdp
+				gpu_info.tdp_max = apu_data.max_tdp
+				gpu_info.max_boost = apu_data.max_boost
+				gpu_info.tdp_capable = true
 
-	gpu_info.tdp_min = apu_data.min_tdp
-	gpu_info.tdp_max = apu_data.max_tdp
-	gpu_info.max_boost = apu_data.max_boost
-	gpu_info.tdp_capable = true
-	logger.debug("Found all APU data")
+		"Intel":
+			apu_data = intel_apu_database.get_apu(cpu.model)
+			if apu_data:
+				gpu_info.clk_capable = true
+				gpu_info.tdp_min = apu_data.min_tdp
+				gpu_info.tdp_max = apu_data.max_tdp
+				gpu_info.max_boost = apu_data.max_boost
+				gpu_info.tdp_capable = true
 
 	return gpu_info
 
-# Run glxinfo and return the data from it.
-# TODO: Maybe use vulkaninfo? Need a way to get vendor string in that. It can
-# output to JSON so it might be easier to get more info like driver name and info,
-# device type (dedicated or integrated), etc.
-func _get_glxinfo() -> Array:
-	var args = ["-c", "glxinfo", "-B"]
-	var output: Array = _do_exec("bash", args)
-	var exit_code = output[1]
-	if exit_code:
-		return []
-	return  output[0][0].split("\n") as Array
-	
+
+## Returns an array of CardInfo resources derived from /sys/class/drm
+func _get_gpu_cards() -> Array[CardInfo]:
+	var path_prefix := "/sys/class/drm"
+	var cards: Array[CardInfo] = []
+	var card_dirs := DirAccess.get_directories_at(path_prefix)
+	for card_name in card_dirs:
+
+		if not "card" in card_name:
+			continue
+		if "-" in card_name:
+			continue
+		var card_info := CardInfo.new()
+		var file_prefix := "/".join([path_prefix, card_name, "device"])
+		var vendor_hex := _get_card_property_from_path("/".join([file_prefix, "vendor"]))
+		var device_hex := _get_card_property_from_path("/".join([file_prefix, "device"]))
+		var rev_hex := _get_card_property_from_path("/".join([file_prefix, "revision"]))
+		var sub_vendor_hex := _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
+		var sub_device_hex := _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
+		var gpu_data := _get_device_from_card(vendor_hex, device_hex, sub_vendor_hex, sub_device_hex)
+
+		# Sanitize the vendor strings so they are standard.
+		match gpu_data[0]:
+			"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
+				card_info.vendor = "AMD"
+			"Intel", "GenuineIntel", "Intel Corporation":
+				card_info.vendor = "Intel"
+			"Nvidia":
+				card_info.vendor = "Trash"
+				logger.info("Nvidia devices are not suppored.")
+				continue
+			_:
+				logger.warn("Device vendor string not recognized: " + gpu_data[0])
+				continue
+
+		card_info.device = gpu_data[1]
+		card_info.subdevice = gpu_data[2]
+		card_info.name = card_name
+
+		# TODO: Itentify ports
+		cards.append(card_info)
+
+	return cards
+
+
+## Helper function that simplifies reading hex valued from a given path.
+func _get_card_property_from_path(path: String) -> String:
+	return FileAccess.get_file_as_string(path).lstrip("0x").to_lower().strip_escapes()
+
+
+## Returns a PackedStringArray that includes the Vendor Name, Device Name,
+## and Subdevice Name as defined in /usr/share/hwdata/pci.ids byt matching
+## the hex values derived from /sys/class/drm/cardX/device/<property> from
+## the list <vendor/device/subsystem_vendor/subsystem_device>.
+func _get_device_from_card(vendor_hex: String, device_hex: String, sub_vendor_hex: String, sub_device_hex: String) -> PackedStringArray:
+	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
+	var vendor_name: String
+	var vendor_found: bool = false
+	var device_name: String
+	var device_found: bool = false
+	var subdevice_name: String
+	logger.debug("Getting device info from: " + vendor_hex + " " + device_hex + " " + sub_vendor_hex + " " + sub_device_hex)
+	while not hwids.eof_reached():
+		var line := hwids.get_line()
+		var line_clean := line.strip_escapes()
+
+		if line.begins_with("\t") and not vendor_found:
+			continue
+		if line.begins_with(vendor_hex):
+			vendor_name = line.lstrip(vendor_hex).strip_edges()
+			vendor_found = true
+			continue
+		if vendor_found and not line.begins_with("\t"):
+			if line.begins_with("#"):
+				continue
+			logger.debug("Got to end of vendor list. Device not found")
+			break
+
+		if line.begins_with("\t\t") and not device_found:
+			continue
+
+		if line_clean.begins_with(device_hex):
+			device_name = line_clean.lstrip(device_hex).strip_edges()
+			device_found = true
+
+		if device_found and not line.begins_with("\t\t"):
+			logger.debug("Got to end of device list. Subdevice not found")
+			break
+
+		var prefix := sub_vendor_hex + " " + sub_device_hex
+		if line_clean.begins_with(prefix):
+			subdevice_name = line.lstrip(prefix)
+			break
+
+	return [vendor_name, device_name, subdevice_name]
+
+
 # Run uname and return the data from it.
 func _get_kernel_version() -> String:
 	var output: Array = _do_exec("uname", ["-s", "-r", "-m"]) # Fetches kernel name, version, and machine
@@ -461,7 +564,7 @@ func _get_kernel_version() -> String:
 	if exit_code:
 		return "Unknown"
 	return output[0][0] as String
-	
+
 # Queries /sys/class for BIOS information
 func _get_bios_version() -> String:
 	var output: Array = _do_exec("cat", ["/sys/class/dmi/id/bios_version"])
@@ -469,6 +572,7 @@ func _get_bios_version() -> String:
 	if exit_code:
 		return "Unknown"
 	return output[0][0] as String
+
 
 ## Data container for OS information
 class OSInfo extends Resource:
@@ -493,6 +597,7 @@ class CPUInfo extends Resource:
 ## Data container for GPU information
 class GPUInfo extends Resource:
 	var clk_capable: bool = false
+	var card: CardInfo
 	var driver: String
 	var freq_max: float
 	var freq_min: float
@@ -505,3 +610,12 @@ class GPUInfo extends Resource:
 	var thermal_profile_capable: bool = false
 	var tj_temp_capable: bool = false
 	var vendor: String
+
+
+## Data container for /sys/class/drm/cardX information
+class CardInfo extends Resource:
+	var name: String
+	var vendor: String
+	var device: String
+	var subdevice: String
+	var ports: PackedStringArray

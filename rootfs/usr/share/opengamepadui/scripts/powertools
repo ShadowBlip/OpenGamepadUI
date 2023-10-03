@@ -65,8 +65,7 @@ setThermalPolicy(){
 setRapl(){
   power_type=$1
   val=$2
-  interface=$3
-  /usr/bin/echo $val > /sys/class/powercap/${interface}/${power_type}
+  /usr/bin/echo $val > /sys/class/powercap/intel-rapl/intel-rapl:0/${power_type}
 }
 
 # GPU Frquency Control
@@ -82,9 +81,6 @@ intelGpuClock(){
 if [[ $1 == "cpuBoost" ]]; then
   cpuBoost $2
 
-elif [[ $1 == "cpuPower" ]]; then
-  cpuPower $2 $3 $4
-
 elif [[ $1 == "cpuToggle" ]]; then
   cpuToggle $2 $3
 
@@ -97,7 +93,7 @@ elif [[ $1 == "amdGpuClock" ]]; then
 
 elif [[ $1 == "pdfpl" ]]; then
   if [[ $2 == "write" ]]; then
-    setAmdPerfLevelWrite $2
+    setAmdPerfLevelWrite $3
   else
     setAmdPerfLevelValue $2 $3
   fi
@@ -111,7 +107,7 @@ elif [[ $1 == "ryzenadj" ]]; then
 
 ## Intel iGPU's
 elif [[ $1 == "setRapl" ]]; then
-  setRapl $2 $3 $4
+  setRapl $2 $3
 
 elif [[ $1 == "intelGpuClock" ]]; then
   intelGpuClock $2 $3 $4
