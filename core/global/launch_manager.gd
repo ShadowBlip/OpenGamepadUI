@@ -189,6 +189,8 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	var user_env = SettingsManager.get_value(section, env_key)
 	if user_env and user_env is Dictionary:
 		env = user_env
+	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
+	var use_sandboxing := SettingsManager.get_value(section, sandboxing_key, true) as bool
 	
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
@@ -204,7 +206,9 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 		env_vars.append("{0}={1}".format([key, env[key]]))
 	
 	# If sandboxing is available, launch the game in the sandbox 
-	var sandbox := _sandbox.get_command(app)
+	var sandbox := PackedStringArray()
+	if use_sandboxing:
+		sandbox = _sandbox.get_command(app)
 
 	# Build the launch command to run
 	var exec := "env"

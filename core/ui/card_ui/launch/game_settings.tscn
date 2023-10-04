@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="15_lmmqq"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="18_qwki4"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="19_1erbu"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_launch_settings.tscn" id="19_06mfy"]
+[ext_resource type="PackedScene" uid="uid://d1j0e1fl12fnl" path="res://core/ui/vapor_ui/launch/game_launch_settings.tscn" id="19_06mfy"]
 [ext_resource type="Resource" uid="uid://1dnelmxp0tuq" path="res://assets/state/state_machines/game_settings_state_machine.tres" id="20_cokg3"]
 [ext_resource type="Resource" uid="uid://d3rbp3ws1ejal" path="res://assets/state/states/game_settings_launch.tres" id="21_tdepl"]
 [ext_resource type="PackedScene" uid="uid://dl3lxwakvk7l2" path="res://core/ui/vapor_ui/launch/game_boxart_settings.tscn" id="24_4afdc"]

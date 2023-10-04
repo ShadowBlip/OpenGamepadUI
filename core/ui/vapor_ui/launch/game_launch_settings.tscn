@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://d1j0e1fl12fnl"]
 
 [ext_resource type="Script" path="res://core/ui/vapor_ui/launch/game_launch_settings.gd" id="1_36god"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_14tsa"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_m05uu"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="4_nd0jr"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="5_wwn8p"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="7_5wp75"]
 
 [node name="LaunchSettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -13,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+follow_focus = true
 script = ExtResource("1_36god")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -69,3 +71,14 @@ unique_name_in_owner = true
 layout_mode = 2
 title = "Environment Variables"
 description = "Environment variables to use when launching the game"
+
+[node name="SandboxSettingsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
+layout_mode = 2
+text = "Sandbox Settings"
+
+[node name="UseSandboxToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_5wp75")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Use sandboxing"
+separator_visible = false
+description = "Launch the game in a sandbox"
