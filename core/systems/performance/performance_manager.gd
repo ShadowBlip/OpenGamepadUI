@@ -46,9 +46,7 @@ func _init():
 
 
 func _setup():
-	logger.debug("Setup!")
 	platform_provider = _platform.platform
-
 	batteries = _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
 	if batteries.size() > 1:
 		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
@@ -83,6 +81,8 @@ func read_system_components(power_profile: int = 1) -> void:
 		cpu = _platform.get_cpu_info()
 	if not gpu:
 		gpu = _platform.get_gpu_info()
+	logger.debug("CPU Data: " + str(cpu))
+	logger.debug("GPU Data: " + str(gpu))
 
 	if gpu.tdp_capable:
 		await _read_tdp()

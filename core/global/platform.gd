@@ -59,6 +59,8 @@ var cards: Array[CardInfo]
 var kernel: String
 var bios: String
 var loaded: bool
+var product_name: String
+var vendor_name: String
 
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
@@ -69,12 +71,13 @@ func _init() -> void:
 	_get_system_components()
 
 	var flags := get_platform_flags()
-	
+
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres")
 	if PLATFORM.ALLY_GEN1 in flags:
 		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
+		@warning_ignore("unsafe_property_access")
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
 			gpu.thermal_profile_capable = true
@@ -139,6 +142,7 @@ func _init() -> void:
 ## Loads the detected platforms. This should be called once when OpenGamepadUI
 ## first starts. It takes the root window to give platform providers the
 ## opportinity to modify the scene tree.
+@warning_ignore("shadowed_global_identifier")
 func load(root: Window) -> void:
 	if platform:
 		platform.ready(root)
@@ -150,7 +154,7 @@ func load(root: Window) -> void:
 func get_handheld_gamepad() -> HandheldGamepad:
 	if not platform:
 		return null
-	return await platform.get_handheld_gamepad()
+	return platform.get_handheld_gamepad()
 
 
 ## Returns all detected platform flags
@@ -162,17 +166,20 @@ func get_platform_flags() -> Array[PLATFORM]:
 	return flags
 
 
+
+func _idendify_product() -> void:
+	product_name = _read_sys("/sys/devices/virtual/dmi/id/product_name")
+	vendor_name = _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
+	logger.debug("Device identified as " + vendor_name + " " + product_name)
+
+
 ## Returns the hardware product name
 func get_product_name() -> String:
-	var product_name := _read_sys("/sys/devices/virtual/dmi/id/product_name")
-	logger.debug("Product Name: " + product_name)
 	return product_name
 
 
 ## Returns the hardware vendor name
 func get_vendor_name() -> String:
-	var vendor_name := _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
-	logger.debug("Vendor Name: " + vendor_name)
 	return vendor_name
 
 
@@ -204,7 +211,7 @@ func get_bios_version() -> String:
 ## Used to read values from sysfs
 func _read_sys(path: String) -> String:
 	var output: Array = _do_exec("cat", [path])
-	return output[0][0].strip_escapes()
+	return (output[0][0] as String).strip_escapes()
 
 
 ## returns result of OS.Execute in a reliable data structure
@@ -216,8 +223,7 @@ func _do_exec(command: String, args: Array) -> Array:
 
 # Reads DMI vendor and product name strings and returns an enumerated PLATFORM
 func _read_dmi() -> PLATFORM:
-	var product_name := get_product_name()
-	var vendor_name := get_vendor_name()
+	_idendify_product()
 	# ANBERNIC
 	if product_name == "Win600" and vendor_name == "ANBERNIC":
 		logger.debug("Detected Win600 platform")
@@ -355,8 +361,9 @@ func _get_system_components():
 
 ## Provides info on the CPU vendor, model, and capabilities.
 func _read_cpu_info() -> CPUInfo:
+	logger.debug("Reading GPU Info")
 	var cpu_info := CPUInfo.new()
-	var cpu_raw := _get_lscpu_info()
+	var cpu_raw : PackedStringArray = _get_lscpu_info()
 
 	for param in cpu_raw:
 		var parts := param.split(" ", false) as Array
@@ -378,7 +385,7 @@ func _read_cpu_info() -> CPUInfo:
 			parts.remove_at(0)
 			cpu_info.model = str(" ".join(parts))
 		# TODO: We can get min/max CPU freq here.
-	logger.debug("Found CPU: Vendor: " + cpu_info.vendor + ", Model: " + cpu_info.model)
+	logger.debug("Found CPU: " + str(cpu_info))
 	return cpu_info
 
 
@@ -389,12 +396,12 @@ func _get_lscpu_info() -> Array:
 	var exit_code = output[1]
 	if exit_code:
 		return []
-	return  output[0][0].split("\n") as Array
+	return  (output[0][0] as String).split("\n") as PackedStringArray
 
 
 ## Reads system files and tools to fill out the GPUInfo
 func _read_gpu_info() -> GPUInfo:
-	var gpu_list: Array[GPUInfo]
+	logger.debug("Reading GPU Info")
 	var gpu_info := GPUInfo.new()
 
 	# Get the info reported by the current rendering driver.
@@ -418,53 +425,80 @@ func _read_gpu_info() -> GPUInfo:
 	gpu_info.model = RenderingServer.get_video_adapter_name()
 	gpu_info.driver = RenderingServer.get_video_adapter_api_version()
 
-	# TODO: This is bad and lazy. We need to identify a correct way to link the
-	# PCI Address to the rendering info
-	# Assume the first card is the one we are using.
+	# Identify all installed GPU's
 	cards = _get_gpu_cards()
 	if cards.size() <= 0:
-		logger.warn("GPU Data could not be derived.")
+		logger.error("GPU Data could not be derived.")
 		return null
 
-	logger.debug("Assuming " + cards[0].name + " is the correct card!")
-	gpu_info.card = cards[0]
+	var active_gpu_data = get_active_gpu_device()
 
-	logger.debug("*** Current GPU: " + gpu_info.model + " ***")
+	for card in cards:
+		if card.vendor_id == active_gpu_data[0] and card.device_id == active_gpu_data[1]:
+			gpu_info.card = card
+		elif card.subvendor_id == active_gpu_data[0] and card.subdevice_id == active_gpu_data[1]:
+			gpu_info.card = card
+
+	if not gpu_info.card:
+		logger.debug("Found GPU: " + str(gpu_info))
+		logger.error("Could not identify active GPU.")
+		return gpu_info
+
+	if gpu_info.card.device_type != "PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU":
+		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Active GPU is not an APU. Skipping APU Setup.")
+		return gpu_info
 
 	if not cpu:
+		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Cannot check APU database without CPU information.")
 		return gpu_info
 
 	# Get APU data, if it exists
 	var apu_data: APUEntry = null
-	match gpu_info.vendor:
-
-		"AMD":
+	match cpu.vendor:
+		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
 			apu_data = amd_apu_database.get_apu(cpu.model)
-			if apu_data:
-				gpu_info.tj_temp_capable = true
-				gpu_info.power_profile_capable = true
-				gpu_info.clk_capable = true
-				gpu_info.tdp_min = apu_data.min_tdp
-				gpu_info.tdp_max = apu_data.max_tdp
-				gpu_info.max_boost = apu_data.max_boost
-				gpu_info.tdp_capable = true
+			if not apu_data:
+				logger.debug("Found GPU: " + str(gpu_info))
+				logger.debug("No APU Match for device: " + cpu.model)
+				return gpu_info
+			logger.debug("Found APU Data: " +str(apu_data.model_name))
+			gpu_info.tj_temp_capable = true
+			gpu_info.power_profile_capable = true
+			gpu_info.clk_capable = true
+			gpu_info.tdp_min = apu_data.min_tdp
+			gpu_info.tdp_max = apu_data.max_tdp
+			gpu_info.max_boost = apu_data.max_boost
+			gpu_info.tdp_capable = true
 
-		"Intel":
+		"Intel", "GenuineIntel", "Intel Corporation":
 			apu_data = intel_apu_database.get_apu(cpu.model)
-			if apu_data:
-				gpu_info.clk_capable = true
-				gpu_info.tdp_min = apu_data.min_tdp
-				gpu_info.tdp_max = apu_data.max_tdp
-				gpu_info.max_boost = apu_data.max_boost
-				gpu_info.tdp_capable = true
+			if not apu_data:
+				logger.debug("Found GPU: " + str(gpu_info))
+				logger.debug("No APU Match for device: " + cpu.model)
+				return gpu_info
+			logger.debug("Found APU Data: " +str(apu_data.model_name))
+			gpu_info.clk_capable = true
+			gpu_info.tdp_min = apu_data.min_tdp
+			gpu_info.tdp_max = apu_data.max_tdp
+			gpu_info.max_boost = apu_data.max_boost
+			gpu_info.tdp_capable = true
 
+		_:
+			logger.debug("No match: " + cpu.vendor)
+			logger.debug("Found GPU: " + str(gpu_info))
+			return gpu_info
+
+	logger.debug("APU Data Loaded")
+	logger.debug("Found GPU: " + str(gpu_info))
 	return gpu_info
 
 
 ## Returns an array of CardInfo resources derived from /sys/class/drm
 func _get_gpu_cards() -> Array[CardInfo]:
 	var path_prefix := "/sys/class/drm"
-	var cards: Array[CardInfo] = []
+	var found_cards: Array[CardInfo] = []
 	var card_dirs := DirAccess.get_directories_at(path_prefix)
 	for card_name in card_dirs:
 
@@ -474,12 +508,12 @@ func _get_gpu_cards() -> Array[CardInfo]:
 			continue
 		var card_info := CardInfo.new()
 		var file_prefix := "/".join([path_prefix, card_name, "device"])
-		var vendor_hex := _get_card_property_from_path("/".join([file_prefix, "vendor"]))
-		var device_hex := _get_card_property_from_path("/".join([file_prefix, "device"]))
-		var rev_hex := _get_card_property_from_path("/".join([file_prefix, "revision"]))
-		var sub_vendor_hex := _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
-		var sub_device_hex := _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
-		var gpu_data := _get_device_from_card(vendor_hex, device_hex, sub_vendor_hex, sub_device_hex)
+		card_info.vendor_id = _get_card_property_from_path("/".join([file_prefix, "vendor"]))
+		card_info.device_id = _get_card_property_from_path("/".join([file_prefix, "device"]))
+		card_info.revision_id = _get_card_property_from_path("/".join([file_prefix, "revision"]))
+		card_info.subvendor_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
+		card_info.subdevice_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
+		var gpu_data := get_device_from_card(card_info)
 
 		# Sanitize the vendor strings so they are standard.
 		match gpu_data[0]:
@@ -500,36 +534,44 @@ func _get_gpu_cards() -> Array[CardInfo]:
 		card_info.name = card_name
 
 		# TODO: Itentify ports
-		cards.append(card_info)
+		found_cards.append(card_info)
 
-	return cards
+	var vulkan_info := _get_cards_from_vulkan()
+	for card in found_cards:
+		for info in vulkan_info:
+			if card.vendor_id == info[0] and card.device_id == info[1]:
+				card.device_type = info[2]
+				logger.debug("Assigning type " + card.device_type + " to device " + card.device)
+
+	return found_cards
 
 
-## Helper function that simplifies reading hex valued from a given path.
+## Helper function that simplifies reading id values from a given path.
 func _get_card_property_from_path(path: String) -> String:
 	return FileAccess.get_file_as_string(path).lstrip("0x").to_lower().strip_escapes()
 
 
 ## Returns a PackedStringArray that includes the Vendor Name, Device Name,
 ## and Subdevice Name as defined in /usr/share/hwdata/pci.ids byt matching
-## the hex values derived from /sys/class/drm/cardX/device/<property> from
+## the id values derived from /sys/class/drm/cardX/device/<property> from
 ## the list <vendor/device/subsystem_vendor/subsystem_device>.
-func _get_device_from_card(vendor_hex: String, device_hex: String, sub_vendor_hex: String, sub_device_hex: String) -> PackedStringArray:
+func get_device_from_card(cardinfo: CardInfo) -> PackedStringArray:
 	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
-	var vendor_name: String
+	var card_vendor_name: String
 	var vendor_found: bool = false
-	var device_name: String
+	var card_device_name: String
 	var device_found: bool = false
-	var subdevice_name: String
-	logger.debug("Getting device info from: " + vendor_hex + " " + device_hex + " " + sub_vendor_hex + " " + sub_device_hex)
+	var card_subdevice_name: String
+	logger.debug("Getting device info from: " + cardinfo.vendor_id + " " + cardinfo.device_id + " " + cardinfo.subvendor_id + " " + cardinfo.subdevice_id)
 	while not hwids.eof_reached():
 		var line := hwids.get_line()
 		var line_clean := line.strip_escapes()
 
 		if line.begins_with("\t") and not vendor_found:
 			continue
-		if line.begins_with(vendor_hex):
-			vendor_name = line.lstrip(vendor_hex).strip_edges()
+		if line.begins_with(cardinfo.vendor_id):
+			card_vendor_name = line.lstrip(cardinfo.vendor_id).strip_edges()
+			logger.debug("Found vendor_name: " + card_vendor_name)
 			vendor_found = true
 			continue
 		if vendor_found and not line.begins_with("\t"):
@@ -541,20 +583,95 @@ func _get_device_from_card(vendor_hex: String, device_hex: String, sub_vendor_he
 		if line.begins_with("\t\t") and not device_found:
 			continue
 
-		if line_clean.begins_with(device_hex):
-			device_name = line_clean.lstrip(device_hex).strip_edges()
+		if line_clean.begins_with(cardinfo.device_id):
+			card_device_name = line_clean.lstrip(cardinfo.device_id).strip_edges()
+			logger.debug("Found device_name: " + card_device_name)
 			device_found = true
 
 		if device_found and not line.begins_with("\t\t"):
 			logger.debug("Got to end of device list. Subdevice not found")
 			break
 
-		var prefix := sub_vendor_hex + " " + sub_device_hex
+		var prefix := cardinfo.subvendor_id + " " + cardinfo.subdevice_id
 		if line_clean.begins_with(prefix):
-			subdevice_name = line.lstrip(prefix)
+			card_subdevice_name = line.lstrip(prefix)
+			logger.debug("Found subdevice_name: " + card_subdevice_name)
 			break
 
-	return [vendor_name, device_name, subdevice_name]
+	return [card_vendor_name, card_device_name, card_subdevice_name]
+
+
+func _get_cards_from_vulkan() ->Array[PackedStringArray]:
+	var vulkan_cards: Array[PackedStringArray] = []
+	var args = ["-c", "vulkaninfo", "--summary"]
+	var output: Array = _do_exec("bash", args)
+	var exit_code = output[1]
+	if exit_code:
+		logger.error("Failed to run glxinfo")
+		return []
+	var stdout := (output[0][0] as String).split("\n") as PackedStringArray
+	var i := 0
+	for line in stdout:
+		var vendor_id: String
+		var device_id: String
+		var device_type: String
+		if not "vendorID" in line:
+			i += 1
+			continue
+		var split_line: PackedStringArray = line.split("=")
+		vendor_id = split_line[1].strip_edges().replace("0x", "").to_lower()
+		split_line = stdout[i+1].split("=")
+		device_id = split_line[1].strip_edges().replace("0x", "").to_lower()
+		split_line = stdout[i+2].split("=")
+		device_type = split_line[1].strip_edges()
+		var device_info: PackedStringArray = [vendor_id, device_id, device_type]
+		vulkan_cards.append(device_info)
+		logger.debug("Found vulkan device: " + vendor_id + "|" + device_id + "|" + device_type)
+		i += 1
+	return vulkan_cards
+
+
+## Returns the string of the currently active GPU
+func get_active_gpu_device() -> PackedStringArray:
+	var vendor: String
+	var device: String
+	var args = ["-c", "glxinfo", "-B"]
+	var output: Array = _do_exec("bash", args)
+	var exit_code = output[1]
+
+	if exit_code:
+		logger.error("Failed to run glxinfo")
+		return []
+
+	var stdout := (output[0][0] as String).split("\n") as Array
+	for line in stdout:
+		if not "Device: " in line and not "Vendor: " in line:
+			continue
+
+		# Match on the last part of the string to get the device ID
+		# E.g. Device: AMD Radeon Graphics (renoir, LLVM 16.0.6, DRM 3.54, 6.5.5-arch1-1) (0x1636)
+		var regex := RegEx.new()
+		regex.compile("0[xX][0-9a-fA-F]+\\)$")
+		var result := regex.search(line)
+		if not result:
+			logger.debug("Got no result: " + str(result))
+			continue
+
+		var match_str := result.get_string()
+		if "Device: " in line:
+			device = match_str.replace("0x", "").replace(")", "").to_lower()
+			logger.debug("Found device: " + device)
+		if "Vendor: " in line:
+			vendor = match_str.replace("0x", "").replace(")", "").to_lower()
+			logger.debug("Found vendor: " + vendor)
+		if vendor and device:
+			break
+
+	if not vendor or not device:
+		logger.error("Unable to identify currently active device. ")
+		return []
+
+	return [vendor, device]
 
 
 # Run uname and return the data from it.
@@ -593,6 +710,16 @@ class CPUInfo extends Resource:
 	var model: String
 	var smt_capable: bool = false
 
+	func _to_string() -> String:
+		return "<CPUInfo:" \
+			+ " Vendor: (" + str(vendor) \
+			+ ") Model: (" + str(model) \
+			+ ") Core count: (" + str(core_count) \
+			+ ") Cores Enabled: (" + str(cores_available) \
+			+ ") Boost Capable: (" + str(boost_capable) \
+			+ ") SMT Ccapable: (" + str(smt_capable) \
+			+ ")>"
+
 
 ## Data container for GPU information
 class GPUInfo extends Resource:
@@ -611,11 +738,48 @@ class GPUInfo extends Resource:
 	var tj_temp_capable: bool = false
 	var vendor: String
 
+	func _to_string() -> String:
+		return "GPUInfo:" \
+			+ " Vendor: (" + str(vendor) \
+			+ ") Model: (" + str(model) \
+			+ ") Driver: (" + str(driver) \
+			+ ") TDP Min: (" + str(tdp_min) \
+			+ ") TDP Max: (" + str(tdp_max) \
+			+ ") TDP Max Boost Adjustment: (" + str(max_boost) \
+			+ ") Clock Capable: (" + str(clk_capable) \
+			+ ") Frequency Min: (" + str(freq_min) \
+			+ ") Frequency Min: (" + str(freq_max) \
+			+ ") Power Profile Capable: (" + str(power_profile_capable) \
+			+ ") Thermal Profile Capable: (" + str(thermal_profile_capable) \
+			+ ") Tjunction Temp Setable: (" + str(tj_temp_capable) \
+			+ ") PCI Data: (" + str(card) \
+			+ ")>"
+
 
 ## Data container for /sys/class/drm/cardX information
 class CardInfo extends Resource:
 	var name: String
 	var vendor: String
+	var vendor_id: String
 	var device: String
+	var device_id: String
+	var device_type: String
 	var subdevice: String
+	var subdevice_id: String
+	var subvendor_id: String
+	var revision_id: String
 	var ports: PackedStringArray
+
+	func _to_string() -> String:
+		return "<CardInfo:" \
+			+ " Name: (" + str(name) \
+			+ ") Vendor: (" + str(vendor) \
+			+ ") Vendor ID: (" + str(vendor_id) \
+			+ ") Device: (" + str(device) \
+			+ ") Device ID: (" + str(device_id) \
+			+ ") Device Type: (" + str(device_type) \
+			+ ") Subdevice: (" + str(subdevice) \
+			+ ") Subdevice ID: (" + str(subvendor_id) \
+			+ ") Revision ID: (" + str(revision_id) \
+			+ ") Ports: (" + str(ports) \
+			+ ")>"
