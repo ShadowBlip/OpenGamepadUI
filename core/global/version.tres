@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_g72si")
-core = "0.24.0"
+core = "0.24.1"
 plugin_api = "1.0.0"
