@@ -59,8 +59,8 @@ var cards: Array[CardInfo]
 var kernel: String
 var bios: String
 var loaded: bool
-var _product_name: String
-var _vendor_name: String
+var _product_name: String = ""
+var _vendor_name: String = ""
 
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
@@ -168,7 +168,7 @@ func get_platform_flags() -> Array[PLATFORM]:
 ## Returns the hardware product name
 func get_product_name() -> String:
 	if _product_name == "":
-		_product_name = _read_sys("/sys/devices/virtual/dmi/id/_product_name")
+		_product_name = _read_sys("/sys/devices/virtual/dmi/id/product_name")
 	return _product_name
 
 
