@@ -59,8 +59,8 @@ var cards: Array[CardInfo]
 var kernel: String
 var bios: String
 var loaded: bool
-var product_name: String
-var vendor_name: String
+var _product_name: String
+var _vendor_name: String
 
 func _init() -> void:
 	amd_apu_database = load("res://core/platform/hardware/amd_apu_database.tres")
@@ -120,7 +120,7 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres") as HandheldPlatform
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres") as HandheldPlatform
-	
+
 	if platform:
 		for action in platform.startup_actions:
 			action.execute()
@@ -165,21 +165,18 @@ func get_platform_flags() -> Array[PLATFORM]:
 	return flags
 
 
-
-func _idendify_product() -> void:
-	product_name = _read_sys("/sys/devices/virtual/dmi/id/product_name")
-	vendor_name = _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
-	logger.debug("Device identified as " + vendor_name + " " + product_name)
-
-
 ## Returns the hardware product name
 func get_product_name() -> String:
-	return product_name
+	if _product_name == "":
+		_product_name = _read_sys("/sys/devices/virtual/dmi/id/_product_name")
+	return _product_name
 
 
 ## Returns the hardware vendor name
 func get_vendor_name() -> String:
-	return vendor_name
+	if _vendor_name == "":
+		_vendor_name = _read_sys("/sys/devices/virtual/dmi/id/sys_vendor")
+	return _vendor_name
 
 
 ## Returns the CPUInfo
@@ -187,6 +184,7 @@ func get_cpu_info() -> CPUInfo:
 	return cpu
 
 
+## Returns the CPU Model Name
 func get_cpu_model() -> String:
 	return cpu.model
 
@@ -195,17 +193,25 @@ func get_cpu_model() -> String:
 func get_gpu_info() -> GPUInfo:
 	return gpu
 
+## Returns the GPU Model Name
 func get_gpu_model() -> String:
 	return gpu.model
-	
+
+
+## Returns the GPU Driver
 func get_gpu_driver() -> String:
 	return gpu.driver
-	
+
+
+## Returns the kernel version
 func get_kernel_version() -> String:
 	return kernel
 
+
+# Returns the BIOS Version
 func get_bios_version() -> String:
 	return bios
+
 
 ## Used to read values from sysfs
 func _read_sys(path: String) -> String:
@@ -222,36 +228,39 @@ func _do_exec(command: String, args: Array) -> Array:
 
 # Reads DMI vendor and product name strings and returns an enumerated PLATFORM
 func _read_dmi() -> PLATFORM:
-	_idendify_product()
+	get_product_name()
+	get_vendor_name()
+	logger.debug("Device idendtified as " +_vendor_name + " " + _product_name)
+
 	# ANBERNIC
-	if product_name == "Win600" and vendor_name == "ANBERNIC":
+	if _product_name == "Win600" and _vendor_name == "ANBERNIC":
 		logger.debug("Detected Win600 platform")
 		return PLATFORM.ABERNIC_GEN1
 	# AOKZOE
-	elif product_name in ["AOKZOE A1 AR07", "AOKZOE A1 Pro"] and vendor_name == "AOKZOE":
+	elif _product_name in ["AOKZOE A1 AR07", "AOKZOE A1 Pro"] and _vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE Gen 1 platform")
 		return PLATFORM.AOKZOE_GEN1
 	# ASUS
-	elif product_name == "ROG Ally RC71L_RC71L" and vendor_name == "ASUSTeK COMPUTER INC.":
+	elif _product_name == "ROG Ally RC71L_RC71L" and _vendor_name == "ASUSTeK COMPUTER INC.":
 		logger.debug("Detected ROG Ally Gen 1 platform")
 		return PLATFORM.ALLY_GEN1
 	# AYANEO
-	elif product_name in ["AYANEO 2", "GEEK"] and vendor_name == "AYANEO":
+	elif _product_name in ["AYANEO 2", "GEEK"] and _vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 4 platform")
 		return PLATFORM.AYANEO_GEN4
-	elif product_name in ["AYANEO 2S", "GEEK 1S", "AIR 1S"] and vendor_name == "AYANEO":
+	elif _product_name in ["AYANEO 2S", "GEEK 1S", "AIR 1S"] and _vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 6 platform")
 		return PLATFORM.AYANEO_GEN6
 	elif (
-		(product_name.contains("2021") or product_name.contains("FOUNDER"))
-		and vendor_name.begins_with("AYA")
+		(_product_name.contains("2021") or _product_name.contains("FOUNDER"))
+		and _vendor_name.begins_with("AYA")
 	):
 		logger.debug("Detected AYANEO 2021 platform")
 		return PLATFORM.AYANEO_GEN1
-	elif product_name in ["AIR", "AIR Pro"] and vendor_name == "AYANEO":
+	elif _product_name in ["AIR", "AIR Pro"] and _vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 3 platform")
 		return PLATFORM.AYANEO_GEN3
-	elif product_name.contains("AIR Plus") and vendor_name == "AYANEO":
+	elif _product_name.contains("AIR Plus") and _vendor_name == "AYANEO":
 		match cpu.vendor:
 			"GenuineIntel":
 				logger.debug("Detected AYANEO Gen 7 platform")
@@ -259,37 +268,37 @@ func _read_dmi() -> PLATFORM:
 			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
 				logger.debug("Detected AYANEO Gen 5 platform")
 				return PLATFORM.AYANEO_GEN5
-	elif product_name.contains("NEXT") and vendor_name == "AYANEO":
+	elif _product_name.contains("NEXT") and _vendor_name == "AYANEO":
 		logger.debug("Detected AYANEO Gen 2 platform")
 		return PLATFORM.AYANEO_GEN2
 	# AYN
-	elif product_name.contains("Loki Max") and vendor_name == "ayn":
+	elif _product_name.contains("Loki Max") and _vendor_name == "ayn":
 		logger.debug("Detected Ayn Gen 1 platform")
 		return PLATFORM.AYN_GEN1
-	elif product_name.contains("Loki Zero") and vendor_name == "ayn":
+	elif _product_name.contains("Loki Zero") and _vendor_name == "ayn":
 		logger.debug("Detected Ayn Gen 2 platform")
 		return PLATFORM.AYN_GEN2
-	elif product_name.contains("Loki MiniPro") and vendor_name == "ayn":
+	elif _product_name.contains("Loki MiniPro") and _vendor_name == "ayn":
 		logger.debug("Detected Ayn Gen 3 platform")
 		return PLATFORM.AYN_GEN3
 	# GPD
-	elif product_name.contains("G1618-03") and vendor_name == "GPD":
+	elif _product_name.contains("G1618-03") and _vendor_name == "GPD":
 		logger.debug("Detected GPD Gen 1 platform")
 		return PLATFORM.GPD_GEN1
-	elif product_name.contains("G1619-04") and vendor_name == "GPD":
+	elif _product_name.contains("G1619-04") and _vendor_name == "GPD":
 		logger.debug("Detected GPD Gen 2 platform")
 		return PLATFORM.GPD_GEN2
-	elif product_name.contains("G1618-04") and vendor_name == "GPD":
+	elif _product_name.contains("G1618-04") and _vendor_name == "GPD":
 		logger.debug("Detected GPD Gen 3 platform")
 		return PLATFORM.GPD_GEN3
 	# OneXPlayer
-	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):
+	elif _product_name in ["ONEXPLAYER Mini Pro"] and _vendor_name.contains("ONE-NETBOOK"):
 		logger.debug("Detected OneXPlayer Gen 4 platform")
 		return PLATFORM.ONEXPLAYER_GEN4
-	elif product_name in ["ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
+	elif _product_name in ["ONEXPLAYER mini A07"] and _vendor_name.contains("ONE-NETBOOK"):
 		logger.debug("Detected OneXPlayer Gen 3 platform")
 		return PLATFORM.ONEXPLAYER_GEN3
-	elif product_name in ["ONE XPLAYER", "ONEXPLAYER"] and vendor_name.contains("ONE-NETBOOK"):
+	elif _product_name in ["ONE XPLAYER", "ONEXPLAYER"] and _vendor_name.contains("ONE-NETBOOK"):
 		match cpu.vendor:
 			"GenuineIntel":
 				logger.debug("Detected OneXPlayer Gen 1 platform")
@@ -298,7 +307,7 @@ func _read_dmi() -> PLATFORM:
 				logger.debug("Detected OneXPlayer Gen 2 platform")
 				return PLATFORM.ONEXPLAYER_GEN2
 	# Valve
-	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
+	elif _product_name.begins_with("Jupiter") and _vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
 		return PLATFORM.STEAMDECK
 	logger.debug("Detected generic platform")
@@ -556,10 +565,10 @@ func _get_card_property_from_path(path: String) -> String:
 	return FileAccess.get_file_as_string(path).lstrip("0x").to_lower().strip_escapes()
 
 
-## Returns a PackedStringArray that includes the Vendor Name, Device Name,
-## and Subdevice Name as defined in /usr/share/hwdata/pci.ids byt matching
-## the id values derived from /sys/class/drm/cardX/device/<property> from
-## the list <vendor/device/subsystem_vendor/subsystem_device>.
+## Updates a given CardInfo with the Vendor, Device, and Subdevice Names
+## as defined in /usr/share/hwdata/pci.ids byt matching the id values derived
+## from /sys/class/drm/cardX/device/<property>. The properties used are
+## vendor, device, subsystem_vendor, and subsystem_device.
 func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
 	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
 	var vendor_found: bool = false
@@ -573,7 +582,7 @@ func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
 			continue
 		if line.begins_with(cardinfo.vendor_id):
 			cardinfo.vendor = line.lstrip(cardinfo.vendor_id).strip_edges()
-			logger.debug("Found vendor_name: " + cardinfo.vendor)
+			logger.debug("Found vendor name: " + cardinfo.vendor)
 			vendor_found = true
 			continue
 		if vendor_found and not line.begins_with("\t"):
@@ -587,7 +596,7 @@ func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
 
 		if line_clean.begins_with(cardinfo.device_id):
 			cardinfo.device = line_clean.lstrip(cardinfo.device_id).strip_edges()
-			logger.debug("Found device_name: " + cardinfo.device)
+			logger.debug("Found device name: " + cardinfo.device)
 			device_found = true
 
 		if device_found and not line.begins_with("\t\t"):
@@ -597,12 +606,14 @@ func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
 		var prefix := cardinfo.subvendor_id + " " + cardinfo.subdevice_id
 		if line_clean.begins_with(prefix):
 			cardinfo.subdevice = line.lstrip(prefix)
-			logger.debug("Found subdevice_name: " + cardinfo.subdevice)
+			logger.debug("Found subdevice name: " + cardinfo.subdevice)
 			break
 
 	return cardinfo
 
 
+## Returns a an array of PackedStringArray's that each represent a sing GPU
+## identified in vulkaninfo.
 func _get_cards_from_vulkan() ->Array[PackedStringArray]:
 	var vulkan_cards: Array[PackedStringArray] = []
 	var args = ["--summary"]
@@ -676,7 +687,7 @@ func get_active_gpu_device() -> PackedStringArray:
 	return [vendor, device]
 
 
-# Run uname and return the data from it.
+## Run uname and return the data from it.
 func _get_kernel_version() -> String:
 	var output: Array = _do_exec("uname", ["-s", "-r", "-m"]) # Fetches kernel name, version, and machine
 	var exit_code = output[1]
@@ -684,7 +695,7 @@ func _get_kernel_version() -> String:
 		return "Unknown"
 	return output[0][0] as String
 
-# Queries /sys/class for BIOS information
+## Queries /sys/class for BIOS information
 func _get_bios_version() -> String:
 	var output: Array = _do_exec("cat", ["/sys/class/dmi/id/bios_version"])
 	var exit_code = output[1]
@@ -770,7 +781,7 @@ class CardInfo extends Resource:
 	var subdevice_id: String
 	var subvendor_id: String
 	var revision_id: String
-	var ports: PackedStringArray
+	var ports: PackedStringArray # TODO: Placeholder. Use another data struct resource. 
 
 	func _to_string() -> String:
 		return "<CardInfo:" \
