@@ -74,53 +74,52 @@ func _init() -> void:
 
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
-		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres")
+		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres") as HandheldPlatform
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres")
-		@warning_ignore("unsafe_property_access")
+		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres") as HandheldPlatform
 		if FileAccess.file_exists(platform.thermal_policy_path):
 			logger.debug("Platform able to set thermal policy")
 			gpu.thermal_profile_capable = true
 	if PLATFORM.AOKZOE_GEN1 in flags:
-		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres")
+		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN1 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen1.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen1.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN2 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen2.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen2.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN3 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen3.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen3.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN4 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen4.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN5 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen5.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen5.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN6 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen6.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen6.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN7 in flags:
-		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen7.tres")
+		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen7.tres") as HandheldPlatform
 	if PLATFORM.AYN_GEN1 in flags:
-		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres")
+		platform = load("res://core/platform/handheld/ayn/ayn_gen1.tres") as HandheldPlatform
 	if PLATFORM.AYN_GEN2 in flags:
-		platform = load("res://core/platform/handheld/ayn/ayn_gen2.tres")
+		platform = load("res://core/platform/handheld/ayn/ayn_gen2.tres") as HandheldPlatform
 	if PLATFORM.AYN_GEN3 in flags:
-		platform = load("res://core/platform/handheld/ayn/ayn_gen3.tres")
+		platform = load("res://core/platform/handheld/ayn/ayn_gen3.tres") as HandheldPlatform
 	if PLATFORM.GENERIC in flags:
 		platform = load("res://core/platform/generic.tres")
 	if PLATFORM.GPD_GEN1 in flags:
-		platform = load("res://core/platform/handheld/gpd/gpd_gen1.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen1.tres") as HandheldPlatform
 	if PLATFORM.GPD_GEN2 in flags:
-		platform = load("res://core/platform/handheld/gpd/gpd_gen2.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen2.tres") as HandheldPlatform
 	if PLATFORM.GPD_GEN3 in flags:
-		platform = load("res://core/platform/handheld/gpd/gpd_gen3.tres")
+		platform = load("res://core/platform/handheld/gpd/gpd_gen3.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN1 in flags:
-		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen1.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen1.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN2 in flags:
-		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen2.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen2.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN3 in flags:
-		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen3.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen3.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN4 in flags:
-		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres")
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres") as HandheldPlatform
 	if PLATFORM.STEAMDECK in flags:
-		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres")
+		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres") as HandheldPlatform
 	
 	if platform:
 		for action in platform.startup_actions:
@@ -363,7 +362,7 @@ func _get_system_components():
 func _read_cpu_info() -> CPUInfo:
 	logger.debug("Reading GPU Info")
 	var cpu_info := CPUInfo.new()
-	var cpu_raw : PackedStringArray = _get_lscpu_info()
+	var cpu_raw := _get_lscpu_info()
 
 	for param in cpu_raw:
 		var parts := param.split(" ", false) as Array
@@ -390,7 +389,7 @@ func _read_cpu_info() -> CPUInfo:
 
 
 ## Provides info on the GPU vendor, model, and capabilities.
-func _get_lscpu_info() -> Array:
+func _get_lscpu_info() -> PackedStringArray:
 	var args = ["-c", "lscpu"]
 	var output: Array = _do_exec("bash", args)
 	var exit_code = output[1]
@@ -426,12 +425,16 @@ func _read_gpu_info() -> GPUInfo:
 	gpu_info.driver = RenderingServer.get_video_adapter_api_version()
 
 	# Identify all installed GPU's
-	cards = _get_gpu_cards()
+	cards = get_gpu_cards()
 	if cards.size() <= 0:
 		logger.error("GPU Data could not be derived.")
 		return null
 
-	var active_gpu_data = get_active_gpu_device()
+	var active_gpu_data := get_active_gpu_device()
+	if active_gpu_data.size() == 0:
+		logger.debug("Found GPU: " + str(gpu_info))
+		logger.error("Could not identify active GPU.")
+		return gpu_info
 
 	for card in cards:
 		if card.vendor_id == active_gpu_data[0] and card.device_id == active_gpu_data[1]:
@@ -496,7 +499,7 @@ func _read_gpu_info() -> GPUInfo:
 
 
 ## Returns an array of CardInfo resources derived from /sys/class/drm
-func _get_gpu_cards() -> Array[CardInfo]:
+func get_gpu_cards() -> Array[CardInfo]:
 	var path_prefix := "/sys/class/drm"
 	var found_cards: Array[CardInfo] = []
 	var card_dirs := DirAccess.get_directories_at(path_prefix)
@@ -508,15 +511,17 @@ func _get_gpu_cards() -> Array[CardInfo]:
 			continue
 		var card_info := CardInfo.new()
 		var file_prefix := "/".join([path_prefix, card_name, "device"])
+
+		card_info.name = card_name
 		card_info.vendor_id = _get_card_property_from_path("/".join([file_prefix, "vendor"]))
 		card_info.device_id = _get_card_property_from_path("/".join([file_prefix, "device"]))
 		card_info.revision_id = _get_card_property_from_path("/".join([file_prefix, "revision"]))
 		card_info.subvendor_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
 		card_info.subdevice_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
-		var gpu_data := get_device_from_card(card_info)
+		card_info = expound_device_from_card(card_info)
 
 		# Sanitize the vendor strings so they are standard.
-		match gpu_data[0]:
+		match card_info.vendor:
 			"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
 				card_info.vendor = "AMD"
 			"Intel", "GenuineIntel", "Intel Corporation":
@@ -526,17 +531,17 @@ func _get_gpu_cards() -> Array[CardInfo]:
 				logger.info("Nvidia devices are not suppored.")
 				continue
 			_:
-				logger.warn("Device vendor string not recognized: " + gpu_data[0])
+				logger.warn("Device vendor string not recognized: " + card_info.vendor)
 				continue
-
-		card_info.device = gpu_data[1]
-		card_info.subdevice = gpu_data[2]
-		card_info.name = card_name
 
 		# TODO: Itentify ports
 		found_cards.append(card_info)
 
 	var vulkan_info := _get_cards_from_vulkan()
+	if found_cards.size() == 0 or vulkan_info.size() == 0:
+		logger.error("Unable to identify display adapters")
+		return found_cards
+
 	for card in found_cards:
 		for info in vulkan_info:
 			if card.vendor_id == info[0] and card.device_id == info[1]:
@@ -555,13 +560,10 @@ func _get_card_property_from_path(path: String) -> String:
 ## and Subdevice Name as defined in /usr/share/hwdata/pci.ids byt matching
 ## the id values derived from /sys/class/drm/cardX/device/<property> from
 ## the list <vendor/device/subsystem_vendor/subsystem_device>.
-func get_device_from_card(cardinfo: CardInfo) -> PackedStringArray:
+func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
 	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
-	var card_vendor_name: String
 	var vendor_found: bool = false
-	var card_device_name: String
 	var device_found: bool = false
-	var card_subdevice_name: String
 	logger.debug("Getting device info from: " + cardinfo.vendor_id + " " + cardinfo.device_id + " " + cardinfo.subvendor_id + " " + cardinfo.subdevice_id)
 	while not hwids.eof_reached():
 		var line := hwids.get_line()
@@ -570,8 +572,8 @@ func get_device_from_card(cardinfo: CardInfo) -> PackedStringArray:
 		if line.begins_with("\t") and not vendor_found:
 			continue
 		if line.begins_with(cardinfo.vendor_id):
-			card_vendor_name = line.lstrip(cardinfo.vendor_id).strip_edges()
-			logger.debug("Found vendor_name: " + card_vendor_name)
+			cardinfo.vendor = line.lstrip(cardinfo.vendor_id).strip_edges()
+			logger.debug("Found vendor_name: " + cardinfo.vendor)
 			vendor_found = true
 			continue
 		if vendor_found and not line.begins_with("\t"):
@@ -584,8 +586,8 @@ func get_device_from_card(cardinfo: CardInfo) -> PackedStringArray:
 			continue
 
 		if line_clean.begins_with(cardinfo.device_id):
-			card_device_name = line_clean.lstrip(cardinfo.device_id).strip_edges()
-			logger.debug("Found device_name: " + card_device_name)
+			cardinfo.device = line_clean.lstrip(cardinfo.device_id).strip_edges()
+			logger.debug("Found device_name: " + cardinfo.device)
 			device_found = true
 
 		if device_found and not line.begins_with("\t\t"):
@@ -594,20 +596,20 @@ func get_device_from_card(cardinfo: CardInfo) -> PackedStringArray:
 
 		var prefix := cardinfo.subvendor_id + " " + cardinfo.subdevice_id
 		if line_clean.begins_with(prefix):
-			card_subdevice_name = line.lstrip(prefix)
-			logger.debug("Found subdevice_name: " + card_subdevice_name)
+			cardinfo.subdevice = line.lstrip(prefix)
+			logger.debug("Found subdevice_name: " + cardinfo.subdevice)
 			break
 
-	return [card_vendor_name, card_device_name, card_subdevice_name]
+	return cardinfo
 
 
 func _get_cards_from_vulkan() ->Array[PackedStringArray]:
 	var vulkan_cards: Array[PackedStringArray] = []
-	var args = ["-c", "vulkaninfo", "--summary"]
-	var output: Array = _do_exec("bash", args)
+	var args = ["--summary"]
+	var output: Array = _do_exec("vulkaninfo", args)
 	var exit_code = output[1]
-	if exit_code:
-		logger.error("Failed to run glxinfo")
+	if exit_code != OK:
+		logger.error("Failed to run vulkaninfo")
 		return []
 	var stdout := (output[0][0] as String).split("\n") as PackedStringArray
 	var i := 0
@@ -635,11 +637,11 @@ func _get_cards_from_vulkan() ->Array[PackedStringArray]:
 func get_active_gpu_device() -> PackedStringArray:
 	var vendor: String
 	var device: String
-	var args = ["-c", "glxinfo", "-B"]
-	var output: Array = _do_exec("bash", args)
+	var args = ["-B"]
+	var output: Array = _do_exec("glxinfo", args)
 	var exit_code = output[1]
 
-	if exit_code:
+	if exit_code != OK:
 		logger.error("Failed to run glxinfo")
 		return []
 
