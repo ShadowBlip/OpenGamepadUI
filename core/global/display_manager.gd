@@ -19,6 +19,7 @@ signal brightness_changed
 
 const backlight_path := "/sys/class/backlight"
 const steamos_write_bin := "/usr/bin/steamos-polkit-helpers/steamos-priv-write"
+const drm_path := "/sys/class/drm"
 
 var logger := Log.get_logger("DisplayManager", Log.LEVEL.INFO)
 var backlights := get_backlight_paths()
@@ -134,3 +135,50 @@ func _get_brightness_provider() -> BRIGHTNESS_PROVIDER:
 ## Write a value using steamos polkit helper
 func _steamos_priv_write(path: String, value: int) -> int:
 	return OS.execute(steamos_write_bin, [path, str(value)])
+
+
+# Get the drm adapter path
+func get_drm_device_status_path(card_name: String) -> String:
+	var file_prefix := "/".join([drm_path, card_name, "status"])
+	return file_prefix
+
+
+# Get the drm adapter name
+func get_drm_device_names() -> PackedStringArray:
+	var card_names := PackedStringArray()
+	var card_dirs := DirAccess.get_directories_at(drm_path)
+	for card_name in card_dirs:
+		if not "card" in card_name:
+			continue
+		if not "-" in card_name:
+			continue
+		card_names.append(card_name)
+	return card_names
+
+
+# Get the drm adapter status
+func get_drm_device_status(path: String, card: String) -> bool:
+	var cmd := Command.new("cat", [path])
+	var parts = card.split("-")
+	var adapter = []
+	if parts.size() > 1:
+		adapter = parts[1]
+	if await cmd.execute() != OK:
+		print("Command failed with code", cmd.code)
+	if "disconnected" in cmd.stdout:
+		return false
+	else:
+		return true
+
+
+# Get a list of all the connected displays
+func show_available_adapters() -> PackedStringArray:
+	var adapter_names = get_drm_device_names()
+	var available_adapter_paths := []
+	var connected_devices = []
+	for name in adapter_names:
+			available_adapter_paths.append(await get_drm_device_status_path(name))
+			for adapter in available_adapter_paths:
+				if await get_drm_device_status(adapter, name):
+					connected_devices.append(name)
+	return connected_devices
