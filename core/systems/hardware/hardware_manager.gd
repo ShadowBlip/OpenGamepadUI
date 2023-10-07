@@ -11,9 +11,9 @@ const pci_ids_path := "/usr/share/hwdata/pci.ids"
 var amd_apu_database := load("res://core/platform/hardware/amd_apu_database.tres") as APUDatabase
 var intel_apu_database := load("res://core/platform/hardware/intel_apu_database.tres") as APUDatabase
 var logger := Log.get_logger("HardwareManager", Log.LEVEL.INFO)
+var cards := get_gpu_cards()
 var cpu := get_cpu_info()
 var gpu := get_gpu_info()
-var cards := get_gpu_cards()
 var bios := get_bios_version()
 var kernel := get_kernel_version()
 var product_name := get_product_name()
@@ -97,8 +97,7 @@ func get_gpu_info() -> GPUInfo:
 	gpu_info.driver = RenderingServer.get_video_adapter_api_version()
 
 	# Identify all installed GPU's
-	var gpu_cards := get_gpu_cards()
-	if gpu_cards.size() <= 0:
+	if cards.size() <= 0:
 		logger.error("GPU Data could not be derived.")
 		return null
 
@@ -108,7 +107,7 @@ func get_gpu_info() -> GPUInfo:
 		logger.error("Could not identify active GPU.")
 		return gpu_info
 
-	for card in gpu_cards:
+	for card in cards:
 		if card.vendor_id == active_gpu_data[0] and card.device_id == active_gpu_data[1]:
 			gpu_info.card = card
 		elif card.subvendor_id == active_gpu_data[0] and card.subdevice_id == active_gpu_data[1]:
@@ -180,42 +179,106 @@ func get_kernel_version() -> String:
 	return output[0][0] as String
 
 
-## Returns an array of CardInfo resources derived from /sys/class/drm
-func get_gpu_cards() -> Array[CardInfo]:
-	var path_prefix := "/sys/class/drm"
-	var found_cards: Array[CardInfo] = []
-	var card_dirs := DirAccess.get_directories_at(path_prefix)
-	for card_name in card_dirs:
+## Returns GPU card info for the given card directory in /sys/class/drm
+## (e.g. get_gpu_card("card1"))
+func get_gpu_card(card_dir: String) -> DRMCardInfo:
+	var file_prefix := "/".join(["/sys/class/drm", card_dir, "device"])
+	var vendor_id := _get_card_property_from_path("/".join([file_prefix, "vendor"]))
+	var device_id := _get_card_property_from_path("/".join([file_prefix, "device"]))
+	var revision_id := _get_card_property_from_path("/".join([file_prefix, "revision"]))
+	var subvendor_id := _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
+	var subdevice_id := _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
 
+	# Try to load the card info if it already exists
+	var res_path := "/".join(["drmcardinfo://", vendor_id, device_id, subvendor_id, subdevice_id])
+	if ResourceLoader.exists(res_path):
+		var card_info := load(res_path) as DRMCardInfo
+		if card_info.name != card_dir:
+			card_info.name = card_dir
+		return card_info
+
+	# Create a new card instance and take over the caching path
+	var card_info := DRMCardInfo.new()
+	card_info.take_over_path(res_path)
+	card_info.name = card_dir
+	card_info.vendor_id = vendor_id
+	card_info.device_id = device_id
+	card_info.revision_id = revision_id
+	card_info.subvendor_id = subvendor_id
+	card_info.subdevice_id = subdevice_id
+	
+	# Lookup the card details
+	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
+	var vendor_found: bool = false
+	var device_found: bool = false
+	logger.debug("Getting device info from: " + vendor_id + " " + device_id + " " + subvendor_id + " " + subdevice_id)
+	while not hwids.eof_reached():
+		var line := hwids.get_line()
+		var line_clean := line.strip_escapes()
+
+		if line.begins_with("\t") and not vendor_found:
+			continue
+		if line.begins_with(vendor_id):
+			card_info.vendor = line.lstrip(vendor_id).strip_edges()
+			logger.debug("Found vendor name: " + card_info.vendor)
+			vendor_found = true
+			continue
+		if vendor_found and not line.begins_with("\t"):
+			if line.begins_with("#"):
+				continue
+			logger.debug("Got to end of vendor list. Device not found")
+			break
+
+		if line.begins_with("\t\t") and not device_found:
+			continue
+
+		if line_clean.begins_with(device_id):
+			card_info.device = line_clean.lstrip(device_id).strip_edges()
+			logger.debug("Found device name: " + card_info.device)
+			device_found = true
+
+		if device_found and not line.begins_with("\t\t"):
+			logger.debug("Got to end of device list. Subdevice not found")
+			break
+
+		var prefix := subvendor_id + " " + subdevice_id
+		if line_clean.begins_with(prefix):
+			card_info.subdevice = line.lstrip(prefix)
+			logger.debug("Found subdevice name: " + card_info.subdevice)
+			break
+
+	# Sanitize the vendor strings so they are standard.
+	match card_info.vendor:
+		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
+			card_info.vendor = "AMD"
+		"Intel", "GenuineIntel", "Intel Corporation":
+			card_info.vendor = "Intel"
+		"Nvidia":
+			card_info.vendor = "Trash"
+			logger.warn("Nvidia devices are not suppored.")
+			# TODO: Handle this case
+			return null
+		_:
+			logger.warn("Device vendor string not recognized: " + card_info.vendor)
+			# TODO: Handle this case
+			return null
+
+	return card_info
+
+
+## Returns an array of CardInfo resources derived from /sys/class/drm
+func get_gpu_cards() -> Array[DRMCardInfo]:
+	var path_prefix := "/sys/class/drm"
+	var found_cards: Array[DRMCardInfo] = []
+	var card_dirs := DirAccess.get_directories_at(path_prefix)
+
+	for card_name in card_dirs:
 		if not "card" in card_name:
 			continue
 		if "-" in card_name:
 			continue
-		var card_info := CardInfo.new()
-		var file_prefix := "/".join([path_prefix, card_name, "device"])
-
-		card_info.name = card_name
-		card_info.vendor_id = _get_card_property_from_path("/".join([file_prefix, "vendor"]))
-		card_info.device_id = _get_card_property_from_path("/".join([file_prefix, "device"]))
-		card_info.revision_id = _get_card_property_from_path("/".join([file_prefix, "revision"]))
-		card_info.subvendor_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
-		card_info.subdevice_id = _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
-		card_info = expound_device_from_card(card_info)
-
-		# Sanitize the vendor strings so they are standard.
-		match card_info.vendor:
-			"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
-				card_info.vendor = "AMD"
-			"Intel", "GenuineIntel", "Intel Corporation":
-				card_info.vendor = "Intel"
-			"Nvidia":
-				card_info.vendor = "Trash"
-				logger.info("Nvidia devices are not suppored.")
-				continue
-			_:
-				logger.warn("Device vendor string not recognized: " + card_info.vendor)
-				continue
-
+		var card_info := get_gpu_card(card_name)
+		
 		# TODO: Itentify ports
 		found_cards.append(card_info)
 
@@ -231,53 +294,6 @@ func get_gpu_cards() -> Array[CardInfo]:
 				logger.debug("Assigning type " + card.device_type + " to device " + card.device)
 
 	return found_cards
-
-
-## Updates a given CardInfo with the Vendor, Device, and Subdevice Names
-## as defined in /usr/share/hwdata/pci.ids byt matching the id values derived
-## from /sys/class/drm/cardX/device/<property>. The properties used are
-## vendor, device, subsystem_vendor, and subsystem_device.
-func expound_device_from_card(cardinfo: CardInfo) -> CardInfo:
-	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
-	var vendor_found: bool = false
-	var device_found: bool = false
-	logger.debug("Getting device info from: " + cardinfo.vendor_id + " " + cardinfo.device_id + " " + cardinfo.subvendor_id + " " + cardinfo.subdevice_id)
-	while not hwids.eof_reached():
-		var line := hwids.get_line()
-		var line_clean := line.strip_escapes()
-
-		if line.begins_with("\t") and not vendor_found:
-			continue
-		if line.begins_with(cardinfo.vendor_id):
-			cardinfo.vendor = line.lstrip(cardinfo.vendor_id).strip_edges()
-			logger.debug("Found vendor name: " + cardinfo.vendor)
-			vendor_found = true
-			continue
-		if vendor_found and not line.begins_with("\t"):
-			if line.begins_with("#"):
-				continue
-			logger.debug("Got to end of vendor list. Device not found")
-			break
-
-		if line.begins_with("\t\t") and not device_found:
-			continue
-
-		if line_clean.begins_with(cardinfo.device_id):
-			cardinfo.device = line_clean.lstrip(cardinfo.device_id).strip_edges()
-			logger.debug("Found device name: " + cardinfo.device)
-			device_found = true
-
-		if device_found and not line.begins_with("\t\t"):
-			logger.debug("Got to end of device list. Subdevice not found")
-			break
-
-		var prefix := cardinfo.subvendor_id + " " + cardinfo.subdevice_id
-		if line_clean.begins_with(prefix):
-			cardinfo.subdevice = line.lstrip(prefix)
-			logger.debug("Found subdevice name: " + cardinfo.subdevice)
-			break
-
-	return cardinfo
 
 
 ## Returns the string of the currently active GPU
@@ -405,7 +421,7 @@ class CPUInfo extends Resource:
 ## Data container for GPU information
 class GPUInfo extends Resource:
 	var clk_capable: bool = false
-	var card: CardInfo
+	var card: DRMCardInfo
 	var driver: String
 	var freq_max: float
 	var freq_min: float
@@ -432,33 +448,4 @@ class GPUInfo extends Resource:
 			+ ") Power Profile Capable: (" + str(power_profile_capable) \
 			+ ") Tjunction Temp Setable: (" + str(tj_temp_capable) \
 			+ ") PCI Data: (" + str(card) \
-			+ ")>"
-
-
-## Data container for /sys/class/drm/cardX information
-class CardInfo extends Resource:
-	var name: String
-	var vendor: String
-	var vendor_id: String
-	var device: String
-	var device_id: String
-	var device_type: String
-	var subdevice: String
-	var subdevice_id: String
-	var subvendor_id: String
-	var revision_id: String
-	var ports: PackedStringArray # TODO: Placeholder. Use another data struct resource. 
-
-	func _to_string() -> String:
-		return "<CardInfo:" \
-			+ " Name: (" + str(name) \
-			+ ") Vendor: (" + str(vendor) \
-			+ ") Vendor ID: (" + str(vendor_id) \
-			+ ") Device: (" + str(device) \
-			+ ") Device ID: (" + str(device_id) \
-			+ ") Device Type: (" + str(device_type) \
-			+ ") Subdevice: (" + str(subdevice) \
-			+ ") Subdevice ID: (" + str(subvendor_id) \
-			+ ") Revision ID: (" + str(revision_id) \
-			+ ") Ports: (" + str(ports) \
 			+ ")>"
