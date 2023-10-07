@@ -1,7 +1,5 @@
 extends Resource
-
 class_name APUEntry
-
 
 @export var model_name: String
 @export var min_tdp: float

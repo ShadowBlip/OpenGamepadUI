@@ -20,16 +20,14 @@ const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
 const FALLBACK_GPU_TEMP: float = 80
 var _notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var _platform := load("res://core/global/platform.tres") as Platform
+var _hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
 var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var _shared_thread := load("res://core/systems/threading/utility_thread.tres") as SharedThread
 
 var ryzenadj := RyzenAdj.new()
 var batteries: Array[PowerManager.Device]
-var cpu: Platform.CPUInfo
-var gpu: Platform.GPUInfo
 var library_item: LibraryLaunchItem
-var platform_provider: PlatformProvider
 var profile: PerformanceProfile
 var profile_state: String # docked or undocked
 var initialized: bool = false
@@ -46,7 +44,6 @@ func _init():
 
 
 func _setup():
-	platform_provider = _platform.platform
 	batteries = _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
 	if batteries.size() > 1:
 		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
@@ -77,10 +74,8 @@ func _update_profile_state(item: PowerManager.Device) -> void:
 ## and current settings. 
 func read_system_components(power_profile: int = 1) -> void:
 	logger.debug("Update system components started")
-	if not cpu:
-		cpu = _platform.get_cpu_info()
-	if not gpu:
-		gpu = _platform.get_gpu_info()
+	var cpu := _hardware_manager.cpu
+	var gpu := _hardware_manager.gpu
 	logger.debug("CPU Data: " + str(cpu))
 	logger.debug("GPU Data: " + str(gpu))
 
@@ -102,7 +97,7 @@ func read_system_components(power_profile: int = 1) -> void:
 	if cpu.boost_capable:
 		await _read_cpu_boost_enabled()
 
-	if gpu.thermal_profile_capable:
+	if _platform.platform is HandheldPlatform:
 		await _read_thermal_profile()
 
 	# There's currently no known way to detect the set profile. Default to
@@ -118,7 +113,7 @@ func read_system_components(power_profile: int = 1) -> void:
 ### Manage PerformanceProfile funcs
 
 func _get_profile_name() -> String:
-	var prefix: String = _platform.get_product_name().replace(" ", "_") + "_" + profile_state
+	var prefix: String = _hardware_manager.get_product_name().replace(" ", "_") + "_" + profile_state
 	var postfix: String = "_default_profile.tres"
 	if library_item:
 		postfix = "_" + library_item.name.sha256_text() + ".tres"
@@ -196,6 +191,8 @@ func load_profile(profile_path: String = "") -> void:
 
 
 func emit_profile_signals() -> void:
+	var cpu := _hardware_manager.cpu
+	var gpu := _hardware_manager.gpu
 	cpu_boost_toggled.emit(profile.cpu_boost_enabled)
 	cpu_cores_available_updated.emit(cpu.cores_available)
 	cpu_cores_used.emit(profile.cpu_core_count_current)
@@ -210,6 +207,8 @@ func emit_profile_signals() -> void:
 
 
 func _apply_profile() -> void:
+	var cpu := _hardware_manager.cpu
+	var gpu := _hardware_manager.gpu
 	if cpu.boost_capable:
 		logger.debug("Set CPU Boost from profile: " + str(profile.cpu_boost_enabled))
 		await _apply_cpu_boost_state()
@@ -235,7 +234,7 @@ func _apply_profile() -> void:
 	if gpu.tdp_capable:
 		logger.debug("Set tdp from profile: " + str(profile.tdp_current) + " boost:" + str(profile.tdp_boost_current))
 		await _tdp_value_change()
-	if gpu.thermal_profile_capable:
+	if _platform.platform is HandheldPlatform:
 		logger.debug("Set thermal mode from profile: " +str(profile.thermal_profile))
 		await _apply_thermal_profile()
 	logger.info("Applied Performance Profile: " + profile_state + " " + profile.name)
@@ -303,6 +302,7 @@ func set_gpu_freq_min(value: float) -> void:
 
 ## Called to toggle auto/manual gpu clocking
 func set_gpu_manual_enabled(state: bool) -> void:
+	var gpu := _hardware_manager.gpu
 	if profile.gpu_manual_enabled == state:
 		return
 	profile.gpu_manual_enabled = state
@@ -370,8 +370,12 @@ func _apply_cpu_boost_state() -> void:
 
 
 func _apply_thermal_profile() -> void:
-	if not platform_provider is HandheldPlatform:
-		logger.warn("Attempt to apply thermoal profile on platform that is not HandheldPlatform.")
+	if not _platform.platform is HandheldPlatform:
+		logger.warn("Attempt to apply thermal profile on platform that is not HandheldPlatform.")
+		return
+	var platform_provider := _platform.platform as HandheldPlatform
+	if not FileAccess.file_exists(platform_provider.thermal_policy_path):
+		logger.warn("Thermal policy path does not exist.")
 		return
 	match profile.thermal_profile:
 			"0":
@@ -381,7 +385,7 @@ func _apply_thermal_profile() -> void:
 			"2":
 				logger.debug("Setting thermal throttle policy to Silent")
 	var args := ["setThermalPolicy", str(profile.thermal_profile)]
-	await _async_do_exec((platform_provider as HandheldPlatform).thermal_policy_path, args)
+	await _async_do_exec(platform_provider.thermal_policy_path, args)
 	thermal_profile_updated.emit(profile.thermal_profile)
 
 
@@ -419,6 +423,7 @@ func _amd_tdp_boost_change() -> void:
 
 # Called to disable/enable cores by count as specified by value. 
 func _change_cpu_cores():
+	var cpu := _hardware_manager.cpu
 	logger.debug("Enable cpu_cores: " +str(profile.cpu_core_count_current) + "/" + str(cpu.core_count))
 	var args := []
 	for cpu_no in range(1, cpu.core_count):
@@ -435,6 +440,7 @@ func _change_cpu_cores():
 
 ## Called to set write permissions to power_dpm_force_performace_level
 func _enable_performance_write() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _async_do_exec(POWERTOOLS_PATH, ["pdfpl", "write", gpu.card.name])
@@ -444,6 +450,7 @@ func _enable_performance_write() -> void:
 
 ## Ensures the current boost doesn't exceed the max boost.
 func _ensure_tdp_boost_limited()  -> void:
+	var gpu := _hardware_manager.gpu
 	if profile.tdp_boost_current > gpu.max_boost:
 		profile.tdp_boost_current = gpu.max_boost
 	if profile.tdp_boost_current < 0:
@@ -452,6 +459,7 @@ func _ensure_tdp_boost_limited()  -> void:
 
 ## Set the GPU min/max freq.
 func _gpu_freq_change() -> void:
+	var gpu := _hardware_manager.gpu
 	var cmd := ""
 	match gpu.vendor:
 		"AMD":
@@ -463,6 +471,7 @@ func _gpu_freq_change() -> void:
 
 
 func _gpu_manual_change() -> void:
+	var gpu := _hardware_manager.gpu
 	if gpu.vendor == "AMD":
 		var args := ["pdfpl", "auto", gpu.card.name]
 		if profile.gpu_manual_enabled:
@@ -481,6 +490,7 @@ func _gpu_manual_change() -> void:
 # TODO: Support more than AMD APU's
 ## Sets the ryzenadj power profile
 func _gpu_power_profile_change() -> void:
+	var gpu := _hardware_manager.gpu
 	var power_profile := ryzenadj.POWER_PROFILE.MAX_PERFORMANCE
 	if profile.gpu_power_profile == 1:
 		power_profile = ryzenadj.POWER_PROFILE.POWER_SAVINGS
@@ -495,6 +505,7 @@ func _gpu_power_profile_change() -> void:
 # TODO: Support more than AMD APU's
 ## Sets the T-junction temp.
 func _gpu_temp_limit_change() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await ryzenadj.set_tctl_temp(profile.gpu_temp_current)
@@ -526,6 +537,7 @@ func _intel_tdp_change() -> void:
 
 ## Called to set the base average TDP
 func _tdp_boost_value_change(emit_change: bool = true) -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _amd_tdp_boost_change()
@@ -538,6 +550,7 @@ func _tdp_boost_value_change(emit_change: bool = true) -> void:
 
 ## Called to set the base average TDP
 func _tdp_value_change() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _amd_tdp_change()
@@ -550,6 +563,7 @@ func _tdp_value_change() -> void:
 # Sets the current TDP to the midpoint of the detected hardware. Used when we're not able to
 # Determine the current settings.
 func _set_sane_defaults() -> void:
+	var gpu := _hardware_manager.gpu
 	if not profile.tdp_current:
 		profile.tdp_current = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
 	if not profile.tdp_boost_current:
@@ -565,6 +579,7 @@ func _set_sane_defaults() -> void:
 ## Reads the pp_od_clk_voltage from sysfs and returns the OD_RANGE values. This file will 
 ## be empty if not in "manual" for pp_od_performance_level.
 func _read_amd_gpu_clock_limits() -> void:
+	var gpu := _hardware_manager.gpu
 	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
 	@warning_ignore("unsafe_method_access")
@@ -585,6 +600,7 @@ func _read_amd_gpu_clock_limits() -> void:
 ## Reads the pp_od_clk_voltage from sysfs and returns the OD_SCLK values. This file will 
 ## be empty if not in "manual" for pp_od_performance_level.
 func _read_amd_gpu_clock_current() -> void:
+	var gpu := _hardware_manager.gpu
 	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
 	var output: Array = await _async_do_exec("cat", args)
 	@warning_ignore("unsafe_method_access")
@@ -604,6 +620,7 @@ func _read_amd_gpu_clock_current() -> void:
 
 
 func _read_amd_gpu_perf_level() -> void:
+	var gpu := _hardware_manager.gpu
 	var performance_level = await  _read_sys("/sys/class/drm/" + gpu.card.name + "/device/power_dpm_force_performance_level")
 	if performance_level == "manual":
 		profile.gpu_manual_enabled = true
@@ -618,6 +635,7 @@ func _read_amd_gpu_power_profile() -> void:
 
 ## Retrieves the current TDP from ryzenadj for AMD APU's.
 func _read_amd_tdp() -> void:
+	var gpu := _hardware_manager.gpu
 	var set_sane_defaults := false
 
 	# Fetch the current info from ryzenadj
@@ -672,6 +690,7 @@ func _read_cpu_boost_enabled() -> void:
 
 ## Loops through all cores and returns the count of enabled cores.
 func _read_cpus_enabled() -> void:
+	var cpu := _hardware_manager.cpu
 	var active_cpus := 1
 	for i in range(1, cpu.core_count):
 		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
@@ -686,6 +705,7 @@ func _read_cpus_enabled() -> void:
 
 ## Updates the total number of cores
 func _read_cpu_count() -> void:
+	var cpu := _hardware_manager.cpu
 	var args = ["-c", "ls /sys/bus/cpu/devices/ | wc -l"]
 	var output: Array = await _async_do_exec("bash", args)
 	var exit_code = output[1]
@@ -703,6 +723,7 @@ func _read_cpu_count() -> void:
 
 ## Reads the current and absolute min/max gpu clocks.
 func _read_gpu_clk_limits() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _read_amd_gpu_clock_limits()
@@ -712,6 +733,7 @@ func _read_gpu_clk_limits() -> void:
 
 
 func _read_gpu_clk_current() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _read_amd_gpu_clock_current()
@@ -722,6 +744,7 @@ func _read_gpu_clk_current() -> void:
 
 ## Called to read the current performance level and set the UI as needed.
 func _read_gpu_perf_level() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _read_amd_gpu_perf_level()
@@ -731,6 +754,7 @@ func _read_gpu_perf_level() -> void:
 
 
 func _read_gpu_power_profile() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			_read_amd_gpu_power_profile()
@@ -741,12 +765,14 @@ func _read_gpu_power_profile() -> void:
 
 ## Reads the following sysfs paths to update the current and mix/max gpu frequencies.
 func _read_intel_gpu_clock_limits() -> void:
+	var gpu := _hardware_manager.gpu
 	gpu.freq_max = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RP0_freq_mhz"))
 	gpu.freq_min = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RPn_freq_mhz"))
 	logger.debug("Found GPU CLK Limits: " + str(gpu.freq_min) + " - " + str(gpu.freq_max))
 
 
 func _read_intel_gpu_clock_current() -> void:
+	var gpu := _hardware_manager.gpu
 	profile.gpu_freq_max_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_max_freq_mhz"))
 	profile.gpu_freq_min_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_min_freq_mhz"))
 	logger.debug("Found GPU CLK Current: " + str(profile.gpu_freq_min_current) + " - " + str(profile.gpu_freq_max_current))
@@ -782,6 +808,7 @@ func _read_smt_enabled() -> void:
 
 ## Retrieves the current TDP.
 func _read_tdp() -> void:
+	var gpu := _hardware_manager.gpu
 	match gpu.vendor:
 		"AMD":
 			await _read_amd_tdp()
@@ -792,14 +819,15 @@ func _read_tdp() -> void:
 
 ## Retrieves the current thermal mode.
 func _read_thermal_profile() -> void:
-	if not platform_provider is HandheldPlatform:
+	if not _platform.platform is HandheldPlatform:
 		logger.warn("Attempted to call thermal profile property on a platform that is not a HandheldPlatform.")
 		return
-	if not _platform.gpu.thermal_profile_capable:
+	var platform_provider := _platform.platform as HandheldPlatform
+	if not FileAccess.file_exists(platform_provider.thermal_policy_path):
 		logger.warn("Attempted to call thermal profile property on a Platform that is not thermal profile capable.")
 		return
 
-	profile.thermal_profile = int(await _read_sys((platform_provider as HandheldPlatform).thermal_policy_path))
+	profile.thermal_profile = int(await _read_sys(platform_provider.thermal_policy_path))
 	match profile.thermal_profile:
 		0:
 			logger.debug("Thermal throttle policy currently at Balanced")

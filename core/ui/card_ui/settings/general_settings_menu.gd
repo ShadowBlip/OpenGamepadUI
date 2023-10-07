@@ -7,7 +7,8 @@ const theme_setter_scene := preload("res://core/systems/user_interface/theme_set
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var Version := load("res://core/global/version.tres") as Version
-var Platform := load("res://core/global/platform.tres") as Platform
+var platform := load("res://core/global/platform.tres") as Platform
+var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
 var update_available := false
 var update_installed := false
 var logger := Log.get_logger("GeneralSettings")
@@ -23,28 +24,30 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var platform_image := $%PlatformImage
 @onready var platform_name := $%PlatformNameLabel
 @onready var client_version_text := $%ClientVersionText
-@onready var os_text := $%OSText
-@onready var product_text := $%ProductText
-@onready var vendor_text := $%VendorText
-@onready var cpu_text := $%CPUModelText
-@onready var gpu_text := $%GPUModelText
-@onready var driver_text := $%GPUDriverText
-@onready var kernel_text := $%KernelVerText
-@onready var bios_text := $%BIOSVerText
+@onready var os_text := $%OSText as SelectableText
+@onready var product_text := $%ProductText as SelectableText
+@onready var vendor_text := $%VendorText as SelectableText
+@onready var cpu_text := $%CPUModelText as SelectableText
+@onready var gpu_text := $%GPUModelText as SelectableText
+@onready var driver_text := $%GPUDriverText as SelectableText
+@onready var kernel_text := $%KernelVerText as SelectableText
+@onready var bios_text := $%BIOSVerText as SelectableText
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Set system info text
 	client_version_text.text = "v{0}".format([str(Version.core)])
-	os_text.text = Platform.os_info.pretty_name
-	product_text.text = Platform.get_product_name()
-	vendor_text.text = Platform.get_vendor_name()
-	cpu_text.text = Platform.get_cpu_model()
-	gpu_text.text = Platform.get_gpu_model()
-	driver_text.text = Platform.get_gpu_driver()
-	kernel_text.text = Platform.get_kernel_version()
-	bios_text.text = Platform.get_bios_version()
+	os_text.text = platform.os_info.pretty_name
+	product_text.text = hardware_manager.get_product_name()
+	vendor_text.text = hardware_manager.get_vendor_name()
+	if hardware_manager.cpu:
+		cpu_text.text = hardware_manager.cpu.model
+	if hardware_manager.gpu:
+		gpu_text.text = hardware_manager.gpu.model
+		driver_text.text = hardware_manager.gpu.driver
+	kernel_text.text = hardware_manager.get_kernel_version()
+	bios_text.text = hardware_manager.get_bios_version()
 	
 	# Try to detect the platform and platform image
 	if product_text.text == "Jupiter" and vendor_text.text == "Valve":

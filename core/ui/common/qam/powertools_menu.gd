@@ -1,8 +1,9 @@
 extends VBoxContainer
 
-@onready var performance_manager := load("res://core/systems/performance/performance_manager.tres") as PerformanceManager
-@onready var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-
+var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
+var platform := load("res://core/global/platform.tres") as Platform
+var performance_manager := load("res://core/systems/performance/performance_manager.tres") as PerformanceManager
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
 @onready var cpu_boost_button := $CPUBoostButton as Toggle
 @onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
@@ -40,27 +41,29 @@ func _ready() -> void:
 
 
 func _setup_interface() -> void:
-	if performance_manager.cpu.smt_capable:
+	if hardware_manager.cpu.smt_capable:
 		logger.debug("CPU is SMT Capable")
 		_setup_cpu_core_range()
-	if performance_manager.cpu.boost_capable:
+	if hardware_manager.cpu.boost_capable:
 		logger.debug("CPU is Boost Capable")
 		_setup_cpu_boost()
-	if performance_manager.gpu.tdp_capable:
+	if hardware_manager.gpu.tdp_capable:
 		logger.debug("SOC is TDP Capable")
 		_setup_tdp_range()
-	if performance_manager.gpu.clk_capable:
+	if hardware_manager.gpu.clk_capable:
 		logger.debug("GPU is Reclock Capable")
 		_setup_gpu_freq_range()
-	if performance_manager.gpu.power_profile_capable:
+	if hardware_manager.gpu.power_profile_capable:
 		logger.debug("GPU is Power Profile Capable")
 		_setup_power_profile()
-	if performance_manager.gpu.tj_temp_capable:
+	if hardware_manager.gpu.tj_temp_capable:
 		logger.debug("GPU is TJ Temp Configurable")
 		_setup_gpu_temp()
-	if performance_manager.gpu.thermal_profile_capable:
-		logger.debug("GPU is Thermal Mode Configurable")
-		_setup_thermal_profile()
+	if platform.platform is HandheldPlatform:
+		var platform_provider := platform.platform as HandheldPlatform
+		if FileAccess.file_exists(platform_provider.thermal_policy_path):
+			logger.debug("GPU is Thermal Mode Configurable")
+			_setup_thermal_profile()
 
 	launch_manager.app_switched.connect(_on_app_switched)
 
@@ -143,9 +146,9 @@ func _update_cpu_cores_used(count: int) -> void:
 func _setup_tdp_range() -> void:
 	_to_visible.append(tdp_boost_slider)
 	_to_visible.append(tdp_slider)
-	tdp_slider.max_value = performance_manager.gpu.tdp_max
-	tdp_slider.min_value = performance_manager.gpu.tdp_min
-	tdp_boost_slider.max_value = performance_manager.gpu.max_boost
+	tdp_slider.max_value = hardware_manager.gpu.tdp_max
+	tdp_slider.min_value = hardware_manager.gpu.tdp_min
+	tdp_boost_slider.max_value = hardware_manager.gpu.max_boost
 	tdp_boost_slider.value_changed.connect(_on_tdp_boost_value_slider_changed)
 	tdp_slider.value_changed.connect(_on_tdp_value_slider_changed)
 	performance_manager.tdp_updated.connect(_update_tdp)
