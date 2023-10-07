@@ -3,7 +3,8 @@ extends Control
 var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var Version := load("res://core/global/version.tres") as Version
-var Platform := load("res://core/global/platform.tres") as Platform
+var platform := load("res://core/global/platform.tres") as Platform
+var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
 var update_available := false
 var update_installed := false
 var logger := Log.get_logger("GeneralSettings")
@@ -26,11 +27,13 @@ var logger := Log.get_logger("GeneralSettings")
 func _ready() -> void:
 	# Set system info text
 	client_version_text.text = "v{0}".format([str(Version.core)])
-	os_text.text = Platform.os_info.pretty_name
-	product_text.text = Platform.get_product_name()
-	vendor_text.text = Platform.get_vendor_name()
-	cpu_text.text = Platform.get_cpu_model()
-	gpu_text.text = Platform.get_gpu_model()
+	os_text.text = platform.os_info.pretty_name
+	product_text.text = hardware_manager.get_product_name()
+	vendor_text.text = hardware_manager.get_vendor_name()
+	if hardware_manager.cpu:
+		cpu_text.text = hardware_manager.cpu.model
+	if hardware_manager.gpu:
+		gpu_text.text = hardware_manager.gpu.model
 
 	# Configure home menu
 	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
@@ -55,7 +58,7 @@ func _ready() -> void:
 	# Configure install update
 	var on_install_update := func():
 		update_button.disabled = true
-		updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
+		updater.install_update(updater.update_pack_url)
 		var status := await updater.update_installed as int
 		if status == OK:
 			var notify := Notification.new("Client update installed successfully")
@@ -94,7 +97,7 @@ func _on_autoupdate() -> void:
 
 	logger.info("New update was found. Trying to install it.")
 	update_button.disabled = true
-	updater.install_update(updater.update_pack_url, updater.update_pack_signature_url)
+	updater.install_update(updater.update_pack_url)
 	var status := await updater.update_installed as int
 	if status == OK:
 		update_installed = true
