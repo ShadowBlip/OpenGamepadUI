@@ -70,40 +70,82 @@ func _to_string() -> String:
 
 ## Data container for /sys/class/drm/cardX-YYYY information
 class Port extends Resource:
+	## Mutex used for thread safety
+	var mutex := Mutex.new()
 	## Name of the port. E.g. HDMI-A-1
 	var name: String
 	## Full path to the port. E.g. /sys/class/drm/card1-HDMI-A-1
 	var path: String
+	## The connector id. E.g. /sys/class/drm/card1-HDMI-A-1/connector_id
 	var connector_id := -1:
+		get:
+			mutex.lock()
+			var prop := connector_id
+			mutex.unlock()
+			return prop
 		set(v):
 			if connector_id == v:
 				return
+			mutex.lock()
 			connector_id = v
-			changed.emit()
+			mutex.unlock()
+			emit_signal.call_deferred("changed")
+	## Whether or not the port is enabled
 	var enabled := false:
+		get:
+			mutex.lock()
+			var prop := enabled
+			mutex.unlock()
+			return prop
 		set(v):
 			if enabled == v:
 				return
+			mutex.lock()
 			enabled = v
-			changed.emit()
+			mutex.unlock()
+			emit_signal.call_deferred("changed")
+	## An array of valid modes (E.g. ["1024x768", "1920x1080"])
 	var modes := PackedStringArray():
+		get:
+			mutex.lock()
+			var prop := modes
+			mutex.unlock()
+			return prop
 		set(v):
 			if modes == v:
 				return
+			mutex.lock()
 			modes = v
-			changed.emit()
+			mutex.unlock()
+			emit_signal.call_deferred("changed")
+	## Status of the port (e.g. "connected")
 	var status: String:
+		get:
+			mutex.lock()
+			var prop := status
+			mutex.unlock()
+			return prop
 		set(v):
 			if status == v:
 				return
+			mutex.lock()
 			status = v
-			changed.emit()
+			mutex.unlock()
+			emit_signal.call_deferred("changed")
+	## Display power management signaling
 	var dpms: bool:
+		get:
+			mutex.lock()
+			var prop := dpms
+			mutex.unlock()
+			return prop
 		set(v):
 			if dpms == v:
 				return
+			mutex.lock()
 			dpms = v
-			changed.emit()
+			mutex.unlock()
+			emit_signal.call_deferred("changed")
 
 	# Updates the properties of the port
 	func update() -> void:
