@@ -21,3 +21,11 @@ func test_get_ports() -> void:
 			var port_name := "-".join([card.name, port.name])
 			var other_port := card.get_port(port_name)
 			assert_eq(port, other_port, "should return the same port instance")
+
+
+func test_get_card_clock_value() -> void:
+	var cards := hardware_manager.get_gpu_cards()
+	for card in cards:
+		gut.p(str(card))
+		var clock_value := card.get_clock_values()
+		gut.p(str(clock_value))

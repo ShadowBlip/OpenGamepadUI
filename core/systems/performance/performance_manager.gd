@@ -25,7 +25,7 @@ var _power_manager := load("res://core/systems/power/power_manager.tres") as Pow
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var _shared_thread := load("res://core/systems/threading/utility_thread.tres") as SharedThread
 
-var ryzenadj := RyzenAdj.new()
+var cpu := _hardware_manager.get_cpu()
 var batteries: Array[PowerManager.Device]
 var library_item: LibraryLaunchItem
 var profile: PerformanceProfile
@@ -35,6 +35,11 @@ var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
 
 
 func _init():
+	# Connect to CPU signals
+	var on_smt_updated := func(enabled: bool) -> void:
+		smt_toggled.emit(enabled)
+	cpu.smt_updated.connect(on_smt_updated)
+	
 	_shared_thread.start()
 	profile = PerformanceProfile.new()
 	if not _platform.loaded:
@@ -70,6 +75,18 @@ func _update_profile_state(item: PowerManager.Device) -> void:
 		profile_state = to_state
 
 
+## Returns the GPU performance manager
+func get_gpu_performance_manager() -> PerformanceGPU:
+	var gpu := _hardware_manager.gpu
+	match gpu.vendor:
+		"AMD":
+			return PerformanceAMDGPU.new()
+		"Intel":
+			return PerformanceIntelGPU.new()
+	
+	return null
+
+
 ## Looks at system file decriptors to update components and their capabilities
 ## and current settings. 
 func read_system_components(power_profile: int = 1) -> void:
@@ -88,14 +105,6 @@ func read_system_components(power_profile: int = 1) -> void:
 		if profile.gpu_manual_enabled:
 			await _read_gpu_clk_limits()
 			await _read_gpu_clk_current()
-
-	if cpu.smt_capable:
-		await _read_smt_enabled()
-		await _read_cpu_count()
-		await _read_cpus_enabled()
-
-	if cpu.boost_capable:
-		await _read_cpu_boost_enabled()
 
 	if _platform.platform is HandheldPlatform:
 		await _read_thermal_profile()
@@ -190,6 +199,49 @@ func load_profile(profile_path: String = "") -> void:
 	_shared_thread.exec(_apply_profile)
 
 
+func apply_profile(profile: PerformanceProfile) -> void:
+	var cpu := _hardware_manager.cpu
+	var gpu := _hardware_manager.gpu
+	var gpu_performance := get_gpu_performance_manager()
+	
+	if cpu.boost_capable:
+		logger.debug("Set CPU Boost from profile: " + str(profile.cpu_boost_enabled))
+		cpu.set_boost_enabled(profile.cpu_boost_enabled)
+		
+	if cpu.smt_capable:
+		logger.debug("Set SMT state from profile: " + str(profile.cpu_smt_enabled))
+		await cpu.set_smt_enabled(profile.cpu_smt_enabled)
+		logger.debug("Set core count from profile: " + str(profile.cpu_core_count_current))
+		cpu.set_cpu_core_count(profile.cpu_core_count_current)
+		
+	if gpu.clk_capable:
+		logger.debug("Set gpu mode from profile: " + str(profile.gpu_manual_enabled))
+		gpu_performance.set_gpu_manual_enabled(profile.gpu_manual_enabled)
+		if profile.gpu_manual_enabled:
+			logger.debug("Set gpu frequency range from profile: " + str(profile.gpu_freq_min_current) + "-" + str(profile.gpu_freq_max_current))
+			gpu_performance.set_gpu_freq(profile.gpu_freq_min_current, profile.gpu_freq_max_current)
+			
+	if gpu.power_profile_capable:
+		logger.debug("Set gpu power profile from profile: " +str(profile.gpu_power_profile))
+		gpu_performance.set_gpu_power_profile(profile.gpu_power_profile)
+		
+	if gpu.tj_temp_capable:
+		logger.debug("Set gpu temp target from profile: " +str(profile.gpu_temp_current))
+		gpu_performance.set_gpu_temp_current(profile.gpu_temp_current)
+		
+	if gpu.tdp_capable:
+		logger.debug("Set tdp from profile: " + str(profile.tdp_current) + " boost:" + str(profile.tdp_boost_current))
+		gpu_performance.set_tdp_value(profile.tdp_current)
+		gpu_performance.set_tdp_boost_value(profile.tdp_boost_current)
+		
+	if _platform.platform is HandheldPlatform:
+		logger.debug("Set thermal mode from profile: " +str(profile.thermal_profile))
+		gpu_performance.set_thermal_profile(profile.thermal_profile)
+		
+	logger.info("Applied Performance Profile: " + profile_state + " " + profile.name)
+	perfomance_profile_applied.emit(profile)
+
+
 func emit_profile_signals() -> void:
 	var cpu := _hardware_manager.cpu
 	var gpu := _hardware_manager.gpu
@@ -205,40 +257,6 @@ func emit_profile_signals() -> void:
 	tdp_updated.emit(profile.tdp_current, profile.tdp_boost_current)
 	thermal_profile_updated.emit(profile.thermal_profile)
 
-
-func _apply_profile() -> void:
-	var cpu := _hardware_manager.cpu
-	var gpu := _hardware_manager.gpu
-	if cpu.boost_capable:
-		logger.debug("Set CPU Boost from profile: " + str(profile.cpu_boost_enabled))
-		await _apply_cpu_boost_state()
-	if cpu.smt_capable:
-		logger.debug("Set SMT state from profile: " + str(profile.cpu_smt_enabled))
-		await _apply_cpu_smt_state()
-		logger.debug("Set core count from profile: " + str(profile.cpu_core_count_current))
-		await _change_cpu_cores()
-	if gpu.clk_capable:
-		logger.debug("Set gpu mode from profile: " + str(profile.gpu_manual_enabled))
-		await _gpu_manual_change()
-		if profile.gpu_manual_enabled:
-			if not gpu.freq_min or gpu.freq_max:
-				await _read_gpu_clk_limits()
-			logger.debug("Set gpu frequency range from profile: " + str(profile.gpu_freq_min_current) + "-" + str(profile.gpu_freq_max_current))
-			await _gpu_freq_change()
-	if gpu.power_profile_capable:
-		logger.debug("Set gpu power profile from profile: " +str(profile.gpu_power_profile))
-		await _gpu_power_profile_change()
-	if gpu.tj_temp_capable:
-		logger.debug("Set gpu temp target from profile: " +str(profile.gpu_temp_current))
-		await _gpu_temp_limit_change()
-	if gpu.tdp_capable:
-		logger.debug("Set tdp from profile: " + str(profile.tdp_current) + " boost:" + str(profile.tdp_boost_current))
-		await _tdp_value_change()
-	if _platform.platform is HandheldPlatform:
-		logger.debug("Set thermal mode from profile: " +str(profile.thermal_profile))
-		await _apply_thermal_profile()
-	logger.info("Applied Performance Profile: " + profile_state + " " + profile.name)
-	perfomance_profile_applied.emit(profile)
 
 
 func on_app_switched(_from: RunningApp, to: RunningApp) -> void:
@@ -401,24 +419,6 @@ func _apply_cpu_smt_state() -> void:
 		logger.warn("_on_toggle_smt exit code: " + str(exit_code))
 		return
 	smt_toggled.emit(profile.cpu_smt_enabled)
-	await _read_cpu_count()
-	await _read_cpus_enabled()
-
-
-## Set STAPM on AMD APU's
-func _amd_tdp_change() -> void:
-	logger.debug("Doing callback func _do_amd_tdp_change")
-	await ryzenadj.set_stapm_limit(profile.tdp_current * 1000)
-
-
-## Set long/short PPT on AMD APU's
-func _amd_tdp_boost_change() -> void:
-	logger.debug("Doing callback func _do_amd_tdp_boost_change")
-	
-	var slowPPT: float = (floor(profile.tdp_boost_current/2) + profile.tdp_current) * 1000
-	var fastPPT: float = (profile.tdp_boost_current + profile.tdp_current) * 1000
-	await ryzenadj.set_fast_limit(fastPPT)
-	await ryzenadj.set_slow_limit(slowPPT)
 
 
 # Called to disable/enable cores by count as specified by value. 
@@ -438,16 +438,6 @@ func _change_cpu_cores():
 	cpu_cores_used.emit(profile.cpu_core_count_current)
 
 
-## Called to set write permissions to power_dpm_force_performace_level
-func _enable_performance_write() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _async_do_exec(POWERTOOLS_PATH, ["pdfpl", "write", gpu.card.name])
-		"Intel":
-			pass
-
-
 ## Ensures the current boost doesn't exceed the max boost.
 func _ensure_tdp_boost_limited()  -> void:
 	var gpu := _hardware_manager.gpu
@@ -455,109 +445,6 @@ func _ensure_tdp_boost_limited()  -> void:
 		profile.tdp_boost_current = gpu.max_boost
 	if profile.tdp_boost_current < 0:
 		profile.tdp_boost_current = 0
-
-
-## Set the GPU min/max freq.
-func _gpu_freq_change() -> void:
-	var gpu := _hardware_manager.gpu
-	var cmd := ""
-	match gpu.vendor:
-		"AMD":
-			cmd = "amdGpuClock"
-		"Intel":
-			cmd = "intelGpuClock"
-	await _async_do_exec(POWERTOOLS_PATH, [cmd, str(profile.gpu_freq_min_current), str(profile.gpu_freq_max_current), gpu.card.name])
-	gpu_clk_current_updated.emit(profile.gpu_freq_min_current, profile.gpu_freq_max_current)
-
-
-func _gpu_manual_change() -> void:
-	var gpu := _hardware_manager.gpu
-	if gpu.vendor == "AMD":
-		var args := ["pdfpl", "auto", gpu.card.name]
-		if profile.gpu_manual_enabled:
-			args = ["pdfpl", "manual", gpu.card.name]
-		var output: Array = await _async_do_exec(POWERTOOLS_PATH, args)
-		var exit_code = output[1]
-		if exit_code:
-			logger.warn("_on_toggle_gpu_freq exit code: " + str(exit_code))
-
-		gpu_manual_enabled_updated.emit(profile.gpu_manual_enabled)
-
-	if gpu.vendor == "Intel":
-		gpu_manual_enabled_updated.emit(profile.gpu_manual_enabled)
-
-
-# TODO: Support more than AMD APU's
-## Sets the ryzenadj power profile
-func _gpu_power_profile_change() -> void:
-	var gpu := _hardware_manager.gpu
-	var power_profile := ryzenadj.POWER_PROFILE.MAX_PERFORMANCE
-	if profile.gpu_power_profile == 1:
-		power_profile = ryzenadj.POWER_PROFILE.POWER_SAVINGS
-	match gpu.vendor:
-		"AMD":
-			await ryzenadj.set_power_profile(power_profile)
-		"Intel":
-			pass
-	gpu_power_profile_updated.emit(profile.gpu_power_profile)
-
-
-# TODO: Support more than AMD APU's
-## Sets the T-junction temp.
-func _gpu_temp_limit_change() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await ryzenadj.set_tctl_temp(profile.gpu_temp_current)
-		"Intel":
-			pass
-	gpu_temp_limit_updated.emit(profile.gpu_temp_current)
-
-
-# Set short/peak TDP on Intel iGPU's
-func _intel_tdp_boost_change() -> void:
-	logger.debug("Doing callback func _do_intel_tdp_boost_change")
-	var shortTDP: float = (floor(profile.tdp_boost_current/2) + profile.tdp_current) * 1000000
-	var peakTDP: float = (profile.tdp_boost_current + profile.tdp_current) * 1000000
-	var results := await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_1_power_limit_uw", str(shortTDP)])
-	for result in results:
-		logger.debug("Result: " +str(result))
-	results = await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_2_power_limit_uw", str(peakTDP)])
-	for result in results:
-		logger.debug("Result: " +str(result))
-
-
-# Set long TDP on Intel iGPU's
-func _intel_tdp_change() -> void:
-	logger.debug("Doing callback func _do_intel_tdp_change")
-	var results := await _async_do_exec(POWERTOOLS_PATH, ["setRapl", "constraint_0_power_limit_uw", str(profile.tdp_current * 1000000)])
-	for result in results:
-		logger.debug("Result: " +str(result))
-
-
-## Called to set the base average TDP
-func _tdp_boost_value_change(emit_change: bool = true) -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _amd_tdp_boost_change()
-		"Intel":
-			await _intel_tdp_boost_change()
-	if emit_change:
-		tdp_updated.emit(profile.tdp_current, profile.tdp_boost_current)
-
-
-
-## Called to set the base average TDP
-func _tdp_value_change() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _amd_tdp_change()
-		"Intel":
-			await _intel_tdp_change()
-	await _tdp_boost_value_change(false)
-	tdp_updated.emit(profile.tdp_current, profile.tdp_boost_current)
 
 
 # Sets the current TDP to the midpoint of the detected hardware. Used when we're not able to
@@ -573,297 +460,3 @@ func _set_sane_defaults() -> void:
 	await _tdp_value_change()
 	await _gpu_temp_limit_change()
 
-
-### Read from sysfs funcs
-
-## Reads the pp_od_clk_voltage from sysfs and returns the OD_RANGE values. This file will 
-## be empty if not in "manual" for pp_od_performance_level.
-func _read_amd_gpu_clock_limits() -> void:
-	var gpu := _hardware_manager.gpu
-	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
-	var output: Array = await _async_do_exec("cat", args)
-	@warning_ignore("unsafe_method_access")
-	var result := (output[0][0] as String).split("\n")
-	logger.debug(result)
-	for param in result:
-		var parts := param.split("\n")
-		for part in parts:
-			var fixed_part := part.strip_edges().split(" ", false)
-			if fixed_part.is_empty() or fixed_part in ["0:", "1:"]:
-				continue
-			if fixed_part[0] == "SCLK:":
-				gpu.freq_min = int(fixed_part[1].rstrip("Mhz"))
-				gpu.freq_max = int(fixed_part[2].rstrip("Mhz"))
-	logger.debug("Found GPU CLK Limits: " + str(gpu.freq_min) + " - " + str(gpu.freq_max))
-
-
-## Reads the pp_od_clk_voltage from sysfs and returns the OD_SCLK values. This file will 
-## be empty if not in "manual" for pp_od_performance_level.
-func _read_amd_gpu_clock_current() -> void:
-	var gpu := _hardware_manager.gpu
-	var args := ["/sys/class/drm/" + gpu.card.name + "/device/pp_od_clk_voltage"]
-	var output: Array = await _async_do_exec("cat", args)
-	@warning_ignore("unsafe_method_access")
-	var result := (output[0][0] as String).split("\n")
-
-	for param in result:
-		var parts := param.split("\n")
-		for part in parts:
-			var fixed_part := part.strip_edges().split(" ", false)
-			if fixed_part.is_empty() or fixed_part[0] == "SCLK:" :
-				continue
-			if fixed_part[0] == "0:":
-				profile.gpu_freq_min_current =  int(fixed_part[1].rstrip("Mhz"))
-			elif fixed_part[0] == "1:":
-				profile.gpu_freq_max_current =  int(fixed_part[1].rstrip("Mhz"))
-	logger.debug("Found GPU CLK Current: " + str(profile.gpu_freq_min_current) + " - " + str(profile.gpu_freq_max_current))
-
-
-func _read_amd_gpu_perf_level() -> void:
-	var gpu := _hardware_manager.gpu
-	var performance_level = await  _read_sys("/sys/class/drm/" + gpu.card.name + "/device/power_dpm_force_performance_level")
-	if performance_level == "manual":
-		profile.gpu_manual_enabled = true
-	else:
-		profile.gpu_manual_enabled = false
-
-
-# TODO: Find a way to detect this.
-func _read_amd_gpu_power_profile() -> void:
-	pass
-
-
-## Retrieves the current TDP from ryzenadj for AMD APU's.
-func _read_amd_tdp() -> void:
-	var gpu := _hardware_manager.gpu
-	var set_sane_defaults := false
-
-	# Fetch the current info from ryzenadj
-	var info := await ryzenadj.get_info()
-	if not info:
-		logger.info("Unable to verify current tdp. Setting TDP to midpoint of range")
-		await _set_sane_defaults()
-		return
-
-	# Handle cases where ryzenadj failed to read particular values
-	var current_fastppt := 0.0
-	if info.ppt_limit_fast > 0:
-		current_fastppt = info.ppt_limit_fast
-	else:
-		logger.warn("RyzenAdj unable to read current PPT LIMIT FAST value. Setting to sane default.")
-		current_fastppt = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
-		set_sane_defaults = true
-
-	if info.stapm_limit > 0:
-		profile.tdp_current = info.stapm_limit
-	else:
-		logger.warn("RyzenAdj unable to read current STAPM value. Setting to sane default.")
-		profile.tdp_current = float((gpu.tdp_max - gpu.tdp_min) / 2 + gpu.tdp_min)
-		set_sane_defaults = true
-	
-	if info.thm_limit_core > 0:
-		profile.gpu_temp_current = info.thm_limit_core
-	else:
-		logger.warn("RyzenAdj unable to read current THM value. Setting to sane default.")
-		profile.gpu_temp_current = FALLBACK_GPU_TEMP
-		set_sane_defaults = true
-
-	# Set the TDP boost
-	profile.tdp_boost_current = current_fastppt - profile.tdp_current
-	_ensure_tdp_boost_limited()
-	if set_sane_defaults:
-		await _set_sane_defaults()
-		return
-	await _tdp_boost_value_change()
-
-
-func _read_cpu_boost_enabled() -> void:
-	if not  FileAccess.file_exists("/sys/devices/system/cpu/cpufreq/boost"):
-		logger.warn("Attempted to read CPU boost when CPU is not possible.")
-
-	var boost_set :=  await  _read_sys("/sys/devices/system/cpu/cpufreq/boost")
-	profile.cpu_boost_enabled = boost_set == "1"
-
-	logger.debug("CPU boost enabled: " + str(profile.cpu_boost_enabled))
-	cpu_boost_toggled.emit(profile.cpu_boost_enabled)
-
-
-## Loops through all cores and returns the count of enabled cores.
-func _read_cpus_enabled() -> void:
-	var cpu := _hardware_manager.cpu
-	var active_cpus := 1
-	for i in range(1, cpu.core_count):
-		var args = ["-c", "cat /sys/bus/cpu/devices/cpu"+str(i)+"/online"]
-		var output: Array = await _async_do_exec("bash", args)
-		logger.debug("Add to count: " + str((output[0][0] as String).strip_edges()))
-		active_cpus += int((output[0][0] as String).strip_edges())
-		logger.debug("Detected Active CPU's: " + str(active_cpus))
-	profile.cpu_core_count_current = active_cpus
-	logger.debug("Total Active CPU's: " + str(profile.cpu_core_count_current))
-	cpu_cores_used.emit(profile.cpu_core_count_current)
-
-
-## Updates the total number of cores
-func _read_cpu_count() -> void:
-	var cpu := _hardware_manager.cpu
-	var args = ["-c", "ls /sys/bus/cpu/devices/ | wc -l"]
-	var output: Array = await _async_do_exec("bash", args)
-	var exit_code = output[1]
-	if exit_code:
-		logger.warn("Unable to update CPU count. Received exit code: " +str(exit_code))
-		return
-	cpu.core_count = (output[0][0] as String).split("\n")[0] as int
-	cpu.cores_available = cpu.core_count
-	if not profile.cpu_smt_enabled:
-		@warning_ignore("integer_division")
-		cpu.cores_available = cpu.core_count / 2
-	logger.debug("Total CPU's: " + str(cpu.core_count) + " Available CPU's: " + str(cpu.cores_available))
-	cpu_cores_available_updated.emit(cpu.cores_available)
-
-
-## Reads the current and absolute min/max gpu clocks.
-func _read_gpu_clk_limits() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _read_amd_gpu_clock_limits()
-		"Intel":
-			await _read_intel_gpu_clock_limits()
-	gpu_clk_limits_updated.emit(gpu.freq_min, gpu.freq_max)
-
-
-func _read_gpu_clk_current() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _read_amd_gpu_clock_current()
-		"Intel":
-			await _read_intel_gpu_clock_current()
-	gpu_clk_current_updated.emit(profile.gpu_freq_min_current, profile.gpu_freq_max_current)
-
-
-## Called to read the current performance level and set the UI as needed.
-func _read_gpu_perf_level() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _read_amd_gpu_perf_level()
-		_:
-			return
-	gpu_manual_enabled_updated.emit(profile.gpu_manual_enabled)
-
-
-func _read_gpu_power_profile() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			_read_amd_gpu_power_profile()
-		_:
-			return
-	gpu_power_profile_updated.emit(profile.gpu_power_profile)
-
-
-## Reads the following sysfs paths to update the current and mix/max gpu frequencies.
-func _read_intel_gpu_clock_limits() -> void:
-	var gpu := _hardware_manager.gpu
-	gpu.freq_max = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RP0_freq_mhz"))
-	gpu.freq_min = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_RPn_freq_mhz"))
-	logger.debug("Found GPU CLK Limits: " + str(gpu.freq_min) + " - " + str(gpu.freq_max))
-
-
-func _read_intel_gpu_clock_current() -> void:
-	var gpu := _hardware_manager.gpu
-	profile.gpu_freq_max_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_max_freq_mhz"))
-	profile.gpu_freq_min_current = float(await _read_sys("/sys/class/drm/" + gpu.card.name + "/gt_min_freq_mhz"))
-	logger.debug("Found GPU CLK Current: " + str(profile.gpu_freq_min_current) + " - " + str(profile.gpu_freq_max_current))
-
-
-## Retrieves the current TDP from sysfs for Intel iGPU's.
-func _read_intel_tdp() -> void:
-	var long_tdp: float = float(await _read_sys("/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_0_power_limit_uw"))
-	if not long_tdp:
-		logger.warn("Unable to determine long TDP.")
-		return
-
-	profile.tdp_current = long_tdp / 1000000
-	var peak_tdp: float = float(await _read_sys("/sys/class/powercap/intel-rapl/intel-rapl:0/constraint_2_power_limit_uw"))
-	if not peak_tdp:
-		logger.warn("Unable to determine long TDP.")
-		return
-	profile.tdp_boost_current = peak_tdp / 1000000 - profile.tdp_current
-	_ensure_tdp_boost_limited()
-	await _tdp_boost_value_change()
-
-
-func _read_smt_enabled() -> void:
-	if FileAccess.file_exists("/sys/devices/system/cpu/smt/control"):
-		var smt_set := await  _read_sys("/sys/devices/system/cpu/smt/control")
-		logger.debug("SMT is set to" + smt_set)
-		if smt_set == "on":
-			profile.cpu_smt_enabled = true
-	await _read_cpus_enabled()
-	await _read_cpu_count()
-	smt_toggled.emit(profile.cpu_smt_enabled)
-
-
-## Retrieves the current TDP.
-func _read_tdp() -> void:
-	var gpu := _hardware_manager.gpu
-	match gpu.vendor:
-		"AMD":
-			await _read_amd_tdp()
-		"Intel":
-			await _read_intel_tdp()
-	tdp_updated.emit(profile.tdp_current, profile.tdp_boost_current)
-
-
-## Retrieves the current thermal mode.
-func _read_thermal_profile() -> void:
-	if not _platform.platform is HandheldPlatform:
-		logger.warn("Attempted to call thermal profile property on a platform that is not a HandheldPlatform.")
-		return
-	var platform_provider := _platform.platform as HandheldPlatform
-	if not FileAccess.file_exists(platform_provider.thermal_policy_path):
-		logger.warn("Attempted to call thermal profile property on a Platform that is not thermal profile capable.")
-		return
-
-	profile.thermal_profile = int(await _read_sys(platform_provider.thermal_policy_path))
-	match profile.thermal_profile:
-		0:
-			logger.debug("Thermal throttle policy currently at Balanced")
-		1:
-			logger.debug("Thermal throttle policy currently at Performance")
-		2:
-			logger.debug("Thermal throttle policy currently at Silent")
-	thermal_profile_updated.emit(profile.thermal_profile)
-
-
-# Used to read values from sysfs
-func _read_sys(path: String) -> String:
-	var result := await _async_do_exec("cat", [path])
-	if result[1] != OK:
-		logger.warn("failed to read path: " + path)
-		return ""
-	return (result[0][0] as String).strip_escapes()
-
-
-# Thread safe method of calling _do_exec
-func _async_do_exec(command: String, args: Array)-> Array:
-	logger.debug("Start async_do_exec : " + command + " " + str(args))
-#	var cmd := Command.new(command, args)
-#	var exit_code := await cmd.execute()
-#	return [cmd.stdout, exit_code]
-	return await _shared_thread.exec(_do_exec.bind(command, args))
-
-
-## Calls OS.execute with the provided command and args and returns an array with
-## the results and exit code to catch errors.
-func _do_exec(command: String, args: Array)-> Array:
-	logger.debug("Start _do_exec with command : " + command)
-	for arg in args:
-		logger.debug(str(arg))
-	var output = []
-	var exit_code := OS.execute(command, args, output)
-#	logger.debug("Output: " + str(output))
-#	logger.debug("Exit code: " +str(exit_code))
-	return [output, exit_code]
