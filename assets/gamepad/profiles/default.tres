@@ -111,7 +111,7 @@ output_events = Array[Resource("res://core/systems/input/events/mappable_event.g
 output_behavior = 0
 
 [sub_resource type="InputEventAction" id="InputEventAction_eo3yu"]
-action = &"ogui_qam"
+action = &"ogui_qb"
 
 [sub_resource type="Resource" id="Resource_efdbu"]
 script = ExtResource("1_4tblf")
@@ -123,7 +123,7 @@ code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_qbxr4"]
 script = ExtResource("2_immjq")
-name = "Quick Access Menu"
+name = "Quick Bar Menu"
 source_event = SubResource("Resource_l5wf1")
 output_events = Array[Resource("res://core/systems/input/events/mappable_event.gd")]([SubResource("Resource_efdbu")])
 output_behavior = 0

@@ -9,7 +9,7 @@
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_mab76"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_ejgx3"]
 [ext_resource type="Texture2D" uid="uid://bi3kevyi1dgys" path="res://assets/icons/game-controller.svg" id="6_hc1fc"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_t3rni"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar.tres" id="6_t3rni"]
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_2y6wm"]
 [ext_resource type="Texture2D" uid="uid://bu4bm2a56t5g5" path="res://assets/icons/config.svg" id="7_qo3p1"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_hg7ac"]

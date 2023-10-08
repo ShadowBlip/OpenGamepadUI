@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://gjrgimao0edi"]
+
+[ext_resource type="Script" path="res://core/ui/common/quick_bar/quick_settings_menu.gd" id="1_gwnsx"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_2f2tv"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_ljj2w"]
+
+[node name="QuickSettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_gwnsx")
+
+[node name="QuickVBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FocusGroup" parent="QuickVBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_2f2tv")]
+unique_name_in_owner = true
+current_focus = NodePath("../VolumeSlider")
+focus_stack = ExtResource("3_ljj2w")
+
+[node name="VolumeSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Volume"
+
+[node name="BrightnessSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Brightness"
+step = 3.0
+
+[node name="SaturationSlider" parent="QuickVBoxContainer" instance=ExtResource("2_v67rd")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Saturation"
+value = 100.0
+max_value = 400.0
+step = 5.0

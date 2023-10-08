@@ -6,7 +6,7 @@ class_name InputManager
 ##
 ## The InputManager class is responsible for handling global input that should
 ## happen everywhere in the application, regardless of the current menu. Examples
-## include opening up the main or quick access menus.[br][br]
+## include opening up the main or quick bar menus.[br][br]
 ##
 ## To include this functionality, add this as a node to the root node in the
 ## scene tree.
@@ -23,7 +23,7 @@ var state_machine := (
 )
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
-var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
+var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 
@@ -62,9 +62,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	# QAM Events
-	if event.is_action("ogui_qam"):
-		_qam_input(event)
+	# Quick Bar Open Events
+	if event.is_action("ogui_qb"):
+		_on_quick_bar_open(event)
 		get_viewport().set_input_as_handled()
 		return
 
@@ -93,7 +93,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		if event.is_action_released("ogui_south"):
-			action_release("ogui_qam")
+			action_release("ogui_qb")
 			get_viewport().set_input_as_handled()
 			return
 
@@ -103,9 +103,9 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed("ogui_north"):
 			action_press("ogui_osk")
 			action_press("ogui_guide_action")
-		# QAM
+		# Quick Bar
 		if event.is_action_pressed("ogui_south"):
-			action_press("ogui_qam")
+			action_press("ogui_qb")
 			action_press("ogui_guide_action")
 
 		# Prevent ALL input from propagating if guide is held!
@@ -114,7 +114,7 @@ func _input(event: InputEvent) -> void:
 
 
 ## Handle guide button events and determine whether this is a guide action
-## (e.g. guide + A to open the QAM), or if it's just a normal guide button press.
+## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
 func _guide_input(event: InputEvent) -> void:
 	# Only act on release events
 	if event.is_pressed():
@@ -143,25 +143,25 @@ func _main_menu_input(event: InputEvent) -> void:
 
 	if state == menu_state:
 		state_machine.pop_state()
-	elif state in [qam_state, osk_state]:
+	elif state in [quick_bar_state, osk_state]:
 		state_machine.replace_state(menu_state)
 	else:
 		state_machine.push_state(menu_state)
 
 
-## Handle quick access menu events to open the quick access menu
-func _qam_input(event: InputEvent) -> void:
+## Handle quick bar menu events to open the quick bar menu
+func _on_quick_bar_open(event: InputEvent) -> void:
 	# Only act on press events
 	if not event.is_pressed():
 		return
 
 	var state := state_machine.current_state()
-	if state == qam_state:
+	if state == quick_bar_state:
 		state_machine.pop_state()
 	elif state in [main_menu_state, in_game_menu_state, osk_state]:
-		state_machine.replace_state(qam_state)
+		state_machine.replace_state(quick_bar_state)
 	else:
-		state_machine.push_state(qam_state)
+		state_machine.push_state(quick_bar_state)
 
 
 ## Handle OSK events for bringing up the on-screen keyboard
@@ -177,7 +177,7 @@ func _osk_input(event: InputEvent) -> void:
 	var state := state_machine.current_state()
 	if state == osk_state:
 		state_machine.pop_state()
-	elif state in [main_menu_state, in_game_menu_state, qam_state]:
+	elif state in [main_menu_state, in_game_menu_state, quick_bar_state]:
 		state_machine.replace_state(osk_state)
 	else:
 		state_machine.push_state(osk_state)

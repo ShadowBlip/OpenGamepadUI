@@ -11,7 +11,7 @@
 [ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="5_4mdii"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_x46c2"]
 [ext_resource type="Texture2D" uid="uid://de4v68g8x5ygf" path="res://addons/controller_icons/assets/xbox360/back_alt.png" id="6_30dtu"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_access_menu.tres" id="6_faybn"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar.tres" id="6_faybn"]
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="7_61xd2"]
 [ext_resource type="Texture2D" uid="uid://dq0eirc22li66" path="res://addons/controller_icons/assets/xbox360/start_alt.png" id="7_rrebb"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="8_1ol5d"]

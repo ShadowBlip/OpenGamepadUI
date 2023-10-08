@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://bp807nlks8eq1"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_qarre"]
+
+[resource]
+script = ExtResource("1_qarre")
+name = "quick_bar_menu"
+data = null

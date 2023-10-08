@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwwmigfjhrtv"]
+
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_8yvu5"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.gd" id="2_m1o6y"]
+[ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/overlay_mode_input_manager.tscn" id="3_22tft"]
+[ext_resource type="PackedScene" uid="uid://gtwv1vl35ctn" path="res://core/ui/vapor_ui/quick_bar/quick_bar_menu.tscn" id="4_mti36"]
+
+[node name="Main" type="Control" groups=["main"]]
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("1_8yvu5")
+script = ExtResource("2_m1o6y")
+
+[node name="InputManager" parent="." instance=ExtResource("3_22tft")]
+
+[node name="UIContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = -1280.0
+offset_bottom = 800.0
+
+[node name="Content" type="Control" parent="UIContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="QuickBarMenu" parent="UIContainer/Content" instance=ExtResource("4_mti36")]
+layout_mode = 1

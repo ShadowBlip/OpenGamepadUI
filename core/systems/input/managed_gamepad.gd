@@ -11,7 +11,7 @@ signal profile_updated
 enum INTERCEPT_MODE {
 	NONE,
 	PASS,  # Pass all inputs to the virtual device except guide
-	PASS_QAM,  # Pass all inputs to the virtual device except guide + south
+	PASS_QB,  # Pass all inputs to the virtual device except guide + south
 	ALL,  # Intercept all inputs and send nothing to the virtual device
 }
 
@@ -73,7 +73,7 @@ var mode_event: InputDeviceEvent
 var _last_time := 0
 var logger: Log.Logger
 
-# List of events to consume the BTN_MODE event in PASS_QAM mode. This enables the
+# List of events to consume the BTN_MODE event in PASS_QB mode. This enables the
 # use of default button combo's in Steam.
 var use_mode_list: Array = [
 	InputDeviceEvent.BTN_WEST,
@@ -232,13 +232,13 @@ func process_input() -> void:
 			continue
 		
 		# TODO: Find a better way
-		# Hack to get the QAM button working on Steam Deck OpenSD devices
+		# Hack to get the QB button working on Steam Deck OpenSD devices
 		if event.type == event.EV_KEY and event.code == event.KEY_F20:
-			var qam_event := InputDeviceEvent.new()
-			qam_event.type = event.EV_KEY
-			qam_event.code = event.BTN_BASE
-			qam_event.value = event.value
-			event = qam_event
+			var quick_bar_event := InputDeviceEvent.new()
+			quick_bar_event.type = event.EV_KEY
+			quick_bar_event.code = event.BTN_BASE
+			quick_bar_event.value = event.value
+			event = quick_bar_event
 		
 		# Possibly translate the physical event and process it
 		var mappable_event := EvdevEvent.from_input_device_event(event)
@@ -367,9 +367,9 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
 		return
 
-	# Intercept mode PASS_QAM will pass all input to the virtual gamepad except
+	# Intercept mode PASS_QB will pass all input to the virtual gamepad except
 	# for guide + south button combo presses.
-	if mode == INTERCEPT_MODE.PASS_QAM:
+	if mode == INTERCEPT_MODE.PASS_QB:
 		if event.get_code() == event.BTN_MODE:
 			logger.debug("Mode Pressed!")
 			if event.value == 1:
@@ -387,8 +387,8 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 					mode_event = null
 
 		if event.get_code() == event.BTN_EAST and mode_event:
-			logger.debug("Open dat QAM BB")
-			_send_input("ogui_qam", event.value == 1, 1)
+			logger.debug("Open the Quick Bar Menu")
+			_send_input("ogui_qb", event.value == 1, 1)
 			mode_event = null
 			return
 
@@ -619,7 +619,7 @@ func _process_virt_event(event: InputDeviceEvent) -> void:
 
 ## Process native Godot input events
 func _process_native_event(event: InputEvent, delta: float) -> void:
-	# Handle OpenGamepadUI action events (e.g. "ogui_qam")
+	# Handle OpenGamepadUI action events (e.g. "ogui_qb")
 	if event is InputEventAction:
 		_send_input_event(event)
 		return

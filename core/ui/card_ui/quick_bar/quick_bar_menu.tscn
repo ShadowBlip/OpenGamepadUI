@@ -1,0 +1,185 @@
+[gd_scene load_steps=24 format=3 uid="uid://hroo3ll4inrb"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.gd" id="1_56jo7"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_6rvrx"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_cxjne"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_l64vu"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="5_i1kur"]
+[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_ro2hl"]
+[ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_xtcf0"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_5082k"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="9_6qs1m"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="10_4yppf"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_a0ma3"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_ldp5y"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="13_u3r8o"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_didkb"]
+[ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="14_gr3i0"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="15_ip4q6"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="16_5eydp"]
+[ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_qgen2"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_4nxly"]
+[ext_resource type="PackedScene" uid="uid://bjy50kdrebgre" path="res://core/ui/card_ui/quick_bar/notifications_card.tscn" id="19_pppbi"]
+[ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/quick_bar/quick_settings_card.tscn" id="20_17ks0"]
+[ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/quick_bar/performance_card.tscn" id="21_uw510"]
+[ext_resource type="PackedScene" uid="uid://v751ima8r8vg" path="res://core/ui/card_ui/quick_bar/power_tools_card.tscn" id="22_dtanu"]
+
+[node name="QuickBarMenu" type="Control" groups=["quick-bar"]]
+z_index = 20
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("1_56jo7")
+
+[node name="StateWatcher" parent="." instance=ExtResource("2_6rvrx")]
+state = ExtResource("3_cxjne")
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_l64vu")]
+target = NodePath("../..")
+fade_speed = 0.15
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="SlideEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_i1kur")]
+target = NodePath("../../MarginContainer/PanelContainer")
+slide_speed = 0.15
+on_signal = "state_entered"
+slide_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="BackInputHandler" parent="." instance=ExtResource("5_ro2hl")]
+process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_cxjne")])
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SystemContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_xtcf0")]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("8_5082k")]
+current_focus = NodePath("../NotifyButton")
+focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
+
+[node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("10_4yppf")
+
+[node name="HelpButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("11_a0ma3")
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/HelpButton" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("13_u3r8o")
+state = ExtResource("14_gr3i0")
+on_signal = "button_up"
+
+[node name="Spacer" type="Control" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("13_u3r8o")
+state = ExtResource("14_didkb")
+on_signal = "button_up"
+
+[node name="PlayingNowContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+layout_mode = 2
+
+[node name="SectionLabel" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer" instance=ExtResource("15_ip4q6")]
+layout_mode = 2
+text = "Playing Now"
+
+[node name="GameNameLabel" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Game Name"
+autowrap_mode = 3
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/PlayingNowContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("16_5eydp")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ScrollerJoystick" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer" instance=ExtResource("17_qgen2")]
+
+[node name="Viewport" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="FocusGroup" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("8_5082k")]
+unique_name_in_owner = true
+current_focus = NodePath("../QuickSettingsCard")
+focus_stack = ExtResource("18_4nxly")
+focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
+
+[node name="NotificationsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("19_pppbi")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="QuickSettingsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("20_17ks0")]
+layout_mode = 2
+
+[node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("21_uw510")]
+layout_mode = 2
+
+[node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("22_dtanu")]
+layout_mode = 2

@@ -12,18 +12,18 @@
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/store/store_menu.tscn" id="10_ethl4"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_launch_menu.tscn" id="11_4ea7a"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/launch/game_settings.tscn" id="12_soqxq"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="13_vrgc7"]
+[ext_resource type="PackedScene" uid="uid://bjocbvjgxlr4s" path="res://core/ui/vapor_ui/gamepad/gamepad_settings.tscn" id="13_vrgc7"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/settings/settings_menu.tscn" id="13_vxtul"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/navigation/top_bar.tscn" id="14_gncx1"]
 [ext_resource type="PackedScene" uid="uid://c8w7apchin02b" path="res://core/ui/vapor_ui/main-menu/main_menu_container.tscn" id="15_n7egu"]
-[ext_resource type="PackedScene" uid="uid://gtwv1vl35ctn" path="res://core/ui/vapor_ui/qam/quick_access_menu.tscn" id="16_4ky7m"]
+[ext_resource type="PackedScene" uid="uid://gtwv1vl35ctn" path="res://core/ui/vapor_ui/quick_bar/quick_bar_menu.tscn" id="16_4ky7m"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/navigation/context_bar.tscn" id="17_7qf7f"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_v6bwg"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="18_ycfam"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/game/game_loading.tscn" id="19_es4xs"]
 [ext_resource type="PackedScene" uid="uid://bjxpafq4ic16x" path="res://core/ui/components/toast.tscn" id="19_ruxfl"]
 [ext_resource type="PackedScene" path="res://core/ui/vapor_ui/power/power_menu.tscn" id="20_d22mh"]
-[ext_resource type="PackedScene" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="20_vy825"]
+[ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/vapor_ui/osk/on_screen_keyboard.tscn" id="20_vy825"]
 
 [sub_resource type="Gradient" id="Gradient_867l0"]
 interpolation_mode = 1
@@ -133,7 +133,7 @@ offset_bottom = 40.0
 visible = false
 layout_mode = 1
 
-[node name="QuickAccessMenu" parent="UIContainer/Content" instance=ExtResource("16_4ky7m")]
+[node name="QuickBarsMenu" parent="UIContainer/Content" instance=ExtResource("16_4ky7m")]
 visible = false
 layout_mode = 1
 

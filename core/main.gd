@@ -16,16 +16,24 @@ func _ready() -> void:
 	
 	# Launch old ui
 	if "--vapor-ui" in args:
-		# in only-qam mode
+		# in overlay mode
 		if "--qam-only" in args or "--only-qam" in args:
-			get_tree().change_scene_to_file("res://core/ui/vapor_ui_only_qam/only_qam_main.tscn")
+			print("[WARN] --only-qam and --qam-only launch arguments are deprecated and will be removed in a future update.")
+			get_tree().change_scene_to_file("res://core/ui/vapor_ui_ooverlay_mode/overlay_mode_main.tscn")
+			return
+		elif "--overlay-mode" in args:
+			get_tree().change_scene_to_file("res://core/ui/vapor_ui_ooverlay_mode/overlay_mode_main.tscn")
 			return
 		get_tree().change_scene_to_file("res://core/ui/vapor_ui/vapor_ui.tscn")
 		return
 
-	# Launch CardUI in only-qam mode
+	# Launch CardUI in overlay mode
 	if "--qam-only" in args or "--only-qam" in args:
-		get_tree().change_scene_to_file("res://core/ui/card_ui_only_qam/card_ui_only_qam.tscn")
+		print("[WARN] --only-qam and --qam-only launch arguments are deprecated and will be removed in a future update.")
+		get_tree().change_scene_to_file("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
+		return
+	elif "--overlay-mode" in args:
+		get_tree().change_scene_to_file("res://core/ui/vapor_ui_ooverlay_mode/overlay_mode_main.tscn")
 		return
 	# Launch the main interface
 	get_tree().change_scene_to_file("res://core/ui/card_ui/card_ui.tscn")
@@ -43,7 +51,8 @@ func _show_help() -> void:
 	print("")
 	print("Flags:")
 	print("  --vapor-ui       Load Vapor UI")
-	print("  --only-qam       Load the only-qam UI")
+	print("  --only-qam       Launch in overlay mode (Deprecated)")
+	print("  --overlay-mode   Launch in overlay mode")
 	print("")
 	print("Environment Variables:")
 	print("  LOG_LEVEL        Set the global log level (debug,info,warn,error)")

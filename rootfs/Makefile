@@ -55,8 +55,8 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/lib/udev/rules.d/61-opengamepadui-handheld.rules
 	install -Dm644 usr/lib/systemd/user/systemd-sysext-updater.service \
 		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
-	install -Dm644 usr/lib/systemd/user/ogui-qam.service \
-		$(PREFIX)/lib/systemd/user/ogui-qam.service
+	install -Dm644 usr/lib/systemd/user/ogui-overlay-mode.service \
+		$(PREFIX)/lib/systemd/user/ogui-overlay-mode.service
 	@echo "Installation complete"
 
 .PHONY: uninstall
@@ -71,5 +71,5 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
 	rm -rf $(PREFIX)/lib/udev/rules.d/10-opengamepadui-handheld.rules
 	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
-	rm -rf $(PREFIX)/lib/systemd/user/ogui-qam.service
+	rm -rf $(PREFIX)/lib/systemd/user/ogui-overlay-mode.service
 	@echo "Uninstall complete"

@@ -7,8 +7,8 @@ var logger := Log.get_logger("ContextBar")
 
 @onready var accept_icon := $%AcceptButtonIcon as ControllerTextureRect
 @onready var back_icon := $%BackButtonIcon as ControllerTextureRect
-@onready var qam_mod_icon := $%QAMModifierIcon as ControllerTextureRect
-@onready var qam_button_icon := $%QAMButtonIcon as ControllerTextureRect
+@onready var quick_bar_mod_icon := $%QBModifierIcon as ControllerTextureRect
+@onready var quick_bar_button_icon := $%QBButtonIcon as ControllerTextureRect
 
 
 # Called when the node enters the scene tree for the first time.
@@ -40,10 +40,10 @@ func _on_input_type_changed(input_type: ControllerIcons.InputType) -> void:
 	if input_type == ControllerIcons.InputType.CONTROLLER:
 		accept_icon.path = "joypad/a"
 		back_icon.path = "joypad/b"
-		qam_mod_icon.path = "joypad/home"
-		qam_button_icon.path = "joypad/a"
+		quick_bar_mod_icon.path = "joypad/home"
+		quick_bar_button_icon.path = "joypad/a"
 	else:
 		accept_icon.path = "ui_accept"
 		back_icon.path = "ogui_east"
-		qam_mod_icon.path = "key/ctrl"
-		qam_button_icon.path = "ogui_guide_action_qam"
+		quick_bar_mod_icon.path = "key/ctrl"
+		quick_bar_button_icon.path = "ogui_guide_action_quick_bar"

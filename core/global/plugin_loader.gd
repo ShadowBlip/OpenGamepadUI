@@ -39,12 +39,12 @@ var SettingsManager := load("res://core/global/settings_manager.tres") as Settin
 var parent: PluginManager
 var logger := Log.get_logger("PluginLoader", Log.LEVEL.INFO)
 ## Dictionary of installed plugins on the root file system.
-var plugins := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
+var plugins := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["quck_bar", "steam"], ...}
 ## Dictionary of instantiated plugins.
 var plugin_nodes := {}
 ## Dictionary of available plugins in the defualt plugin store. Similair data
 ## struture to the plugins dict with some additonal fields.
-var plugin_store_items := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["qam", "steam"], ...}
+var plugin_store_items := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["quick_bar", "steam"], ...}
 ## List of plugin_ids that are installed where a newer version of the plugin is
 ## available in the plugin store.
 var plugins_upgradable := []

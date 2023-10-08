@@ -207,7 +207,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Backspace"
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("11_e30qo")
@@ -224,7 +224,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Close keyboard"
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer2"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("12_3rby5")
@@ -241,7 +241,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Toggle Shift"
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer3"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("13_w7w1y")
@@ -258,7 +258,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Enter"
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer4"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer4"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("14_vxuc7")

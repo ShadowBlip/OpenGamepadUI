@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=8 format=3 uid="uid://b7q6cl8lcsqak"]
 
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ylil8"]
 [ext_resource type="Script" path="res://core/ui/vapor_ui/navigation/context_bar.gd" id="2_jserv"]
@@ -73,13 +73,13 @@ expand_mode = 1
 script = ExtResource("3_vjpxr")
 path = "ogui_east"
 
-[node name="QAMLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="QBLabel" type="Label" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Quick Access Menu"
 horizontal_alignment = 2
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -93,11 +93,11 @@ force_type = 2
 layout_mode = 2
 text = "+"
 
-[node name="QAMButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+[node name="QBButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("7_xtiui")
 expand_mode = 1
 script = ExtResource("3_vjpxr")
-path = "ogui_guide_action_qam"
+path = "ogui_guide_action_qb"

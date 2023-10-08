@@ -1,0 +1,248 @@
+[gd_scene load_steps=23 format=3 uid="uid://c1mv0roveqqvs"]
+
+[ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_6eq2a"]
+[ext_resource type="Script" path="res://core/ui/vapor_ui/quick_bar/quick_bar_menu.gd" id="2_dgy5y"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="4_u26a3"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="6_bel00"]
+[ext_resource type="Script" path="res://core/ui/components/transition.gd" id="7_8b678"]
+[ext_resource type="Resource" uid="uid://cycr83vpni1ka" path="res://assets/state/state_machines/quick_bar_state_machine.tres" id="8_878q4"]
+[ext_resource type="PackedScene" path="res://core/ui/common/quick_bar/notifications_menu.tscn" id="8_s3yne"]
+[ext_resource type="Resource" uid="uid://bkvuiq0ehx3ll" path="res://assets/state/states/quick_bar_notifications.tres" id="9_e7me7"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="10_3yfx4"]
+[ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/quick_bar/powertools_menu.tscn" id="11_2q3cm"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="11_7a71g"]
+[ext_resource type="Resource" uid="uid://b2ruoxboq5k6e" path="res://assets/state/states/quick_bar_powertools.tres" id="12_greee"]
+[ext_resource type="PackedScene" uid="uid://gjrgimao0edi" path="res://core/ui/common/quick_bar/quick_settings_menu.tscn" id="13_plgns"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="14_drb1g"]
+[ext_resource type="Resource" uid="uid://1hipypfrfavt" path="res://assets/state/states/quick_bar_quick_settings.tres" id="15_mqxpa"]
+[ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="17_vj2o4"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="19_ut6h4"]
+[ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="20_qjwqj"]
+[ext_resource type="Texture2D" uid="uid://cqy34r7oni6d4" path="res://assets/ui/icons/powertools_icon.svg" id="23_w8se6"]
+
+[sub_resource type="Animation" id="Animation_5up20"]
+resource_name = "enter"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(400, 0), Vector2(1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+
+[sub_resource type="Animation" id="Animation_4xb6e"]
+resource_name = "exit"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(400, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cdpfs"]
+_data = {
+"enter": SubResource("Animation_5up20"),
+"exit": SubResource("Animation_4xb6e")
+}
+
+[node name="QuickBarMenu" type="Control" groups=["quick_bar"]]
+z_index = 20
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -300.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("1_6eq2a")
+script = ExtResource("2_dgy5y")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("6_bel00")]
+state = ExtResource("4_u26a3")
+visible_during = Array[Resource]([ExtResource("4_u26a3")])
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("10_3yfx4")]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 40
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/PanelContainer" instance=ExtResource("6_bel00")]
+state = ExtResource("4_u26a3")
+visible_during = Array[Resource]([ExtResource("4_u26a3")])
+
+[node name="TransitionSlideRight" type="AnimationPlayer" parent="MarginContainer/PanelContainer/VisibilityManager"]
+libraries = {
+"": SubResource("AnimationLibrary_cdpfs")
+}
+script = ExtResource("7_8b678")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ViewportMargin" type="MarginContainer" parent="MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 15
+
+[node name="Viewport" type="VBoxContainer" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NotificationsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("8_s3yne")]
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/NotificationsMenu" instance=ExtResource("6_bel00")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("9_e7me7")
+
+[node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/NotificationsMenu/VisibilityManager" instance=ExtResource("10_3yfx4")]
+
+[node name="PowerToolsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("11_2q3cm")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu" instance=ExtResource("6_bel00")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("12_greee")
+
+[node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/PowerToolsMenu/VisibilityManager" instance=ExtResource("10_3yfx4")]
+
+[node name="QuickSettingsMenu" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport" instance=ExtResource("13_plgns")]
+visible = false
+layout_mode = 2
+
+[node name="VisibilityManager" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/QuickSettingsMenu" instance=ExtResource("6_bel00")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("15_mqxpa")
+
+[node name="TransitionFadeIn" parent="MarginContainer/PanelContainer/HBoxContainer/ViewportMargin/Viewport/QuickSettingsMenu/VisibilityManager" instance=ExtResource("10_3yfx4")]
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="IconMargin" type="MarginContainer" parent="MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="IconBar" type="VBoxContainer" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="FocusManager" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar" node_paths=PackedStringArray("current_focus") instance=ExtResource("17_vj2o4")]
+unique_name_in_owner = true
+current_focus = NodePath("../Notifications")
+process_input = true
+
+[node name="Notifications" type="Button" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+focus_neighbor_top = NodePath("../HelpButton")
+focus_neighbor_bottom = NodePath("../QuickSettingsButton")
+focus_next = NodePath("../../../ViewportMargin/Viewport/QuickSettingsMenu")
+focus_previous = NodePath("../HelpButton")
+icon = ExtResource("11_7a71g")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/Notifications" instance=ExtResource("19_ut6h4")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("9_e7me7")
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/Notifications" node_paths=PackedStringArray("target") instance=ExtResource("20_qjwqj")]
+target = NodePath("../../../../ViewportMargin/Viewport/NotificationsMenu")
+on_signal = "pressed"
+
+[node name="PowerToolsButton" type="Button" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+icon = ExtResource("23_w8se6")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/PowerToolsButton" instance=ExtResource("19_ut6h4")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("12_greee")
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/PowerToolsButton" node_paths=PackedStringArray("target") instance=ExtResource("20_qjwqj")]
+target = NodePath("../../../../ViewportMargin/Viewport/PowerToolsMenu")
+on_signal = "pressed"
+
+[node name="QuickSettingsButton" type="Button" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+focus_neighbor_top = NodePath("../Notifications")
+focus_neighbor_bottom = NodePath("../PerformanceButton")
+focus_next = NodePath("../PerformanceButton")
+focus_previous = NodePath("../Notifications")
+icon = ExtResource("14_drb1g")
+icon_alignment = 1
+expand_icon = true
+
+[node name="StateUpdater" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/QuickSettingsButton" instance=ExtResource("19_ut6h4")]
+state_machine = ExtResource("8_878q4")
+state = ExtResource("15_mqxpa")
+on_signal = "focus_entered"
+
+[node name="FocusSetter" parent="MarginContainer/PanelContainer/HBoxContainer/IconMargin/IconBar/QuickSettingsButton" node_paths=PackedStringArray("target") instance=ExtResource("20_qjwqj")]
+target = NodePath("../../../../ViewportMargin/Viewport/QuickSettingsMenu")
+on_signal = "pressed"

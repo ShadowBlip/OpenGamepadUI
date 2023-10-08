@@ -17,7 +17,7 @@ var logger := Log.get_logger("Plugin")
 
 const OGUIButton := preload("res://core/ui/components/button.tscn")
 const ButtonStateChanger := preload("res://core/systems/state/state_changer.tscn")
-const qam_state_machine := preload("res://assets/state/state_machines/qam_state_machine.tres")
+const quick_bar_state_machine := preload("res://assets/state/state_machines/quick_bar_state_machine.tres")
 
 
 func _init() -> void:
@@ -64,21 +64,21 @@ func add_boxart(boxart: BoxArtProvider) -> void:
 
 
 ## Adds the given menu scene to the Quick Access Menu
-func add_to_qam(qam_item: Control, icon: Texture2D, focus_node: Control = null) -> void:
-	var qam := get_tree().get_first_node_in_group("qam")
-	if not qam:
+func add_to_quick_bar(qb_item: Control, icon: Texture2D, focus_node: Control = null) -> void:
+	var qb := get_tree().get_first_node_in_group("quick-bar")
+	if not qb:
 		(
 			logger
 			. error(
 				(
-					"Unable to find the Quick Access Menu. Plugin {} can not be loaded."
-					. format(qam_item.name)
+					"Unable to find the Quick Bar Menu. Plugin {} can not be loaded."
+					. format(qb_item.name)
 				)
 			)
 		)
 		return
 
-	qam.add_child_menu(qam_item, icon, focus_node)
+	qb.add_child_menu(qb_item, icon, focus_node)
 
 
 ## Adds the given overlay
