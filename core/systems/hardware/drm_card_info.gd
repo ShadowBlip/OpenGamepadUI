@@ -19,6 +19,10 @@ var subvendor_id: String
 var revision_id: String
 
 
+func _init(card_dir: String) -> void:
+	name = card_dir
+
+
 ## Returns a [DRMCardPort] object for the given port directory (E.g. card1-HDMI-A-1)
 func get_port(port_dir: String) -> DRMCardPort:
 	var port_name := port_dir.trim_prefix(name + "-")
@@ -53,6 +57,29 @@ func get_ports() -> Array[DRMCardPort]:
 		found_ports.append(port)
 		
 	return found_ports
+
+
+## Returns the maximum and minimum GPU clock values
+func get_clock_limits() -> Vector2:
+	return Vector2.ZERO
+
+
+## Returns the current GPU minimum and maximum clock values
+func get_clock_values() -> Vector2:
+	return Vector2.ZERO
+
+
+## Read the data from the given property path relative to /sys/class/drm/cardX
+func _get_property(prop: String) -> String:
+	var card_path := "/".join([drm_path, name])
+	var prop_path := "/".join([card_path, prop])
+	if not FileAccess.file_exists(prop_path):
+		return ""
+	var file := FileAccess.open(prop_path, FileAccess.READ)
+	var length := file.get_length()
+	var bytes := file.get_buffer(length)
+
+	return bytes.get_string_from_utf8()
 
 
 func _to_string() -> String:

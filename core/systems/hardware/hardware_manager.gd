@@ -13,7 +13,7 @@ var intel_apu_database := load("res://core/platform/hardware/intel_apu_database.
 var logger := Log.get_logger("HardwareManager", Log.LEVEL.INFO)
 var cards := get_gpu_cards()
 var card_ports: Array[DRMCardPort]
-var cpu := get_cpu_info()
+var cpu := get_cpu()
 var gpu := get_gpu_info()
 var bios := get_bios_version()
 var kernel := get_kernel_version()
@@ -42,32 +42,18 @@ func get_vendor_name() -> String:
 
 
 ## Provides info on the CPU vendor, model, and capabilities.
-func get_cpu_info() -> CPUInfo:
-	logger.debug("Reading GPU Info")
-	var cpu_info := CPUInfo.new()
-	var cpu_raw := _get_lscpu_info()
+func get_cpu() -> CPU:
+	logger.debug("Reading CPU Info")
+	# Try to load the CPU info if it already exists
+	var res_path := "hardware://cpu"
+	if ResourceLoader.exists(res_path):
+		var cpu_info := load(res_path) as CPU
+		return cpu_info
 
-	for param in cpu_raw:
-		var parts := param.split(" ", false) as Array
-		if parts.is_empty():
-			continue
-		if parts[0] == "Flags:":
-			if "ht" in parts:
-				cpu_info.smt_capable = true
-			if "cpb" in parts and FileAccess.file_exists("/sys/devices/system/cpu/cpufreq/boost"):
-				cpu_info.boost_capable = true
-		if parts[0] == "Vendor" and parts[1] == "ID:":
-			# Delete parts of the string we don't want
-			parts.remove_at(1)
-			parts.remove_at(0)
-			cpu_info.vendor = str(" ".join(parts))
-		if parts[0] == "Model" and parts[1] == "name:":
-			# Delete parts of the string we don't want
-			parts.remove_at(1)
-			parts.remove_at(0)
-			cpu_info.model = str(" ".join(parts))
-		# TODO: We can get min/max CPU freq here.
-	logger.debug("Found CPU: " + str(cpu_info))
+	# Create a new cpu info instance and take over the caching path
+	var cpu_info := CPU.new()
+	cpu_info.take_over_path(res_path)
+	logger.debug("Got CPU info: " + str(cpu_info))
 
 	return cpu_info
 
@@ -147,6 +133,11 @@ func get_gpu_info() -> GPUInfo:
 			gpu_info.tdp_max = apu_data.max_tdp
 			gpu_info.max_boost = apu_data.max_boost
 			gpu_info.tdp_capable = true
+			
+			# Read the GPU limits
+			var foo := _read_sys("/sys/class/drm/" + gpu_info.card.name + "/device/pp_od_clk_voltage")
+			gpu_info.freq_min
+			gpu_info.freq_max
 
 		"Intel", "GenuineIntel", "Intel Corporation":
 			apu_data = intel_apu_database.get_apu(cpu.model)
@@ -199,20 +190,13 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 			card_info.name = card_dir
 		return card_info
 
-	# Create a new card instance and take over the caching path
-	var card_info := DRMCardInfo.new()
-	card_info.take_over_path(res_path)
-	card_info.name = card_dir
-	card_info.vendor_id = vendor_id
-	card_info.device_id = device_id
-	card_info.revision_id = revision_id
-	card_info.subvendor_id = subvendor_id
-	card_info.subdevice_id = subdevice_id
-	
 	# Lookup the card details
 	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
 	var vendor_found: bool = false
 	var device_found: bool = false
+	var vendor := ""
+	var device := ""
+	var subdevice := ""
 	logger.debug("Getting device info from: " + vendor_id + " " + device_id + " " + subvendor_id + " " + subdevice_id)
 	while not hwids.eof_reached():
 		var line := hwids.get_line()
@@ -221,8 +205,8 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 		if line.begins_with("\t") and not vendor_found:
 			continue
 		if line.begins_with(vendor_id):
-			card_info.vendor = line.lstrip(vendor_id).strip_edges()
-			logger.debug("Found vendor name: " + card_info.vendor)
+			vendor = line.lstrip(vendor_id).strip_edges()
+			logger.debug("Found vendor name: " + vendor)
 			vendor_found = true
 			continue
 		if vendor_found and not line.begins_with("\t"):
@@ -235,8 +219,8 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 			continue
 
 		if line_clean.begins_with(device_id):
-			card_info.device = line_clean.lstrip(device_id).strip_edges()
-			logger.debug("Found device name: " + card_info.device)
+			device = line_clean.lstrip(device_id).strip_edges()
+			logger.debug("Found device name: " + device)
 			device_found = true
 
 		if device_found and not line.begins_with("\t\t"):
@@ -245,25 +229,44 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 
 		var prefix := subvendor_id + " " + subdevice_id
 		if line_clean.begins_with(prefix):
-			card_info.subdevice = line.lstrip(prefix)
-			logger.debug("Found subdevice name: " + card_info.subdevice)
+			subdevice = line.lstrip(prefix)
+			logger.debug("Found subdevice name: " + subdevice)
 			break
 
 	# Sanitize the vendor strings so they are standard.
-	match card_info.vendor:
+	match vendor:
 		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
-			card_info.vendor = "AMD"
+			vendor = "AMD"
 		"Intel", "GenuineIntel", "Intel Corporation":
-			card_info.vendor = "Intel"
+			vendor = "Intel"
 		"Nvidia":
-			card_info.vendor = "Trash"
+			vendor = "Trash"
 			logger.warn("Nvidia devices are not suppored.")
 			# TODO: Handle this case
 			return null
 		_:
-			logger.warn("Device vendor string not recognized: " + card_info.vendor)
+			logger.warn("Device vendor string not recognized: " + vendor)
 			# TODO: Handle this case
 			return null
+
+	# Create a new card instance and take over the caching path
+	var card_info: DRMCardInfo
+	match vendor:
+		"AMD":
+			card_info = DRMCardInfoAMD.new(card_dir)
+		"Intel":
+			card_info = DRMCardInfoIntel.new(card_dir)
+		_:
+			return null
+	card_info.take_over_path(res_path)
+	card_info.vendor = vendor
+	card_info.vendor_id = vendor_id
+	card_info.device = device
+	card_info.device_id = device_id
+	card_info.revision_id = revision_id
+	card_info.subvendor_id = subvendor_id
+	card_info.subdevice = subdevice
+	card_info.subdevice_id = subdevice_id
 
 	return card_info
 
@@ -297,6 +300,23 @@ func get_gpu_cards() -> Array[DRMCardInfo]:
 				logger.debug("Assigning type " + card.device_type + " to device " + card.device)
 
 	return found_cards
+
+
+## Returns the currently active GPU card
+func get_active_gpu_card() -> DRMCardInfo:
+	if gpu and gpu.card:
+		return gpu.card
+	
+	var active_vendor_device := get_active_gpu_device()
+	if active_vendor_device.size() != 2:
+		return null
+	var vendor_id := active_vendor_device[0]
+	var device_id := active_vendor_device[1]
+	for card in get_gpu_cards():
+		if card.vendor_id == vendor_id and card.device_id == device_id:
+			return card
+	
+	return null
 
 
 ## Returns the string of the currently active GPU
@@ -366,15 +386,6 @@ func start_gpu_watch() -> void:
 	thread.start()
 
 
-## Provides info on the GPU vendor, model, and capabilities.
-func _get_lscpu_info() -> PackedStringArray:
-	var output: Array = _exec("lscpu")
-	var exit_code = output[1]
-	if exit_code:
-		return []
-	return  (output[0][0] as String).split("\n") as PackedStringArray
-
-
 ## Helper function that simplifies reading id values from a given path.
 func _get_card_property_from_path(path: String) -> String:
 	return FileAccess.get_file_as_string(path).lstrip("0x").to_lower().strip_escapes()
@@ -425,26 +436,6 @@ func _read_sys(path: String) -> String:
 	var length := file.get_length()
 	var bytes := file.get_buffer(length)
 	return bytes.get_string_from_utf8().strip_escapes()
-
-
-## Data container for CPU information
-class CPUInfo extends Resource:
-	var core_count: int = 1
-	var cores_available: int = 1
-	var boost_capable: bool = false
-	var vendor: String
-	var model: String
-	var smt_capable: bool = false
-
-	func _to_string() -> String:
-		return "<CPUInfo:" \
-			+ " Vendor: (" + str(vendor) \
-			+ ") Model: (" + str(model) \
-			+ ") Core count: (" + str(core_count) \
-			+ ") Cores Enabled: (" + str(cores_available) \
-			+ ") Boost Capable: (" + str(boost_capable) \
-			+ ") SMT Ccapable: (" + str(smt_capable) \
-			+ ")>"
 
 
 ## Data container for GPU information
