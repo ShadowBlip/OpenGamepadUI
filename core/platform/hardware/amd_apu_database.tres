@@ -14,8 +14,8 @@ max_boost = 6.0
 script = ExtResource("1_a4rxd")
 model_name = "AMD Athlon Silver 3050e with Radeon Graphics"
 min_tdp = 2.0
-max_tdp = 12.0
-max_boost = 6.0
+max_tdp = 20.0
+max_boost = 5.0
 
 [sub_resource type="Resource" id="Resource_wmno8"]
 script = ExtResource("1_a4rxd")
@@ -481,7 +481,7 @@ max_boost = 8.0
 
 [sub_resource type="Resource" id="Resource_i281s"]
 script = ExtResource("1_a4rxd")
-model_name = "AMD Ryzen 7 7735HS w/ Radeon 680M Graphics"
+model_name = "AMD Ryzen 7 7735HS with Radeon Graphics"
 min_tdp = 35.0
 max_tdp = 54.0
 max_boost = 8.0
