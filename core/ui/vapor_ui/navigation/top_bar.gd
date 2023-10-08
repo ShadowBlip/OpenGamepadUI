@@ -4,7 +4,7 @@ const thread := preload("res://core/systems/threading/thread_pool.tres")
 
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
-var qam_state := preload("res://assets/state/states/quick_access_menu.tres") as State
+var quick_bar_menu_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 
 var battery_capacity := -1
 var panel_alpha_normal := 156
@@ -30,8 +30,8 @@ func _ready() -> void:
 	main_menu_state.state_exited.connect(_on_game_menu_exited)
 	in_game_menu_state.state_entered.connect(_on_game_menu_entered)
 	in_game_menu_state.state_exited.connect(_on_game_menu_exited)
-	qam_state.state_entered.connect(_on_game_menu_entered)
-	qam_state.state_exited.connect(_on_game_menu_exited)
+	quick_bar_menu_state.state_entered.connect(_on_game_menu_entered)
+	quick_bar_menu_state.state_exited.connect(_on_game_menu_exited)
 
 	# Create a timer to update the time
 	var time_timer: Timer = Timer.new()
@@ -65,7 +65,7 @@ func _on_game_menu_entered(_from: State) -> void:
 
 
 func _on_game_menu_exited(to: State) -> void:
-	if to in [in_game_menu_state, main_menu_state, qam_state]:
+	if to in [in_game_menu_state, main_menu_state, quick_bar_menu_state]:
 		return
 	panel.modulate.a8 = panel_alpha_normal
 

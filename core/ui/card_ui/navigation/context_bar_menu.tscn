@@ -82,12 +82,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="QAMLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="QBLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Quick Access Menu"
 horizontal_alignment = 2
 
-[node name="QAMModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
@@ -101,11 +101,11 @@ force_type = 2
 layout_mode = 2
 text = "+"
 
-[node name="QAMButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+[node name="QBButtonIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("7_wroit")
 expand_mode = 1
 script = ExtResource("2_hvl7j")
-path = "ogui_guide_action_qam"
+path = "ogui_guide_action_qb"

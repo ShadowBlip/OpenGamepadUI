@@ -9,7 +9,7 @@ enum STATE {
 	NONE,
 	HOME,
 	MAIN_MENU,
-	QUICK_ACCESS_MENU,
+	QUICK_BAR_MENU,
 	LIBRARY,
 	STORE,
 	IN_GAME,
@@ -17,14 +17,14 @@ enum STATE {
 	GAME_LAUNCHER,
 	SETTINGS,
 	OSK,
-	QAM_BUTTON_SUBMENU,
+	QUICK_BAR_BUTTON_SUBMENU,
 }
 
 const StateMap = {
 	STATE.NONE: "",
 	STATE.HOME: "home",
 	STATE.MAIN_MENU: "main_menu",
-	STATE.QUICK_ACCESS_MENU: "quick_access_menu",
+	STATE.QUICK_BAR_MENU: "quick_bar_menu",
 	STATE.LIBRARY: "library",
 	STATE.STORE: "store",
 	STATE.IN_GAME: "in-game",
@@ -32,7 +32,7 @@ const StateMap = {
 	STATE.GAME_LAUNCHER: "game_launcher_menu",
 	STATE.SETTINGS: "settings_menu",
 	STATE.OSK: "osk",
-	STATE.QAM_BUTTON_SUBMENU: "qam_button_submenu",
+	STATE.QUICK_BAR_BUTTON_SUBMENU: "quick_bar_button_submenu",
 }
 
 signal state_changed(from: int, to: int, data: Dictionary)

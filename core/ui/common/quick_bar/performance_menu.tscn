@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7piua3snox4i"]
+
+[ext_resource type="Script" path="res://core/ui/common/quick_bar/performance_menu.gd" id="1_r31yj"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_yptsc"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_my16i"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_hsr7n"]
+
+[node name="PerformanceMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_r31yj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FocusGroup" parent="VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_my16i")]
+current_focus = NodePath("../MangoAppSlider")
+focus_stack = ExtResource("3_hsr7n")
+
+[node name="MangoAppSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Performance Overlay"
+max_value = 4.0
+tick_count = 5
+
+[node name="FramerateLimitSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
+visible = false
+layout_mode = 2
+text = "FPS Limit"
+
+[node name="RefreshRateSlider" parent="VBoxContainer" instance=ExtResource("1_yptsc")]
+visible = false
+layout_mode = 2
+text = "Refresh Rate"

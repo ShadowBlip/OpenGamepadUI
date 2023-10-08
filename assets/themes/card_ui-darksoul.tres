@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=29 format=3 uid="uid://bhdlcd8rvccus"]
+[gd_resource type="Theme" load_steps=28 format=3 uid="uid://bhdlcd8rvccus"]
 
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_xbfkn"]
 [ext_resource type="Texture2D" uid="uid://b8m8g766k3kay" path="res://assets/styles/darksoul/highlight.tres" id="2_d6a4j"]
@@ -8,7 +8,6 @@
 [ext_resource type="StyleBox" uid="uid://b3ta5yb32jlnb" path="res://assets/styles/darksoul/context_bar_menu_panel.tres" id="4_v80py"]
 [ext_resource type="StyleBox" uid="uid://bar3btp2yiodw" path="res://assets/styles/darksoul/inside_panel.tres" id="5_smg3e"]
 [ext_resource type="StyleBox" uid="uid://b8agb31kxbsap" path="res://assets/styles/darksoul/main_menu_panel.tres" id="6_nlift"]
-[ext_resource type="StyleBox" uid="uid://daavpt58e7jlj" path="res://assets/styles/darksoul/quick_access_menu_panel.tres" id="7_1vum8"]
 [ext_resource type="StyleBox" uid="uid://cors0phwi7ji0" path="res://assets/styles/darksoul/game_launch_buttons_panel.tres" id="8_lih84"]
 [ext_resource type="StyleBox" uid="uid://saqxc1jchonl" path="res://assets/styles/darksoul/search_bar_menu_panel.tres" id="9_4cedj"]
 [ext_resource type="StyleBox" uid="uid://dj874jn605gma" path="res://assets/styles/darksoul/power_menu_panel.tres" id="9_7cwdd"]
@@ -115,7 +114,7 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_lko5h")
 PluginStoreCard/styles/panel = ExtResource("10_lu8vp")
 PowerMenu/styles/panel = ExtResource("9_7cwdd")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
-QAM/styles/panel = ExtResource("7_1vum8")
+QuickBar/styles/panel = null
 RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
 SearchBar/styles/panel = ExtResource("9_4cedj")
 SelectableText/styles/panel = SubResource("StyleBoxFlat_uab83")

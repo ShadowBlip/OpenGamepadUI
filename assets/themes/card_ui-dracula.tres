@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=28 format=3 uid="uid://ehplgpp70vxa"]
+[gd_resource type="Theme" load_steps=27 format=3 uid="uid://ehplgpp70vxa"]
 
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_yyc4b"]
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="2_f7nj8"]
@@ -10,7 +10,6 @@
 [ext_resource type="StyleBox" uid="uid://x0dxx5c8u5rv" path="res://assets/styles/dracula/context_bar_menu_panel.tres" id="4_wqh56"]
 [ext_resource type="StyleBox" uid="uid://c2xl0k66pybg4" path="res://assets/styles/dracula/main_menu_panel.tres" id="7_n80rp"]
 [ext_resource type="StyleBox" uid="uid://c0pprevg50iuy" path="res://assets/styles/dracula/game_launch_buttons_panel.tres" id="8_iqinc"]
-[ext_resource type="StyleBox" uid="uid://br2w1fnanqkfa" path="res://assets/styles/dracula/quick_access_menu_panel.tres" id="9_5igh1"]
 [ext_resource type="StyleBox" uid="uid://dgbhd8b0on3sx" path="res://assets/styles/dracula/notification_panel.tres" id="9_sy73e"]
 [ext_resource type="StyleBox" uid="uid://362ykskskx" path="res://assets/styles/dracula/search_bar_menu_panel.tres" id="10_7w6bt"]
 [ext_resource type="StyleBox" uid="uid://y3qbwgrt2wai" path="res://assets/styles/dracula/settings_menu_panel.tres" id="10_rxp5w"]
@@ -110,7 +109,7 @@ PanelContainer/styles/panel = ExtResource("2_f7nj8")
 PluginStoreCard/styles/panel = ExtResource("11_83cpl")
 PowerMenu/styles/panel = ExtResource("10_u1qhh")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
-QAM/styles/panel = ExtResource("9_5igh1")
+QuickBar/styles/panel = null
 RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
 SearchBar/styles/panel = ExtResource("10_7w6bt")
 SelectableText/styles/panel = SubResource("StyleBoxFlat_803y7")

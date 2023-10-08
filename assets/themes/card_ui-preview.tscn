@@ -11,12 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://b6c6f3vdwx43s" path="res://core/ui/components/tab_label.tscn" id="6_cdmjx"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="6_fb72f"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_i5gpo"]
-[ext_resource type="PackedScene" uid="uid://b5xnora73yd8x" path="res://core/ui/card_ui/qam/qam_card.tscn" id="8_4qcrd"]
+[ext_resource type="PackedScene" uid="uid://b5xnora73yd8x" path="res://core/ui/card_ui/quick_bar/qb_card.tscn" id="8_4qcrd"]
 [ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_ybko6"]
 [ext_resource type="PackedScene" uid="uid://dlouq0b0bnm41" path="res://core/ui/card_ui/navigation/running_game_card.tscn" id="9_alt0d"]
 [ext_resource type="PackedScene" uid="uid://d1hlp6c8wrqgv" path="res://core/ui/components/status.tscn" id="10_w1v8b"]
 [ext_resource type="PackedScene" uid="uid://rr8qu8dhnyrf" path="res://core/ui/components/level_indicator.tscn" id="11_65ipo"]
-[ext_resource type="PackedScene" path="res://core/ui/components/plugin_store_card.tscn" id="12_xoo83"]
+[ext_resource type="PackedScene" uid="uid://cc7a35n2pqmmf" path="res://core/ui/components/plugin_store_card.tscn" id="12_xoo83"]
 
 [node name="CardUIPreview" type="ScrollContainer"]
 anchors_preset = 15
@@ -142,9 +142,9 @@ size_flags_horizontal = 3
 [node name="ExpandableCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("8_ybko6")]
 layout_mode = 2
 
-[node name="QuickAccessCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("8_4qcrd")]
+[node name="QuickBarCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("8_4qcrd")]
 layout_mode = 2
-title = "QAM Card"
+title = "Quick Bar Card"
 
 [node name="RunningGameCard" parent="MarginContainer/HBoxContainer/VBoxContainer3" instance=ExtResource("9_alt0d")]
 layout_mode = 2

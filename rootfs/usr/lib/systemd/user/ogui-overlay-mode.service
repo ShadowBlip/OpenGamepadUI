@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenGamepadui in Overlay Mode
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/opengamepadui --overlay-mode
+
+[Install]
+WantedBy=default.target

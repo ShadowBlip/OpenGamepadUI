@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://cycr83vpni1ka"]
+
+[ext_resource type="Script" path="res://core/systems/state/state_machine.gd" id="1_k2cku"]
+
+[resource]
+script = ExtResource("1_k2cku")
+logger_name = "QuickBarStateMachine"

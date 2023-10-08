@@ -168,11 +168,11 @@ debug: ## Run the project in debug mode in gamescope
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
-.PHONY: debug-qam
-debug-qam: ## Run the project in debug mode in gamescope with --only-qam
+.PHONY: debug-overlay
+debug-overlay: ## Run the project in debug mode in gamescope with --overlay-mode
 	$(GAMESCOPE) -e --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
-		--position 320,140 res://entrypoint.tscn --only-qam -- steam -gamepadui -steamos3 -steampal -steamdeck
+		--position 320,140 res://entrypoint.tscn --overlay-mode -- steam -gamepadui -steamos3 -steampal -steamdeck
 
 .PHONY: docs
 docs: docs/api/classes/.generated ## Generate docs
