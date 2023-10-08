@@ -12,12 +12,14 @@ var amd_apu_database := load("res://core/platform/hardware/amd_apu_database.tres
 var intel_apu_database := load("res://core/platform/hardware/intel_apu_database.tres") as APUDatabase
 var logger := Log.get_logger("HardwareManager", Log.LEVEL.INFO)
 var cards := get_gpu_cards()
+var card_ports: Array[DRMCardPort]
 var cpu := get_cpu_info()
 var gpu := get_gpu_info()
 var bios := get_bios_version()
 var kernel := get_kernel_version()
 var product_name := get_product_name()
 var vendor_name := get_vendor_name()
+var thread := load("res://core/systems/threading/io_thread.tres") as SharedThread
 
 
 ## Queries /sys/class for BIOS information
@@ -339,6 +341,30 @@ func get_active_gpu_device() -> PackedStringArray:
 	return [vendor, device]
 
 
+## Starts watching for GPU connector port state changes in a separate thread,
+## updating the properties of [DRMCardPort] objects and emitting signals
+## when their state changes.
+func start_gpu_watch() -> void:
+	# Don't start again if already ran
+	if card_ports.size() > 0:
+		logger.debug("GPU state watch already started")
+		return
+	
+	# Create a function to get called every thread "tick"
+	var port_update := func(_delta: float, port: DRMCardPort) -> void:
+		port.update()
+
+	# Poll GPU port state in a thread
+	# TODO: handle hot-swappable GPUs
+	for card in cards:
+		var ports := card.get_ports()
+		for port in ports:
+			thread.add_process(port_update.bind(port))
+		card_ports.append_array(ports)
+
+	thread.start()
+
+
 ## Provides info on the GPU vendor, model, and capabilities.
 func _get_lscpu_info() -> PackedStringArray:
 	var output: Array = _exec("lscpu")
@@ -394,8 +420,10 @@ func _exec(command: String, args: PackedStringArray = []) -> Array:
 
 ## Used to read values from sysfs
 func _read_sys(path: String) -> String:
-	var output: Array = _exec("cat", [path])
-	return (output[0][0] as String).strip_escapes()
+	var file := FileAccess.open(path, FileAccess.READ)
+	var length := file.get_length()
+	var bytes := file.get_buffer(length)
+	return bytes.get_string_from_utf8().strip_escapes()
 
 
 ## Data container for CPU information
