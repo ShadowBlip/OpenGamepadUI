@@ -18,7 +18,8 @@ func _ready() -> void:
 	if "--vapor-ui" in args:
 		# in overlay mode
 		if "--qam-only" in args or "--only-qam" in args:
-			print("[WARN] --only-qam and --qam-only launch arguments are deprecated and will be removed in a future update.")
+			print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are\
+			deprecated and will be removed in a future update. Use --overlay-mode instead.")
 			get_tree().change_scene_to_file("res://core/ui/vapor_ui_ooverlay_mode/overlay_mode_main.tscn")
 			return
 		elif "--overlay-mode" in args:
@@ -29,7 +30,8 @@ func _ready() -> void:
 
 	# Launch CardUI in overlay mode
 	if "--qam-only" in args or "--only-qam" in args:
-		print("[WARN] --only-qam and --qam-only launch arguments are deprecated and will be removed in a future update.")
+		print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are deprecated\
+		and will be removed in a future update. Use --overlay-mode instead.")
 		get_tree().change_scene_to_file("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
 	elif "--overlay-mode" in args:

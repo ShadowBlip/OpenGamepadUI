@@ -63,7 +63,14 @@ func add_boxart(boxart: BoxArtProvider) -> void:
 	add_child(boxart)
 
 
-## Adds the given menu scene to the Quick Access Menu
+## Deprecated method for adding a plugin to the quick bar.
+func add_to_qam(qb_item: Control, icon: Texture2D, focus_node: Control = null) -> void:
+	logger.warn("Deprecation Warning: The function \'add_to_qam\' has been deprecated and will be removed in a future update. \
+	Control node \"" + qb_item.name + "\" using deprecated function.")
+	add_to_quick_bar(qb_item, icon, focus_node)
+
+
+## Adds the given menu scene to the Quick Bar Menu
 func add_to_quick_bar(qb_item: Control, icon: Texture2D, focus_node: Control = null) -> void:
 	var qb := get_tree().get_first_node_in_group("quick-bar")
 	if not qb:
