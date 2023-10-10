@@ -280,8 +280,9 @@ func get_gpu_cards() -> Array[DRMCardInfo]:
 		if "-" in card_name:
 			continue
 		var card_info := get_gpu_card(card_name)
+		if not card_info:
+			continue
 		
-		# TODO: Itentify ports
 		found_cards.append(card_info)
 
 	var vulkan_info := _get_cards_from_vulkan()
