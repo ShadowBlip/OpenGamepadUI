@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://emu06cv8ccpg"]
-
-[ext_resource type="Script" path="res://core/global/gamescope_test.gd" id="1_23qbe"]
-
-[node name="gamescope_test" type="Node"]
-script = ExtResource("1_23qbe")

@@ -1,12 +1,14 @@
-extends Test
+extends GutTest
 
 
-func _ready() -> void:
+func test_get_access_points() -> void:
 	if not NetworkManager.supports_network():
+		pass_test("Networking not supported, skipping")
 		return
-		
+
 	for ap in NetworkManager.get_access_points():
-		logger.info(ap.ssid + " " + str(ap.strength))
+		gut.p("Found AP: " + str(ap.ssid))
 
 	for device in NetworkManager.get_devices():
-		logger.info(device.device + " " + device.type + " " + device.state)
+		gut.p("Found device: " + device.device + " " + device.type + " " + device.state)
+	pass_test("Skipping")

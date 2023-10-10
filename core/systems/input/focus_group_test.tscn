@@ -1,13 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://hiyw26sr71r7"]
+[gd_scene load_steps=4 format=3 uid="uid://hiyw26sr71r7"]
 
-[ext_resource type="Script" path="res://core/systems/input/focus_group_test.gd" id="1_yb5t4"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_fjdmt"]
 [ext_resource type="Resource" uid="uid://ym51uin41rbk" path="res://core/systems/input/focus_stack_test.tres" id="3_jfjyp"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="3_uekmi"]
 
 [node name="FocusGroupTest" type="Node"]
-script = ExtResource("1_yb5t4")
-finish_after_ready = false
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15

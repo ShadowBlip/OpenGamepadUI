@@ -1,0 +1,17 @@
+name: 🪲 Test
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-tests:
+    name: Run GUT tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          make in-docker TARGET='import test GAMESCOPE_CMD='

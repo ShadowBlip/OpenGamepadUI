@@ -1,11 +1,15 @@
-extends Node
+extends GutTest
 
-func _ready() -> void:
-	var gamescope := Gamescope.new()
+var gamescope := Gamescope.new()
+
+
+func test_float_to_long() -> void:
 	var to_int := gamescope._float_to_long(1.3)
-	print(to_int)
-	assert(to_int == 1067869798)
-	
-	var to_float := gamescope._long_to_float(to_int)
-	print(to_float)
-	assert(to_float > 1.2 and to_float <= 1.3)
+	gut.p(to_int)
+	assert_true(to_int == 1067869798)
+
+
+func test_long_to_float() -> void:
+	var to_float := gamescope._long_to_float(1067869798)
+	gut.p(to_float)
+	assert_almost_eq(to_float, 1.3, 0.01, "should be approximately 1.3")

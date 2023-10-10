@@ -35,8 +35,11 @@ func _init() -> void:
 
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		stop()
-		
+		mutex.lock()
+		running = false
+		mutex.unlock()
+		thread.wait_to_finish()
+
 
 ## Starts the thread for the thread group
 func start() -> void:

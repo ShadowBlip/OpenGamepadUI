@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://di2r8o1y5ls8l"]
-
-[ext_resource type="Script" path="res://core/systems/threading/thread_pool_test.gd" id="1_7lc0s"]
-
-[node name="ThreadPoolTest" type="Node"]
-script = ExtResource("1_7lc0s")
-test_name = "TestThreadPool"

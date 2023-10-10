@@ -1,9 +1,16 @@
-extends Test
+extends GutTest
+
+var ryzenadj := RyzenAdj.new()
+var supports_ryzenadj := has_ryzenadj()
 
 
-func _ready() -> void:
-	var ryzenadj := RyzenAdj.new()
+func has_ryzenadj() -> bool:
+	return OS.execute("which", ["ryzenadj"]) == OK
+
+
+func test_get_info() -> void:
+	if not supports_ryzenadj:
+		pass_test("ryzenadj not installed, skipping")
+		return
 	var info := await ryzenadj.get_info()
-	print(info.stapm_limit)
-	
-	ryzenadj.set_stapm_limit(44.60000 * 1000)
+	assert_not_null(info, "should return ryzenadj info")

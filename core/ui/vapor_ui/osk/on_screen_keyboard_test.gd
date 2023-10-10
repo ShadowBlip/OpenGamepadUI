@@ -1,4 +1,4 @@
-extends Test
+extends GutTest
 
 @onready var text_edit := $CenterContainer/TextEdit
 @onready var osk := $OnScreenKeyboard
