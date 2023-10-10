@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=28 format=3 uid="uid://bhdlcd8rvccus"]
+[gd_resource type="Theme" load_steps=29 format=3 uid="uid://bhdlcd8rvccus"]
 
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_xbfkn"]
 [ext_resource type="Texture2D" uid="uid://b8m8g766k3kay" path="res://assets/styles/darksoul/highlight.tres" id="2_d6a4j"]
@@ -14,6 +14,7 @@
 [ext_resource type="StyleBox" uid="uid://ciuc6cu2urmkg" path="res://assets/styles/darksoul/notification_panel.tres" id="9_hfwpg"]
 [ext_resource type="StyleBox" uid="uid://cuedb05hnwyhu" path="res://assets/styles/darksoul/settings_menu_panel.tres" id="9_loi6v"]
 [ext_resource type="StyleBox" uid="uid://b7jn4lre7ah4x" path="res://assets/styles/darksoul/plugin_store_card_panel.tres" id="10_lu8vp"]
+[ext_resource type="StyleBox" uid="uid://br2w1fnanqkfa" path="res://assets/styles/dracula/quick_bar_panel.tres" id="13_g8s16"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
@@ -114,7 +115,7 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_lko5h")
 PluginStoreCard/styles/panel = ExtResource("10_lu8vp")
 PowerMenu/styles/panel = ExtResource("9_7cwdd")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
-QuickBar/styles/panel = null
+QuickBar/styles/panel = ExtResource("13_g8s16")
 RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
 SearchBar/styles/panel = ExtResource("9_4cedj")
 SelectableText/styles/panel = SubResource("StyleBoxFlat_uab83")
