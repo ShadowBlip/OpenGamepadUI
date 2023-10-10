@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://megmeqjsdutu"]
-
-[ext_resource type="Script" path="res://core/systems/network/github_client_test.gd" id="1_actff"]
-
-[node name="GitHubClientTest" type="Node"]
-script = ExtResource("1_actff")
-finish_after_ready = false

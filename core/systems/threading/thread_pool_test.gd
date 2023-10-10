@@ -1,24 +1,25 @@
-extends Test
+extends GutTest
 
 var thread_pool := ThreadPool.new()
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func before_all() -> void:
 	thread_pool.start()
-	print("Thread pool started")
+
+
+func after_all() -> void:
+	thread_pool.stop()
+
+
+func test_exec() -> void:
 	var sleep1 := func():
-		OS.delay_msec(5000)
-		print("sleep1 done")
+		OS.delay_msec(100)
 		return "sleep1"
 	var sleep2 := func():
-		OS.delay_msec(10000)
-		print("sleep2 done")
+		OS.delay_msec(50)
 		return "sleep2"
 		
-	thread_pool.exec(sleep1)
-	thread_pool.exec(sleep2)
-
-
-func _exit_tree() -> void:
-	thread_pool.stop()
+	var result1 := await thread_pool.exec(sleep1) as String
+	var result2 := await thread_pool.exec(sleep2) as String
+	assert_eq(result1, "sleep1")
+	assert_eq(result2, "sleep2")

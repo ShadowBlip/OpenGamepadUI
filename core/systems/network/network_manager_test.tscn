@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://1bdhlkl55ee3"]
-
-[ext_resource type="Script" path="res://core/systems/network/network_manager_test.gd" id="1_7eymj"]
-
-[node name="network_manager_test" type="Node"]
-script = ExtResource("1_7eymj")
-test_name = "NetworkManagerTest"

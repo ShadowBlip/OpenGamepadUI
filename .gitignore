@@ -6,3 +6,4 @@ build
 dist
 settings.mk
 RyzenAdj
+.gut_editor_config.json

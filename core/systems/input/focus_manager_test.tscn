@@ -6,7 +6,6 @@
 
 [node name="FocusManagerTest" type="Node"]
 script = ExtResource("1_imj4y")
-test_name = "FocusManagerTest"
 
 [node name="HFlowContainer" type="HFlowContainer" parent="."]
 anchors_preset = 15

@@ -7,6 +7,7 @@ GODOT_RELEASE ?= $(shell godot --version | rev | cut -d '.' -f2 | rev)
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
+GAMESCOPE_CMD ?= $(GAMESCOPE) -e --xwayland-count 2 --
 
 EXPORT_TEMPLATE := $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
@@ -89,11 +90,16 @@ uninstall-ext: ## Uninstall the OpenGamepadUI systemd extension
 
 ##@ Development
 
+ifeq ($(GAMESCOPE_CMD),)
+HEADLESS := --headless
+endif
+
 .PHONY: test
 test: ## Run all unit tests
-	$(GODOT) --path $(PWD) --headless --debug \
-		--remote-debug tcp://127.0.0.1:6007 \
-		res://core/systems/testing/run_tests.tscn
+	$(GAMESCOPE_CMD) $(GODOT) \
+		--position 320,140 \
+		--path $(PWD) $(HEADLESS) \
+		--script res://addons/gut/gut_cmdln.gd
 
 .PHONY: build
 build: build/opengamepad-ui.x86_64 ## Build and export the project
@@ -133,7 +139,7 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 .PHONY: import
 import: ## Import project assets
 	@echo "Importing project assets. This will take some time..."
-	timeout --foreground 60 $(GODOT) --headless --editor . || echo "Finished"
+	timeout --foreground 60 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 
 .PHONY: edit
 edit: ## Open the project in the Godot editor
@@ -347,6 +353,7 @@ in-docker:
 		-v $(PWD):/src \
 		--workdir /src \
 		-e HOME=/home/build \
+		-e PWD=/src \
 		--user $(shell id -u):$(shell id -g) \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
 		make $(TARGET)

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://btjonoruc5wjb"]
-
-[ext_resource type="Script" path="res://core/systems/updater/semantic_version_test.gd" id="1_e3aio"]
-
-[node name="SemanticVersionTest" type="Node"]
-script = ExtResource("1_e3aio")
-test_name = "SemanticVersionTest"

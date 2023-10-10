@@ -1,16 +1,21 @@
-extends Test
+extends GutTest
+
+var shared_thread := SharedThread.new()
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	var thread_group := SharedThread.new()
-	thread_group.start()
-	var result = await thread_group.exec(long_method.bind(1))
-	logger.info("Got result: " + str(result))
-	assert_true(result == 3)
+func before_all() -> void:
+	shared_thread.start()
+
+
+func after_all() -> void:
+	shared_thread.stop()
+
+
+func test_exec() -> void:
+	var result = await shared_thread.exec(long_method.bind(1))
+	assert_eq(result, 2, "should have returned a result")
 
 
 func long_method(one: int) -> int:
-	OS.delay_msec(10000)
-	logger.info("Done!")
+	OS.delay_msec(100)
 	return one + 1
