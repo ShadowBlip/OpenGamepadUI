@@ -167,6 +167,8 @@ func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _process_input(_delta: float) -> void:
 	# Process the input for all currently managed gamepads
+	if not is_instance_valid(gamepads):
+		return
 	for gamepad in gamepads.items():
 		gamepad.process_input()
 
