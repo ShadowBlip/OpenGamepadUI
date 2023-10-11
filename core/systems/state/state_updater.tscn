@@ -4,3 +4,4 @@
 
 [node name="StateUpdater" type="Node"]
 script = ExtResource("1_anggw")
+on_signal = ""

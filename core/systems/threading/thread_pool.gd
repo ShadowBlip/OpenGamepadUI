@@ -31,9 +31,7 @@ class Task extends RefCounted:
 
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		for thread in threads:
-			semaphore.post()
-			thread.wait_to_finish()
+		stop()
 
 
 ## Starts the threads for the thread pool

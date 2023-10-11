@@ -35,10 +35,7 @@ func _init() -> void:
 
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
-		mutex.lock()
-		running = false
-		mutex.unlock()
-		thread.wait_to_finish()
+		stop()
 
 
 ## Starts the thread for the thread group
@@ -231,22 +228,28 @@ func _run() -> void:
 func _process(delta: float) -> void:
 	# Only lock our mutex fetching data, not during processing
 	mutex.lock()
-	var process_nodes := nodes.duplicate()
-	var process_methods := one_shots.duplicate()
-	var process_scheduled := scheduled_funcs.duplicate()
-	var process_loops := process_funcs.duplicate()
+	var process_nodes := nodes.duplicate() as Array[NodeThread]
+	var process_methods := one_shots.duplicate() as Array[Callable]
+	var process_scheduled := scheduled_funcs.duplicate() as Array[ScheduledTask]
+	var process_loops := process_funcs.duplicate() as Array[Callable]
 	mutex.unlock()
 
 	# Process any thread process methods
 	for process in process_loops:
+		if not is_instance_valid(process.get_object()):
+			continue
 		process.call(delta)
 
 	# Process nodes with _thread_process
 	for node in process_nodes:
+		if not is_instance_valid(node):
+			continue
 		node._thread_process(delta)
 	
 	# Call any one-shot thread methods
 	for method in process_methods:
+		if not is_instance_valid(method.get_object()):
+			continue
 		_async_call(method)
 		mutex.lock()
 		one_shots.erase(method)
@@ -258,6 +261,8 @@ func _process(delta: float) -> void:
 		if current_time - task.start_time < task.wait_time_ms:
 			continue
 		var method := task.method as Callable
+		if not is_instance_valid(method.get_object()):
+			continue
 		method.call()
 		mutex.lock()
 		scheduled_funcs.erase(task)
