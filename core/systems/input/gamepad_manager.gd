@@ -20,7 +20,7 @@ signal gamepad_added(gamepad: ManagedGamepad)
 signal gamepad_removed
 
 var platform := load("res://core/global/platform.tres") as Platform
-var device_hider := load("res://core/systems/input/device_hider.tres") as DeviceHider
+var device_unhider := load("res://core/systems/input/device_hider.tres") as DeviceHider
 var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
 
 var gamepads := GamepadArray.new()
@@ -38,8 +38,8 @@ func _init() -> void:
 		logger.info("Not initializing. Ran from editor.")
 		return
 
-	# If we crashed, unhide any device events that were orphaned
-	await device_hider.restore_all_hidden()
+	# Unhide any device events that were orphaned by bad programs like HandyGCCS
+	await device_unhider.restore_all_hidden()
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
@@ -143,17 +143,14 @@ func exit() -> void:
 			gamepad.phys_device.grab(false)
 			gamepad.virt_device.close()
 			gamepad.phys_device.close()
-			device_hider.restore_event_device(gamepad.phys_path)
 		if gamepad is HandheldGamepad:
 			logger.debug("Cleaning up handheld gamepad: " + gamepad.gamepad.phys_path)
 			gamepad.gamepad.phys_device.grab(false)
 			gamepad.gamepad.virt_device.close()
 			gamepad.gamepad.phys_device.close()
-			device_hider.restore_event_device(gamepad.gamepad.phys_path)
 			
 			gamepad.kb_device.grab(false)
 			gamepad.kb_device.close()
-			device_hider.restore_event_device(gamepad.kb_event_path)
 
 
 ## Sets the gamepad intercept mode
@@ -167,8 +164,6 @@ func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _process_input(_delta: float) -> void:
 	# Process the input for all currently managed gamepads
-	if not is_instance_valid(gamepads):
-		return
 	for gamepad in gamepads.items():
 		gamepad.process_input()
 
@@ -236,10 +231,6 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		
 		# Hide the device from other processes
 		var path := discovered_handheld.get_path()
-		logger.debug("Trying to re-hide handheld gamepad")
-		var hidden_path := await device_hider.hide_event_device(path)
-		if hidden_path == "":
-			logger.warn("Unable to re-hide handheld gamepad: " + path)
 
 	# Setup any handheld gamepads if they are discovered and not yet configured
 	if not gamepads.has_handheld() and discovered_handheld:
@@ -247,21 +238,13 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		logger.info("A handheld gamepad was discovered at: " + path)
 		# Hide the device from other processes
 		logger.debug("Trying to hide handheld gamepad")
-		var hidden_path := await device_hider.hide_event_device(path)
-		if hidden_path == "":
-			logger.warn("Unable to hide handheld gamepad: " + path)
-			logger.warn("Opening the raw handheld gamepad instead")
-			# Try to open the non-hidden device instead
-			hidden_path = path
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
-		logger.debug("Opening handheld gamepad at: " + hidden_path)
+		logger.debug("Opening handheld gamepad at: " + path)
 		var gamepad := HandheldGamepad.new()
-		if gamepad.open(hidden_path) != OK:
-			logger.error("Unable to create handheld gamepad for: " + hidden_path)
-			if hidden_path != path:
-				logger.debug("Restoring device back to its regular path")
-				device_hider.restore_event_device(hidden_path)
+		if gamepad.open(path) != OK:
+			logger.error("Unable to create handheld gamepad for: " + path)
+
 		else:
 			gamepad.setup(discovered_keyboards)
 			gamepads.add(gamepad)
@@ -281,20 +264,10 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			logger.debug("Device appears to be virtual , skipping " + path)
 			continue
 
-		# Hide the device from other processes
-		var hidden_path := await device_hider.hide_event_device(path)
-		if hidden_path == "":
-			logger.warn("Unable to hide gamepad: " + path)
-			logger.warn("Opening the raw gamepad instead")
-			# Try to open the non-hidden device instead
-			hidden_path = path
-
 		# Create a new managed gamepad with physical/virtual gamepad pair
 		var gamepad := ManagedGamepad.new()
-		if gamepad.open(hidden_path) != OK:
-			logger.error("Unable to create managed gamepad for: " + hidden_path)
-			if hidden_path != path:
-				device_hider.restore_event_device(hidden_path)
+		if gamepad.open(path) != OK:
+			logger.error("Unable to create managed gamepad for: " + path)
 			continue
 
 		gamepads.add(gamepad)
