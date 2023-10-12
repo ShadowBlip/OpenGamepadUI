@@ -68,6 +68,7 @@ grow_vertical = 2
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+theme_type_variation = &"QuickBar"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
 layout_mode = 2
