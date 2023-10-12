@@ -38,16 +38,22 @@ var virt_device: VirtualInputDevice
 var virt_mouse := GamepadMouse.new()
 var abs_y_max: int
 var abs_y_min: int
+var abs_y_mid: int
 var abs_x_max: int
 var abs_x_min: int
+var abs_x_mid: int
 var abs_z_max: int
 var abs_z_min: int
+var abs_z_mid: int
 var abs_ry_max: int
 var abs_ry_min: int
+var abs_ry_mid: int
 var abs_rx_max: int
 var abs_rx_min: int
+var abs_rx_mid: int
 var abs_rz_max: int
 var abs_rz_min: int
+var abs_rz_mid: int
 ## Bitwise flags indicating what left-stick axis directions are currently being pressed.
 var axis_pressed: AXIS_PRESSED
 var should_process_mouse := false
@@ -140,16 +146,27 @@ func open_physical(path: String) -> int:
 	# Query information about the device
 	abs_y_max = phys_device.get_abs_max(InputDeviceEvent.ABS_Y)
 	abs_y_min = phys_device.get_abs_min(InputDeviceEvent.ABS_Y)
+	abs_y_mid = (abs_y_max + abs_y_min)/2
+	logger.debug("Found axis range: " +  " ".join([str(abs_y_min), str(abs_y_mid), str(abs_y_max)]))
 	abs_x_max = phys_device.get_abs_max(InputDeviceEvent.ABS_X)
 	abs_x_min = phys_device.get_abs_min(InputDeviceEvent.ABS_X)
+	abs_x_mid = (abs_x_max + abs_x_min)/2
+
 	abs_z_max = phys_device.get_abs_max(InputDeviceEvent.ABS_Z)
 	abs_z_min = phys_device.get_abs_min(InputDeviceEvent.ABS_Z)
+	abs_z_mid = (abs_z_max + abs_z_min)/2
+
 	abs_ry_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RY)
 	abs_ry_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RY)
+	abs_ry_mid = (abs_ry_max + abs_ry_min)/2
+
 	abs_rx_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RX)
 	abs_rx_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RX)
+	abs_rx_mid = (abs_rx_max + abs_rx_min)/2
+
 	abs_rz_max = phys_device.get_abs_max(InputDeviceEvent.ABS_RZ)
 	abs_rz_min = phys_device.get_abs_min(InputDeviceEvent.ABS_RZ)
+	abs_rz_mid = (abs_rz_max + abs_rz_min)/2
 
 	# Store value of get_phys() so this can be reidentified if disconnected.
 	phys = phys_device.get_phys()
@@ -753,7 +770,7 @@ func _translate_output_event(out_event: MappableEvent, value: float) -> Mappable
 func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 	var threshold := 0.35
 	var value := _normalize_axis(event)
-	logger.debug("_is_axis_pressed: " + event.get_code_name() + " code: " + str(event.get_code()) + " value: " + str(value))
+	logger.debug("_is_axis_pressed: " + event.get_code_name() + " code: " + str(event.get_code()) + " value: " + str(value) + " event_value: " + str(event.value))
 	if is_positive:
 		if value > threshold:
 			logger.debug("_is_axis_pressed: true")
@@ -771,56 +788,60 @@ func _is_axis_pressed(event: InputDeviceEvent, is_positive: bool) -> bool:
 func _normalize_axis(event: InputDeviceEvent) -> float:
 	match event.get_code():
 		event.ABS_Y:
-			if event.value > 0:
-				var maximum := abs_y_max
-				var value := event.value / float(maximum)
+			var event_value := event.value - abs_y_mid
+			if event_value >= 0:
+				var maximum := abs_y_max - abs_y_mid
+				var value := event_value / float(maximum)
 				return value
-			if event.value <= 0:
-				var minimum := abs_y_min
-				var value := event.value / float(minimum)
+			if event_value < 0:
+				var minimum := abs_y_min - abs_y_mid
+				var value := event_value / float(minimum)
 				return -value
 		event.ABS_X:
-			if event.value > 0:
-				var maximum := abs_x_max
-				var value := event.value / float(maximum)
+			var event_value := event.value - abs_x_mid
+			if event_value >= 0:
+				var maximum := abs_x_max  - abs_x_mid
+				var value := event_value / float(maximum)
 				return value
-			if event.value <= 0:
-				var minimum := abs_x_min
-				var value := event.value / float(minimum)
+			if event_value < 0:
+				var minimum := abs_x_min - abs_x_mid
+				var value := event_value / float(minimum)
 				return -value
 		event.ABS_Z:
-			if event.value > 0:
+			if event.value >= 0:
 				var maximum := abs_z_max
 				var value := event.value / float(maximum)
 				return value
-			if event.value <= 0:
+			if event.value < 0:
 				var minimum := abs_z_min
 				var value := event.value / float(minimum)
 				return -value
 		event.ABS_RY:
-			if event.value > 0:
-				var maximum := abs_ry_max
-				var value := event.value / float(maximum)
+			var event_value := event.value - abs_ry_mid
+			if event_value >= 0:
+				var maximum := abs_ry_max - abs_ry_mid
+				var value := event_value / float(maximum)
 				return value
-			if event.value <= 0:
-				var minimum := abs_ry_min
-				var value := event.value / float(minimum)
+			if event_value < 0:
+				var minimum := abs_ry_min - abs_ry_mid
+				var value := event_value / float(minimum)
 				return -value
 		event.ABS_RX:
-			if event.value > 0:
-				var maximum := abs_rx_max
-				var value := event.value / float(maximum)
+			var event_value := event.value - abs_rx_mid
+			if event_value >= 0:
+				var maximum := abs_rx_max - abs_rx_mid
+				var value := event_value / float(maximum)
 				return value
-			if event.value <= 0:
-				var minimum := abs_rx_min
-				var value := event.value / float(minimum)
+			if event_value < 0:
+				var minimum := abs_rx_min - abs_rx_mid
+				var value := event_value / float(minimum)
 				return -value
 		event.ABS_RZ:
-			if event.value > 0:
+			if event.value >= 0:
 				var maximum := abs_rz_max
 				var value := event.value / float(maximum)
 				return value
-			if event.value <= 0:
+			if event.value < 0:
 				var minimum := abs_rz_min
 				var value := event.value / float(minimum)
 				return -value
@@ -834,56 +855,56 @@ func _normalize_axis(event: InputDeviceEvent) -> float:
 func _denormalize_axis(axis_code: int, normalized_value: float) -> float:
 	match axis_code:
 		InputDeviceEvent.ABS_Y:
-			if normalized_value > 0:
-				var maximum := abs_y_max
-				var value := normalized_value * float(maximum)
+			if normalized_value >= 0:
+				var maximum := abs_y_max - abs_y_mid
+				var value := (normalized_value * float(maximum)) + abs_y_mid
 				return value
-			if normalized_value <= 0:
-				var minimum := abs_y_min
-				var value := normalized_value * float(minimum)
+			if normalized_value < 0:
+				var minimum := abs_y_min - abs_y_mid
+				var value := normalized_value * float(minimum) + abs_y_mid
 				return -value
 		InputDeviceEvent.ABS_X:
-			if normalized_value > 0:
-				var maximum := abs_x_max
-				var value := normalized_value * float(maximum)
+			if normalized_value >= 0:
+				var maximum := abs_x_max - abs_x_mid
+				var value := normalized_value * float(maximum) + abs_x_mid
 				return value
-			if normalized_value <= 0:
-				var minimum := abs_x_min
-				var value := normalized_value * float(minimum)
+			if normalized_value < 0:
+				var minimum := abs_x_min - abs_x_mid
+				var value := normalized_value * float(minimum) + abs_x_mid
 				return -value
 		InputDeviceEvent.ABS_Z:
-			if normalized_value > 0:
+			if normalized_value >= 0:
 				var maximum := abs_z_max
 				var value := normalized_value * float(maximum)
 				return value
-			if normalized_value <= 0:
+			if normalized_value < 0:
 				var minimum := abs_z_min
 				var value := normalized_value * float(minimum)
 				return -value
 		InputDeviceEvent.ABS_RY:
-			if normalized_value > 0:
-				var maximum := abs_ry_max
-				var value := normalized_value * float(maximum)
+			if normalized_value >= 0:
+				var maximum := abs_ry_max - abs_ry_mid
+				var value := normalized_value * float(maximum) + abs_ry_mid
 				return value
-			if normalized_value <= 0:
-				var minimum := abs_ry_min
-				var value := normalized_value * float(minimum)
+			if normalized_value < abs_ry_mid:
+				var minimum := abs_ry_min - - abs_ry_mid
+				var value := normalized_value * float(minimum) + abs_ry_mid
 				return -value
 		InputDeviceEvent.ABS_RX:
-			if normalized_value > 0:
-				var maximum := abs_rx_max
-				var value := normalized_value * float(maximum)
+			if normalized_value >= abs_rx_mid:
+				var maximum := abs_rx_max - abs_rx_mid
+				var value := normalized_value * float(maximum) + abs_rx_mid
 				return value
-			if normalized_value <= 0:
-				var minimum := abs_rx_min
-				var value := normalized_value * float(minimum)
+			if normalized_value < abs_rx_mid:
+				var minimum := abs_rx_min - abs_rx_mid
+				var value := normalized_value * float(minimum) + abs_rx_mid
 				return -value
 		InputDeviceEvent.ABS_RZ:
-			if normalized_value > 0:
+			if normalized_value >= 0:
 				var maximum := abs_rz_max
 				var value := normalized_value * float(maximum)
 				return value
-			if normalized_value <= 0:
+			if normalized_value < 0:
 				var minimum := abs_rz_min
 				var value := normalized_value * float(minimum)
 				return -value
