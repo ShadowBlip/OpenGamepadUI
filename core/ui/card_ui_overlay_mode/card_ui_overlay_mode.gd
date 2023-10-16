@@ -17,9 +17,8 @@ var display := Gamescope.XWAYLAND.OGUI
 var game_running: bool = false
 var window_id: int
 var pid: int = OS.get_process_id()
-var shared_thread: SharedThread
 var underlay_log: FileAccess
-var underlay_process: InteractiveProcess
+var underlay_process: int
 var underlay_window_id: int
 
 @onready var quick_bar_menu := $%QuickBarMenu
@@ -143,22 +142,10 @@ func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 func _start_steam_process(args: Array) -> void:
 	# Setup steam
 	var underlay_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
+	args.push_front("SDL_JOYSTICK_HIDAPI=0")
 	_start_underlay_process(args, underlay_log_path)
 
-	# Look for steam and save window ID
-	while not underlay_window_id:
-		# Find Steam in the display tree
-		var root_win_id := gamescope.get_root_window_id(display)
-		var all_windows := gamescope.get_all_windows(root_win_id, display)
-		for window in all_windows:
-			if window == window_id:
-				continue
-			if gamescope.has_xprop(window, "STEAM_OVERLAY", display):
-				underlay_window_id = window
-				logger.debug("Found steam! " + str(underlay_window_id))
-				break
-		# Wait a bit to reduce cpu load.
-		OS.delay_msec(1000)
+	_find_underlay_window_id()
 
 	# Start timer to check if steam has exited.
 	var exit_timer := Timer.new()
@@ -169,10 +156,11 @@ func _start_steam_process(args: Array) -> void:
 	exit_timer.start()
 
 
+## Called to start the specified underlay process.
 func _start_underlay_process(args: Array, log_path: String) -> void:
-	# Start the shared thread we use for logging.
-	shared_thread = SharedThread.new()
-	shared_thread.start()
+	# Set up loggining in the new thread.
+	args.append("2>&1")
+	args.append(log_path)
 
 	# Setup logging
 	underlay_log = FileAccess.open(log_path, FileAccess.WRITE)
@@ -181,15 +169,31 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 		logger.warn("Got error opening log file.")
 	else:
 		logger.info("Started logging underlay process at " + log_path)
-	var command: String = args[0]
-	args.remove_at(0)
-	underlay_process = InteractiveProcess.new(command, args)
-	if underlay_process.start() != OK:
-		logger.error("Failed to start child process.")
-		return
-	var logger_func := func(delta: float):
-		underlay_process.output_to_log_file(underlay_log)
-	shared_thread.add_process(logger_func)
+	var command: String = "env"
+	underlay_process = Reaper.create_process(command, args)
+
+
+## Called to idendify the xwayland window ID of the underlay process.
+func _find_underlay_window_id() -> void:
+	# Find Steam in the display tree
+	var root_win_id := gamescope.get_root_window_id(display)
+	var all_windows := gamescope.get_all_windows(root_win_id, display)
+	for window in all_windows:
+		if window == window_id:
+			continue
+		if gamescope.has_xprop(window, "STEAM_OVERLAY", display):
+			underlay_window_id = window
+			logger.debug("Found steam! " + str(underlay_window_id))
+			break
+
+	# If we didn't find the window_id, set up a tiemr to loop back and try again.
+	if not underlay_window_id:
+		var underlay_window_timer := Timer.new()
+		underlay_window_timer.set_one_shot(true)
+		underlay_window_timer.set_timer_process_callback(Timer.TIMER_PROCESS_IDLE)
+		underlay_window_timer.timeout.connect(_find_underlay_window_id)
+		add_child(underlay_window_timer)
+		underlay_window_timer.start()
 
 
 ## Called when "quick_bar_menu_state" is entered.
@@ -226,6 +230,8 @@ func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.
 func _check_exit() -> void:
+	if Reaper.get_pid_state(underlay_process) in ["R (running)", "S (sleeping)"]:
+		return
 	if gamescope.has_xprop(underlay_window_id, "STEAM_OVERLAY", display):
 		return
 	logger.debug("Steam closed. Shutting down.")
