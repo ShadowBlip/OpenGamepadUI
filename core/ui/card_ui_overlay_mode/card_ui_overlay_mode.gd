@@ -142,7 +142,9 @@ func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 func _start_steam_process(args: Array) -> void:
 	# Setup steam
 	var underlay_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
+	args.push_front("&&")
 	args.push_front("SDL_JOYSTICK_HIDAPI=0")
+	args.push_front("export")
 	_start_underlay_process(args, underlay_log_path)
 
 	_find_underlay_window_id()
@@ -169,8 +171,8 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 		logger.warn("Got error opening log file.")
 	else:
 		logger.info("Started logging underlay process at " + log_path)
-	var command: String = "env"
-	underlay_process = Reaper.create_process(command, args)
+	var command: String = "bash"
+	underlay_process = Reaper.create_process(command, ["-c", " ".join(args)])
 
 
 ## Called to idendify the xwayland window ID of the underlay process.
