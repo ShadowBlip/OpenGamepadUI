@@ -79,6 +79,7 @@ func test_denormalize_axis(params=use_parameters(normalize_axis_params)) -> void
 
 	# Try to denormalize the input events
 	for event in events:
+		gut.p("Testing params: " + str(event.code) + " " + str(expected))
 		var denormalized := gamepad._denormalize_axis(event.code, expected)
 		assert_eq(denormalized, event.value)
 
@@ -102,6 +103,7 @@ func create_events(type: int, codes: Array[int], value: int) -> Array[InputDevic
 
 func set_gamepad_min_mid_max(gamepad: ManagedGamepad, axis_min: int, axis_max: int) -> void:
 	var axis_mid := (axis_max + axis_min)/2
+	gut.p("Mid point for axis: " + str(axis_mid))
 	gamepad.abs_x_min = axis_min
 	gamepad.abs_x_max = axis_max
 	gamepad.abs_x_mid = axis_mid
