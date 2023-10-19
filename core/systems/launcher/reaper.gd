@@ -10,8 +10,8 @@ enum SIG {
 ## Spawn a process with PR_SET_CHILD_SUBREAPER set so child processes will
 ## reparent themselves to OpenGamepadUI. Returns the PID of the spawned process.
 static func create_process(cmd: String, args: PackedStringArray) -> int:
-	#return Subreaper.create_process(cmd, args)
-	return OS.create_process(cmd, args)
+	#return OS.create_process(cmd, args)
+	return LinuxThread.subreaper_create_process(cmd, args)
 
 
 # Kills the given PID and all its descendants
@@ -22,10 +22,19 @@ static func reap(pid: int, sig: SIG = SIG.TERM) -> void:
 	
 	# Kill all children in the process tree from the leaves inward
 	pids.reverse()
-	for p in pids:
-		OS.execute("kill", [sig_arg, "--", "-{0}".format([p])])
-		#OS.kill(p)
 	var logger := Log.get_logger("Reaper")
+	for p in pids:
+		# Kill PGID
+		var cmd := "kill"
+		var args := [sig_arg, "--", "-{0}".format([p])]
+		logger.info(cmd + " " + " ".join(args))
+		OS.execute(cmd, args)
+		
+		# Kill PIDs
+		args = [sig_arg, "--", "{0}".format([p])]
+		logger.info(cmd + " " + " ".join(args))
+		OS.execute(cmd, args)
+
 	logger.info("Reaped pids: " + ",".join(pids))
 
 
