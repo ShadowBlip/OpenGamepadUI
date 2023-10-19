@@ -232,7 +232,7 @@ func get_child_pids() -> PackedInt32Array:
 
 	# Get all child processes
 	var child_pids := Reaper.pstree(pid)
-	pids.append_array(pids)
+	pids.append_array(child_pids)
 
 	# Get all PIDs that share the running app's process ID group
 	var pids_in_group := []
