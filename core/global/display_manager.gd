@@ -24,6 +24,22 @@ var logger := Log.get_logger("DisplayManager", Log.LEVEL.INFO)
 var backlights := get_backlight_paths()
 var brightness_provider := _get_brightness_provider()
 
+var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
+var thread := load("res://core/systems/threading/io_thread.tres") as SharedThread
+var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+
+
+func _init():
+	for card in hardware_manager.get_gpu_cards():
+		var ports := card.get_ports()
+		for port in ports:
+			thread.add_process(port.update)
+			thread.start()
+
+
+func _ready():
+	hardware_manager.port.changed.connect(_on_port_changed)
+
 
 ## Returns true if OpenGamepadUI has access to adjust brightness
 func supports_brightness() -> bool:
@@ -134,3 +150,44 @@ func _get_brightness_provider() -> BRIGHTNESS_PROVIDER:
 ## Write a value using steamos polkit helper
 func _steamos_priv_write(path: String, value: int) -> int:
 	return OS.execute(steamos_write_bin, [path, str(value)])
+
+
+func _on_port_changed():
+	pass
+
+
+func rotate_screen(position: int) -> bool:
+	gamescope.set_rotation(position)
+	return true
+
+
+func get_list_of_connectors() -> PackedStringArray:
+	var connector_names = [] as PackedStringArray
+	for card in hardware_manager.get_gpu_cards():
+		var ports := card.get_ports()
+		for port in ports:
+			if port.status == "connected":
+				connector_names.append(port.name)
+	return connector_names
+
+
+func get_list_of_connector_ids() -> Array:
+	var connector_ids = [] as Array
+	for card in hardware_manager.get_gpu_cards():
+		var ports := card.get_ports()
+		for port in ports:
+			if port.status == "connected":
+				connector_ids.append(port.connector_id)
+	return connector_ids
+
+
+func target_connector(connector_id: int) -> bool:
+	for card in hardware_manager.get_gpu_cards():
+		var ports := card.get_ports()
+		for port in ports:
+			if port.status == "connected":
+				if port.connector_id == connector_id && port.connector_id > 0:
+					# DISPLAY=:0 xprop -root -f GAMESCOPE_CONNECTOR_CONTROL 32c GAMESCOPE_CONNECTOR_CONTROL 0
+					gamescope.set_connector(connector_id)
+					return true
+	return false

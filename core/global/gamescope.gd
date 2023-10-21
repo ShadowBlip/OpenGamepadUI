@@ -583,6 +583,29 @@ func set_resolution(resolution: Vector2i, allow_super: bool = false, display: XW
 	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_XWAYLAND_MODE_CONTROL", args)
 
 
+func set_rotation(rotation_index: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(XWAYLAND.PRIMARY)
+	if not xwayland:
+		return -1
+	
+	var target_display := get_display_number(display)
+	var root_id := xwayland.get_root_window_id()
+	var args := PackedInt32Array([rotation_index])
+	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_ROTATE_CONTROL", args)
+
+
+func set_connector(connector_id: int, display: XWAYLAND = XWAYLAND.PRIMARY) -> int:
+	var xwayland := get_xwayland(XWAYLAND.PRIMARY)
+	if not xwayland:
+		return -1
+	
+	var target_display := get_display_number(display)
+	var root_id := xwayland.get_root_window_id()
+	var args := PackedInt32Array([connector_id])
+	print(args)
+	return _set_xprop_array(xwayland, root_id, "GAMESCOPE_CONNECTOR_CONTROL", args)
+
+
 ## Returns the currently set gamescope saturation
 # Based on vibrantDeck by Scrumplex
 func get_saturation(display: XWAYLAND = XWAYLAND.PRIMARY) -> float:
