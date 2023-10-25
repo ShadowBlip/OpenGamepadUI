@@ -82,19 +82,19 @@ var logger: Log.Logger
 # List of events to consume the BTN_MODE event in PASS_QB mode. This enables the
 # use of default button combo's in Steam.
 var use_mode_list: Array = [
-	InputDeviceEvent.BTN_WEST,
+	InputDeviceEvent.ABS_HAT0X,
+	InputDeviceEvent.ABS_HAT0Y,
 	InputDeviceEvent.BTN_NORTH,
+	InputDeviceEvent.BTN_SELECT,
 	InputDeviceEvent.BTN_SOUTH,
+	InputDeviceEvent.BTN_START,
+	InputDeviceEvent.BTN_TL,
+	InputDeviceEvent.BTN_TR,
 	InputDeviceEvent.BTN_TRIGGER_HAPPY1,
 	InputDeviceEvent.BTN_TRIGGER_HAPPY2,
 	InputDeviceEvent.BTN_TRIGGER_HAPPY3,
 	InputDeviceEvent.BTN_TRIGGER_HAPPY4,
-	InputDeviceEvent.ABS_HAT0X,
-	InputDeviceEvent.ABS_HAT0Y,
-	InputDeviceEvent.BTN_TL,
-	InputDeviceEvent.BTN_TR,
-	InputDeviceEvent.BTN_SELECT,
-	InputDeviceEvent.BTN_START
+	InputDeviceEvent.BTN_WEST,
 ]
 
 
@@ -409,17 +409,26 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 			mode_event = null
 			return
 
-		# Process button combos that use BTN_MODE and another button
-		if event.get_code() in use_mode_list and mode_event:
-			if event.value == 1:
-				logger.debug("Mode DOWN! (Out)")
-				virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
-				OS.delay_msec(80)
-				virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
-				mode_event = null
+		## Process button combos that use BTN_MODE and another button
+		# Send MODE first if "down" event that uses mode.
+		if event.get_code() in use_mode_list and mode_event and event.get_value() == 1:
+			logger.debug("Mode Pressed: " + str(event.get_value()))
+			virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 1)
+			virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+			OS.delay_msec(180)
+
+		# Send original event
 		if event.get_type() == event.EV_KEY:
-			logger.debug("Event out: " + event.get_code_name() + " " + str(event.get_value()))
+			logger.debug("Event Pressed: " + event.get_code_name() + " " + str(event.get_value()))
 		virt_device.write_event(event.get_type(), event.get_code(), event.get_value())
+
+		# Send MODE last if "up" event that uses mode.
+		if event.get_code() in use_mode_list and mode_event and event.get_value() == 0:
+			virt_device.write_event(event.EV_SYN, event.SYN_REPORT, 0)
+			OS.delay_msec(180)
+			logger.debug("Mode Pressed: " + str(event.get_value()))
+			virt_device.write_event(mode_event.get_type(), mode_event.get_code(), 0)
+			mode_event = null
 		return
 
 	# Intercept mode ALL will not send *any* input to the virtual gamepad
