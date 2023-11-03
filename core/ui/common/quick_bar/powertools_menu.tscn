@@ -12,10 +12,6 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 66.0
-offset_top = -116.0
-offset_right = 66.0
-offset_bottom = -116.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qncpn")
@@ -24,10 +20,18 @@ script = ExtResource("1_qncpn")
 current_focus = NodePath("../CPUBoostButton")
 focus_stack = ExtResource("3_0iyf7")
 
+[node name="ApplyTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+autostart = true
+
+[node name="ServiceTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
 [node name="WaitLabel" parent="." instance=ExtResource("4_1pfjc")]
 layout_mode = 2
-text = "Reading system info.
-Please wait..."
+text = "Waiting for PowerStation service..."
 horizontal_alignment = 1
 
 [node name="CPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
