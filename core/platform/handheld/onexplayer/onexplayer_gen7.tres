@@ -1,0 +1,180 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=42 format=3 uid="uid://dmfg5asmedq7o"]
+
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_1fuiu"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_ug8uk"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_bdwvr"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_pjfbg"]
+[ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="5_qy6y2"]
+
+[sub_resource type="Resource" id="Resource_r7met"]
+script = ExtResource("1_1fuiu")
+phys_path = "'usb-0000:c4:00.3-4/input0"
+name = "Microsoft X-Box 360 pad"
+
+[sub_resource type="Resource" id="Resource_efbap"]
+script = ExtResource("2_ug8uk")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_skaxw"]
+script = ExtResource("2_ug8uk")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_dck4a"]
+script = ExtResource("3_bdwvr")
+name = "Volume Up"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_efbap")])
+emits = SubResource("Resource_skaxw")
+
+[sub_resource type="Resource" id="Resource_l8u3c"]
+script = ExtResource("2_ug8uk")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_d2nwm"]
+script = ExtResource("2_ug8uk")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_2imxn"]
+script = ExtResource("3_bdwvr")
+name = "Volume Down"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_l8u3c")])
+emits = SubResource("Resource_d2nwm")
+
+[sub_resource type="Resource" id="Resource_vn4sq"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTCTRL"
+
+[sub_resource type="Resource" id="Resource_ev0tw"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTALT"
+
+[sub_resource type="Resource" id="Resource_e0d8q"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_raeh7"]
+script = ExtResource("2_ug8uk")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_ythr7"]
+script = ExtResource("3_bdwvr")
+name = "Turbo"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_vn4sq"), SubResource("Resource_ev0tw"), SubResource("Resource_e0d8q")])
+emits = SubResource("Resource_raeh7")
+
+[sub_resource type="Resource" id="Resource_tvs2f"]
+script = ExtResource("2_ug8uk")
+code = "KEY_O"
+
+[sub_resource type="Resource" id="Resource_vrnek"]
+script = ExtResource("2_ug8uk")
+code = "KEY_RIGHTCTRL"
+
+[sub_resource type="Resource" id="Resource_1at0l"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_a72xl"]
+script = ExtResource("2_ug8uk")
+code = "KEY_KEYBOARD"
+
+[sub_resource type="Resource" id="Resource_uxras"]
+script = ExtResource("3_bdwvr")
+name = "KB (Short Press)"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_tvs2f"), SubResource("Resource_vrnek"), SubResource("Resource_1at0l")])
+emits = SubResource("Resource_a72xl")
+
+[sub_resource type="Resource" id="Resource_oarvo"]
+script = ExtResource("2_ug8uk")
+code = "KEY_D"
+
+[sub_resource type="Resource" id="Resource_hjp4b"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_ggnan"]
+script = ExtResource("2_ug8uk")
+code = "BTN_MODE"
+
+[sub_resource type="Resource" id="Resource_2dph6"]
+script = ExtResource("3_bdwvr")
+name = "AOK (Short Press)"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_oarvo"), SubResource("Resource_hjp4b")])
+emits = SubResource("Resource_ggnan")
+
+[sub_resource type="Resource" id="Resource_xfmpm"]
+script = ExtResource("2_ug8uk")
+code = "KEY_G"
+
+[sub_resource type="Resource" id="Resource_2y3tl"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_dy83a"]
+script = ExtResource("2_ug8uk")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_lulcw"]
+script = ExtResource("3_bdwvr")
+name = "AOK (Long Press)"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_xfmpm"), SubResource("Resource_2y3tl")])
+emits = SubResource("Resource_dy83a")
+
+[sub_resource type="Resource" id="Resource_atlbm"]
+script = ExtResource("2_ug8uk")
+code = "KEY_SYSRQ"
+
+[sub_resource type="Resource" id="Resource_bl71s"]
+script = ExtResource("2_ug8uk")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_hmfwa"]
+script = ExtResource("2_ug8uk")
+code = "KEY_PRINT"
+
+[sub_resource type="Resource" id="Resource_1bh5u"]
+script = ExtResource("3_bdwvr")
+name = "Turbo + AOK"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_atlbm"), SubResource("Resource_bl71s")])
+emits = SubResource("Resource_hmfwa")
+
+[sub_resource type="Resource" id="Resource_vg0ed"]
+script = ExtResource("2_ug8uk")
+code = "KEY_RIGHTCTRL"
+
+[sub_resource type="Resource" id="Resource_t78hk"]
+script = ExtResource("2_ug8uk")
+code = "KEY_RIGHTALT"
+
+[sub_resource type="Resource" id="Resource_fvwef"]
+script = ExtResource("2_ug8uk")
+code = "KEY_DELETE"
+
+[sub_resource type="Resource" id="Resource_62ea8"]
+script = ExtResource("2_ug8uk")
+code = "KEY_F13"
+
+[sub_resource type="Resource" id="Resource_1kjkk"]
+script = ExtResource("3_bdwvr")
+name = "KB + AOK"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_vg0ed"), SubResource("Resource_t78hk"), SubResource("Resource_fvwef")])
+emits = SubResource("Resource_62ea8")
+
+[sub_resource type="Resource" id="Resource_4ysgf"]
+script = ExtResource("1_1fuiu")
+phys_path = "isa0060/serio0/input0"
+name = "AT Translated Set 2 keyboard"
+
+[sub_resource type="Resource" id="Resource_dj8xs"]
+script = ExtResource("5_qy6y2")
+
+[resource]
+script = ExtResource("4_pjfbg")
+key_map = Array[ExtResource("3_bdwvr")]([SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_ythr7"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_lulcw"), SubResource("Resource_1bh5u"), SubResource("Resource_1kjkk")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
+keypads = Array[ExtResource("1_1fuiu")]([SubResource("Resource_4ysgf")])
+gamepad = SubResource("Resource_r7met")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_dj8xs")])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
