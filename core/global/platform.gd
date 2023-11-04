@@ -59,7 +59,8 @@ func _init() -> void:
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres") as HandheldPlatform
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres") as HandheldPlatform
+		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres") as ROGAllyPlatform
+		platform.identify_controller_phys()
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN1 in flags:
