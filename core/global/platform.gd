@@ -30,8 +30,11 @@ enum PLATFORM {
 	GPD_GEN3, ## Win4
 	ONEXPLAYER_GEN1,  ## Intel OXP Devices
 	ONEXPLAYER_GEN2,  ## AMD OXP Devices 5800U and older.
-	ONEXPLAYER_GEN3,  ## AMD OXP Mini A07.
-	ONEXPLAYER_GEN4,  ## AMD OXP Mini Pro 6800U.
+	ONEXPLAYER_GEN3,  ## OXP Mini A07 5800U, special BIOS.
+	ONEXPLAYER_GEN4,  ## OXP Mini Pro.
+	ONEXPLAYER_GEN5,  ## OXP2
+	ONEXPLAYER_GEN6,  ## OXP2 Pro/EVA
+	ONEXPLAYER_GEN7,  ## OneXFly
 	STEAMDECK,
 	
 	# OS Platforms
@@ -98,6 +101,12 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen3.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN4 in flags:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen4.tres") as HandheldPlatform
+	if PLATFORM.ONEXPLAYER_GEN5 in flags:
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen5.tres") as HandheldPlatform
+	if PLATFORM.ONEXPLAYER_GEN6 in flags:
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen6.tres") as HandheldPlatform
+	if PLATFORM.ONEXPLAYER_GEN7 in flags:
+		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen7.tres") as HandheldPlatform
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres") as HandheldPlatform
 
@@ -220,12 +229,6 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.GPD_GEN3
 
 	# OneXPlayer
-	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):
-		logger.debug("Detected OneXPlayer Gen 4 platform")
-		return PLATFORM.ONEXPLAYER_GEN4
-	elif product_name in ["ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
-		logger.debug("Detected OneXPlayer Gen 3 platform")
-		return PLATFORM.ONEXPLAYER_GEN3
 	elif product_name in ["ONE XPLAYER", "ONEXPLAYER"] and vendor_name.contains("ONE-NETBOOK"):
 		match cpu.vendor:
 			"GenuineIntel":
@@ -234,7 +237,21 @@ func _read_dmi() -> PLATFORM:
 			'AuthenticAMD', 'AuthenticAMD Advanced Micro Devices, Inc.':
 				logger.debug("Detected OneXPlayer Gen 2 platform")
 				return PLATFORM.ONEXPLAYER_GEN2
-
+	elif product_name in ["ONEXPLAYER mini A07"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 3 platform")
+		return PLATFORM.ONEXPLAYER_GEN3
+	elif product_name in ["ONEXPLAYER Mini Pro"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 4 platform")
+		return PLATFORM.ONEXPLAYER_GEN4
+	elif product_name in ["ONEXPLAYER 2 ARP23"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 5 platform")
+		return PLATFORM.ONEXPLAYER_GEN5
+	elif product_name in ["ONEXPLAYER 2 PRO ARP23P", "ONEXPLAYER 2 PRO ARP23P EVA-01"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 6 platform")
+		return PLATFORM.ONEXPLAYER_GEN6
+	elif product_name in ["ONEXPLAYER F1"] and vendor_name.contains("ONE-NETBOOK"):
+		logger.debug("Detected OneXPlayer Gen 7 platform")
+		return PLATFORM.ONEXPLAYER_GEN7
 	# Valve
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
