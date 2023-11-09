@@ -43,6 +43,8 @@ class CPUBus extends Resource:
 	## Returns a list of DBus object paths to every detected core
 	func enumerate_cores() -> PackedStringArray:
 		var result := _proxy.call_method(IFACE_CPU, "EnumerateCores")
+		if not result:
+			return []
 		var args := result.get_args()
 		if args.size() != 1:
 			return []
@@ -53,6 +55,8 @@ class CPUBus extends Resource:
 	## Returns true if the CPU has the given feature
 	func has_feature(feature: String) -> bool:
 		var result := _proxy.call_method(IFACE_CPU, "HasFeature", [feature], "s")
+		if not result:
+			return false
 		var args := result.get_args()
 		if args.size() != 1:
 			return false
@@ -118,6 +122,8 @@ class GPUBus extends Resource:
 	## Returns a list of DBus object paths to every detected GPU card
 	func enumerate_cards() -> PackedStringArray:
 		var result := _proxy.call_method(IFACE_GPU, "EnumerateCards")
+		if not result:
+			return []
 		var args := result.get_args()
 		if args.size() != 1:
 			return []
@@ -157,6 +163,8 @@ class GPUCard extends Resource:
 	## Returns a list of DBus object paths to every detected GPU connector
 	func enumerate_connectors() -> PackedStringArray:
 		var result := _proxy.call_method(IFACE_GPU_CARD, "EnumerateConnectors")
+		if not result:
+			return []
 		var args := result.get_args()
 		if args.size() != 1:
 			return []

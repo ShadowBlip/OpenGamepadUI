@@ -26,6 +26,10 @@ signal toggled(pressed: bool)
 
 @export_category("Toggle Settings")
 @export var button_pressed := false:
+	get:
+		if check_button:
+			return check_button.button_pressed
+		return button_pressed
 	set(v):
 		button_pressed = v
 		if check_button:

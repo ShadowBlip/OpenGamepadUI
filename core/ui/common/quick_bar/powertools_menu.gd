@@ -25,7 +25,7 @@ var power_station := load("res://core/systems/performance/power_station.tres") a
 var power_station_running := false
 var profile_loading := false
 var current_profile: PerformanceProfile
-var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
+var logger := Log.get_logger("PowerTools", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.
@@ -85,6 +85,9 @@ func _ready() -> void:
 	power_profile_dropdown.clear()
 	power_profile_dropdown.add_item("Max Performance", 0)
 	power_profile_dropdown.add_item("Power Saving", 1)
+	
+	# Set the initial values
+	_on_profile_loaded(performance_manager.current_profile)
 
 
 # Triggers when the apply timer times out. The apply timer will start/restart
@@ -95,6 +98,19 @@ func _on_apply_timer_timeout() -> void:
 		logger.debug("No loaded profile to apply")
 		return
 	logger.debug("Applying and saving profile")
+
+	# Update the profile based on the currently set values
+	current_profile.cpu_boost_enabled = cpu_boost_button.button_pressed
+	current_profile.cpu_smt_enabled = smt_button.button_pressed
+	print(smt_button.button_pressed)
+	current_profile.cpu_core_count_current = cpu_cores_slider.value
+	current_profile.tdp_current = tdp_slider.value
+	current_profile.tdp_boost_current = tdp_boost_slider.value
+	current_profile.gpu_manual_enabled = gpu_freq_enable.button_pressed
+	current_profile.gpu_freq_min_current = gpu_freq_min_slider.value
+	current_profile.gpu_freq_max_current = gpu_freq_max_slider.value
+	current_profile.gpu_temp_current = gpu_temp_slider.value
+
 	performance_manager.apply_and_save_profile(current_profile)
 
 
@@ -111,6 +127,11 @@ func _on_service_timer_timeout() -> void:
 
 ## Called when a performance profile is loaded
 func _on_profile_loaded(profile: PerformanceProfile) -> void:
+	if not power_station.supports_power_station():
+		logger.info("Unable to load performance profile. PowerStation not detected.")
+		return
+	
+	logger.debug("Updating UI with loaded performance profile")
 	# Keep track of the currently loaded profile
 	current_profile = profile
 	
@@ -154,6 +175,7 @@ func _setup_interface() -> void:
 		cpu_boost_button.visible = cpu.has_feature("cpb")
 		smt_button.visible = cpu.has_feature("ht")
 		cpu_cores_slider.max_value = cpu.cores_count
+		cpu_cores_slider.visible = true
 	
 	# Configure GPU components
 	if power_station.gpu:

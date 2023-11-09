@@ -46,9 +46,14 @@ func _init() -> void:
 		var battery := batteries[0]
 		battery.updated.connect(_on_battery_updated.bind(battery))
 	
+	# Do nothing if PowerStation is not detected
+	if not _power_station.supports_power_station():
+		return
+	
 	# Load and apply the default profile
 	var profile_state := get_profile_state()
 	var path := get_profile_filename(profile_state)
+	path = "/".join([USER_PROFILES, path])
 	current_profile = load_or_create_profile(path)
 	apply_profile(current_profile)
 
@@ -141,18 +146,25 @@ func load_profile(profile_path: String) -> PerformanceProfile:
 ## Loads a PerformanceProfile from the given path. If the profile does not exist,
 ## it will create a new profile using the currently applied performance settings.
 func load_or_create_profile(profile_path: String, library_item: LibraryLaunchItem = null) -> PerformanceProfile:
+	logger.debug("Loading or creating profile: " + profile_path)
 	# Try to load the profile if it exists
 	var profile := load_profile(profile_path)
 	if profile:
+		logger.debug("Found profile at: " + profile_path)
 		return profile
 	
 	# If the profile does not exist, create one with the currently applied
 	# performance settings.
+	logger.debug("No profile found. Creating one.")
 	return create_profile(library_item)
 
 
 ## Applies the given performance profile to the system
 func apply_profile(profile: PerformanceProfile) -> void:
+	if not _power_station.supports_power_station():
+		logger.info("Unable to apply performance profile. PowerStation not detected.")
+		return
+	
 	logger.info("Applying performance profile: " + profile.name)
 
 	# Apply CPU settings from the given profile
@@ -272,6 +284,7 @@ func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 
 	# Load the performance profile based on the running game
 	var profile_path := get_profile_filename(profile_state, to.launch_item)
+	profile_path = "/".join([USER_PROFILES, profile_path])
 	var profile := load_or_create_profile(profile_path, to.launch_item)
 	current_profile = profile
 	profile_loaded.emit(profile)
