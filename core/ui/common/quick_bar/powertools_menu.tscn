@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dv3dt0j3jketh"]
+[gd_scene load_steps=9 format=3 uid="uid://dv3dt0j3jketh"]
 
 [ext_resource type="Script" path="res://core/ui/common/quick_bar/powertools_menu.gd" id="1_qncpn"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_h0jgv"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_0iyf7"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_1pfjc"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="5_xig3u"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_yr563"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="6_7aip6"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_0kvsa"]
 
@@ -16,23 +17,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qncpn")
 
-[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_h0jgv")]
-current_focus = NodePath("../CPUBoostButton")
+[node name="FocusGroup" parent="." instance=ExtResource("2_h0jgv")]
 focus_stack = ExtResource("3_0iyf7")
 
 [node name="ApplyTimer" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
-autostart = true
 
 [node name="ServiceTimer" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
 
-[node name="WaitLabel" parent="." instance=ExtResource("4_1pfjc")]
+[node name="WaitLabel" parent="." instance=ExtResource("5_yr563")]
 layout_mode = 2
 text = "Waiting for PowerStation service..."
 horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="CPUSectionLabel" parent="." instance=ExtResource("4_1pfjc")]
 visible = false
@@ -50,7 +51,6 @@ focus_next = NodePath("../SMTButton")
 focus_previous = NodePath("../GPUTempSlider")
 text = "CPU Boost"
 separator_visible = false
-button_pressed = false
 
 [node name="SMTButton" parent="." instance=ExtResource("5_xig3u")]
 visible = false
@@ -63,7 +63,6 @@ focus_next = NodePath("../CPUCoresSlider")
 focus_previous = NodePath("../CPUBoostButton")
 text = "SMT Enabled"
 separator_visible = false
-button_pressed = false
 
 [node name="CPUCoresSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
@@ -116,7 +115,6 @@ focus_next = NodePath("../GPUFreqMinSlider")
 focus_previous = NodePath("../TDPBoostSlider")
 text = "Manual Freq"
 separator_visible = false
-button_pressed = false
 
 [node name="GPUFreqMinSlider" parent="." instance=ExtResource("6_7aip6")]
 visible = false
