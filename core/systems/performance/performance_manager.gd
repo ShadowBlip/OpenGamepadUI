@@ -186,6 +186,7 @@ func apply_profile(profile: PerformanceProfile) -> void:
 		if card.class_type != "integrated":
 			continue
 		logger.debug("Applying GPU performance settings from profile")
+		card.manual_clock = profile.gpu_manual_enabled
 		if profile.tdp_current > 0:
 			card.tdp = profile.tdp_current
 		if profile.tdp_boost_current > 0:
@@ -194,7 +195,6 @@ func apply_profile(profile: PerformanceProfile) -> void:
 			card.clock_value_mhz_min = profile.gpu_freq_min_current
 		if profile.gpu_freq_max_current > 0:
 			card.clock_value_mhz_max = profile.gpu_freq_max_current
-		card.manual_clock = profile.gpu_manual_enabled
 		#if profile.gpu_power_profile > 0:
 		#	card.power_profile = profile.gpu_power_profile # TODO: Fix this
 		if profile.gpu_temp_current > 0:

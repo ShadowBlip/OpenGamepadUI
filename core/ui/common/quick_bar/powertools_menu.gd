@@ -63,6 +63,19 @@ func _ready() -> void:
 	gpu_freq_max_slider.value_changed.connect(on_slider_changed)
 	gpu_temp_slider.value_changed.connect(on_slider_changed)
 
+	# Configure GPU frequency timers so the minimum value can never go higher
+	# than the maximum value slider and the maximum value can never go lower
+	# than the minimum value slider.
+	var on_gpu_freq_changed := func(_value: float, kind: String) -> void:
+		if kind == "min" and gpu_freq_min_slider.value > gpu_freq_max_slider.value:
+			gpu_freq_max_slider.value = gpu_freq_min_slider.value
+			return
+		if kind == "max" and gpu_freq_max_slider.value < gpu_freq_min_slider.value:
+			gpu_freq_min_slider.value = gpu_freq_max_slider.value
+			return
+	gpu_freq_min_slider.value_changed.connect(on_gpu_freq_changed.bind("min"))
+	gpu_freq_max_slider.value_changed.connect(on_gpu_freq_changed.bind("max"))
+
 	# Also restart the apply timer when dropdown changes happen
 	var on_dropdown_changed := func(_index) -> void:
 		if profile_loading:
@@ -73,8 +86,24 @@ func _ready() -> void:
 	
 	# Toggle visibility when the GPU freq manual toggle is on
 	var on_manual_freq := func() -> void:
+		# Immediately apply manual GPU frequency so we can read the min/max
+		# values for the sliders
+		var card := _get_integrated_card()
+		if not card:
+			logger.warn("No integrated GPU to set manual frequency on!")
+			return
+		card.manual_clock = gpu_freq_enable.button_pressed
+
+		# Update the slider values with the current values
 		gpu_freq_min_slider.visible = gpu_freq_enable.button_pressed
+		gpu_freq_min_slider.min_value = card.clock_limit_mhz_min
+		gpu_freq_min_slider.max_value = card.clock_limit_mhz_max
+		gpu_freq_min_slider.value = card.clock_value_mhz_min
 		gpu_freq_max_slider.visible = gpu_freq_enable.button_pressed
+		gpu_freq_max_slider.min_value = card.clock_limit_mhz_min
+		gpu_freq_max_slider.max_value = card.clock_limit_mhz_max
+		gpu_freq_max_slider.value = card.clock_value_mhz_max
+
 	gpu_freq_enable.pressed.connect(on_manual_freq)
 	
 	# Setup dropdowns
@@ -102,7 +131,6 @@ func _on_apply_timer_timeout() -> void:
 	# Update the profile based on the currently set values
 	current_profile.cpu_boost_enabled = cpu_boost_button.button_pressed
 	current_profile.cpu_smt_enabled = smt_button.button_pressed
-	print(smt_button.button_pressed)
 	current_profile.cpu_core_count_current = cpu_cores_slider.value
 	current_profile.tdp_current = tdp_slider.value
 	current_profile.tdp_boost_current = tdp_boost_slider.value
@@ -153,7 +181,8 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 	profile_loading = false
 
 
-# Configure the min/max values and visibility
+# Configure the min/max values and visibility based on detected performance
+# features.
 func _setup_interface() -> void:
 	# If powerstation is not running, disable everything
 	if not power_station.supports_power_station():
@@ -179,12 +208,7 @@ func _setup_interface() -> void:
 	
 	# Configure GPU components
 	if power_station.gpu:
-		var card: PowerStation.GPUCard
-		var cards := power_station.gpu.get_cards()
-		for c in cards:
-			if c.class_type != "integrated":
-				continue
-			card = c
+		var card := _get_integrated_card()
 		
 		# Configure based on integrated graphics card
 		if card:
@@ -194,3 +218,24 @@ func _setup_interface() -> void:
 			tdp_slider.max_value = hardware_manager.gpu.tdp_max
 			tdp_boost_slider.visible = true
 			tdp_boost_slider.max_value = hardware_manager.gpu.max_boost
+			gpu_freq_enable.visible = true
+			if card.clock_limit_mhz_min > 0 and card.clock_limit_mhz_max > 0:
+				gpu_freq_min_slider.visible = card.manual_clock
+				gpu_freq_min_slider.min_value = card.clock_limit_mhz_min
+				gpu_freq_min_slider.max_value = card.clock_limit_mhz_max
+				gpu_freq_max_slider.visible = card.manual_clock
+				gpu_freq_max_slider.min_value = card.clock_limit_mhz_min
+				gpu_freq_max_slider.max_value = card.clock_limit_mhz_max
+			if card.thermal_throttle_limit_c > 0:
+				gpu_temp_slider.visible = true
+
+
+## Returns the primary integrated GPU instance
+func _get_integrated_card() -> PowerStation.GPUCard:
+		var card: PowerStation.GPUCard
+		var cards := power_station.gpu.get_cards()
+		for c in cards:
+			if c.class_type != "integrated":
+				continue
+			card = c
+		return card
