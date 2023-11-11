@@ -14,6 +14,7 @@ focus_mode = 2
 script = ExtResource("1_k5c4s")
 title = "Setting"
 description = "Description"
+selected = -1
 
 [node name="Label" type="Label" parent="."]
 unique_name_in_owner = true

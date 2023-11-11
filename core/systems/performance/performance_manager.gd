@@ -188,16 +188,27 @@ func apply_profile(profile: PerformanceProfile) -> void:
 		logger.debug("Applying GPU performance settings from profile")
 		card.manual_clock = profile.gpu_manual_enabled
 		if profile.tdp_current > 0:
+			logger.debug("Applying TDP: " + str(profile.tdp_current))
 			card.tdp = profile.tdp_current
 		if profile.tdp_boost_current > 0:
+			logger.debug("Applying TDP Boost: " + str(profile.tdp_boost_current))
 			card.boost = profile.tdp_boost_current
 		if profile.gpu_freq_min_current > 0:
+			logger.debug("Applying Clock Freq Min: " + str(profile.gpu_freq_min_current))
 			card.clock_value_mhz_min = profile.gpu_freq_min_current
 		if profile.gpu_freq_max_current > 0:
+			logger.debug("Applying Clock Freq Max: " + str(profile.gpu_freq_max_current))
 			card.clock_value_mhz_max = profile.gpu_freq_max_current
-		#if profile.gpu_power_profile > 0:
-		#	card.power_profile = profile.gpu_power_profile # TODO: Fix this
+		if profile.gpu_power_profile >= 0:
+			var power_profile := "max-performance"
+			if profile.gpu_power_profile == 0:
+				power_profile = "max-performance"
+			if profile.gpu_power_profile == 1:
+				power_profile = "power-saving"
+			logger.debug("Applying Power Profile: " + power_profile)
+			card.power_profile = power_profile
 		if profile.gpu_temp_current > 0:
+			logger.debug("Applying Thermal Throttle Limit: " + str(profile.gpu_temp_current))
 			card.thermal_throttle_limit_c = profile.gpu_temp_current
 
 	logger.info("Applied Performance Profile: " + profile.name)

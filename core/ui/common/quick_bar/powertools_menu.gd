@@ -107,13 +107,13 @@ func _ready() -> void:
 	gpu_freq_enable.pressed.connect(on_manual_freq)
 	
 	# Setup dropdowns
+	power_profile_dropdown.clear()
+	power_profile_dropdown.add_item("Max Performance", 0)
+	power_profile_dropdown.add_item("Power Saving", 1)
 	thermal_profile_dropdown.clear()
 	thermal_profile_dropdown.add_item("Balanced", 0)
 	thermal_profile_dropdown.add_item("Performance", 1)
 	thermal_profile_dropdown.add_item("Silent", 2)
-	power_profile_dropdown.clear()
-	power_profile_dropdown.add_item("Max Performance", 0)
-	power_profile_dropdown.add_item("Power Saving", 1)
 	
 	# Set the initial values
 	_on_profile_loaded(performance_manager.current_profile)
@@ -131,13 +131,14 @@ func _on_apply_timer_timeout() -> void:
 	# Update the profile based on the currently set values
 	current_profile.cpu_boost_enabled = cpu_boost_button.button_pressed
 	current_profile.cpu_smt_enabled = smt_button.button_pressed
-	current_profile.cpu_core_count_current = cpu_cores_slider.value
+	current_profile.cpu_core_count_current = int(cpu_cores_slider.value)
 	current_profile.tdp_current = tdp_slider.value
 	current_profile.tdp_boost_current = tdp_boost_slider.value
 	current_profile.gpu_manual_enabled = gpu_freq_enable.button_pressed
 	current_profile.gpu_freq_min_current = gpu_freq_min_slider.value
 	current_profile.gpu_freq_max_current = gpu_freq_max_slider.value
 	current_profile.gpu_temp_current = gpu_temp_slider.value
+	current_profile.gpu_power_profile = power_profile_dropdown.selected
 
 	performance_manager.apply_and_save_profile(current_profile)
 
@@ -178,6 +179,7 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 
 	power_profile_dropdown.select(profile.gpu_power_profile)
 	thermal_profile_dropdown.select(profile.thermal_profile)
+
 	profile_loading = false
 
 
@@ -219,6 +221,7 @@ func _setup_interface() -> void:
 			tdp_boost_slider.visible = true
 			tdp_boost_slider.max_value = hardware_manager.gpu.max_boost
 			gpu_freq_enable.visible = true
+			power_profile_dropdown.visible = true
 			if card.clock_limit_mhz_min > 0 and card.clock_limit_mhz_max > 0:
 				gpu_freq_min_slider.visible = card.manual_clock
 				gpu_freq_min_slider.min_value = card.clock_limit_mhz_min
