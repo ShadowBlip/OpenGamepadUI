@@ -32,8 +32,9 @@ var button_scene := load("res://core/ui/components/card_button.tscn") as PackedS
 @onready var content_container := $%ContentContainer
 @onready var game_logo := $%GameLogo
 @onready var game_label := $%GameLabel
-@onready var resume_button := $%ResumeButton
-@onready var exit_button := $%ExitButton
+@onready var resume_button := $%ResumeButton as CardButton
+@onready var suspend_button := $%SuspendButton as CardButton
+@onready var exit_button := $%ExitButton as CardButton
 @onready var highlight := $%HighlightTexture 
 @onready var highlight_rect := $%HighlightTextureRect
 @onready var inside_panel := $%InsidePanel
@@ -65,6 +66,13 @@ func _ready() -> void:
 		launch_manager.stop(running_app)
 		state_machine.pop_state()
 	exit_button.pressed.connect(on_exit_game)
+	var on_suspend := func():
+		running_app.suspend(not running_app.is_suspended)
+		if running_app.is_suspended:
+			suspend_button.text = "Continue"
+		else:
+			suspend_button.text = "Suspend"
+	suspend_button.pressed.connect(on_suspend)
 
 
 func _on_theme_changed() -> void:

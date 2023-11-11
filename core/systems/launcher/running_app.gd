@@ -20,6 +20,8 @@ signal window_ids_changed(from: PackedInt32Array, to: PackedInt32Array)
 signal app_id_changed
 ## Emitted when the app's state has changed
 signal state_changed(from: STATE, to: STATE)
+## Emitted when an app is suspended
+signal suspended(enabled: bool)
 ## Emitted when the app is focused
 signal focus_entered
 ## Emitted when the app is unfocused
@@ -51,6 +53,13 @@ var state: STATE = STATE.STARTED:
 		state = v
 		if old_state != state:
 			state_changed.emit(old_state, state)
+## Whether or not the running app is suspended
+var is_suspended := false:
+	set(v):
+		var old_value := is_suspended
+		is_suspended = v
+		if old_value != is_suspended:
+			suspended.emit(is_suspended)
 ## Time in milliseconds when the app started
 var start_time := Time.get_ticks_msec()
 ## The currently detected window ID of the application
@@ -162,6 +171,15 @@ func update() -> void:
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
+
+
+## Pauses/Resumes the running app by running 'kill -STOP' or 'kill -CONT'
+func suspend(enable: bool) -> void:
+	if enable:
+		Reaper.reap(pid, Reaper.SIG.STOP)
+	else:
+		Reaper.reap(pid, Reaper.SIG.CONT)
+	is_suspended = enable
 
 
 ## Returns the window title of the given window. If the window ID does not belong to this app,
