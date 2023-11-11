@@ -30,7 +30,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
-SYSEXT_VERSION_ID ?= 3.4.8
+SYSEXT_VERSION_ID ?= 3.5.1
 
 # Include any user defined settings
 -include settings.mk
@@ -303,7 +303,7 @@ dist/update.zip: build/metadata.json
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: dist-ext
 dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
-dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-session.tar.gz $(CACHE_DIR)/RyzenAdj/build/ryzenadj
+dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/powerstation.tar.gz
 	@echo "Building redistributable systemd extension"
 	mkdir -p dist
 	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
@@ -313,9 +313,17 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-ses
 	echo ID=$(SYSEXT_ID) > $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
 	echo VERSION_ID=$(SYSEXT_VERSION_ID) >> $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
 
+	@# Copy gamescope-session into the extension
+	cd $(CACHE_DIR) && tar xvfz gamescope-session.tar.gz
+	cp -r $(CACHE_DIR)/gamescope-session-main/usr/* $(CACHE_DIR)/opengamepadui/usr
+
 	@# Copy opengamepadui-session into the extension
-	cd $(CACHE_DIR) && tar xvfz opengamepadui-session.tar.gz
-	cp -r $(CACHE_DIR)/OpenGamepadUI-session-main/usr/* $(CACHE_DIR)/opengamepadui/usr
+	cd $(CACHE_DIR) && tar xvfz gamescope-session-opengamepadui.tar.gz
+	cp -r $(CACHE_DIR)/gamescope-session-opengamepadui-main/usr/* $(CACHE_DIR)/opengamepadui/usr
+
+	@# Copy powerstation into the extension
+	cd $(CACHE_DIR) && tar xvfz powerstation.tar.gz
+	cp -r $(CACHE_DIR)/powerstation/usr/* $(CACHE_DIR)/opengamepadui/usr
 
 	@# Copy ryzenadj files into the extension
 	install -Dsm 755 $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/opengamepadui/usr/bin/ryzenadj
@@ -324,7 +332,7 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/opengamepadui-ses
 
 	@# Build the extension archive
 	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
-	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/OpenGamepadUI-session-main
+	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/gamescope-session-opengamepadui-main $(CACHE_DIR)/gamescope-session-main
 	mv $(CACHE_DIR)/opengamepadui.raw $@
 
 
@@ -336,8 +344,17 @@ $(CACHE_DIR)/RyzenAdj/build/ryzenadj:
 	cd $(CACHE_DIR)/RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
 
 
-$(CACHE_DIR)/opengamepadui-session.tar.gz:
-	wget -O $@ https://github.com/ShadowBlip/OpenGamepadUI-session/archive/refs/heads/main.tar.gz
+$(CACHE_DIR)/gamescope-session.tar.gz:
+	wget -O $@ https://github.com/ChimeraOS/gamescope-session/archive/refs/heads/main.tar.gz
+
+
+$(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz:
+	wget -O $@ https://github.com/ShadowBlip/gamescope-session-opengamepadui/archive/refs/heads/main.tar.gz
+
+
+$(CACHE_DIR)/powerstation.tar.gz:
+	export PS_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/PowerStation/releases/latest | jq -r '.name') && \
+		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation.tar.gz
 
 
 # Refer to .releaserc.yaml for release configuration
