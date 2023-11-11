@@ -24,6 +24,15 @@ signal item_selected(index: int)
 		disabled = v
 		if option_button:
 			option_button.disabled = v
+@export var selected: int:
+	get:
+		if option_button:
+			return option_button.selected
+		return selected
+	set(v):
+		selected = v
+		if option_button:
+			option_button.selected = v
 
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
