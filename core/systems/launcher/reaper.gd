@@ -4,6 +4,8 @@ class_name Reaper
 enum SIG {
 	KILL = 9,
 	TERM = 15,
+	CONT = 18,
+	STOP = 19,
 }
 
 
@@ -35,7 +37,12 @@ static func reap(pid: int, sig: SIG = SIG.TERM) -> void:
 		logger.info(cmd + " " + " ".join(args))
 		OS.execute(cmd, args)
 
-	logger.info("Reaped pids: " + ",".join(pids))
+	var verb := "Reaped"
+	if sig == SIG.STOP:
+		verb = "Suspended"
+	if sig == SIG.CONT:
+		verb = "Resumed"
+	logger.info(verb + " pids: " + ",".join(pids))
 
 
 # Returns an array of child PIDs that are in the given process group
