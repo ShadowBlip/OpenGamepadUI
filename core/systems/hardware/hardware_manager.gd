@@ -133,11 +133,6 @@ func get_gpu_info() -> GPUInfo:
 			gpu_info.tdp_max = apu_data.max_tdp
 			gpu_info.max_boost = apu_data.max_boost
 			gpu_info.tdp_capable = true
-			
-			# Read the GPU limits
-			var foo := _read_sys("/sys/class/drm/" + gpu_info.card.name + "/device/pp_od_clk_voltage")
-			gpu_info.freq_min
-			gpu_info.freq_max
 
 		"Intel", "GenuineIntel", "Intel Corporation":
 			apu_data = intel_apu_database.get_apu(cpu.model)
