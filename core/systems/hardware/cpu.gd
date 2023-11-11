@@ -8,45 +8,11 @@ signal boost_updated(enabled: bool)
 ## Emitted when SMT is updated
 signal smt_updated(enabled: bool)
 
-const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
-const BOOST_PATH := "/sys/devices/system/cpu/cpufreq/boost"
-const SMT_PATH := "/sys/devices/system/cpu/smt/control"
 const CPUS_PATH := "/sys/bus/cpu/devices"
 
-var mutex := Mutex.new()
 var core_count := get_total_core_count()
-var boost_capable: bool = false
-var boost_enabled := false:
-	get:
-		mutex.lock()
-		var prop := boost_enabled
-		mutex.unlock()
-		return prop
-	set(v):
-		if boost_enabled == v:
-			return
-		mutex.lock()
-		boost_enabled = v
-		mutex.unlock()
-		emit_signal.call_deferred("changed")
-		emit_signal.call_deferred("boost_updated", v)
 var vendor: String
 var model: String
-var smt_capable: bool = false
-var smt_enabled := false:
-	get:
-		mutex.lock()
-		var prop := smt_enabled
-		mutex.unlock()
-		return prop
-	set(v):
-		if smt_enabled == v:
-			return
-		mutex.lock()
-		smt_enabled = v
-		mutex.unlock()
-		emit_signal.call_deferred("changed")
-		emit_signal.call_deferred("smt_updated", v)
 var logger := Log.get_logger("CPU")
 
 
@@ -56,11 +22,6 @@ func _init() -> void:
 		var parts := param.split(" ", false) as Array
 		if parts.is_empty():
 			continue
-		if parts[0] == "Flags:":
-			if "ht" in parts:
-				smt_capable = true
-			if "cpb" in parts and FileAccess.file_exists(BOOST_PATH):
-				boost_capable = true
 		if parts[0] == "Vendor" and parts[1] == "ID:":
 			# Delete parts of the string we don't want
 			parts.remove_at(1)
@@ -72,60 +33,11 @@ func _init() -> void:
 			parts.remove_at(0)
 			model = str(" ".join(parts))
 		# TODO: We can get min/max CPU freq here.
-	update()
 
 
 ## Returns the count of number of enabled CPU cores
 func get_enabled_core_count() -> int:
 	return OS.get_processor_count()
-
-
-## Returns true if boost is currently enabled
-func get_boost_enabled() -> bool:
-	if not boost_capable:
-		return false
-	var value := _get_property(BOOST_PATH).to_lower().strip_edges()
-
-	return value == "on" or value == "1"
-
-
-## Set CPU boost to the given value
-func set_boost_enabled(enabled: bool) -> int:
-	if not boost_capable:
-		return -1
-	var enabled_str := "1" if enabled else "0"
-	var args := ["cpuBoost", enabled_str]
-	var cmd := CommandSync.new(POWERTOOLS_PATH, args)
-	if cmd.execute() != OK:
-		logger.warn("Failed to set CPU boost")
-		return cmd.code
-	update()
-	
-	return cmd.code
-
-
-## Returns true if SMT is currently enabled
-func get_smt_enabled() -> bool:
-	if not smt_capable:
-		return false
-	var value := _get_property(SMT_PATH).to_lower().strip_edges()
-
-	return value == "on" or value == "1"
-
-
-## Set CPU smt to the given value
-func set_smt_enabled(enabled: bool) -> int:
-	if not smt_capable:
-		return -1
-	var enabled_str := "1" if enabled else "0"
-	var args := ["smtToggle", enabled_str]
-	var cmd := CommandSync.new(POWERTOOLS_PATH, args)
-	if cmd.execute() != OK:
-		logger.warn("Failed to set CPU smt")
-		return cmd.code
-	update()
-	
-	return cmd.code
 
 
 ## Returns an instance of the given CPU core
@@ -175,32 +87,6 @@ func get_online_core_count() -> int:
 	return count
 
 
-## Called to set the number of enabled CPU's
-func set_cpu_core_count(value: int) -> void:
-	# Update the state of the CPU
-	update()
-	var cores := get_cores()
-	logger.debug("Enable cpu cores: " + str(value) + "/" + str(cores.size()))
-
-	for core in cores:
-		if core.num == 0:
-			continue
-		var online := true
-		if smt_enabled and core.num >= value:
-			online = false
-		elif not smt_enabled:
-			if core.num % 2 != 0 or core.num >= (value * 2) - 1:
-				online = false
-		logger.debug("Set CPU No: " + str(core.num) + " online: " + str(online))
-		core.set_online(online)
-
-
-## Fetches the current CPU info
-func update() -> void:
-	boost_enabled = get_boost_enabled()
-	smt_enabled = get_smt_enabled()
-
-
 func _get_property(prop_path: String) -> String:
 	if not FileAccess.file_exists(prop_path):
 		return ""
@@ -224,7 +110,5 @@ func _to_string() -> String:
 		+ " Vendor: (" + str(vendor) \
 		+ ") Model: (" + str(model) \
 		+ ") Core count: (" + str(core_count) \
-		+ ") Boost Capable: (" + str(boost_capable) \
-		+ ") SMT Capable: (" + str(smt_capable) \
 		+ ")>"
 
