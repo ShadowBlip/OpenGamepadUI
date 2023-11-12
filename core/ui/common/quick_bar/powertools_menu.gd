@@ -51,6 +51,20 @@ func _ready() -> void:
 	smt_button.pressed.connect(on_changed)
 	gpu_freq_enable.pressed.connect(on_changed)
 
+	# Set the total number of available cores if the SMT button is pressed
+	var on_smt_pressed := func() -> void:
+		if not hardware_manager.cpu:
+			return
+		var cpu := hardware_manager.cpu
+		if smt_button.button_pressed:
+			cpu_cores_slider.max_value = cpu.core_count
+		else:
+			var cores := cpu.core_count / 2
+			if cpu_cores_slider.value > cores:
+				cpu_cores_slider.value = cores
+			cpu_cores_slider.max_value = cores
+	smt_button.pressed.connect(on_smt_pressed)
+
 	# Restart the timer when any slider changes happen
 	var on_slider_changed := func(_value) -> void:
 		if profile_loading:
@@ -169,6 +183,7 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 	cpu_boost_button.button_pressed = profile.cpu_boost_enabled
 	smt_button.button_pressed = profile.cpu_smt_enabled
 	cpu_cores_slider.value = profile.cpu_core_count_current
+	smt_button.pressed.emit()
 	tdp_slider.value = profile.tdp_current
 	tdp_boost_slider.value = profile.tdp_boost_current
 	gpu_freq_enable.button_pressed = profile.gpu_manual_enabled
@@ -205,7 +220,10 @@ func _setup_interface() -> void:
 		cpu_label.visible = true
 		cpu_boost_button.visible = cpu.has_feature("cpb")
 		smt_button.visible = cpu.has_feature("ht")
-		cpu_cores_slider.max_value = cpu.cores_count
+		if cpu.smt_enabled:
+			cpu_cores_slider.max_value = cpu.cores_count
+		else:
+			cpu_cores_slider.max_value = cpu.cores_count / 2
 		cpu_cores_slider.visible = true
 	
 	# Configure GPU components
