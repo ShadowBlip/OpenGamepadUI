@@ -92,6 +92,7 @@ func _ready() -> void:
 		drag_started.emit()
 	slider.drag_ended.connect(on_drag_started)
 	var on_changed := func():
+		label_value.text = str(slider.value)
 		changed.emit()
 	slider.changed.connect(on_changed)
 

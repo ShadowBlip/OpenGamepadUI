@@ -14,6 +14,7 @@ var thread: Thread
 var mutex := Mutex.new()
 var tid := -1
 var running := false
+var executing_task: ExecutingTask
 var nodes: Array[NodeThread] = []
 var process_funcs: Array[Callable] = []
 var scheduled_funcs: Array[ScheduledTask] = []
@@ -74,7 +75,7 @@ func set_priority(value: int) -> int:
 	if LinuxThread.get_tid() != thread_id:
 		logger.debug("Set thread priority was called from another thread")
 		return await exec(set_priority.bind(value))
-	
+
 	# Set the thread priority if this function was called from the SharedThread
 	var err := LinuxThread.set_thread_priority(value)
 	if err == OK:
@@ -178,12 +179,12 @@ func _run() -> void:
 	tid = LinuxThread.get_tid()
 	mutex.unlock()
 	logger.info("Started thread with thread ID: " + str(LinuxThread.get_tid()))
-	
+
 	# If the nice value isn't default, reassign the thread priority
 	if niceness != 0:
 		if await set_priority(niceness) != OK:
 			logger.warn("Unable to set niceness on thread: " + name)
-	
+
 	# TODO: Fix unsafe thread operations
 	Thread.set_thread_safety_checks_enabled(false)
 	var exited := false
@@ -238,23 +239,29 @@ func _process(delta: float) -> void:
 	for process in process_loops:
 		if not is_instance_valid(process.get_object()):
 			continue
+		_set_executing_task(ExecutingTask.from_callable(process))
 		process.call(delta)
+		_set_executing_task(null)
 
 	# Process nodes with _thread_process
 	for node in process_nodes:
 		if not is_instance_valid(node):
 			continue
+		_set_executing_task(ExecutingTask.from_node_thread(node))
 		node._thread_process(delta)
-	
+		_set_executing_task(null)
+
 	# Call any one-shot thread methods
 	for method in process_methods:
 		if not is_instance_valid(method.get_object()):
 			continue
+		_set_executing_task(ExecutingTask.from_callable(method))
 		_async_call(method)
 		mutex.lock()
 		one_shots.erase(method)
 		mutex.unlock()
-	
+		_set_executing_task(null)
+
 	# Call any scheduled methods
 	for task in process_scheduled:
 		var current_time := Time.get_ticks_msec()
@@ -263,15 +270,31 @@ func _process(delta: float) -> void:
 		var method := task.method as Callable
 		if not is_instance_valid(method.get_object()):
 			continue
+		_set_executing_task(ExecutingTask.from_callable(method))
 		method.call()
 		mutex.lock()
 		scheduled_funcs.erase(task)
 		mutex.unlock()
+		_set_executing_task(null)
 
 
 func _async_call(method: Callable) -> void:
 	var ret = await method.call()
 	emit_signal.call_deferred("exec_completed", method, ret)
+
+
+## Returns the currently executing task
+func get_executing_task() -> ExecutingTask:
+	self.mutex.lock()
+	var task := self.executing_task
+	self.mutex.unlock()
+	return task
+
+
+func _set_executing_task(task: ExecutingTask) -> void:
+	self.mutex.lock()
+	self.executing_task = task
+	self.mutex.unlock()
 
 
 ## Returns the target frame time in microseconds of the SharedThread
@@ -284,3 +307,26 @@ class ScheduledTask:
 	var start_time: int
 	var wait_time_ms: int
 	var method: Callable
+
+
+## Container for holding information about the currently executing task
+class ExecutingTask:
+	var object: String
+	var method: String
+	var args: Array
+
+	static func from_callable(callable: Callable) -> ExecutingTask:
+		var task := ExecutingTask.new()
+		task.object = str(callable.get_object())
+		task.method = callable.get_method()
+		task.args = callable.get_bound_arguments()
+		return task
+
+	static func from_node_thread(node: NodeThread) -> ExecutingTask:
+		var task := ExecutingTask.new()
+		task.object = node.get_path()
+		task.method = "_thread_process"
+		return task
+
+	func _to_string() -> String:
+		return "{0}.{1}({2})".format([self.object, self.method, str(self.args)])

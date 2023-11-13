@@ -54,7 +54,7 @@ func _process(_delta: float):
 func _process_message(msg: DBusMessage) -> void:
 	# Try looking up the well-known name of the message sender
 	var known_names := get_names_for_owner(msg.get_sender())
-	
+
 	# Try constructing the resource path to the proxy and see if it exists
 	for known_name in known_names:
 		var res_path := "dbus://" + known_name + msg.get_path()
@@ -63,7 +63,10 @@ func _process_message(msg: DBusMessage) -> void:
 			continue
 		logger.debug("Found proxy to send message signal to at: " + res_path)
 		var proxy := load(res_path) as Proxy
-		var send_signal := func(message: DBusMessage):
+		if not proxy:
+			logger.warn("Failed to load proxy from resource cache: " + res_path)
+			continue
+		var send_signal := func(message: DBusMessage) -> void:
 			proxy.message_received.emit(message)
 		send_signal.call_deferred(msg)
 		break
@@ -116,7 +119,7 @@ func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 		var obj_data := objs_dict[obj_path] as Dictionary
 		var object := ManagedObject.new(obj_path, obj_data)
 		objects.append(object)
-	
+
 	return objects
 
 
@@ -128,8 +131,13 @@ func get_names_for_owner(owner: String) -> PackedStringArray:
 		var name_owner := dbus_proxy.get_name_owner(name)
 		if name_owner == owner:
 			names.append(name)
-	
+
 	return names
+
+
+func _to_string() -> String:
+	var bus_string := "System" if bus_type == BUS_TYPE.SYSTEM else "Session"
+	return "<DBusManager#{0}>".format([bus_string])
 
 
 ## A Proxy provides an interface to call methods on a DBus object.
@@ -141,14 +149,15 @@ class Proxy extends Resource:
 	var path: String
 	var rules := PackedStringArray()
 	var logger := Log.get_logger("DBusProxy")
-	
+	var thread: SharedThread = load("res://core/systems/threading/system_thread.tres")
+
 	func _init(conn: DBus, bus: String, obj_path: String) -> void:
 		_dbus = conn
 		bus_name = bus
 		path = obj_path
 		message_received.connect(_on_property_changed)
-		if watch(IFACE_PROPERTIES, "PropertiesChanged") != OK:
-			logger.warn("Unable to watch " + obj_path)
+		thread.exec(watch.bind(IFACE_PROPERTIES, "PropertiesChanged"))
+
 
 	func _on_property_changed(msg: DBusMessage) -> void:
 		if not msg:
@@ -186,7 +195,7 @@ class Proxy extends Resource:
 			return null
 		
 		return args[0]
-	
+
 	## Get all properties for the given interface
 	func get_properties(iface: String) -> Dictionary:
 		var response := call_method(IFACE_PROPERTIES, "GetAll", [iface], "s")
@@ -205,7 +214,10 @@ class Proxy extends Resource:
 		)
 		rules.append(rule)
 		logger.debug("Adding watch rule: " + rule)
-		return _dbus.add_match(rule)
+		var err := _dbus.add_match(rule)
+		if err != OK:
+			logger.error("Unable to watch " + path)
+		return err
 
 
 ## A ManagedObject is a simple structure used with GetManagedObjects

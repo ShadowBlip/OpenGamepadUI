@@ -97,7 +97,7 @@ func _ready() -> void:
 		apply_timer.start()
 	power_profile_dropdown.item_selected.connect(on_dropdown_changed)
 	thermal_profile_dropdown.item_selected.connect(on_dropdown_changed)
-	
+
 	# Toggle visibility when the GPU freq manual toggle is on
 	var on_manual_freq := func() -> void:
 		# Immediately apply manual GPU frequency so we can read the min/max
@@ -119,7 +119,7 @@ func _ready() -> void:
 		gpu_freq_max_slider.value = card.clock_value_mhz_max
 
 	gpu_freq_enable.pressed.connect(on_manual_freq)
-	
+
 	# Setup dropdowns
 	power_profile_dropdown.clear()
 	power_profile_dropdown.add_item("Max Performance", 0)
@@ -128,7 +128,7 @@ func _ready() -> void:
 	thermal_profile_dropdown.add_item("Balanced", 0)
 	thermal_profile_dropdown.add_item("Performance", 1)
 	thermal_profile_dropdown.add_item("Silent", 2)
-	
+
 	# Set the initial values
 	_on_profile_loaded(performance_manager.current_profile)
 
@@ -173,17 +173,28 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 	if not power_station.supports_power_station():
 		logger.info("Unable to load performance profile. PowerStation not detected.")
 		return
-	
+	var core_count := 1
+	if hardware_manager.cpu:
+		core_count = hardware_manager.cpu.core_count
+
 	logger.debug("Updating UI with loaded performance profile")
 	# Keep track of the currently loaded profile
 	current_profile = profile
-	
-	# Update all UI components based on the loaded profile
+
+	# Update CPU UI components based on the loaded profile
 	profile_loading = true
 	cpu_boost_button.button_pressed = profile.cpu_boost_enabled
 	smt_button.button_pressed = profile.cpu_smt_enabled
+	if smt_button.button_pressed:
+		cpu_cores_slider.max_value = core_count
+	else:
+		var cores := core_count / 2
+		if cpu_cores_slider.value > cores:
+			cpu_cores_slider.value = cores
+		cpu_cores_slider.max_value = cores
 	cpu_cores_slider.value = profile.cpu_core_count_current
-	smt_button.pressed.emit()
+
+	# Update GPU UI components
 	tdp_slider.value = profile.tdp_current
 	tdp_boost_slider.value = profile.tdp_boost_current
 	gpu_freq_enable.button_pressed = profile.gpu_manual_enabled
@@ -210,10 +221,10 @@ func _setup_interface() -> void:
 			if node == Control:
 				(node as Control).visible = false
 		return
-	
+
 	# Configure visibility for all components
 	wait_label.visible = false
-	
+
 	# Configure CPU components
 	if power_station.cpu:
 		var cpu := power_station.cpu
@@ -225,7 +236,7 @@ func _setup_interface() -> void:
 		else:
 			cpu_cores_slider.max_value = cpu.cores_count / 2
 		cpu_cores_slider.visible = true
-	
+
 	# Configure GPU components
 	if power_station.gpu:
 		var card := _get_integrated_card()
