@@ -1,0 +1,530 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.1\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+#, fuzzy
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# Main Menu
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Library"
+msgstr "Juegos"
+
+msgid "Settings"
+msgstr "Opciones"
+
+msgid "Power"
+msgstr "Apagado"
+
+msgid "Accept"
+msgstr "Confirmar"
+
+msgid "Back"
+msgstr "Volver"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Exit"
+msgstr "Salida"
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "Open Main Menu"
+msgstr "Abrir menú principal"
+
+msgid "Open Quick Access Menu"
+msgstr "Abrir menú rápido"
+
+msgid "Open On-Screen Keyboard"
+msgstr "Abrir el teclado en pantalla"
+
+msgid "Scroll container"
+msgstr "Desplazarse por el menú"
+
+msgid "Switch to left tab"
+msgstr "Cambiar a la pestaña izquierda"
+
+msgid "Switch to right tab"
+msgstr "Cambiar a la pestaña derecha"
+
+msgid "Backspace"
+msgstr "Retroceso"
+
+msgid "Close keyboard"
+msgstr "Cerrar el teclado"
+
+msgid "Toggle Shift"
+msgstr "Activar la tecla de mayúsculas"
+
+msgid "Enter"
+msgstr "Ingresar"
+
+msgid "Steam Deck"
+msgstr ""
+
+msgid "Global"
+msgstr "Global"
+
+msgid "Unable to save gamepad profile"
+msgstr "No se puede guardar el perfil del gamepad"
+
+msgid "Failed to save gamepad profile"
+msgstr "No se pudo guardar el perfil del gamepad"
+
+msgid "Gamepad profile saved"
+msgstr "Perfil de gamepad guardado"
+
+msgid "Play Now"
+msgstr "Jugar ahora"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Resume"
+msgstr "Reanudar"
+
+msgid "Queued"
+msgstr "Puesto en cola"
+
+msgid "Installing"
+msgstr "Instalando"
+
+msgid "Quick Access Menu"
+msgstr "Menú rápido"
+
+msgid "Game Name"
+msgstr "Nombre del juego"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "Lanzamiento"
+
+msgid "Boxart"
+msgstr "Arte de caja"
+
+msgid "Launch Provider"
+msgstr "Proveedor de lanzamiento"
+
+msgid "Library provider to launch this game with"
+msgstr "Proveedor de juegos para lanzar este juego"
+
+#, fuzzy
+msgid "Launch Settings"
+msgstr "Opciones"
+
+msgid "Command"
+msgstr "Comando"
+
+msgid "Command to use to launch the game"
+msgstr "Comando a utilizar para iniciar el juego."
+
+msgid "Arguments"
+msgstr "Argumentos de comando"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "Argumentos de línea de comando para darle al juego"
+
+msgid "Launch Directory"
+msgstr "Directorio de inicio"
+
+msgid "Directory to launch the game from"
+msgstr "Directorio desde el que iniciar el juego"
+
+msgid "Environment Variables"
+msgstr "Variables de entorno"
+
+msgid "Environment variables to use when launching the game"
+msgstr "Variables de entorno a utilizar al iniciar el juego"
+
+#, fuzzy
+msgid "Sandbox Settings"
+msgstr "Opciones de salvadera"
+
+msgid "Use sandboxing"
+msgstr "Usar zona de pruebas"
+
+msgid "Launch the game in a sandbox"
+msgstr "Iniciar el juego en una caja de arena"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Proveedor de arte de caja"
+
+msgid "Images"
+msgstr "Imágenes"
+
+msgid "Banner"
+msgstr "Bandera"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Grids"
+msgstr "Rejillas"
+
+# Settings Menu
+msgid "General"
+msgstr "General"
+
+msgid "Display"
+msgstr "Monitor"
+
+msgid "Network"
+msgstr "Red"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+msgid "Plugins"
+msgstr "Complementos"
+
+msgid "Plugin Store"
+msgstr "Tienda de complementos"
+
+msgid "Processes"
+msgstr "Procesos"
+
+msgid "Logging"
+msgstr "Registro"
+
+msgid "Controllers"
+msgstr "Mandos"
+
+msgid "Windows"
+msgstr "Ventanas"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "Actualizaciones"
+
+msgid "Automatic Updates"
+msgstr "Actualizaciones automáticas"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr "Descargue y aplique actualizaciones automáticamente en segundo plano cuando estén disponibles"
+
+msgid "Check for Updates"
+msgstr "Buscar actualizaciones"
+
+msgid "Install Update"
+msgstr "Instalar actualización"
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "System language"
+msgstr "Lenguaje del sistema"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Maximum Recent Apps"
+msgstr "Aplicaciones recientes máximas"
+
+msgid "System Information"
+msgstr "Información del sistema"
+
+msgid "Platform"
+msgstr "Plataforma"
+
+msgid "Client Version"
+msgstr "Versión de aplicacion"
+
+msgid "OS"
+msgstr "OS"
+
+msgid "Kernel Version"
+msgstr "Versión de kernel"
+
+msgid "Vendor"
+msgstr "Proveedor"
+
+msgid "Product"
+msgstr "Producto"
+
+msgid "BIOS Version"
+msgstr "Versión de BIOS"
+
+msgid "CPU Model"
+msgstr "Modelo de CPU"
+
+msgid "GPU Model"
+msgstr "Modelo de GPU"
+
+msgid "Driver Version"
+msgstr "Versión de driver"
+
+# Display Menu
+msgid "Scale"
+msgstr "La amplitud"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "Dependencias de red no encontradas"
+
+msgid "Wireless Network"
+msgstr "Red inalámbrica"
+
+msgid "Visible Networks"
+msgstr "Redes visibles"
+
+msgid "Refresh Networks"
+msgstr "Actualizar redes"
+
+msgid "Wired Network"
+msgstr "Red cableada"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Enter the password for this network"
+msgstr "Ingrese la contraseña para esta red"
+
+msgid "Bluetooth service unavailable"
+msgstr "Servicio Bluetooth no disponible"
+
+msgid "Enabled"
+msgstr "Activado"
+
+msgid "Enable Discovery"
+msgstr "Habilitar el descubrimiento"
+
+# Audio Menu
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Volume"
+msgstr "Volumen"
+
+msgid "Output Device"
+msgstr "Dispositivo de salida"
+
+msgid "Input Device"
+msgstr "Dispositivo de entrada"
+
+msgid "Microphone"
+msgstr "Micrófono"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "No se encontraron complementos"
+
+# Processes Menu
+msgid "Kill"
+msgstr "Cesar"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "Nivel de registro global"
+
+msgid "Set the log level for all systems"
+msgstr "Establecer el nivel de registro para todos los sistemas"
+
+msgid "Per-system Logging"
+msgstr "Registro por sistema"
+
+# General Controller Settings Menu
+msgid "General Controller Settings"
+msgstr "Configuración general del controlador"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "SDL HIDAPI encendido"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr "Sistema de entrada alternativo que puede provocar doble entrada. Algunos juegos usan SDL para controles giroscópicos o todas las entradas. Requiere reinicio."
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "Nombre de perfil"
+
+msgid "Buttons"
+msgstr "Botones"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "Ejes"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "Cambiar entrada"
+
+msgid "Keyboard"
+msgstr "Teclado"
+
+msgid "Mouse"
+msgstr "Ratón"
+
+msgid "Gamepad"
+msgstr "Mando"
+
+msgid "Clear"
+msgstr "Borrar"
+
+msgid "Left Click"
+msgstr "Click izquierdo"
+
+msgid "Right Click"
+msgstr "Click derecho"
+
+msgid "Mouse Motion"
+msgstr "Movimiento del mouse"
+
+msgid "Wheel Up"
+msgstr ""
+
+msgid "Wheel Down"
+msgstr ""
+
+msgid "Middle Click"
+msgstr ""
+
+msgid "Welcome"
+msgstr "Bienvenidos"
+
+msgid "Select a language"
+msgstr "Selecciona un idioma"
+
+msgid "Connect to your network"
+msgstr "Conéctate a tu red"
+
+msgid "Next"
+msgstr "Entrante"
+
+msgid "Install plugins"
+msgstr "Instalar complementos"
+
+msgid "Configure your plugins"
+msgstr "Configura tus complementos"
+
+msgid "Finished"
+msgstr "Finalizado"
+
+msgid "You're ready to go"
+msgstr "Estas listo para ir"
+
+msgid "Start playing"
+msgstr "Empezar a jugar"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "¿Qué deberías jugar?"
+
+msgid "Installed"
+msgstr "Instalado"
+
+msgid "All Games"
+msgstr "Todos los juegos"
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Collections"
+msgstr "Colecciones"
+
+#, fuzzy
+msgid "Quick Settings"
+msgstr "Ajustes rápidos"
+
+msgid "Performance"
+msgstr "Rendimiento"
+
+msgid "Power Tools"
+msgstr "Herramientas eléctricas"
+
+msgid "Brightness"
+msgstr "Brillo"
+
+msgid "Saturation"
+msgstr "Saturación"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "Superposición de rendimiento"
+
+msgid "FPS Limit"
+msgstr "Límite de FPS"
+
+msgid "Refresh Rate"
+msgstr "Frecuencia de actualización"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "Esperando el servicio de PowerStation..."
+
+#, fuzzy
+msgid "CPU Settings"
+msgstr "Opciones de CPU"
+
+msgid "CPU Boost"
+msgstr "Aumentar de CPU"
+
+msgid "SMT Enabled"
+msgstr "SMT habilitado"
+
+msgid "CPU Cores"
+msgstr "Núcleos de CPU"
+
+#, fuzzy
+msgid "GPU Settings"
+msgstr "Opciones de GPU"
+
+msgid "TDP Boost"
+msgstr "Aumentar de TDP"
+
+msgid "Manual Freq"
+msgstr "Frecuencia manual"
+
+msgid "Min Freq"
+msgstr "Frecuencia mínima"
+
+msgid "Max Freq"
+msgstr "Frecuencia máxima"
+
+msgid "GPU Temp Limit"
+msgstr "Límite de temperatura de la gpu"
+
+msgid "Power Profile"
+msgstr "Perfil de poder"
+
+msgid "Thermal Throttle Profile"
+msgstr "Perfil del acelerador térmico"
+
+# Power Menu
+msgid "Suspend"
+msgstr "Suspender"
+
+msgid "Reboot"
+msgstr "Reiniciar"
+
+msgid "Shutdown"
+msgstr "Cerrar"
