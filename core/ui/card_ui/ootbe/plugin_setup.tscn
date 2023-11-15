@@ -66,9 +66,8 @@ layout_mode = 2
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("4_bqgae")]
+[node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_bqgae")]
 unique_name_in_owner = true
-current_focus = NodePath("")
 
 [node name="Spacer" type="Control" parent="HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

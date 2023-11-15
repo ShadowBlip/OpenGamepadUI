@@ -373,6 +373,9 @@ theme_override_constants/margin_bottom = 5
 [node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("29_8hwjo")]
 layout_mode = 2
 
+[node name="AutoUpdateToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer" index="2"]
+button_pressed = true
+
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings" instance=ExtResource("2_xwevg")]
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("16_sfk74")
@@ -402,6 +405,12 @@ state = ExtResource("19_l8vuu")
 [node name="BluetoothSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("33_a7xb2")]
 visible = false
 layout_mode = 2
+
+[node name="EnableToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" index="1"]
+button_pressed = true
+
+[node name="DiscoverToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" index="2"]
+button_pressed = true
 
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu" instance=ExtResource("2_xwevg")]
 state_machine = ExtResource("15_cb33u")
@@ -450,6 +459,9 @@ state = ExtResource("25_nijem")
 [node name="GeneralControllerSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_uqw2r")]
 visible = false
 layout_mode = 2
+
+[node name="SDLHIDAPIToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralControllerSettings/MarginContainer/VBoxContainer" index="1"]
+button_pressed = true
 
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings"]
