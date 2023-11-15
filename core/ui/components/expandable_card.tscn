@@ -61,7 +61,7 @@ on_signal = "effect_finished"
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-texture = SubResource("ImageTexture_wsaqv")
+texture = SubResource("GradientTexture2D_quvnw")
 expand_mode = 1
 stretch_mode = 6
 

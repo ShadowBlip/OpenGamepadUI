@@ -32,6 +32,7 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var driver_text := $%GPUDriverText as SelectableText
 @onready var kernel_text := $%KernelVerText as SelectableText
 @onready var bios_text := $%BIOSVerText as SelectableText
+@onready var lang_dropdown := $%LanguageDropdown as Dropdown
 
 
 # Called when the node enters the scene tree for the first time.
@@ -110,6 +111,29 @@ func _ready() -> void:
 	update_timer.timeout.connect(_on_autoupdate)
 	if auto_update:
 		update_timer.start()
+
+	# Configure the language dropdown
+	var current_locale := SettingsManager.get_value("general", "locale", "en_US") as String
+	lang_dropdown.clear()
+	# E.g. ["en_US", "es_MX"]
+	var i := 0
+	for locale in TranslationServer.get_loaded_locales():
+		var language := locale.split("_")[0]
+		var language_name := TranslationServer.get_language_name(language)
+		lang_dropdown.add_item(language_name)
+		lang_dropdown.option_button.set_item_metadata(i, locale)
+		if locale == current_locale:
+			lang_dropdown.select(i)
+		i += 1
+
+	# Update the locale when it is changed
+	var on_language_change := func(idx: int) -> void:
+		var locale := lang_dropdown.option_button.get_item_metadata(idx) as String
+		var language_name := lang_dropdown.option_button.get_item_text(idx)
+		logger.info("Setting language to: " + locale)
+		TranslationServer.set_locale(locale)
+		SettingsManager.set_value("general", "locale", locale)
+	lang_dropdown.item_selected.connect(on_language_change)
 
 
 # Looks for user defined themes and creates buttons to select those themes

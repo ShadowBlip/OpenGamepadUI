@@ -1,0 +1,524 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# Main Menu Messages
+msgid "Home"
+msgstr ""
+
+msgid "Library"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Power"
+msgstr ""
+
+# General messages
+msgid "Accept"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Exit"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+# Help Menu Messages
+msgid "Open Main Menu"
+msgstr ""
+
+msgid "Open Quick Access Menu"
+msgstr ""
+
+msgid "Open On-Screen Keyboard"
+msgstr ""
+
+msgid "Scroll container"
+msgstr ""
+
+msgid "Switch to left tab"
+msgstr ""
+
+msgid "Switch to right tab"
+msgstr ""
+
+msgid "Backspace"
+msgstr ""
+
+msgid "Close keyboard"
+msgstr ""
+
+msgid "Toggle Shift"
+msgstr ""
+
+msgid "Enter"
+msgstr ""
+
+msgid "Steam Deck"
+msgstr ""
+
+msgid "Global"
+msgstr ""
+
+msgid "Unable to save gamepad profile"
+msgstr ""
+
+msgid "Failed to save gamepad profile"
+msgstr ""
+
+msgid "Gamepad profile saved"
+msgstr ""
+
+msgid "Play Now"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Queued"
+msgstr ""
+
+msgid "Installing"
+msgstr ""
+
+msgid "Quick Access Menu"
+msgstr ""
+
+msgid "Game Name"
+msgstr ""
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr ""
+
+msgid "Boxart"
+msgstr ""
+
+msgid "Launch Provider"
+msgstr ""
+
+msgid "Library provider to launch this game with"
+msgstr ""
+
+msgid "Launch Settings"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid "Command to use to launch the game"
+msgstr ""
+
+msgid "Arguments"
+msgstr ""
+
+msgid "Command-line arguments to pass to the game"
+msgstr ""
+
+msgid "Launch Directory"
+msgstr ""
+
+msgid "Directory to launch the game from"
+msgstr ""
+
+msgid "Environment Variables"
+msgstr ""
+
+msgid "Environment variables to use when launching the game"
+msgstr ""
+
+msgid "Sandbox Settings"
+msgstr ""
+
+msgid "Use sandboxing"
+msgstr ""
+
+msgid "Launch the game in a sandbox"
+msgstr ""
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Banner"
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Grids"
+msgstr ""
+
+# Settings Menu
+msgid "General"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Network"
+msgstr ""
+
+msgid "Bluetooth"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Plugin Store"
+msgstr ""
+
+msgid "Processes"
+msgstr ""
+
+msgid "Logging"
+msgstr ""
+
+msgid "Controllers"
+msgstr ""
+
+msgid "Windows"
+msgstr ""
+
+# General Settings Menu
+msgid "Updates"
+msgstr ""
+
+msgid "Automatic Updates"
+msgstr ""
+
+msgid "Automatically download and apply updates in the background when they are available"
+msgstr ""
+
+msgid "Check for Updates"
+msgstr ""
+
+msgid "Install Update"
+msgstr ""
+
+msgid "Appearance"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "System language"
+msgstr ""
+
+msgid "Theme"
+msgstr ""
+
+msgid "Maximum Recent Apps"
+msgstr ""
+
+msgid "System Information"
+msgstr ""
+
+msgid "Platform"
+msgstr ""
+
+msgid "Client Version"
+msgstr ""
+
+msgid "OS"
+msgstr ""
+
+msgid "Kernel Version"
+msgstr ""
+
+msgid "Vendor"
+msgstr ""
+
+msgid "Product"
+msgstr ""
+
+msgid "BIOS Version"
+msgstr ""
+
+msgid "CPU Model"
+msgstr ""
+
+msgid "GPU Model"
+msgstr ""
+
+msgid "Driver Version"
+msgstr ""
+
+# Display Menu
+msgid "Scale"
+msgstr ""
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr ""
+
+msgid "Wireless Network"
+msgstr ""
+
+msgid "Visible Networks"
+msgstr ""
+
+msgid "Refresh Networks"
+msgstr ""
+
+msgid "Wired Network"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Enter the password for this network"
+msgstr ""
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Enable Discovery"
+msgstr ""
+
+# Audio Menu
+msgid "Audio"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "Output Device"
+msgstr ""
+
+msgid "Input Device"
+msgstr ""
+
+msgid "Microphone"
+msgstr ""
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr ""
+
+# Processes Menu
+msgid "Kill"
+msgstr ""
+
+# Log Menu
+msgid "Global Log Level"
+msgstr ""
+
+msgid "Set the log level for all systems"
+msgstr ""
+
+msgid "Per-system Logging"
+msgstr ""
+
+# General Controller Settings Menu
+msgid "General Controller Settings"
+msgstr ""
+
+msgid "SDL HIDAPI Enabled"
+msgstr ""
+
+msgid "Alternate input system that can cause double input. Some games use SDL for gyro controls or all input. Requires restart."
+msgstr ""
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr ""
+
+msgid "Buttons"
+msgstr ""
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr ""
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr ""
+
+msgid "Keyboard"
+msgstr ""
+
+msgid "Mouse"
+msgstr ""
+
+msgid "Gamepad"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Left Click"
+msgstr ""
+
+msgid "Right Click"
+msgstr ""
+
+msgid "Mouse Motion"
+msgstr ""
+
+msgid "Wheel Up"
+msgstr ""
+
+msgid "Wheel Down"
+msgstr ""
+
+msgid "Middle Click"
+msgstr ""
+
+# First Boot Menu
+msgid "Welcome"
+msgstr ""
+
+msgid "Select a language"
+msgstr ""
+
+msgid "Connect to your network"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Install plugins"
+msgstr ""
+
+msgid "Configure your plugins"
+msgstr ""
+
+msgid "Finished"
+msgstr ""
+
+msgid "You're ready to go"
+msgstr ""
+
+msgid "Start playing"
+msgstr ""
+
+# Search Bar
+msgid "What should you play?"
+msgstr ""
+
+msgid "Installed"
+msgstr ""
+
+msgid "All Games"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Collections"
+msgstr ""
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr ""
+
+msgid "Performance"
+msgstr ""
+
+msgid "Power Tools"
+msgstr ""
+
+msgid "Brightness"
+msgstr ""
+
+msgid "Saturation"
+msgstr ""
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr ""
+
+msgid "FPS Limit"
+msgstr ""
+
+msgid "Refresh Rate"
+msgstr ""
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr ""
+
+msgid "CPU Settings"
+msgstr ""
+
+msgid "CPU Boost"
+msgstr ""
+
+msgid "SMT Enabled"
+msgstr ""
+
+msgid "CPU Cores"
+msgstr ""
+
+msgid "GPU Settings"
+msgstr ""
+
+msgid "TDP Boost"
+msgstr ""
+
+msgid "Manual Freq"
+msgstr ""
+
+msgid "Min Freq"
+msgstr ""
+
+msgid "Max Freq"
+msgstr ""
+
+msgid "GPU Temp Limit"
+msgstr ""
+
+msgid "Power Profile"
+msgstr ""
+
+msgid "Thermal Throttle Profile"
+msgstr ""
+
+# Power Menu
+msgid "Suspend"
+msgstr ""
+
+msgid "Reboot"
+msgstr ""
+
+msgid "Shutdown"
+msgstr ""

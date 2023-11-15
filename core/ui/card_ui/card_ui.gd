@@ -56,6 +56,10 @@ func _ready() -> void:
 	fade_texture.visible = true
 	boot_video.finished.connect(_on_boot_video_player_finished)
 	
+	# Configure the locale
+	var locale := settings_manager.get_value("general", "locale", "en_US") as String
+	TranslationServer.set_locale(locale)
+	
 	# Load any platform-specific logic
 	platform.load(get_tree().get_root())
 	

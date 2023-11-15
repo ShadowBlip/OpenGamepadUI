@@ -20,7 +20,7 @@ config/name="Open Gamepad UI"
 run/main_scene="res://entrypoint.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="opengamepadui"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.1", "Forward Plus")
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/show_image=false
@@ -209,6 +209,11 @@ ogui_volume_mute={
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://assets/locale/en_US.po", "res://assets/locale/es_MX.po", "res://assets/locale/fr_FR.po")
+locale/fallback="en_US"
 
 [rendering]
 
