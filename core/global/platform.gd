@@ -12,7 +12,8 @@ signal platform_loaded
 enum PLATFORM {
 	# Hardware platforms
 	ABERNIC_GEN1, ## Win600
-	AOKZOE_GEN1,  ## A1 AR07, A1 Pro
+	AOKZOE_GEN1,  ## A1 AR07
+	AOKZOE_GEN2,  ## A1 Pro
 	ALLY_GEN1,    ## ASUS ROG Ally RC71L
 	AYANEO_GEN1,  ## Includes Founders Edition, Pro, and Retro Power models.
 	AYANEO_GEN2,  ## Includes NEXT models.
@@ -66,6 +67,8 @@ func _init() -> void:
 		platform.identify_controller_phys()
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres") as HandheldPlatform
+	if PLATFORM.AOKZOE_GEN2 in flags:
+		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen2.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN1 in flags:
 		platform = load("res://core/platform/handheld/ayaneo/ayaneo_gen1.tres") as HandheldPlatform
 	if PLATFORM.AYANEO_GEN2 in flags:
@@ -170,9 +173,12 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.ABERNIC_GEN1
 
 	# AOKZOE
-	elif product_name in ["AOKZOE A1 AR07", "AOKZOE A1 Pro"] and vendor_name == "AOKZOE":
+	elif product_name in ["AOKZOE A1 AR07"] and vendor_name == "AOKZOE":
 		logger.debug("Detected AOKZOE Gen 1 platform")
 		return PLATFORM.AOKZOE_GEN1
+	elif product_name in ["AOKZOE A1 Pro"] and vendor_name == "AOKZOE":
+		logger.debug("Detected AOKZOE Gen 2 platform")
+		return PLATFORM.AOKZOE_GEN2
 
 	# ASUS
 	elif product_name == "ROG Ally RC71L_RC71L" and vendor_name == "ASUSTeK COMPUTER INC.":
