@@ -170,9 +170,11 @@ func apply_profile(profile: PerformanceProfile) -> void:
 	# Apply CPU settings from the given profile
 	if _power_station.cpu:
 		logger.debug("Applying CPU performance settings from profile")
-		_power_station.cpu.boost_enabled = profile.cpu_boost_enabled
-		_power_station.cpu.smt_enabled = profile.cpu_smt_enabled
-		if profile.cpu_core_count_current > 0:
+		if _power_station.cpu.boost_enabled != profile.cpu_boost_enabled:
+			_power_station.cpu.boost_enabled = profile.cpu_boost_enabled
+		if _power_station.cpu.smt_enabled != profile.cpu_smt_enabled:
+			_power_station.cpu.smt_enabled = profile.cpu_smt_enabled
+		if profile.cpu_core_count_current > 0 and _power_station.cpu.cores_enabled != profile.cpu_core_count_current:
 			_power_station.cpu.cores_enabled = profile.cpu_core_count_current
 
 	# Detect all GPU cards
@@ -186,17 +188,18 @@ func apply_profile(profile: PerformanceProfile) -> void:
 		if card.class_type != "integrated":
 			continue
 		logger.debug("Applying GPU performance settings from profile")
-		card.manual_clock = profile.gpu_manual_enabled
-		if profile.tdp_current > 0:
+		if card.manual_clock != profile.gpu_manual_enabled:
+			card.manual_clock = profile.gpu_manual_enabled
+		if profile.tdp_current > 0 and card.tdp != profile.tdp_current:
 			logger.debug("Applying TDP: " + str(profile.tdp_current))
 			card.tdp = profile.tdp_current
-		if profile.tdp_boost_current > 0:
+		if profile.tdp_boost_current > 0 and card.boost != profile.tdp_boost_current:
 			logger.debug("Applying TDP Boost: " + str(profile.tdp_boost_current))
 			card.boost = profile.tdp_boost_current
-		if profile.gpu_freq_min_current > 0:
+		if profile.gpu_freq_min_current > 0 and card.clock_value_mhz_min != profile.gpu_freq_min_current:
 			logger.debug("Applying Clock Freq Min: " + str(profile.gpu_freq_min_current))
 			card.clock_value_mhz_min = profile.gpu_freq_min_current
-		if profile.gpu_freq_max_current > 0:
+		if profile.gpu_freq_max_current > 0 and card.clock_value_mhz_max != profile.gpu_freq_max_current:
 			logger.debug("Applying Clock Freq Max: " + str(profile.gpu_freq_max_current))
 			card.clock_value_mhz_max = profile.gpu_freq_max_current
 		if profile.gpu_power_profile >= 0:
@@ -205,9 +208,10 @@ func apply_profile(profile: PerformanceProfile) -> void:
 				power_profile = "max-performance"
 			if profile.gpu_power_profile == 1:
 				power_profile = "power-saving"
-			logger.debug("Applying Power Profile: " + power_profile)
-			card.power_profile = power_profile
-		if profile.gpu_temp_current > 0:
+			if card.power_profile != power_profile:
+				logger.debug("Applying Power Profile: " + power_profile)
+				card.power_profile = power_profile
+		if profile.gpu_temp_current > 0 and card.thermal_throttle_limit_c != profile.gpu_temp_current:
 			logger.debug("Applying Thermal Throttle Limit: " + str(profile.gpu_temp_current))
 			card.thermal_throttle_limit_c = profile.gpu_temp_current
 
