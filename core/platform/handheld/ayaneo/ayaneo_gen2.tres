@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=24 format=3 uid="uid://cq2afdo742vjq"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=29 format=3 uid="uid://cq2afdo742vjq"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_sxb4s"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_y36u3"]
@@ -38,13 +38,13 @@ name = "Volume Down"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_j8ifh")])
 emits = SubResource("Resource_5kiqp")
 
-[sub_resource type="Resource" id="Resource_hpe38"]
-script = ExtResource("2_y36u3")
-code = "KEY_LEFT"
-
 [sub_resource type="Resource" id="Resource_e5qhq"]
 script = ExtResource("2_y36u3")
 code = "KEY_KPENTER"
+
+[sub_resource type="Resource" id="Resource_hpe38"]
+script = ExtResource("2_y36u3")
+code = "KEY_LEFT"
 
 [sub_resource type="Resource" id="Resource_qnbxs"]
 script = ExtResource("2_y36u3")
@@ -55,12 +55,6 @@ script = ExtResource("2_y36u3")
 code = "BTN_MODE"
 
 [sub_resource type="Resource" id="Resource_ewnjs"]
-script = ExtResource("3_uiyw2")
-name = "Aya Space"
-activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_hpe38"), SubResource("Resource_e5qhq"), SubResource("Resource_qnbxs")])
-emits = SubResource("Resource_vt8ps")
-
-[sub_resource type="Resource" id="Resource_3ee0g"]
 script = ExtResource("3_uiyw2")
 name = "Aya Space"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_e5qhq"), SubResource("Resource_hpe38"), SubResource("Resource_qnbxs")])
@@ -84,11 +78,35 @@ name = "Small Buttton"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_w24iw"), SubResource("Resource_dt4ei")])
 emits = SubResource("Resource_ko31g")
 
-[sub_resource type="Resource" id="Resource_ma76b"]
+[sub_resource type="Resource" id="Resource_2ib3x"]
+script = ExtResource("2_y36u3")
+code = "KEY_F12"
+
+[sub_resource type="Resource" id="Resource_0reoq"]
+script = ExtResource("2_y36u3")
+code = "KEY_RIGHTCTRL"
+
+[sub_resource type="Resource" id="Resource_hkkrh"]
+script = ExtResource("2_y36u3")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_fblhk"]
+script = ExtResource("3_uiyw2")
+name = "Aya Space"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_2ib3x"), SubResource("Resource_0reoq"), SubResource("Resource_hkkrh")])
+
+[sub_resource type="Resource" id="Resource_ygouk"]
+script = ExtResource("2_y36u3")
+code = "KEY_D"
+
+[sub_resource type="Resource" id="Resource_xiupp"]
+script = ExtResource("2_y36u3")
+code = "KEY_LEFTMETA"
+
+[sub_resource type="Resource" id="Resource_0lfuq"]
 script = ExtResource("3_uiyw2")
 name = "Small Buttton"
-activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_w24iw"), SubResource("Resource_dt4ei")])
-emits = SubResource("Resource_ko31g")
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_ygouk"), SubResource("Resource_xiupp")])
 
 [sub_resource type="Resource" id="Resource_4vawq"]
 script = ExtResource("1_sxb4s")
@@ -97,7 +115,7 @@ name = "AT Translated Set 2 keyboard"
 
 [resource]
 script = ExtResource("4_vgjqj")
-key_map = Array[ExtResource("3_uiyw2")]([SubResource("Resource_krc84"), SubResource("Resource_kfxia"), SubResource("Resource_ewnjs"), SubResource("Resource_3ee0g"), SubResource("Resource_dddtb"), SubResource("Resource_ma76b")])
+key_map = Array[ExtResource("3_uiyw2")]([SubResource("Resource_krc84"), SubResource("Resource_kfxia"), SubResource("Resource_ewnjs"), SubResource("Resource_dddtb"), SubResource("Resource_fblhk"), SubResource("Resource_0lfuq")])
 filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_sxb4s")]([SubResource("Resource_4vawq")])
 gamepad = SubResource("Resource_gwcbt")
