@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '18'
+          node-version: "20"
 
       - name: Install Dependencies
         run: npm install @semantic-release/exec @google/semantic-release-replace-plugin @semantic-release/git
