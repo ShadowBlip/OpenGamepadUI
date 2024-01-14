@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 LABEL org.opencontainers.image.title="OpenGamepadUI Builder"
 LABEL org.opencontainers.image.description="Build container for OpenGamepadUI"
 LABEL org.opencontainers.image.source="https://github.com/ShadowBlip/OpenGamepadUI"
-LABEL org.opencontainers.image.version="4.1.3"
+LABEL org.opencontainers.image.version="4.2.1"
 
 RUN sed -i '/ParallelDownloads/s/^#//g' /etc/pacman.conf
 
