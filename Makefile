@@ -2,8 +2,8 @@ PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
 ROOTFS ?= $(CACHE_DIR)/rootfs
 OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d '"' -f2)
-GODOT_VERSION ?= $(shell godot --version | grep -o '[0-9].*[0-9]')
-GODOT_RELEASE ?= $(shell godot --version | rev | cut -d '.' -f2 | rev)
+GODOT_VERSION ?= $(shell godot --version | grep -o '[0-9].*[0-9]\.' | sed 's/.$$//')
+GODOT_RELEASE ?= $(shell godot --version | grep -oP '^[0-9].*?[a-z]\.' | grep -oP '[a-z]+')
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GODOT ?= /usr/bin/godot
 GAMESCOPE ?= /usr/bin/gamescope
