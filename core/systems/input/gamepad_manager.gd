@@ -89,7 +89,7 @@ func get_gamepad_capabilities(device: String) -> Array[MappableEvent]:
 func discover_devices() -> Array[InputDevice]:
 	var input_path := "/dev/input"
 	var devices: Array[InputDevice] = []
-	
+
 	var files := DirAccess.get_files_at(input_path)
 	for file in files:
 		if not file.begins_with("event"):
@@ -137,7 +137,7 @@ func exit() -> void:
 	Input.joy_connection_changed.disconnect(_on_gamepad_change)
 	for gamepad in gamepads.items():
 		gamepad.close()
-		
+
 		if gamepad is ManagedGamepad:
 			logger.debug("Cleaning up gamepad: " + gamepad.phys_path)
 			gamepad.phys_device.grab(false)
@@ -150,7 +150,7 @@ func exit() -> void:
 			gamepad.gamepad.virt_device.close()
 			gamepad.gamepad.phys_device.close()
 			device_hider.restore_event_device(gamepad.gamepad.phys_path)
-			
+
 			gamepad.kb_device.grab(false)
 			gamepad.kb_device.close()
 			device_hider.restore_event_device(gamepad.kb_event_path)
@@ -167,8 +167,6 @@ func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _process_input(_delta: float) -> void:
 	# Process the input for all currently managed gamepads
-	if not is_instance_valid(gamepads):
-		return
 	for gamepad in gamepads.items():
 		gamepad.process_input()
 
@@ -176,12 +174,11 @@ func _process_input(_delta: float) -> void:
 ## Triggers whenever we detect any gamepad connect/disconnect events
 func _on_gamepad_change(device: int, connected: bool) -> void:
 	logger.info("Gamepad was changed: " + Input.get_joy_name(device) + " connected: " + str(connected))
-	
 	logger.debug("Current Managed gamepads: " + str(gamepads.phys_paths()))
-	
+
 	# Get all currently detected sysfs input devices
 	var sysfs_devices := SysfsDevice.get_all()
-	
+
 	# Get a list of all currently detected event devices (e.g. ["event1", "event2"])
 	var detected_event_handlers := PackedStringArray()
 	for sysfs_device in sysfs_devices:
@@ -191,7 +188,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 				continue
 			detected_event_handlers.append(handler)
 	logger.debug("Detected device handlers: " + str(detected_event_handlers))
-	
+
 	# Discover any new gamepads
 	var discovered_devices := discover_devices()
 	var discovered_gamepads: Array[InputDevice] = []
@@ -223,7 +220,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			logger.debug("Handheld gamepad was disconnected")
 			gamepad.phys_device = null
 			continue
-		
+
 		logger.debug("Gamepad disconnected: " + gamepad.phys_path)
 		gamepads.erase(gamepad)
 		gamepad_removed.emit()
@@ -233,7 +230,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		logger.debug("Handheld gamepad was reconnected")
 		gamepads.handheld.phys_device = discovered_handheld
 		gamepads.handheld.grab()
-		
+
 		# Hide the device from other processes
 		var path := discovered_handheld.get_path()
 		logger.debug("Trying to re-hide handheld gamepad")
@@ -277,7 +274,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 
 		# See if we've identified the gamepad defined by the device platform.
-		if _is_device_virtual(dev):
+		if is_device_virtual(dev):
 			logger.debug("Device appears to be virtual , skipping " + path)
 			continue
 
@@ -313,29 +310,29 @@ func _get_event_from_phys(phys_path: String)  -> String:
 
 
 ## Returns true if the InputDevice is a virtual device.
-func _is_device_virtual(device: InputDevice) -> bool:
+func is_device_virtual(device: InputDevice) -> bool:
 	var event := device.get_path()
 	logger.debug("Checking if " + event + " is a virtual device.")
 
-	if not device.get_phys() == "":
+	if device.get_phys() != "":
 		logger.debug(event + " is real, it has a physical address: " + device.get_phys())
 		return false
 
+	var event_file := event.split("/")[-1]
 	var sysfs_devices := SysfsDevice.get_all()
+	logger.debug("Looking for " + event_file)
 	for sysfs_device in sysfs_devices:
-		for handler in sysfs_device.handlers:
-			logger.debug("Checking sysfs device: " + sysfs_device.sysfs_path + " handler: " + handler)
+		logger.debug("Event Handlers: " + str(sysfs_device.handlers))
+		if not event_file in sysfs_device.handlers:
+			continue
+		logger.debug("Found sysfs device for " + event_file)
 
-			if event != "/dev/input/" + handler:
-				logger.debug("Handler " + handler + " not part of path. Skipping.")
-				continue
+		if "/devices/virtual" in sysfs_device.sysfs_path:
+			logger.debug("Device appears to be virtual")
+			return true
 
-			if "/devices/virtual" in sysfs_device.sysfs_path:
-				logger.debug("Device appears to be virtual")
-				return true
-
-			logger.debug("Device is not in /devices/virtual. Treating as real.")
-			return false
+		logger.debug("Device is not in /devices/virtual. Treating as real.")
+		return false
 
 	logger.debug("Unable to match device to any sysfs device.")
 	return true
@@ -348,7 +345,7 @@ class GamepadArray:
 	var gamepad_phys_paths: Array[String] = []
 	var gamepad_virt_paths: Array[String] = []
 	var mutex := Mutex.new()
-	
+
 	func add(gamepad: ManagedGamepad) -> void:
 		mutex.lock()
 		gamepads.append(gamepad)
@@ -380,7 +377,7 @@ class GamepadArray:
 		var paths := gamepad_phys_paths.duplicate()
 		mutex.unlock()
 		return paths
-	
+
 	func get_by_phys(phys_path: String) -> ManagedGamepad:
 		mutex.lock()
 		var idx := gamepad_phys_paths.find(phys_path)
