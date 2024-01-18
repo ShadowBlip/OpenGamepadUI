@@ -20,7 +20,7 @@ signal gamepad_added(gamepad: ManagedGamepad)
 signal gamepad_removed
 
 var platform := load("res://core/global/platform.tres") as Platform
-var device_unhider := load("res://core/systems/input/device_hider.tres") as DeviceHider
+var device_hider := load("res://core/systems/input/device_hider.tres") as DeviceHider
 var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
 
 var gamepads := GamepadArray.new()
@@ -38,8 +38,8 @@ func _init() -> void:
 		logger.info("Not initializing. Ran from editor.")
 		return
 
-	# Unhide any device events that were orphaned by bad programs like HandyGCCS
-	await device_unhider.restore_all_hidden()
+	# If we crashed, unhide any device events that were orphaned
+	await device_hider.restore_all_hidden()
 
 	# Discover any gamepads and grab exclusive access to them. Create a
 	# duplicate virtual gamepad for each physical one.
@@ -143,14 +143,17 @@ func exit() -> void:
 			gamepad.phys_device.grab(false)
 			gamepad.virt_device.close()
 			gamepad.phys_device.close()
+			device_hider.restore_event_device(gamepad.phys_path)
 		if gamepad is HandheldGamepad:
 			logger.debug("Cleaning up handheld gamepad: " + gamepad.gamepad.phys_path)
 			gamepad.gamepad.phys_device.grab(false)
 			gamepad.gamepad.virt_device.close()
 			gamepad.gamepad.phys_device.close()
+			device_hider.restore_event_device(gamepad.gamepad.phys_path)
 			
 			gamepad.kb_device.grab(false)
 			gamepad.kb_device.close()
+			device_hider.restore_event_device(gamepad.kb_event_path)
 
 
 ## Sets the gamepad intercept mode
@@ -164,6 +167,8 @@ func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _process_input(_delta: float) -> void:
 	# Process the input for all currently managed gamepads
+	if not is_instance_valid(gamepads):
+		return
 	for gamepad in gamepads.items():
 		gamepad.process_input()
 
@@ -231,6 +236,10 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		
 		# Hide the device from other processes
 		var path := discovered_handheld.get_path()
+		logger.debug("Trying to re-hide handheld gamepad")
+		var hidden_path := await device_hider.hide_event_device(path)
+		if hidden_path == "":
+			logger.warn("Unable to re-hide handheld gamepad: " + path)
 
 	# Setup any handheld gamepads if they are discovered and not yet configured
 	if not gamepads.has_handheld() and discovered_handheld:
@@ -238,13 +247,21 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 		logger.info("A handheld gamepad was discovered at: " + path)
 		# Hide the device from other processes
 		logger.debug("Trying to hide handheld gamepad")
+		var hidden_path := await device_hider.hide_event_device(path)
+		if hidden_path == "":
+			logger.warn("Unable to hide handheld gamepad: " + path)
+			logger.warn("Opening the raw handheld gamepad instead")
+			# Try to open the non-hidden device instead
+			hidden_path = path
 
 		# Create a new managed gamepad with physical/virtual gamepad pair
-		logger.debug("Opening handheld gamepad at: " + path)
+		logger.debug("Opening handheld gamepad at: " + hidden_path)
 		var gamepad := HandheldGamepad.new()
-		if gamepad.open(path) != OK:
-			logger.error("Unable to create handheld gamepad for: " + path)
-
+		if gamepad.open(hidden_path) != OK:
+			logger.error("Unable to create handheld gamepad for: " + hidden_path)
+			if hidden_path != path:
+				logger.debug("Restoring device back to its regular path")
+				device_hider.restore_event_device(hidden_path)
 		else:
 			gamepad.setup(discovered_keyboards)
 			gamepads.add(gamepad)
@@ -260,14 +277,24 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 
 		# See if we've identified the gamepad defined by the device platform.
-		if is_device_virtual(dev):
+		if _is_device_virtual(dev):
 			logger.debug("Device appears to be virtual , skipping " + path)
 			continue
 
+		# Hide the device from other processes
+		var hidden_path := await device_hider.hide_event_device(path)
+		if hidden_path == "":
+			logger.warn("Unable to hide gamepad: " + path)
+			logger.warn("Opening the raw gamepad instead")
+			# Try to open the non-hidden device instead
+			hidden_path = path
+
 		# Create a new managed gamepad with physical/virtual gamepad pair
 		var gamepad := ManagedGamepad.new()
-		if gamepad.open(path) != OK:
-			logger.error("Unable to create managed gamepad for: " + path)
+		if gamepad.open(hidden_path) != OK:
+			logger.error("Unable to create managed gamepad for: " + hidden_path)
+			if hidden_path != path:
+				device_hider.restore_event_device(hidden_path)
 			continue
 
 		gamepads.add(gamepad)
@@ -286,29 +313,29 @@ func _get_event_from_phys(phys_path: String)  -> String:
 
 
 ## Returns true if the InputDevice is a virtual device.
-func is_device_virtual(device: InputDevice) -> bool:
+func _is_device_virtual(device: InputDevice) -> bool:
 	var event := device.get_path()
 	logger.debug("Checking if " + event + " is a virtual device.")
 
-	if device.get_phys() != "":
+	if not device.get_phys() == "":
 		logger.debug(event + " is real, it has a physical address: " + device.get_phys())
 		return false
 
-	var event_file := event.split("/")[-1]
 	var sysfs_devices := SysfsDevice.get_all()
-	logger.debug("Looking for " + event_file)
 	for sysfs_device in sysfs_devices:
-		logger.debug("Event Handlers: " + str(sysfs_device.handlers))
-		if not event_file in sysfs_device.handlers:
-			continue
-		logger.debug("Found sysfs device for " + event_file)
+		for handler in sysfs_device.handlers:
+			logger.debug("Checking sysfs device: " + sysfs_device.sysfs_path + " handler: " + handler)
 
-		if "/devices/virtual" in sysfs_device.sysfs_path:
-			logger.debug("Device appears to be virtual")
-			return true
+			if event != "/dev/input/" + handler:
+				logger.debug("Handler " + handler + " not part of path. Skipping.")
+				continue
 
-		logger.debug("Device is not in /devices/virtual. Treating as real.")
-		return false
+			if "/devices/virtual" in sysfs_device.sysfs_path:
+				logger.debug("Device appears to be virtual")
+				return true
+
+			logger.debug("Device is not in /devices/virtual. Treating as real.")
+			return false
 
 	logger.debug("Unable to match device to any sysfs device.")
 	return true
