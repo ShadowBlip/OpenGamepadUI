@@ -167,8 +167,6 @@ func set_intercept(mode: ManagedGamepad.INTERCEPT_MODE) -> void:
 ## access variables from the main thread
 func _process_input(_delta: float) -> void:
 	# Process the input for all currently managed gamepads
-	if not is_instance_valid(gamepads):
-		return
 	for gamepad in gamepads.items():
 		gamepad.process_input()
 
@@ -277,7 +275,7 @@ func _on_gamepad_change(device: int, connected: bool) -> void:
 			continue
 
 		# See if we've identified the gamepad defined by the device platform.
-		if _is_device_virtual(dev):
+		if is_device_virtual(dev):
 			logger.debug("Device appears to be virtual , skipping " + path)
 			continue
 
@@ -313,29 +311,29 @@ func _get_event_from_phys(phys_path: String)  -> String:
 
 
 ## Returns true if the InputDevice is a virtual device.
-func _is_device_virtual(device: InputDevice) -> bool:
+func is_device_virtual(device: InputDevice) -> bool:
 	var event := device.get_path()
 	logger.debug("Checking if " + event + " is a virtual device.")
 
-	if not device.get_phys() == "":
+	if device.get_phys() != "":
 		logger.debug(event + " is real, it has a physical address: " + device.get_phys())
 		return false
 
+	var event_file := event.split("/")[-1]
 	var sysfs_devices := SysfsDevice.get_all()
+	logger.debug("Looking for " + event_file)
 	for sysfs_device in sysfs_devices:
-		for handler in sysfs_device.handlers:
-			logger.debug("Checking sysfs device: " + sysfs_device.sysfs_path + " handler: " + handler)
+		logger.debug("Event Handlers: " + str(sysfs_device.handlers))
+		if not event_file in sysfs_device.handlers:
+			continue
+		logger.debug("Found sysfs device for " + event_file)
 
-			if event != "/dev/input/" + handler:
-				logger.debug("Handler " + handler + " not part of path. Skipping.")
-				continue
+		if "/devices/virtual" in sysfs_device.sysfs_path:
+			logger.debug("Device appears to be virtual")
+			return true
 
-			if "/devices/virtual" in sysfs_device.sysfs_path:
-				logger.debug("Device appears to be virtual")
-				return true
-
-			logger.debug("Device is not in /devices/virtual. Treating as real.")
-			return false
+		logger.debug("Device is not in /devices/virtual. Treating as real.")
+		return false
 
 	logger.debug("Unable to match device to any sysfs device.")
 	return true
