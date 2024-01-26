@@ -20,25 +20,33 @@ func _ready() -> void:
 		if "--qam-only" in args or "--only-qam" in args:
 			print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are\
 			deprecated and will be removed in a future update. Use --overlay-mode instead.")
-			get_tree().change_scene_to_file("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
+			_change_to_scene("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
 			return
 		elif "--overlay-mode" in args:
-			get_tree().change_scene_to_file("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
+			_change_to_scene("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
 			return
-		get_tree().change_scene_to_file("res://core/ui/vapor_ui/vapor_ui.tscn")
+		_change_to_scene("res://core/ui/vapor_ui/vapor_ui.tscn")
 		return
 
 	# Launch CardUI in overlay mode
 	if "--qam-only" in args or "--only-qam" in args:
 		print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are deprecated\
 		and will be removed in a future update. Use --overlay-mode instead.")
-		get_tree().change_scene_to_file("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
+		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
 	elif "--overlay-mode" in args:
-		get_tree().change_scene_to_file("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
+		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
 	# Launch the main interface
-	get_tree().change_scene_to_file("res://core/ui/card_ui/card_ui.tscn")
+	_change_to_scene("res://core/ui/card_ui/card_ui.tscn")
+
+
+# Change to the given scene
+func _change_to_scene(scene_path: String) -> void:
+	var scene := load(scene_path) as PackedScene
+	var root := get_window()
+	root.add_child(scene.instantiate())
+	queue_free()
 
 
 # Show command-line help options
