@@ -26,7 +26,7 @@ func _init():
 # the source and grab the hash out of it and return it.  Super Rube Golbergery,
 # but tons of fun.
 func _make_crazy_dynamic_over_engineered_class_db_hash():
-	var text = "var all_the_classes = {\n"
+	var text = "var all_the_classes: Dictionary = {\n"
 	for classname in ClassDB.get_class_list():
 		if(ClassDB.can_instantiate(classname)):
 			text += str('"', classname, '": ', classname, ", \n")
@@ -155,9 +155,6 @@ func get_return(obj, method, parameters=null):
 
 
 func should_call_super(obj, method, parameters=null):
-	if(_utils.non_super_methods.has(method)):
-		return false
-
 	var stub_info = _find_stub(obj, method, parameters)
 
 	var is_partial = false

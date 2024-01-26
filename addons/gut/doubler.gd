@@ -1,37 +1,3 @@
-# ##############################################################################
-#(G)odot (U)nit (T)est class
-#
-# ##############################################################################
-# The MIT License (MIT)
-# =====================
-#
-# Copyright (c) 2020 Tom "Butch" Wesley
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# ##############################################################################
-# Description
-# -----------
-# ##############################################################################
-
-
-
 # ------------------------------------------------------------------------------
 # A stroke of genius if I do say so.  This allows for doubling a scene without
 # having  to write any files.  By overloading the "instantiate" method  we can
@@ -47,8 +13,22 @@ class PackedSceneDouble:
 
 	func instantiate(edit_state=0):
 		var inst = _scene.instantiate(edit_state)
+		var export_props = []
+		var script_export_flag = (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_SCRIPT_VARIABLE)
+
 		if(_script !=  null):
+			if(inst.get_script() != null):
+				# Get all the exported props and values so we can set them again
+				for prop in inst.get_property_list():
+					var is_export = prop.usage & (script_export_flag) == script_export_flag
+					if(is_export):
+						export_props.append([prop.name, inst.get(prop.name)])
+
 			inst.set_script(_script)
+			for exported_value in export_props:
+				print('setting ', exported_value)
+				inst.set(exported_value[0], exported_value[1])
+
 		return inst
 
 	func load_scene(path):
@@ -129,7 +109,7 @@ func _get_indented_line(indents, text):
 
 
 func _stub_to_call_super(parsed, method_name):
-	if(_utils.non_super_methods.has(method_name)):
+	if(!parsed.get_method(method_name).is_eligible_for_doubling()):
 		return
 
 	var params = _utils.StubParams.new(parsed.script_path, method_name, parsed.subpath)
@@ -137,7 +117,7 @@ func _stub_to_call_super(parsed, method_name):
 	_stubber.add_stub(params)
 
 
-func _get_base_script_text(parsed, override_path, partial):
+func _get_base_script_text(parsed, override_path, partial, included_methods):
 	var path = parsed.script_path
 	if(override_path != null):
 		path = override_path
@@ -170,14 +150,15 @@ func _get_base_script_text(parsed, override_path, partial):
 		"gut_id":gut_id,
 		"singleton_name":'',#GutUtils.nvl(obj_info.get_singleton_name(), ''),
 		"is_partial":partial,
+		"doubled_methods":included_methods,
 	}
 
 	return _base_script_text.format(values)
 
 
-func _is_valid_double_method(parsed_script, parsed_method):
+func _is_method_eligible_for_doubling(parsed_script, parsed_method):
 	return !parsed_method.is_accessor() and \
-		!parsed_method.is_black_listed() and \
+		parsed_method.is_eligible_for_doubling() and \
 		!_ignored_methods.has(parsed_script.resource, parsed_method.meta.name)
 
 
@@ -197,30 +178,34 @@ func _create_script_no_warnings(src):
 
 
 func _create_double(parsed, strategy, override_path, partial):
-	var base_script = _get_base_script_text(parsed, override_path, partial)
-	var super_name = ""
 	var path = ""
 
 	path = parsed.script_path
 	var dbl_src = ""
-	dbl_src += base_script
+	var included_methods = []
 
 	for method in parsed.get_local_methods():
-		if(_is_valid_double_method(parsed, method)):
+		if(_is_method_eligible_for_doubling(parsed, method)):
+			included_methods.append(method.meta.name)
 			var mthd = parsed.get_local_method(method.meta.name)
 			if(parsed.is_native):
-				dbl_src += _get_func_text(method.meta, parsed.resource, super_name)
+				dbl_src += _get_func_text(method.meta, parsed.resource)
 			else:
-				dbl_src += _get_func_text(method.meta, path, super_name)
+				dbl_src += _get_func_text(method.meta, path)
 
 	if(strategy == _utils.DOUBLE_STRATEGY.INCLUDE_NATIVE):
 		for method in parsed.get_super_methods():
-			if(_is_valid_double_method(parsed, method)):
+			if(_is_method_eligible_for_doubling(parsed, method)):
+				included_methods.append(method.meta.name)
 				_stub_to_call_super(parsed, method.meta.name)
 				if(parsed.is_native):
-					dbl_src += _get_func_text(method.meta, parsed.resource, super_name)
+					dbl_src += _get_func_text(method.meta, parsed.resource)
 				else:
-					dbl_src += _get_func_text(method.meta, path, super_name)
+					dbl_src += _get_func_text(method.meta, path)
+
+	var base_script = _get_base_script_text(parsed, override_path, partial, included_methods)
+	dbl_src = base_script + "\n\n" + dbl_src
+
 
 	if(print_source):
 		print(_utils.add_line_numbers(dbl_src))
@@ -234,7 +219,7 @@ func _create_double(parsed, strategy, override_path, partial):
 
 func _stub_method_default_values(which, parsed, strategy):
 	for method in parsed.get_local_methods():
-		if(!method.is_black_listed() && !_ignored_methods.has(parsed.resource, method.meta.name)):
+		if(method.is_eligible_for_doubling() && !_ignored_methods.has(parsed.resource, method.meta.name)):
 			_stubber.stub_defaults_from_meta(parsed.script_path, method.meta)
 
 
@@ -262,12 +247,12 @@ func _get_inst_id_ref_str(inst):
 	return ref_str
 
 
-func _get_func_text(method_hash, path, super_=""):
+func _get_func_text(method_hash, path):
 	var override_count = null;
 	if(_stubber != null):
 		override_count = _stubber.get_parameter_count(path, method_hash.name)
 
-	var text = _method_maker.get_function_text(method_hash, path, override_count, super_) + "\n"
+	var text = _method_maker.get_function_text(method_hash, override_count) + "\n"
 
 	return text
 
@@ -338,3 +323,34 @@ func partial_double_inner(parent, inner, strategy=_strategy):
 
 func add_ignored_method(obj, method_name):
 	_ignored_methods.add(obj, method_name)
+
+
+
+# ##############################################################################
+#(G)odot (U)nit (T)est class
+#
+# ##############################################################################
+# The MIT License (MIT)
+# =====================
+#
+# Copyright (c) 2024 Tom "Butch" Wesley
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# ##############################################################################

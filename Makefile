@@ -156,7 +156,7 @@ clean: ## Remove build artifacts
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
 run-force:
-	$(GAMESCOPE) -w 1920 -h 1080 -f -e \
+	$(GAMESCOPE) -w 1920 -h 1080 -f \
 		--xwayland-count 2 -- ./build/opengamepad-ui.x86_64
 
 $(EXPORT_TEMPLATE):
@@ -170,13 +170,13 @@ $(EXPORT_TEMPLATE):
 
 .PHONY: debug 
 debug: ## Run the project in debug mode in gamescope
-	$(GAMESCOPE) -e --xwayland-count 2 -- \
+	$(GAMESCOPE) --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
 .PHONY: debug-overlay
 debug-overlay: ## Run the project in debug mode in gamescope with --overlay-mode
-	$(GAMESCOPE) -e --xwayland-count 2 -- \
+	$(GAMESCOPE) --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn --overlay-mode -- steam -gamepadui -steamos3 -steampal -steamdeck
 
