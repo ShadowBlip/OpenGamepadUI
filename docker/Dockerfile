@@ -34,6 +34,7 @@ RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
   libxres \
   libxtst \
   squashfs-tools \
+  rpm-tools \
   fontconfig \
   zip \
   jq \

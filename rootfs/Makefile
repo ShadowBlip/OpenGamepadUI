@@ -1,4 +1,5 @@
 PREFIX ?= $(HOME)/.local
+INSTALL_PREFIX ?= $(PREFIX)
 
 ##@ General
 
@@ -15,7 +16,7 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 	mkdir -p $(PREFIX)/share/applications
 	install -Dm644 usr/share/applications/opengamepadui.desktop \
 		$(PREFIX)/share/applications/opengamepadui.desktop
-	sed -i 's|Exec=opengamepadui|Exec=$(PREFIX)/bin/opengamepadui|g' \
+	sed -i 's|Exec=opengamepadui|Exec=$(INSTALL_PREFIX)/bin/opengamepadui|g' \
 		$(PREFIX)/share/applications/opengamepadui.desktop
 	mkdir -p $(PREFIX)/share/icons/hicolor/scalable/apps
 	install -Dm644 usr/share/icons/hicolor/scalable/apps/opengamepadui.svg \

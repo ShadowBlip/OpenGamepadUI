@@ -1,50 +1,50 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 set -eu
 
 if [[ $EUID -ne 0 ]]; then
-  exec pkexec --disable-internal-agent "$0" "$@"
+	exec pkexec --disable-internal-agent "$0" "$@"
 fi
 
 ensure_hidden_exists() {
-  if [[ ! -d "/dev/input/.hidden" ]]; then
-    mkdir /dev/input/.hidden
-  fi
+	if [[ ! -d "/dev/input/.hidden" ]]; then
+		mkdir /dev/input/.hidden
+	fi
 }
 
 hide() {
-  mv /dev/input/${1} /dev/input/.hidden/${1}
+	mv /dev/input/${1} /dev/input/.hidden/${1}
 }
 
 restore() {
-  mv /dev/input/.hidden/${1} /dev/input/${1}
+	mv /dev/input/.hidden/${1} /dev/input/${1}
 }
 
 turbo_takeover() {
-  value=${1}
-  echo ${value} > /sys/devices/platform/oxp-platform/tt_toggle
+	value=${1}
+	echo ${value} >/sys/devices/platform/oxp-platform/tt_toggle
 }
 
 ensure_hidden_exists
 
 if [[ $1 == "hide" ]]; then
-  if [[ ! -e "/dev/input/${2}" ]]; then
-    echo "UInput device ${2} does not exist."
-    exit 1
-  fi
-  hide $2
+	if [[ ! -e "/dev/input/${2}" ]]; then
+		echo "UInput device ${2} does not exist."
+		exit 1
+	fi
+	hide $2
 
 elif [[ $1 == "restore" ]]; then
-  if [[ ! -e "/dev/input/.hidden/${2}" ]]; then
-    echo "UInput device ${2} is not hidden."
-    exit 1
-  fi
-  restore $2
- 
+	if [[ ! -e "/dev/input/.hidden/${2}" ]]; then
+		echo "UInput device ${2} is not hidden."
+		exit 1
+	fi
+	restore $2
+
 elif [[ $1 == "turbo_takeover" ]]; then
-  if [[ ! -f /sys/devices/platform/oxp-platform/tt_toggle ]]; then
-    echo "Turbo toggle does not exist."
-    exit 1
-  fi
-  turbo_takeover $2
-fi 
+	if [[ ! -f /sys/devices/platform/oxp-platform/tt_toggle ]]; then
+		echo "Turbo toggle does not exist."
+		exit 1
+	fi
+	turbo_takeover $2
+fi
