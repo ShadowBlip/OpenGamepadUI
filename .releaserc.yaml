@@ -6,7 +6,7 @@ branches:
   - name: main
   #- name: 'v+([0-9])?(.{+([0-9]),x}).x'
 
-# These plugins will run when a release is triggered. They will analyze commit 
+# These plugins will run when a release is triggered. They will analyze commit
 # messages to determine what kind of release this is and publish a new release.
 plugins:
   # Analyze commit messages to determine next version
@@ -15,25 +15,30 @@ plugins:
   # Generate release notes
   - "@semantic-release/release-notes-generator"
 
-  # Replace version strings in the project. The 'git' plugin is needed to 
+  # Replace version strings in the project. The 'git' plugin is needed to
   # commit the version strings to the repository.
   - - "@google/semantic-release-replace-plugin"
     - replacements:
-      - files:
-          - core/global/version.tres
-        from: "core = .*"
-        to: "core = \"${nextRelease.version}\""
-        #results:
-        #  - file: core/global/version.tres
-        #    hasChanged: true
-        #    numMatches: 1
-        #    numReplacements: 1
-        #countMatches: true
+        - files:
+            - core/global/version.tres
+          from: "core = .*"
+          to: 'core = "${nextRelease.version}"'
+          #results:
+          #  - file: core/global/version.tres
+          #    hasChanged: true
+          #    numMatches: 1
+          #    numReplacements: 1
+          #countMatches: true
+        - files:
+            - package/rpm/opengamepadui.spec
+          from: "Version:        .*"
+          to: "Version:        ${nextRelease.version}"
 
   # Commit the following changes to git after other plugins have run
   - - "@semantic-release/git"
     - assets:
-      - core/global/version.tres
+        - core/global/version.tres
+        - package/rpm/opengamepadui.spec
 
   # Execute commands to build the project
   - - "@semantic-release/exec"
@@ -43,10 +48,12 @@ plugins:
   # Publish artifacts as a GitHub release
   - - "@semantic-release/github"
     - assets:
-      - path: dist/opengamepadui.raw
-      - path: dist/opengamepadui.raw.sha256.txt
-      - path: dist/opengamepadui.tar.gz
-      - path: dist/opengamepadui.tar.gz.sha256.txt
-      - path: dist/update.zip
-      - path: dist/update.zip.sha256.txt
-      - path: docs/install/opengamepadui_deck_installer.desktop
+        - path: dist/opengamepadui-*.rpm
+        - path: dist/opengamepadui-*.rpm.sha256.txt
+        - path: dist/opengamepadui.raw
+        - path: dist/opengamepadui.raw.sha256.txt
+        - path: dist/opengamepadui.tar.gz
+        - path: dist/opengamepadui.tar.gz.sha256.txt
+        - path: dist/update.zip
+        - path: dist/update.zip.sha256.txt
+        - path: docs/install/opengamepadui_deck_installer.desktop

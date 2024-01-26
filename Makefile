@@ -272,11 +272,20 @@ rootfs: build/opengamepad-ui.x86_64
 
 
 .PHONY: dist 
-dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip ## Create all redistributable versions of the project
+dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm ## Create all redistributable versions of the project
+	cd dist && sha256sum opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm > opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm.sha256.txt
 	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
 	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
 	cd dist && sha256sum update.zip > update.zip.sha256.txt
 
+.PHONY: dist-rpm
+dist-rpm: dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm ## Create a redistributable RPM
+dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm: dist/opengamepadui.tar.gz
+	@echo "Building redistributable RPM package"
+	mkdir -p dist $(HOME)/rpmbuild/SOURCES
+	cp dist/opengamepadui.tar.gz $(HOME)/rpmbuild/SOURCES
+	rpmbuild -bb package/rpm/opengamepadui.spec
+	cp $(HOME)/rpmbuild/RPMS/x86_64/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm dist
 
 .PHONY: dist-archive
 dist-archive: dist/opengamepadui.tar.gz ## Create a redistributable tar.gz of the project
@@ -303,7 +312,7 @@ dist/update.zip: build/metadata.json
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: dist-ext
 dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
-dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/powerstation.tar.gz
+dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/powerstation.tar.gz
 	@echo "Building redistributable systemd extension"
 	mkdir -p dist
 	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
@@ -325,23 +334,10 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session
 	cd $(CACHE_DIR) && tar xvfz powerstation.tar.gz
 	cp -r $(CACHE_DIR)/powerstation/usr/* $(CACHE_DIR)/opengamepadui/usr
 
-	@# Copy ryzenadj files into the extension
-	install -Dsm 755 $(CACHE_DIR)/RyzenAdj/build/ryzenadj $(CACHE_DIR)/opengamepadui/usr/bin/ryzenadj
-	install -Dsm 744 $(CACHE_DIR)/RyzenAdj/build/libryzenadj.so $(CACHE_DIR)/opengamepadui/usr/lib/libryzenadj.so
-	install -Dm 644 $(CACHE_DIR)/RyzenAdj/lib/ryzenadj.h $(CACHE_DIR)/opengamepadui/usr/include/ryzenadj.h
-
 	@# Build the extension archive
 	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
 	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/gamescope-session-opengamepadui-main $(CACHE_DIR)/gamescope-session-main
 	mv $(CACHE_DIR)/opengamepadui.raw $@
-
-
-$(CACHE_DIR)/RyzenAdj/build/ryzenadj:
-	rm -Rf $(CACHE_DIR)/RyzenAdj
-	@# Copy ryzenadj into the extension
-	git clone https://github.com/FlyGoat/RyzenAdj.git $(CACHE_DIR)/RyzenAdj
-	mkdir -p $(CACHE_DIR)/RyzenAdj/build
-	cd $(CACHE_DIR)/RyzenAdj/build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
 
 
 $(CACHE_DIR)/gamescope-session.tar.gz:
