@@ -17,6 +17,7 @@ A free and open source game launcher and overlay written using the Godot Game En
 
 %define debug_package %{nil}
 %define _build_id_links none
+%define __os_install_post %{nil}
 
 %prep
 %autosetup -p1 -n opengamepadui
