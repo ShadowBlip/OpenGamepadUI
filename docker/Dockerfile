@@ -37,18 +37,23 @@ RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
   rpm-tools \
   fontconfig \
   zip \
-  jq \
-  godot
+  jq
+
+# Download and install the appropriate version of Godot
+ARG GODOT_VERSION=4.2.1
+ARG GODOT_RELEASE=stable
+RUN mkdir /tmp/godot && \
+  wget -q https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip -O /tmp/godot/godot.zip && \
+  cd /tmp/godot && \
+  unzip godot.zip && \
+  mv Godot_v*.x86_64 /usr/bin/godot
 
 # Create a home directory for the builder
 RUN mkdir -p /home/build/.local/share/godot/export_templates && chmod -R 777 /home/build
 
 # Download the Godot export template
-RUN export GODOT_VERSION=$(godot --version) && \
-  export RELEASE=$(echo ${GODOT_VERSION} | rev | cut -d'.' -f2 | rev) && \
-  export VERSION=$(echo ${GODOT_VERSION} | grep -o '[0-9].*[0-9]') && \
-  export TEMPLATE_DIR=/home/build/.local/share/godot/export_templates/${VERSION}.${RELEASE} && \
-  export URL="https://github.com/godotengine/godot/releases/download/${VERSION}-${RELEASE}/Godot_v${VERSION}-${RELEASE}_export_templates.tpz" && \
+RUN export TEMPLATE_DIR=/home/build/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_RELEASE} && \
+  export URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_export_templates.tpz" && \
   wget "${URL}" -O /home/build/.local/share/godot/export_templates/templates.zip && \
   unzip /home/build/.local/share/godot/export_templates/templates.zip -d /home/build/.local/share/godot/export_templates/ && \
   rm /home/build/.local/share/godot/export_templates/templates.zip && \

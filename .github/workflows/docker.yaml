@@ -1,4 +1,4 @@
-# Build and push the Docker builder image which contain all of the build 
+# Build and push the Docker builder image which contain all of the build
 # dependencies for OpenGamepadUI
 
 name: Create and publish a Docker image
@@ -27,5 +27,8 @@ jobs:
       - name: Log in to Docker registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and push Docker image
+      - name: Build and push latest Docker image
         run: make docker-builder-push
+
+      - name: Build and push versioned Docker image
+        run: make docker-builder-push IMAGE_TAG=$(grep 'ARG GODOT_VER' docker/Dockerfile | cut -d'=' -f2)
