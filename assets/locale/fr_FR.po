@@ -41,13 +41,13 @@ msgid "Back"
 msgstr "Retour"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 msgid "Exit"
-msgstr ""
+msgstr "Quitter"
 
 msgid "Submit"
-msgstr ""
+msgstr "Envoyer"
 
 msgid "Open Main Menu"
 msgstr "Ouvrir le menu principal"
@@ -89,7 +89,7 @@ msgid "Unable to save gamepad profile"
 msgstr "Impossible de sauvegarder le profil de la manette"
 
 msgid "Failed to save gamepad profile"
-msgstr "Echec de la sauvegarde du profil manette"
+msgstr "Échec de la sauvegarde du profil manette"
 
 msgid "Gamepad profile saved"
 msgstr "Profil manette sauvegardé"
@@ -117,10 +117,10 @@ msgstr "Nom du jeu"
 
 # Game Launch Settings Menu
 msgid "Launch"
-msgstr ""
+msgstr "Lancer"
 
 msgid "Boxart"
-msgstr ""
+msgstr "Jacquette"
 
 msgid "Launch Provider"
 msgstr ""
@@ -130,214 +130,216 @@ msgstr ""
 
 #, fuzzy
 msgid "Launch Settings"
-msgstr "Paramètres"
+msgstr "Paramètres de lancement"
 
 msgid "Command"
-msgstr ""
+msgstr "Commande"
 
 msgid "Command to use to launch the game"
-msgstr ""
+msgstr "Commande à utiliser pour lancer le jeu"
 
 msgid "Arguments"
-msgstr ""
+msgstr "Arguments"
 
 msgid "Command-line arguments to pass to the game"
-msgstr ""
+msgstr "Arguments de ligne de commande à transmettre au jeu"
 
 msgid "Launch Directory"
-msgstr ""
+msgstr "Répertoire de lancement"
 
 msgid "Directory to launch the game from"
-msgstr ""
+msgstr "Répertoire d'où lancer le jeu"
 
 msgid "Environment Variables"
-msgstr ""
+msgstr "Variables d'environnement"
 
 msgid "Environment variables to use when launching the game"
-msgstr ""
+msgstr "Variables d'environnement à utiliser lors du lancement du jeu"
 
 #, fuzzy
 msgid "Sandbox Settings"
-msgstr "Paramètres"
+msgstr "Paramètres sandbox"
 
 msgid "Use sandboxing"
-msgstr ""
+msgstr "Utiliser le sandboxing"
 
 msgid "Launch the game in a sandbox"
-msgstr ""
+msgstr "Lancer le jeu dans une sandbox"
 
 # Boxart Settings Menu
 msgid "Boxart Provider"
-msgstr ""
+msgstr "Fournisseur jaquettes"
 
 msgid "Images"
-msgstr ""
+msgstr "Images"
 
 msgid "Banner"
-msgstr ""
+msgstr "Bannière"
 
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 msgid "Grids"
-msgstr ""
+msgstr "Grilles"
 
 # Settings Menu
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 msgid "Display"
-msgstr ""
+msgstr "Affichage"
 
 msgid "Network"
-msgstr ""
+msgstr "Réseau"
 
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 msgid "Plugin Store"
 msgstr ""
 
 msgid "Processes"
-msgstr ""
+msgstr "Processus"
 
 msgid "Logging"
-msgstr ""
+msgstr "Connexion"
 
 msgid "Controllers"
-msgstr ""
+msgstr "Contrôleurs"
 
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 # General Settings Menu
 msgid "Updates"
-msgstr ""
+msgstr "Mises à jour"
 
 msgid "Automatic Updates"
-msgstr ""
+msgstr "Mises à jour automatiques"
 
 msgid ""
 "Automatically download and apply updates in the background when they are "
 "available"
 msgstr ""
+"Téléchargez et appliquez automatiquement les mises à jour en arrière-plan "
+"lorsqu'elles sont disponibles"
 
 msgid "Check for Updates"
-msgstr ""
+msgstr "Rechercher des mises à jour"
 
 #, fuzzy
 msgid "Install Update"
-msgstr "Installer"
+msgstr "Installer la mise à jour"
 
 msgid "Appearance"
-msgstr ""
+msgstr "Apparence"
 
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 msgid "System language"
-msgstr ""
+msgstr "Langue système"
 
 msgid "Theme"
-msgstr ""
+msgstr "Thème"
 
 msgid "Maximum Recent Apps"
-msgstr ""
+msgstr "Nombre maximal d'applications récentes"
 
 msgid "System Information"
-msgstr ""
+msgstr "Informations système"
 
 msgid "Platform"
-msgstr ""
+msgstr "Plateformes"
 
 msgid "Client Version"
-msgstr ""
+msgstr "Version du client"
 
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 msgid "Kernel Version"
-msgstr ""
+msgstr "Version du kernel"
 
 msgid "Vendor"
-msgstr ""
+msgstr "Fournisseur"
 
 msgid "Product"
-msgstr ""
+msgstr "Produit"
 
 msgid "BIOS Version"
-msgstr ""
+msgstr "Version du BIOS"
 
 msgid "CPU Model"
-msgstr ""
+msgstr "Modèle de CPU"
 
 msgid "GPU Model"
-msgstr ""
+msgstr "Modèle de GPU"
 
 msgid "Driver Version"
-msgstr ""
+msgstr "Version du driver"
 
 # Display Menu
 msgid "Scale"
-msgstr ""
+msgstr "Échelle"
 
 # Network Menu
 msgid "Network dependencies not found"
-msgstr ""
+msgstr "Dépendances réseau introuvables"
 
 msgid "Wireless Network"
-msgstr ""
+msgstr "Réseau sans fil"
 
 msgid "Visible Networks"
-msgstr ""
+msgstr "Réseaux visibles"
 
 msgid "Refresh Networks"
-msgstr ""
+msgstr "Actualiser les réseaux"
 
 msgid "Wired Network"
-msgstr ""
+msgstr "Réseau filaire"
 
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 msgid "Enter the password for this network"
-msgstr ""
+msgstr "Entrez le mot de passe de ce réseau"
 
 msgid "Bluetooth service unavailable"
 msgstr "Service bluetooth indisponible"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Activé"
 
 msgid "Enable Discovery"
-msgstr ""
+msgstr "Activer la découverte"
 
 # Audio Menu
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 msgid "Output Device"
-msgstr ""
+msgstr "Périphérique de sortie"
 
 msgid "Input Device"
-msgstr ""
+msgstr "Périphérique d'entrée"
 
 msgid "Microphone"
-msgstr ""
+msgstr "Microphone"
 
 # Plugins Menu
 msgid "No plugins found"
-msgstr ""
+msgstr "Aucun plugin trouvé"
 
 # Processes Menu
 msgid "Kill"
-msgstr ""
+msgstr "Tuer"
 
 # Log Menu
 msgid "Global Log Level"
@@ -351,183 +353,185 @@ msgstr ""
 
 # General Controller Settings Menu
 msgid "General Controller Settings"
-msgstr ""
+msgstr "Paramètres généraux du contrôleur"
 
 msgid "SDL HIDAPI Enabled"
-msgstr ""
+msgstr "SDL HIDAPI activé"
 
 msgid ""
 "Alternate input system that can cause double input. Some games use SDL for "
 "gyro controls or all input. Requires restart."
 msgstr ""
+"Système de saisie alternatif pouvant provoquer une double saisie. Certains "
+"jeux utilisent SDL pour les contrôles gyro ou pour toutes les entrées. Nécessite un redémarrage"
 
 # Gamepad Settings Menu
 msgid "Profile Name"
-msgstr ""
+msgstr "Nom du profil"
 
 msgid "Buttons"
-msgstr ""
+msgstr "Boutons"
 
 # (plural of "axis", not the wood chopping thing)
 msgid "Axes"
-msgstr ""
+msgstr "Axes"
 
 # Gamepad Mapper Menu
 msgid "Change Input"
-msgstr ""
+msgstr "Modifier l'entrée"
 
 #, fuzzy
 msgid "Keyboard"
-msgstr "Fermer le clavier"
+msgstr "Clavier"
 
 msgid "Mouse"
-msgstr ""
+msgstr "Souris"
 
 #, fuzzy
 msgid "Gamepad"
-msgstr "Nom du jeu"
+msgstr "Manette"
 
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 msgid "Left Click"
-msgstr ""
+msgstr "Click gauche"
 
 msgid "Right Click"
-msgstr ""
+msgstr "Click droit"
 
 msgid "Mouse Motion"
-msgstr ""
+msgstr "Mouvement de souris"
 
 msgid "Wheel Up"
-msgstr ""
+msgstr "Molette vers le haut"
 
 msgid "Wheel Down"
-msgstr ""
+msgstr "Molete vers le bas"
 
 msgid "Middle Click"
-msgstr ""
+msgstr "Click du milieu"
 
 msgid "Welcome"
 msgstr "Bienvenu"
 
 msgid "Select a language"
-msgstr ""
+msgstr "Choisissez une langue"
 
 msgid "Connect to your network"
-msgstr ""
+msgstr "Connectez-vous à votre réseau"
 
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #, fuzzy
 msgid "Install plugins"
-msgstr "Installation en cours"
+msgstr "Installer des plugins"
 
 msgid "Configure your plugins"
-msgstr ""
+msgstr "Configurer vos plugins"
 
 msgid "Finished"
 msgstr "Terminé"
 
 msgid "You're ready to go"
-msgstr ""
+msgstr "Tout est prêt"
 
 msgid "Start playing"
-msgstr ""
+msgstr "Commencer à jouer"
 
 # Search Bar
 msgid "What should you play?"
-msgstr ""
+msgstr "A quoi jouer ?"
 
 #, fuzzy
 msgid "Installed"
-msgstr "Installer"
+msgstr "Installé"
 
 msgid "All Games"
-msgstr ""
+msgstr "Tous les jeux"
 
 msgid "Favorites"
-msgstr ""
+msgstr "Favoris"
 
 msgid "Collections"
-msgstr ""
+msgstr "Collections"
 
 #, fuzzy
 msgid "Quick Settings"
-msgstr "Paramètres"
+msgstr "Paramètres rapides"
 
 msgid "Performance"
-msgstr ""
+msgstr "Performance"
 
 #, fuzzy
 msgid "Power Tools"
 msgstr "Marche/arrêt"
 
 msgid "Brightness"
-msgstr ""
+msgstr "Luminosité"
 
 msgid "Saturation"
-msgstr ""
+msgstr "Saturation"
 
 # Performance Menu
 msgid "Performance Overlay"
-msgstr ""
+msgstr "Overlay des performances"
 
 msgid "FPS Limit"
-msgstr ""
+msgstr "Limite des FPS"
 
 msgid "Refresh Rate"
-msgstr ""
+msgstr "Taux de rafraîchissement"
 
 # Power Tools Menu
 msgid "Waiting for PowerStation service..."
-msgstr ""
+msgstr "En attente du service PowerStation..."
 
 #, fuzzy
 msgid "CPU Settings"
-msgstr "Paramètres"
+msgstr "Paramètres du CPU"
 
 msgid "CPU Boost"
-msgstr ""
+msgstr "Boost CPU"
 
 msgid "SMT Enabled"
-msgstr ""
+msgstr "SMT activé"
 
 msgid "CPU Cores"
-msgstr ""
+msgstr "Cœurs du CPU"
 
 #, fuzzy
 msgid "GPU Settings"
-msgstr "Paramètres"
+msgstr "Paramètres du GPU"
 
 msgid "TDP Boost"
-msgstr ""
+msgstr "Boost TDP"
 
 msgid "Manual Freq"
-msgstr ""
+msgstr "Freq manuelle"
 
 msgid "Min Freq"
-msgstr ""
+msgstr "Freq min"
 
 msgid "Max Freq"
-msgstr ""
+msgstr "Freq max"
 
 msgid "GPU Temp Limit"
-msgstr ""
+msgstr "Temp limit GPU"
 
 msgid "Power Profile"
-msgstr ""
+msgstr "Profil de puissance"
 
 msgid "Thermal Throttle Profile"
-msgstr ""
+msgstr "Profil d'accélérateur thermique"
 
 # Power Menu
 msgid "Suspend"
-msgstr ""
+msgstr "Veille"
 
 msgid "Reboot"
-msgstr ""
+msgstr "Redémarrer"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Éteindre"
