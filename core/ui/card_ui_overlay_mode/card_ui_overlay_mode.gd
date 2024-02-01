@@ -64,6 +64,10 @@ func _ready() -> void:
 		logger.warn("Launched via update pack without arguments! Falling back to default.")
 		args = ["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"]
 
+	# Configure the locale
+	var locale := settings_manager.get_value("general", "locale", "en_US") as String
+	TranslationServer.set_locale(locale)
+
 	# Set the theme if one was set
 	var theme_path := settings_manager.get_value("general", "theme", "") as String
 	if theme_path == "":
