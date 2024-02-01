@@ -217,5 +217,4 @@ locale/fallback="en_US"
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
 viewport/transparent_background=true
