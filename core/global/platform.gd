@@ -181,7 +181,7 @@ func _read_dmi() -> PLATFORM:
 		return PLATFORM.AOKZOE_GEN2
 
 	# ASUS
-	elif product_name == "ROG Ally RC71L_RC71L" and vendor_name == "ASUSTeK COMPUTER INC.":
+	elif product_name.contains("ROG Ally RC71L") and vendor_name == "ASUSTeK COMPUTER INC.":
 		logger.debug("Detected ROG Ally Gen 1 platform")
 		return PLATFORM.ALLY_GEN1
 
