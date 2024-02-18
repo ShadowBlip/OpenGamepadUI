@@ -1,0 +1,112 @@
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=25 format=3 uid="uid://d34rol45u8k7k"]
+
+[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_1iyr8"]
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_8pq5y"]
+[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_8trfu"]
+[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_5akon"]
+
+[sub_resource type="Resource" id="Resource_r41v4"]
+script = ExtResource("1_1iyr8")
+phys_path = "usb-0000:c3:00.3-5/input0"
+name = "SHANWAN Android Gamepad"
+
+[sub_resource type="Resource" id="Resource_raaho"]
+script = ExtResource("2_8trfu")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_r40h4"]
+script = ExtResource("2_8trfu")
+code = "KEY_VOLUMEUP"
+
+[sub_resource type="Resource" id="Resource_7bpyu"]
+script = ExtResource("3_5akon")
+name = "Volume Up"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_raaho")])
+emits = SubResource("Resource_r40h4")
+
+[sub_resource type="Resource" id="Resource_n1xc0"]
+script = ExtResource("2_8trfu")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_h4kte"]
+script = ExtResource("2_8trfu")
+code = "KEY_VOLUMEDOWN"
+
+[sub_resource type="Resource" id="Resource_c0iy8"]
+script = ExtResource("3_5akon")
+name = "Volume Down"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_n1xc0")])
+emits = SubResource("Resource_h4kte")
+
+[sub_resource type="Resource" id="Resource_diqsa"]
+script = ExtResource("2_8trfu")
+code = "KEY_F17"
+
+[sub_resource type="Resource" id="Resource_i1w2x"]
+script = ExtResource("2_8trfu")
+code = "KEY_KEYBOARD"
+
+[sub_resource type="Resource" id="Resource_kvvue"]
+script = ExtResource("3_5akon")
+name = "LC"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_diqsa")])
+emits = SubResource("Resource_i1w2x")
+
+[sub_resource type="Resource" id="Resource_rwwk8"]
+script = ExtResource("2_8trfu")
+code = "KEY_F18"
+
+[sub_resource type="Resource" id="Resource_5uob7"]
+script = ExtResource("2_8trfu")
+code = "BTN_BASE2"
+
+[sub_resource type="Resource" id="Resource_vqfga"]
+script = ExtResource("3_5akon")
+name = "RC"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_rwwk8")])
+emits = SubResource("Resource_5uob7")
+
+[sub_resource type="Resource" id="Resource_6m0u8"]
+script = ExtResource("2_8trfu")
+code = "KEY_F16"
+
+[sub_resource type="Resource" id="Resource_0puse"]
+script = ExtResource("2_8trfu")
+code = "BTN_MODE"
+
+[sub_resource type="Resource" id="Resource_d0oj4"]
+script = ExtResource("3_5akon")
+name = "Guide"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_6m0u8")])
+emits = SubResource("Resource_0puse")
+
+[sub_resource type="Resource" id="Resource_0uuq8"]
+script = ExtResource("2_8trfu")
+code = "KEY_F15"
+
+[sub_resource type="Resource" id="Resource_xflw3"]
+script = ExtResource("2_8trfu")
+code = "BTN_BASE"
+
+[sub_resource type="Resource" id="Resource_gmcf8"]
+script = ExtResource("3_5akon")
+name = "Quick Access"
+activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_0uuq8")])
+emits = SubResource("Resource_xflw3")
+
+[sub_resource type="Resource" id="Resource_eamda"]
+script = ExtResource("1_1iyr8")
+phys_path = "isa0060/serio0/input0"
+name = "AT Translated Set 2 keyboard"
+
+[resource]
+script = ExtResource("1_8pq5y")
+key_map = Array[ExtResource("3_5akon")]([SubResource("Resource_7bpyu"), SubResource("Resource_c0iy8"), SubResource("Resource_kvvue"), SubResource("Resource_vqfga"), SubResource("Resource_d0oj4"), SubResource("Resource_gmcf8")])
+filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
+keypads = Array[ExtResource("1_1iyr8")]([SubResource("Resource_eamda")])
+gamepad = SubResource("Resource_r41v4")
+icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+thermal_policy_path = ""
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

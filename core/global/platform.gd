@@ -36,6 +36,7 @@ enum PLATFORM {
 	ONEXPLAYER_GEN5,  ## OXP2
 	ONEXPLAYER_GEN6,  ## OXP2 Pro/EVA
 	ONEXPLAYER_GEN7,  ## OneXFly
+	ORANGEPI_GEN1, ## OrangePi NEO
 	STEAMDECK,
 	
 	# OS Platforms
@@ -111,6 +112,8 @@ func _init() -> void:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen6.tres") as HandheldPlatform
 	if PLATFORM.ONEXPLAYER_GEN7 in flags:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen7.tres") as HandheldPlatform
+	if PLATFORM.ORANGEPI_GEN1 in flags:
+		platform = load("res://core/platform/handheld/orangepi/orangepi_gen1.tres") as HandheldPlatform
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres") as HandheldPlatform
 
@@ -259,6 +262,12 @@ func _read_dmi() -> PLATFORM:
 	elif product_name in ["ONEXPLAYER F1"] and vendor_name.contains("ONE-NETBOOK"):
 		logger.debug("Detected OneXPlayer Gen 7 platform")
 		return PLATFORM.ONEXPLAYER_GEN7
+
+	# OrangePi
+	elif product_name in ["G1621-02", "NEO-01"] and vendor_name.contains("OrangePi"):
+		logger.debug("Detected OrangePi Gen 1 platform")
+		return PLATFORM.ORANGEPI_GEN1
+
 	# Valve
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
