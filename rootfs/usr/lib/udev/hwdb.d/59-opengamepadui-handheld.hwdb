@@ -19,6 +19,7 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnAYANEO:*
   KEYBOARD_KEY_66=f15
   KEYBOARD_KEY_67=f16
   KEYBOARD_KEY_68=f17
+  KEYBOARD_KEY_69=f18
 
 ## AYN DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnayn:*
@@ -27,3 +28,12 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnayn:*
 ## ONEXPLAYER DEVICES
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnONE-NETBOOK*:pnONE*:
   FORCE_INPUT_UACCESS=1
+
+## OrangePi Devices
+evdev:name:AT Translated Set 2 keyboard:dmi:*:svnOrangePi:*
+  KEYBOARD_KEY_64=f15 # Neccessary?
+  KEYBOARD_KEY_65=f16 # Neccessary?
+  KEYBOARD_KEY_66=f15
+  KEYBOARD_KEY_67=f16
+  KEYBOARD_KEY_68=f17
+  KEYBOARD_KEY_69=f18
