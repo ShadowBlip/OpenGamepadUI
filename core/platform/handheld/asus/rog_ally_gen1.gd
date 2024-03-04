@@ -10,11 +10,11 @@ const GAMEPAD_ADDRESS_LIST : PackedStringArray =[
 
 ## Detects the phys_path of the gamepad. This changes depending on BIOS
 ## version and if some hardware is enabled.
-func identify_controller_phys() -> void:
+func identify_controller_phys() -> bool:
 	# The asus-his driver needs some time to switch to gamepad mode after initializing. Hiding the
 	# event file descriptors before this happens will cause the action to fail. Wait a moment.
 	logger.debug("Waiting 5s for ROG Ally controller to be ready...")
-	await OS.delay_msec(5000)
+	OS.delay_msec(5000)
 
 	var sysfs_devices := SysfsDevice.get_all()
 	for sysfs_device in sysfs_devices:
@@ -24,4 +24,5 @@ func identify_controller_phys() -> void:
 		if sysfs_device.phys_path in GAMEPAD_ADDRESS_LIST:
 			gamepad = sysfs_device
 			logger.debug("Found gamepad device: " + sysfs_device.phys_path)
-			return
+			return true
+	return false
