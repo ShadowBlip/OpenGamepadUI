@@ -240,7 +240,7 @@ deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 .PHONY: enable-debug
 enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .config/environment.d
-	echo 'OGUICMD="opengamepadui --remote-debug tcp://127.0.0.1:6007"' | \
+	echo 'CLIENTCMD="opengamepadui --remote-debug tcp://127.0.0.1:6007"' | \
 		ssh $(SSH_USER)@$(SSH_HOST) bash -c \
 		'cat > .config/environment.d/opengamepadui-session.conf'
 
