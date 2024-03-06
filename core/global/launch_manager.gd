@@ -80,33 +80,7 @@ func _init() -> void:
 		if not should_manage_overlay:
 			return
 
-		# Check to see if the overlay property needs updating
-		var focusable_apps := Gamescope.get_focusable_apps()
-		if _should_set_overlay(focusable_apps):
-			var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-			Gamescope.set_overlay(ogui_window_id, 1)
-			return
-
 	Gamescope.focused_window_updated.connect(on_focus_changed)
-
-	# Ensure that the overlay property is set when other apps are launched.
-	var on_focusable_apps_changed := func(from: PackedInt32Array, to: PackedInt32Array):
-		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
-		if not should_manage_overlay:
-			return
-
-		# Check to see if the overlay property needs updating
-		logger.debug("Apps changed from " + str(from) + " to " + str(to))
-		var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-		if _should_set_overlay(to):
-			logger.debug("Other focusable apps exist. Enabling STEAM_OVERLAY.")
-			Gamescope.set_overlay(ogui_window_id, 1)
-			return
-
-		logger.debug("No other focusable apps. Removing STEAM_OVERLAY.")
-		Gamescope.set_overlay(ogui_window_id, 0)
-
-	Gamescope.focusable_apps_updated.connect(on_focusable_apps_changed)
 
 	# Debug print when the focused app changed
 	var on_focused_app_changed := func(from: int, to: int) -> void:
@@ -118,31 +92,25 @@ func _init() -> void:
 		if _current_app:
 			set_app_gamepad_profile(_current_app)
 
+		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
+		if not should_manage_overlay:
+			return
+
+		logger.debug("Enabling STEAM_OVERLAY.")
+		var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
+		Gamescope.set_overlay(ogui_window_id, 0)
+		
+	var on_game_state_exited := func(_to: State):
+		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
+		if not should_manage_overlay:
+			return
+
+		logger.debug("Removing STEAM_OVERLAY.")
+		var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
+		Gamescope.set_overlay(ogui_window_id, 1)
+
 	in_game_state.state_entered.connect(on_game_state_entered)
-
-
-# Returns true if the 'STEAM_OVERLAY' prop should be set. This property should
-# ALWAYS be set to '1' if there are any other windows/apps. Only when OGUI
-# is the last remaining app should it be disabled.
-func _should_set_overlay(focusable_apps: PackedInt32Array) -> bool:
-	# If there are no focusable apps, then the overlay property should be disabled.
-	if focusable_apps.size() == 0:
-		return false
-
-	var ogui_window_id = Gamescope.get_window_id(PID, Gamescope.XWAYLAND.OGUI)
-	var focused_window := Gamescope.get_focused_window()
-
-	# If the focused app is 769 (Steam), but its window is different, overlay should be enabled.
-	# This means that Steam was launched and is focused.
-	if focusable_apps.size() == 1 and focusable_apps[0] == Gamescope.OVERLAY_GAME_ID and focused_window != ogui_window_id:
-		logger.debug("Steam appears to be focused.")
-		return true
-
-	# If OGUI is the only focused and remaining app, overlay should be disabled.
-	if focusable_apps.size() == 1 and focusable_apps[0] == Gamescope.OVERLAY_GAME_ID and focused_window == ogui_window_id:
-		return false
-
-	return true
+	in_game_state.state_exited.connect(on_game_state_exited)
 
 
 # Loads persistent data like recent games launched, etc.
