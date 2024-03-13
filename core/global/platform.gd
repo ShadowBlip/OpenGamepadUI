@@ -263,6 +263,9 @@ func _read_dmi() -> PLATFORM:
 	elif product_name.begins_with("Jupiter") and vendor_name.begins_with("Valve"):
 		logger.debug("Detected SteamDeck platform")
 		return PLATFORM.STEAMDECK
+	elif product_name.begins_with("Galileo") and vendor_name.begins_with("Valve"):
+		logger.debug("Detected SteamDeck OLED platform")
+		return PLATFORM.STEAMDECK
 	logger.debug("Detected generic platform")
 
 	return PLATFORM.GENERIC
