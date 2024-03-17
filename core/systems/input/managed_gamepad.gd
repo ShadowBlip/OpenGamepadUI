@@ -572,6 +572,8 @@ func _process_phys_event(event: InputDeviceEvent, delta: float) -> void:
 # Detect and emit "echo" inputs. Echo inputs are repeated input events when the user
 # is holding down a direction.
 func _process_echo_input(delta: float) -> void:
+	return
+	
 	# Go through each possible direction
 	for direction in echo_last_event_time.keys():
 		if Bitwise.has_flag(axis_pressed, direction):
