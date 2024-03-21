@@ -11,7 +11,7 @@ class_name PlatformProvider
 @export var name: String ## Name of the platform
 @export var startup_actions: Array[PlatformAction] ## Actions to take upon startup
 @export var shutdown_actions: Array[PlatformAction] ## Actions to take upon shutdown 
-var logger := Log.get_logger("PlatformProvider", Log.LEVEL.INFO)
+var logger := Log.get_logger("PlatformProvider", Log.LEVEL.DEBUG)
 
 
 ## Ready will be called after the scene tree has initialized. This should be

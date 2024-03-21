@@ -99,7 +99,7 @@ var use_mode_list: Array = [
 
 
 func _init() -> void:
-	logger = Log.get_logger("ManagedGamepad", Log.LEVEL.INFO)
+	logger = Log.get_logger("ManagedGamepad", Log.LEVEL.DEBUG)
 
 
 ## Opens the given physical gamepad with exclusive access and creates a virtual

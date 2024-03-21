@@ -15,7 +15,7 @@ var process_input_during: Array[State] = []
 var handle_back: bool = false
 
 ## Will show logger events with the prefix InputManager(Overlay Mode)
-var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
+var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.DEBUG)
 
 func _ready() -> void:
 	state_machine.state_changed.connect(_on_state_changed)

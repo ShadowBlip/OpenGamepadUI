@@ -24,7 +24,7 @@ var device_hider := load("res://core/systems/input/device_hider.tres") as Device
 var input_thread := load("res://core/systems/threading/input_thread.tres") as SharedThread
 
 var gamepads := GamepadArray.new()
-var logger := Log.get_logger("GamepadManager")
+var logger := Log.get_logger("GamepadManager", Log.LEVEL.DEBUG)
 
 ## Default gamepad profile to use
 @export_category("Gamepad Profile")
