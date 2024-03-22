@@ -12,7 +12,7 @@ var keypads: Array[Keypad]
 
 
 func _init() -> void:
-	logger = Log.get_logger("HandheldGamepad", Log.LEVEL.INFO)
+	logger = Log.get_logger("HandheldGamepad", Log.LEVEL.DEBUG)
 	
 
 ## Setup the given keyboard devices for the handheld gamepad

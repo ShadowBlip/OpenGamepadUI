@@ -45,7 +45,7 @@ func _ready() -> void:
 func _change_to_scene(scene_path: String) -> void:
 	var scene := load(scene_path) as PackedScene
 	var root := get_window()
-	root.add_child(scene.instantiate())
+	root.add_child.call_deferred((scene.instantiate()))
 	queue_free()
 
 

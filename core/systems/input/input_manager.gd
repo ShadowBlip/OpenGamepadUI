@@ -25,7 +25,7 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
-var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.

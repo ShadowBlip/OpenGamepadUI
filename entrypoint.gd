@@ -20,25 +20,25 @@ func _ready() -> void:
 	# Apply any update packs
 	if not "--skip-update-pack" in args:
 		_apply_update_packs()
-	
+
 	# Launch the main interface if no child pid exists
 	if child_pid < 0:
-		get_tree().change_scene_to_file("res://core/main.tscn")
+		_change_to_scene("res://core/main.tscn")
 		return
-	
+
 	logger.info("Supervising child process")
-	
+
 	# Resize the window
 	window.title = "OpenGamepadUI Supervisor"
 	window.size = Vector2(4, 4)
-	
+
 	# On timeout, check the child pid
 	var on_timeout := func():
 		if OS.is_process_running(child_pid):
 			return
 		logger.info("Child process exited")
 		get_tree().quit()
-		
+
 	# Create a timer to supervise the child pid
 	var timer := Timer.new()
 	timer.timeout.connect(on_timeout)
@@ -54,7 +54,7 @@ func _apply_update_packs() -> void:
 	if not FileAccess.file_exists(update_pack_file):
 		return
 	logger.info("Update pack was found.")
-	
+
 	# Check if we should validate update archive signatures
 	var verify_signatures := not "--skip-verify-packages" in args
 	if not verify_signatures:
@@ -69,7 +69,7 @@ func _apply_update_packs() -> void:
 	if metadata.size() == 0:
 		logger.warn("Unable to read metadata.json from update pack.")
 		return
-	
+
 	# Parse the metadata from the zip file
 	var parsed_metadata = JSON.parse_string(metadata.get_string_from_ascii())
 	if not parsed_metadata is Dictionary:
@@ -82,13 +82,13 @@ func _apply_update_packs() -> void:
 		logger.warn("No files list found in metadata.json")
 		return
 	logger.info("Update pack version: " + parsed_metadata["version"])
-	
+
 	# Check if the update pack is a newer version than our version
 	var version := load("res://core/global/version.tres") as Version
 	if not SemanticVersion.is_greater_or_equal(version.core, parsed_metadata["version"]):
 		logger.info("Update pack version is older than base version")
 		return
-	
+
 	# Validate and extract each file in the update pack
 	var files := parsed_metadata["files"] as Dictionary
 	for filename in files.keys():
@@ -102,7 +102,7 @@ func _apply_update_packs() -> void:
 			if not PackageVerifier.has_valid_signature(file_data, sig):
 				logger.warn("File " + filename + " in update.zip does not have a valid signature. Not loading update pack.")
 				return
-		
+
 		# Validate the hash defined in the metadata
 		if PackageVerifier.get_hash_string(file_data) != hash:
 			logger.warn("File " + filename + " in update.zip does not have a valid hash. Not loading update pack.")
@@ -122,14 +122,14 @@ func _apply_update_packs() -> void:
 		extracted_file.store_buffer(file_data)
 		extracted_file.flush()
 		extracted_file.close()
-		
+
 		# Set execute permissions
 		if filename == "opengamepad-ui.x86_64":
 			var file_path := ProjectSettings.globalize_path(extracted_path)
 			if OS.execute("chmod", ["+x", file_path]) != OK:
 				logger.warn("Failed to set execute permissions. Not loading update pack")
 				return
-			
+
 			# Try to run setcap to allow setting thread priorities
 			if OS.execute("/usr/share/opengamepadui/scripts/make_nice", []) != OK:
 				logger.warn("Unable to run setcap to enable thread priorities")
@@ -141,7 +141,15 @@ func _apply_update_packs() -> void:
 	update_args.append("--skip-update-pack")
 	update_args.append("--")
 	update_args.append_array(OS.get_cmdline_user_args())
-	
+
 	logger.info("Launching update pack: " + update_bin + " " + " ".join(update_args))
 	child_pid = OS.create_process(update_bin, update_args)
 	logger.info("Launched OpenGamepadUI with pid: " + str(child_pid))
+
+
+# Change to the given scene
+func _change_to_scene(scene_path: String) -> void:
+	var scene := load(scene_path) as PackedScene
+	var root := get_window()
+	root.add_child.call_deferred((scene.instantiate()))
+	queue_free()
