@@ -31,9 +31,9 @@ evdev:name:AT Translated Set 2 keyboard:dmi:*:svnONE-NETBOOK*:pnONE*:
 
 ## OrangePi Devices
 evdev:name:AT Translated Set 2 keyboard:dmi:*:svnOrangePi:*
-  KEYBOARD_KEY_64=f15 # Neccessary?
-  KEYBOARD_KEY_65=f16 # Neccessary?
+  FORCE_INPUT_UACCESS=1
   KEYBOARD_KEY_66=f15
   KEYBOARD_KEY_67=f16
-  KEYBOARD_KEY_68=f17
-  KEYBOARD_KEY_69=f18
+
+evdev:name:  OrangePi USB Controller:dmi:*:svnOrangePi:*
+  FORCE_INPUT_UACCESS=1
