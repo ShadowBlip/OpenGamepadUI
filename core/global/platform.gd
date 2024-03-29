@@ -113,8 +113,7 @@ func _init() -> void:
 	if PLATFORM.ONEXPLAYER_GEN7 in flags:
 		platform = load("res://core/platform/handheld/onexplayer/onexplayer_gen7.tres") as HandheldPlatform
 	if PLATFORM.ORANGEPI_GEN1 in flags:
-		platform = load("res://core/platform/handheld/orangepi/orangepi_gen1.tres") as OrangePiPlatform
-		platform.delay_for_devices()
+		platform = load("res://core/platform/handheld/orangepi/orangepi_gen1.tres") as HandheldPlatform
 	if PLATFORM.STEAMDECK in flags:
 		platform = load("res://core/platform/handheld/steamdeck/steamdeck.tres") as HandheldPlatform
 
