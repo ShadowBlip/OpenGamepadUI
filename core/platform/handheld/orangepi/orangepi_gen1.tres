@@ -1,14 +1,9 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=26 format=3 uid="uid://d34rol45u8k7k"]
+[gd_resource type="Resource" script_class="OrangePiPlatform" load_steps=25 format=3 uid="uid://d34rol45u8k7k"]
 
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_1iyr8"]
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_8pq5y"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_8trfu"]
 [ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_5akon"]
-
-[sub_resource type="Resource" id="Resource_r41v4"]
-script = ExtResource("1_1iyr8")
-phys_path = "usb-0000:c3:00.3-5/input0"
-name = "Microsoft X-Box 360 pad"
+[ext_resource type="Script" path="res://core/platform/handheld/orangepi/orangepi_gen1.gd" id="4_n0wnl"]
 
 [sub_resource type="Resource" id="Resource_raaho"]
 script = ExtResource("2_8trfu")
@@ -105,11 +100,10 @@ phys_path = "usb-0000:c3:00.3-5/input1"
 name = "  OrangePi USB Controller"
 
 [resource]
-script = ExtResource("1_8pq5y")
+script = ExtResource("4_n0wnl")
 key_map = Array[ExtResource("3_5akon")]([SubResource("Resource_7bpyu"), SubResource("Resource_c0iy8"), SubResource("Resource_kvvue"), SubResource("Resource_vqfga"), SubResource("Resource_d0oj4"), SubResource("Resource_gmcf8")])
 filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_1iyr8")]([SubResource("Resource_eamda"), SubResource("Resource_hqcin")])
-gamepad = SubResource("Resource_r41v4")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
 thermal_policy_path = ""
 name = ""
