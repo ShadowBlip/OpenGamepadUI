@@ -1,8 +1,6 @@
 extends Sandbox
 class_name SandboxBubblewrap
 
-var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
-
 
 ## Returns an array defining the command line to launch the given application
 ## in a sandbox.
@@ -11,15 +9,10 @@ func get_command(app: LibraryLaunchItem) -> PackedStringArray:
 	var sandbox := PackedStringArray()
 	if not is_available():
 		return sandbox
-	
+
 	# Bind the entire filesystem
 	sandbox.append_array(["bwrap", "--dev-bind", "/", "/"])
-	
-	# Blacklist any managed gamepads
-	var blacklist := gamepad_manager.get_gamepad_paths()
-	for device in blacklist:
-		sandbox.append_array(["--bind", "/dev/null", device])
-	
+
 	# Apply platform-specific quirks to the sandbox command
 	sandbox.append_array(_apply_quirks(app))
 	sandbox.append("--")

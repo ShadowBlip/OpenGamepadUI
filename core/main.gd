@@ -10,23 +10,6 @@ func _ready() -> void:
 		_show_help()
 		get_tree().quit()
 		return
-	
-	# Set global max FPS for better power consumption
-	Engine.max_fps = 60
-	
-	# Launch old ui
-	if "--vapor-ui" in args:
-		# in overlay mode
-		if "--qam-only" in args or "--only-qam" in args:
-			print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are\
-			deprecated and will be removed in a future update. Use --overlay-mode instead.")
-			_change_to_scene("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
-			return
-		elif "--overlay-mode" in args:
-			_change_to_scene("res://core/ui/vapor_ui_overlay_mode/overlay_mode_main.tscn")
-			return
-		_change_to_scene("res://core/ui/vapor_ui/vapor_ui.tscn")
-		return
 
 	# Launch CardUI in overlay mode
 	if "--qam-only" in args or "--only-qam" in args:
@@ -37,6 +20,7 @@ func _ready() -> void:
 	elif "--overlay-mode" in args:
 		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
+
 	# Launch the main interface
 	_change_to_scene("res://core/ui/card_ui/card_ui.tscn")
 

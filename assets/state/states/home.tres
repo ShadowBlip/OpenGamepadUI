@@ -1,8 +1,8 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://oaavalv0wcoa"]
+[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://oaavalv0wcoa"]
 
 [ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_kb1a4"]
 
 [resource]
 script = ExtResource("1_kb1a4")
 name = "home"
-data = null
+data = {}

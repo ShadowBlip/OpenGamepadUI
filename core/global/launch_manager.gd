@@ -37,8 +37,6 @@ signal recent_apps_changed()
 const SettingsManager := preload("res://core/global/settings_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
-var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
-
 var Gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -278,34 +276,11 @@ func get_current_app() -> RunningApp:
 func set_app_gamepad_profile(app: RunningApp) -> void:
 	# If no app was specified, unset the current gamepad profile
 	if not app or not app.launch_item:
-		set_gamepad_profile("")
 		return
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
-	set_gamepad_profile(profile_path)
-
-
-## Sets the gamepad profile for the running app with the given profile
-func set_gamepad_profile(path: String) -> void:
-	# If no profile was specified, unset the gamepad profiles
-	if path == "":
-		for gamepad in gamepad_manager.get_gamepad_paths():
-			gamepad_manager.set_gamepad_profile(gamepad, null)
-		return
-	
-	# Try to load the profile and set it
-	var profile := load(path)
-
-	# TODO: Save profiles for individual controllers?
-	for gamepad in gamepad_manager.get_gamepad_paths():
-		gamepad_manager.set_gamepad_profile(gamepad, profile)
-	if not profile:
-		logger.warn("Gamepad profile not found: " + path)
-		return
-	var notify := Notification.new("Using gamepad profile: " + profile.name)
-	NotificationManager.show(notify)
 
 
 ## Sets the given running app as the current app

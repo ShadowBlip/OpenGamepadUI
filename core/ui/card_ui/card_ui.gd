@@ -1,13 +1,11 @@
 extends Control
 
-var PID: int = OS.get_process_id()
 var platform := load("res://core/global/platform.tres") as Platform
 var gamescope := load("res://core/global/gamescope.tres") as Gamescope
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
 
-var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -15,8 +13,10 @@ var first_boot_state := preload("res://assets/state/states/first_boot_menu.tres"
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
-var power_state := load("res://assets/state/states/power_menu.tres") as State
-var logger = Log.get_logger("Main", Log.LEVEL.INFO)
+var power_state := preload("res://assets/state/states/power_menu.tres") as State
+
+var PID: int = OS.get_process_id()
+var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
 @onready var panel := $%Panel
 @onready var ui_container := $%MenuContent
@@ -25,6 +25,7 @@ var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 @onready var fade_texture := $%FadeTexture
 @onready var power_timer := $%PowerTimer
 
+var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
@@ -89,6 +90,8 @@ func _ready() -> void:
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	library_manager.reload_library()
 
+	# Set the initial intercept mode
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 
 func _on_focus_changed(control: Control) -> void:
 	if control != null:
@@ -104,7 +107,7 @@ func _on_state_changed(_from: State, _to: State) -> void:
 ## Invoked when the in-game state was entered
 func _on_game_state_entered(_from: State) -> void:
 	# Pass all gamepad input to the game
-	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS)
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 
 	# Turn off gamescope blur effect
 	_set_blur(gamescope.BLUR_MODE.OFF)
@@ -122,10 +125,10 @@ func _on_game_state_entered(_from: State) -> void:
 ## Invoked when the in-game state is exited
 func _on_game_state_exited(to: State) -> void:
 	# Intercept all gamepad input when not in-game
-	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 	
 	# Revert back to the default gamepad profile
-	gamepad_manager.set_gamepads_profile(null)
+	#gamepad_manager.set_gamepads_profile(null)
 	
 	# Set gamescope input focus to on so the user can interact with the UI
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:

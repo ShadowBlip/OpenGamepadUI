@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="1_27d2q"]
 [ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp-mini/diagram.png" id="1_fqeaf"]
 [ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="2_vrxrd"]
-[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="3_3evgw"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="3_qiq0o"]
 [ext_resource type="Texture2D" uid="uid://ddj7iydr5c04r" path="res://addons/controller_icons/assets/oxp/a.png" id="4_0l6ld"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_hsh11"]
@@ -33,8 +32,52 @@ code = "KEY_VOLUMEUP"
 script = ExtResource("2_vrxrd")
 code = "KEY_VOLUMEUP"
 
+[sub_resource type="GDScript" id="GDScript_5auqi"]
+script/source = "@icon(\"res://assets/editor-icons/mind-map.svg\")
+extends MappableEvent
+class_name HandheldEventMapping
+
+## Name of the event to emit
+@export var name: String
+## List of events that will trigger this MappedEvent.
+@export var activation_keys: Array[EvdevEvent]
+## Emits this event when the activation keys are triggered
+@export var emits: MappableEvent
+
+## Will show logger statements in the event log with the prefix [HandheldEventMapping].
+var logger := Log.get_logger(\"HandheldEventMapping\", Log.LEVEL.INFO)
+
+
+## Checks if the given Array of EvdevEvents matches the activation_keys array.
+func output_events_match(active_event: Array[EvdevEvent]) -> bool:
+#	logger.debug(\"Checking active events against event list.\")
+	if active_event.size() != activation_keys.size() or active_event.size() == 0:
+#		logger.debug(\"Event list too short\")
+		return false
+	for i in active_event.size():
+		if not active_event[i].matches(activation_keys[i]):
+#			logger.debug(\"Event list doesn't match active event\")
+			return false
+	return true
+
+
+## Checks if the given Array of EvdevEvents matches the activation_keys array.
+func trigger_events_match(active_keys: Array[EvdevEvent]) -> bool:
+#	logger.debug(\"Checking active keys against key actvation keys.\")
+	if active_keys.size() != activation_keys.size() or active_keys.size() == 0:
+#		logger.debug(\"Event list too short. Active_keys.size():\" + str(active_keys.size()) + \" Activation_keys.size(): \" + str(activation_keys.size()))
+		return false
+	for i in active_keys.size():
+#		logger.debug(\"Checking event \" + str(active_keys[i].get_event_type()) + \" \" + str(active_keys[i].get_event_code()))
+#		logger.debug(\"Against event \" + str(activation_keys[i].get_event_type()) + \" \" + str(activation_keys[i].get_event_code()))
+		if not activation_keys[i].matches(active_keys[i]):
+#			logger.debug(\"Activation list doesn't match active keys.\")
+			return false
+	return true
+"
+
 [sub_resource type="Resource" id="Resource_dck4a"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "Volume Up"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_efbap")])
 emits = SubResource("Resource_skaxw")
@@ -48,7 +91,7 @@ script = ExtResource("2_vrxrd")
 code = "KEY_VOLUMEDOWN"
 
 [sub_resource type="Resource" id="Resource_2imxn"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "Volume Down"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_l8u3c")])
 emits = SubResource("Resource_d2nwm")
@@ -70,7 +113,7 @@ script = ExtResource("2_vrxrd")
 code = "BTN_BASE"
 
 [sub_resource type="Resource" id="Resource_ythr7"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "Turbo"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_vn4sq"), SubResource("Resource_ev0tw"), SubResource("Resource_e0d8q")])
 emits = SubResource("Resource_raeh7")
@@ -92,7 +135,7 @@ script = ExtResource("2_vrxrd")
 code = "KEY_KEYBOARD"
 
 [sub_resource type="Resource" id="Resource_uxras"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "KB (Short Press)"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_tvs2f"), SubResource("Resource_vrnek"), SubResource("Resource_1at0l")])
 emits = SubResource("Resource_a72xl")
@@ -110,7 +153,7 @@ script = ExtResource("2_vrxrd")
 code = "BTN_MODE"
 
 [sub_resource type="Resource" id="Resource_2dph6"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "AOK (Short Press)"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_oarvo"), SubResource("Resource_hjp4b")])
 emits = SubResource("Resource_ggnan")
@@ -128,7 +171,7 @@ script = ExtResource("2_vrxrd")
 code = "BTN_BASE2"
 
 [sub_resource type="Resource" id="Resource_lulcw"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "AOK (Long Press)"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_xfmpm"), SubResource("Resource_2y3tl")])
 emits = SubResource("Resource_dy83a")
@@ -146,7 +189,7 @@ script = ExtResource("2_vrxrd")
 code = "KEY_PRINT"
 
 [sub_resource type="Resource" id="Resource_1bh5u"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "Turbo + AOK"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_atlbm"), SubResource("Resource_bl71s")])
 emits = SubResource("Resource_hmfwa")
@@ -168,7 +211,7 @@ script = ExtResource("2_vrxrd")
 code = "KEY_F13"
 
 [sub_resource type="Resource" id="Resource_1kjkk"]
-script = ExtResource("3_3evgw")
+script = SubResource("GDScript_5auqi")
 name = "KB + AOK"
 activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_vg0ed"), SubResource("Resource_t78hk"), SubResource("Resource_fvwef")])
 emits = SubResource("Resource_62ea8")
@@ -183,7 +226,7 @@ script = ExtResource("5_tlsi8")
 
 [resource]
 script = ExtResource("4_hsh11")
-key_map = Array[ExtResource("3_3evgw")]([SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_ythr7"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_lulcw"), SubResource("Resource_1bh5u"), SubResource("Resource_1kjkk")])
+key_map = Array[SubResource("GDScript_5auqi")]([SubResource("Resource_dck4a"), SubResource("Resource_2imxn"), SubResource("Resource_ythr7"), SubResource("Resource_uxras"), SubResource("Resource_2dph6"), SubResource("Resource_lulcw"), SubResource("Resource_1bh5u"), SubResource("Resource_1kjkk")])
 filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
 keypads = Array[ExtResource("1_27d2q")]([SubResource("Resource_4ysgf")])
 gamepad = SubResource("Resource_r7met")
