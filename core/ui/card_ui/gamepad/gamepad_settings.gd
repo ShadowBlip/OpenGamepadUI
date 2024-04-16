@@ -3,7 +3,6 @@ extends Control
 const user_templates := "user://data/gamepad/templates"
 const user_profiles := "user://data/gamepad/profiles"
 
-var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
 var change_input_state := preload("res://assets/state/states/gamepad_change_input.tres") as State
 var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as State
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
@@ -14,7 +13,6 @@ var state_machine := load("res://assets/state/state_machines/gamepad_settings_st
 var button_scene := load("res://core/ui/components/card_mapping_button.tscn") as PackedScene
 var axes_container_scene := load("res://core/ui/components/card_axes_mapping_container.tscn") as PackedScene
 var dropdown_scene := load("res://core/ui/components/dropdown.tscn") as PackedScene
-var profile: GamepadProfile
 var library_item: LibraryItem
 var buttons: Dictionary = {}
 var axes_containers: Array[CardAxesMappingContainer] = []
@@ -32,14 +30,14 @@ var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	gamepad_state.state_entered.connect(_on_state_entered)
-	gamepad_mapper.mappings_selected.connect(_on_mapping_selected)
-	save_button.button_up.connect(_save_profile)
+	#gamepad_mapper.mappings_selected.connect(_on_mapping_selected)
+	#save_button.button_up.connect(_save_profile)
 
 	# On delete button pressed, reset profile to default
-	var on_delete := func():
-		profile = _load_profile()
-		_update_buttons()
-	delete_button.button_up.connect(on_delete)
+	#var on_delete := func():
+		#profile = _load_profile()
+		#_update_buttons()
+	#delete_button.button_up.connect(on_delete)
 	
 	# Grab focus when the mapper exits
 	var on_state_changed := func(_from: State, to: State):
@@ -50,38 +48,38 @@ func _ready() -> void:
 
 
 ## Invoked when a gamepad mapping is selected
-func _on_mapping_selected(mappings: Array[GamepadMapping]) -> void:
-	if not profile:
-		logger.warn("Gamepad profile is null!")
-		return
-	
-	for mapping in mappings:
-		var source_event := mapping.source_event
-		# Remove old mappings
-		var to_remove := []
-		for map in profile.mapping:
-			if source_event.matches(map.source_event):
-				to_remove.append(map)
-		for map in to_remove:
-			logger.debug("Removing old mapping: " + str(map))
-			profile.erase(map)
-		if mapping.output_events.size() > 0:
-			logger.debug("Adding mapping: " + str(mapping) + ", behavior: " + str(mapping.output_behavior))
-			profile.add(mapping)
-		logger.debug("Reloading profile")
-	_update_buttons()
+#func _on_mapping_selected(mappings: Array[GamepadMapping]) -> void:
+	#if not profile:
+		#logger.warn("Gamepad profile is null!")
+		#return
+	#
+	#for mapping in mappings:
+		#var source_event := mapping.source_event
+		## Remove old mappings
+		#var to_remove := []
+		#for map in profile.mapping:
+			#if source_event.matches(map.source_event):
+				#to_remove.append(map)
+		#for map in to_remove:
+			#logger.debug("Removing old mapping: " + str(map))
+			#profile.erase(map)
+		#if mapping.output_events.size() > 0:
+			#logger.debug("Adding mapping: " + str(mapping) + ", behavior: " + str(mapping.output_behavior))
+			#profile.add(mapping)
+		#logger.debug("Reloading profile")
+	#_update_buttons()
 
 
 ## Called when the gamepad settings state is entered
 func _on_state_entered(_from: State) -> void:
-	var gamepads := gamepad_manager.get_gamepad_paths()
+	#var gamepads := gamepad_manager.get_gamepad_paths()
 	# TODO: Configure the menu per-gamepad to support multiple gamepads
-	if gamepads.size() == 0:
-		return
-	populate_mappings_for(gamepads[0])
-
-	library_item = null
-	profile = null
+	#if gamepads.size() == 0:
+		#return
+	#populate_mappings_for(gamepads[0])
+#
+	#library_item = null
+	#profile = null
 	if gamepad_state.has_meta("item"):
 		library_item = gamepad_state.get_meta("item") as LibraryItem
 
@@ -89,12 +87,12 @@ func _on_state_entered(_from: State) -> void:
 	if not library_item:
 		profile_label.text = "Global"
 		var profile_path := settings_manager.get_value("input", "gamepad_profile", "") as String
-		if profile_path == "":
-			profile = load(gamepad_manager.default_profile)
-			_update_buttons()
-			return
-		profile = _load_profile(profile_path)
-		_update_buttons()
+		#if profile_path == "":
+			#profile = load(gamepad_manager.default_profile)
+			#_update_buttons()
+			#return
+		#profile = _load_profile(profile_path)
+		#_update_buttons()
 		return
 
 	# Set the profile text to the game name
@@ -102,13 +100,13 @@ func _on_state_entered(_from: State) -> void:
 
 	# Check to see if the given game has a gamepad profile
 	var profile_path := settings_manager.get_library_value(library_item, "gamepad_profile", "") as String
-	profile = _load_profile(profile_path)
-	_update_buttons()
+	#profile = _load_profile(profile_path)
+	#_update_buttons()
 
 
 ## Populates the button mappings for the given gamepad
 func populate_mappings_for(gamepad_path: String) -> void:
-	var capabilities := gamepad_manager.get_gamepad_capabilities(gamepad_path)
+	#var capabilities := gamepad_manager.get_gamepad_capabilities(gamepad_path)
 
 	# Delete any old buttons
 	for child in container.get_children():
@@ -128,43 +126,43 @@ func populate_mappings_for(gamepad_path: String) -> void:
 	var button_events: Array[EvdevKeyEvent] = []
 	var key_events: Array[EvdevKeyEvent] = []
 	var axes_events := AxesArray.new()
-	for event in capabilities:
-		if event is EvdevKeyEvent:
-			var code_name := event.to_input_device_event().get_code_name() as String
-			if code_name.begins_with("BTN"):
-				button_events.append(event)
-				continue
-			key_events.append(event)
-			continue
-		elif event is EvdevAbsEvent:
-			var code_name := event.to_input_device_event().get_code_name() as String
-			var axis_pair := AxisPair.new()
-			if code_name.ends_with("_X"):
-				axis_pair.type = AxisPair.TYPE.LEFT_JOY
-				axis_pair.x_axis = event
-			elif code_name.ends_with("_Y"):
-				axis_pair.type = AxisPair.TYPE.LEFT_JOY
-				axis_pair.y_axis = event
-			elif code_name.ends_with("_RX"):
-				axis_pair.type = AxisPair.TYPE.RIGHT_JOY
-				axis_pair.x_axis = event
-			elif code_name.ends_with("_RY"):
-				axis_pair.type = AxisPair.TYPE.RIGHT_JOY
-				axis_pair.y_axis = event
-			elif code_name.ends_with("_Z"):
-				axis_pair.type = AxisPair.TYPE.TRIGGER
-				axis_pair.x_axis = event
-			elif code_name.ends_with("_RZ"):
-				axis_pair.type = AxisPair.TYPE.TRIGGER
-				axis_pair.y_axis = event
-			elif code_name.ends_with("_HAT0X"):
-				axis_pair.type = AxisPair.TYPE.HAT0
-				axis_pair.x_axis = event
-			elif code_name.ends_with("_HAT0Y"):
-				axis_pair.type = AxisPair.TYPE.HAT0
-				axis_pair.y_axis = event
-
-			axes_events.append(axis_pair)
+	#for event in capabilities:
+		#if event is EvdevKeyEvent:
+			#var code_name := event.to_input_device_event().get_code_name() as String
+			#if code_name.begins_with("BTN"):
+				#button_events.append(event)
+				#continue
+			#key_events.append(event)
+			#continue
+		#elif event is EvdevAbsEvent:
+			#var code_name := event.to_input_device_event().get_code_name() as String
+			#var axis_pair := AxisPair.new()
+			#if code_name.ends_with("_X"):
+				#axis_pair.type = AxisPair.TYPE.LEFT_JOY
+				#axis_pair.x_axis = event
+			#elif code_name.ends_with("_Y"):
+				#axis_pair.type = AxisPair.TYPE.LEFT_JOY
+				#axis_pair.y_axis = event
+			#elif code_name.ends_with("_RX"):
+				#axis_pair.type = AxisPair.TYPE.RIGHT_JOY
+				#axis_pair.x_axis = event
+			#elif code_name.ends_with("_RY"):
+				#axis_pair.type = AxisPair.TYPE.RIGHT_JOY
+				#axis_pair.y_axis = event
+			#elif code_name.ends_with("_Z"):
+				#axis_pair.type = AxisPair.TYPE.TRIGGER
+				#axis_pair.x_axis = event
+			#elif code_name.ends_with("_RZ"):
+				#axis_pair.type = AxisPair.TYPE.TRIGGER
+				#axis_pair.y_axis = event
+			#elif code_name.ends_with("_HAT0X"):
+				#axis_pair.type = AxisPair.TYPE.HAT0
+				#axis_pair.x_axis = event
+			#elif code_name.ends_with("_HAT0Y"):
+				#axis_pair.type = AxisPair.TYPE.HAT0
+				#axis_pair.y_axis = event
+#
+			#axes_events.append(axis_pair)
 	
 	# Create all the button mappings 
 	for event in button_events:
@@ -187,14 +185,14 @@ func _add_button_for_event(event: EvdevEvent, parent: Node) -> CardMappingButton
 	buttons[event.get_signature()] = [button] as Array[CardMappingButton]
 
 	# Create a gamepad profile mapping when pressed
-	var on_pressed := func():
-		var mapping := GamepadMapping.new()
-		mapping.source_event = event
-		change_input_state.set_meta("texture", button.texture.texture)
-		change_input_state.set_meta("mappings", [mapping] as Array[GamepadMapping])
-		change_input_state.set_meta("output_index", 0)
-		state_machine.push_state(change_input_state)
-	button.button_up.connect(on_pressed)
+	#var on_pressed := func():
+		#var mapping := GamepadMapping.new()
+		#mapping.source_event = event
+		#change_input_state.set_meta("texture", button.texture.texture)
+		#change_input_state.set_meta("mappings", [mapping] as Array[GamepadMapping])
+		#change_input_state.set_meta("output_index", 0)
+		#state_machine.push_state(change_input_state)
+	#button.button_up.connect(on_pressed)
 
 	container.add_child(button)
 	container.move_child(button, idx)
@@ -226,61 +224,61 @@ func _set_axis_container_focus(axes_container: Control) -> void:
 	new_focus_group.focus_neighbor_top = previous_axis_focus_group
 	previous_axis_focus_group = new_focus_group
 
-
-# Syncs the UI to the given profile
-func _update_buttons() -> void:
-	if not profile:
-		return
-	profile_label.text = profile.name
-
-	# Reset the button text
-	for button_array in buttons.values():
-		for button in button_array:
-			button.text = "-"
-
-	# Collect all the UI elements to update
-	var all_buttons := [buttons] as Array[Dictionary]
-	for axes_container in axes_containers:
-		axes_container.set_mappings_from(profile)
-		var mode := axes_container.determine_mode(profile)
-		axes_container.set_mode(mode)
-		all_buttons.append(axes_container.buttons)
-
-	# Set the button text based on the loaded profile
-	for mapping in profile.mapping:
-		var source_event := mapping.source_event
-		for buttons_dict in all_buttons:
-			if not source_event.get_signature() in buttons_dict:
-				continue
-			var button_array := buttons_dict[source_event.get_signature()] as Array[CardMappingButton]
-			for button in button_array:
-				_update_button(button, mapping)
-
-
-func _update_button(button: CardMappingButton, mapping: GamepadMapping) -> void:
-	var mapped_text := PackedStringArray()
-
-	# Handle updating the UI for sequential
-	if mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.SEQUENCE:
-		# Set the text depending on the kind of output event
-		for event in mapping.output_events:
-			var text := _get_display_string_for(event)
-			if text == "":
-				continue
-			mapped_text.append(text)
-
-	elif mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.AXIS:
-		if not button.has_meta("output_index"):
-			return
-		var output_index := button.get_meta("output_index") as int
-		if mapping.output_events.size() < output_index + 1:
-			return
-		var event := mapping.output_events[output_index]
-		var text := _get_display_string_for(event)
-		if text != "":
-			mapped_text.append(text)
-
-	button.text = " + ".join(mapped_text)
+#
+## Syncs the UI to the given profile
+#func _update_buttons() -> void:
+	#if not profile:
+		#return
+	#profile_label.text = profile.name
+#
+	## Reset the button text
+	#for button_array in buttons.values():
+		#for button in button_array:
+			#button.text = "-"
+#
+	## Collect all the UI elements to update
+	#var all_buttons := [buttons] as Array[Dictionary]
+	#for axes_container in axes_containers:
+		#axes_container.set_mappings_from(profile)
+		#var mode := axes_container.determine_mode(profile)
+		#axes_container.set_mode(mode)
+		#all_buttons.append(axes_container.buttons)
+#
+	## Set the button text based on the loaded profile
+	#for mapping in profile.mapping:
+		#var source_event := mapping.source_event
+		#for buttons_dict in all_buttons:
+			#if not source_event.get_signature() in buttons_dict:
+				#continue
+			#var button_array := buttons_dict[source_event.get_signature()] as Array[CardMappingButton]
+			#for button in button_array:
+				#_update_button(button, mapping)
+#
+#
+#func _update_button(button: CardMappingButton, mapping: GamepadMapping) -> void:
+	#var mapped_text := PackedStringArray()
+#
+	## Handle updating the UI for sequential
+	#if mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.SEQUENCE:
+		## Set the text depending on the kind of output event
+		#for event in mapping.output_events:
+			#var text := _get_display_string_for(event)
+			#if text == "":
+				#continue
+			#mapped_text.append(text)
+#
+	#elif mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.AXIS:
+		#if not button.has_meta("output_index"):
+			#return
+		#var output_index := button.get_meta("output_index") as int
+		#if mapping.output_events.size() < output_index + 1:
+			#return
+		#var event := mapping.output_events[output_index]
+		#var text := _get_display_string_for(event)
+		#if text != "":
+			#mapped_text.append(text)
+#
+	#button.text = " + ".join(mapped_text)
 
 
 ## Get the text to display on the mapping button from the given event
@@ -308,69 +306,6 @@ func _get_display_string_for(event: MappableEvent) -> String:
 		return ControllerMapper.get_joypad_path_from_event(event)
 
 	return ""
-
-
-# Save the current profile to a file
-func _save_profile() -> void:
-	var notify := Notification.new("")
-	if not profile:
-		logger.debug("No profile loaded to save")
-		return
-	if not library_item:
-		# TODO: Fix for global
-		logger.debug("No library item loaded to associate profile with")
-		return
-
-	# Try to save the profile
-	if DirAccess.make_dir_recursive_absolute(user_profiles) != OK:
-		logger.debug("Unable to create gamepad profiles directory")
-		notify.text = "Unable to save gamepad profile"
-		notification_manager.show(notify)
-		return
-	var filename := library_item.name.sha256_text() + ".tres"
-	var path := "/".join([user_profiles, filename])
-	if ResourceSaver.save(profile, path) != OK:
-		logger.error("Failed to save gamepad profile to: " + path)
-		notify.text = "Failed to save gamepad profile"
-		notification_manager.show(notify)
-		return
-
-	# Update the game settings to use this gamepad profile
-	var section := "game.{0}".format([library_item.name.to_lower()])
-	settings_manager.set_value(section, "gamepad_profile", path)
-	logger.debug("Saved gamepad profile to: " + path)
-	notify.text = "Gamepad profile saved"
-	notification_manager.show(notify)
-
-	# Update/reload the saved profile
-	#profile = ResourceLoader.load(path, "GamepadProfile", ResourceLoader.CACHE_MODE_IGNORE)
-	var running_app := launch_manager.get_current_app()
-	if running_app:
-		if running_app.launch_item.name != library_item.name:
-			pass
-		logger.debug("Reloading gamepad profile for running game")
-		launch_manager.set_gamepad_profile(path)
-
-
-# Load the given gamepad profile. Returns the default gamepad profile if the 
-# given profile does not exist.
-func _load_profile(profile_path: String = "") -> GamepadProfile:
-	var loaded: GamepadProfile
-	if profile_path == "" or not FileAccess.file_exists(profile_path):
-		loaded = load(gamepad_manager.default_profile)
-		if not loaded:
-			loaded = GamepadProfile.new()
-		else:
-			loaded = loaded.duplicate(true)
-		loaded.load_mappings()
-		if library_item:
-			loaded.name = library_item.name
-		return loaded
-
-	loaded = load(profile_path) as GamepadProfile
-	if loaded:
-		loaded.load_mappings()
-	return loaded
 
 
 ## Container for ABS axis mappings

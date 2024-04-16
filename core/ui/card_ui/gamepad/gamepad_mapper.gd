@@ -6,13 +6,13 @@ const state_machine := preload(
 )
 var change_input_state := load("res://assets/state/states/gamepad_change_input.tres") as State
 
-signal mappings_selected(mappings: Array[GamepadMapping])
+#signal mappings_selected(mappings: Array[GamepadMapping])
 
 @export var keyboard: KeyboardInstance = load("res://core/global/keyboard_instance.tres")
 
-var mappings: Array[GamepadMapping]
+#var mappings: Array[GamepadMapping]
 var output_index: int = 0
-var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.INPUT_MAPPER)
+var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.DBUS)
 
 @onready var input_texture_node := $%InputTexture as TextureRect
 @onready var clear_button := $%ClearButton as CardButton
@@ -35,21 +35,21 @@ func _ready() -> void:
 
 	# Setup the clear button
 	var on_clear_button := func():
-		mappings_selected.emit(mappings)
+		#mappings_selected.emit(mappings)
 		state_machine.pop_state()
 	clear_button.button_up.connect(on_clear_button)
 
 	# Setup the keyboard input select
-	var on_keyboard_button := func():
-		keyboard_context.mappings = mappings
-		keyboard.open(keyboard_context)
-	keyboard_button.button_up.connect(on_keyboard_button)
+	#var on_keyboard_button := func():
+		#keyboard_context.mappings = mappings
+		#keyboard.open(keyboard_context)
+	#keyboard_button.button_up.connect(on_keyboard_button)
 
 	# Setup the mouse input select
-	var on_mouse_button := func():
-		mouse_container.visible = true
-		mouse_focus_group.grab_focus()
-	mouse_button.button_up.connect(on_mouse_button)
+	#var on_mouse_button := func():
+		#mouse_container.visible = true
+		#mouse_focus_group.grab_focus()
+	#mouse_button.button_up.connect(on_mouse_button)
 
 	# Handle selecting a mouse input
 	mouse_left_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_LEFT))
@@ -60,20 +60,20 @@ func _ready() -> void:
 	mouse_motion_button.button_up.connect(_on_mouse_motion)
 
 	# Handle selecting a key input 
-	keyboard_context.keymap_input_selected.connect(_on_key_selected)
+	#keyboard_context.keymap_input_selected.connect(_on_key_selected)
 
 
 func _on_state_entered(_from: State) -> void:
 	var texture := change_input_state.get_meta("texture") as Texture2D
-	mappings = change_input_state.get_meta("mappings") as Array[GamepadMapping]
+	#mappings = change_input_state.get_meta("mappings") as Array[GamepadMapping]
 	output_index = change_input_state.get_meta("output_index") as int
 	input_texture_node.texture = texture
 	mouse_container.visible = false
 	
 	var mouse_motion_disabled := false
-	for mapping in mappings:
-		if not mapping.source_event is EvdevAbsEvent:
-			mouse_motion_disabled = true
+	#for mapping in mappings:
+		#if not mapping.source_event is EvdevAbsEvent:
+			#mouse_motion_disabled = true
 	mouse_motion_button.disabled = mouse_motion_disabled
 	mouse_motion_button.visible = !mouse_motion_disabled
 
@@ -87,42 +87,42 @@ func _on_mouse_button(button: MouseButton) -> void:
 	input_event.button_index = button
 	var mappable_event := NativeEvent.new()
 	mappable_event.event = input_event
-	for mapping in mappings:
-		if mapping.output_events.size() - 1 < output_index:
-			mapping.output_events.resize(output_index+1)
-		mapping.output_events[output_index] = mappable_event
-	mappings_selected.emit(mappings)
+	#for mapping in mappings:
+		#if mapping.output_events.size() - 1 < output_index:
+			#mapping.output_events.resize(output_index+1)
+		#mapping.output_events[output_index] = mappable_event
+	#mappings_selected.emit(mappings)
 	state_machine.pop_state()
 
 
 func _on_mouse_motion() -> void:
-	for mapping in mappings:
-		var input_event := InputEventMouseMotion.new()
-		var mappable_event := NativeEvent.new()
-		mappable_event.event = input_event
-		print("Mapping: " + str(mapping))
-		if mapping.output_events.size() - 1 < output_index:
-			mapping.output_events.resize(output_index+1)
-		mapping.output_events[output_index] = mappable_event
-		
-		# Set the relative x/y. This is used in ManagedGamepad to determine which axis should be moved.
-		var source_event := mapping.source_event as EvdevEvent
-		var event := mapping.output_events[output_index].event as InputEventMouseMotion
-		if source_event.input_device_event.get_code_name().contains("X"):
-			event.relative.x = 1
-			event.relative.y = 0
-		elif source_event.input_device_event.get_code_name().contains("Y"):
-			event.relative.x = 0
-			event.relative.y = 1
-
-	mappings_selected.emit(mappings)
+	#for mapping in mappings:
+		#var input_event := InputEventMouseMotion.new()
+		#var mappable_event := NativeEvent.new()
+		#mappable_event.event = input_event
+		#print("Mapping: " + str(mapping))
+		#if mapping.output_events.size() - 1 < output_index:
+			#mapping.output_events.resize(output_index+1)
+		#mapping.output_events[output_index] = mappable_event
+		#
+		## Set the relative x/y. This is used in ManagedGamepad to determine which axis should be moved.
+		#var source_event := mapping.source_event as EvdevEvent
+		#var event := mapping.output_events[output_index].event as InputEventMouseMotion
+		#if source_event.input_device_event.get_code_name().contains("X"):
+			#event.relative.x = 1
+			#event.relative.y = 0
+		#elif source_event.input_device_event.get_code_name().contains("Y"):
+			#event.relative.x = 0
+			#event.relative.y = 1
+#
+	#mappings_selected.emit(mappings)
 	state_machine.pop_state()
 
 
 func _on_key_selected(event: MappableEvent) -> void:
-	for mapping in mappings:
-		if mapping.output_events.size() - 1 < output_index:
-			mapping.output_events.resize(output_index+1)
-		mapping.output_events[output_index] = event
-	mappings_selected.emit(mappings)
+	#for mapping in mappings:
+		#if mapping.output_events.size() - 1 < output_index:
+			#mapping.output_events.resize(output_index+1)
+		#mapping.output_events[output_index] = event
+	#mappings_selected.emit(mappings)
 	state_machine.pop_state()
