@@ -17,6 +17,9 @@ const osk := preload("res://core/global/keyboard_instance.tres")
 
 ## The audio manager to use to adjust the audio when audio input events happen.
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
+## InputPlumber receives and sends DBus input events.
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+
 ## State machine to use to switch menu states in response to input events.
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -25,21 +28,29 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
-var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
+
+## Will show logger events with the prefix InputManager
+var logger := Log.get_logger("InputManager", Log.LEVEL.DEBUG)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_to_group("InputManager")
+	input_plumber.composite_device_added.connect(_watch_dbus_device)
+
+	for device in input_plumber.composite_devices:
+		_watch_dbus_device(device)
 
 
 ## Queue a release event for the given action
 func action_release(action: String, strength: float = 1.0) -> void:
+	Input.action_release(action)
 	_send_input(action, false, strength)
 
 
 ## Queue a pressed event for the given action
 func action_press(action: String, strength: float = 1.0) -> void:
+	Input.action_press(action)
 	_send_input(action, true, strength)
 
 
@@ -56,6 +67,8 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 ## Process all unhandled input, possibly preventing the input from propagating further.
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
+	logger.debug("Got input event to handle: " + str(event))
+
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
 		_guide_input(event)
@@ -64,24 +77,28 @@ func _input(event: InputEvent) -> void:
 
 	# Quick Bar Open Events
 	if event.is_action("ogui_qb"):
+		logger.debug("Quick bar action pressed")
 		_on_quick_bar_open(event)
 		get_viewport().set_input_as_handled()
 		return
 
 	# OSK Events
 	if event.is_action("ogui_osk"):
+		logger.debug("OSK action pressed")
 		_osk_input(event)
 		get_viewport().set_input_as_handled()
 		return
 
 	# Main menu events
 	if event.is_action("ogui_menu"):
+		logger.debug("Menu action pressed")
 		_main_menu_input(event)
 		get_viewport().set_input_as_handled()
 		return
 
 	# Audio events
 	if event.is_action("ogui_volume_down") or event.is_action("ogui_volume_up") or event.is_action("ogui_volume_mute"):
+		logger.debug("Volume key pressed")
 		_audio_input(event)
 		get_viewport().set_input_as_handled()
 		return
@@ -99,12 +116,15 @@ func _input(event: InputEvent) -> void:
 
 	# Handle inputs when the guide button is being held
 	if Input.is_action_pressed("ogui_guide"):
+		logger.debug("Additional action while guide wad pressed.")
 		# OSK
 		if event.is_action_pressed("ogui_north"):
+			logger.debug("North. Trigger OSK")
 			action_press("ogui_osk")
 			action_press("ogui_guide_action")
 		# Quick Bar
 		if event.is_action_pressed("ogui_south"):
+			logger.debug("Trigger QB")
 			action_press("ogui_qb")
 			action_press("ogui_guide_action")
 
@@ -112,21 +132,31 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
+	if event.is_action_pressed("ogui_south"):
+		logger.debug("South pressed on its own.")
+		action_press("ui_accept")
+	elif event.is_action_released("ogui_south"):
+		logger.debug("South released on its own.")
+		action_release("ui_accept")
+
 
 ## Handle guide button events and determine whether this is a guide action
 ## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
 func _guide_input(event: InputEvent) -> void:
 	# Only act on release events
 	if event.is_pressed():
+		logger.debug("Guide pressed. Waiting for additional events.")
 		return
 
 	# If a guide action combo was pressed and we released the guide button,
 	# end the guide action and do nothing else.
 	if Input.is_action_pressed("ogui_guide_action"):
+		logger.debug("Guide released. Additional events used guide action, ignoring.")
 		action_release("ogui_guide_action")
 		return
 
 	# Emit the main menu action if this was not a guide action
+	logger.debug("Guide released. Additional events did not use guide action. Opening menu.")
 	action_press("ogui_menu")
 	action_release("ogui_menu")
 
@@ -202,3 +232,43 @@ func _audio_input(event: InputEvent) -> void:
 		audio_manager.call_deferred("set_volume", 0.06, audio_manager.VOLUME.RELATIVE)
 		return
 
+
+func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
+		for target in device.dbus_targets:
+			logger.debug("Adding watch for " + device.name + " " + target.name)
+			logger.debug(str(target.get_instance_id()))
+			logger.debug(str(target.get_rid()))
+			target.input_event.connect(_on_dbus_input_event)
+
+
+func _on_dbus_input_event(event: String, value: float) -> void:
+	var pressed := value == 1.0
+	logger.debug("Handling dbus input event: " + event + " pressed: " + str(pressed))
+
+	var action = event
+	match event:
+		"ui_accept":
+			action = "ogui_south"
+		"ui_back":
+			action = "ogui_east"
+		"ui_guide":
+			action = "ogui_guide"
+		"ui_action":
+			action = "ogui_west"
+		"ui_context":
+			action = "ogui_north"
+		"ui_quick":
+			action = "ogui_qb"
+		"ui_quick2":
+			action = "ogui_qb"
+		"ui_osk":
+			action = "ogui_osk"
+		"ui_r1":
+			action = "ogui_tab_right"
+		"ui_l1":
+			action = "ogui_tab_left"
+
+	if pressed:
+		action_press(action)
+	else:
+		action_release(action)

@@ -86,7 +86,7 @@ func create_proxy(bus: String, path: String) -> Proxy:
 
 	proxy = Proxy.new(dbus, bus, path)
 	proxy.take_over_path(res_path)
-	
+
 	# Keep track of bus names so they can be referenced later
 	if not bus in well_known_names:
 		well_known_names.append(bus)
@@ -98,7 +98,7 @@ func create_proxy(bus: String, path: String) -> Proxy:
 func bus_exists(name: String) -> bool:
 	return dbus.name_has_owner(name)
 
-
+# TODO: This is deprecated. Remove this and all refrences to it.
 ## Returns a dictionary of manages objects for the given bus and path
 func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 	var obj := create_proxy(bus, path)
@@ -110,10 +110,10 @@ func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 		return []
 	if not args[0] is Dictionary:
 		return []
-	
+
 	var objs_dict := args[0] as Dictionary
 	var objects: Array[ManagedObject] = []
-	
+
 	# Convert the objects dictionary into an array of objects
 	for obj_path in objs_dict.keys():
 		var obj_data := objs_dict[obj_path] as Dictionary
@@ -140,6 +140,58 @@ func _to_string() -> String:
 	return "<DBusManager#{0}>".format([bus_string])
 
 
+class ObjectManager extends Resource:
+	signal interfaces_added(dbus_path: String)
+	signal interfaces_removed(dbus_path: String)
+	
+	var _proxy: Proxy
+
+	func _init(proxy: Proxy) -> void:
+		_proxy = proxy
+		_proxy.message_received.connect(_on_message_received)
+		_proxy.thread.exec(_proxy.watch.bind(IFACE_OBJECT_MANAGER, "InterfacesAdded"))
+		_proxy.thread.exec(_proxy.watch.bind(IFACE_OBJECT_MANAGER, "InterfacesRemoved"))
+
+	## Returns a dictionary of manages objects for the given bus and path
+	func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
+		var result := _proxy.call_method(IFACE_OBJECT_MANAGER, "GetManagedObjects", [], "")
+		if not result:
+			return []
+		var args := result.get_args()
+		if args.size() != 1:
+			return []
+		if not args[0] is Dictionary:
+			return []
+
+		var objs_dict := args[0] as Dictionary
+		var objects: Array[ManagedObject] = []
+
+		# Convert the objects dictionary into an array of objects
+		for obj_path in objs_dict.keys():
+			var obj_data := objs_dict[obj_path] as Dictionary
+			var object := ManagedObject.new(obj_path, obj_data)
+			objects.append(object)
+
+		return objects
+
+	func _on_message_received(msg: DBusMessage) -> void:
+		#print("Got message: " + str(msg))
+		if not msg:
+			return
+		var args := msg.get_args()
+		#print("Got args: " + str(args))
+		if args.size() != 2:
+			return
+		#print("Got args big enough")
+		if msg.get_member() == "InterfacesAdded":
+			#print("Got InterfacesAdded")
+			interfaces_added.emit(args[0])
+
+		if msg.get_member() == "InterfacesRemoved":
+			#print("Got InterfacesRemoved")
+			interfaces_removed.emit(args[0])
+
+
 ## A Proxy provides an interface to call methods on a DBus object.
 class Proxy extends Resource:
 	signal message_received(msg: DBusMessage)
@@ -157,7 +209,6 @@ class Proxy extends Resource:
 		path = obj_path
 		message_received.connect(_on_property_changed)
 		thread.exec(watch.bind(IFACE_PROPERTIES, "PropertiesChanged"))
-
 
 	func _on_property_changed(msg: DBusMessage) -> void:
 		if not msg:
@@ -183,6 +234,7 @@ class Proxy extends Resource:
 
 	## Set the given property
 	func set_property(iface: String, property: String, value: Variant) -> void:
+		logger.debug("Set property " + property + " to " + str(value) + " for interface " + iface)
 		call_method(IFACE_PROPERTIES, "Set", [iface, property, value], "ssv")
 
 	## Get the given property

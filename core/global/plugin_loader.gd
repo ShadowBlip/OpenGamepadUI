@@ -395,19 +395,19 @@ func _load_plugins() -> void:
 		logger.debug("Found plugin: " + file_name)
 		var meta = _load_plugin_meta("/".join([PLUGINS_DIR, file_name]))
 		if meta == null:
-			logger.warning("%s failed to load" % file_name)
+			logger.warn("%s failed to load" % file_name)
 			file_name = dir.get_next()
 			continue
 
 		# Validate the plugin metadata
 		if not _is_valid_plugin_meta(meta):
-			logger.warning("%s has invalid plugin JSON" % file_name)
+			logger.warn("%s has invalid plugin JSON" % file_name)
 			file_name = dir.get_next()
 			continue
 
 		# Ensure the plugin is compatible
 		if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
-			logger.warning("%s is not compatible with this plugin API verion" % file_name)
+			logger.warn("%s is not compatible with this plugin API verion" % file_name)
 			file_name = dir.get_next()
 			continue
 
@@ -433,7 +433,7 @@ func _load_plugins() -> void:
 		# Load the plugin, this will also replace the existing instance of the resource.
 		# for an updated plugin.
 		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, file_name])):
-			logger.warning("%s failed to load" % file_name)
+			logger.warn("%s failed to load" % file_name)
 
 		# Register the plugin
 		var plugin_name: String = meta["plugin.id"]

@@ -11,6 +11,7 @@ signal platform_loaded
 ## Platforms we support
 enum PLATFORM {
 	# Hardware platforms
+	# TODO: Simplify this list. We only need to support unique images now.
 	ABERNIC_GEN1, ## Win600
 	AOKZOE_GEN1,  ## A1 AR07
 	AOKZOE_GEN2,  ## A1 Pro
@@ -59,12 +60,12 @@ var loaded: bool
 func _init() -> void:
 	var flags := get_platform_flags()
 
+	# TODO: Add some recent AYANEO/GPD/OXP models.
 	# Set hardware platform provider
 	if PLATFORM.ABERNIC_GEN1 in flags:
 		platform = load("res://core/platform/handheld/abernic/abernic_gen1.tres") as HandheldPlatform
 	if PLATFORM.ALLY_GEN1 in flags:
-		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres") as ROGAllyPlatform
-		platform.identify_controller_phys()
+		platform = load("res://core/platform/handheld/asus/rog_ally_gen1.tres") as HandheldPlatform
 	if PLATFORM.AOKZOE_GEN1 in flags:
 		platform = load("res://core/platform/handheld/aokzoe/aokzoe_gen1.tres") as HandheldPlatform
 	if PLATFORM.AOKZOE_GEN2 in flags:
@@ -141,13 +142,6 @@ func load(root: Window) -> void:
 		platform.ready(root)
 	if os:
 		os.ready(root)
-
-
-## Returns the handheld gamepad for the detected platform
-func get_handheld_gamepad() -> HandheldGamepad:
-	if not platform:
-		return null
-	return platform.get_handheld_gamepad()
 
 
 ## Returns all detected platform flags

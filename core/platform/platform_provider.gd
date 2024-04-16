@@ -19,11 +19,3 @@ var logger := Log.get_logger("PlatformProvider", Log.LEVEL.INFO)
 ## scene tree.
 func ready(root: Window) -> void:
 	pass
-
-
-## DEPRECATED
-## If implemented, return a HandheldGamepad implementation for hardware platforms
-## with embedded controllers.
-func get_handheld_gamepad() -> HandheldGamepad:
-	logger.info("Platform not found. Using default configuration.")
-	return null

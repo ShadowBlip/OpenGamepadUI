@@ -1,22 +1,24 @@
 extends Control
 
+var platform := preload("res://core/global/platform.tres") as Platform
+var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
+var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-var quick_bar_menu_state = preload("res://assets/state/states/quick_bar_menu.tres") as State
+var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumber
+
+var state_machine := (
+	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+)
+var quick_bar_state = preload("res://assets/state/states/quick_bar_menu.tres") as State
 var settings_state = preload("res://assets/state/states/settings.tres") as State
-var home_state = preload("res://assets/state/states/home.tres") as State
+var base_state = preload("res://assets/state/states/home.tres") as State
 
-var gamescope := load("res://core/global/gamescope.tres") as Gamescope
-var gamepad_manager := load("res://core/systems/input/gamepad_manager.tres") as GamepadManager
-var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-var default_gamepad_profile := load("res://assets/gamepad/profiles/default_overlay.tres") as GamepadProfile
-
+var PID: int = OS.get_process_id()
 var args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
 var display := Gamescope.XWAYLAND.OGUI
 var game_running: bool = false
-var window_id: int
-var pid: int = OS.get_process_id()
+var overlay_window_id: int
 var underlay_log: FileAccess
 var underlay_process: int
 var underlay_window_id: int
@@ -26,11 +28,22 @@ var underlay_window_id: int
 
 var logger := Log.get_logger("Main", Log.LEVEL.INFO)
 
-## Sets up PluginManager for overlay mode.
+## Sets up overlay mode.
 func _init():
-	# Back button wont close windows without this. InputManager prevents poping the last state.
-	state_machine.push_state(home_state)
+
+	logger.debug("Overlay start _init")
+	# Tell gamescope that we're an overlay
+	if overlay_window_id < 0:
+		logger.error("Unable to detect Window ID. Overlay is not going to work!")
+	logger.debug("Found primary window id: {0}".format([overlay_window_id]))
+
+	# Back button wont close windows without this. OverlayInputManager prevents poping the last state.
+	state_machine.push_state(base_state)
+
+	# Ensure LaunchManager doesn't override our custom overlay management l
 	launch_manager.should_manage_overlay = false
+
+	# Set up plugin manager for quick-bar tags
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("quick-bar")]
 	plugin_loader.set_plugin_filters(filters)
@@ -38,26 +51,15 @@ func _init():
 	var plugin_manager := plugin_manager_scene.instantiate()
 	add_child(plugin_manager)
 
-	# Set up our default gamepad profiles.
-	gamepad_manager.default_profile = "res://assets/gamepad/profiles/default_overlay.tres"
-	for gamepad in gamepad_manager.get_gamepad_paths():
-		gamepad_manager.set_gamepad_profile(gamepad, default_gamepad_profile)
-	
-	# Whenever a gamepad is added/removed, set the correct intercept mode on it
-	var on_gamepads_changed := func():
-		var intercept := ManagedGamepad.INTERCEPT_MODE.PASS_QB
-		if state_machine.has_state(quick_bar_menu_state):
-			intercept = ManagedGamepad.INTERCEPT_MODE.ALL
-		gamepad_manager.set_intercept(intercept)
-	gamepad_manager.gamepads_changed.connect(on_gamepads_changed)
-	
 	# Listen for home state changes
-	home_state.state_entered.connect(_on_home_state_entered)
-	home_state.state_exited.connect(_on_home_state_exited)
+	base_state.state_entered.connect(_on_base_state_entered)
+	base_state.state_exited.connect(_on_base_state_exited)
+	logger.debug("Overlay finish _init")
 
 
 ## Starts the --overlay-mode session.
 func _ready() -> void:
+	logger.debug("Overlay start _ready")
 	# Workaround old versions that don't pass launch args via update pack
 	# TODO: Parse the parent PID's CLI args and use those instead.
 	if "--skip-update-pack" in cmdargs and args.size() == 0:
@@ -65,10 +67,16 @@ func _ready() -> void:
 		args = ["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"]
 
 	# Configure the locale
+	logger.debug("Setup Locale")
 	var locale := settings_manager.get_value("general", "locale", "en_US") as String
 	TranslationServer.set_locale(locale)
 
+	logger.debug("Setup Platform")
+	# Load any platform-specific logic
+	platform.load(get_tree().get_root())
+
 	# Set the theme if one was set
+	logger.debug("Setup Theme")
 	var theme_path := settings_manager.get_value("general", "theme", "") as String
 	if theme_path == "":
 		logger.debug("No theme set. Using default theme.")
@@ -80,24 +88,30 @@ func _ready() -> void:
 		else:
 			logger.debug("Unable to load theme")
 
+	# Set the FPS limit
+	logger.debug("Setup FPS Limit")
+	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
+	
 	# Set window size to native resolution
+	logger.debug("Setup Window Size")
 	var screen_size : Vector2i = DisplayServer.screen_get_size()
 	var window : Window = get_window()
 	window.set_size(screen_size)
 
 	# Set up the session
+	logger.debug("Setup Overlay Mode")
 	_setup_overlay_mode(args)
 	launch_manager.app_switched.connect(_on_app_switched)
 
-## Finds needed PID's and global vars, Starts the user defined program in the sandbox.
+
+## Finds needed PID's and global vars, Starts the user defined program as an
+## underlay process.
 func _setup_overlay_mode(args: Array) -> void:
-	window_id = gamescope.get_window_id(pid, display)
-	quick_bar_menu_state.state_entered.connect(_on_window_open)
-	quick_bar_menu_state.state_exited.connect(_on_window_closed)
+	overlay_window_id = gamescope.get_window_id(PID, display)
+	quick_bar_state.state_entered.connect(_on_window_open)
+	quick_bar_state.state_exited.connect(_on_window_closed)
 	settings_state.state_entered.connect(_on_window_open)
 	settings_state.state_exited.connect(_on_window_closed)
-
-	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QB)
 
 	# Don't crash if we're not launching another program.
 	if args == []:
@@ -111,7 +125,7 @@ func _setup_overlay_mode(args: Array) -> void:
 		_start_underlay_process(args, log_path)
 
 	# Establish overlay focus in gamescope.
-	gamescope.set_overlay(window_id, 1, display)
+	gamescope.set_overlay(overlay_window_id, 1, display)
 
 	# Remove unneeded/conflicting elements from default menues
 	var remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
@@ -119,7 +133,12 @@ func _setup_overlay_mode(args: Array) -> void:
 	var settings_remove_list: PackedStringArray = ["NetworkButton", "BluetoothButton", "AudioButton"]
 	_run_child_killer(settings_remove_list, settings_menu)
 
+	# Setup inputplumber to receive guide presses.
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	input_plumber.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 
+
+## Removes specified child elements from the given Node.
 func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 	var child_count := parent.get_child_count()
 	var to_remove_list := []
@@ -142,9 +161,9 @@ func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 		#logger.debug("Removing " + child.name)
 		child.queue_free()
 
-
+## Starts Steam as an underlay process
 func _start_steam_process(args: Array) -> void:
-	# Setup steam
+	logger.debug("Starting steam: " + str(args))
 	var underlay_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
 	if not settings_manager.get_value("general.controller", "sdl_hidapi_enabled", false):
 		logger.debug("SDL HIDAPI Disabled.")
@@ -164,8 +183,10 @@ func _start_steam_process(args: Array) -> void:
 	exit_timer.start()
 
 
-## Called to start the specified underlay process.
+## Called to start the specified underlay process and redirects logging to a
+## seperate log file.
 func _start_underlay_process(args: Array, log_path: String) -> void:
+	logger.debug("Starting underlay process: " + str(args))
 	# Set up loggining in the new thread.
 	args.append("2>&1")
 	args.append(log_path)
@@ -181,13 +202,13 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 	underlay_process = Reaper.create_process(command, ["-c", " ".join(args)])
 
 
-## Called to idendify the xwayland window ID of the underlay process.
+## Called to identify the xwayland window ID of the underlay process.
 func _find_underlay_window_id() -> void:
 	# Find Steam in the display tree
 	var root_win_id := gamescope.get_root_window_id(display)
 	var all_windows := gamescope.get_all_windows(root_win_id, display)
 	for window in all_windows:
-		if window == window_id:
+		if window == overlay_window_id:
 			continue
 		if gamescope.has_xprop(window, "STEAM_OVERLAY", display):
 			underlay_window_id = window
@@ -204,34 +225,37 @@ func _find_underlay_window_id() -> void:
 		underlay_window_timer.start()
 
 
-## Called when "quick_bar_menu_state" is entered.
-func _on_window_open(_from: State) -> void:
-	if _from:
-		logger.info("Quick bar open state: " + _from.name)
-	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.ALL)
+## Called when "quick_bar_state" is entered.
+func _on_window_open(from: State) -> void:
+	if from:
+		logger.info("Quick bar open state: " + from.name)
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 	if game_running:
-		gamescope.set_overlay(window_id, 1, display)
+		gamescope.set_overlay(overlay_window_id, 1, display)
 		gamescope.set_overlay(underlay_window_id, 0, display)
 
 
-## Called when "quick_bar_menu_state" is exited.
-func _on_window_closed(_to: State) -> void:
-	if _to:
-		logger.info("Quick bar closed state: " + _to.name)
-	gamepad_manager.set_intercept(ManagedGamepad.INTERCEPT_MODE.PASS_QB)
+## Called when "quick_bar_state" is exited.
+func _on_window_closed(to: State) -> void:
+	if to:
+		logger.info("Quick bar closed state: " + to.name)
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 	if game_running:
-		gamescope.set_overlay(window_id, 0, display)
+		gamescope.set_overlay(overlay_window_id, 0, display)
 		gamescope.set_overlay(underlay_window_id, 1, display)
 
 
+## Called when a RunningApp is changed to another RunningApp, or to no app.
+## Changes the overlay focus to the overlay if no game is running or to the
+## underlay process if a game is running.
 func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 	if to == null:
 		# Establish overlay focus in gamescope.
-		gamescope.set_overlay(window_id, 1, display)
+		gamescope.set_overlay(overlay_window_id, 1, display)
 		gamescope.set_overlay(underlay_window_id, 0, display)
 		game_running = false
 		return
-	gamescope.set_overlay(window_id, 0, display)
+	gamescope.set_overlay(overlay_window_id, 0, display)
 	gamescope.set_overlay(underlay_window_id, 1, display)
 	game_running = true
 
@@ -246,13 +270,15 @@ func _check_exit() -> void:
 	get_tree().quit()
 
 
-func _on_home_state_exited(_to: State) -> void:
-	# Set gamescope input focus to on so the user can interact with the UI
-	if gamescope.set_input_focus(window_id, 1) != OK:
+## Sets gamescope input focus to on so the user can interact with the UI
+
+func _on_base_state_exited(_to: State) -> void:
+	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 
-func _on_home_state_entered(_from: State) -> void:
-	# Set gamescope input focus to off so the user can interact with the game
-	if gamescope.set_input_focus(window_id, 0) != OK:
+## Sets gamescope input focus to off so the user can interact with the game
+func _on_base_state_entered(_from: State) -> void:
+
+	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")

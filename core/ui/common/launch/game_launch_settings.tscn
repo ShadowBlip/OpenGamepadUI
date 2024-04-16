@@ -1,0 +1,84 @@
+[gd_scene load_steps=8 format=3 uid="uid://d1j0e1fl12fnl"]
+
+[ext_resource type="Script" path="res://core/ui/common/launch/game_launch_settings.gd" id="1_36god"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_14tsa"]
+[ext_resource type="Resource" uid="uid://cc6i4i264dmqd" path="res://core/ui/card_ui/launch/game_settings_focus.tres" id="3_jkkpl"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="4_m05uu"]
+[ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="4_nd0jr"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="5_wwn8p"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="7_5wp75"]
+
+[node name="LaunchSettings" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+script = ExtResource("1_36god")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_14tsa")]
+current_focus = NodePath("../LaunchProviderDropdown")
+focus_stack = ExtResource("3_jkkpl")
+
+[node name="LaunchProviderLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
+layout_mode = 2
+text = "Launch Provider"
+
+[node name="LaunchProviderDropdown" parent="MarginContainer/VBoxContainer" instance=ExtResource("5_wwn8p")]
+unique_name_in_owner = true
+layout_mode = 2
+title = ""
+description = "Library provider to launch this game with"
+
+[node name="LaunchSettingsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
+layout_mode = 2
+text = "Launch Settings"
+
+[node name="CommandTextInput" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_nd0jr")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Command"
+description = "Command to use to launch the game"
+
+[node name="ArgsTextInput" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_nd0jr")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Arguments"
+description = "Command-line arguments to pass to the game"
+
+[node name="CWDTextInput" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_nd0jr")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Launch Directory"
+description = "Directory to launch the game from"
+
+[node name="EnvTextInput" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_nd0jr")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Environment Variables"
+description = "Environment variables to use when launching the game"
+
+[node name="SandboxSettingsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
+layout_mode = 2
+text = "Sandbox Settings"
+
+[node name="UseSandboxToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_5wp75")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Use sandboxing"
+separator_visible = false
+description = "Launch the game in a sandbox"

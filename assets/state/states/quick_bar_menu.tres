@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_qarre")
 name = "quick_bar_menu"
-data = null
+data = {}

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="InputPlumber" load_steps=2 format=3 uid="uid://ct1hxnffwtqvl"]
+
+[ext_resource type="Script" path="res://core/systems/input/input_plumber.gd" id="1_0njvc"]
+
+[resource]
+script = ExtResource("1_0njvc")

@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3 uid="uid://bfu4edkk5dqt2"]
+
+[ext_resource type="Script" path="res://core/ui/common/debug/processes_menu.gd" id="1_i5gve"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_t6r8e"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_2ttlw"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="4_1h6bm"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group.gd" id="5_nqvca"]
+
+[node name="ProcessesMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i5gve")
+
+[node name="RefreshTimer" type="Timer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ProcecssesLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_t6r8e")]
+layout_mode = 2
+text = "Processes"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_right") instance=ExtResource("3_2ttlw")]
+current_focus = NodePath("../PIDInspector")
+focus_stack = ExtResource("4_1h6bm")
+focus_neighbor_right = NodePath("../MarginContainer/VBoxContainer/FocusGroup")
+
+[node name="PIDInspector" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+hide_root = true
+select_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" type="Node" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_left")]
+script = ExtResource("5_nqvca")
+current_focus = NodePath("../KillButton")
+focus_neighbor_left = NodePath("../../../FocusGroup")
+
+[node name="KillButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+disabled = true
+text = "Kill"

@@ -1,86 +1,14 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=24 format=3 uid="uid://dxiglpg3bsp34"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=4 format=3 uid="uid://dx0ykcjvufix"]
 
-[ext_resource type="Texture2D" uid="uid://cvyo2q5qjpamv" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_6n0pc"]
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_ypdva"]
-[ext_resource type="Script" path="res://core/systems/input/sysfs_device.gd" id="2_2w360"]
-[ext_resource type="Texture2D" uid="uid://dd8meysn3x77u" path="res://assets/images/platform/steamdeck.png" id="2_7v1x7"]
-[ext_resource type="Script" path="res://core/systems/input/events/evdev_key_event.gd" id="4_naxp5"]
-[ext_resource type="Script" path="res://core/platform/actions/start_opensd.gd" id="4_whgcr"]
-[ext_resource type="Script" path="res://core/systems/input/events/native_event.gd" id="5_dthup"]
-[ext_resource type="Script" path="res://core/platform/handheld_event_mapping.gd" id="6_1owfd"]
-[ext_resource type="Script" path="res://core/platform/actions/start_powerstation.gd" id="9_0nhq7"]
-
-[sub_resource type="Resource" id="Resource_ltx62"]
-script = ExtResource("2_2w360")
-phys_path = ""
-name = "OpenSD Gamepad Device"
-
-[sub_resource type="Resource" id="Resource_afgsg"]
-script = ExtResource("4_naxp5")
-code = "KEY_POWER"
-
-[sub_resource type="InputEventAction" id="InputEventAction_f63ue"]
-action = &"ogui_power"
-
-[sub_resource type="Resource" id="Resource_m8uvx"]
-script = ExtResource("5_dthup")
-event = SubResource("InputEventAction_f63ue")
-
-[sub_resource type="Resource" id="Resource_or71w"]
-script = ExtResource("6_1owfd")
-name = "Power Button"
-activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_afgsg")])
-emits = SubResource("Resource_m8uvx")
-
-[sub_resource type="Resource" id="Resource_w1kuq"]
-script = ExtResource("4_naxp5")
-code = "KEY_VOLUMEUP"
-
-[sub_resource type="Resource" id="Resource_1w3g8"]
-script = ExtResource("4_naxp5")
-code = "KEY_VOLUMEUP"
-
-[sub_resource type="Resource" id="Resource_0lnfg"]
-script = ExtResource("6_1owfd")
-name = "Volume Up"
-activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_w1kuq")])
-emits = SubResource("Resource_1w3g8")
-
-[sub_resource type="Resource" id="Resource_iu3wr"]
-script = ExtResource("4_naxp5")
-code = "KEY_VOLUMEDOWN"
-
-[sub_resource type="Resource" id="Resource_8w25d"]
-script = ExtResource("4_naxp5")
-code = "KEY_VOLUMEDOWN"
-
-[sub_resource type="Resource" id="Resource_x4pu0"]
-script = ExtResource("6_1owfd")
-name = "Volume Down"
-activation_keys = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([SubResource("Resource_iu3wr")])
-emits = SubResource("Resource_8w25d")
-
-[sub_resource type="Resource" id="Resource_662np"]
-script = ExtResource("2_2w360")
-phys_path = "isa0060/serio0/input0"
-name = "AT Translated Set 2 keyboard"
-
-[sub_resource type="Resource" id="Resource_2gxl0"]
-script = ExtResource("4_whgcr")
-
-[sub_resource type="Resource" id="Resource_pyd8y"]
-script = ExtResource("9_0nhq7")
+[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_f6nrl"]
+[ext_resource type="Texture2D" uid="uid://cvyo2q5qjpamv" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_juvkj"]
+[ext_resource type="Texture2D" uid="uid://dd8meysn3x77u" path="res://assets/images/platform/steamdeck.png" id="2_tane6"]
 
 [resource]
-script = ExtResource("1_ypdva")
-key_map = Array[ExtResource("6_1owfd")]([SubResource("Resource_or71w"), SubResource("Resource_0lnfg"), SubResource("Resource_x4pu0")])
-filtered_events = Array[Resource("res://core/systems/input/events/evdev_event.gd")]([])
-keypads = Array[ExtResource("2_2w360")]([SubResource("Resource_662np")])
-gamepad = SubResource("Resource_ltx62")
-image = ExtResource("2_7v1x7")
-diagram = ExtResource("1_6n0pc")
+script = ExtResource("1_f6nrl")
+image = ExtResource("2_tane6")
+diagram = ExtResource("1_juvkj")
 icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
-thermal_policy_path = ""
-name = "Steam Deck"
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_2gxl0"), SubResource("Resource_pyd8y")])
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
 shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])

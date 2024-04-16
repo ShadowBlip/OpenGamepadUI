@@ -17,10 +17,11 @@ const IFACE_GPU_CARD := "org.shadowblip.GPU.Card"
 const IFACE_GPU_TDP := "org.shadowblip.GPU.Card.TDP"
 const IFACE_GPU_CONNECTOR := "org.shadowblip.GPU.Card.Connector"
 
+var logger := Log.get_logger("PowerStation")
+
 var dbus := load("res://core/global/dbus_system.tres") as DBusManager
 var cpu := CPUBus.new(dbus.create_proxy(POWERSTATION_BUS, CPU_PATH))
 var gpu := GPUBus.new(dbus.create_proxy(POWERSTATION_BUS, GPU_PATH))
-
 
 ## Returns true if PowerStation can be used on this system
 func supports_power_station() -> bool:
