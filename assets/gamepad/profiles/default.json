@@ -1,0 +1,127 @@
+{
+	"version": 1,
+	"kind": "DeviceProfile",
+	"name": "Default",
+	"mapping": [
+		{
+			"name": "QuickAccess",
+			"source_event": {
+				"gamepad": {
+					"button": "QuickAccess"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "South"
+					}
+				}
+			]
+		},
+		{
+			"name": "LeftTop",
+			"source_event": {
+				"gamepad": {
+					"button": "LeftTop"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Keyboard"
+					}
+				}
+			]
+		},
+		{
+			"name": "RightTop",
+			"source_event": {
+				"gamepad": {
+					"button": "RightTop"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "QuickAccess2"
+					}
+				}
+			]
+		},
+		{
+			"name": "LeftPaddle",
+			"source_event": {
+				"gamepad": {
+					"button": "LeftPaddle1"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "LeftStick"
+					}
+				}
+			]
+		},
+		{
+			"name": "RightPaddle",
+			"source_event": {
+				"gamepad": {
+					"button": "RightPaddle1"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "RightStick"
+					}
+				}
+			]
+		},
+		{
+			"name": "Keyboard",
+			"source_event": {
+				"gamepad": {
+					"button": "Keyboard"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "North"
+					}
+				}
+			]
+		},
+		{
+			"name": "QuickAccess2",
+			"source_event": {
+				"gamepad": {
+					"button": "QuickAccess2"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "East"
+					}
+				}
+			]
+		}
+	]
+}

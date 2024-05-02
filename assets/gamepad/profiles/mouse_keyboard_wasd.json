@@ -1,0 +1,265 @@
+{
+	"version": 1,
+	"kind": "DeviceProfile",
+	"name": "Mouse and Keyboard (WASD)",
+	"description": "Gamepad mapping to Mouse + WASD keyboard controls",
+	"mapping": [
+		{
+			"name": "Guide",
+			"source_event": {
+				"gamepad": {
+					"button": "Guide"
+				}
+			},
+			"target_events": [
+				{
+					"dbus": "ui_guide"
+				}
+			]
+		},
+		{
+			"name": "Quick Access",
+			"source_event": {
+				"gamepad": {
+					"button": "QuickAccess"
+				}
+			},
+			"target_events": [
+				{
+					"dbus": "ui_quick"
+				}
+			]
+		},
+		{
+			"name": "Left",
+			"source_event": {
+				"gamepad": {
+					"axis": {
+						"name": "LeftStick",
+						"direction": "left",
+						"deadzone": 0.3
+					}
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyA"
+				}
+			]
+		},
+		{
+			"name": "Right",
+			"source_event": {
+				"gamepad": {
+					"axis": {
+						"name": "LeftStick",
+						"direction": "right",
+						"deadzone": 0.3
+					}
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyD"
+				}
+			]
+		},
+		{
+			"name": "Up",
+			"source_event": {
+				"gamepad": {
+					"axis": {
+						"name": "LeftStick",
+						"direction": "up",
+						"deadzone": 0.3
+					}
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyW"
+				}
+			]
+		},
+		{
+			"name": "Down",
+			"source_event": {
+				"gamepad": {
+					"axis": {
+						"name": "LeftStick",
+						"direction": "down",
+						"deadzone": 0.3
+					}
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyS"
+				}
+			]
+		},
+		{
+			"name": "Joystick Mouse",
+			"source_event": {
+				"gamepad": {
+					"axis": {
+						"name": "RightStick"
+					}
+				}
+			},
+			"target_events": [
+				{
+					"mouse": {
+						"motion": {
+							"speed_pps": 800
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Menu",
+			"source_event": {
+				"gamepad": {
+					"button": "Start"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyEsc"
+				}
+			]
+		},
+		{
+			"name": "Select",
+			"source_event": {
+				"gamepad": {
+					"button": "Select"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyTab"
+				}
+			]
+		},
+		{
+			"name": "A Button",
+			"source_event": {
+				"gamepad": {
+					"button": "South"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeySpace"
+				}
+			]
+		},
+		{
+			"name": "X Button",
+			"source_event": {
+				"gamepad": {
+					"button": "North"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyR"
+				}
+			]
+		},
+		{
+			"name": "Y Button",
+			"source_event": {
+				"gamepad": {
+					"button": "West"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyF"
+				}
+			]
+		},
+		{
+			"name": "B Button",
+			"source_event": {
+				"gamepad": {
+					"button": "East"
+				}
+			},
+			"target_events": [
+				{
+					"keyboard": "KeyE"
+				}
+			]
+		},
+		{
+			"name": "Right Trigger",
+			"source_event": {
+				"gamepad": {
+					"trigger": {
+						"name": "RightTrigger",
+						"deadzone": 0.2
+					}
+				}
+			},
+			"target_events": [
+				{
+					"mouse": {
+						"button": "Left"
+					}
+				}
+			]
+		},
+		{
+			"name": "Left Trigger",
+			"source_event": {
+				"gamepad": {
+					"trigger": {
+						"name": "LeftTrigger",
+						"deadzone": 0.2
+					}
+				}
+			},
+			"target_events": [
+				{
+					"mouse": {
+						"button": "Right"
+					}
+				}
+			]
+		},
+		{
+			"name": "RB",
+			"source_event": {
+				"gamepad": {
+					"button": "RightBumper"
+				}
+			},
+			"target_events": [
+				{
+					"mouse": {
+						"button": "WheelUp"
+					}
+				}
+			]
+		},
+		{
+			"name": "LB",
+			"source_event": {
+				"gamepad": {
+					"button": "LeftBumper"
+				}
+			},
+			"target_events": [
+				{
+					"mouse": {
+						"button": "WheelDown"
+					}
+				}
+			]
+		}
+	]
+}

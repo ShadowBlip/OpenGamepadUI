@@ -5,7 +5,9 @@ class_name CardIconButton
 
 signal pressed
 signal button_up
+signal player_button_up(metaname: String, dbus_path: String)
 signal button_down
+signal player_button_down(metaname: String, dbus_path: String)
 
 @export_category("Image")
 @export var texture: Texture2D:
@@ -76,6 +78,7 @@ func _play_sound(stream: AudioStream) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	var dbus_path := event.get_meta("dbus_path", "") as String
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			button_down.emit()
@@ -86,6 +89,8 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	if event.is_pressed():
 		button_down.emit()
+		player_button_down.emit("dbus_path", dbus_path)
 		pressed.emit()
 	else:
 		button_up.emit()
+		player_button_up.emit("dbus_path", dbus_path)

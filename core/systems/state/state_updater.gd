@@ -36,9 +36,11 @@ func _ready() -> void:
 	get_parent().connect(on_signal, _on_signal)
 
 
-func _on_signal():
+func _on_signal(metakey: String = "", metadata: Variant = null):
 	# Switch to the given state
 	var sm := state_machine as StateMachine
+	if metakey != "":
+		state.set_meta(metakey, metadata)
 
 	# Manage the state based on the given action
 	match action:
