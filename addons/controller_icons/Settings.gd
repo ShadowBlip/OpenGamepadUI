@@ -3,6 +3,7 @@ extends Resource
 class_name ControllerSettings
 
 enum Devices {
+	# Controllers
 	LUNA,
 	OUYA,
 	PS3,
@@ -18,6 +19,8 @@ enum Devices {
 	XBOX360,
 	XBOXONE,
 	XBOXSERIES,
+
+	# Handhelds
 	STEAM_DECK,
 	OXP,
 }

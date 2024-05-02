@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_dilc0"]
 [ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="8_3yky8"]
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_uixir"]
+[ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="9_2p7i2"]
 [ext_resource type="Resource" uid="uid://cjda3nse6s3n1" path="res://core/ui/card_ui/library/library_tabs_state.tres" id="9_dlgkq"]
-[ext_resource type="Texture2D" uid="uid://c4sj5uyseavix" path="res://addons/controller_icons/assets/key/f5.png" id="9_rttnl"]
 
 [node name="SearchBarMenu" type="PanelContainer"]
 z_index = 20
@@ -59,7 +59,7 @@ placeholder_text = "What should you play?"
 modulate = Color(1, 1, 1, 0.823529)
 custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
-texture = ExtResource("9_rttnl")
+texture = ExtResource("9_2p7i2")
 expand_mode = 1
 stretch_mode = 5
 script = ExtResource("8_3yky8")

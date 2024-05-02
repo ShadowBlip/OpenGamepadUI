@@ -164,7 +164,7 @@ texture = ExtResource("5_ewj68")
 [node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/GamepadButton" instance=ExtResource("15_lat8h")]
 state_machine = ExtResource("16_m8g5y")
 state = ExtResource("17_7ydn0")
-on_signal = "button_up"
+on_signal = "player_button_up"
 
 [node name="VSeparator" type="VSeparator" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(0, 24)
