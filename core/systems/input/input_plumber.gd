@@ -257,6 +257,13 @@ class CompositeDevice extends Resource:
 				return []
 			return property
 
+	var target_capabilities: PackedStringArray:
+		get:
+			var property = _proxy.get_property(IFACE_COMPOSITE_DEVICE, "TargetCapabilities")
+			if not property is Array:
+				return []
+			return property
+
 	var dbus_devices: PackedStringArray:
 		get:
 			var property = _proxy.get_property(IFACE_COMPOSITE_DEVICE, "DbusDevices")

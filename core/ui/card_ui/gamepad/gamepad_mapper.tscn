@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b3o3wo40sfih1"]
+[gd_scene load_steps=20 format=3 uid="uid://b3o3wo40sfih1"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_4osef"]
@@ -7,18 +7,25 @@
 [ext_resource type="Resource" uid="uid://46cu324n427u" path="res://assets/state/states/gamepad_change_input.tres" id="4_sv30y"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_i6uqd"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_roi3c"]
-[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="9_0om7o"]
+[ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_okgql"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_an8os"]
 [ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="10_g6xyt"]
-[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="10_w3t8m"]
+[ext_resource type="Resource" uid="uid://b58i2ue2qwe6f" path="res://core/ui/card_ui/gamepad/gamepad_mapper_tabs_state.tres" id="10_gr678"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="11_c6udv"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="11_taofv"]
+[ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="12_30f1c"]
+[ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="12_akkxd"]
+[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox360/XboxOne_Diagram.png" id="13_hvmil"]
+[ext_resource type="Texture2D" uid="uid://ciij2ysnubdv7" path="res://addons/controller_icons/assets/key/Mouse_Simple_Key_Dark.png" id="13_xultc"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="16_bkk3w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t62r6"]
 
 [node name="GamepadMapper" type="Control"]
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_alala")
@@ -33,7 +40,7 @@ fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
 [node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_i6uqd")]
-target = NodePath("../../PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer/FocusGroup")
+target = NodePath("../../VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer/GamepadFocusGroup")
 on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("5_roi3c")]
@@ -41,135 +48,254 @@ state_machine = ExtResource("3_wgp64")
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_sv30y")])
 minimum_states = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"RoundedPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="SubsectionLabel" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_0om7o")]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Change Input"
-horizontal_alignment = 1
+size_flags_horizontal = 3
+theme_type_variation = &"SearchBar"
 
-[node name="InputTexture" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Modifying"
+
+[node name="ModifyingInputTexture" type="TextureRect" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 texture = ExtResource("10_g6xyt")
-expand_mode = 1
+expand_mode = 3
 stretch_mode = 5
 
-[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+size_flags_horizontal = 8
 
-[node name="ButtonContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer2"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
+[node name="FocusGroup" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer2" instance=ExtResource("9_an8os")]
 
-[node name="FocusGroup" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
-current_focus = NodePath("../KeyboardButton")
-
-[node name="KeyboardButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="ClearButton" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer2" instance=ExtResource("11_taofv")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Keyboard"
-uppercase = false
+texture = ExtResource("12_akkxd")
 
-[node name="MouseButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
+[node name="TabsHeader" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer" instance=ExtResource("8_okgql")]
+layout_mode = 2
+alignment = 1
+tabs_state = ExtResource("10_gr678")
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Mouse"
-uppercase = false
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_t62r6")
+tabs_visible = false
 
-[node name="GamepadButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
-unique_name_in_owner = true
-visible = false
+[node name="Gamepad" type="MarginContainer" parent="VBoxContainer/TabContainer"]
 layout_mode = 2
-text = "Gamepad"
-uppercase = false
 
-[node name="ClearButton" parent="PanelContainer/VBoxContainer/MarginContainer2/ButtonContainer" instance=ExtResource("10_w3t8m")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Clear"
-uppercase = false
-
-[node name="MouseContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
-visible = false
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Gamepad"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MouseContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer"]
 layout_mode = 2
 
-[node name="MouseFocusGroup" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("9_an8os")]
-unique_name_in_owner = true
-current_focus = NodePath("../LeftClickButton")
-
-[node name="LeftClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="GamepadDiagram" type="TextureRect" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Left Click"
-uppercase = false
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("13_hvmil")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="RightClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+follow_focus = true
+
+[node name="GamepadInputContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Right Click"
-uppercase = false
+size_flags_horizontal = 3
 
-[node name="MouseMotionButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="GamepadFocusGroup" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("9_an8os")]
+unique_name_in_owner = true
+
+[node name="ButtonsLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Mouse Motion"
-uppercase = false
+text = "Buttons"
 
-[node name="WheelUpButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="CardButton" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
+layout_mode = 2
+text = "A Button"
+focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+select_audio = "res://assets/audio/interface/select_002.ogg"
+
+[node name="CardButton2" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
+layout_mode = 2
+text = "B Button"
+focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+select_audio = "res://assets/audio/interface/select_002.ogg"
+
+[node name="CardButton3" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
+layout_mode = 2
+text = "X Button"
+focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+select_audio = "res://assets/audio/interface/select_002.ogg"
+
+[node name="AxesLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Wheel Up"
-uppercase = false
+text = "Axes"
 
-[node name="WheelDownButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
+[node name="CardButton5" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
+layout_mode = 2
+text = "Left Stick"
+focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+select_audio = "res://assets/audio/interface/select_002.ogg"
+
+[node name="TriggersLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Wheel Down"
-uppercase = false
+text = "Triggers"
 
-[node name="MiddleClickButton" parent="PanelContainer/VBoxContainer/MouseContainer/VBoxContainer" instance=ExtResource("10_w3t8m")]
-unique_name_in_owner = true
+[node name="CardButton4" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
-text = "Middle Click"
-uppercase = false
+text = "Right Trigger"
+focus_audio = "res://assets/audio/interface/glitch_004.ogg"
+select_audio = "res://assets/audio/interface/select_002.ogg"
+
+[node name="GyroLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Gyro"
+
+[node name="AccelerometerLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Accelerometer"
+
+[node name="TouchpadsLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Touch Pads"
+
+[node name="Keyboard" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Keyboard"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer"]
+layout_mode = 2
+
+[node name="Spacer1" type="Control" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="OnScreenKeyboard" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer/VBoxContainer" instance=ExtResource("12_30f1c")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.6
+
+[node name="Spacer2" type="Control" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Mouse" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Mouse"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 80
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("13_xultc")
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonsLabel" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("11_c6udv")]
+layout_mode = 2
+text = "Buttons"
+
+[node name="System" type="MarginContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/System"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 20

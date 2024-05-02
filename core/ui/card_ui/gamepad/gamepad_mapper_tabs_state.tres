@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TabContainerState" load_steps=2 format=3 uid="uid://b58i2ue2qwe6f"]
+
+[ext_resource type="Script" path="res://core/systems/state/tab_container_state.gd" id="1_rge7p"]
+
+[resource]
+script = ExtResource("1_rge7p")
+tabs_text = PackedStringArray("Gamepad", "Keyboard", "Mouse", "System")

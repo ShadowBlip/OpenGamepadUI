@@ -23,7 +23,7 @@ signal entered
 ## Emitted when the keyboard is closed with this context
 signal exited
 ## Emitted when the user has selected a keymap input key
-signal keymap_input_selected(key_event: NativeEvent)
+signal keymap_input_selected(key_event: InputPlumberEvent)
 
 ## The type of keyboard context
 var type: TYPE

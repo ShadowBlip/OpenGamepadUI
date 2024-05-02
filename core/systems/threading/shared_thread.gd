@@ -279,6 +279,9 @@ func _process(delta: float) -> void:
 
 
 func _async_call(method: Callable) -> void:
+	if not method.is_valid():
+		logger.warn("Tried to call null method!")
+		return
 	var ret = await method.call()
 	emit_signal.call_deferred("exec_completed", method, ret)
 
