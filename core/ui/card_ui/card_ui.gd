@@ -25,7 +25,7 @@ var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 @onready var fade_texture := $%FadeTexture
 @onready var power_timer := $%PowerTimer
 
-var logger = Log.get_logger("Main", Log.LEVEL.INFO)
+var logger = Log.get_logger("Main", Log.LEVEL.DEBUG)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
@@ -64,18 +64,6 @@ func _ready() -> void:
 	# Load any platform-specific logic
 	platform.load(get_tree().get_root())
 	
-	# Set the theme if one was set
-	var theme_path := settings_manager.get_value("general", "theme", "") as String
-	if theme_path == "":
-		logger.debug("No theme set. Using default theme.")
-	if theme_path != "":
-		logger.debug("Setting theme to: " + theme_path)
-		var loaded_theme = load(theme_path)
-		if loaded_theme != null:
-			theme = loaded_theme
-		else:
-			logger.debug("Unable to load theme")
-	
 	# Set the FPS limit
 	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
 	
@@ -92,6 +80,23 @@ func _ready() -> void:
 
 	# Set the initial intercept mode
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
+
+	# Set the theme if one was set
+	var theme_path := settings_manager.get_value("general", "theme", "") as String
+	if theme_path == "":
+		logger.debug("No theme set. Using default theme.")
+
+	var current_theme = get_theme()
+	if theme_path != "" && current_theme.resource_path != theme_path:
+		logger.debug("Setting theme to: " + theme_path)
+		var loaded_theme = load(theme_path)
+		if loaded_theme != null:
+			# TODO: This is a workaround, themes aren't properly set the first time.
+			call_deferred("set_theme", loaded_theme)
+			call_deferred("set_theme", current_theme)
+			call_deferred("set_theme", loaded_theme)
+		else:
+			logger.debug("Unable to load theme")
 
 func _on_focus_changed(control: Control) -> void:
 	if control != null:

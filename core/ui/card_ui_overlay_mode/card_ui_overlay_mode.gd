@@ -75,19 +75,6 @@ func _ready() -> void:
 	# Load any platform-specific logic
 	platform.load(get_tree().get_root())
 
-	# Set the theme if one was set
-	logger.debug("Setup Theme")
-	var theme_path := settings_manager.get_value("general", "theme", "") as String
-	if theme_path == "":
-		logger.debug("No theme set. Using default theme.")
-	if theme_path != "":
-		logger.debug("Setting theme to: " + theme_path)
-		var loaded_theme = load(theme_path)
-		if loaded_theme != null:
-			theme = loaded_theme
-		else:
-			logger.debug("Unable to load theme")
-
 	# Set the FPS limit
 	logger.debug("Setup FPS Limit")
 	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
@@ -102,6 +89,24 @@ func _ready() -> void:
 	logger.debug("Setup Overlay Mode")
 	_setup_overlay_mode(args)
 	launch_manager.app_switched.connect(_on_app_switched)
+
+	# Set the theme if one was set
+	logger.debug("Setup Theme")
+	var theme_path := settings_manager.get_value("general", "theme", "") as String
+	if theme_path == "":
+		logger.debug("No theme set. Using default theme.")
+
+	var current_theme = get_theme()
+	if theme_path != "" && current_theme.resource_path != theme_path:
+		logger.debug("Setting theme to: " + theme_path)
+		var loaded_theme = load(theme_path)
+		if loaded_theme != null:
+			# TODO: This is a workaround, themes aren't properly set the first time.
+			call_deferred("set_theme", loaded_theme)
+			call_deferred("set_theme", current_theme)
+			call_deferred("set_theme", loaded_theme)
+		else:
+			logger.debug("Unable to load theme")
 
 
 ## Finds needed PID's and global vars, Starts the user defined program as an

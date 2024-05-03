@@ -1,18 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b6c6f3vdwx43s"]
+[gd_scene load_steps=3 format=3 uid="uid://b6c6f3vdwx43s"]
 
 [ext_resource type="Script" path="res://core/ui/components/tab_label.gd" id="1_2u45l"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_r42nk"]
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_88qmc"]
-color = Color(1, 0.47451, 0.776471, 1)
-thickness = 3
 
 [node name="TabLabel" type="VBoxContainer"]
 focus_mode = 2
 mouse_filter = 0
 alignment = 1
 script = ExtResource("1_2u45l")
-selected = null
 
 [node name="SubsectionLabel" parent="." instance=ExtResource("1_r42nk")]
 unique_name_in_owner = true
@@ -23,5 +18,5 @@ uppercase = true
 
 [node name="HSeparator" type="HSeparator" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_88qmc")

@@ -42,6 +42,7 @@ enum PLATFORM {
 	# OS Platforms
 	CHIMERAOS,
 	STEAMOS,
+	MANJARO,
 	ARCH_LIKE,
 }
 
@@ -124,6 +125,8 @@ func _init() -> void:
 		os = load("res://core/platform/os/steamos.tres")
 	if PLATFORM.CHIMERAOS in flags:
 		os = load("res://core/platform/os/chimeraos.tres")
+	if PLATFORM.MANJARO in flags:
+		os = load("res://core/platform/os/manjaro.tres")
 
 	if os:
 		for action in os.startup_actions:
@@ -274,6 +277,8 @@ func _read_os() -> Array[PLATFORM]:
 		flags.append(PLATFORM.STEAMOS)
 	if os_info.id == "chimeraos":
 		flags.append(PLATFORM.CHIMERAOS)
+	if os_info.id == "manjaro":
+		flags.append(PLATFORM.MANJARO)
 	if os_info.id_like == "arch":
 		flags.append(PLATFORM.ARCH_LIKE)
 
