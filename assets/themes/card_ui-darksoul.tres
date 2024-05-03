@@ -1,104 +1,54 @@
-[gd_resource type="Theme" load_steps=29 format=3 uid="uid://bhdlcd8rvccus"]
+[gd_resource type="Theme" load_steps=26 format=3 uid="uid://ddqvfbno2i1n4"]
 
-[ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_xbfkn"]
-[ext_resource type="Texture2D" uid="uid://b8m8g766k3kay" path="res://assets/styles/darksoul/highlight.tres" id="2_d6a4j"]
-[ext_resource type="StyleBox" uid="uid://sp8fu3o2ov0w" path="res://assets/styles/darksoul/button_menu_panel.tres" id="2_rhoir"]
-[ext_resource type="StyleBox" uid="uid://dd76k8ra1mthg" path="res://assets/styles/darksoul/button_panel.tres" id="3_7tko4"]
-[ext_resource type="StyleBox" uid="uid://d3i2jatw4hvgb" path="res://assets/styles/darksoul/expandable_card_panel.tres" id="4_dnscv"]
-[ext_resource type="StyleBox" uid="uid://b3ta5yb32jlnb" path="res://assets/styles/darksoul/context_bar_menu_panel.tres" id="4_v80py"]
-[ext_resource type="StyleBox" uid="uid://bar3btp2yiodw" path="res://assets/styles/darksoul/inside_panel.tres" id="5_smg3e"]
-[ext_resource type="StyleBox" uid="uid://b8agb31kxbsap" path="res://assets/styles/darksoul/main_menu_panel.tres" id="6_nlift"]
-[ext_resource type="StyleBox" uid="uid://cors0phwi7ji0" path="res://assets/styles/darksoul/game_launch_buttons_panel.tres" id="8_lih84"]
-[ext_resource type="StyleBox" uid="uid://saqxc1jchonl" path="res://assets/styles/darksoul/search_bar_menu_panel.tres" id="9_4cedj"]
-[ext_resource type="StyleBox" uid="uid://dj874jn605gma" path="res://assets/styles/darksoul/power_menu_panel.tres" id="9_7cwdd"]
-[ext_resource type="StyleBox" uid="uid://ciuc6cu2urmkg" path="res://assets/styles/darksoul/notification_panel.tres" id="9_hfwpg"]
-[ext_resource type="StyleBox" uid="uid://cuedb05hnwyhu" path="res://assets/styles/darksoul/settings_menu_panel.tres" id="9_loi6v"]
-[ext_resource type="StyleBox" uid="uid://b7jn4lre7ah4x" path="res://assets/styles/darksoul/plugin_store_card_panel.tres" id="10_lu8vp"]
-[ext_resource type="StyleBox" uid="uid://br2w1fnanqkfa" path="res://assets/styles/dracula/quick_bar_panel.tres" id="13_g8s16"]
+[ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_3v55p"]
+[ext_resource type="StyleBox" uid="uid://sp8fu3o2ov0w" path="res://assets/styles/darksoul/button_menu_panel.tres" id="2_2owxm"]
+[ext_resource type="Texture2D" uid="uid://b8m8g766k3kay" path="res://assets/styles/darksoul/highlight.tres" id="3_8qvdk"]
+[ext_resource type="StyleBox" uid="uid://dd76k8ra1mthg" path="res://assets/styles/darksoul/button_panel.tres" id="4_ac8l1"]
+[ext_resource type="StyleBox" uid="uid://b3ta5yb32jlnb" path="res://assets/styles/darksoul/context_bar_menu_panel.tres" id="5_64mse"]
+[ext_resource type="StyleBox" uid="uid://bar3btp2yiodw" path="res://assets/styles/darksoul/inside_panel.tres" id="6_2qr2n"]
+[ext_resource type="StyleBox" uid="uid://d3i2jatw4hvgb" path="res://assets/styles/darksoul/expandable_card_panel.tres" id="7_ym2an"]
+[ext_resource type="StyleBox" uid="uid://cors0phwi7ji0" path="res://assets/styles/darksoul/game_launch_buttons_panel.tres" id="8_jmiih"]
+[ext_resource type="StyleBox" uid="uid://c4wkalabs1n6g" path="res://assets/styles/darksoul/separator.tres" id="9_5cc4i"]
+[ext_resource type="StyleBox" uid="uid://mupjo5muowto" path="res://assets/styles/darksoul/light_panel.tres" id="10_n8vj1"]
+[ext_resource type="StyleBox" uid="uid://b8agb31kxbsap" path="res://assets/styles/darksoul/main_menu_panel.tres" id="11_pyv4h"]
+[ext_resource type="StyleBox" uid="uid://ciuc6cu2urmkg" path="res://assets/styles/darksoul/notification_panel.tres" id="12_wcln0"]
+[ext_resource type="StyleBox" uid="uid://dewseesxvegsr" path="res://assets/styles/darksoul/background.tres" id="13_mbjal"]
+[ext_resource type="StyleBox" uid="uid://b7jn4lre7ah4x" path="res://assets/styles/darksoul/plugin_store_card_panel.tres" id="14_1jatv"]
+[ext_resource type="StyleBox" uid="uid://dj874jn605gma" path="res://assets/styles/darksoul/power_menu_panel.tres" id="15_se3e7"]
+[ext_resource type="StyleBox" uid="uid://cf7yfsh6hxdtl" path="res://assets/styles/darksoul/progress_bar.tres" id="16_0qxr3"]
+[ext_resource type="StyleBox" uid="uid://daavpt58e7jlj" path="res://assets/styles/darksoul/quick_bar_panel.tres" id="17_kiywn"]
+[ext_resource type="StyleBox" uid="uid://drvm1bmm27j77" path="res://assets/styles/darksoul/rounded_panel.tres" id="18_fk6hi"]
+[ext_resource type="StyleBox" uid="uid://saqxc1jchonl" path="res://assets/styles/darksoul/search_bar_menu_panel.tres" id="19_o15g3"]
+[ext_resource type="StyleBox" uid="uid://6tpsjf015hee" path="res://assets/styles/darksoul/panel_focus.tres" id="20_cjjcl"]
+[ext_resource type="StyleBox" uid="uid://cuedb05hnwyhu" path="res://assets/styles/darksoul/settings_menu_panel.tres" id="21_ubca5"]
+[ext_resource type="StyleBox" uid="uid://bcfg4geulkfvg" path="res://assets/styles/darksoul/grabber.tres" id="22_vliwj"]
+[ext_resource type="StyleBox" uid="uid://c2k5hwm52cf3v" path="res://assets/styles/darksoul/grabber_highlight.tres" id="23_ty2vb"]
+[ext_resource type="StyleBox" uid="uid://d4f1h7f8wt45p" path="res://assets/styles/darksoul/grabber_pressed.tres" id="24_ffxpl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_7mvpb"]
-color = Color(1, 1, 1, 0.25098)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rycl"]
-bg_color = Color(0.0823529, 0.0862745, 0.105882, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hj4t8"]
-bg_color = Color(0.113725, 0.129412, 0.137255, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lko5h"]
-bg_color = Color(0.113725, 0.129412, 0.137255, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4nys6"]
-bg_color = Color(0.803922, 0.184314, 0.537255, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knf7f"]
-bg_color = Color(0.0823529, 0.0862745, 0.105882, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_size = 4
-shadow_offset = Vector2(1, 3)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uab83"]
-bg_color = Color(0.113725, 0.129412, 0.137255, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b0sgf"]
-bg_color = Color(0.913725, 0.0901961, 0.439216, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly0we"]
-bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4qwdc"]
-bg_color = Color(0.8085, 0.686, 0.98, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hby0t"]
-bg_color = Color(0.699883, 0.4998, 0.98, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_ls1is"]
-color = Color(1, 1, 1, 0.25098)
-vertical = true
 
 [resource]
 Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
 Button/colors/font_disabled_color = Color(0.384314, 0.447059, 0.643137, 1)
 Button/colors/font_focus_color = Color(0.972549, 0.972549, 0.94902, 1)
 Button/styles/disabled = SubResource("StyleBoxFlat_s2sy6")
-Button/styles/hover = ExtResource("1_xbfkn")
+Button/styles/hover = ExtResource("1_3v55p")
 ButtonMenu/base_type = &"PanelContainer"
-ButtonMenu/styles/panel = ExtResource("2_rhoir")
+ButtonMenu/styles/panel = ExtResource("2_2owxm")
 CardButton/base_type = &"PanelContainer"
-CardButton/icons/highlight = ExtResource("2_d6a4j")
-CardButton/styles/panel = ExtResource("3_7tko4")
-CardIconButton/icons/highlight = ExtResource("2_d6a4j")
+CardButton/icons/highlight = ExtResource("3_8qvdk")
+CardButton/styles/panel = ExtResource("4_ac8l1")
+CardIconButton/icons/highlight = ExtResource("3_8qvdk")
 ContextBar/base_type = &"PanelContainer"
-ContextBar/styles/panel = ExtResource("4_v80py")
+ContextBar/styles/panel = ExtResource("5_64mse")
 ExpandableCard/base_type = &"Container"
-ExpandableCard/icons/highlight = ExtResource("2_d6a4j")
-ExpandableCard/styles/inside_panel = ExtResource("5_smg3e")
-ExpandableCard/styles/panel = ExtResource("4_dnscv")
+ExpandableCard/icons/highlight = ExtResource("3_8qvdk")
+ExpandableCard/styles/inside_panel = ExtResource("6_2qr2n")
+ExpandableCard/styles/panel = ExtResource("7_ym2an")
 GameLaunchButtons/base_type = &"PanelContainer"
-GameLaunchButtons/styles/panel = ExtResource("8_lih84")
-General/colors/background = Color(0.156863, 0.164706, 0.211765, 1)
+GameLaunchButtons/styles/panel = ExtResource("8_jmiih")
+General/colors/background = Color(0.0823529, 0.0862745, 0.105882, 1)
 General/colors/comment = Color(0.384314, 0.447059, 0.643137, 1)
 General/colors/current_line = Color(0.266667, 0.278431, 0.352941, 1)
 General/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
@@ -109,33 +59,33 @@ General/colors/pink = Color(1, 0.47451, 0.776471, 1)
 General/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
 General/colors/red = Color(1, 0.333333, 0.333333, 1)
 General/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
-HSeparator/styles/separator = SubResource("StyleBoxLine_7mvpb")
+HSeparator/styles/separator = ExtResource("9_5cc4i")
 InsidePanel/base_type = &"Panel"
-InsidePanel/styles/panel = ExtResource("5_smg3e")
+InsidePanel/styles/panel = ExtResource("6_2qr2n")
 LightPanel/base_type = &"Panel"
-LightPanel/styles/panel = SubResource("StyleBoxFlat_4rycl")
+LightPanel/styles/panel = ExtResource("10_n8vj1")
 MainMenu/base_type = &"PanelContainer"
-MainMenu/styles/panel = ExtResource("6_nlift")
+MainMenu/styles/panel = ExtResource("11_pyv4h")
 Notification/base_type = &"PanelContainer"
-Notification/styles/panel = ExtResource("9_hfwpg")
-Panel/styles/panel = SubResource("StyleBoxFlat_hj4t8")
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_lko5h")
+Notification/styles/panel = ExtResource("12_wcln0")
+Panel/styles/panel = ExtResource("13_mbjal")
+PanelContainer/styles/panel = ExtResource("6_2qr2n")
 PluginStoreCard/base_type = &"PanelContainer"
-PluginStoreCard/styles/panel = ExtResource("10_lu8vp")
+PluginStoreCard/styles/panel = ExtResource("14_1jatv")
 PowerMenu/base_type = &"PanelContainer"
-PowerMenu/styles/panel = ExtResource("9_7cwdd")
-ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
+PowerMenu/styles/panel = ExtResource("15_se3e7")
+ProgressBar/styles/fill = ExtResource("16_0qxr3")
 QuickBar/base_type = &"PanelContainer"
-QuickBar/styles/panel = ExtResource("13_g8s16")
+QuickBar/styles/panel = ExtResource("17_kiywn")
 RoundedPanel/base_type = &"PanelContainer"
-RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
+RoundedPanel/styles/panel = ExtResource("18_fk6hi")
 SearchBar/base_type = &"PanelContainer"
-SearchBar/styles/panel = ExtResource("9_4cedj")
+SearchBar/styles/panel = ExtResource("19_o15g3")
 SelectableText/base_type = &"VBoxContainer"
-SelectableText/styles/panel = SubResource("StyleBoxFlat_uab83")
-SelectableText/styles/panel_focus = SubResource("StyleBoxFlat_b0sgf")
+SelectableText/styles/panel = ExtResource("6_2qr2n")
+SelectableText/styles/panel_focus = ExtResource("20_cjjcl")
 SettingsMenu/base_type = &"PanelContainer"
-SettingsMenu/styles/panel = ExtResource("9_loi6v")
+SettingsMenu/styles/panel = ExtResource("21_ubca5")
 Slider/colors/color = Color(0.913725, 0.0901961, 0.439216, 1)
 Status/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
 Status/colors/gray = Color(0.384314, 0.447059, 0.643137, 1)
@@ -147,8 +97,8 @@ Status/colors/red = Color(1, 0.333333, 0.333333, 1)
 Status/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
 Toggle/base_type = &"BoxContainer"
 Toggle/colors/color = Color(0.913725, 0.0901961, 0.439216, 1)
-VScrollBar/styles/grabber = SubResource("StyleBoxFlat_ly0we")
-VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_4qwdc")
-VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hby0t")
-VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")
+VScrollBar/styles/grabber = ExtResource("22_vliwj")
+VScrollBar/styles/grabber_highlight = ExtResource("23_ty2vb")
+VScrollBar/styles/grabber_pressed = ExtResource("24_ffxpl")
+VSeparator/styles/separator = ExtResource("9_5cc4i")
 metadata/name = "Dark Soul"
