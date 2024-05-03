@@ -92,11 +92,9 @@ selected = true
 
 [node name="TabLabel2" parent="MarginContainer/HBoxContainer/VBoxContainer2/TabsHeader" instance=ExtResource("6_cdmjx")]
 layout_mode = 2
-selected = false
 
 [node name="TabLabel3" parent="MarginContainer/HBoxContainer/VBoxContainer2/TabsHeader" instance=ExtResource("6_cdmjx")]
 layout_mode = 2
-selected = false
 
 [node name="Slider" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_2rr5x")]
 layout_mode = 2

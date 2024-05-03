@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=28 format=3 uid="uid://ehplgpp70vxa"]
+[gd_resource type="Theme" load_steps=27 format=3 uid="uid://ehplgpp70vxa"]
 
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_yyc4b"]
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="2_f7nj8"]
@@ -10,6 +10,7 @@
 [ext_resource type="StyleBox" uid="uid://x0dxx5c8u5rv" path="res://assets/styles/dracula/context_bar_menu_panel.tres" id="4_wqh56"]
 [ext_resource type="StyleBox" uid="uid://c2xl0k66pybg4" path="res://assets/styles/dracula/main_menu_panel.tres" id="7_n80rp"]
 [ext_resource type="StyleBox" uid="uid://c0pprevg50iuy" path="res://assets/styles/dracula/game_launch_buttons_panel.tres" id="8_iqinc"]
+[ext_resource type="StyleBox" uid="uid://bs6m01h4e8vcc" path="res://assets/styles/dracula/separator.tres" id="9_6itdn"]
 [ext_resource type="StyleBox" uid="uid://dgbhd8b0on3sx" path="res://assets/styles/dracula/notification_panel.tres" id="9_sy73e"]
 [ext_resource type="StyleBox" uid="uid://362ykskskx" path="res://assets/styles/dracula/search_bar_menu_panel.tres" id="10_7w6bt"]
 [ext_resource type="StyleBox" uid="uid://y3qbwgrt2wai" path="res://assets/styles/dracula/settings_menu_panel.tres" id="10_rxp5w"]
@@ -19,9 +20,6 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_7mvpb"]
-color = Color(1, 1, 1, 0.25098)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rycl"]
 bg_color = Color(0.203922, 0.211765, 0.27451, 1)
@@ -69,10 +67,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_ls1is"]
-color = Color(1, 1, 1, 0.25098)
-vertical = true
-
 [resource]
 Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
 Button/colors/font_disabled_color = Color(0.384314, 0.447059, 0.643137, 1)
@@ -104,7 +98,7 @@ General/colors/pink = Color(1, 0.47451, 0.776471, 1)
 General/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
 General/colors/red = Color(1, 0.333333, 0.333333, 1)
 General/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
-HSeparator/styles/separator = SubResource("StyleBoxLine_7mvpb")
+HSeparator/styles/separator = ExtResource("9_6itdn")
 InsidePanel/base_type = &"Panel"
 InsidePanel/styles/panel = ExtResource("4_aiyld")
 LightPanel/base_type = &"Panel"
@@ -145,5 +139,5 @@ Toggle/colors/color = Color(0.741176, 0.576471, 0.976471, 1)
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_ly0we")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_4qwdc")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_hby0t")
-VSeparator/styles/separator = SubResource("StyleBoxLine_ls1is")
+VSeparator/styles/separator = ExtResource("9_6itdn")
 metadata/name = "Dracula"

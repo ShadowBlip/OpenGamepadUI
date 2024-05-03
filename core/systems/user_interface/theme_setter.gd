@@ -30,6 +30,9 @@ func _on_signal():
 		return
 	if not node is Control:
 		return
+	var current_theme = (node as Control).theme
+	(node as Control).theme = theme
+	(node as Control).theme = current_theme
 	(node as Control).theme = theme
 	
 	if not persist:

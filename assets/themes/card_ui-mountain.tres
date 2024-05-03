@@ -1,0 +1,90 @@
+[gd_resource type="Theme" load_steps=11 format=3 uid="uid://cw7auu2ayqnp8"]
+
+[ext_resource type="StyleBox" uid="uid://qjs1slh4s3im" path="res://assets/styles/mountain/select.tres" id="1_2slwi"]
+[ext_resource type="StyleBox" uid="uid://b2ytymh36ircf" path="res://assets/styles/mountain/item_bordered.tres" id="2_ytnqu"]
+[ext_resource type="Texture2D" uid="uid://dgnfjj3h11oyl" path="res://assets/styles/mountain/highlight.tres" id="3_alrpi"]
+[ext_resource type="StyleBox" uid="uid://2p5qvnplqvxa" path="res://assets/styles/mountain/item.tres" id="4_utt7a"]
+[ext_resource type="StyleBox" uid="uid://cgcpuvugwhcsm" path="res://assets/styles/mountain/press.tres" id="5_1bdl2"]
+[ext_resource type="StyleBox" uid="uid://cmn3au1fs8reh" path="res://assets/styles/mountain/separator.tres" id="6_48vy2"]
+[ext_resource type="StyleBox" uid="uid://brv1d4yldx5ql" path="res://assets/styles/mountain/background.tres" id="7_xdt1r"]
+[ext_resource type="StyleBox" uid="uid://c27fn5rqy010" path="res://assets/styles/mountain/accent.tres" id="8_wvmqr"]
+[ext_resource type="StyleBox" uid="uid://dtqenukgejxsm" path="res://assets/styles/mountain/hover.tres" id="9_0or60"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
+bg_color = Color(0.133333, 0.137255, 0.180392, 1)
+
+[resource]
+Button/colors/font_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/colors/font_disabled_color = Color(0.384314, 0.447059, 0.643137, 1)
+Button/colors/font_focus_color = Color(0.972549, 0.972549, 0.94902, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_s2sy6")
+Button/styles/hover = ExtResource("1_2slwi")
+ButtonMenu/base_type = &"PanelContainer"
+ButtonMenu/styles/panel = ExtResource("2_ytnqu")
+CardButton/base_type = &"PanelContainer"
+CardButton/icons/highlight = ExtResource("3_alrpi")
+CardButton/styles/panel = ExtResource("4_utt7a")
+CardIconButton/icons/highlight = ExtResource("3_alrpi")
+ContextBar/base_type = &"PanelContainer"
+ContextBar/styles/panel = ExtResource("5_1bdl2")
+ExpandableCard/base_type = &"Container"
+ExpandableCard/icons/highlight = ExtResource("3_alrpi")
+ExpandableCard/styles/inside_panel = ExtResource("1_2slwi")
+ExpandableCard/styles/panel = ExtResource("2_ytnqu")
+GameLaunchButtons/base_type = &"PanelContainer"
+GameLaunchButtons/styles/panel = ExtResource("1_2slwi")
+General/colors/background = Color(0.176471, 0.176471, 0.176471, 1)
+General/colors/blue = Color(0.207843, 0.74902, 0.643137, 1)
+General/colors/comment = Color(0.717647, 0.72549, 0.733333, 1)
+General/colors/current_line = Color(0.396078, 0.411765, 0.427451, 1)
+General/colors/foreground = Color(0.266667, 0.278431, 0.352941, 1)
+HSeparator/styles/separator = ExtResource("6_48vy2")
+InsidePanel/base_type = &"Panel"
+InsidePanel/styles/panel = ExtResource("7_xdt1r")
+LightPanel/base_type = &"Panel"
+LightPanel/styles/panel = ExtResource("7_xdt1r")
+MainMenu/base_type = &"PanelContainer"
+MainMenu/styles/panel = ExtResource("2_ytnqu")
+Notification/base_type = &"PanelContainer"
+Notification/styles/panel = ExtResource("2_ytnqu")
+OptionButton/styles/focus = ExtResource("5_1bdl2")
+OptionButton/styles/hover = ExtResource("1_2slwi")
+OptionButton/styles/normal = ExtResource("2_ytnqu")
+OptionButton/styles/pressed = ExtResource("5_1bdl2")
+Panel/styles/panel = ExtResource("7_xdt1r")
+PanelContainer/styles/panel = ExtResource("2_ytnqu")
+PluginStoreCard/base_type = &"PanelContainer"
+PluginStoreCard/styles/panel = ExtResource("2_ytnqu")
+PopupMenu/styles/hover = ExtResource("1_2slwi")
+PopupMenu/styles/panel = ExtResource("7_xdt1r")
+PopupMenu/styles/separator = ExtResource("6_48vy2")
+PowerMenu/base_type = &"PanelContainer"
+PowerMenu/styles/panel = ExtResource("2_ytnqu")
+ProgressBar/styles/fill = ExtResource("8_wvmqr")
+QuickBar/base_type = &"PanelContainer"
+QuickBar/styles/panel = ExtResource("2_ytnqu")
+RoundedPanel/base_type = &"PanelContainer"
+RoundedPanel/styles/panel = ExtResource("2_ytnqu")
+SearchBar/base_type = &"PanelContainer"
+SearchBar/styles/panel = ExtResource("1_2slwi")
+SelectableText/base_type = &"VBoxContainer"
+SelectableText/styles/panel = ExtResource("2_ytnqu")
+SelectableText/styles/panel_focus = ExtResource("1_2slwi")
+SettingsMenu/base_type = &"PanelContainer"
+SettingsMenu/styles/panel = ExtResource("2_ytnqu")
+Slider/colors/color = Color(0.207843, 0.74902, 0.643137, 1)
+Status/colors/cyan = Color(0.545098, 0.913725, 0.992157, 1)
+Status/colors/gray = Color(0.384314, 0.447059, 0.643137, 1)
+Status/colors/green = Color(0.313726, 0.980392, 0.482353, 1)
+Status/colors/orange = Color(1, 0.721569, 0.423529, 1)
+Status/colors/pink = Color(1, 0.47451, 0.776471, 1)
+Status/colors/purple = Color(0.741176, 0.576471, 0.976471, 1)
+Status/colors/red = Color(1, 0.333333, 0.333333, 1)
+Status/colors/yellow = Color(0.945098, 0.980392, 0.54902, 1)
+Toggle/base_type = &"BoxContainer"
+Toggle/colors/color = Color(0.207843, 0.74902, 0.643137, 1)
+VScrollBar/styles/grabber = ExtResource("5_1bdl2")
+VScrollBar/styles/grabber_highlight = ExtResource("9_0or60")
+VScrollBar/styles/grabber_pressed = ExtResource("1_2slwi")
+VSeparator/styles/separator = ExtResource("6_48vy2")
+metadata/name = "Dracula"

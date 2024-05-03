@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PlatformChimeraOS" load_steps=2 format=3 uid="uid://cjh075h8mbdob"]
+
+[ext_resource type="Script" path="res://core/platform/os/manjaro.gd" id="1_v2018"]
+
+[resource]
+script = ExtResource("1_v2018")
+name = ""
+startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
