@@ -13,8 +13,8 @@ const delete_icon := preload("res://assets/ui/icons/round-delete-forever.svg")
 @export var highlight_speed := 0.1
 
 @export_category("AudioSteamPlayer")
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
+@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
+@export_file("*.ogg") var select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
 var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader

@@ -12,8 +12,8 @@ const LAYOUTS: Dictionary = {
 }
 
 @export var text: String = "Empty"
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
+@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
+@export_file("*.ogg") var select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 @export var layout: LAYOUT_MODE = LAYOUT_MODE.LANDSCAPE
 @export var layout_scale: float = 1
 var library_item: LibraryItem

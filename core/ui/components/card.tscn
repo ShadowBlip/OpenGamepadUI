@@ -48,7 +48,7 @@ script = ExtResource("1_aiin0")
 on_signal = "focus_entered"
 
 [node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_701dj")]
-audio = "res://assets/audio/interface/select_002.ogg"
+audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 on_signal = "pressed"
 
 [node name="RaiseEffect" parent="." node_paths=PackedStringArray("target", "shadow") instance=ExtResource("3_gyi80")]
