@@ -5,6 +5,7 @@ class_name InputIconKeyboardMapping
 @export var name: String
 
 @export_category("Mouse")
+@export var mouse: Texture
 @export var mouse_left: Texture
 @export var mouse_middle: Texture
 @export var mouse_right: Texture
@@ -101,6 +102,18 @@ class_name InputIconKeyboardMapping
 ## Return the texture in the mapping from the given path
 func get_texture(path: String) -> Texture:
 	match path:
+		# Mouse
+		"mouse/motion":
+			return self.mouse
+		"mouse/left":
+			return self.mouse_left
+		"mouse/right":
+			return self.mouse_right
+		"mouse/middle":
+			return self.mouse_middle
+		"mouse/wheel":
+			return self.mouse_wheel
+		# Keyboard
 		"key/esc":
 			return self.esc
 		"key/tab":
@@ -271,13 +284,5 @@ func get_texture(path: String) -> Texture:
 			return self.bracket_right
 		"key/tilda":
 			return self.tilda
-		"mouse/left":
-			return self.mouse_left
-		"mouse/right":
-			return self.mouse_right
-		"mouse/middle":
-			return self.mouse_middle
-		"mouse/wheel":
-			return self.mouse_wheel
 
 	return null

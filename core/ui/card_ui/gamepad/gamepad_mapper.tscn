@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b3o3wo40sfih1"]
+[gd_scene load_steps=22 format=3 uid="uid://b3o3wo40sfih1"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_4osef"]
@@ -16,10 +16,14 @@
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="12_30f1c"]
 [ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="12_akkxd"]
 [ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="13_hvmil"]
-[ext_resource type="Texture2D" uid="uid://ciij2ysnubdv7" path="res://addons/controller_icons/assets/key/Mouse_Simple_Key_Dark.png" id="13_xultc"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="16_bkk3w"]
+[ext_resource type="Texture2D" uid="uid://05mc8os4g5ax" path="res://assets/images/mouse/diagram.svg" id="18_lkxxd"]
+[ext_resource type="Script" path="res://core/global/keyboard_instance.gd" id="18_u0i73"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t62r6"]
+
+[sub_resource type="Resource" id="Resource_0h3mb"]
+script = ExtResource("18_u0i73")
 
 [node name="GamepadMapper" type="Control"]
 layout_mode = 3
@@ -225,9 +229,11 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="OnScreenKeyboard" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer/VBoxContainer" instance=ExtResource("12_30f1c")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.6
+instance = SubResource("Resource_0h3mb")
 
 [node name="Spacer2" type="Control" parent="VBoxContainer/TabContainer/Keyboard/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -252,11 +258,11 @@ theme_override_constants/margin_top = 80
 theme_override_constants/margin_right = 80
 theme_override_constants/margin_bottom = 80
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer2"]
+[node name="MouseDiagram" type="TextureRect" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-texture = ExtResource("13_xultc")
+texture = ExtResource("18_lkxxd")
 stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer"]
@@ -270,12 +276,23 @@ theme_override_constants/margin_bottom = 20
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+follow_focus = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer"]
+[node name="MouseInputContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ButtonsLabel" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/VBoxContainer" instance=ExtResource("11_c6udv")]
+[node name="MouseFocusGroup" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MouseInputContainer" instance=ExtResource("9_an8os")]
+unique_name_in_owner = true
+
+[node name="MouseMotionLabel" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MouseInputContainer" instance=ExtResource("11_c6udv")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Motion"
+
+[node name="MouseButtonsLabel" parent="VBoxContainer/TabContainer/Mouse/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MouseInputContainer" instance=ExtResource("11_c6udv")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Buttons"
 
@@ -289,3 +306,10 @@ theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 20
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/TabContainer/System/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/System/MarginContainer/CenterContainer"]
+layout_mode = 2
+text = "Not yet supported"

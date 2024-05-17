@@ -117,12 +117,12 @@ func set_target_capability(capability: String) -> void:
 		return
 	if set_target_icon(capability) != OK:
 		logger.warn("No icon found for capability. Setting text instead.")
-		source_label.visible = true
-		source_icon.visible = false
-		source_label.text = capability
+		target_label.visible = true
+		target_icon.visible = false
+		target_label.text = capability
 		return
-	source_label.visible = false
-	source_icon.visible = true
+	target_label.visible = false
+	target_icon.visible = true
 
 
 ## Configures the button for the given mappable event. If a path cannot be found,
