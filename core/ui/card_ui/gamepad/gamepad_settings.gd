@@ -17,6 +17,7 @@ var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
 var library_item: LibraryItem
 var gamepad_types := ["Generic Gamepad", "XBox 360", "DualSense", "DualSense Edge", "Steam Deck"]
+var gamepad_types_icons := ["XBox 360", "XBox 360", "PS5", "PS5", "Steam Deck"] # From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var buttons: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
@@ -59,6 +60,7 @@ func _ready() -> void:
 				InputPlumberProfile.TargetDevice.Mouse,
 				InputPlumberProfile.TargetDevice.Keyboard,
 			]
+		self._update_buttons()
 	gamepad_type_dropdown.item_selected.connect(on_gamepad_selected)
 	
 	# Grab focus when the mapper exits
@@ -248,7 +250,12 @@ func _add_button_for_capability(capability: String, parent: Node) -> CardMapping
 
 	var button := button_scene.instantiate() as CardMappingButton
 	button.text = "-"
-	button.set_capability.call_deferred(capability)
+	var on_button_ready := func():
+		var icon_mapping := get_selected_target_gamepad_icon_map()
+		button.set_target_device_icon_mapping(icon_mapping)
+		button.set_source_device_icon_mapping(gamepad.name)
+		button.set_source_capability(capability)
+	button.ready.connect(on_button_ready, CONNECT_ONE_SHOT)
 
 	# Add the button to our button map
 	buttons[capability] = button
@@ -265,10 +272,14 @@ func _add_button_for_capability(capability: String, parent: Node) -> CardMapping
 		mapping.source_event = source_event
 		
 		# Switch to change_input_state with the selected mapping to be updated
-		change_input_state.set_meta("texture", button.texture.texture)
+		var texture: Texture
+		if button.source_icon.textures.size() > 0:
+			texture = button.source_icon.textures[0]
+		change_input_state.set_meta("texture", texture)
 		change_input_state.set_meta("mappings", mapping)
 		change_input_state.set_meta("gamepad", self.gamepad)
 		change_input_state.set_meta("gamepad_type", self.gamepad_types[self.gamepad_type_selected])
+		change_input_state.set_meta("gamepad_type_icon_map", self.gamepad_types_icons[self.gamepad_type_selected])
 		state_machine.push_state(change_input_state)
 	button.button_up.connect(on_pressed)
 
@@ -326,30 +337,13 @@ func _update_buttons() -> void:
 ## Update the button using the given mapping
 func _update_button(button: CardMappingButton, mapping: InputPlumberMapping) -> void:
 	button.text = ""
-	var button_text := PackedStringArray()
+	var icon_mapping := get_selected_target_gamepad_icon_map()
+	logger.debug("Using target icon mapping: " + icon_mapping)
+	button.set_target_device_icon_mapping(icon_mapping)
 	for event in mapping.target_events:
-		button_text.append(event.to_capability())
-	button.text = " ".join(button_text)
-
-	# Set the text depending on the kind of output event
-	#for event: InputPlumberEvent in mapping.target_events:
-		#var text := _get_display_string_for(event)
-		#if text == "":
-			#continue
-		#mapped_text.append(text)
-
-	#elif mapping.output_behavior == mapping.OUTPUT_BEHAVIOR.AXIS:
-		#if not button.has_meta("output_index"):
-			#return
-		#var output_index := button.get_meta("output_index") as int
-		#if mapping.output_events.size() < output_index + 1:
-			#return
-		#var event := mapping.output_events[output_index]
-		#var text := _get_display_string_for(event)
-		#if text != "":
-			#mapped_text.append(text)
-
-	#button.text = " + ".join(mapped_text)
+		button.set_target_capability(event.to_capability())
+		# TODO: Figure out what to display if this maps to multiple inputs
+		break
 
 
 ## Get the text to display on the mapping button from the given event
@@ -396,6 +390,12 @@ func get_selected_target_gamepad() -> InputPlumberProfile.TargetDevice:
 			return InputPlumberProfile.TargetDevice.SteamDeck
 
 	return InputPlumberProfile.TargetDevice.Gamepad
+
+
+## Returns the name of the gamepad icon map to use for target capabilities
+func get_selected_target_gamepad_icon_map() -> String:
+	var selected_target_icon_map := self.gamepad_types_icons[self.gamepad_type_dropdown.selected] as String
+	return selected_target_icon_map
 
 
 ## Returns the gamepad type text for the given InputPlumber gamepad string

@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="HandheldPlatform" load_steps=10 format=3 uid="uid://dbvnshrvwlsck"]
 
-[ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp-mini/diagram.png" id="1_fqeaf"]
+[ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp/oxp-mini-a07.png" id="1_fqeaf"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="3_qiq0o"]
-[ext_resource type="Texture2D" uid="uid://ddj7iydr5c04r" path="res://addons/controller_icons/assets/oxp/a.png" id="4_0l6ld"]
+[ext_resource type="Texture2D" uid="uid://ddj7iydr5c04r" path="res://assets/images/gamepad/oxp/a.png" id="4_0l6ld"]
 [ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_hsh11"]
-[ext_resource type="Texture2D" uid="uid://b3ofivkj5cwdd" path="res://addons/controller_icons/assets/oxp/b.png" id="5_3mkdn"]
+[ext_resource type="Texture2D" uid="uid://b3ofivkj5cwdd" path="res://assets/images/gamepad/oxp/b.png" id="5_3mkdn"]
 [ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="5_tlsi8"]
 
 [sub_resource type="Resource" id="Resource_53wen"]

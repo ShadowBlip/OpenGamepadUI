@@ -1,9 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cgmb4kr2ec4ha"]
+[gd_scene load_steps=4 format=3 uid="uid://cgmb4kr2ec4ha"]
 
 [ext_resource type="Script" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
-[ext_resource type="Texture2D" uid="uid://bamrmda3in3qq" path="res://addons/controller_icons/assets/xbox360/lb.png" id="3_15bgo"]
-[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="4_cjawb"]
-[ext_resource type="Texture2D" uid="uid://cw2jo5xbteqdu" path="res://addons/controller_icons/assets/xbox360/rb.png" id="6_61y6d"]
+[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="2_oxuw3"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_lb7pt"]
 content_margin_top = 20.0
@@ -23,28 +21,20 @@ visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_lb7pt")
 
-[node name="TextureLB" type="TextureRect" parent="."]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIconLB" type="HBoxContainer" parent="."]
 layout_mode = 2
-texture = ExtResource("3_15bgo")
-expand_mode = 1
-script = ExtResource("4_cjawb")
-path = "joypad/lb"
+script = ExtResource("2_oxuw3")
+path = "ogui_tab_left"
 
 [node name="TabLabelContainer" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="TextureRB" type="TextureRect" parent="."]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIconRB" type="HBoxContainer" parent="."]
 layout_mode = 2
-texture = ExtResource("6_61y6d")
-expand_mode = 1
-script = ExtResource("4_cjawb")
-path = "joypad/rb"
+script = ExtResource("2_oxuw3")
+path = "ogui_tab_right"
 
 [node name="RSeparator" type="VSeparator" parent="."]
 unique_name_in_owner = true

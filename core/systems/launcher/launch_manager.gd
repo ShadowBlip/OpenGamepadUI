@@ -1,4 +1,4 @@
-@icon("res://assets/icons/upload.svg")
+@icon("res://assets/editor-icons/ph-rocket-launch-fill.svg")
 extends Node
 
 @export var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
