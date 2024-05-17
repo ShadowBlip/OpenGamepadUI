@@ -1,0 +1,68 @@
+[gd_resource type="Resource" script_class="InputIconMapping" load_steps=32 format=3 uid="uid://behwrymqjqtvv"]
+
+[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="1_s4hvo"]
+[ext_resource type="Texture2D" uid="uid://jv2vbh18muy8" path="res://assets/images/gamepad/switch/switch_dpad.svg" id="1_ydeli"]
+[ext_resource type="Texture2D" uid="uid://beb058tm84w5j" path="res://assets/images/gamepad/switch/switch_dpad_down.svg" id="2_tw4ge"]
+[ext_resource type="Texture2D" uid="uid://dnp6tc41r8xi3" path="res://assets/images/gamepad/switch/switch_dpad_left.svg" id="3_8rr1p"]
+[ext_resource type="Texture2D" uid="uid://u7ity54x4vx3" path="res://assets/images/gamepad/switch/switch_dpad_right.svg" id="4_pppsw"]
+[ext_resource type="Texture2D" uid="uid://bi8viiuisfuxh" path="res://assets/images/gamepad/switch/switch_dpad_up.svg" id="5_c4oby"]
+[ext_resource type="Texture2D" uid="uid://dec8wg71j58h1" path="res://assets/images/gamepad/switch/switch_button_a.svg" id="6_riih2"]
+[ext_resource type="Texture2D" uid="uid://b3v8gbuc0knsr" path="res://assets/images/gamepad/switch/switch_button_home.svg" id="7_v8spc"]
+[ext_resource type="Texture2D" uid="uid://by4xd4qq5dspy" path="res://assets/images/gamepad/switch/switch_joycon_left_rotate.svg" id="8_mj4ae"]
+[ext_resource type="Texture2D" uid="uid://b57k4ko26lm6" path="res://assets/images/gamepad/switch/switch_button_l.svg" id="9_ryb7o"]
+[ext_resource type="Texture2D" uid="uid://bgkt5t7mmbhts" path="res://assets/images/gamepad/switch/switch_stick_l.svg" id="10_jcwsc"]
+[ext_resource type="Texture2D" uid="uid://ca4fcl2jsx62k" path="res://assets/images/gamepad/switch/switch_stick_l_press.svg" id="11_tcwua"]
+[ext_resource type="Texture2D" uid="uid://bvnpkij77axxu" path="res://assets/images/gamepad/switch/switch_stick_l_down.svg" id="12_dmidv"]
+[ext_resource type="Texture2D" uid="uid://bbad7xmuveel8" path="res://assets/images/gamepad/switch/switch_stick_l_left.svg" id="13_g56k4"]
+[ext_resource type="Texture2D" uid="uid://lpy6n3raxq2" path="res://assets/images/gamepad/switch/switch_stick_l_right.svg" id="14_0ydal"]
+[ext_resource type="Texture2D" uid="uid://btrirhorp6y57" path="res://assets/images/gamepad/switch/switch_stick_l_up.svg" id="15_5vsxb"]
+[ext_resource type="Texture2D" uid="uid://dsa8m2vfvtx0q" path="res://assets/images/gamepad/switch/switch_button_zl.svg" id="16_4pllh"]
+[ext_resource type="Texture2D" uid="uid://b6wkct2qwo0ul" path="res://assets/images/gamepad/switch/switch_button_x.svg" id="17_n3inh"]
+[ext_resource type="Texture2D" uid="uid://bu2naacuis8k8" path="res://assets/images/gamepad/switch/switch_button_r.svg" id="18_45ryk"]
+[ext_resource type="Texture2D" uid="uid://c1fas8o38r02p" path="res://assets/images/gamepad/switch/switch_stick_r.svg" id="19_gqh2w"]
+[ext_resource type="Texture2D" uid="uid://dop088ppjtx7r" path="res://assets/images/gamepad/switch/switch_stick_r_press.svg" id="20_rugaw"]
+[ext_resource type="Texture2D" uid="uid://dqrqw3lv3kl3e" path="res://assets/images/gamepad/switch/switch_stick_r_down.svg" id="21_susn6"]
+[ext_resource type="Texture2D" uid="uid://bcstmmysk3e1" path="res://assets/images/gamepad/switch/switch_stick_r_left.svg" id="22_xgn3r"]
+[ext_resource type="Texture2D" uid="uid://domi3pblhpgqy" path="res://assets/images/gamepad/switch/switch_stick_r_right.svg" id="23_stpgt"]
+[ext_resource type="Texture2D" uid="uid://dtkumw37qfis8" path="res://assets/images/gamepad/switch/switch_stick_r_up.svg" id="24_ranay"]
+[ext_resource type="Texture2D" uid="uid://cutjyk72c0d1" path="res://assets/images/gamepad/switch/switch_button_zr.svg" id="25_4bdkg"]
+[ext_resource type="Texture2D" uid="uid://baeygxurw7dn1" path="res://assets/images/gamepad/switch/switch_button_sync.svg" id="26_ppthb"]
+[ext_resource type="Texture2D" uid="uid://crl6hqey1xqfd" path="res://assets/images/gamepad/switch/switch_button_minus.svg" id="28_i4oi2"]
+[ext_resource type="Texture2D" uid="uid://8o3g4dcunk87" path="res://assets/images/gamepad/switch/switch_button_b.svg" id="29_qxbwx"]
+[ext_resource type="Texture2D" uid="uid://dugmdwvujsrk4" path="res://assets/images/gamepad/switch/switch_button_plus.svg" id="30_gmsl2"]
+[ext_resource type="Texture2D" uid="uid://djvoe5nud1i0w" path="res://assets/images/gamepad/switch/switch_button_y.svg" id="31_7qfqf"]
+
+[resource]
+script = ExtResource("1_s4hvo")
+name = "Switch"
+device_names = PackedStringArray("Switch Controller", "Switch Pro Controller")
+north = ExtResource("17_n3inh")
+south = ExtResource("29_qxbwx")
+east = ExtResource("6_riih2")
+west = ExtResource("31_7qfqf")
+guide = ExtResource("7_v8spc")
+start = ExtResource("30_gmsl2")
+select = ExtResource("28_i4oi2")
+screenshot = ExtResource("26_ppthb")
+dpad = ExtResource("1_ydeli")
+dpad_left = ExtResource("3_8rr1p")
+dpad_right = ExtResource("4_pppsw")
+dpad_up = ExtResource("5_c4oby")
+dpad_down = ExtResource("2_tw4ge")
+left_shoulder = ExtResource("9_ryb7o")
+left_trigger = ExtResource("16_4pllh")
+right_shoulder = ExtResource("18_45ryk")
+right_trigger = ExtResource("25_4bdkg")
+left_stick = ExtResource("10_jcwsc")
+left_stick_left = ExtResource("13_g56k4")
+left_stick_right = ExtResource("14_0ydal")
+left_stick_up = ExtResource("15_5vsxb")
+left_stick_down = ExtResource("12_dmidv")
+left_stick_click = ExtResource("11_tcwua")
+right_stick = ExtResource("19_gqh2w")
+right_stick_left = ExtResource("22_xgn3r")
+right_stick_right = ExtResource("23_stpgt")
+right_stick_up = ExtResource("24_ranay")
+right_stick_down = ExtResource("21_susn6")
+right_stick_click = ExtResource("20_rugaw")
+gyro = ExtResource("8_mj4ae")

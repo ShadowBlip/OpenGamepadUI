@@ -1,10 +1,11 @@
-[gd_scene load_steps=35 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=36 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="2_600i0"]
 [ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
+[ext_resource type="Script" path="res://core/systems/input/input_icon_processor.gd" id="3_y116l"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
 [ext_resource type="PackedScene" uid="uid://o70x5igrlq30" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
@@ -83,6 +84,9 @@ theme = ExtResource("1_ajgj2")
 script = ExtResource("1_f8851")
 
 [node name="InputManager" parent="." instance=ExtResource("1_34t85")]
+
+[node name="InputIconProcessor" type="Node" parent="."]
+script = ExtResource("3_y116l")
 
 [node name="BoxArtLocal" parent="." instance=ExtResource("2_600i0")]
 

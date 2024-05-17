@@ -36,7 +36,6 @@ func _ready() -> void:
 
 	# Listen for tab changes
 	tabs_state.tab_changed.connect(_on_tab_changed)
-	ControllerIcons.input_type_changed.connect(_on_input_type_changed)
 
 
 func _on_tab_changed(tab: int) -> void:
@@ -44,16 +43,6 @@ func _on_tab_changed(tab: int) -> void:
 		tab_label.selected = false
 	current_tab = container.get_child(tab)
 	current_tab.selected = true
-
-
-# Update the icons in the tab bar based on input type
-func _on_input_type_changed(input_type: ControllerIcons.InputType) -> void:
-	if input_type == ControllerIcons.InputType.CONTROLLER:
-		l_texture.path = "joypad/lb"
-		r_texture.path = "joypad/rb"
-	else:
-		l_texture.path = "ogui_tab_left"
-		r_texture.path = "ogui_tab_right"
 
 
 func _input(event: InputEvent) -> void:

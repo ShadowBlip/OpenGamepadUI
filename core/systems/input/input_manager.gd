@@ -1,4 +1,4 @@
-@icon("res://assets/icons/navigation.svg")
+@icon("res://assets/editor-icons/material-symbols-joystick.svg")
 extends Node
 class_name InputManager
 
