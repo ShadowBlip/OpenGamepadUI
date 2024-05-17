@@ -119,37 +119,119 @@ func matches(event: InputPlumberEvent) -> bool:
 ## Returns the controller icon path from the given event
 static func get_joypad_path(cap: String) -> String:
 	var mapping := {
+		# Buttons
 		"Gamepad:Button:South": "joypad/a",
 		"Gamepad:Button:North": "joypad/x",
 		"Gamepad:Button:East": "joypad/b",
 		"Gamepad:Button:West": "joypad/y",
-		"Gamepad:Button:LeftBumper": "joypad/lb",
-		"Gamepad:Button:RightBumper": "joypad/rb",
-		"Gamepad:Button:LeftBumper2": "joypad/lt",
-		"Gamepad:Button:RightBumper2": "joypad/rt",
 		"Gamepad:Button:Start": "joypad/start",
 		"Gamepad:Button:Select": "joypad/select",
-		"Gamepad:Button:LeftStick": "joypad/l_stick_click",
-		"Gamepad:Button:RightStick": "joypad/r_stick_click",
 		"Gamepad:Button:Guide": "joypad/home",
 		"Gamepad:Button:QuickAccess": "joypad/quickaccess",
+		"Gamepad:Button:QuickAccess2": "joypad/quickaccess2",
 		"Gamepad:Button:Screenshot": "joypad/screenshot",
-		"Gamepad:Axis:LeftStick": "joypad/l_stick",
-		"Gamepad:Axis:RightStick": "joypad/r_stick",
+		"Gamepad:Button:Keyboard": "joypad/keyboard",
+		# DPad
+		"Gamepad:Button:DPadLeft": "joypad/dpad/left",
+		"Gamepad:Button:DPadRight": "joypad/dpad/right",
+		"Gamepad:Button:DPadUp": "joypad/dpad/up",
+		"Gamepad:Button:DPadDown": "joypad/dpad/down",
+		# Shoulders
+		"Gamepad:Button:LeftBumper": "joypad/lb",
+		"Gamepad:Button:LeftTop": "joypad/left_top",
+		"Gamepad:Button:RightBumper": "joypad/rb",
+		"Gamepad:Button:RightTop": "joypad/right_top",
+		# Triggers
 		"Gamepad:Trigger:LeftTrigger": "joypad/lt",
 		"Gamepad:Trigger:RightTrigger": "joypad/rt",
-		"Gamepad:Button:DPadLeft": "joypad/dpad",
-		"Gamepad:Button:DPadRight": "joypad/dpad",
-		"Gamepad:Button:DPadUp": "joypad/dpad",
-		"Gamepad:Button:DPadDown": "joypad/dpad",
-		# TODO: Finish this
-		#InputDeviceEvent.BTN_TRIGGER_HAPPY1: "joypad/dpad_left",
-		#InputDeviceEvent.BTN_TRIGGER_HAPPY2: "joypad/dpad_right",
-		#InputDeviceEvent.BTN_TRIGGER_HAPPY3: "joypad/dpad_up",
-		#InputDeviceEvent.BTN_TRIGGER_HAPPY4: "joypad/dpad_down",
+		# Paddles
+		"Gamepad:Button:LeftPaddle1": "joypad/left_paddle_1",
+		"Gamepad:Button:LeftPaddle2": "joypad/left_paddle_2",
+		"Gamepad:Button:LeftPaddle3": "joypad/left_paddle_3",
+		"Gamepad:Button:RightPaddle1": "joypad/right_paddle_1",
+		"Gamepad:Button:RightPaddle2": "joypad/right_paddle_2",
+		"Gamepad:Button:RightPaddle3": "joypad/right_paddle_3",
+		# Axes
+		"Gamepad:Axis:LeftStick": "joypad/l_stick",
+		"Gamepad:Axis:RightStick": "joypad/r_stick",
+		"Gamepad:Button:LeftStick": "joypad/l_stick_click",
+		"Gamepad:Button:RightStick": "joypad/r_stick_click",
+		"Gamepad:Button:LeftStickTouch": "joypad/l_stick_touch",
+		"Gamepad:Button:RightStickTouch": "joypad/r_stick_touch",
+		# Touchpads
+		"Touchpad:LeftPad:Motion": "joypad/left_pad",
+		"Touchpad:LeftPad:Button:Touch": "joypad/left_pad",
+		"Touchpad:LeftPad:Button:Press": "joypad/left_pad",
+		"Touchpad:CenterPad:Motion": "joypad/center_pad",
+		"Touchpad:CenterPad:Button:Touch": "joypad/center_pad",
+		"Touchpad:CenterPad:Button:Press": "joypad/center_pad",
+		"Touchpad:RightPad:Motion": "joypad/right_pad",
+		"Touchpad:RightPad:Button:Touch": "joypad/right_pad",
+		"Touchpad:RightPad:Button:Press": "joypad/right_pad",
+		# Mouse
+		"Mouse:Motion": "mouse/motion",
+		"Mouse:Button:Left": "mouse/left",
+		"Mouse:Button:Middle": "mouse/middle",
+		"Mouse:Button:Right": "mouse/right",
+		"Mouse:Button:Extra1": "mouse/extra1",
+		"Mouse:Button:Extra2": "mouse/extra2",
+		"Mouse:Button:WheelUp": "mouse/wheel_up",
+		"Mouse:Button:WheelDown": "mouse/wheel_down",
 	}
 
 	if cap in mapping:
 		return mapping[cap] as String
 	
 	return ""
+
+
+## Sorts the given string capabilities and returns them sorted
+static func sort_capabilities(caps: PackedStringArray) -> PackedStringArray:
+	# Weights for capabilities. Higher values will sort to the beginning.
+	var weights := {
+		"Gamepad:Button:South": 150,
+		"Gamepad:Button:East": 149,
+		"Gamepad:Button:North": 148,
+		"Gamepad:Button:West": 147,
+		"Gamepad:Button:Start": 146,
+		"Gamepad:Button:Select": 145,
+		"Gamepad:Button:Guide": 144,
+		"Gamepad:Button:QuickAccess": 143,
+		"Gamepad:Button:QuickAccess2": 142,
+		"Gamepad:Button:Screenshot": 141,
+		"Gamepad:Button:Keyboard": 140,
+		"Gamepad:Button:DPadLeft": 130,
+		"Gamepad:Button:DPadRight": 129,
+		"Gamepad:Button:DPadUp": 128,
+		"Gamepad:Button:DPadDown": 127,
+		"Gamepad:Button:LeftBumper": 120,
+		"Gamepad:Button:LeftTop": 119,
+		"Gamepad:Button:RightBumper": 118,
+		"Gamepad:Button:RightTop": 117,
+		"Gamepad:Button:LeftStick": 80,
+		"Gamepad:Button:LeftStickTouch": 79,
+		"Gamepad:Button:RightStick": 78,
+		"Gamepad:Button:RightStickTouch": 77,
+		"Gamepad:Button:LeftPaddle1": 50,
+		"Gamepad:Button:LeftPaddle2": 49,
+		"Gamepad:Button:LeftPaddle3": 48,
+		"Gamepad:Button:RightPaddle1": 47,
+		"Gamepad:Button:RightPaddle2": 46,
+		"Gamepad:Button:RightPaddle3": 45,
+	}
+
+	# Custom sort for sorter higher weighted values towards the beggining
+	var weighted_sort := func(a: String, b: String) -> bool:
+		var a_weight := -1
+		if a in weights:
+			a_weight = weights[a] as int
+		var b_weight := -1
+		if b in weights:
+			b_weight = weights[b] as int
+		return a_weight > b_weight
+	
+	var sorted: Array = Array(caps.duplicate())
+	sorted.sort()
+	sorted.sort_custom(weighted_sort)
+	
+	return PackedStringArray(sorted)

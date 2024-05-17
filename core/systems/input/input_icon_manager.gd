@@ -211,7 +211,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 	# Determine the type of input icon texture should be returned
 	var device_name := self.last_input_device
 	var mapping
-	match self.last_input_type:
+	match input_type:
 		InputType.GAMEPAD:
 			mapping = self.load_matching_mapping(device_name)
 		InputType.KEYBOARD_MOUSE:
@@ -224,7 +224,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 	if path in self._special_actions:
 		logger.debug("Path is a special action: " + path)
 		var data := self._special_actions[path] as Dictionary
-		var settings := data[self.last_input_type] as Dictionary
+		var settings := data[input_type] as Dictionary
 		var special_paths := settings["paths"] as Array
 		
 		# Check that the mapping has texture(s) for this action

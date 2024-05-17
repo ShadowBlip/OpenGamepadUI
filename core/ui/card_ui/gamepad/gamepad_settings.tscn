@@ -17,7 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="14_b37ub"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="14_vtep2"]
 [ext_resource type="PackedScene" uid="uid://b3o3wo40sfih1" path="res://core/ui/card_ui/gamepad/gamepad_mapper.tscn" id="16_1g7gi"]
-[ext_resource type="PackedScene" uid="uid://c2v6vl2a8mjfb" path="res://core/ui/components/gamepad_diagram.tscn" id="19_f8l1b"]
+[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="18_lmo36"]
 
 [node name="GamepadSettings" type="Control"]
 layout_mode = 3
@@ -203,10 +203,13 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="DiagramTextureRect" parent="MainContainer/TopLevelContainer/HBoxContainer/MarginContainer" instance=ExtResource("19_f8l1b")]
-unique_name_in_owner = true
+[node name="InputIcon" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_stretch_ratio = 2.0
+script = ExtResource("18_lmo36")
+path = "joypad/diagram"
+force_type = 2
+max_width = -1
 
 [node name="GamepadMapper" parent="MainContainer" instance=ExtResource("16_1g7gi")]
 unique_name_in_owner = true

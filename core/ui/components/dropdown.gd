@@ -51,7 +51,7 @@ func _ready() -> void:
 	option_button.focus_neighbor_top = focus_neighbor_top
 	option_button.focus_previous = focus_previous
 	option_button.focus_next = focus_next
-	
+
 	# Hide labels if nothing is specified
 	if title == "":
 		label.visible = false
@@ -65,6 +65,18 @@ func _ready() -> void:
 	var on_item_selected := func(index: int):
 		item_selected.emit(index)
 	option_button.item_selected.connect(on_item_selected)
+
+	# Handle custom input for the popup menu
+	var option_popup := option_button.get_popup()
+	var on_option_button_input := func(event: InputEvent):
+		if event.is_action_pressed("ogui_south"):
+			var focused_item := option_popup.get_focused_item()
+			option_button.select(focused_item)
+			option_button.item_selected.emit(focused_item)
+			option_popup.visible = false
+		if event.is_action_pressed("ogui_east") or event.is_action_pressed("ogui_back"):
+			option_popup.visible = false
+	option_popup.window_input.connect(on_option_button_input)
 
 
 # Override focus grabbing to grab the node
@@ -85,8 +97,8 @@ func select(idx: int) -> void:
 	option_button.select(idx)
 
 
-func set_option_disabled(idx: int, disabled: bool) -> void:
-	option_button.set_item_disabled(idx, disabled)
+func set_option_disabled(idx: int, is_disabled: bool) -> void:
+	option_button.set_item_disabled(idx, is_disabled)
 
 
 # Override certain properties and pass them to child objects
