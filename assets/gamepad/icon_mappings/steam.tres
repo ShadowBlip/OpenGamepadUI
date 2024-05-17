@@ -1,0 +1,54 @@
+[gd_resource type="Resource" script_class="InputIconMapping" load_steps=25 format=3 uid="uid://bgm0ymdturbr6"]
+
+[ext_resource type="Texture2D" uid="uid://c8b8706k0iryj" path="res://assets/images/gamepad/steam/controller_steam.svg" id="1_6gggn"]
+[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="1_vsxmp"]
+[ext_resource type="Texture2D" uid="uid://dnia1n0cogcvv" path="res://assets/images/gamepad/steam/steam_dpad.svg" id="2_dr285"]
+[ext_resource type="Texture2D" uid="uid://b36ese18p42qf" path="res://assets/images/gamepad/steam/steam_dpad_down.svg" id="3_614i2"]
+[ext_resource type="Texture2D" uid="uid://curpocxiiytm1" path="res://assets/images/gamepad/steam/steam_dpad_left.svg" id="4_joten"]
+[ext_resource type="Texture2D" uid="uid://bpws8otkr23ss" path="res://assets/images/gamepad/steam/steam_dpad_right.svg" id="5_iyjxe"]
+[ext_resource type="Texture2D" uid="uid://cmlvutjr6mn8r" path="res://assets/images/gamepad/steam/steam_dpad_up.svg" id="6_khnqq"]
+[ext_resource type="Texture2D" uid="uid://c435jhogs3n8o" path="res://assets/images/gamepad/steam/steam_button_color_b.svg" id="7_g8gma"]
+[ext_resource type="Texture2D" uid="uid://com8m05m2uqco" path="res://assets/images/gamepad/steam/steam_button_lp.svg" id="8_6hxdr"]
+[ext_resource type="Texture2D" uid="uid://b8kll7wj3mpw5" path="res://assets/images/gamepad/steamdeck/steamdeck_button_guide.svg" id="8_qwegv"]
+[ext_resource type="Texture2D" uid="uid://b251los4ey64w" path="res://assets/images/gamepad/steam/steam_stick.svg" id="9_0stxd"]
+[ext_resource type="Texture2D" uid="uid://01a6rkyglcse" path="res://assets/images/gamepad/steam/steam_button_color_y.svg" id="9_tbfyw"]
+[ext_resource type="Texture2D" uid="uid://cer0ys0nbh0no" path="res://assets/images/gamepad/steam/steam_button_rp.svg" id="10_c0nl7"]
+[ext_resource type="Texture2D" uid="uid://dipbfvbdnieqv" path="res://assets/images/gamepad/steam/steam_stick_down.svg" id="10_emyma"]
+[ext_resource type="Texture2D" uid="uid://7jx3hwdcd28t" path="res://assets/images/gamepad/steam/steam_lg.svg" id="10_lb40s"]
+[ext_resource type="Texture2D" uid="uid://cc3la68tqkeu7" path="res://assets/images/gamepad/steam/steam_stick_l_press.svg" id="10_uvdib"]
+[ext_resource type="Texture2D" uid="uid://b7vfsacm21uvc" path="res://assets/images/gamepad/steam/steam_stick_left.svg" id="11_bq8g3"]
+[ext_resource type="Texture2D" uid="uid://jfjsyxvyctbk" path="res://assets/images/gamepad/steam/steam_stick_right.svg" id="12_8u65p"]
+[ext_resource type="Texture2D" uid="uid://dpgjaie64o2j7" path="res://assets/images/gamepad/steam/steam_button_back_icon.svg" id="12_gac83"]
+[ext_resource type="Texture2D" uid="uid://bpkm2swtktdf0" path="res://assets/images/gamepad/steam/steam_button_color_a.svg" id="13_vysxh"]
+[ext_resource type="Texture2D" uid="uid://c10buq0dndeb8" path="res://assets/images/gamepad/steam/steam_stick_up.svg" id="13_yhcf0"]
+[ext_resource type="Texture2D" uid="uid://gm2fk8y4xrig" path="res://assets/images/gamepad/steam/steam_button_color_x.svg" id="14_l277p"]
+[ext_resource type="Texture2D" uid="uid://bsxofaj5ietuc" path="res://assets/images/gamepad/steam/steam_rg.svg" id="19_dvgk4"]
+[ext_resource type="Texture2D" uid="uid://drhbwe1m16fx7" path="res://assets/images/gamepad/steam/steam_button_start_icon.svg" id="19_mlqpj"]
+
+[resource]
+script = ExtResource("1_vsxmp")
+name = "Steam Controller"
+device_names = PackedStringArray("Steam Controller")
+diagram = ExtResource("1_6gggn")
+north = ExtResource("9_tbfyw")
+south = ExtResource("13_vysxh")
+east = ExtResource("7_g8gma")
+west = ExtResource("14_l277p")
+guide = ExtResource("8_qwegv")
+start = ExtResource("19_mlqpj")
+select = ExtResource("12_gac83")
+dpad = ExtResource("2_dr285")
+dpad_left = ExtResource("4_joten")
+dpad_right = ExtResource("5_iyjxe")
+dpad_up = ExtResource("6_khnqq")
+dpad_down = ExtResource("3_614i2")
+left_paddle_1 = ExtResource("10_lb40s")
+right_paddle_1 = ExtResource("19_dvgk4")
+left_stick = ExtResource("9_0stxd")
+left_stick_left = ExtResource("11_bq8g3")
+left_stick_right = ExtResource("12_8u65p")
+left_stick_up = ExtResource("13_yhcf0")
+left_stick_down = ExtResource("10_emyma")
+left_stick_click = ExtResource("10_uvdib")
+left_pad = ExtResource("8_6hxdr")
+right_pad = ExtResource("10_c0nl7")

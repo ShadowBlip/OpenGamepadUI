@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="InputIconMapping" load_steps=31 format=3 uid="uid://005wjp70lsdu"]
+
+[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="1_7rqq5"]
+[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="1_lckpp"]
+[ext_resource type="Texture2D" uid="uid://cdhd2pnbunvy3" path="res://assets/images/gamepad/xbox/xbox_dpad.svg" id="2_7tdao"]
+[ext_resource type="Texture2D" uid="uid://bju6gytlq2div" path="res://assets/images/gamepad/xbox/xbox_dpad_down.svg" id="3_b76jf"]
+[ext_resource type="Texture2D" uid="uid://candjw8elkekp" path="res://assets/images/gamepad/xbox/xbox_dpad_left.svg" id="4_3pall"]
+[ext_resource type="Texture2D" uid="uid://dcpsb03pvu0vb" path="res://assets/images/gamepad/xbox/xbox_dpad_right.svg" id="5_g2nkq"]
+[ext_resource type="Texture2D" uid="uid://c6w5exkfdkkrr" path="res://assets/images/gamepad/xbox/xbox_dpad_up.svg" id="6_tm6is"]
+[ext_resource type="Texture2D" uid="uid://bqho0a0sr6u1j" path="res://assets/images/gamepad/xbox/xbox_button_color_b.svg" id="7_g13ut"]
+[ext_resource type="Texture2D" uid="uid://bcoajyq8st62e" path="res://assets/images/gamepad/xbox/xbox_guide.svg" id="8_2xbuh"]
+[ext_resource type="Texture2D" uid="uid://mtd8tfnbotgc" path="res://assets/images/gamepad/xbox/xbox_lb.svg" id="9_hg4fs"]
+[ext_resource type="Texture2D" uid="uid://bdqfg27h5o836" path="res://assets/images/gamepad/xbox/xbox_stick_l.svg" id="10_6y3yw"]
+[ext_resource type="Texture2D" uid="uid://dvv5grt45cows" path="res://assets/images/gamepad/xbox/xbox_stick_l_press.svg" id="11_u8jcq"]
+[ext_resource type="Texture2D" uid="uid://dcumk3oqkyy7g" path="res://assets/images/gamepad/xbox/xbox_stick_l_down.svg" id="12_o47r8"]
+[ext_resource type="Texture2D" uid="uid://dooej262t4g0x" path="res://assets/images/gamepad/xbox/xbox_stick_l_left.svg" id="13_k3o80"]
+[ext_resource type="Texture2D" uid="uid://coltjh07der5" path="res://assets/images/gamepad/xbox/xbox_stick_l_right.svg" id="14_5mj40"]
+[ext_resource type="Texture2D" uid="uid://b3xxbnyo2h20l" path="res://assets/images/gamepad/xbox/xbox_stick_l_up.svg" id="15_k4fks"]
+[ext_resource type="Texture2D" uid="uid://u3jonqoafyg6" path="res://assets/images/gamepad/xbox/xbox_lt.svg" id="16_ld8s8"]
+[ext_resource type="Texture2D" uid="uid://ddpudi00yulrx" path="res://assets/images/gamepad/xbox/xbox_button_color_y.svg" id="17_wbg38"]
+[ext_resource type="Texture2D" uid="uid://co3kg331knfu7" path="res://assets/images/gamepad/xbox/xbox_rb.svg" id="18_dqiaq"]
+[ext_resource type="Texture2D" uid="uid://dw15y6xiuthpe" path="res://assets/images/gamepad/xbox/xbox_stick_r.svg" id="19_tfh6l"]
+[ext_resource type="Texture2D" uid="uid://de2kcqeakp3q0" path="res://assets/images/gamepad/xbox/xbox_stick_r_press.svg" id="20_qquah"]
+[ext_resource type="Texture2D" uid="uid://d4iq63eypbf2s" path="res://assets/images/gamepad/xbox/xbox_stick_r_down.svg" id="21_5sudg"]
+[ext_resource type="Texture2D" uid="uid://bus2l2lmd844f" path="res://assets/images/gamepad/xbox/xbox_stick_r_left.svg" id="22_y2dmg"]
+[ext_resource type="Texture2D" uid="uid://cokparjjmwy8c" path="res://assets/images/gamepad/xbox/xbox_stick_r_right.svg" id="23_tnsia"]
+[ext_resource type="Texture2D" uid="uid://jn543ff1ak1c" path="res://assets/images/gamepad/xbox/xbox_stick_r_up.svg" id="24_u3tot"]
+[ext_resource type="Texture2D" uid="uid://da8ojjv5vttou" path="res://assets/images/gamepad/xbox/xbox_rt.svg" id="25_h8btq"]
+[ext_resource type="Texture2D" uid="uid://ce732ysw0pjo1" path="res://assets/images/gamepad/xbox/xbox_button_view.svg" id="27_we8jk"]
+[ext_resource type="Texture2D" uid="uid://dyemqkvdtk43e" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="28_e6a35"]
+[ext_resource type="Texture2D" uid="uid://dagfma4wnmvw8" path="res://assets/images/gamepad/xbox/xbox_button_menu.svg" id="29_r5b3p"]
+[ext_resource type="Texture2D" uid="uid://cuvx61nakiaoi" path="res://assets/images/gamepad/xbox/xbox_button_color_x.svg" id="30_2but5"]
+
+[resource]
+script = ExtResource("1_lckpp")
+name = "XBox One"
+device_names = PackedStringArray("Xbox One", "X-Box One", "Xbox Wireless Controller")
+diagram = ExtResource("1_7rqq5")
+north = ExtResource("17_wbg38")
+south = ExtResource("28_e6a35")
+east = ExtResource("7_g13ut")
+west = ExtResource("30_2but5")
+guide = ExtResource("8_2xbuh")
+start = ExtResource("29_r5b3p")
+select = ExtResource("27_we8jk")
+dpad = ExtResource("2_7tdao")
+dpad_left = ExtResource("4_3pall")
+dpad_right = ExtResource("5_g2nkq")
+dpad_up = ExtResource("6_tm6is")
+dpad_down = ExtResource("3_b76jf")
+left_shoulder = ExtResource("9_hg4fs")
+left_trigger = ExtResource("16_ld8s8")
+right_shoulder = ExtResource("18_dqiaq")
+right_trigger = ExtResource("25_h8btq")
+left_stick = ExtResource("10_6y3yw")
+left_stick_left = ExtResource("13_k3o80")
+left_stick_right = ExtResource("14_5mj40")
+left_stick_up = ExtResource("15_k4fks")
+left_stick_down = ExtResource("12_o47r8")
+left_stick_click = ExtResource("11_u8jcq")
+right_stick = ExtResource("19_tfh6l")
+right_stick_left = ExtResource("22_y2dmg")
+right_stick_right = ExtResource("23_tnsia")
+right_stick_up = ExtResource("24_u3tot")
+right_stick_down = ExtResource("21_5sudg")
+right_stick_click = ExtResource("20_qquah")

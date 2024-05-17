@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="11_taofv"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="12_30f1c"]
 [ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="12_akkxd"]
-[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox360/XboxOne_Diagram.png" id="13_hvmil"]
+[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="13_hvmil"]
 [ext_resource type="Texture2D" uid="uid://ciij2ysnubdv7" path="res://addons/controller_icons/assets/key/Mouse_Simple_Key_Dark.png" id="13_xultc"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="16_bkk3w"]
 
@@ -161,20 +161,14 @@ text = "Buttons"
 [node name="CardButton" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
 text = "A Button"
-focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-select_audio = "res://assets/audio/interface/select_002.ogg"
 
 [node name="CardButton2" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
 text = "B Button"
-focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-select_audio = "res://assets/audio/interface/select_002.ogg"
 
 [node name="CardButton3" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
 text = "X Button"
-focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-select_audio = "res://assets/audio/interface/select_002.ogg"
 
 [node name="AxesLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true
@@ -184,8 +178,6 @@ text = "Axes"
 [node name="CardButton5" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
 text = "Left Stick"
-focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-select_audio = "res://assets/audio/interface/select_002.ogg"
 
 [node name="TriggersLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true
@@ -195,8 +187,6 @@ text = "Triggers"
 [node name="CardButton4" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("16_bkk3w")]
 layout_mode = 2
 text = "Right Trigger"
-focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-select_audio = "res://assets/audio/interface/select_002.ogg"
 
 [node name="GyroLabel" parent="VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer" instance=ExtResource("11_c6udv")]
 unique_name_in_owner = true

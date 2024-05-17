@@ -10,6 +10,7 @@ signal closed
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 const key_scene := preload("res://core/ui/components/button.tscn")
+var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
 # Different states of mode shift (i.e. when the user presses "shift" or "caps")
 enum MODE_SHIFT {
@@ -71,13 +72,19 @@ func populate_keyboard() -> void:
 			if key.input:
 				var is_shortcut_key := false
 				if key.input.keycode == KEY_BACKSPACE:
-					button.icon = ControllerIcons.parse_path("joypad/x", 1)
+					var textures := input_icons.parse_path("joypad/x", "", 1)
+					if textures.size() > 0:
+						button.icon = textures[0]
 					is_shortcut_key = true
 				if key.input.keycode == KEY_SHIFT:
-					button.icon = ControllerIcons.parse_path("joypad/lt", 1)
+					var textures := input_icons.parse_path("joypad/lt", "", 1)
+					if textures.size() > 0:
+						button.icon = textures[0]
 					is_shortcut_key = true
 				if key.input.keycode == KEY_ENTER:
-					button.icon = ControllerIcons.parse_path("joypad/rt", 1)
+					var textures := input_icons.parse_path("joypad/rt", "", 1)
+					if textures.size() > 0:
+						button.icon = textures[0]
 					is_shortcut_key = true
 				if is_shortcut_key:
 					button.expand_icon = true

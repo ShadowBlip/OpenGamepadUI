@@ -56,11 +56,13 @@ var tween: Tween
 var focus_audio_stream = load(focus_audio)
 var select_audio_stream = load(select_audio)
 var mappings: Array[InputPlumberMapping] = []
+var logger := Log.get_logger("CardMappingButton", Log.LEVEL.DEBUG)
 
 @onready var source_label := $%SourceLabel as Label
 @onready var target_label := $%TargetLabel as Label
 @onready var highlight := $%HighlightTexture as TextureRect
-@onready var texture := $%ControllerTextureRect as TextureRect
+@onready var source_icon := $%SourceInputIcon as InputIcon
+@onready var target_icon := $%TargetInputIcon as InputIcon
 
 
 # Called when the node enters the scene tree for the first time.
@@ -83,29 +85,70 @@ func _ready() -> void:
 	_on_theme_changed()
 
 
+## Set the source input icon's icon mapping
+func set_source_device_icon_mapping(mapping_name: String) -> void:
+	source_icon.force_mapping = mapping_name
+
+
+## Set the target input icon's icon mapping
+func set_target_device_icon_mapping(mapping_name: String) -> void:
+	target_icon.force_mapping = mapping_name
+
+
 ## Configures the button for the given source capability
-func set_capability(capability: String) -> void:
-	print("Setting capabilibuddy: " + capability)
+func set_source_capability(capability: String) -> void:
+	logger.debug("Setting source capabilibuddy: " + capability)
 	if capability == "":
 		return
-	if set_icon(capability) != OK:
-		print("No icon found for capability. Setting text instead.")
+	if set_source_icon(capability) != OK:
+		logger.warn("No icon found for capability. Setting text instead.")
 		source_label.visible = true
-		texture.visible = false
+		source_icon.visible = false
 		source_label.text = capability
 		return
 	source_label.visible = false
-	texture.visible = true
+	source_icon.visible = true
 
 
-## Configures the button for the given mappable event
-func set_icon(capability: String) -> int:
-	if not texture or not capability:
+## Configures the button for the given target capability
+func set_target_capability(capability: String) -> void:
+	logger.debug("Setting target capabilibuddy: " + capability)
+	if capability == "":
+		return
+	if set_target_icon(capability) != OK:
+		logger.warn("No icon found for capability. Setting text instead.")
+		source_label.visible = true
+		source_icon.visible = false
+		source_label.text = capability
+		return
+	source_label.visible = false
+	source_icon.visible = true
+
+
+## Configures the button for the given mappable event. If a path cannot be found,
+## this will return an error.
+func set_source_icon(capability: String) -> int:
+	# Convert the capability into an input icon path
+	var path := InputPlumberEvent.get_joypad_path(capability)
+	if path.is_empty():
+		logger.warn("No input path is defined for capability: " + capability)
 		return ERR_DOES_NOT_EXIST
-	#ControllerMapper.convert_joypad_path_from_type()
-	#if event is EvdevEvent:
-	#	texture.path = ControllerMapper.get_joypad_path_from_event(event)
-	return ERR_DOES_NOT_EXIST
+	source_icon.path = path
+
+	return OK
+
+
+## Configures the button for the given mappable event. If a path cannot be found,
+## this will return an error.
+func set_target_icon(capability: String) -> int:
+	# Convert the capability into an input icon path
+	var path := InputPlumberEvent.get_joypad_path(capability)
+	if path.is_empty():
+		logger.warn("No input path is defined for capability: " + capability)
+		return ERR_DOES_NOT_EXIST
+	target_icon.path = path
+
+	return OK
 
 
 ## Returns true if the given event has a controller icon

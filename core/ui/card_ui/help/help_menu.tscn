@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dj1fooc3gh13l"]
+[gd_scene load_steps=9 format=3 uid="uid://dj1fooc3gh13l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/help/help_menu.gd" id="1_7fti5"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pli5u"]
@@ -7,12 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="5_uocjd"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_wfsen"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="7_15bya"]
-[ext_resource type="Script" path="res://addons/controller_icons/objects/TextureRect.gd" id="9_hxxd2"]
-[ext_resource type="PackedScene" uid="uid://dci64so7q3y67" path="res://core/ui/components/shortcut_button_icon.tscn" id="10_tisgi"]
-[ext_resource type="Texture2D" uid="uid://jcc3t88rfxh0" path="res://addons/controller_icons/assets/xbox360/x.png" id="11_e30qo"]
-[ext_resource type="Texture2D" uid="uid://bufx8lu1tny4o" path="res://addons/controller_icons/assets/xbox360/b.png" id="12_3rby5"]
-[ext_resource type="Texture2D" uid="uid://dhhjoq01cc2oh" path="res://addons/controller_icons/assets/xbox360/lt.png" id="13_w7w1y"]
-[ext_resource type="Texture2D" uid="uid://d2qha4gd4x604" path="res://addons/controller_icons/assets/xbox360/rt.png" id="14_vxuc7"]
+[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="8_swg2f"]
 
 [node name="HelpMenu" type="Control"]
 layout_mode = 3
@@ -88,11 +83,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Accept"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer8" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer8"]
 layout_mode = 2
-keyboard_modifier = ""
-keyboard_key = "ui_accept"
-gamepad_modifier = ""
+script = ExtResource("8_swg2f")
+path = "ui_accept"
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -102,12 +96,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Back"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer7" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer7"]
 layout_mode = 2
-keyboard_modifier = ""
-keyboard_key = "ogui_east"
-gamepad_modifier = ""
-gamepad_button = "joypad/b"
+script = ExtResource("8_swg2f")
+path = "ogui_east"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -117,10 +109,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Open Main Menu"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer"]
 layout_mode = 2
-gamepad_modifier = ""
-gamepad_button = "joypad/home"
+script = ExtResource("8_swg2f")
+path = "ogui_menu"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -128,11 +120,12 @@ layout_mode = 2
 [node name="Label" type="Label" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Open Quick Access Menu"
+text = "Open Quick Bar Menu"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer2" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer2"]
 layout_mode = 2
-keyboard_key = "key/f2"
+script = ExtResource("8_swg2f")
+path = "ogui_qb"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -142,26 +135,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Open On-Screen Keyboard"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer3" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer3"]
 layout_mode = 2
-keyboard_modifier = "joypad/home"
-keyboard_key = "joypad/x"
-gamepad_button = "joypad/x"
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Scroll container"
-
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer4" instance=ExtResource("10_tisgi")]
-layout_mode = 2
-keyboard_modifier = ""
-keyboard_key = "mouse/middle"
-gamepad_modifier = ""
-gamepad_button = "joypad/r_stick_click"
+script = ExtResource("8_swg2f")
+path = "ogui_osk"
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -171,11 +148,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Switch to left tab"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer5" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer5"]
 layout_mode = 2
-keyboard_key = "key/page_up"
-gamepad_modifier = ""
-gamepad_button = "joypad/lb"
+script = ExtResource("8_swg2f")
+path = "ogui_tab_left"
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer"]
 layout_mode = 2
@@ -185,11 +161,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Switch to right tab"
 
-[node name="ShortcutButtonIcon" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer6" instance=ExtResource("10_tisgi")]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/MenuShortcutsContainer/HBoxContainer6"]
 layout_mode = 2
-keyboard_key = "key/page_down"
-gamepad_modifier = ""
-gamepad_button = "joypad/rb"
+script = ExtResource("8_swg2f")
+path = "ogui_tab_right"
 
 [node name="OSKShortcutsContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer"]
 layout_mode = 2
@@ -207,14 +182,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Backspace"
 
-[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer"]
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("11_e30qo")
-expand_mode = 1
-script = ExtResource("9_hxxd2")
+script = ExtResource("8_swg2f")
 path = "joypad/x"
-force_type = 2
+show_only = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer"]
 layout_mode = 2
@@ -224,14 +196,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Close keyboard"
 
-[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer2"]
 layout_mode = 2
-texture = ExtResource("12_3rby5")
-expand_mode = 1
-script = ExtResource("9_hxxd2")
+script = ExtResource("8_swg2f")
 path = "joypad/b"
-force_type = 2
+show_only = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer"]
 layout_mode = 2
@@ -241,14 +210,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Toggle Shift"
 
-[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer3"]
 layout_mode = 2
-texture = ExtResource("13_w7w1y")
-expand_mode = 1
-script = ExtResource("9_hxxd2")
+script = ExtResource("8_swg2f")
 path = "joypad/lt"
-force_type = 2
+show_only = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer"]
 layout_mode = 2
@@ -258,11 +224,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Enter"
 
-[node name="QBModifierIcon" type="TextureRect" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer4"]
-custom_minimum_size = Vector2(40, 40)
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer/PanelContainer/ScrollContainer/MarginContainer/HelpContainer/HBoxContainer/OSKShortcutsContainer/HBoxContainer4"]
 layout_mode = 2
-texture = ExtResource("14_vxuc7")
-expand_mode = 1
-script = ExtResource("9_hxxd2")
+script = ExtResource("8_swg2f")
 path = "joypad/rt"
-force_type = 2
+show_only = 2

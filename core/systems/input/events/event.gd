@@ -132,8 +132,8 @@ static func get_joypad_path(cap: String) -> String:
 		"Gamepad:Button:LeftStick": "joypad/l_stick_click",
 		"Gamepad:Button:RightStick": "joypad/r_stick_click",
 		"Gamepad:Button:Guide": "joypad/home",
-		"Gamepad:Button:QuickAccess": "joypad/share",
-		"Gamepad:Button:Screenshot": "joypad/share",
+		"Gamepad:Button:QuickAccess": "joypad/quickaccess",
+		"Gamepad:Button:Screenshot": "joypad/screenshot",
 		"Gamepad:Axis:LeftStick": "joypad/l_stick",
 		"Gamepad:Axis:RightStick": "joypad/r_stick",
 		"Gamepad:Trigger:LeftTrigger": "joypad/lt",
@@ -142,6 +142,7 @@ static func get_joypad_path(cap: String) -> String:
 		"Gamepad:Button:DPadRight": "joypad/dpad",
 		"Gamepad:Button:DPadUp": "joypad/dpad",
 		"Gamepad:Button:DPadDown": "joypad/dpad",
+		# TODO: Finish this
 		#InputDeviceEvent.BTN_TRIGGER_HAPPY1: "joypad/dpad_left",
 		#InputDeviceEvent.BTN_TRIGGER_HAPPY2: "joypad/dpad_right",
 		#InputDeviceEvent.BTN_TRIGGER_HAPPY3: "joypad/dpad_up",

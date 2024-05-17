@@ -34,6 +34,7 @@ var manager := Manager.new(dbus.create_proxy(INPUT_PLUMBER_BUS, INPUT_PLUMBER_MA
 var object_manager := dbus.ObjectManager.new(dbus.create_proxy(INPUT_PLUMBER_BUS, INPUT_PLUMBER_PATH))
 
 var composite_devices: Array[CompositeDevice] = []
+var composite_devices_map: Dictionary = {}
 var intercept_mode_current: INTERCEPT_MODE = INTERCEPT_MODE.NONE
 var intercept_triggers_current: PackedStringArray = ["Gamepad:Button:Guide"]
 var intercept_target_current: String = "Gamepad:Button:Guide"
@@ -47,17 +48,24 @@ func _init() -> void:
 	object_manager.interfaces_added.connect(_on_interfaces_added)
 	object_manager.interfaces_removed.connect(_on_interfaces_removed)
 	composite_devices = get_devices()
+	for device in composite_devices:
+		composite_devices_map[device.dbus_path] = device
 
 
 func _on_interfaces_added(dbus_path: String) -> void:
 	logger.debug("Interfaces Added: " + str(dbus_path) )
 	composite_devices = get_devices()
-
+	composite_devices_map.clear()
+	for device in composite_devices:
+		composite_devices_map[device.dbus_path] = device
 
 
 func _on_interfaces_removed(dbus_path: String) -> void:
 	logger.debug("Interfaces Removed: " + str(dbus_path) )
 	composite_devices = get_devices()
+	composite_devices_map.clear()
+	for device in composite_devices:
+		composite_devices_map[device.dbus_path] = device
 	if dbus_path.contains("CompositeDevice"):
 		composite_device_removed.emit(dbus_path)
 
@@ -146,6 +154,13 @@ func get_devices() -> Array[CompositeDevice]:
 			composite_device_added.emit(device)
 
 	return existing_devices
+
+
+## Returns the [CompositeDevice] with the given DBus path
+func get_device(dbus_path: String) -> CompositeDevice:
+	if dbus_path in composite_devices_map:
+		return composite_devices_map[dbus_path]
+	return null
 
 
 ## Sets all composite devices to the specified intercept mode.
