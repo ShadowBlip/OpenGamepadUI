@@ -82,7 +82,10 @@ var internal_children: Array[Node] = []
 				continue
 			var texture_rect := child as TextureRect
 			if max_width < 0:
-				texture_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+				texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				texture_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				texture_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			else:
 				texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				texture_rect.custom_minimum_size.x = max_width

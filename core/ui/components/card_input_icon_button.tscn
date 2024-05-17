@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dbll03tbmw3ps"]
+[gd_scene load_steps=7 format=3 uid="uid://cidpxji45gi5x"]
 
-[ext_resource type="Script" path="res://core/ui/components/card_mapping_button.gd" id="1_qi6wi"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="2_d8vnj"]
-[ext_resource type="Texture2D" uid="uid://da6kcs5mhssov" path="res://assets/ui/icons/arrow-right-bold.svg" id="4_gjhmn"]
+[ext_resource type="Script" path="res://core/ui/components/card_input_icon_button.gd" id="1_232on"]
+[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="2_r6b12"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_sp3p3"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_rsmju"]
 
-[sub_resource type="Image" id="Image_6ya5b"]
+[sub_resource type="Image" id="Image_pd87x"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -13,70 +14,55 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_hxlu7"]
-image = SubResource("Image_6ya5b")
+[sub_resource type="ImageTexture" id="ImageTexture_la347"]
+image = SubResource("Image_pd87x")
 
-[node name="CardMappingButton" type="PanelContainer"]
-editor_description = "Button used for mapping gamepad inputs"
+[node name="CardInputIconButton" type="PanelContainer"]
 clip_children = 2
-offset_right = 82.0
+offset_right = 103.0
 offset_bottom = 34.0
 focus_mode = 2
 theme_type_variation = &"CardButton"
-script = ExtResource("1_qi6wi")
+script = ExtResource("1_232on")
+
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_sp3p3")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_sp3p3")]
+audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
+on_signal = "pressed"
+
+[node name="FadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_rsmju")]
+target = NodePath("../HighlightTexture")
+on_signal = "focus_entered"
+fade_out_signal = "focus_exited"
+on_signal = "focus_entered"
+
+[node name="MouseFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_rsmju")]
+target = NodePath("../HighlightTexture")
+on_signal = "mouse_entered"
+fade_out_signal = "mouse_exited"
+on_signal = "mouse_entered"
 
 [node name="HighlightTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-texture = SubResource("ImageTexture_hxlu7")
+texture = SubResource("ImageTexture_la347")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-
-[node name="SourceInputIcon" type="HBoxContainer" parent="HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-script = ExtResource("2_d8vnj")
-
-[node name="SourceLabel" type="Label" parent="HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Button"
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
-
-[node name="ArrowRect" type="TextureRect" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture = ExtResource("4_gjhmn")
-stretch_mode = 5
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 4
 
-[node name="TargetInputIcon" type="HBoxContainer" parent="HBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-script = ExtResource("2_d8vnj")
-
-[node name="TargetLabel" type="Label" parent="HBoxContainer/MarginContainer"]
+[node name="InputIcon" type="HBoxContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Button"
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
+script = ExtResource("2_r6b12")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true

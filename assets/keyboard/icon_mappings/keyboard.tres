@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InputIconKeyboardMapping" load_steps=91 format=3 uid="uid://cuohv36v63cje"]
+[gd_resource type="Resource" script_class="InputIconKeyboardMapping" load_steps=92 format=3 uid="uid://cuohv36v63cje"]
 
 [ext_resource type="Texture2D" uid="uid://baw7g0pvqxrrn" path="res://assets/images/keyboard/keyboard_a.svg" id="1_g6b5n"]
 [ext_resource type="Script" path="res://core/systems/input/input_icon_keyboard_mapping.gd" id="1_irquw"]
@@ -69,6 +69,7 @@
 [ext_resource type="Texture2D" uid="uid://dh0ao1bskrydi" path="res://assets/images/keyboard/keyboard_m.svg" id="42_s5lf7"]
 [ext_resource type="Texture2D" uid="uid://dyllwym50qwbw" path="res://assets/images/keyboard/keyboard_bracket_less.svg" id="43_yy35w"]
 [ext_resource type="Texture2D" uid="uid://i1b2vkmhqbba" path="res://assets/images/keyboard/keyboard_bracket_greater.svg" id="44_kdex1"]
+[ext_resource type="Texture2D" uid="uid://dvmwjcfhw1n7e" path="res://assets/images/mouse/mouse_move.svg" id="49_deiis"]
 [ext_resource type="Texture2D" uid="uid://besny6d3s2ji1" path="res://assets/images/keyboard/keyboard_plus.svg" id="49_j0fgs"]
 [ext_resource type="Texture2D" uid="uid://c7ygf0rjvtbj" path="res://assets/images/keyboard/keyboard_numpad_plus.svg" id="50_ghxdn"]
 [ext_resource type="Texture2D" uid="uid://j8k1hddit4oc" path="res://assets/images/keyboard/keyboard_n.svg" id="51_ucknl"]
@@ -94,6 +95,7 @@
 [resource]
 script = ExtResource("1_irquw")
 name = "Mouse/Keyboard"
+mouse = ExtResource("49_deiis")
 mouse_left = ExtResource("18_ui2n5")
 mouse_middle = ExtResource("19_wu6ur")
 mouse_right = ExtResource("20_ao5p1")

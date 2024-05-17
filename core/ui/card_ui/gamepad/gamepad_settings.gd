@@ -170,6 +170,10 @@ func _on_mapping_selected(mapping: InputPlumberMapping) -> void:
 ## Populates the button mappings for the given gamepad
 func populate_mappings_for(gamepad: InputPlumber.CompositeDevice) -> void:
 	var capabilities := gamepad.capabilities
+	
+	# Sort the capabilities
+	capabilities = InputPlumberEvent.sort_capabilities(capabilities)
+	capabilities.reverse()
 	logger.debug("Found capabilities for gamepad: " + str(capabilities))
 
 	# Delete any old buttons
@@ -279,7 +283,7 @@ func _add_button_for_capability(capability: String, parent: Node) -> CardMapping
 		change_input_state.set_meta("mappings", mapping)
 		change_input_state.set_meta("gamepad", self.gamepad)
 		change_input_state.set_meta("gamepad_type", self.gamepad_types[self.gamepad_type_selected])
-		change_input_state.set_meta("gamepad_type_icon_map", self.gamepad_types_icons[self.gamepad_type_selected])
+		change_input_state.set_meta("gamepad_type_icon_map", self.get_selected_target_gamepad_icon_map())
 		state_machine.push_state(change_input_state)
 	button.button_up.connect(on_pressed)
 
