@@ -36,6 +36,13 @@ func _ready() -> void:
 	# Do nothing if running in the editor
 	if Engine.is_editor_hint():
 		return
+
+	# Auto-close when visibility is lost
+	var on_visibility_changed := func():
+		var grower := get_node("GrowerEffect") as GrowerEffect
+		grower.shrink()
+		is_toggled = false
+	hidden.connect(on_visibility_changed)
 	
 	# Resize any children that are Control nodes
 	for child in content_container.get_children():
