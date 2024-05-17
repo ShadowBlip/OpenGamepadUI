@@ -18,8 +18,8 @@ signal button_down
 @export var highlight_speed := 0.1
 
 @export_category("AudioSteamPlayer")
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
+@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
+@export_file("*.ogg") var select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 var tween: Tween
 var focus_audio_stream = load(focus_audio)

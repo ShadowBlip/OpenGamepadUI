@@ -10,11 +10,11 @@ resource_local_to_scene = true
 shader = ExtResource("1_42mcm")
 shader_parameter/on = false
 shader_parameter/color = Color(0.74, 0.57, 0.97, 1)
-shader_parameter/width = 2
+shader_parameter/width = 1.0
 shader_parameter/pattern = 2
 shader_parameter/inside = false
 shader_parameter/add_margins = true
-shader_parameter/width_speed = 3
+shader_parameter/width_speed = 1.0
 shader_parameter/Smooth = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_x4gc0"]

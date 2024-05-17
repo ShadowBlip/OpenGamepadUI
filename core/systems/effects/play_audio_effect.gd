@@ -3,7 +3,7 @@ extends Effect
 class_name PlayAudioEffect
 
 @export_category("AudioSteamPlayer")
-@export_file("*.ogg") var audio = "res://assets/audio/interface/glitch_004.ogg"
+@export_file("*.ogg") var audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
 
 var stream = load(audio)
 
