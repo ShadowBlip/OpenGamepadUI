@@ -11,7 +11,7 @@ class_name InputIconManager
 
 signal input_type_changed(input_type: InputType)
 
-const MAPPINGS_DIR := "res://assets/gamepad/icon_mappings/"
+const MAPPINGS_DIR := "res://assets/gamepad/icon_mappings"
 const DEFAULT_MAPPING := "res://assets/gamepad/icon_mappings/xbox360.tres"
 
 enum InputType {
@@ -20,7 +20,7 @@ enum InputType {
 }
 
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
-var logger := Log.get_logger("InputIconsManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InputIconManager", Log.LEVEL.DEBUG)
 
 ## The last detected input type
 var last_input_type := InputType.GAMEPAD
@@ -29,7 +29,7 @@ var last_input_device: String
 ## Mapping of device names to match to path to input icon mapping. There can be
 ## multiple device names that match a single icon mapping resource.
 ## E.g. {"Xbox 360 Controller": "res://assets/gamepad/icon_mappings/xb360.tres"}
-var _device_mappings := {}
+var _device_mappings := discover_device_mappings(MAPPINGS_DIR)
 ## Mapping of icon mapping names to the path to the mapping
 ## E.g. {"XBox 360": "res://assets/gamepad/icon_mappings/xb360.tres"}
 var _mappings := {}
@@ -154,8 +154,14 @@ static func discover_mappings(mappings_dir: String) -> Dictionary:
 
 	# Load all the mappings and organize them based on matching device names
 	for filename: String in mappings:
+		# After being exported, resources are listed with a ".remap" extension
+		if filename.ends_with(".remap"):
+			filename = filename.trim_suffix(".remap")
 		var path := "/".join([MAPPINGS_DIR, filename])
 		var mapping := load(path) as InputIconMapping
+		if not mapping:
+			push_error("InputIconManager: Failed to load input icon mapping: ", path)
+			continue
 		name_mappings[mapping.name] = path
 
 	return name_mappings
@@ -168,8 +174,14 @@ static func discover_device_mappings(mappings_dir: String) -> Dictionary:
 
 	# Load all the mappings and organize them based on matching device names
 	for filename: String in mappings:
+		# After being exported, resources are listed with a ".remap" extension
+		if filename.ends_with(".remap"):
+			filename = filename.trim_suffix(".remap")
 		var path := "/".join([MAPPINGS_DIR, filename])
 		var mapping := load(path) as InputIconMapping
+		if not mapping:
+			push_error("InputIconManager: Failed to load input icon mapping: ", path)
+			continue
 		for dev_name: String in mapping.device_names:
 			device_mappings[dev_name] = path
 	
@@ -279,6 +291,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 ## Load and return the mapping that matches the given device.
 func load_matching_mapping(device_name: String) -> InputIconMapping:
 	# First try to do an exact match
+	logger.debug("Devices with mappings: " + str(self._device_mappings))
 	if device_name in self._device_mappings:
 		var mapping_path := self._device_mappings[device_name] as String
 		var mapping := load(mapping_path) as InputIconMapping

@@ -42,19 +42,9 @@ signal button_down
 		if target_label:
 			target_label.uppercase = v
 
-@export_category("Animation")
-@export var highlight_speed := 0.1
-
-@export_category("AudioSteamPlayer")
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/glitch_004.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/select_002.ogg"
-
 @export_category("Mouse")
 @export var click_focuses := true
 
-var tween: Tween
-var focus_audio_stream = load(focus_audio)
-var select_audio_stream = load(select_audio)
 var mappings: Array[InputPlumberMapping] = []
 var logger := Log.get_logger("CardMappingButton", Log.LEVEL.DEBUG)
 
@@ -76,11 +66,6 @@ func _ready() -> void:
 	target_label.uppercase = uppercase
 	
 	# Connect signals
-	pressed.connect(_play_sound.bind(select_audio_stream))
-	focus_entered.connect(_on_focus)
-	focus_exited.connect(_on_unfocus)
-	mouse_entered.connect(_on_focus)
-	mouse_exited.connect(_on_unfocus)
 	theme_changed.connect(_on_theme_changed)
 	_on_theme_changed()
 
@@ -163,31 +148,6 @@ func _on_theme_changed() -> void:
 	var highlight_texture := get_theme_icon("highlight", "CardButton")
 	if highlight_texture:
 		highlight.texture = highlight_texture
-
-
-func _on_focus() -> void:
-	if tween:
-		tween.kill()
-	tween = get_tree().create_tween()
-	tween.tween_property(highlight, "visible", true, 0)
-	tween.tween_property(highlight, "modulate", Color(1, 1, 1, 0), 0)
-	tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), highlight_speed)
-	_play_sound(focus_audio_stream)
-
-
-func _on_unfocus() -> void:
-	if tween:
-		tween.kill()
-	tween = get_tree().create_tween()
-	tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), 0)
-	tween.tween_property(highlight, "modulate", Color(1, 1, 1, 0), highlight_speed)
-	tween.tween_property(highlight, "visible", false, 0)
-	
-
-func _play_sound(stream: AudioStream) -> void:
-	var audio_player: AudioStreamPlayer = $AudioStreamPlayer
-	audio_player.stream = stream
-	audio_player.play()
 
 
 func _gui_input(event: InputEvent) -> void:

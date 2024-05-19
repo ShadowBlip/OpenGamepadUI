@@ -1,10 +1,13 @@
-[gd_scene load_steps=14 format=3 uid="uid://dlouq0b0bnm41"]
+[gd_scene load_steps=17 format=3 uid="uid://dlouq0b0bnm41"]
 
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="1_4m4go"]
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/running_game_card.gd" id="1_vgpef"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_1mgsy"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_ao14v"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="2_w7u51"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_4x3oi"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_o4kus"]
+[ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_f5kjd"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_smmwr"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_s452c"]
 [ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/card_ui/main-menu/main_menu_focus.tres" id="6_xmlue"]
@@ -12,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="8_ixs6g"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
 
-[sub_resource type="Image" id="Image_hqab3"]
+[sub_resource type="Image" id="Image_nnnfm"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -21,8 +24,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_ocbm3"]
-image = SubResource("Image_hqab3")
+[sub_resource type="ImageTexture" id="ImageTexture_wbc42"]
+image = SubResource("Image_nnnfm")
 
 [node name="RunningGameCard" type="PanelContainer"]
 anchors_preset = 10
@@ -33,15 +36,41 @@ focus_mode = 2
 mouse_filter = 1
 theme_type_variation = &"ExpandableCard"
 script = ExtResource("1_vgpef")
-focus_audio = null
-select_audio = null
 
-[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_ao14v")]
-target = NodePath("../MarginContainer/VBoxContainer/ContentContainer/FocusGroup")
-on_signal = "finished_growing"
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_1mgsy")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_1mgsy")]
+audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
+on_signal = "pressed"
+
+[node name="FadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_o4kus")]
+target = NodePath("../HighlightTexture")
+on_signal = "focus_entered"
+fade_out_signal = "focus_exited"
+on_signal = "focus_entered"
+
+[node name="MouseFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_o4kus")]
+target = NodePath("../HighlightTexture")
+on_signal = "mouse_entered"
+fade_out_signal = "mouse_exited"
+on_signal = "mouse_entered"
+
+[node name="GrowerEffect" parent="." node_paths=PackedStringArray("target", "content_container", "inside_panel", "separator") instance=ExtResource("4_f5kjd")]
+target = NodePath("..")
+content_container = NodePath("../MarginContainer/VBoxContainer/ContentContainer")
+inside_panel = NodePath("../InsidePanelMargin/InsidePanel")
+separator = NodePath("../MarginContainer/VBoxContainer/HSeparator")
+on_signal = "toggled_on"
+shrink_signal = "toggled_off"
+on_signal = "toggled_on"
+
+[node name="FocusGroupSetter" parent="GrowerEffect" node_paths=PackedStringArray("target") instance=ExtResource("2_ao14v")]
+unique_name_in_owner = true
+target = NodePath("../../MarginContainer/VBoxContainer/ContentContainer/FocusGroup")
+on_signal = "effect_finished"
 
 [node name="HighlightTexture" type="Panel" parent="."]
-unique_name_in_owner = true
 visible = false
 clip_children = 2
 layout_mode = 2
@@ -55,7 +84,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("ImageTexture_ocbm3")
+texture = SubResource("ImageTexture_wbc42")
 expand_mode = 1
 stretch_mode = 6
 
@@ -67,7 +96,6 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"InsidePanel"
@@ -103,7 +131,6 @@ expand_mode = 5
 stretch_mode = 5
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
@@ -138,12 +165,9 @@ text = "Gamepad"
 [node name="StateUpdater" parent="MarginContainer/VBoxContainer/ContentContainer/GamepadButton" instance=ExtResource("6_s452c")]
 state_machine = ExtResource("7_yrgt0")
 state = ExtResource("8_nyd1y")
-on_signal = "pressed"
+on_signal = "player_button_up"
 
 [node name="ExitButton" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("8_ixs6g")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true

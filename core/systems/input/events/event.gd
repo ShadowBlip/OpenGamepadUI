@@ -15,6 +15,27 @@ static func from_capability(capability: String) -> InputPlumberEvent:
 	return event
 
 
+## Create a new InputPlumberEvent from the given Godot event
+static func from_event(godot_event: InputEvent) -> InputPlumberEvent:
+	if godot_event is InputEventKey:
+		var key_event := godot_event as InputEventKey
+		var capability := capability_from_keycode(key_event.keycode)
+		return from_capability(capability)
+	# TODO: Finish implementing these
+	elif godot_event is InputEventJoypadButton:
+		return null
+	elif godot_event is InputEventJoypadMotion:
+		return null
+	elif godot_event is InputEventMouseButton:
+		return null
+	elif godot_event is InputEventMouseMotion:
+		return null
+	elif godot_event is InputEventAction:
+		return null
+	
+	return null
+
+
 ## Create a new InputPlumberEvent from the given JSON dictionary
 static func from_dict(dict: Dictionary) -> InputPlumberEvent:
 	var event := InputPlumberEvent.new()
@@ -88,22 +109,39 @@ func to_capability() -> String:
 ## Set the event based on the given capability string (e.g. "Gamepad:Button:South")
 ## TODO: FINISH THIS!
 func set_capability(capability: String) -> int:
+	if capability.begins_with("Keyboard"):
+		keyboard = capability.trim_prefix("Keyboard:")
+		return OK
+	if capability.begins_with("Mouse:Motion"):
+		mouse = InputPlumberMouseEvent.new()
+		mouse.motion = InputPlumberMouseMotionEvent.new()
+		return OK
+	if capability.begins_with("Mouse:Button"):
+		mouse = InputPlumberMouseEvent.new()
+		mouse.button = capability.trim_prefix("Mouse:Button:")
+		return OK
 	if capability.begins_with("Gamepad:Button"):
 		gamepad = InputPlumberGamepadEvent.new()
 		gamepad.button = capability.trim_prefix("Gamepad:Button:")
 		return OK
-	#if capability.begins_with("Gamepad:Axis"):
-		#gamepad = InputPlumberGamepadEvent.new()
-		#gamepad.axis = capability.trim_prefix("Gamepad:Axis:")
-		#return OK
-	#if capability.begins_with("Gamepad:Trigger"):
-		#gamepad = InputPlumberGamepadEvent.new()
-		#gamepad.trigger = capability.trim_prefix("Gamepad:Trigger:")
-		#return OK
-	#if capability.begins_with("Gamepad:Gyro"):
-		#gamepad = InputPlumberGamepadEvent.new()
-		#gamepad.gyro = capability.trim_prefix("Gamepad:Gyro:")
-		#return OK
+	if capability.begins_with("Gamepad:Axis"):
+		gamepad = InputPlumberGamepadEvent.new()
+		var axis := InputPlumberAxisEvent.new()
+		axis.name = capability.trim_prefix("Gamepad:Axis:")
+		gamepad.axis = axis
+		return OK
+	if capability.begins_with("Gamepad:Trigger"):
+		gamepad = InputPlumberGamepadEvent.new()
+		var trigger := InputPlumberTriggerEvent.new()
+		trigger.name = capability.trim_prefix("Gamepad:Trigger:")
+		gamepad.trigger = trigger
+		return OK
+	if capability.begins_with("Gamepad:Gyro"):
+		gamepad = InputPlumberGamepadEvent.new()
+		var gyro := InputPlumberGyroEvent.new()
+		gyro.name = "Gyro"
+		gamepad.gyro = gyro
+		return OK
 	
 	return ERR_DOES_NOT_EXIST
 
@@ -177,6 +215,168 @@ static func get_joypad_path(cap: String) -> String:
 		"Mouse:Button:Extra2": "mouse/extra2",
 		"Mouse:Button:WheelUp": "mouse/wheel_up",
 		"Mouse:Button:WheelDown": "mouse/wheel_down",
+		# Keyboard
+		"Keyboard:KeyEsc": "key/esc",
+		"Keyboard:Key1": "key/1",
+		"Keyboard:Key2": "key/2",
+		"Keyboard:Key3": "key/3",
+		"Keyboard:Key4": "key/4",
+		"Keyboard:Key5": "key/5",
+		"Keyboard:Key6": "key/6",
+		"Keyboard:Key7": "key/7",
+		"Keyboard:Key8": "key/8",
+		"Keyboard:Key9": "key/9",
+		"Keyboard:Key0": "key/0",
+		"Keyboard:KeyMinus": "key/minus",
+		"Keyboard:KeyEqual": "key/equal",
+		"Keyboard:KeyBackspace": "key/backspace",
+		"Keyboard:KeyTab": "key/tab",
+		"Keyboard:KeyQ": "key/q",
+		"Keyboard:KeyW": "key/w",
+		"Keyboard:KeyE": "key/e",
+		"Keyboard:KeyR": "key/r",
+		"Keyboard:KeyT": "key/t",
+		"Keyboard:KeyY": "key/y",
+		"Keyboard:KeyU": "key/u",
+		"Keyboard:KeyI": "key/i",
+		"Keyboard:KeyO": "key/o",
+		"Keyboard:KeyP": "key/p",
+		"Keyboard:KeyLeftBrace": "key/left_brace",
+		"Keyboard:KeyRightBrace": "key/right_brace",
+		"Keyboard:KeyEnter": "key/enter",
+		"Keyboard:KeyLeftCtrl": "key/left_ctrl",
+		"Keyboard:KeyA": "key/a",
+		"Keyboard:KeyS": "key/s",
+		"Keyboard:KeyD": "key/d",
+		"Keyboard:KeyF": "key/f",
+		"Keyboard:KeyG": "key/g",
+		"Keyboard:KeyH": "key/h",
+		"Keyboard:KeyJ": "key/j",
+		"Keyboard:KeyK": "key/k",
+		"Keyboard:KeyL": "key/l",
+		"Keyboard:KeySemicolon": "key/semicolon",
+		"Keyboard:KeyApostrophe": "key/apostrophe",
+		"Keyboard:KeyGrave": "key/tilda",
+		"Keyboard:KeyLeftShift": "key/left_shift",
+		"Keyboard:KeyBackslash": "key/backslash",
+		"Keyboard:KeyZ": "key/z",
+		"Keyboard:KeyX": "key/x",
+		"Keyboard:KeyC": "key/c",
+		"Keyboard:KeyV": "key/v",
+		"Keyboard:KeyB": "key/b",
+		"Keyboard:KeyN": "key/n",
+		"Keyboard:KeyM": "key/m",
+		"Keyboard:KeyComma": "key/comma",
+		"Keyboard:KeyDot": "key/period",
+		"Keyboard:KeySlash": "key/slash",
+		"Keyboard:KeyRightShift": "key/right_shift",
+		"Keyboard:KeyKpAsterisk": "key/kp_asterisk",
+		"Keyboard:KeyLeftAlt": "key/left_alt",
+		"Keyboard:KeySpace": "key/space",
+		"Keyboard:KeyCapslock": "key/caps_lock",
+		"Keyboard:KeyF1": "key/f1",
+		"Keyboard:KeyF2": "key/f2",
+		"Keyboard:KeyF3": "key/f3",
+		"Keyboard:KeyF4": "key/f4",
+		"Keyboard:KeyF5": "key/f5",
+		"Keyboard:KeyF6": "key/f6",
+		"Keyboard:KeyF7": "key/f7",
+		"Keyboard:KeyF8": "key/f8",
+		"Keyboard:KeyF9": "key/f9",
+		"Keyboard:KeyF10": "key/f10",
+		"Keyboard:KeyNumlock": "key/num_lock",
+		"Keyboard:KeyScrollLock": "key/scroll_lock",
+		"Keyboard:KeyKp7": "key/kp7",
+		"Keyboard:KeyKp8": "key/kp8",
+		"Keyboard:KeyKp9": "key/kp9",
+		"Keyboard:KeyKpMinus": "key/kp_minus",
+		"Keyboard:KeyKp4": "key/kp4",
+		"Keyboard:KeyKp5": "key/kp5",
+		"Keyboard:KeyKp6": "key/kp6",
+		"Keyboard:KeyKpPlus": "key/kp_plus",
+		"Keyboard:KeyKp1": "key/kp1",
+		"Keyboard:KeyKp2": "key/kp2",
+		"Keyboard:KeyKp3": "key/kp3",
+		"Keyboard:KeyKp0": "key/kp0",
+		"Keyboard:KeyKpDot": "key/kp_dot",
+		"Keyboard:KeyZenkakuhankaku": "key/zenkakuhankaku",
+		"Keyboard:Key102nd": "key/102nd",
+		"Keyboard:KeyF11": "key/f11",
+		"Keyboard:KeyF12": "key/f12",
+		"Keyboard:KeyRo": "key/ro",
+		"Keyboard:KeyKatakana": "key/katakana",
+		"Keyboard:KeyHiragana": "key/hiragana",
+		"Keyboard:KeyHenkan": "key/henkan",
+		"Keyboard:KeyKatakanaHiragana": "key/katakana_hiragana",
+		"Keyboard:KeyMuhenkan": "key/muhenkan",
+		"Keyboard:KeyKpJpComma": "key/kp_jp_comma",
+		"Keyboard:KeyKpEnter": "key/kp_enter",
+		"Keyboard:KeyRightCtrl": "key/right_ctrl",
+		"Keyboard:KeyKpSlash": "key/kp_slash",
+		"Keyboard:KeySysrq": "key/sysrq",
+		"Keyboard:KeyRightAlt": "key/right_alt",
+		"Keyboard:KeyHome": "key/home",
+		"Keyboard:KeyUp": "key/up",
+		"Keyboard:KeyPageUp": "key/page_up",
+		"Keyboard:KeyLeft": "key/left",
+		"Keyboard:KeyRight": "key/right",
+		"Keyboard:KeyEnd": "key/end",
+		"Keyboard:KeyDown": "key/down",
+		"Keyboard:KeyPageDown": "key/page_down",
+		"Keyboard:KeyInsert": "key/insert",
+		"Keyboard:KeyDelete": "key/delete",
+		"Keyboard:KeyMute": "key/mute",
+		"Keyboard:KeyVolumeDown": "key/volume_down",
+		"Keyboard:KeyVolumeUp": "key/volume_up",
+		"Keyboard:KeyPower": "key/power",
+		"Keyboard:KeyKpEqual": "key/kp_equal",
+		"Keyboard:KeyPause": "key/pause",
+		"Keyboard:KeyKpComma": "key/kp_comma",
+		"Keyboard:KeyHanja": "key/hanja",
+		"Keyboard:KeyYen": "key/yen",
+		"Keyboard:KeyLeftMeta": "key/left_meta",
+		"Keyboard:KeyRightMeta": "key/right_meta",
+		"Keyboard:KeyCompose": "key/compose",
+		"Keyboard:KeyStop": "key/stop",
+		"Keyboard:KeyAgain": "key/again",
+		"Keyboard:KeyProps": "key/props",
+		"Keyboard:KeyUndo": "key/undo",
+		"Keyboard:KeyFront": "key/front",
+		"Keyboard:KeyCopy": "key/copy",
+		"Keyboard:KeyOpen": "key/open",
+		"Keyboard:KeyPaste": "key/paste",
+		"Keyboard:KeyFind": "key/find",
+		"Keyboard:KeyCut": "key/cut",
+		"Keyboard:KeyHelp": "key/help",
+		"Keyboard:KeyCalc": "key/calc",
+		"Keyboard:KeySleep": "key/sleep",
+		"Keyboard:KeyWww": "key/www",
+		"Keyboard:KeyBack": "key/back",
+		"Keyboard:KeyForward": "key/forward",
+		"Keyboard:KeyEjectCD": "key/eject_cd",
+		"Keyboard:KeyNextSong": "key/next_song",
+		"Keyboard:KeyPlayPause": "key/play_pause",
+		"Keyboard:KeyPreviousSong": "key/previous_song",
+		"Keyboard:KeyStopCD": "key/stop_cd",
+		"Keyboard:KeyRefresh": "key/refresh",
+		"Keyboard:KeyEdit": "key/edit",
+		"Keyboard:KeyScrollUp": "key/scroll_up",
+		"Keyboard:KeyScrollDown": "key/scroll_down",
+		"Keyboard:KeyKpLeftParen": "key/kp_left_paren",
+		"Keyboard:KeyKpRightParen": "key/kp_right_paren",
+		"Keyboard:KeyF13": "key/f13",
+		"Keyboard:KeyF14": "key/f14",
+		"Keyboard:KeyF15": "key/f15",
+		"Keyboard:KeyF16": "key/f16",
+		"Keyboard:KeyF17": "key/f17",
+		"Keyboard:KeyF18": "key/f18",
+		"Keyboard:KeyF19": "key/f19",
+		"Keyboard:KeyF20": "key/f20",
+		"Keyboard:KeyF21": "key/f21",
+		"Keyboard:KeyF22": "key/f22",
+		"Keyboard:KeyF23": "key/f23",
+		"Keyboard:KeyF24": "key/f24",
+		"Keyboard:KeyProg1": "key/prog1",
 	}
 
 	if cap in mapping:
@@ -235,3 +435,268 @@ static func sort_capabilities(caps: PackedStringArray) -> PackedStringArray:
 	sorted.sort_custom(weighted_sort)
 	
 	return PackedStringArray(sorted)
+
+
+## Convert the given key scancode into a capability string
+static func capability_from_keycode(scancode: int) -> String:
+	match scancode:
+		KEY_ESCAPE:
+			return "Keyboard:KeyEsc"
+		KEY_1:
+			return "Keyboard:Key1"
+		KEY_2:
+			return "Keyboard:Key2"
+		KEY_3:
+			return "Keyboard:Key3"
+		KEY_4:
+			return "Keyboard:Key4"
+		KEY_5:
+			return "Keyboard:Key5"
+		KEY_6:
+			return "Keyboard:Key6"
+		KEY_7:
+			return "Keyboard:Key7"
+		KEY_8:
+			return "Keyboard:Key8"
+		KEY_9:
+			return "Keyboard:Key9"
+		KEY_0:
+			return "Keyboard:Key0"
+		KEY_MINUS:
+			return "Keyboard:KeyMinus"
+		KEY_EQUAL:
+			return "Keyboard:KeyEqual"
+		KEY_BACKSPACE:
+			return "Keyboard:KeyBackspace"
+		KEY_TAB:
+			return "Keyboard:KeyTab"
+		KEY_Q:
+			return "Keyboard:KeyQ"
+		KEY_W:
+			return "Keyboard:KeyW"
+		KEY_E:
+			return "Keyboard:KeyE"
+		KEY_R:
+			return "Keyboard:KeyR"
+		KEY_T:
+			return "Keyboard:KeyT"
+		KEY_Y:
+			return "Keyboard:KeyY"
+		KEY_U:
+			return "Keyboard:KeyU"
+		KEY_I:
+			return "Keyboard:KeyI"
+		KEY_O:
+			return "Keyboard:KeyO"
+		KEY_P:
+			return "Keyboard:KeyP"
+		KEY_BRACELEFT:
+			return "Keyboard:KeyLeftBrace"
+		KEY_BRACERIGHT:
+			return "Keyboard:KeyRightBrace"
+		KEY_ENTER:
+			return "Keyboard:KeyEnter"
+		KEY_CTRL:
+			return "Keyboard:KeyLeftCtrl"
+		KEY_A:
+			return "Keyboard:KeyA"
+		KEY_S:
+			return "Keyboard:KeyS"
+		KEY_D:
+			return "Keyboard:KeyD"
+		KEY_F:
+			return "Keyboard:KeyF"
+		KEY_G:
+			return "Keyboard:KeyG"
+		KEY_H:
+			return "Keyboard:KeyH"
+		KEY_J:
+			return "Keyboard:KeyJ"
+		KEY_K:
+			return "Keyboard:KeyK"
+		KEY_L:
+			return "Keyboard:KeyL"
+		KEY_SEMICOLON:
+			return "Keyboard:KeySemicolon"
+		KEY_APOSTROPHE:
+			return "Keyboard:KeyApostrophe"
+		KEY_ASCIITILDE:
+			return "Keyboard:KeyGrave"
+		KEY_SHIFT:
+			return "Keyboard:KeyLeftShift"
+		KEY_BACKSLASH:
+			return "Keyboard:KeyBackslash"
+		KEY_Z:
+			return "Keyboard:KeyZ"
+		KEY_X:
+			return "Keyboard:KeyX"
+		KEY_C:
+			return "Keyboard:KeyC"
+		KEY_V:
+			return "Keyboard:KeyV"
+		KEY_B:
+			return "Keyboard:KeyB"
+		KEY_N:
+			return "Keyboard:KeyN"
+		KEY_M:
+			return "Keyboard:KeyM"
+		KEY_COMMA:
+			return "Keyboard:KeyComma"
+		KEY_PERIOD:
+			return "Keyboard:KeyDot"
+		KEY_SLASH:
+			return "Keyboard:KeySlash"
+		KEY_SHIFT:
+			return "Keyboard:KeyRightShift"
+		KEY_ASTERISK:
+			return "Keyboard:KeyKpAsterisk"
+		KEY_ALT:
+			return "Keyboard:KeyLeftAlt"
+		KEY_SPACE:
+			return "Keyboard:KeySpace"
+		KEY_CAPSLOCK:
+			return "Keyboard:KeyCapslock"
+		KEY_F1:
+			return "Keyboard:KeyF1"
+		KEY_F2:
+			return "Keyboard:KeyF2"
+		KEY_F3:
+			return "Keyboard:KeyF3"
+		KEY_F4:
+			return "Keyboard:KeyF4"
+		KEY_F5:
+			return "Keyboard:KeyF5"
+		KEY_F6:
+			return "Keyboard:KeyF6"
+		KEY_F7:
+			return "Keyboard:KeyF7"
+		KEY_F8:
+			return "Keyboard:KeyF8"
+		KEY_F9:
+			return "Keyboard:KeyF9"
+		KEY_F10:
+			return "Keyboard:KeyF10"
+		KEY_NUMLOCK:
+			return "Keyboard:KeyNumlock"
+		KEY_SCROLLLOCK:
+			return "Keyboard:KeyScrollLock"
+		KEY_KP_7:
+			return "Keyboard:KeyKp7"
+		KEY_KP_8:
+			return "Keyboard:KeyKp8"
+		KEY_KP_9:
+			return "Keyboard:KeyKp9"
+		KEY_KP_SUBTRACT:
+			return "Keyboard:KeyKpMinus"
+		KEY_KP_4:
+			return "Keyboard:KeyKp4"
+		KEY_KP_5:
+			return "Keyboard:KeyKp5"
+		KEY_KP_6:
+			return "Keyboard:KeyKp6"
+		KEY_KP_ADD:
+			return "Keyboard:KeyKpPlus"
+		KEY_KP_1:
+			return "Keyboard:KeyKp1"
+		KEY_KP_2:
+			return "Keyboard:KeyKp2"
+		KEY_KP_3:
+			return "Keyboard:KeyKp3"
+		KEY_KP_0:
+			return "Keyboard:KeyKp0"
+		KEY_KP_PERIOD:
+			return "Keyboard:KeyKpDot"
+		KEY_F11:
+			return "Keyboard:KeyF11"
+		KEY_F12:
+			return "Keyboard:KeyF12"
+		KEY_JIS_KANA:
+			return "Keyboard:KeyKatakanaHiragana"
+		KEY_KP_ENTER:
+			return "Keyboard:KeyKpEnter"
+		KEY_CTRL:
+			return "Keyboard:KeyRightCtrl"
+		KEY_KP_DIVIDE:
+			return "Keyboard:KeyKpSlash"
+		KEY_SYSREQ:
+			return "Keyboard:KeySysrq"
+		KEY_ALT:
+			return "Keyboard:KeyRightAlt"
+		KEY_HOME:
+			return "Keyboard:KeyHome"
+		KEY_UP:
+			return "Keyboard:KeyUp"
+		KEY_PAGEUP:
+			return "Keyboard:KeyPageUp"
+		KEY_LEFT:
+			return "Keyboard:KeyLeft"
+		KEY_RIGHT:
+			return "Keyboard:KeyRight"
+		KEY_END:
+			return "Keyboard:KeyEnd"
+		KEY_DOWN:
+			return "Keyboard:KeyDown"
+		KEY_PAGEDOWN:
+			return "Keyboard:KeyPageDown"
+		KEY_INSERT:
+			return "Keyboard:KeyInsert"
+		KEY_DELETE:
+			return "Keyboard:KeyDelete"
+		KEY_VOLUMEMUTE:
+			return "Keyboard:KeyMute"
+		KEY_VOLUMEDOWN:
+			return "Keyboard:KeyVolumeDown"
+		KEY_VOLUMEUP:
+			return "Keyboard:KeyVolumeUp"
+		KEY_PAUSE:
+			return "Keyboard:KeyPause"
+		KEY_YEN:
+			return "Keyboard:KeyYen"
+		KEY_META:
+			return "Keyboard:KeyLeftMeta"
+		KEY_META:
+			return "Keyboard:KeyRightMeta"
+		KEY_STOP:
+			return "Keyboard:KeyStop"
+		KEY_HELP:
+			return "Keyboard:KeyHelp"
+		KEY_BACK:
+			return "Keyboard:KeyBack"
+		KEY_FORWARD:
+			return "Keyboard:KeyForward"
+		KEY_MEDIANEXT:
+			return "Keyboard:KeyNextSong"
+		KEY_MEDIAPLAY:
+			return "Keyboard:KeyPlayPause"
+		KEY_MEDIAPREVIOUS:
+			return "Keyboard:KeyPreviousSong"
+		KEY_MEDIASTOP:
+			return "Keyboard:KeyStopCD"
+		KEY_REFRESH:
+			return "Keyboard:KeyRefresh"
+		KEY_F13:
+			return "Keyboard:KeyF13"
+		KEY_F14:
+			return "Keyboard:KeyF14"
+		KEY_F15:
+			return "Keyboard:KeyF15"
+		KEY_F16:
+			return "Keyboard:KeyF16"
+		KEY_F17:
+			return "Keyboard:KeyF17"
+		KEY_F18:
+			return "Keyboard:KeyF18"
+		KEY_F19:
+			return "Keyboard:KeyF19"
+		KEY_F20:
+			return "Keyboard:KeyF20"
+		KEY_F21:
+			return "Keyboard:KeyF21"
+		KEY_F22:
+			return "Keyboard:KeyF22"
+		KEY_F23:
+			return "Keyboard:KeyF23"
+		KEY_F24:
+			return "Keyboard:KeyF24"
+		_:
+			return ""

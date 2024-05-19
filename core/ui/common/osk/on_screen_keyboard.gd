@@ -366,11 +366,8 @@ func _handle_input_map(key: KeyboardKeyConfig) -> void:
 		set_mode_shift(MODE_SHIFT.ONE_SHOT)
 		return
 
-	# TODO: Fix this
-	logger.error("Selecting key input not supported yet!")
-	assert(false)
-	#var mappable_event := NativeEvent.new()
-	#mappable_event.event = event
+	# Create an InputPlumber event for the selected key
+	var input_plumber_event := InputPlumberEvent.from_event(event)
 	set_mode_shift(MODE_SHIFT.OFF)
-	#instance.context.keymap_input_selected.emit(mappable_event)
+	instance.context.keymap_input_selected.emit(input_plumber_event)
 	instance.close()

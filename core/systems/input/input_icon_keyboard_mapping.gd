@@ -118,7 +118,7 @@ func get_texture(path: String) -> Texture:
 			return self.esc
 		"key/tab":
 			return self.tab
-		"key/backspace_alt":
+		"key/backspace", "key/backspace_alt":
 			return self.backspace_alt
 		"key/return", "key/enter", "key/enter_alt":
 			return self.enter_alt
@@ -126,7 +126,7 @@ func get_texture(path: String) -> Texture:
 			return self.enter_tall
 		"key/insert":
 			return self.insert
-		"key/del":
+		"key/del", "key/delete":
 			return self.del
 		"key/print_screen":
 			return self.print_screen
@@ -146,13 +146,13 @@ func get_texture(path: String) -> Texture:
 			return self.page_up
 		"key/page_down":
 			return self.page_down
-		"key/shift_alt":
+		"key/shift", "key/left_shift", "key/right_shift", "key/shift_alt":
 			return self.shift_alt
-		"key/ctrl":
+		"key/ctrl", "key/left_ctrl", "key/right_ctrl":
 			return self.ctrl
 		"key/command":
 			return self.command
-		"key/meta":
+		"key/meta", "key/left_meta", "key/right_meta":
 			return self.meta
 		"key/alt":
 			return self.alt
@@ -186,7 +186,7 @@ func get_texture(path: String) -> Texture:
 			return self.f12
 		"key/asterisk":
 			return self.asterisk
-		"key/minus":
+		"key/minus", "key/dash":
 			return self.minus
 		"key/plus_tall":
 			return self.plus_tall
