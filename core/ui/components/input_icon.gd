@@ -24,6 +24,9 @@ var internal_children: Array[Node] = []
 		path = _path
 		if not is_inside_tree():
 			return
+		if path == "":
+			self.visible = false
+			return
 		if force_type > 0:
 			self.textures = input_icons.parse_path(path, force_mapping, force_type - 1)
 		else:
@@ -49,6 +52,10 @@ var internal_children: Array[Node] = []
 			self._add_internal_child(rect)
 			i += 1
 
+		# Ensure the max width triggers
+		var _w := self.max_width
+		self.max_width = _w
+
 ## Whether or not an icon should be displayed
 @export_enum("Both", "Keyboard/Mouse", "Controller") var show_only: int = 0:
 	set(_show_only):
@@ -66,10 +73,8 @@ var internal_children: Array[Node] = []
 	set(_mapping):
 		force_mapping = _mapping
 		if is_inside_tree():
-			if force_type > 0:
-				self.textures = input_icons.parse_path(path, _mapping, force_type - 1)
-			else:
-				self.textures = input_icons.parse_path(path, _mapping)
+			var _p := self.path
+			self.path = _p
 
 ## The maximum width of each icon texture
 @export var max_width: int = 40:

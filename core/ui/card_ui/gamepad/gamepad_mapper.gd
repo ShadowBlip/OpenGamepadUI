@@ -51,12 +51,6 @@ func _ready() -> void:
 		state_machine.pop_state()
 	clear_button.button_up.connect(on_clear_button)
 
-	## Setup the mouse input select
-	##var on_mouse_button := func():
-		##mouse_container.visible = true
-		##mouse_focus_group.grab_focus()
-	##mouse_button.button_up.connect(on_mouse_button)
-
 	# Handle selecting a key input
 	var on_key_selected := func(event: InputPlumberEvent) -> void:
 		# Update the mapping with the selected capability
@@ -114,7 +108,11 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_state_exited(_to: State) -> void:
-	pass
+	# Delete any old buttons
+	for child in gamepad_input_container.get_children():
+		if child is CardInputIconButton or child is CardButton:
+			gamepad_input_container.remove_child(child)
+			child.queue_free()
 
 
 ## Populates the mappings for the given capabilities
@@ -244,6 +242,7 @@ func _add_button_for_capability(capability: String, parent: Node, neighbor: Node
 	var button := card_button_scene.instantiate() as CardInputIconButton
 	button.name = capability
 	var on_button_ready := func():
+		button.input_icon.max_width = 64
 		button.set_target_device_icon_mapping(gamepad_icons_type)
 		button.input_icon.force_type = 1 # Force type to keyboard/mouse
 		var button_parent := button.get_parent()

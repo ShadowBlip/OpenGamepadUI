@@ -136,13 +136,6 @@ func set_target_icon(capability: String) -> int:
 	return OK
 
 
-## Returns true if the given event has a controller icon
-func has_controller_icon(event: InputPlumberMapping) -> bool:
-	#if event is EvdevEvent:
-	#	return ControllerMapper.get_joypad_path_from_event(event) != ""
-	return false
-
-
 func _on_theme_changed() -> void:
 	# Configure the highlight texture from the theme
 	var highlight_texture := get_theme_icon("highlight", "CardButton")
