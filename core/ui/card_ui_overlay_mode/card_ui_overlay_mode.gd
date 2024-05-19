@@ -165,13 +165,7 @@ func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 func _start_steam_process(args: Array) -> void:
 	logger.debug("Starting steam: " + str(args))
 	var underlay_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
-	if not settings_manager.get_value("general.controller", "sdl_hidapi_enabled", false):
-		logger.debug("SDL HIDAPI Disabled.")
-		args.push_front("&&")
-		args.push_front("SDL_JOYSTICK_HIDAPI=0")
-		args.push_front("export")
 	_start_underlay_process(args, underlay_log_path)
-
 	_find_underlay_window_id()
 
 	# Start timer to check if steam has exited.

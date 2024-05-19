@@ -174,11 +174,6 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	# Set the OGUI ID environment variable
 	env["OGUI_ID"] = app.name
 
-	# Set input environment variables
-	var hidapi_enabled: bool = SettingsManager.get_value("general.controller", "sdl_hidapi_enabled", false)
-	if not hidapi_enabled:
-		env["SDL_JOYSTICK_HIDAPI"] = "0"
-
 	# Build any environment variables to include in the command
 	var env_vars := PackedStringArray()
 	for key in env.keys():
