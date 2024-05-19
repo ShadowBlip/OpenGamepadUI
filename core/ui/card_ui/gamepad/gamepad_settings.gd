@@ -11,6 +11,7 @@ var notification_manager := load("res://core/global/notification_manager.tres") 
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var state_machine := load("res://assets/state/state_machines/gamepad_settings_state_machine.tres") as StateMachine
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 var button_scene := load("res://core/ui/components/card_mapping_button.tscn") as PackedScene
 
 var gamepad: InputPlumber.CompositeDevice
@@ -22,6 +23,7 @@ var gamepad_type_selected := 0
 var buttons: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
 
+@onready var gamepad_label := $%GamepadLabel as Label
 @onready var main_container := $%MainContainer as Container
 @onready var not_available := $%ServiceNotAvailableContainer as Container
 @onready var container := $%ButtonMappingContainer as Container
@@ -92,7 +94,6 @@ func _on_state_entered(_from: State) -> void:
 		$ServiceNotAvailableContainer/Label.text = "No gamepad to configure"
 		return
 	var dbus_path := gamepad_state.get_meta("dbus_path") as String
-	logger.debug("Configuring gamepad: " + dbus_path)
 	
 	# Find the composite device to configure
 	for device: InputPlumber.CompositeDevice in input_plumber.composite_devices:
@@ -105,6 +106,11 @@ func _on_state_entered(_from: State) -> void:
 		main_container.visible = false
 		$ServiceNotAvailableContainer/Label.text = "No gamepad to configure"
 		return
+
+	logger.debug("Configuring gamepad '" + gamepad.name + "': " + dbus_path)
+	
+	# Set the gamepad name label
+	gamepad_label.text = gamepad.name
 	
 	# Populate the menu with the source inputs for the given gamepad
 	populate_mappings_for(gamepad)
@@ -136,6 +142,10 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_state_exited(_to: State) -> void:
+	# Delete any old buttons
+	for child in container.get_children():
+		if child is CardMappingButton:
+			child.queue_free()
 	if not self.profile:
 		return
 	_save_profile()
@@ -169,6 +179,7 @@ func _on_mapping_selected(mapping: InputPlumberMapping) -> void:
 
 ## Populates the button mappings for the given gamepad
 func populate_mappings_for(gamepad: InputPlumber.CompositeDevice) -> void:
+	var gamepad_name := gamepad.name
 	var capabilities := gamepad.capabilities
 	
 	# Sort the capabilities
@@ -220,36 +231,36 @@ func populate_mappings_for(gamepad: InputPlumber.CompositeDevice) -> void:
 	var label := $%ButtonsLabel
 	label.visible = button_events.size() > 0
 	for capability in button_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 	label = $%AxesLabel
 	label.visible = axes_events.size() > 0
 	for capability in axes_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 	label = $%TriggersLabel
 	label.visible = trigger_events.size() > 0
 	for capability in trigger_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 	label = $%AccelerometerLabel
 	label.visible = accel_events.size() > 0
 	for capability in accel_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 	label = $%GyroLabel
 	label.visible = gyro_events.size() > 0
 	for capability in gyro_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 	label = $%TouchpadsLabel
 	label.visible = touchpad_events.size() > 0
 	for capability in touchpad_events:
-		_add_button_for_capability(capability, label)
+		_add_button_for_capability(gamepad_name, capability, label)
 
 
 ## Create a card mapping button for the given event under the given parent
-func _add_button_for_capability(capability: String, parent: Node) -> CardMappingButton:
+func _add_button_for_capability(gamepad_name: String, capability: String, parent: Node) -> CardMappingButton:
 	var idx := parent.get_index() + 1
 
 	var button := button_scene.instantiate() as CardMappingButton
@@ -257,7 +268,8 @@ func _add_button_for_capability(capability: String, parent: Node) -> CardMapping
 	var on_button_ready := func():
 		var icon_mapping := get_selected_target_gamepad_icon_map()
 		button.set_target_device_icon_mapping(icon_mapping)
-		button.set_source_device_icon_mapping(gamepad.name)
+		var source_mapping_name := input_icons.get_mapping_name_from_device(gamepad_name)
+		button.set_source_device_icon_mapping(source_mapping_name)
 		button.set_source_capability(capability)
 	button.ready.connect(on_button_ready, CONNECT_ONE_SHOT)
 
@@ -369,33 +381,6 @@ func _update_button(button: CardMappingButton, mapping: InputPlumberMapping) -> 
 		button.set_target_capability(event.to_capability())
 		# TODO: Figure out what to display if this maps to multiple inputs
 		break
-
-
-## Get the text to display on the mapping button from the given event
-#func _get_display_string_for(event: MappableEvent) -> String:
-	#if event is NativeEvent:
-		#var native_event := event as NativeEvent
-		#if native_event.event is InputEventKey:
-			#var key_event := native_event.event as InputEventKey
-			#return key_event.as_text()
-		#if native_event.event is InputEventMouseMotion:
-			#return "Mouse motion"
-		#if native_event.event is InputEventMouseButton:
-			#var mouse_event := native_event.event as InputEventMouseButton
-			#if mouse_event.button_index == MOUSE_BUTTON_LEFT:
-				#return "Left mouse click"
-			#if mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
-				#return "Middle mouse click"
-			#if mouse_event.button_index == MOUSE_BUTTON_RIGHT:
-				#return "Right mouse click"
-			#if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				#return "Mouse wheel up"
-			#if mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				#return "Mouse wheel down"
-	#if event is EvdevEvent:
-		#return ControllerMapper.get_joypad_path_from_event(event)
-#
-	#return ""
 
 
 ## Returns the InputPlumber gamepad string based on the currently selected

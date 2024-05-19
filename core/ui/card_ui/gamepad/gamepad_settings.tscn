@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cwarv58ju0sow"]
+[gd_scene load_steps=20 format=3 uid="uid://cwarv58ju0sow"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_settings.gd" id="1_o4hh5"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_3x6ad"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="13_h4n8t"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="14_b37ub"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="14_vtep2"]
+[ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="15_qntu1"]
 [ext_resource type="PackedScene" uid="uid://b3o3wo40sfih1" path="res://core/ui/card_ui/gamepad/gamepad_mapper.tscn" id="16_1g7gi"]
 [ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="18_lmo36"]
 
@@ -120,8 +121,13 @@ texture = ExtResource("13_4xnt2")
 [node name="GamepadTypeDropdown" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" instance=ExtResource("13_h4n8t")]
 unique_name_in_owner = true
 layout_mode = 2
-title = "Gamepad Type"
+title = "Target Gamepad Type"
 description = ""
+
+[node name="GamepadLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" instance=ExtResource("15_qntu1")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Gamepad"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2

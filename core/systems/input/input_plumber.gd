@@ -301,7 +301,11 @@ class CompositeDevice extends Resource:
 			return property
 
 	func load_profile_path(path: String) -> void:
-		_proxy.call_method(IFACE_COMPOSITE_DEVICE, "LoadProfilePath", [path])
+		# Normalize the path if it is a resource path
+		var normalized_path := path
+		if path.begins_with("res://") or path.begins_with("user://"):
+			normalized_path = ProjectSettings.globalize_path(path)
+		_proxy.call_method(IFACE_COMPOSITE_DEVICE, "LoadProfilePath", [normalized_path], "s")
 
 	func send_event(action: String, value: Variant) -> void:
 		_proxy.call_method( IFACE_COMPOSITE_DEVICE, "SendEvent", [action, value], "sv")

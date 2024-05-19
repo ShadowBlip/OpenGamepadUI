@@ -61,6 +61,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_d8vnj")
+max_width = 64
 
 [node name="SourceLabel" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
@@ -90,6 +91,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 script = ExtResource("2_d8vnj")
+max_width = 64
 
 [node name="TargetLabel" type="Label" parent="HBoxContainer/MarginContainer"]
 unique_name_in_owner = true

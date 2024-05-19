@@ -33,6 +33,10 @@ var _device_mappings := discover_device_mappings(MAPPINGS_DIR)
 ## Mapping of icon mapping names to the path to the mapping
 ## E.g. {"XBox 360": "res://assets/gamepad/icon_mappings/xb360.tres"}
 var _mappings := {}
+## Mapping of device names to a mapping name. There can be multiple device names
+## that match a single icon mapping name.
+## E.g. {"Xbox 360 Wireless Controller": "XBox 360"}
+var _device_name_to_mapping_name := {}
 var _custom_input_actions := {}
 ## Special actions is a mapping of actions that can have fallback mappings
 ## if a particular icon map doesn't have certain inputs. 
@@ -129,6 +133,14 @@ func _init():
 
 	self._mappings = discover_mappings(MAPPINGS_DIR)
 	self._device_mappings = discover_device_mappings(MAPPINGS_DIR)
+	
+	# Populate mapping of device names to mapping names
+	for mapping_name in self._mappings.keys():
+		var mapping_path := self._mappings[mapping_name] as String
+		for device_name in self._device_mappings.keys():
+			if mapping_path != self._device_mappings[device_name]:
+				continue
+			self._device_name_to_mapping_name[device_name] = mapping_name
 
 	# Listen for InputPlumber device change events
 	var on_comp_device_added := func(_device: InputPlumber.CompositeDevice):
@@ -291,7 +303,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 ## Load and return the mapping that matches the given device.
 func load_matching_mapping(device_name: String) -> InputIconMapping:
 	# First try to do an exact match
-	logger.debug("Devices with mappings: " + str(self._device_mappings))
+	#logger.debug("Devices with mappings: " + str(self._device_mappings))
 	if device_name in self._device_mappings:
 		var mapping_path := self._device_mappings[device_name] as String
 		var mapping := load(mapping_path) as InputIconMapping
@@ -310,6 +322,23 @@ func load_matching_mapping(device_name: String) -> InputIconMapping:
 	var mapping_path := DEFAULT_MAPPING
 	var mapping := load(mapping_path) as InputIconMapping
 	return mapping
+
+
+## Returns the mapping name for the given device name. The mapping name is the
+## "name" property of an [InputIconMapping].
+func get_mapping_name_from_device(device_name: String) -> String:
+	# First try to do an exact match
+	#logger.debug("Devices with mappings: " + str(self._device_mappings))
+	if device_name in self._device_name_to_mapping_name:
+		return self._device_name_to_mapping_name[device_name] as String
+	
+	# Next, try to do a substring match
+	for pattern: String in self._device_name_to_mapping_name.keys():
+		if not pattern in device_name:
+			continue
+		return self._device_name_to_mapping_name[pattern] as String
+	
+	return ""
 
 
 ## Returns the Godot event(s) defined in the input map with the given name and
