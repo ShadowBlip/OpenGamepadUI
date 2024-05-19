@@ -338,12 +338,33 @@ func _update_buttons() -> void:
 		_update_button(button, mapping)
 
 
-## Update the button using the given mapping
+## Update the button's target icon using the given mapping
 func _update_button(button: CardMappingButton, mapping: InputPlumberMapping) -> void:
 	button.text = ""
-	var icon_mapping := get_selected_target_gamepad_icon_map()
-	logger.debug("Using target icon mapping: " + icon_mapping)
-	button.set_target_device_icon_mapping(icon_mapping)
+
+	# Configure no target icon if there is no target events
+	if not mapping or mapping.target_events.is_empty():
+		logger.warn("Mapping '" + mapping.name + "' has no target events")
+		return
+	
+	# Get the target capability to determine if this is a gamepad icon or keyboard/mouse
+	# TODO: Figure out what to do if this maps to multiple types of input (e.g. Keyboard + Gamepad)
+	var target_capability := mapping.target_events[0].to_capability()
+	var target_input_type := 2 # gamepad
+	if target_capability.begins_with("Mouse") or target_capability.begins_with("Keyboard"):
+		target_input_type = 1 # kb/mouse
+	button.target_icon.force_type = target_input_type
+
+	# Set the icon mapping to use
+	if target_input_type == 1:
+		logger.debug("Using keyboard/mouse icon mapping")
+		button.set_target_device_icon_mapping("")
+	else:
+		var icon_mapping := get_selected_target_gamepad_icon_map()
+		logger.debug("Using target icon mapping: " + icon_mapping)
+		button.set_target_device_icon_mapping(icon_mapping)
+
+	# Set the target capability
 	for event in mapping.target_events:
 		button.set_target_capability(event.to_capability())
 		# TODO: Figure out what to display if this maps to multiple inputs

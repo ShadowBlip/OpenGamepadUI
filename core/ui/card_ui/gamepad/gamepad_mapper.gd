@@ -50,29 +50,29 @@ func _ready() -> void:
 		mapping_selected.emit(null)
 		state_machine.pop_state()
 	clear_button.button_up.connect(on_clear_button)
-#
-	## Setup the keyboard input select
-	##var on_keyboard_button := func():
-		##keyboard_context.mappings = mappings
-		##keyboard.open(keyboard_context)
-	##keyboard_button.button_up.connect(on_keyboard_button)
-#
+
 	## Setup the mouse input select
 	##var on_mouse_button := func():
 		##mouse_container.visible = true
 		##mouse_focus_group.grab_focus()
 	##mouse_button.button_up.connect(on_mouse_button)
-#
-	## Handle selecting a mouse input
-	#mouse_left_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_LEFT))
-	#mouse_right_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_RIGHT))
-	#mouse_middle_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_MIDDLE))
-	#mouse_wheel_up_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_WHEEL_UP))
-	#mouse_wheel_down_button.button_up.connect(_on_mouse_button.bind(MOUSE_BUTTON_WHEEL_DOWN))
-	#mouse_motion_button.button_up.connect(_on_mouse_motion)
 
-	# Handle selecting a key input 
-	#keyboard_context.keymap_input_selected.connect(_on_key_selected)
+	# Handle selecting a key input
+	var on_key_selected := func(event: InputPlumberEvent) -> void:
+		# Update the mapping with the selected capability
+		if not self.current_mapping:
+			logger.error("No current mapping is set to update!")
+			return
+
+		# Set the target capability for the input mapping
+		self.current_mapping.target_events.append(event)
+
+		# Exit the menu
+		state_machine.pop_state()
+		
+		# Emit the updated mapping
+		self.mapping_selected.emit(self.current_mapping)
+	keyboard_context.keymap_input_selected.connect(on_key_selected)
 
 
 func _on_state_entered(_from: State) -> void:
@@ -320,12 +320,4 @@ func _add_button_for_capability(capability: String, parent: Node, neighbor: Node
 ##
 	##mappings_selected.emit(mappings)
 	#state_machine.pop_state()
-#
-#
-#func _on_key_selected(event: InputPlumberMapping) -> void:
-	##for mapping in mappings:
-		##if mapping.output_events.size() - 1 < output_index:
-			##mapping.output_events.resize(output_index+1)
-		##mapping.output_events[output_index] = event
-	##mappings_selected.emit(mappings)
-	#state_machine.pop_state()
+

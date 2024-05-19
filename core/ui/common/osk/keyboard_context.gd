@@ -11,7 +11,7 @@ class_name KeyboardContext
 ## Type of Keyboard context
 # TODO: Break these up into their own classes
 enum TYPE {
-	DBUS, ## ROutes keyboard input to a dbus input manager
+	DBUS, ## Routes keyboard input to a dbus input manager
 	GODOT,  ## Routes keyboard input to a Godot control node (i.e. textbox)
 	X11,  ## Routes keyboard input to the currently running game
 }
