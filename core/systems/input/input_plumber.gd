@@ -21,6 +21,10 @@ const IFACE_GAMEPAD_DEVICE := "org.shadowblip.Input.Gamepad"
 const IFACE_KEYBOARD_DEVICE := "org.shadowblip.Input.Keyboard"
 const IFACE_MOUSE_DEVICE := "org.shadowblip.Input.Mouse"
 
+const DEFAULT_PROFILE := "res://assets/gamepad/profiles/default.json"
+const DEFAULT_GLOBAL_PROFILE := "user://data/gamepad/profiles/global_default.json"
+const PROFILES_DIR := "user://data/gamepad/profiles"
+
 enum INTERCEPT_MODE {
 	NONE,
 	PASS,
@@ -51,9 +55,22 @@ func _init() -> void:
 	for device in composite_devices:
 		composite_devices_map[device.dbus_path] = device
 
+	# Ensure the global default config is created
+	var profiles_dir := ProjectSettings.globalize_path(PROFILES_DIR)
+	if DirAccess.make_dir_recursive_absolute(profiles_dir) != OK:
+		logger.error("Failed to create user profiles directory: " + profiles_dir)
+		return
+	var default_profile := FileAccess.open(DEFAULT_PROFILE, FileAccess.READ)
+	var default_profile_data := default_profile.get_as_text()
+	logger.debug("Writing default global profile to: " + DEFAULT_GLOBAL_PROFILE)
+	var global_default_profile := FileAccess.open(DEFAULT_GLOBAL_PROFILE, FileAccess.WRITE)
+	global_default_profile.store_string(default_profile_data)
+
 
 func _on_interfaces_added(dbus_path: String) -> void:
-	logger.debug("Interfaces Added: " + str(dbus_path) )
+	logger.debug("Interfaces Added: " + str(dbus_path))
+	if not "CompositeDevice" in dbus_path:
+		return
 	composite_devices = get_devices()
 	composite_devices_map.clear()
 	for device in composite_devices:
@@ -61,7 +78,9 @@ func _on_interfaces_added(dbus_path: String) -> void:
 
 
 func _on_interfaces_removed(dbus_path: String) -> void:
-	logger.debug("Interfaces Removed: " + str(dbus_path) )
+	logger.debug("Interfaces Removed: " + str(dbus_path))
+	if not "CompositeDevice" in dbus_path:
+		return
 	composite_devices = get_devices()
 	composite_devices_map.clear()
 	for device in composite_devices:
@@ -233,7 +252,6 @@ class CompositeDevice extends Resource:
 		_proxy = proxy
 		_proxy.properties_changed.connect(_on_properties_changed)
 		for path in self.dbus_devices:
-			
 			var device := DBusDevice.new(dbus.create_proxy(INPUT_PLUMBER_BUS, path))
 			dbus_targets.append(device)
 		dbus_path = _proxy.path

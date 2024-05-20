@@ -34,7 +34,7 @@ signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
-const SettingsManager := preload("res://core/global/settings_manager.tres")
+const settings_manager := preload("res://core/global/settings_manager.tres")
 const NotificationManager := preload("res://core/global/notification_manager.tres")
 
 var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
@@ -100,6 +100,9 @@ func _init() -> void:
 		gamescope.set_overlay(ogui_window_id, 0)
 		
 	var on_game_state_exited := func(_to: State):
+		# Set the gamepad profile to the global profile
+		set_gamepad_profile("")
+		
 		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
 		if not should_manage_overlay:
 			return
@@ -149,23 +152,23 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	# Override any parameters that may be in the user's config for this game
 	var section := ".".join(["game", app.name.to_lower()])
 	var cmd_key := ".".join(["command", app._provider_id])
-	var user_cmd = SettingsManager.get_value(section, cmd_key)
+	var user_cmd = settings_manager.get_value(section, cmd_key)
 	if user_cmd and user_cmd is String:
 		cmd = user_cmd
 	var args_key := ".".join(["args", app._provider_id])
-	var user_args = SettingsManager.get_value(section, args_key)
+	var user_args = settings_manager.get_value(section, args_key)
 	if user_args and user_args is PackedStringArray:
 		args = user_args
 	var cwd_key := ".".join(["cwd", app._provider_id])
-	var user_cwd = SettingsManager.get_value(section, cwd_key)
+	var user_cwd = settings_manager.get_value(section, cwd_key)
 	if user_cwd and user_cwd is String:
 		cwd = user_cwd
 	var env_key := ".".join(["env", app._provider_id])
-	var user_env = SettingsManager.get_value(section, env_key)
+	var user_env = settings_manager.get_value(section, env_key)
 	if user_env and user_env is Dictionary:
 		env = user_env
 	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
-	var use_sandboxing := SettingsManager.get_value(section, sandboxing_key, true) as bool
+	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, true) as bool
 	
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
@@ -223,7 +226,7 @@ func get_recent_apps() -> Array:
 	var recent := []
 	if not "recent" in _persist_data:
 		return recent
-	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
+	var max_recent := settings_manager.get_value("general.home", "max_home_items", 10) as int
 	var i := 1
 	for app in _persist_data["recent"]:
 		if i > max_recent:
@@ -277,7 +280,7 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
-	var profile_path = SettingsManager.get_value(section, "gamepad_profile", "")
+	var profile_path = settings_manager.get_value(section, "gamepad_profile", "")
 	set_gamepad_profile(profile_path)
 
 
@@ -285,9 +288,13 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 func set_gamepad_profile(path: String) -> void:
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
-		logger.debug("Loading gamepad profile: " + ProjectSettings.globalize_path("res://assets/gamepad/profiles/default.json"))
+		# Try check to see if there is a global gamepad setting
+		var profile_path := settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+		if not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
+			profile_path = InputPlumber.DEFAULT_GLOBAL_PROFILE
+		logger.debug("Loading global gamepad profile: " + profile_path)
 		for gamepad in input_plumber.composite_devices:
-			gamepad.load_profile_path("res://assets/gamepad/profiles/default.json")
+			gamepad.load_profile_path(profile_path)
 		return
 
 	logger.debug("Loading gamepad profile: " + path)

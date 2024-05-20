@@ -204,12 +204,7 @@ layout_mode = 2
 
 [node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
 visible = false
-layout_mode = 2
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1280.0
-offset_bottom = 800.0
+layout_mode = 1
 
 [node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
 editor_description = "Anything in this container will always be visible, even during in-game states.
