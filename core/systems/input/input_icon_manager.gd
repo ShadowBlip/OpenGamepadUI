@@ -19,9 +19,12 @@ enum InputType {
 	GAMEPAD,
 }
 
+var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
 var logger := Log.get_logger("InputIconManager", Log.LEVEL.DEBUG)
 
+## Disable/Enable signaling on input type changes
+var disabled := false
 ## The last detected input type
 var last_input_type := InputType.GAMEPAD
 ## The device name of the last detected input
@@ -142,6 +145,14 @@ func _init():
 				continue
 			self._device_name_to_mapping_name[device_name] = mapping_name
 
+	# Disable when in game
+	var on_in_game_entered := func(_from: State):
+		self.disabled = true
+	in_game_state.state_entered.connect(on_in_game_entered)
+	var on_in_game_exited := func(_to: State):
+		self.disabled = false
+	in_game_state.state_exited.connect(on_in_game_exited)
+
 	# Listen for InputPlumber device change events
 	var on_comp_device_added := func(_device: InputPlumber.CompositeDevice):
 		_on_joy_connection_changed(true)
@@ -203,7 +214,8 @@ static func discover_device_mappings(mappings_dir: String) -> Dictionary:
 ## Refresh all icons
 func refresh():
 	# All it takes is to signal icons to refresh paths
-	input_type_changed.emit(last_input_type)
+	if not self.disabled:
+		input_type_changed.emit(last_input_type)
 
 
 ## Parse the given input path and return the texture(s) associated with that type of
@@ -390,7 +402,8 @@ func _get_matching_event(path: String, input_type: InputType) -> Array[InputEven
 ## Set the last input type to the given value and emit a signal
 func set_last_input_type(_last_input_type: InputType):
 	last_input_type = _last_input_type
-	input_type_changed.emit(_last_input_type)
+	if not self.disabled:
+		input_type_changed.emit(_last_input_type)
 
 
 ## Signal whenever a gamepad is connected/disconnected

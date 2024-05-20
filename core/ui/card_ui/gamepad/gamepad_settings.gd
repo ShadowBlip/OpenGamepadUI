@@ -2,7 +2,7 @@ extends Control
 
 const USER_TEMPLATES := "user://data/gamepad/templates"
 const USER_PROFILES := "user://data/gamepad/profiles"
-const DEFAULT_PROFILE := "res://assets/gamepad/profiles/default.json"
+const GLOBAL_PROFILE_PATH := "user://data/gamepad/profiles/global.json"
 
 var change_input_state := preload("res://assets/state/states/gamepad_change_input.tres") as State
 var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as State
@@ -123,11 +123,7 @@ func _on_state_entered(_from: State) -> void:
 	# If no library item was set with the state, then configure the OGUI profile
 	if not library_item:
 		profile_label.text = "Global"
-		var profile_path := settings_manager.get_value("input", "gamepad_profile", "") as String
-		if profile_path == "":
-			profile = InputPlumberProfile.load(DEFAULT_PROFILE)
-			_update_buttons()
-			return
+		var profile_path := settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
 		profile = _load_profile(profile_path)
 		_update_buttons()
 		return
@@ -146,6 +142,12 @@ func _on_state_exited(_to: State) -> void:
 	for child in container.get_children():
 		if child is CardMappingButton:
 			child.queue_free()
+
+	# Ensure CompositeDevice references are dropped
+	self.gamepad = null
+	change_input_state.remove_meta("gamepad")
+
+	# Save the profile (if one exists)
 	if not self.profile:
 		return
 	_save_profile()
@@ -431,9 +433,23 @@ func _save_profile() -> void:
 	if not profile:
 		logger.debug("No profile loaded to save")
 		return
+	
+	# Handle global gamepad profiles
 	if not library_item:
-		# TODO: Fix for global
 		logger.debug("No library item loaded to associate profile with")
+		# Save the profile
+		var path := GLOBAL_PROFILE_PATH
+		if profile.save(path) != OK:
+			logger.error("Failed to save global gamepad profile to: " + path)
+			notify.text = "Failed to save global gamepad profile"
+			notification_manager.show(notify)
+			return
+		
+		# Update the game settings to use this global profile
+		settings_manager.set_value("input", "gamepad_profile", path)
+		logger.debug("Saved global gamepad profile to: " + path)
+		notify.text = "Global gamepad profile saved"
+		notification_manager.show(notify)
 		return
 
 	# Try to save the profile
@@ -466,8 +482,8 @@ func _save_profile() -> void:
 # given profile does not exist.
 func _load_profile(profile_path: String = "") -> InputPlumberProfile:
 	var loaded: InputPlumberProfile
-	if profile_path == "" or not FileAccess.file_exists(profile_path):
-		loaded = InputPlumberProfile.load(DEFAULT_PROFILE)
+	if profile_path == "" or not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
+		loaded = InputPlumberProfile.load(InputPlumber.DEFAULT_GLOBAL_PROFILE)
 		if not loaded:
 			loaded = InputPlumberProfile.new()
 		if library_item:
