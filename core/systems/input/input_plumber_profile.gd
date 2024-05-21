@@ -119,6 +119,36 @@ func save(path: String) -> Error:
 	return OK
 
 
+## Returns an array of source capability strings for all mappings in the profile.
+## I.e. this will return a list of every mapping.source_event property.
+func get_mappings_source_capabilities() -> PackedStringArray:
+	var sources := PackedStringArray()
+	for mapping: InputPlumberMapping in self.mapping:
+		var source_event := mapping.source_event
+		var capability := source_event.to_capability()
+		if capability == "":
+			continue
+		if capability in sources:
+			continue
+		sources.append(capability)
+	
+	return sources
+
+
+## Return all mappings that match the given source capability. Most source capabilities
+## will just have a single mapping, but some, like "GamepadAxis", may have
+## multiple mappings associated with them (e.g. LeftStick -> KeyA, KeyW, KeyS, KeyD)
+func get_mappings_by_source_capability(source_capability: String) -> Array[InputPlumberMapping]:
+	var matching: Array[InputPlumberMapping] = []
+	for mapping: InputPlumberMapping in self.mapping:
+		var source_event := mapping.source_event
+		var capability := source_event.to_capability()
+		if source_capability == capability:
+			matching.append(mapping)
+
+	return matching
+
+
 ## Convert the profile to an easily serializable dictionary
 func to_dict() -> Dictionary:
 	var dict := {

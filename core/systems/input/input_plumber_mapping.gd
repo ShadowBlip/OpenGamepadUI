@@ -11,6 +11,18 @@ class_name InputPlumberMapping
 @export var target_events: Array[InputPlumberEvent]
 
 
+## Create a new mapping from the given source capability string.
+static func from_source_capability(capability: String) -> InputPlumberMapping:
+	var mapping := InputPlumberMapping.new()
+	mapping.name = capability
+	var source_event := InputPlumberEvent.new()
+	if source_event.set_capability(capability) != OK:
+		return null
+	mapping.source_event = source_event
+
+	return mapping
+
+
 static func from_dict(dict: Dictionary) -> InputPlumberMapping:
 	var obj := InputPlumberMapping.new()
 	if "name" in dict:
