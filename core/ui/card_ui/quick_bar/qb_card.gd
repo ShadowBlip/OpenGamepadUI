@@ -17,10 +17,13 @@ signal nonchild_focused
 @export var title := "Section"
 @export var is_toggled := false
 
-@onready var label := $%SectionLabel
-@onready var highlight := $%HighlightTexture
-@onready var content_container := $%ContentContainer
+@onready var header_container := $%HeaderContainer as VBoxContainer
+@onready var label := $%SectionLabel as Label
+@onready var highlight := $%HighlightTexture as TextureRect
+@onready var content_container := $%ContentContainer as VBoxContainer
 @onready var focus_group_setter := $%FocusGroupSetter as FocusGroupSetter
+@onready var smooth_scroll := $SmoothScrollEffect as SmoothScrollEffect
+@onready var grower := $GrowerEffect as GrowerEffect
 
 var focus_group: FocusGroup
 var logger := Log.get_logger("QBCard", Log.LEVEL.INFO)
@@ -38,6 +41,14 @@ func _ready() -> void:
 	# Do nothing if running in the editor
 	if Engine.is_editor_hint():
 		return
+
+	# Try to find a scroll container to do smooth scrolling on expansion
+	var scroll_container := find_parent("ScrollContainer")
+	if scroll_container and scroll_container is ScrollContainer:
+		smooth_scroll.target = scroll_container
+		var on_grow_finished := func():
+			smooth_scroll.scroll(self)
+		grower.effect_finished.connect(on_grow_finished)
 
 	# Auto-close when visibility is lost
 	var on_visibility_changed := func():
@@ -58,6 +69,33 @@ func _ready() -> void:
 	# Try and find a FocusGroup in the content to focus
 	focus_group = _find_child_focus_group(content_container.get_children())
 	focus_group_setter.target = focus_group
+
+
+## Add the given content as the header to the card. Disables the section header
+## when used.
+func add_header(content: Control, alignment: BoxContainer.AlignmentMode) -> void:
+	var add_to_card := func():
+		label.visible = false
+		header_container.visible = true
+		header_container.alignment = alignment
+		header_container.add_child(content)
+	if self.is_node_ready():
+		add_to_card.call()
+	else:
+		self.ready.connect(add_to_card)
+
+
+## Add the given content to the card
+func add_content(content: Control) -> void:
+	var nodes: Array[Node] = [content]
+	var add_to_card := func():
+		focus_group = _find_child_focus_group(nodes)
+		content_container.add_child(content)
+		focus_group_setter.target = focus_group
+	if self.is_node_ready():
+		add_to_card.call()
+	else:
+		self.ready.connect(add_to_card)
 
 
 func _on_theme_changed() -> void:

@@ -59,3 +59,8 @@ func pop() -> FocusGroup:
 		focus_group_changed.emit(stack[-1])
 	logger.debug("Popped focus stack: " + str(stack))
 	return last
+
+
+## Clear the focus stack
+func clear() -> void:
+	stack.clear()

@@ -154,6 +154,15 @@ func matches(event: InputPlumberEvent) -> bool:
 	return cap_a == cap_b
 
 
+## Certain events can have a "direction" specified, such as for joysticks and
+## gyro. This will return the direction if one exists and is supported.
+func get_direction() -> String:
+	if self.gamepad:
+		if self.gamepad.axis and self.gamepad.axis.direction:
+			return self.gamepad.axis.direction
+	return ""
+
+
 ## Returns the controller icon path from the given event
 static func get_joypad_path(cap: String) -> String:
 	var mapping := {

@@ -20,7 +20,7 @@ func _on_signal() -> void:
 
 func scroll(to_node: Control) -> void:
 	var tree := get_tree()
-	if not tree:
+	if not tree or not target:
 		return
 	if tween:
 		tween.kill()

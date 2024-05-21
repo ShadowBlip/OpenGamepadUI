@@ -134,13 +134,13 @@ func get_texture(path: String) -> Texture:
 			return self.home
 		"key/end":
 			return self.end
-		"key/arrow_left":
+		"key/arrow_left", "key/left":
 			return self.arrow_left
-		"key/arrow_up":
+		"key/arrow_up", "key/up":
 			return self.arrow_up
-		"key/arrow_right":
+		"key/arrow_right", "key/right":
 			return self.arrow_right
-		"key/arrow_down":
+		"key/arrow_down", "key/down":
 			return self.arrow_down
 		"key/page_up":
 			return self.page_up

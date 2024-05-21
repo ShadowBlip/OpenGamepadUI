@@ -1,6 +1,6 @@
 @tool
 @icon("res://assets/editor-icons/button.svg")
-extends PanelContainer
+extends Control
 class_name CardMappingButton
 
 signal pressed
@@ -45,7 +45,9 @@ signal button_down
 @export_category("Mouse")
 @export var click_focuses := true
 
-var mappings: Array[InputPlumberMapping] = []
+var _capability: String = ""
+var _direction: String = ""
+var _mappings: Array[InputPlumberMapping] = []
 var logger := Log.get_logger("CardMappingButton", Log.LEVEL.DEBUG)
 
 @onready var source_label := $%SourceLabel as Label
@@ -81,11 +83,15 @@ func set_target_device_icon_mapping(mapping_name: String) -> void:
 
 
 ## Configures the button for the given source capability
-func set_source_capability(capability: String) -> void:
+func set_source_capability(capability: String, direction: String = "") -> void:
 	logger.debug("Setting source capabilibuddy: " + capability)
 	if capability == "":
 		return
-	if set_source_icon(capability) != OK:
+	_capability = capability
+	_direction = direction
+	if not is_inside_tree():
+		return
+	if set_source_icon(capability, direction) != OK:
 		logger.warn("No icon found for capability. Setting text instead.")
 		source_label.visible = true
 		source_icon.visible = false
@@ -96,11 +102,11 @@ func set_source_capability(capability: String) -> void:
 
 
 ## Configures the button for the given target capability
-func set_target_capability(capability: String) -> void:
+func set_target_capability(capability: String, direction: String = "") -> void:
 	logger.debug("Setting target capabilibuddy: " + capability)
 	if capability == "":
 		return
-	if set_target_icon(capability) != OK:
+	if set_target_icon(capability, direction) != OK:
 		logger.warn("No icon found for capability. Setting text instead.")
 		target_label.visible = true
 		target_icon.visible = false
@@ -112,12 +118,14 @@ func set_target_capability(capability: String) -> void:
 
 ## Configures the button for the given mappable event. If a path cannot be found,
 ## this will return an error.
-func set_source_icon(capability: String) -> int:
+func set_source_icon(capability: String, direction: String = "") -> int:
 	# Convert the capability into an input icon path
 	var path := InputPlumberEvent.get_joypad_path(capability)
 	if path.is_empty():
 		logger.warn("No input path is defined for capability: " + capability)
 		return ERR_DOES_NOT_EXIST
+	if not direction.is_empty():
+		path = "/".join([path, direction])
 	source_icon.path = path
 
 	return OK
@@ -125,12 +133,14 @@ func set_source_icon(capability: String) -> int:
 
 ## Configures the button for the given mappable event. If a path cannot be found,
 ## this will return an error.
-func set_target_icon(capability: String) -> int:
+func set_target_icon(capability: String, direction: String = "") -> int:
 	# Convert the capability into an input icon path
 	var path := InputPlumberEvent.get_joypad_path(capability)
 	if path.is_empty():
 		logger.warn("No input path is defined for capability: " + capability)
 		return ERR_DOES_NOT_EXIST
+	if not direction.is_empty():
+		path = "/".join([path, direction])
 	target_icon.path = path
 
 	return OK

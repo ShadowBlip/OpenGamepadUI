@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://b2vibgdoiquxh"]
+
+[ext_resource type="Script" path="res://core/ui/components/card_mapping_button_group.gd" id="1_tdk78"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_354ht"]
+[ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="2_h5pbi"]
+[ext_resource type="Resource" uid="uid://bj4m2lh2hfslr" path="res://core/ui/card_ui/gamepad/gamepad_settings_focus.tres" id="3_2hry8"]
+[ext_resource type="PackedScene" uid="uid://dbll03tbmw3ps" path="res://core/ui/components/card_mapping_button.tscn" id="3_b0ckb"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="5_j8hel"]
+
+[node name="CardMappingContainer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("1_tdk78")
+
+[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_354ht")]
+unique_name_in_owner = true
+current_focus = NodePath("../Dropdown")
+focus_stack = ExtResource("3_2hry8")
+
+[node name="Dropdown" parent="." instance=ExtResource("2_h5pbi")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Use as"
+description = ""
+selected = 0
+
+[node name="CardMappingButton" parent="." instance=ExtResource("3_b0ckb")]
+layout_mode = 2
+
+[node name="CardMappingButton2" parent="." instance=ExtResource("3_b0ckb")]
+layout_mode = 2
+
+[node name="CardMappingButton3" parent="." instance=ExtResource("3_b0ckb")]
+layout_mode = 2
+
+[node name="CardMappingButton4" parent="." instance=ExtResource("3_b0ckb")]
+layout_mode = 2
+
+[node name="DeadzoneSlider" parent="." instance=ExtResource("5_j8hel")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deadzone"
+value = 30.0
+step = 10.0

@@ -93,6 +93,7 @@ func _ready() -> void:
 	# Set the initial intercept mode
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 
+
 func _on_focus_changed(control: Control) -> void:
 	if control != null:
 		logger.debug("Focus changed to: " + control.get_parent().name + " | " + control.name)
@@ -126,9 +127,6 @@ func _on_game_state_entered(_from: State) -> void:
 func _on_game_state_exited(to: State) -> void:
 	# Intercept all gamepad input when not in-game
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
-	
-	# Revert back to the default gamepad profile
-	#gamepad_manager.set_gamepads_profile(null)
 	
 	# Set gamescope input focus to on so the user can interact with the UI
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
