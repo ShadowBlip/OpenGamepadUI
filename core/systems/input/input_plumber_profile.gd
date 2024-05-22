@@ -97,6 +97,48 @@ static func from_json(json: String) -> InputPlumberProfile:
 	return InputPlumberProfile.from_dict(dict as Dictionary)
 
 
+## Return the target device string for the given target device type
+static func get_target_device_string(target_device: TargetDevice) -> String:
+	var target_device_str: String = ""
+	match target_device:
+		TargetDevice.Gamepad:
+			target_device_str = "gamepad"
+		TargetDevice.Mouse:
+			target_device_str = "mouse"
+		TargetDevice.Keyboard:
+			target_device_str = "keyboard"
+		TargetDevice.DualSense:
+			target_device_str = "ds5"
+		TargetDevice.DualSenseEdge:
+			target_device_str = "ds5-edge"
+		TargetDevice.SteamDeck:
+			target_device_str = "deck"
+		TargetDevice.XBox360:
+			target_device_str = "xb360"
+	return target_device_str
+
+
+## Return the target device for the given target device string
+static func get_target_device(target_device_str: String) -> TargetDevice:
+	var target_device: TargetDevice
+	match target_device_str:
+		"gamepad":
+			target_device = TargetDevice.Gamepad
+		"mouse":
+			target_device = TargetDevice.Mouse
+		"keyboard":
+			target_device = TargetDevice.Keyboard
+		"ds5":
+			target_device = TargetDevice.DualSense
+		"ds5-edge":
+			target_device = TargetDevice.DualSenseEdge
+		"deck":
+			target_device = TargetDevice.SteamDeck
+		"xb360":
+			target_device = TargetDevice.XBox360
+	return target_device
+
+
 ## Save the profile to the given path in JSON format
 func save(path: String) -> Error:
 	if path.begins_with("user://") or path.begins_with("res://"):
@@ -160,22 +202,9 @@ func to_dict() -> Dictionary:
 	if self.target_devices and self.target_devices.size() > 0:
 		var devices := []
 		for target_device: TargetDevice in self.target_devices:
-			var target_device_str: String
-			match target_device:
-				TargetDevice.Gamepad:
-					target_device_str = "gamepad"
-				TargetDevice.Mouse:
-					target_device_str = "mouse"
-				TargetDevice.Keyboard:
-					target_device_str = "keyboard"
-				TargetDevice.DualSense:
-					target_device_str = "ds5"
-				TargetDevice.DualSenseEdge:
-					target_device_str = "ds5-edge"
-				TargetDevice.SteamDeck:
-					target_device_str = "deck"
-				TargetDevice.XBox360:
-					target_device_str = "xb360"
+			var target_device_str := get_target_device_string(target_device)
+			if target_device_str.is_empty():
+				continue
 			devices.append(target_device_str)
 		dict["target_devices"] = devices
 

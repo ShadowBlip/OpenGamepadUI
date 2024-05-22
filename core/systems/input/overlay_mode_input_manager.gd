@@ -23,7 +23,7 @@ var state_machine := (
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
-var base_state = preload("res://assets/state/states/home.tres") as State
+var base_state = preload("res://assets/state/states/in_game.tres") as State
 
 var handle_back: bool = false
 
@@ -51,23 +51,24 @@ func _on_state_changed(_from: State, to: State) -> void:
 
 
 ## Queue a release event for the given action
-func action_release(action: String, strength: float = 1.0) -> void:
+func action_release(dbus_path: String, action: String, strength: float = 1.0) -> void:
 	Input.action_release(action)
-	_send_input(action, false, strength)
+	_send_input(dbus_path, action, false, strength)
 
 
 ## Queue a pressed event for the given action
-func action_press(action: String, strength: float = 1.0) -> void:
+func action_press(dbus_path: String, action: String, strength: float = 1.0) -> void:
 	Input.action_press(action)
-	_send_input(action, true, strength)
+	_send_input(dbus_path, action, true, strength)
 
 
 ## Sends an input action to the event queue
-func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
+func _send_input(dbus_path: String, action: String, pressed: bool, strength: float = 1.0) -> void:
 	var input_action := InputEventAction.new()
 	input_action.action = action
 	input_action.pressed = pressed
 	input_action.strength = strength
+	input_action.set_meta("dbus_path", dbus_path)
 	logger.debug("Send input: " + str(input_action))
 	Input.parse_input_event(input_action)
 
@@ -76,6 +77,7 @@ func _send_input(action: String, pressed: bool, strength: float = 1.0) -> void:
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
+	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
@@ -111,17 +113,17 @@ func _input(event: InputEvent) -> void:
 		logger.debug("Additional action as guide is released.")
 		# Steam OSK
 		if event.is_action_released("ogui_north"):
-			action_release("ogui_osk")
+			action_release(dbus_path, "ogui_osk")
 			get_viewport().set_input_as_handled()
 			return
 		# Quick Bar
 		if event.is_action_released("ogui_east"):
-			action_release("ogui_qb")
+			action_release(dbus_path, "ogui_qb")
 			get_viewport().set_input_as_handled()
 			return
 		# Steam QAM
 		if event.is_action_released("ogui_south"):
-			action_release("ogui_qam")
+			action_release(dbus_path, "ogui_qam")
 			get_viewport().set_input_as_handled()
 			return
 
@@ -132,30 +134,30 @@ func _input(event: InputEvent) -> void:
 			logger.debug("Additional action while guide wad pressed.")
 			# Steam OSK
 			if event.is_action_pressed("ogui_north"):
-				action_press("ogui_guide_action")
-				action_press("ogui_osk")
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_osk")
 			# Quick Bar
 			if event.is_action_pressed("ogui_east"):
-				action_press("ogui_guide_action")
-				action_press("ogui_qb")
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_qb")
 			# Steam QAM
 			if event.is_action_pressed("ogui_south"):
-				action_press("ogui_guide_action")
-				action_press("ogui_qam")
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_qam")
 		elif event.is_released():
 			# Steam OSK
 			if event.is_action_released("ogui_north"):
-				action_release("ogui_osk")
+				action_release(dbus_path, "ogui_osk")
 				get_viewport().set_input_as_handled()
 				return
 			# Quick Bar
 			if event.is_action_released("ogui_east"):
-				action_release("ogui_qb")
+				action_release(dbus_path, "ogui_qb")
 				get_viewport().set_input_as_handled()
 				return
 			# Steam QAM
 			if event.is_action_released("ogui_south"):
-				action_release("ogui_qam")
+				action_release(dbus_path, "ogui_qam")
 				get_viewport().set_input_as_handled()
 				return
 		# Prevent ALL input from propagating if guide is held!
@@ -165,26 +167,26 @@ func _input(event: InputEvent) -> void:
 	# Handle accept in the UI while it is open.
 	if event.is_action_pressed("ogui_south"):
 		logger.debug("South pressed on its own.")
-		action_press("ui_accept")
+		action_press(dbus_path, "ui_accept")
 		get_viewport().set_input_as_handled()
 		return
 
 	elif event.is_action_released("ogui_south"):
 		logger.debug("South released on its own.")
-		action_release("ui_accept")
+		action_release(dbus_path, "ui_accept")
 		get_viewport().set_input_as_handled()
 		return
 
 	# Handle back in the UI while it is open.
 	if event.is_action_pressed("ogui_east"):
 		logger.debug("East pressed on its own.")
-		action_press("ui_back")
+		action_press(dbus_path, "ui_back")
 		get_viewport().set_input_as_handled()
 		return
 
 	elif event.is_action_released("ogui_east"):
 		logger.debug("East released on its own.")
-		action_release("ui_back")
+		action_release(dbus_path, "ui_back")
 		get_viewport().set_input_as_handled()
 		return
 
@@ -208,6 +210,7 @@ func _input(event: InputEvent) -> void:
 ## Handle guide button events and determine whether this is a guide action
 ## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
 func _guide_input(event: InputEvent) -> void:
+	var dbus_path := event.get_meta("dbus_path", "") as String
 	# Only act on release events
 	if event.is_pressed():
 		logger.debug("Guide pressed. Waiting for additional events.")
@@ -217,7 +220,7 @@ func _guide_input(event: InputEvent) -> void:
 	# end the guide action and do nothing else.
 	if Input.is_action_pressed("ogui_guide_action"):
 		logger.debug("Guide released. Additional events used guide action, ignoring.")
-		action_release("ogui_guide_action")
+		action_release(dbus_path, "ogui_guide_action")
 		return
 
 	# Emit the main menu action if this was not a guide action
@@ -305,10 +308,10 @@ func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
 			logger.debug("Adding watch for " + device.name + " " + target.name)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))
-			target.input_event.connect(_on_dbus_input_event)
+			target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))
 
 
-func _on_dbus_input_event(event: String, value: float) -> void:
+func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> void:
 	var pressed := value == 1.0
 	logger.debug("Handling dbus input event: " + event + " pressed: " + str(pressed))
 	var action = event
@@ -333,10 +336,16 @@ func _on_dbus_input_event(event: String, value: float) -> void:
 			action = "ogui_tab_right"
 		"ui_l1":
 			action = "ogui_tab_left"
+
+	var input_action := InputEventAction.new()
+	input_action.action = action
+	input_action.pressed = pressed
+	input_action.strength = value
+
 	if pressed:
-		action_press(action)
+		action_press(dbus_path, action)
 	else:
-		action_release(action)
+		action_release(dbus_path, action)
 
 
 func _close_quickbar() -> void:

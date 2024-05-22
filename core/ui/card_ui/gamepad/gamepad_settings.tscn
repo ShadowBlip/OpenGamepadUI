@@ -48,6 +48,23 @@ on_signal = "state_entered"
 [node name="BackInputHandler" parent="." instance=ExtResource("9_5ao07")]
 process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_wyv83")])
 
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="InGamePanel" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.698039)
+layout_mode = 2
+
 [node name="MainContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
