@@ -11,8 +11,10 @@ var state_machine := (
 )
 var quick_bar_state = preload("res://assets/state/states/quick_bar_menu.tres") as State
 var settings_state = preload("res://assets/state/states/settings.tres") as State
-var base_state = preload("res://assets/state/states/home.tres") as State
+var gamepad_state = preload("res://assets/state/states/gamepad_settings.tres") as State
+var base_state = preload("res://assets/state/states/in_game.tres") as State
 
+var managed_states: Array[State] = [quick_bar_state, settings_state, gamepad_state]
 var PID: int = OS.get_process_id()
 var args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
@@ -108,10 +110,9 @@ func _ready() -> void:
 ## underlay process.
 func _setup_overlay_mode(args: Array) -> void:
 	overlay_window_id = gamescope.get_window_id(PID, display)
-	quick_bar_state.state_entered.connect(_on_window_open)
-	quick_bar_state.state_exited.connect(_on_window_closed)
-	settings_state.state_entered.connect(_on_window_open)
-	settings_state.state_exited.connect(_on_window_closed)
+	for state in managed_states:
+		state.state_entered.connect(_on_window_open)
+		state.state_exited.connect(_on_window_open)
 
 	# Don't crash if we're not launching another program.
 	if args == []:

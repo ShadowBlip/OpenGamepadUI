@@ -6,9 +6,11 @@ const GLOBAL_PROFILE_PATH := "user://data/gamepad/profiles/global.json"
 
 var change_input_state := preload("res://assets/state/states/gamepad_change_input.tres") as State
 var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as State
+var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var global_state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var state_machine := load("res://assets/state/state_machines/gamepad_settings_state_machine.tres") as StateMachine
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
 var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
@@ -18,6 +20,7 @@ var expandable_scene := load("res://core/ui/card_ui/quick_bar/qb_card.tscn") as 
 
 var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
+var profile_gamepad: String
 var library_item: LibraryItem
 var gamepad_types := ["Generic Gamepad", "XBox 360", "DualSense", "DualSense Edge", "Steam Deck"]
 var gamepad_types_icons := ["XBox 360", "XBox 360", "PS5", "PS5", "Steam Deck"] # From res://assets/gamepad/icon_mappings
@@ -25,6 +28,7 @@ var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
 
+@onready var in_game_panel := $%InGamePanel as Control
 @onready var gamepad_label := $%GamepadLabel as Label
 @onready var main_container := $%MainContainer as Container
 @onready var not_available := $%ServiceNotAvailableContainer as Container
@@ -59,11 +63,7 @@ func _ready() -> void:
 		self.gamepad_type_selected = item_selected
 		if self.profile:
 			var gamepad_type := self.get_selected_target_gamepad()
-			self.profile.target_devices = [
-				gamepad_type,
-				InputPlumberProfile.TargetDevice.Mouse,
-				InputPlumberProfile.TargetDevice.Keyboard,
-			]
+			profile_gamepad = InputPlumberProfile.get_target_device_string(gamepad_type)
 		self._update_mapping_elements()
 	gamepad_type_dropdown.item_selected.connect(on_gamepad_selected)
 	
@@ -77,6 +77,9 @@ func _ready() -> void:
 
 ## Called when the gamepad settings state is entered
 func _on_state_entered(_from: State) -> void:
+	# If the in-game state exists in the stack, display a background
+	in_game_panel.visible = global_state_machine.has_state(in_game_state)
+	
 	# Ensure that InputPlumber is running
 	if not input_plumber.supports_input_plumber():
 		not_available.visible = true
@@ -117,17 +120,25 @@ func _on_state_entered(_from: State) -> void:
 	# Populate the menu with the source inputs for the given gamepad
 	populate_mappings_for(gamepad)
 
+	# Set the library item, if one exists
 	library_item = null
 	profile = null
 	if gamepad_state.has_meta("item"):
 		library_item = gamepad_state.get_meta("item") as LibraryItem
+
+	# If no library item was set, but there's a running app, try to see if
+	# there is a library item for it instead.
+	if not library_item:
+		library_item = launch_manager.get_current_app_library_item()
 
 	# If no library item was set with the state, then configure the OGUI profile
 	if not library_item:
 		profile_label.text = "Global"
 		@warning_ignore("confusable_local_declaration")
 		var profile_path := settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+		var profile_target_gamepad := settings_manager.get_value("input", "gamepad_profile_target", "") as String
 		profile = _load_profile(profile_path)
+		profile_gamepad = profile_target_gamepad
 		_update_mapping_elements()
 		return
 
@@ -136,7 +147,9 @@ func _on_state_entered(_from: State) -> void:
 
 	# Check to see if the given game has a gamepad profile
 	var profile_path := settings_manager.get_library_value(library_item, "gamepad_profile", "") as String
+	var profile_target_gamepad := settings_manager.get_library_value(library_item, "gamepad_profile_target", "") as String
 	profile = _load_profile(profile_path)
+	profile_gamepad = profile_target_gamepad
 	_update_mapping_elements()
 	
 	# Clear focus
@@ -154,6 +167,9 @@ func _on_state_exited(_to: State) -> void:
 	# Ensure CompositeDevice references are dropped
 	self.gamepad = null
 	change_input_state.remove_meta("gamepad")
+	
+	# Clear the gamepad settings state
+	gamepad_state.remove_meta("item")
 	
 	# Clear the focus state
 	mapping_focus_group.current_focus = null
@@ -366,20 +382,17 @@ func _update_mapping_elements() -> void:
 	profile_label.text = profile.name
 
 	# Update the dropdown based on the profile's target gamepad type
-	if profile.target_devices and profile.target_devices.size() > 0:
-		for target_device in profile.target_devices:
-			if target_device in [InputPlumberProfile.TargetDevice.Keyboard, InputPlumberProfile.TargetDevice.Mouse]:
-				continue
-			var gamepad_text := self.get_target_gamepad_text(target_device)
-			var i := 0
-			var idx := 0
-			for item in self.gamepad_types:
-				if item == gamepad_text:
-					idx = i
-					break
-				i += 1
-			gamepad_type_dropdown.select(idx)
-			break
+	if not profile_gamepad.is_empty():
+		var target_device := InputPlumberProfile.get_target_device(profile_gamepad)
+		var gamepad_text := self.get_target_gamepad_text(target_device)
+		var i := 0
+		var idx := 0
+		for item in self.gamepad_types:
+			if item == gamepad_text:
+				idx = i
+				break
+			i += 1
+		gamepad_type_dropdown.select(idx)
 
 	# Reset the button text
 	for node in mapping_elements.values():
@@ -566,6 +579,7 @@ func _save_profile() -> void:
 		
 		# Update the game settings to use this global profile
 		settings_manager.set_value("input", "gamepad_profile", path)
+		settings_manager.set_value("input", "gamepad_profile_target", profile_gamepad)
 		logger.debug("Saved global gamepad profile to: " + path)
 		notify.text = "Global gamepad profile saved"
 		notification_manager.show(notify)
@@ -583,6 +597,7 @@ func _save_profile() -> void:
 	# Update the game settings to use this gamepad profile
 	var section := "game.{0}".format([library_item.name.to_lower()])
 	settings_manager.set_value(section, "gamepad_profile", path)
+	settings_manager.set_value(section, "gamepad_profile_target", profile_gamepad)
 	logger.debug("Saved gamepad profile to: " + path)
 	notify.text = "Gamepad profile saved"
 	notification_manager.show(notify)

@@ -21,7 +21,7 @@ enum InputType {
 
 var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
-var logger := Log.get_logger("InputIconManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InputIconManager", Log.LEVEL.INFO)
 
 ## Disable/Enable signaling on input type changes
 var disabled := false

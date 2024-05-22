@@ -318,6 +318,9 @@ class CompositeDevice extends Resource:
 				return []
 			return property
 
+	func set_target_devices(devices: PackedStringArray) -> void:
+		_proxy.call_method( IFACE_COMPOSITE_DEVICE, "SetTargetDevices", [devices], "as")
+
 	func load_profile_path(path: String) -> void:
 		# Normalize the path if it is a resource path
 		var normalized_path := path

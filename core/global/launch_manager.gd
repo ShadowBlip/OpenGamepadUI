@@ -271,21 +271,33 @@ func get_current_app() -> RunningApp:
 	return _current_app
 
 
+## Returns the library item for the currently running app (if one is running).
+func get_current_app_library_item() -> LibraryItem:
+	var current_app := get_current_app()
+	if not current_app or not current_app.launch_item:
+		return
+	var library_item := LibraryItem.new_from_launch_item(_current_app.launch_item)
+	return library_item
+
+
 ## Sets the gamepad profile for the running app with the given profile
 func set_app_gamepad_profile(app: RunningApp) -> void:
 	# If no app was specified, unset the current gamepad profile
 	if not app or not app.launch_item:
+		logger.debug("No app available to set gamepad profile")
 		set_gamepad_profile("")
 		return
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path = settings_manager.get_value(section, "gamepad_profile", "")
-	set_gamepad_profile(profile_path)
+	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
+	logger.debug("Using profile '" + profile_path + "' with gamepad type '" + profile_gamepad + "'")
+	set_gamepad_profile(profile_path, profile_gamepad)
 
 
 ## Sets the gamepad profile for the running app with the given profile
-func set_gamepad_profile(path: String) -> void:
+func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
 		# Try check to see if there is a global gamepad setting
@@ -295,6 +307,9 @@ func set_gamepad_profile(path: String) -> void:
 		logger.debug("Loading global gamepad profile: " + profile_path)
 		for gamepad in input_plumber.composite_devices:
 			gamepad.load_profile_path(profile_path)
+			# Set the target gamepad if one was specified
+			if not target_gamepad.is_empty():
+				gamepad.set_target_devices([target_gamepad, "keyboard", "mouse"])
 		return
 
 	logger.debug("Loading gamepad profile: " + path)
@@ -311,6 +326,10 @@ func set_gamepad_profile(path: String) -> void:
 	# TODO: Save profiles for individual controllers?
 	for gamepad in input_plumber.composite_devices:
 		gamepad.load_profile_path(path)
+		# Set the target gamepad if one was specified
+		if not target_gamepad.is_empty():
+			logger.debug("Setting target gamepad to: " + target_gamepad)
+			gamepad.set_target_devices([target_gamepad, "keyboard", "mouse"])
 	var notify := Notification.new("Using gamepad profile: " + profile.name)
 	NotificationManager.show(notify)
 
