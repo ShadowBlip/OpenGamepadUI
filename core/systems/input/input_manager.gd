@@ -271,11 +271,6 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 		"ui_l1":
 			action = "ogui_tab_left"
 
-	var input_action := InputEventAction.new()
-	input_action.action = action
-	input_action.pressed = pressed
-	input_action.strength = value
-
 	if pressed:
 		action_press(dbus_path, action)
 	else:

@@ -112,7 +112,7 @@ func _setup_overlay_mode(args: Array) -> void:
 	overlay_window_id = gamescope.get_window_id(PID, display)
 	for state in managed_states:
 		state.state_entered.connect(_on_window_open)
-		state.state_exited.connect(_on_window_open)
+		state.state_exited.connect(_on_window_closed)
 
 	# Don't crash if we're not launching another program.
 	if args == []:
