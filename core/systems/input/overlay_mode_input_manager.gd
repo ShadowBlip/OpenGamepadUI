@@ -26,6 +26,7 @@ var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") 
 var base_state = preload("res://assets/state/states/in_game.tres") as State
 
 var handle_back: bool = false
+var actions_pressed := {}
 
 ## Will show logger events with the prefix InputManager(Overlay Mode)
 var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
@@ -78,6 +79,20 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
 	var dbus_path := event.get_meta("dbus_path", "") as String
+
+	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
+	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
+	for action in possible_doubles:
+		if not event.is_action(action):
+			continue
+		var value := event.is_pressed()
+		var old_value := false
+		if action in actions_pressed:
+			old_value = actions_pressed[action]
+		if old_value == value:
+			get_viewport().set_input_as_handled()
+			return
+		actions_pressed[action] = value
 
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):

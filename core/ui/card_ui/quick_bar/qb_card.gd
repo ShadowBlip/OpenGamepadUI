@@ -159,6 +159,8 @@ func _on_pressed() -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	if not event is InputEventAction:
+		return
 	if event.is_action("ui_accept"):
 		if event.is_pressed():
 			button_down.emit()
