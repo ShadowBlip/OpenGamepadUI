@@ -21,7 +21,7 @@ func _input(event: InputEvent) -> void:
 		"InputEventJoypadButton", "InputEventAction":
 			input_type = InputIconManager.InputType.GAMEPAD
 			# If this is an InputPlumber event, use the name from the device
-			if event.has_meta("dbus_path"):
+			if event.has_meta("dbus_path") and not event.get_meta("dbus_path", "").is_empty():
 				var dbus_path := event.get_meta("dbus_path") as String
 				var device := input_plumber.get_device(dbus_path)
 				device_name = device.name
