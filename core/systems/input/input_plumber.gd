@@ -43,7 +43,12 @@ var intercept_mode_current: INTERCEPT_MODE = INTERCEPT_MODE.NONE
 var intercept_triggers_current: PackedStringArray = ["Gamepad:Button:Guide"]
 var intercept_target_current: String = "Gamepad:Button:Guide"
 
+## Emitted when a CompositeDevice is dicovered and identified as a new device
 signal composite_device_added(device: CompositeDevice)
+## Emitted when a CompositeDevice is dicovered over dbus but already exists in
+## the local map
+signal composite_device_changed(device: CompositeDevice)
+## Emitted when a CompositeDevice is removed
 signal composite_device_removed(dbus_path: String)
 
 
@@ -71,7 +76,7 @@ func _on_interfaces_added(dbus_path: String) -> void:
 	logger.debug("Interfaces Added: " + str(dbus_path))
 	if not "CompositeDevice" in dbus_path:
 		return
-	composite_devices = get_devices()
+	composite_devices = get_devices(dbus_path)
 	composite_devices_map.clear()
 	for device in composite_devices:
 		composite_devices_map[device.dbus_path] = device
@@ -149,8 +154,10 @@ func get_objects_of(pattern: String) -> Array:
 	return devices
 
 
-## Retrieves all CompositeDevices currently on the InputPlumber DBus interface 
-func get_devices() -> Array[CompositeDevice]:
+## Retrieves all CompositeDevices currently on the InputPlumber DBus interface. Will
+## emit composite_device_added if the given dbus path is a new device, or
+## composite_device_changed if it already existed
+func get_devices(dbus_path: String = "") -> Array[CompositeDevice]:
 	logger.debug("Getting all composite devices.")
 	var new_device_list: Array[CompositeDevice]
 	new_device_list.assign(get_objects_of("CompositeDevice"))
@@ -163,7 +170,10 @@ func get_devices() -> Array[CompositeDevice]:
 			if old_dev.dbus_path == device.dbus_path:
 				existing_devices.append(old_dev)
 				found = true
+				if dbus_path == device.dbus_path:
+					composite_device_changed.emit(device)
 				break
+
 		# New device found
 		if not found:
 			existing_devices.append(device)
