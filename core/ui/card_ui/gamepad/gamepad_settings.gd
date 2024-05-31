@@ -54,7 +54,7 @@ func _ready() -> void:
 		profile = _load_profile()
 		_update_mapping_elements()
 	delete_button.button_up.connect(on_delete)
-	
+
 	# Setup the gamepad type dropdown
 	gamepad_type_dropdown.clear()
 	for gamepad_type: String in self.gamepad_types:
@@ -64,15 +64,28 @@ func _ready() -> void:
 		if self.profile:
 			var gamepad_type := self.get_selected_target_gamepad()
 			profile_gamepad = InputPlumberProfile.get_target_device_string(gamepad_type)
+			logger.debug("Setting gamepad to " + profile_gamepad)
+		else:
+			logger.debug("No profile, unable to set gamepad type.")
 		self._update_mapping_elements()
 	gamepad_type_dropdown.item_selected.connect(on_gamepad_selected)
-	
+
+	# Load the default profile
+	var profile_path = settings_manager.get_value("input", "gamepad_profile")
+	profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target")
+	for gamepad in input_plumber.composite_devices:
+			_set_gamepad_profile(gamepad, profile_path)
+
 	# Grab focus when the mapper exits
 	var on_state_changed := func(_from: State, to: State):
 		if to:
 			return
 		mapping_focus_group.grab_focus()
 	state_machine.state_changed.connect(on_state_changed)
+
+	# Ensure new devices are set to the correct profile when added
+	input_plumber.composite_device_added.connect(_set_gamepad_profile)
+	input_plumber.composite_device_changed.connect(_set_gamepad_profile)
 
 
 ## Called when the gamepad settings state is entered
@@ -144,6 +157,7 @@ func _on_state_entered(_from: State) -> void:
 
 	# Set the profile text to the game name
 	profile_label.text = library_item.name
+
 
 	# Check to see if the given game has a gamepad profile
 	var profile_path := settings_manager.get_library_value(library_item, "gamepad_profile", "") as String
@@ -558,13 +572,37 @@ func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> 
 	return "Generic Gamepad"
 
 
+#  Set the given profile for the given composte device.
+func _set_gamepad_profile(gamepad: InputPlumber.CompositeDevice, profile_path: String = "") -> void:
+	if profile_path == "":
+		if gamepad_state.has_meta("item"):
+			library_item = gamepad_state.get_meta("item") as LibraryItem
+
+		# If no library item was set, but there's a running app, try to see if
+		# there is a library item for it instead.
+		if not library_item:
+			library_item = launch_manager.get_current_app_library_item()
+
+		# If no library item was set with the state, then use the default
+		if not library_item:
+			profile_path = settings_manager.get_value("input", "gamepad_profile")
+		else:
+			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
+
+	logger.debug("Setting " + gamepad.name + " to profile: " + profile_path)
+	gamepad.load_profile_path(profile_path)
+	if not profile_gamepad.is_empty():
+		logger.debug("Setting target gamepad to: " + profile_gamepad)
+		gamepad.set_target_devices([profile_gamepad, "keyboard", "mouse"])
+
+
 # Save the current profile to a file
 func _save_profile() -> void:
 	var notify := Notification.new("")
 	if not profile:
 		logger.debug("No profile loaded to save")
 		return
-	
+
 	# Handle global gamepad profiles
 	if not library_item:
 		logger.debug("No library item loaded to associate profile with")
@@ -576,10 +614,14 @@ func _save_profile() -> void:
 			notify.text = "Failed to save global gamepad profile"
 			notification_manager.show(notify)
 			return
-		
+
 		# Update the game settings to use this global profile
 		settings_manager.set_value("input", "gamepad_profile", path)
 		settings_manager.set_value("input", "gamepad_profile_target", profile_gamepad)
+
+		for gamepad in input_plumber.composite_devices:
+			_set_gamepad_profile(gamepad, path)
+
 		logger.debug("Saved global gamepad profile to: " + path)
 		notify.text = "Global gamepad profile saved"
 		notification_manager.show(notify)
