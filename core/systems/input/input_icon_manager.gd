@@ -255,21 +255,21 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 	if not mapping:
 		logger.warn("No mapping found for device: " + device_name)
 		return textures
-	
+
 	# Check to see if this path is a special action with possible fallbacks
 	if path in self._special_actions:
 		logger.debug("Path is a special action: " + path)
 		var data := self._special_actions[path] as Dictionary
 		var settings := data[input_type] as Dictionary
 		var special_paths := settings["paths"] as Array
-		
+
 		# Check that the mapping has texture(s) for this action
 		var mapping_has_textures := !special_paths.is_empty()
 		for special_path in special_paths:
 			if not mapping.get_texture(special_path):
 				mapping_has_textures = false
 				break
-		
+
 		# If the mapping doesn't have the texture, use the fallback paths
 		if not mapping_has_textures and "fallback" in settings:
 			logger.debug("Unable to find texture for special action '" + path + "' in mapping: " + mapping.name + ". Using fallback.")
@@ -280,7 +280,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 			paths.clear()
 			paths.append_array(special_paths)
 		logger.debug("Converted special action to: " + str(paths))
-	
+
 	# If the provided path is a custom input action, parse the input actions
 	# and convert the string into an input path. (e.g. "ogui_accept" -> "joypad/a")
 	if not path in self._special_actions and _is_path_action(path):
@@ -290,7 +290,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 		if events.is_empty():
 			logger.warn("Unable to find events in input map for action: " + path)
 			return textures
-		
+
 		paths.clear()
 		for event: InputEvent in events:
 			var converted_path := _convert_event_to_path(event)
@@ -299,7 +299,7 @@ func parse_path(path: String, mapping_name: String = "", input_type: InputType =
 				continue
 			logger.debug("Converted input event '" + str(event) + "' to path: " + converted_path)
 			paths.append(converted_path)
-	
+
 	# Loop through all of the input paths (i.e. ["key/ctrl", "key/f1"]) and
 	# get the corresponding texture based on the last detected device.
 	for input_path in paths:
