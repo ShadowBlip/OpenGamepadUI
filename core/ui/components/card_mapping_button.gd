@@ -126,6 +126,7 @@ func set_source_icon(capability: String, direction: String = "") -> int:
 		return ERR_DOES_NOT_EXIST
 	if not direction.is_empty():
 		path = "/".join([path, direction])
+	source_icon.force_type = 2
 	source_icon.path = path
 
 	return OK

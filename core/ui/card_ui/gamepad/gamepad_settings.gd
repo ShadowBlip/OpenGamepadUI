@@ -290,14 +290,13 @@ func _add_button_for_capability(gamepad_name: String, capability: String, parent
 	var idx := parent.get_index() + 1
 
 	var button := button_scene.instantiate() as CardMappingButton
-	button.set_source_capability(capability)
-	button.text = "-"
 	var on_button_ready := func():
 		# Get the icon map name of the currently selected target gamepad. E.g.
 		# if the PS5 target gamepad is selected, the button will show the
 		# target input icon for the PS5 controller. 
 		var icon_mapping := get_selected_target_gamepad_icon_map()
 		button.set_target_device_icon_mapping(icon_mapping)
+		button.set_target_capability(capability)
 
 		# Get the icon map name from the source gamepad we're configuring.
 		var source_mapping_name := input_icons.get_mapping_name_from_device(gamepad_name)
@@ -412,14 +411,21 @@ func _update_mapping_elements() -> void:
 	for node in mapping_elements.values():
 		if node is CardMappingButton:
 			node.text = "-"
-	
-	# Configure the UI elements for each mapping
-	for capability in profile.get_mappings_source_capabilities():
+
+	var mapped_capabilities := profile.get_mappings_source_capabilities()
+	for capability in mapping_elements:
+
+		# Find if this capability was remapped
+		var mappings : Array[InputPlumberMapping]
+		if capability in mapped_capabilities:
+			mappings = profile.get_mappings_by_source_capability(capability)
+		else:
+			var mapping := InputPlumberMapping.from_source_capability(capability)
+			var target_event = InputPlumberEvent.from_capability(capability)
+			mapping.target_events = [target_event]
+			mappings = [mapping]
+
 		# Find the UI element for this capability
-		if not capability in mapping_elements:
-			logger.debug("Unable to find element for capability: " + capability)
-			continue
-		var mappings := profile.get_mappings_by_source_capability(capability)
 		var element = mapping_elements[capability]
 
 		# Update the button or container using the given mapping(s)
