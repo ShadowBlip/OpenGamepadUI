@@ -34,22 +34,14 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	setcap 'cap_sys_nice=eip' $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64 || true
 	mkdir -p $(PREFIX)/share/opengamepadui/scripts
-	install -Dm755 usr/share/opengamepadui/scripts/powertools \
-		$(PREFIX)/share/opengamepadui/scripts/powertools
 	install -Dm755 usr/share/opengamepadui/scripts/manage_input \
 		$(PREFIX)/share/opengamepadui/scripts/manage_input
 	install -Dm755 usr/share/opengamepadui/scripts/make_nice \
 		$(PREFIX)/share/opengamepadui/scripts/make_nice
-	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.powertools.policy \
-		$(PREFIX)/share/polkit-1/actions/org.shadowblip.powertools.policy
 	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.manage_input.policy \
 		$(PREFIX)/share/polkit-1/actions/org.shadowblip.manage_input.policy
 	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.setcap.policy \
 		$(PREFIX)/share/polkit-1/actions/org.shadowblip.setcap.policy
-	install -Dm644 usr/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb \
-		$(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
-	install -Dm644 usr/lib/udev/rules.d/61-opengamepadui-handheld.rules \
-		$(PREFIX)/lib/udev/rules.d/61-opengamepadui-handheld.rules
 	install -Dm644 usr/lib/systemd/user/systemd-sysext-updater.service \
 		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	install -Dm644 usr/lib/systemd/user/ogui-overlay-mode.service \
@@ -63,10 +55,6 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/bin/opengamepadui
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
-	rm -rf $(PREFIX)/share/opengamepadui/scripts/powertools
-	rm -rf $(PREFIX)/share/polkit-1/actions/org.shadowblip.powertools.policy
-	rm -rf $(PREFIX)/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
-	rm -rf $(PREFIX)/lib/udev/rules.d/10-opengamepadui-handheld.rules
 	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	rm -rf $(PREFIX)/lib/systemd/user/ogui-overlay-mode.service
 	@echo "Uninstall complete"
