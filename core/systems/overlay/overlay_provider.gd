@@ -14,7 +14,7 @@ class_name OverlayProvider
 ## Whether or not the overlay's layout should be managed by an [OverlayContainer]
 @export var managed := true
 
-var logger: Log.Logger
+var logger: Logger
 
 
 func _init() -> void:

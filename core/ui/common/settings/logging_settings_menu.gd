@@ -3,7 +3,7 @@ extends ScrollContainer
 const toggle_scene := preload("res://core/ui/components/toggle.tscn")
 
 var logger_map := {}
-var log_manager := preload("res://core/systems/debug/log_manager.tres") as Log
+var log_manager := load("res://core/systems/debug/log_manager.tres") as LogManager
 
 @onready var container := $%VBoxContainer
 @onready var focus_group := $%FocusGroup
