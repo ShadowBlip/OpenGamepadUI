@@ -143,15 +143,13 @@ func _setup_overlay_mode(args: Array) -> void:
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 	input_plumber.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 
-	input_plumber.composite_device_changed.connect(_set_intercept)
-
-
-# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
-func _set_intercept(device: InputPlumber.CompositeDevice) -> void:
-	var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
-	logger.debug("Setting intercept mode to: " + str(intercept_mode))
-	input_plumber.set_intercept_mode_single(intercept_mode, device)
-	input_plumber.set_intercept_activation_single(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2", device)
+	# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
+	var on_device_changed := func(device: InputPlumber.CompositeDevice):
+		var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
+		logger.debug("Setting intercept mode to: " + str(intercept_mode))
+		input_plumber.set_intercept_mode_single(intercept_mode, device)
+		input_plumber.set_intercept_activation_single(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2", device)
+	input_plumber.composite_device_changed.connect(on_device_changed)
 
 
 # Removes specified child elements from the given Node.
