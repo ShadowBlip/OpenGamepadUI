@@ -128,6 +128,11 @@ func set_source_icon(capability: String, direction: String = "") -> int:
 		path = "/".join([path, direction])
 	source_icon.force_type = 2
 	source_icon.path = path
+	if source_icon.textures.is_empty():
+		logger.debug("No texture found, hiding " + capability + " button.")
+		self.visible = false
+	else:
+		self.visible = true
 
 	return OK
 

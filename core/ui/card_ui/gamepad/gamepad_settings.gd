@@ -22,8 +22,8 @@ var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
-var gamepad_types := ["Generic Gamepad", "XBox 360", "DualSense", "DualSense Edge", "Steam Deck"]
-var gamepad_types_icons := ["XBox 360", "XBox 360", "PS5", "PS5", "Steam Deck"] # From res://assets/gamepad/icon_mappings
+var gamepad_types := ["Generic Gamepad", "DualSense Edge"]#"XBox 360", "DualSense", "Steam Deck"
+var gamepad_types_icons := ["XBox 360", "PS5"] #"XBox 360", "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
@@ -376,6 +376,13 @@ func _add_group_for_capability(gamepad_name: String, capability: String, parent:
 	input_icon.path = icon_path
 	var source_mapping_name := input_icons.get_mapping_name_from_device(gamepad_name)
 	input_icon.force_mapping = source_mapping_name
+
+	# Hide elements with no icon as they aren't yet supported in InputPlumber.
+	var on_card_ready := func():
+		if input_icon.textures.is_empty():
+			logger.debug("No texture found, hiding " + capability + " expandable card.")
+			expandable_card.visible = false
+	input_icon.ready.connect(on_card_ready)
 
 	# Add the group to the expandable card
 	expandable_card.add_header(input_icon, BoxContainer.ALIGNMENT_BEGIN)
