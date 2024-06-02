@@ -6,10 +6,6 @@ var state_machine := load("res://assets/state/state_machines/global_state_machin
 var battery_capacity := -1
 var logger := Log.get_logger("ContextBar")
 
-@onready var accept_icon := $%AcceptButtonIcon as ControllerTextureRect
-@onready var back_icon := $%BackButtonIcon as ControllerTextureRect
-@onready var quick_bar_mod_icon := $%QBModifierIcon as ControllerTextureRect
-@onready var quick_bar_button_icon := $%QBButtonIcon as ControllerTextureRect
 @onready var battery: String = Battery.find_battery_path()
 @onready var time_label: Label = $%TimeLabel
 

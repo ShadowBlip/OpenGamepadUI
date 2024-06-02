@@ -7,9 +7,9 @@
 [ext_resource type="Resource" uid="uid://46cu324n427u" path="res://assets/state/states/gamepad_change_input.tres" id="4_sv30y"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_i6uqd"]
 [ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_roi3c"]
+[ext_resource type="Texture2D" uid="uid://dyemqkvdtk43e" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="8_5jaa6"]
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_okgql"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_an8os"]
-[ext_resource type="Texture2D" uid="uid://d284wkmo0vqfk" path="res://addons/controller_icons/assets/xbox360/a.png" id="10_g6xyt"]
 [ext_resource type="Resource" uid="uid://b58i2ue2qwe6f" path="res://core/ui/card_ui/gamepad/gamepad_mapper_tabs_state.tres" id="10_gr678"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="11_c6udv"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="11_taofv"]
@@ -83,7 +83,7 @@ text = "Modifying"
 [node name="ModifyingInputTexture" type="TextureRect" parent="VBoxContainer/HBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-texture = ExtResource("10_g6xyt")
+texture = ExtResource("8_5jaa6")
 expand_mode = 3
 stretch_mode = 5
 
