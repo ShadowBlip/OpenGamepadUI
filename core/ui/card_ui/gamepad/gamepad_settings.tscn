@@ -42,7 +42,7 @@ fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
 [node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
-target = NodePath("../../MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer/FocusGroup")
+target = NodePath("../../MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/MainFocusGroup")
 on_signal = "state_entered"
 
 [node name="BackInputHandler" parent="." instance=ExtResource("9_5ao07")]
@@ -92,7 +92,7 @@ fade_out_signal = "state_entered"
 on_signal = "state_exited"
 
 [node name="FocusGroupSetter" parent="MainContainer/TopLevelContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
-target = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/FocusGroup")
+target = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/ButtonFocusGroup")
 on_signal = "state_exited"
 
 [node name="ProfileNameLabel" parent="MainContainer/TopLevelContainer" instance=ExtResource("14_b37ub")]
@@ -110,24 +110,25 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("7_fyh3u")]
+[node name="MainFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
 focus_neighbor_bottom = NodePath("../ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer/MappingFocusGroup")
-focus_neighbor_top = NodePath("../HBoxContainer/FocusGroup")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
+[node name="ButtonFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
 current_focus = NodePath("../SaveButton")
-focus_neighbor_bottom = NodePath("../../FocusGroup")
+focus_neighbor_bottom = NodePath("../../MainFocusGroup")
 
 [node name="SaveButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 texture = ExtResource("10_y71gk")
 
 [node name="DeleteButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 texture = ExtResource("12_64hbv")
 
@@ -178,7 +179,7 @@ layout_mode = 2
 unique_name_in_owner = true
 focus_stack = ExtResource("16_888le")
 focus_neighbor_bottom = NodePath(".")
-focus_neighbor_top = NodePath("../../../../../FocusGroup")
+focus_neighbor_top = NodePath("../../../../../MainFocusGroup")
 
 [node name="ButtonsLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cgxl1qiu50h15"]
+[gd_scene load_steps=11 format=3 uid="uid://cgxl1qiu50h15"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/general_controller_settings_menu.gd" id="1_r712q"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_fdccl"]
@@ -6,6 +6,10 @@
 [ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="3_6p4qa"]
 [ext_resource type="Resource" uid="uid://bcekyu20uvkxv" path="res://assets/state/states/settings_general_controller.tres" id="3_yy4fy"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_g1xc4"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_ynn8u"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="8_1egj0"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="9_3kuiy"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="10_uoc6p"]
 
 [node name="GeneralControllerSettings" type="Control"]
 layout_mode = 3
@@ -42,3 +46,12 @@ layout_mode = 2
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_fdccl")]
 focus_stack = ExtResource("3_6p4qa")
+
+[node name="CardButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_ynn8u")]
+layout_mode = 2
+text = "Gamepad Settings"
+
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/CardButton" instance=ExtResource("8_1egj0")]
+state_machine = ExtResource("9_3kuiy")
+state = ExtResource("10_uoc6p")
+on_signal = "player_button_down"

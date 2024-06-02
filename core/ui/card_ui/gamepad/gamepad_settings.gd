@@ -26,7 +26,7 @@ var gamepad_types := ["Generic Gamepad", "DualSense Edge"]#"XBox 360", "DualSens
 var gamepad_types_icons := ["XBox 360", "PS5"] #"XBox 360", "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
-var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 
 @onready var in_game_panel := $%InGamePanel as Control
 @onready var gamepad_label := $%GamepadLabel as Label
@@ -181,10 +181,10 @@ func _on_state_exited(_to: State) -> void:
 	# Ensure CompositeDevice references are dropped
 	self.gamepad = null
 	change_input_state.remove_meta("gamepad")
-	
+
 	# Clear the gamepad settings state
 	gamepad_state.remove_meta("item")
-	
+
 	# Clear the focus state
 	mapping_focus_group.current_focus = null
 	mapping_focus_group.focus_stack.clear()

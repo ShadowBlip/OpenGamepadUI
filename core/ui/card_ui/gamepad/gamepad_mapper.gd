@@ -13,7 +13,7 @@ signal mapping_selected(mapping: InputPlumberMapping)
 var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.DBUS)
 var current_mapping: InputPlumberMapping
-var logger := Log.get_logger("GamepadMapper", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadMapper", Log.LEVEL.INFO)
 
 @onready var tab_container := $%TabContainer as TabContainer
 @onready var osk := $%OnScreenKeyboard as OnScreenKeyboard

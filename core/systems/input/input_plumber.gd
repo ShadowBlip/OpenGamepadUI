@@ -31,7 +31,7 @@ enum INTERCEPT_MODE {
 	ALL,
 }
 
-var logger := Log.get_logger("InputPlumber", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("InputPlumber", Log.LEVEL.INFO)
 
 var dbus := load("res://core/global/dbus_system.tres") as DBusManager
 var manager := Manager.new(dbus.create_proxy(INPUT_PLUMBER_BUS, INPUT_PLUMBER_MANAGER_PATH))
