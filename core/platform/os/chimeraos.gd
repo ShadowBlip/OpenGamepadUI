@@ -1,9 +1,12 @@
 extends OSPlatform
 class_name PlatformChimeraOS
 
+const DEFAULT_THEME := "res://assets/themes/card_ui-darksoul.tres"
+const DEFAULT_OVERLAY_THEME := "res://assets/themes/card_ui-water-vapor.tres"
+const SESSION_SELECT_PATH := "/usr/lib/os-session-select"
+
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var default_theme := "res://assets/themes/card_ui-darksoul.tres"
-var SESSION_SELECT_PATH := "/usr/lib/os-session-select"
+
 
 func _init() -> void:
 	logger.set_name("PlatformChimeraOS")
@@ -59,11 +62,48 @@ func _switch_session(name: String) -> void:
 
 ## Sets the default theme.
 func _set_default_theme(root: Window) -> void:
-	# Set the default theme if there is no theme set
 	var user_theme := settings_manager.get_value("general", "theme", "") as String
-	if user_theme == "":
-		logger.debug("No theme set. Using OS specific default theme: " + default_theme)
-		settings_manager.set_value("general", "theme", default_theme)
-	else :
+	if not user_theme.is_empty():
 		logger.debug("Found existing theme: " + user_theme)
+		return
+	logger.debug("No theme set. Using OS specific default theme: " + DEFAULT_THEME)
 
+	# Find the main node
+	var main: Control
+	var nodes := root.get_tree().get_nodes_in_group("main")
+	for node in nodes:
+		if not node is Control:
+			continue
+		main = node
+		break
+
+	if not main:
+		logger.warn("Unable to find main node!")
+		return
+
+	# Set the default theme depending on if this is overlay mode or full session
+	var theme_path := DEFAULT_THEME
+	if main.name == "CardUI":
+		logger.debug("Detected full session")
+		theme_path = DEFAULT_THEME
+	elif main.name.contains("Control"):
+		logger.debug("Detected overlay session")
+		theme_path = DEFAULT_OVERLAY_THEME
+	else:
+		logger.warn("Unable to determine session type to set theme")
+	logger.debug("Using theme: " + theme_path)
+
+	# Set the theme when the main node is ready
+	var on_main_ready := func():
+		var current_theme = main.theme
+		if theme_path != "" && current_theme.resource_path != theme_path:
+			logger.debug("Setting theme to: " + theme_path)
+			var loaded_theme = load(theme_path)
+			if loaded_theme != null:
+				# TODO: This is a workaround, themes aren't properly set the first time.
+				main.call_deferred("set_theme", loaded_theme)
+				main.call_deferred("set_theme", current_theme)
+				main.call_deferred("set_theme", loaded_theme)
+			else:
+				logger.debug("Unable to load theme")
+	main.ready.connect(on_main_ready)
