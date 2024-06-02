@@ -24,8 +24,6 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 	mkdir -p $(PREFIX)/share/opengamepadui
 	install -Dm644 usr/share/opengamepadui/libdbus.linux.template_debug.x86_64.so \
 		$(PREFIX)/share/opengamepadui/libdbus.linux.template_debug.x86_64.so
-	install -Dm644 usr/share/opengamepadui/libevdev.linux.template_debug.x86_64.so \
-		$(PREFIX)/share/opengamepadui/libevdev.linux.template_debug.x86_64.so
 	install -Dm644 usr/share/opengamepadui/liblinuxthread.linux.template_debug.x86_64.so \
 		$(PREFIX)/share/opengamepadui/liblinuxthread.linux.template_debug.x86_64.so
 	install -Dm644 usr/share/opengamepadui/libpty.linux.template_debug.x86_64.so \
