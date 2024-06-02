@@ -80,6 +80,11 @@ func _ready() -> void:
 
 	# Set the initial intercept mode
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
+	var on_device_changed := func(device: InputPlumber.CompositeDevice):
+		var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
+		logger.debug("Setting intercept mode to: " + str(intercept_mode))
+		input_plumber.set_intercept_mode_single(intercept_mode, device)
+	input_plumber.composite_device_changed.connect(on_device_changed)
 
 	# Set the theme if one was set
 	var theme_path := settings_manager.get_value("general", "theme", "") as String
