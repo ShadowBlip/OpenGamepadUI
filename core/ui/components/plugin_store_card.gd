@@ -25,7 +25,7 @@ var download_url: String
 var project_url: String
 var sha256: String
 var plugin_id: String
-var logger: Log.Logger
+var logger: Logger
 
 @onready var plugin_texture := $%Icon
 @onready var plugin_name_label := $%NameLabel
