@@ -285,7 +285,7 @@ class CompositeDevice extends Resource:
 
 	var intercept_mode: int:
 		set(v):
-			print("Setting mode " + str(v) + " on " + self.dbus_path)
+			#print("Setting mode " + str(v) + " on " + self.dbus_path)
 			_proxy.set_property(IFACE_COMPOSITE_DEVICE, "InterceptMode", DBus.uint32(v))
 		get:
 			var property = _proxy.get_property(IFACE_COMPOSITE_DEVICE, "InterceptMode")
