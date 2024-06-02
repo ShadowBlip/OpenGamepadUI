@@ -48,7 +48,7 @@ signal button_down
 var _capability: String = ""
 var _direction: String = ""
 var _mappings: Array[InputPlumberMapping] = []
-var logger := Log.get_logger("CardMappingButton", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("CardMappingButton", Log.LEVEL.INFO)
 
 @onready var source_label := $%SourceLabel as Label
 @onready var target_label := $%TargetLabel as Label

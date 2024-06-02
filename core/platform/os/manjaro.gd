@@ -7,7 +7,7 @@ var SESSION_SELECT_PATH := "/usr/lib/os-session-select"
 
 func _init() -> void:
 	logger.set_name("PlatformChimeraOS")
-	logger.set_level(Log.LEVEL.DEBUG)
+	logger.set_level(Log.LEVEL.INFO)
 
 
 func ready(root: Window) -> void:

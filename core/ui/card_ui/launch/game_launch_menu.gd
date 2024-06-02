@@ -108,6 +108,8 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_state_exited(to: State) -> void:
+	if to != gamepad_settings_state:
+		gamepad_settings_state.remove_meta("item")
 	if to == in_game_state:
 		state_machine.remove_state(launcher_state)
 	set_process(false)

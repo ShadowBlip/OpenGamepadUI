@@ -55,7 +55,7 @@ var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var should_manage_overlay := true
 
 # Connect to Gamescope signals

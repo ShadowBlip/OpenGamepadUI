@@ -29,7 +29,7 @@ var _launch_manager := load("res://core/global/launch_manager.tres") as LaunchMa
 
 var current_profile: PerformanceProfile
 var current_profile_state: PROFILE_STATE # docked or undocked
-var logger := Log.get_logger("PerformanceManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
 
 
 func _init() -> void:

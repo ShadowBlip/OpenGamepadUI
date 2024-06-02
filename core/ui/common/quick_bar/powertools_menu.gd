@@ -25,7 +25,7 @@ var power_station := load("res://core/systems/performance/power_station.tres") a
 var power_station_running := false
 var profile_loading := false
 var current_profile: PerformanceProfile
-var logger := Log.get_logger("PowerTools", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("PowerTools", Log.LEVEL.INFO)
 
 
 # Called when the node enters the scene tree for the first time.

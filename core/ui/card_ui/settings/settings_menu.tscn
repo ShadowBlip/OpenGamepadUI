@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://d2jiecrd5sw4s"]
+[gd_scene load_steps=44 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
@@ -49,6 +49,15 @@ color = Color(0.384314, 0.447059, 0.643137, 1)
 grow_begin = -10.0
 grow_end = -10.0
 vertical = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2j6m7"]
+resource_local_to_scene = true
+bg_color = Color(0.105882, 0.109804, 0.141176, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -373,9 +382,6 @@ theme_override_constants/margin_bottom = 5
 [node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("29_8hwjo")]
 layout_mode = 2
 
-[node name="AutoUpdateToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer" index="2"]
-button_pressed = true
-
 [node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings" instance=ExtResource("2_xwevg")]
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("16_sfk74")
@@ -432,6 +438,9 @@ state = ExtResource("20_5v03o")
 visible = false
 layout_mode = 2
 
+[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer" index="2"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_2j6m7")
+
 [node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_0u4bv")]
 visible = false
 layout_mode = 2
@@ -459,9 +468,6 @@ state = ExtResource("25_nijem")
 [node name="GeneralControllerSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_uqw2r")]
 visible = false
 layout_mode = 2
-
-[node name="SDLHIDAPIToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralControllerSettings/MarginContainer/VBoxContainer" index="1"]
-button_pressed = true
 
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings"]
