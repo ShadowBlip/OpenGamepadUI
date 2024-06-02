@@ -1,5 +1,0 @@
-# Adds uaccess to Handheld Controller and makes it act like a joystick.
-ACTION=="add|change", KERNEL=="event[0-9]*", SUBSYSTEM=="input", ENV{FORCE_INPUT_UACCESS}=="1", MODE="0660", TAG+="uaccess"
-
-# For GPD Devices, enables keycodes and user access for the input device that provides events for the two rear buttons.
-ACTION=="add|change", KERNEL=="event[0-9]*", ATTRS{idVendor}=="2f24", ATTRS{idProduct}=="0135", ENV{ID_INPUT_KEYBOARD}="1", MODE="0660", TAG+="uaccess"
