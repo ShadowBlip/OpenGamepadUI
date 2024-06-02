@@ -177,8 +177,8 @@ func get_devices(dbus_path: String = "") -> Array[CompositeDevice]:
 		# New device found
 		if not found:
 			existing_devices.append(device)
-			_set_intercept_mode_single(intercept_mode_current, device)
-			_set_intercept_activation_single(intercept_triggers_current, \
+			set_intercept_mode_single(intercept_mode_current, device)
+			set_intercept_activation_single(intercept_triggers_current, \
 				intercept_target_current, device)
 			composite_device_added.emit(device)
 
@@ -198,10 +198,10 @@ func set_intercept_mode(mode: INTERCEPT_MODE) -> void:
 	intercept_mode_current = mode
 	for d in composite_devices:
 		var device := d as CompositeDevice
-		_set_intercept_mode_single(mode, device)
+		set_intercept_mode_single(mode, device)
 
 
-func _set_intercept_mode_single(mode: INTERCEPT_MODE, device: CompositeDevice) -> void:
+func set_intercept_mode_single(mode: INTERCEPT_MODE, device: CompositeDevice) -> void:
 	logger.debug("Setting composite device "+ device.dbus_path + " to mode: " + str(mode))
 	match mode:
 			INTERCEPT_MODE.NONE:
@@ -219,10 +219,10 @@ func set_intercept_activation(triggers: PackedStringArray, target: String) -> vo
 	intercept_target_current = target
 	for d in composite_devices:
 		var device := d as CompositeDevice
-		_set_intercept_activation_single(triggers, target, device)
+		set_intercept_activation_single(triggers, target, device)
 
 
-func _set_intercept_activation_single(triggers: PackedStringArray, target: String, device: CompositeDevice) -> void:
+func set_intercept_activation_single(triggers: PackedStringArray, target: String, device: CompositeDevice) -> void:
 	logger.debug("Setting composite device "+ device.dbus_path + " intercept triggers: " + str(triggers) + " and target event: " + target)
 	device.set_intercept_activation(triggers, target)
 
@@ -285,7 +285,7 @@ class CompositeDevice extends Resource:
 
 	var intercept_mode: int:
 		set(v):
-			#print("Setting mode " + str(v) + " on " + self.dbus_path)
+			print("Setting mode " + str(v) + " on " + self.dbus_path)
 			_proxy.set_property(IFACE_COMPOSITE_DEVICE, "InterceptMode", DBus.uint32(v))
 		get:
 			var property = _proxy.get_property(IFACE_COMPOSITE_DEVICE, "InterceptMode")

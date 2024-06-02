@@ -143,8 +143,18 @@ func _setup_overlay_mode(args: Array) -> void:
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 	input_plumber.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 
+	input_plumber.composite_device_changed.connect(_set_intercept)
 
-## Removes specified child elements from the given Node.
+
+# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
+func _set_intercept(device: InputPlumber.CompositeDevice) -> void:
+	var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
+	logger.debug("Setting intercept mode to: " + str(intercept_mode))
+	input_plumber.set_intercept_mode_single(intercept_mode, device)
+	input_plumber.set_intercept_activation_single(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2", device)
+
+
+# Removes specified child elements from the given Node.
 func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
 	var child_count := parent.get_child_count()
 	var to_remove_list := []
