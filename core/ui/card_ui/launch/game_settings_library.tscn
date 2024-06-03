@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://bvdasrjrvyp11"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings_library.gd" id="1_f1pex"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="1_mk47q"]
+[ext_resource type="Resource" uid="uid://bnw36g1l7shcy" path="res://assets/state/states/game_settings_library.tres" id="2_j1lqu"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_tkmdj"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_qj1l3"]
+[ext_resource type="Resource" uid="uid://cc6i4i264dmqd" path="res://core/ui/card_ui/launch/game_settings_focus.tres" id="5_7h7mk"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="6_e3kvo"]
+
+[node name="LibrarySettings" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+script = ExtResource("1_f1pex")
+
+[node name="StateWatcher" parent="." instance=ExtResource("1_mk47q")]
+state = ExtResource("2_j1lqu")
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("3_tkmdj")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("4_qj1l3")]
+current_focus = NodePath("../HideToggle")
+focus_stack = ExtResource("5_7h7mk")
+
+[node name="HideToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("6_e3kvo")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hidden in library"
+description = "Prevent this item from showing up in your library"
+button_pressed = false

@@ -2,14 +2,14 @@ extends Control
 
 signal refresh_completed
 
-var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
-var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
-var InstallManager := preload("res://core/global/install_manager.tres")
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-var library_state := preload("res://assets/state/states/library.tres") as State
-var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
-var osk_state := preload("res://assets/state/states/osk.tres") as State
-var card_scene := preload("res://core/ui/components/card.tscn") as PackedScene
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
+var install_manager := load("res://core/global/install_manager.tres") as InstallManager
+var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var library_state := load("res://assets/state/states/library.tres") as State
+var launcher_state := load("res://assets/state/states/game_launcher.tres") as State
+var osk_state := load("res://assets/state/states/osk.tres") as State
+var card_scene := load("res://core/ui/components/card.tscn") as PackedScene
 
 var tween: Tween
 var refresh_requested := false
@@ -39,15 +39,16 @@ func _ready() -> void:
 	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
 	
 	# Listen for library changes
-	var on_library_changed := func(item: LibraryItem):
+	var on_library_changed := func(_item: LibraryItem):
 		queue_refresh()
-	LibraryManager.library_item_added.connect(on_library_changed)
-	LibraryManager.library_item_removed.connect(on_library_changed)
+	library_manager.library_item_added.connect(on_library_changed)
+	library_manager.library_item_removed.connect(on_library_changed)
+	library_manager.library_item_unhidden.connect(on_library_changed)
 
 	# Listen for app install/uninstall changes
-	InstallManager.install_queued.connect(_on_install_queued)
-	InstallManager.install_completed.connect(_on_installed)
-	InstallManager.uninstall_completed.connect(_on_uninstalled)
+	install_manager.install_queued.connect(_on_install_queued)
+	install_manager.install_completed.connect(_on_installed)
+	install_manager.uninstall_completed.connect(_on_uninstalled)
 	if global_search != null:
 		global_search.search_submitted.connect(_on_search)
 	
@@ -110,7 +111,7 @@ func _reload_library() -> void:
 	const available_tab_idx := 1
 	
 	# Load our library entries and add them to all games
-	var available := LibraryManager.get_library_items()
+	var available := library_manager.get_library_items()
 	
 	# If the library has been loaded before, check for removed items
 	if _library.size() > 0:
@@ -118,7 +119,7 @@ func _reload_library() -> void:
 
 		# Delete any library cards that no longer exist in the library
 		for card_name in card_names:
-			if LibraryManager.has_app(card_name):
+			if library_manager.has_app(card_name):
 				continue
 			var card := _library[available_tab_idx][card_name] as Control
 			_library[available_tab_idx].erase(card_name)
@@ -134,10 +135,10 @@ func _reload_library() -> void:
 
 	# Populate the installed games grid
 	var modifiers: Array[Callable] = [
-		LibraryManager.filter_installed,
-		LibraryManager.sort_by_name,
+		library_manager.filter_installed,
+		library_manager.sort_by_name,
 	]
-	var installed := LibraryManager.get_library_items(modifiers)
+	var installed := library_manager.get_library_items(modifiers)
 	await _populate_grid(installed_games_grid, installed, installed_tab_idx)
 
 
@@ -161,6 +162,11 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 	for i in range(library_items.size()):
 		var item: LibraryItem = library_items[i]
 		
+		# Check to see if this library item should be hidden
+		var is_hidden := settings_manager.get_library_value(item, "hidden", false) as bool
+		if is_hidden:
+			continue
+		
 		# If the card node already exists, move it to the correct place
 		if tab_num in _library and item.name in _library[tab_num]:
 			var card := _library[tab_num][item.name] as GameCard
@@ -178,6 +184,7 @@ func _populate_grid(grid: HFlowContainer, library_items: Array, tab_num: int):
 		var on_removed := func():
 			_library[tab_num].erase(item.name)
 		item.removed_from_library.connect(on_removed)
+		item.hidden.connect(on_removed)
 		
 		# Add the card to the grid
 		grid.add_child(card)

@@ -66,7 +66,7 @@ custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 focus_mode = 2
 texture = ExtResource("5_nvn2v")
-expand_mode = 3
+expand_mode = 5
 stretch_mode = 5
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/BannerTexture"]

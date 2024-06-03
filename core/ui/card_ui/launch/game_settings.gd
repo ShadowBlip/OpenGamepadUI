@@ -12,11 +12,14 @@ var library_item: LibraryItem
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	game_settings_state.state_entered.connect(_on_state_entered)
+	game_settings_state.state_exited.connect(_on_state_exited)
 	settings_state_machine.state_changed.connect(_on_settings_state_changed)
 
 
 func _on_state_entered(_from: State) -> void:
-	if "item" in game_settings_state.data:
+	if game_settings_state.has_meta("item"):
+		library_item = game_settings_state.get_meta("item") as LibraryItem
+	elif "item" in game_settings_state.data:
 		library_item = game_settings_state.data["item"] as LibraryItem
 
 	# Set the selected game's name
@@ -33,7 +36,15 @@ func _on_state_entered(_from: State) -> void:
 		break
 
 
+func _on_state_exited(_to: State) -> void:
+	settings_state_machine.pop_state()
+	game_settings_state.data.erase("item")
+	game_settings_state.remove_meta("item")
+
+
 func _on_settings_state_changed(_from: State, to: State) -> void:
+	if not to:
+		return
 	var text := to.name
 	text = text.capitalize()
 	text = text.replace("_", " ")

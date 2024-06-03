@@ -86,6 +86,7 @@ func set_library_item(item: LibraryItem, free_on_remove: bool = true) -> void:
 			logger.debug("Removing card: " + name)
 			queue_free()
 		item.removed_from_library.connect(on_removed, CONNECT_ONE_SHOT)
+		item.hidden.connect(on_removed, CONNECT_ONE_SHOT)
 
 
 func _on_focus() -> void:
