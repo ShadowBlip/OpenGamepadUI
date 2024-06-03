@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 LABEL org.opencontainers.image.title="OpenGamepadUI Builder"
 LABEL org.opencontainers.image.description="Build container for OpenGamepadUI"
 LABEL org.opencontainers.image.source="https://github.com/ShadowBlip/OpenGamepadUI"
-LABEL org.opencontainers.image.version="4.2.1"
+LABEL org.opencontainers.image.version="4.2.2"
 
 RUN sed -i '/ParallelDownloads/s/^#//g' /etc/pacman.conf
 
@@ -40,7 +40,7 @@ RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
   jq
 
 # Download and install the appropriate version of Godot
-ARG GODOT_VERSION=4.2.1
+ARG GODOT_VERSION=4.2.2
 ARG GODOT_RELEASE=stable
 RUN mkdir /tmp/godot && \
   wget -q https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip -O /tmp/godot/godot.zip && \
