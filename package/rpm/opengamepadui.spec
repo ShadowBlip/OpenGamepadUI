@@ -28,19 +28,12 @@ make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix}
 %files
 /usr/bin/opengamepadui
 /usr/share/opengamepadui/*.so
-/usr/share/opengamepadui/scripts/make_nice
-/usr/share/opengamepadui/scripts/manage_input
-/usr/share/opengamepadui/scripts/powertools
+/usr/share/opengamepadui/scripts/*
 /usr/share/opengamepadui/opengamepad-ui.x86_64
 /usr/share/applications/opengamepadui.desktop
 /usr/share/icons/hicolor/scalable/apps/opengamepadui.svg
-/usr/share/polkit-1/actions/org.shadowblip.manage_input.policy
-/usr/share/polkit-1/actions/org.shadowblip.powertools.policy
-/usr/share/polkit-1/actions/org.shadowblip.setcap.policy
-/usr/lib/udev/hwdb.d/59-opengamepadui-handheld.hwdb
-/usr/lib/udev/rules.d/61-opengamepadui-handheld.rules
-/usr/lib/systemd/user/systemd-sysext-updater.service
-/usr/lib/systemd/user/ogui-overlay-mode.service
+/usr/share/polkit-1/actions/*
+/usr/lib/systemd/user/*
 
 %changelog
 %autochangelog
