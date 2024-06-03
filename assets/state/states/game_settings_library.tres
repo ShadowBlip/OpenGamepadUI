@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://bnw36g1l7shcy"]
+
+[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_ds0g8"]
+
+[resource]
+script = ExtResource("1_ds0g8")
+name = "library"
+data = {}

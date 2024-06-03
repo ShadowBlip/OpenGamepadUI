@@ -19,7 +19,6 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var check_update_button := $%CheckUpdateButton
 @onready var update_button := $%UpdateButton
 @onready var themes_container := $%ThemeButtonContainer
-@onready var max_recent_slider := $%MaxRecentAppsSlider
 @onready var platform_container := $%PlatformContainer
 @onready var platform_image := $%PlatformImage
 @onready var platform_name := $%PlatformNameLabel
@@ -59,10 +58,6 @@ func _ready() -> void:
 
 	# Add user theme selection buttons
 	_add_user_themes()
-
-	# Configure home menu
-	var max_recent := SettingsManager.get_value("general.home", "max_home_items", 10) as int
-	max_recent_slider.value = max_recent
 
 	# Configure check updates
 	var on_check_updates := func():

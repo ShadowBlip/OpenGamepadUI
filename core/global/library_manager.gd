@@ -40,10 +40,16 @@ signal library_loaded(library_id: String)
 signal library_item_added(item: LibraryItem)
 ## Emitted when a [LibraryItem] is removed from the library
 signal library_item_removed(item: LibraryItem)
+## Emitted when a [LibraryItem] is hidden from the library
+signal library_item_hidden(item: LibraryItem)
+## Emitted when a [LibraryItem] is unhidden from the library
+signal library_item_unhidden(item: LibraryItem)
 ## Emitted when a [LibraryLaunchItem] is added to a [LibraryItem]
 signal library_launch_item_added(item: LibraryLaunchItem)
 ## Emitted when a [LibraryLaunchItem] is removed from a [LibraryItem]
 signal library_launch_item_removed(item: LibraryLaunchItem)
+
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 
 # Dictionary of registered library providers
 # The dictionary is in the form of:
@@ -106,6 +112,12 @@ func filter_by_library(apps: Array[LibraryItem], library_id: String) -> Array[Li
 	return apps.filter(filter)
 
 
+## Filters the given array of apps by hidden
+func filter_by_hidden(apps: Array[LibraryItem]) -> Array[LibraryItem]:
+	var filter := func(item: LibraryItem): return item.is_hidden
+	return apps.filter(filter)
+
+
 ## Returns an dictionary of all available apps
 func get_available() -> Dictionary:
 	return _available_apps.duplicate()
@@ -135,6 +147,9 @@ func add_library_launch_item(library_id: String, item: LibraryLaunchItem) -> voi
 		library_item = LibraryItem.new_from_launch_item(item)
 		_available_apps[item.name] = library_item
 		is_new = true
+		var is_hidden := settings_manager.get_library_value(library_item, "hidden", false) as bool
+		if is_hidden:
+			library_item.is_hidden = is_hidden
 
 	# Update the provider fields on the library item
 	item._provider_id = library_id

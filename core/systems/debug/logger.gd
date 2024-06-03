@@ -74,3 +74,9 @@ func error(message: Variant, xtra2: Variant = null, xtra3: Variant = null, xtra4
 	var msg := _stringify(message, xtra2, xtra3, xtra4, xtra5, xtra6)
 	push_error(prefix, msg)
 	print_rich("[color=red]", prefix, "[/color]", msg)
+
+
+func deprecated(message: Variant) -> void:
+	var prefix := _format_prefix("DEPRECATED", _get_caller())
+	var msg := str(message)
+	print_rich("[color=pink]", prefix, "[/color]", msg)

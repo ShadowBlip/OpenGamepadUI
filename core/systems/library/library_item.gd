@@ -20,6 +20,10 @@ signal installed(launch_item: LibraryLaunchItem)
 signal uninstalled(launch_item: LibraryLaunchItem)
 ## Emitted when the [InstallManager] has updated this library item
 signal upgraded(launch_item: LibraryLaunchItem)
+## Emitted when this library item is hidden from the library
+signal hidden
+## Emitted when this library item is unhidden from the library
+signal unhidden
 
 ## The unique ID of the library item
 @export var _id: String
@@ -31,6 +35,14 @@ signal upgraded(launch_item: LibraryLaunchItem)
 @export var tags: PackedStringArray
 ## An array of categories the game belongs to
 @export var categories: PackedStringArray
+## Whether or not this library item should be hidden in the library
+var is_hidden: bool:
+	set(_is_hidden):
+		is_hidden = _is_hidden
+		if is_hidden:
+			hidden.emit()
+		else:
+			unhidden.emit()
 
 
 ## Creates a new library item from the given library launch item

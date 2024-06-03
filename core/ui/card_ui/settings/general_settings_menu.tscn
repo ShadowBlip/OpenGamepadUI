@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dsgrw1grwef4m"]
+[gd_scene load_steps=18 format=3 uid="uid://dsgrw1grwef4m"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/general_settings_menu.gd" id="1_if7xt"]
 [ext_resource type="PackedScene" uid="uid://bnhxravpuheh2" path="res://core/systems/updater/software_updater.tscn" id="2_ogwq4"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="6_ghdw1"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_qenel"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="8_2m3jw"]
-[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="8_58mcr"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="8_r15pa"]
 [ext_resource type="Texture2D" uid="uid://ckbrrln8fngno" path="res://assets/images/platform/ayaneoair-ctr_v1a_1172023.png" id="9_00g0t"]
 [ext_resource type="PackedScene" uid="uid://c6dpw6swmcbw6" path="res://core/systems/user_interface/theme_setter.tscn" id="9_bci6g"]
@@ -161,21 +160,10 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer3" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
-current_focus = NodePath("../MaxRecentAppsSlider")
+current_focus = NodePath("../ClientVersionText")
 focus_stack = ExtResource("4_fyrmg")
 focus_neighbor_bottom = NodePath("../../VBoxContainer/FocusGroup")
 focus_neighbor_top = NodePath("../../ThemeButtonContainer/FocusGroup")
-
-[node name="HomeLabel" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("8_2m3jw")]
-layout_mode = 2
-text = "Home"
-
-[node name="MaxRecentAppsSlider" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("8_58mcr")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Maximum Recent Apps"
-value = 10.0
-max_value = 30.0
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer3"]
 layout_mode = 2

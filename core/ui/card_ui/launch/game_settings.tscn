@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://58qlqqbh58im"]
+[gd_scene load_steps=26 format=3 uid="uid://58qlqqbh58im"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pga6u"]
@@ -19,7 +19,9 @@
 [ext_resource type="Resource" uid="uid://1dnelmxp0tuq" path="res://assets/state/state_machines/game_settings_state_machine.tres" id="20_cokg3"]
 [ext_resource type="Resource" uid="uid://d3rbp3ws1ejal" path="res://assets/state/states/game_settings_launch.tres" id="21_tdepl"]
 [ext_resource type="PackedScene" uid="uid://dl3lxwakvk7l2" path="res://core/ui/common/launch/game_boxart_settings.tscn" id="24_4afdc"]
+[ext_resource type="Resource" uid="uid://bnw36g1l7shcy" path="res://assets/state/states/game_settings_library.tres" id="24_um3vy"]
 [ext_resource type="Resource" uid="uid://bn8ih6qafytvi" path="res://assets/state/states/game_settings_boxart.tres" id="25_3xebk"]
+[ext_resource type="PackedScene" uid="uid://bvdasrjrvyp11" path="res://core/ui/card_ui/launch/game_settings_library.tscn" id="25_c26mp"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="27_06vpr"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_voua8"]
 [ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="34_j5cnx"]
@@ -150,6 +152,20 @@ on_signal = "focus_entered"
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
+[node name="LibraryButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
+layout_mode = 2
+text = "Library"
+
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" instance=ExtResource("15_lmmqq")]
+state_machine = ExtResource("20_cokg3")
+state = ExtResource("24_um3vy")
+action = 3
+on_signal = "focus_entered"
+
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LibrarySettings/MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "pressed"
+
 [node name="ContentContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -216,5 +232,10 @@ script = ExtResource("34_j5cnx")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings/TransitionContainer" instance=ExtResource("29_voua8")]
 
+[node name="LibrarySettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("25_c26mp")]
+visible = false
+layout_mode = 2
+
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings"]
+[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LibrarySettings"]

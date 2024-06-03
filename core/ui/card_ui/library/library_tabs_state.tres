@@ -4,4 +4,4 @@
 
 [resource]
 script = ExtResource("1_yv172")
-tabs_text = PackedStringArray("Installed", "All Games", "Favorites", "Collections")
+tabs_text = PackedStringArray("Installed", "All Games")

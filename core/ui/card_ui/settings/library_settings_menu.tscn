@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://drbp6ec8646v3"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/settings/library_settings_menu.gd" id="1_0w1vu"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_obgkx"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_guba0"]
+[ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_x5lfl"]
+[ext_resource type="Resource" uid="uid://blcfrofi5oawd" path="res://assets/state/states/settings_library.tres" id="3_ykj28"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_148sd"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_sh522"]
+[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="6_ou60g"]
+
+[node name="LibrarySettingsMenu" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+script = ExtResource("1_0w1vu")
+
+[node name="StateWatcher" parent="." instance=ExtResource("2_guba0")]
+state = ExtResource("3_ykj28")
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_148sd")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("5_sh522")]
+current_focus = NodePath("../MaxRecentAppsSlider")
+focus_stack = ExtResource("6_ou60g")
+
+[node name="HomeLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_x5lfl")]
+layout_mode = 2
+text = "Home"
+
+[node name="MaxRecentAppsSlider" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_obgkx")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Maximum Recent Apps"
+value = 10.0
+max_value = 30.0
+
+[node name="HiddenItemsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_x5lfl")]
+layout_mode = 2
+text = "Hidden Library Items"
+
+[node name="NoHiddenLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No hidden library items"
