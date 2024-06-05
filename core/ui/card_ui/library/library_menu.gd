@@ -136,9 +136,6 @@ func _reload_library() -> void:
 			_library[installed_tab_idx].erase(card_name)
 			card.queue_free()
 
-	# Populate the all games grid
-	await _populate_grid(all_games_grid, available, available_tab_idx)
-
 	# Populate the installed games grid
 	var modifiers: Array[Callable] = [
 		library_manager.filter_installed,
@@ -146,6 +143,9 @@ func _reload_library() -> void:
 	]
 	var installed := library_manager.get_library_items(modifiers)
 	await _populate_grid(installed_games_grid, installed, installed_tab_idx)
+
+	# Populate the all games grid
+	await _populate_grid(all_games_grid, available, available_tab_idx)
 
 
 # Builds a home card from the given library item
