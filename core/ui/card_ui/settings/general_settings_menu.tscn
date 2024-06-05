@@ -54,11 +54,10 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../AutoUpdateToggle")
 focus_stack = ExtResource("4_fyrmg")
 focus_neighbor_bottom = NodePath("../../ThemeButtonContainer/FocusGroup")
-focus_neighbor_top = NodePath("../../VBoxContainer3/FocusGroup")
 
 [node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
 layout_mode = 2
@@ -159,10 +158,9 @@ on_signal = "button_up"
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer3" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer3" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../ClientVersionText")
 focus_stack = ExtResource("4_fyrmg")
-focus_neighbor_bottom = NodePath("../../VBoxContainer/FocusGroup")
 focus_neighbor_top = NodePath("../../ThemeButtonContainer/FocusGroup")
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer3"]

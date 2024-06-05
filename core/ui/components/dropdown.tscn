@@ -24,9 +24,11 @@ label_settings = ExtResource("2_lsmpx")
 
 [node name="DescriptionLabel" type="Label" parent="."]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Description"
 label_settings = ExtResource("3_yy6na")
+autowrap_mode = 3
 
 [node name="OptionButton" type="OptionButton" parent="."]
 unique_name_in_owner = true

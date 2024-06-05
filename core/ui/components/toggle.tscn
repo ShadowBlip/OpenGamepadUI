@@ -34,6 +34,7 @@ button_pressed = true
 [node name="DescriptionLabel" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 label_settings = ExtResource("3_l7kb7")
 autowrap_mode = 3

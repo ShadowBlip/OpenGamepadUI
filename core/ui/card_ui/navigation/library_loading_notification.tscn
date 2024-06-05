@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbcd5tclmp2ux"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/navigation/library_loading_notification.gd" id="1_fykso"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_31rsg"]
+[ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="2_aupqp"]
+
+[node name="LibraryLoadingNotification" type="Control"]
+z_index = 20
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_type_variation = &"ContextBar"
+script = ExtResource("1_fykso")
+
+[node name="FadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_31rsg")]
+target = NodePath("..")
+on_signal = "refresh_started"
+fade_out_signal = "refresh_completed"
+on_signal = "refresh_started"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Loading02" parent="MarginContainer/PanelContainer/MarginContainer/HBoxContainer" instance=ExtResource("2_aupqp")]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Library loading..."

@@ -9,6 +9,7 @@ var state_machine := load("res://assets/state/state_machines/global_state_machin
 var library_state := load("res://assets/state/states/library.tres") as State
 var launcher_state := load("res://assets/state/states/game_launcher.tres") as State
 var osk_state := load("res://assets/state/states/osk.tres") as State
+var library_refresh := load("res://core/ui/card_ui/library/library_refresh_state.tres") as LibraryRefreshState
 var card_scene := load("res://core/ui/components/card.tscn") as PackedScene
 
 var tween: Tween
@@ -39,7 +40,8 @@ func _ready() -> void:
 	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
 	
 	# Listen for library changes
-	var on_library_changed := func(_item: LibraryItem):
+	var on_library_changed := func(item: LibraryItem):
+		logger.debug("Library item added:", item)
 		queue_refresh()
 	library_manager.library_item_added.connect(on_library_changed)
 	library_manager.library_item_removed.connect(on_library_changed)
@@ -68,9 +70,13 @@ func refresh() -> void:
 		return
 	refresh_requested = false
 	refresh_in_progress = true
+	library_refresh.is_refreshing = true
+	library_refresh.refresh_started.emit()
 	await _reload_library()
 	refresh_in_progress = false
 	refresh_completed.emit()
+	library_refresh.is_refreshing = false
+	library_refresh.refresh_completed.emit()
 	refresh.call_deferred()
 
 

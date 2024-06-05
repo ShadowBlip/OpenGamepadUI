@@ -40,6 +40,7 @@ stretch_mode = 4
 
 [node name="Label" type="Label" parent="MarginContainer/ContentContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1

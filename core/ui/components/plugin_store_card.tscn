@@ -89,6 +89,7 @@ text = "Plugin Name"
 
 [node name="SummaryLabel" type="Label" parent="MarginContainer/MarginContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Description of the plugin"
 autowrap_mode = 3
