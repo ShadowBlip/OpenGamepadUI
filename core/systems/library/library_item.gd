@@ -86,3 +86,8 @@ func is_installed() -> bool:
 		if launch_item.installed:
 			return true
 	return false
+
+
+func _to_string() -> String:
+	var fields := {"name": self.name}
+	return "<LibraryItem: {name}>".format(fields)

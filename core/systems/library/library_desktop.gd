@@ -1,18 +1,12 @@
 extends Library
 
-var SettingsManager := load("res://core/global/settings_manager.tres") as SettingsManager
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var home := OS.get_environment("HOME")
-var desktop_folders := (
-	(
-		SettingsManager
-		.get_value(
+var desktop_folders := settings_manager.get_value(
 			"library.desktop",
 			"folders",
 			["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
-		)
-	)
-	as Array
-)
+		) as Array
 
 
 func _ready() -> void:

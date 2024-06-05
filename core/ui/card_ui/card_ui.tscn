@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=37 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
+[ext_resource type="PackedScene" uid="uid://bbcd5tclmp2ux" path="res://core/ui/card_ui/navigation/library_loading_notification.tscn" id="20_7tnsn"]
 [ext_resource type="PackedScene" uid="uid://lfm3ps837gy5" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
 [ext_resource type="PackedScene" path="res://core/ui/common/game/game_loading.tscn" id="22_morxu"]
@@ -186,7 +187,14 @@ theme_override_constants/margin_left = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="ContextBar" parent="MenuContent/BottomMargin" instance=ExtResource("12_bstc8")]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/BottomMargin"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="LibraryLoadingNotification" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("20_7tnsn")]
+layout_mode = 2
+
+[node name="ContextBar" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("12_bstc8")]
 layout_mode = 2
 
 [node name="MenuContainer" type="MarginContainer" parent="MenuContent"]
@@ -263,6 +271,7 @@ on_signal = "opened"
 
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
+visible = false
 z_index = 20
 layout_mode = 1
 anchors_preset = 15

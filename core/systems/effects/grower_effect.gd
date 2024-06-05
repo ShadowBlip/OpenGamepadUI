@@ -26,6 +26,10 @@ func _ready() -> void:
 	if shrink_signal != "":
 		get_parent().connect(shrink_signal, _on_shrink_signal)
 
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
+
 
 func _on_signal() -> void:
 	grow()
@@ -39,7 +43,10 @@ func grow() -> void:
 	if tween:
 		tween.kill()
 	tween = get_tree().create_tween()
-	tween.tween_property(target, "custom_minimum_size", Vector2(0, target.size.y + content_container.size.y), grow_speed)
+
+	var target_size := target.size.y + content_container.size.y
+	content_container.visible = false
+	tween.tween_property(target, "custom_minimum_size", Vector2(0, target_size), grow_speed)
 	if inside_panel:
 		tween.tween_property(inside_panel, "visible", true, 0)
 	if content_container:
@@ -69,6 +76,21 @@ func shrink() -> void:
 	var on_finished := func():
 		shrink_finished.emit()
 	tween.tween_callback(on_finished)
+
+
+## Recursively calculates the total height of all children for the given node
+func _calculate_size(control: Control) -> int:
+	var size := 0
+	for child in control.get_children():
+		if not child is Control:
+			continue
+		size += _calculate_size(child)
+
+	if not control is Container:
+		print("Adding node size for ", control.name, ": ", control.size.y)
+		size += control.size.y
+
+	return size
 
 
 # Customize editor properties that we expose. Here we dynamically look up

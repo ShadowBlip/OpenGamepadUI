@@ -10,11 +10,10 @@
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="7_0kvsa"]
 
 [node name="PowerTools" type="VBoxContainer"]
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 28.0
 grow_horizontal = 2
-grow_vertical = 2
 script = ExtResource("1_qncpn")
 
 [node name="FocusGroup" parent="." instance=ExtResource("2_h0jgv")]
@@ -29,6 +28,7 @@ wait_time = 5.0
 autostart = true
 
 [node name="WaitLabel" parent="." instance=ExtResource("5_yr563")]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Waiting for PowerStation service..."
 horizontal_alignment = 1

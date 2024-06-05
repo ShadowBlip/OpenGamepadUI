@@ -43,11 +43,12 @@ func _ready() -> void:
 	mouse_entered.connect(_on_focus)
 	mouse_exited.connect(_on_unfocus)
 	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
 
 
 func _on_theme_changed() -> void:
 	# Configure the highlight texture from the theme
-	var highlight_texture := get_theme_icon("highlight", "CardIconButton")
+	var highlight_texture := get_theme_icon("highlight", "CardButton")
 	if highlight_texture:
 		highlight.texture = highlight_texture
 
