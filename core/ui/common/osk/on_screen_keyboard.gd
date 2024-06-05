@@ -165,7 +165,26 @@ func open() -> void:
 			key.grab_focus.call_deferred()
 			break
 		break
-	
+
+	# Try to scroll any scroll containers to the target node
+	var target = instance.context.target
+	if target:
+		# TODO: Find a better way to scroll to the focused element after grow
+		# effect finishes
+		var timer := Timer.new()
+		timer.wait_time = 0.2 # must be set to the grow time
+		timer.one_shot = true
+		timer.autostart = false
+		add_child(timer)
+
+		var scroll_containers := _find_scroll_containers(target)
+		var on_timeout := func():
+			for container in scroll_containers:
+				container.ensure_control_visible(target)
+			timer.queue_free()
+		timer.timeout.connect(on_timeout, CONNECT_ONE_SHOT)
+		timer.start()
+
 	opened.emit()
 
 
@@ -274,6 +293,21 @@ func _handle_x11(key: KeyboardKeyConfig) -> void:
 	# Reset the modeshift if this was a one shot
 	if _mode_shift == MODE_SHIFT.ONE_SHOT:
 		set_mode_shift(MODE_SHIFT.OFF)
+
+
+func _find_scroll_containers(child: Node) -> Array[ScrollContainer]:
+	var scroll_containers: Array[ScrollContainer]
+
+	if child is ScrollContainer:
+		scroll_containers.append(child)
+	var parent := child.get_parent()
+
+	# Break at the top-level node
+	if parent == get_tree().root:
+		return scroll_containers
+
+	scroll_containers.append_array(_find_scroll_containers(parent))
+	return scroll_containers
 
 
 # Handles normal character inputs

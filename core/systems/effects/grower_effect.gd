@@ -10,11 +10,17 @@ class_name GrowerEffect
 signal shrink_finished
 
 @export_category("Targets")
+## The target node to grow. This will animate the minimum custom size of this node
+## to be the size of the content container.
 @export var target: Control = get_parent()
+## Content that the target node will grow to match the size.
 @export var content_container: Control
+## Optional inside panel to toggle visibility after growing.
 @export var inside_panel: Control
+## Optional separator to toggle visibility after growing.
 @export var separator: Control
 @export_category("Animation")
+## The speed of the grow animation in seconds.
 @export var grow_speed := 0.2
 
 var tween: Tween
@@ -43,8 +49,12 @@ func grow() -> void:
 	if tween:
 		tween.kill()
 	tween = get_tree().create_tween()
+	
+	var content_size := 0
+	if content_container:
+		content_size = content_container.size.y
 
-	var target_size := target.size.y + content_container.size.y
+	var target_size := target.size.y + content_size
 	content_container.visible = false
 	tween.tween_property(target, "custom_minimum_size", Vector2(0, target_size), grow_speed)
 	if inside_panel:
@@ -68,10 +78,14 @@ func shrink() -> void:
 		tween.kill()
 	tween = get_tree().create_tween()
 	tween.tween_property(content_container, "modulate", Color(1, 1, 1, 0), grow_speed)
-	tween.tween_property(inside_panel, "modulate", Color(1, 1, 1, 0), 0.1)
-	tween.tween_property(separator, "visible", false, 0)
-	tween.tween_property(inside_panel, "visible", false, 0)
-	tween.tween_property(content_container, "visible", false, 0)
+	if inside_panel:
+		tween.tween_property(inside_panel, "modulate", Color(1, 1, 1, 0), 0.1)
+	if separator:
+		tween.tween_property(separator, "visible", false, 0)
+	if inside_panel:
+		tween.tween_property(inside_panel, "visible", false, 0)
+	if content_container:
+		tween.tween_property(content_container, "visible", false, 0)
 	tween.tween_property(target, "custom_minimum_size", Vector2(0, 0), grow_speed)
 	var on_finished := func():
 		shrink_finished.emit()
@@ -126,3 +140,13 @@ func _get_property_list():
 	)
 
 	return properties
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings := PackedStringArray()
+	if not target:
+		warnings.append("Target node to grow must be selected")
+	if not content_container:
+		warnings.append("Content container must be selected to determine size to grow to!")
+		
+	return warnings
