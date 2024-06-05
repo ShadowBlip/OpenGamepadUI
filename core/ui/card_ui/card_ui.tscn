@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=38 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -32,6 +32,7 @@
 [ext_resource type="PackedScene" uid="uid://ccwn4n40imfg8" path="res://core/ui/components/containers/overlay_container.tscn" id="23_h8glb"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="27_jq430"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="28_ex7w4"]
+[ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="32_1lhvy"]
 
 [sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
@@ -124,36 +125,44 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="AboveContextBarMargin" type="MarginContainer" parent="MenuContent"]
+[node name="AboveContextBarContainer" type="VBoxContainer" parent="MenuContent"]
 layout_mode = 2
+alignment = 1
+
+[node name="AboveContextBarMargin" type="MarginContainer" parent="MenuContent/AboveContextBarContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="CardUIHome" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("6_12lhu")]
+[node name="CardUIHome" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("6_12lhu")]
 layout_mode = 2
 
-[node name="GameLaunchMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("9_m34in")]
+[node name="GameLaunchMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("9_m34in")]
 visible = false
 layout_mode = 2
 
-[node name="GameSettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("10_7cj6o")]
+[node name="GameSettingsMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("10_7cj6o")]
 visible = false
 layout_mode = 2
 
-[node name="SettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("10_1ruvi")]
+[node name="SettingsMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("10_1ruvi")]
 visible = false
 layout_mode = 2
 
-[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("13_n64ve")]
+[node name="GamepadSettings" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("13_n64ve")]
 visible = false
 layout_mode = 2
 
-[node name="FirstBootMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("14_dpfu1")]
+[node name="FirstBootMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("14_dpfu1")]
 visible = false
 layout_mode = 2
 
-[node name="HelpMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("15_m1wp2")]
+[node name="HelpMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("15_m1wp2")]
 visible = false
+layout_mode = 2
+
+[node name="KeyboardSpacer" type="Control" parent="MenuContent/AboveContextBarContainer"]
 layout_mode = 2
 
 [node name="FullscreenMenus" type="MarginContainer" parent="MenuContent"]
@@ -268,6 +277,25 @@ direction = "down"
 on_signal = "opened"
 slide_out_signal = "closed"
 on_signal = "opened"
+
+[node name="SpacerGrowerEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target", "content_container") instance=ExtResource("32_1lhvy")]
+target = NodePath("../../../MenuContent/AboveContextBarContainer/KeyboardSpacer")
+content_container = NodePath("../../../OnScreenKeyboardDisplacement")
+on_signal = "opened"
+shrink_signal = "closed"
+on_signal = "opened"
+
+[node name="OnScreenKeyboardDisplacement" type="Control" parent="."]
+editor_description = "This is a dummy node with a custom minimum size used for the \"SpacerGrowerEffect\" when the OSK is opened."
+custom_minimum_size = Vector2(0, 225)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
