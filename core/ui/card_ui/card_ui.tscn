@@ -271,7 +271,6 @@ on_signal = "opened"
 
 [node name="FadeTexture" type="TextureRect" parent="."]
 unique_name_in_owner = true
-visible = false
 z_index = 20
 layout_mode = 1
 anchors_preset = 15
