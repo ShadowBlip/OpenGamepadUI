@@ -363,9 +363,11 @@ $(CACHE_DIR)/powerstation.tar.gz:
 	export PS_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/PowerStation/releases/latest | jq -r '.name') && \
 		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation.tar.gz
 
+
 $(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
 	export IP_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/InputPlumber/releases/latest | jq -r '.name') && \
 		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber.tar.gz
+
 
 $(CACHE_DIR)/libiio:
 	rm -rf $(CACHE_DIR)/libiio*
@@ -375,6 +377,7 @@ $(CACHE_DIR)/libiio:
 	mkdir -p $(CACHE_DIR)/libiio
 	tar xvf $(CACHE_DIR)/libiio.tar -C $(CACHE_DIR)/libiio
 
+
 $(CACHE_DIR)/libserialport:
 	rm -rf $(CACHE_DIR)/libserialport*
 	wget https://archlinux.org/packages/extra/x86_64/libserialport/download/ \
@@ -382,6 +385,7 @@ $(CACHE_DIR)/libserialport:
 	zstd -d $(CACHE_DIR)/libserialport.tar.zst
 	mkdir -p $(CACHE_DIR)/libserialport
 	tar xvf $(CACHE_DIR)/libserialport.tar -C $(CACHE_DIR)/libserialport
+
 
 # Refer to .releaserc.yaml for release configuration
 .PHONY: release 
