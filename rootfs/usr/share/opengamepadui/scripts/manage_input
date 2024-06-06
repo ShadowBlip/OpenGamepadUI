@@ -8,7 +8,7 @@ fi
 
 turbo_takeover() {
 	value=${1}
-	echo ${value} >/sys/devices/platform/oxp-platform/tt_toggle
+	echo "${value}" >/sys/devices/platform/oxp-platform/tt_toggle
 }
 
 if [[ $1 == "turbo_takeover" ]]; then
@@ -16,5 +16,13 @@ if [[ $1 == "turbo_takeover" ]]; then
 		echo "Turbo toggle does not exist."
 		exit 1
 	fi
-	turbo_takeover $2
+	turbo_takeover "$2"
+fi
+
+if [[ $1 == "startInputPlumber" ]]; then
+	systemctl enable --now inputplumber
+fi
+
+if [[ $1 == "startPowerStation" ]]; then
+	systemctl enable --now powerstation
 fi

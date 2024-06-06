@@ -30,7 +30,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
-SYSEXT_VERSION_ID ?= 3.5.1
+SYSEXT_VERSION_ID ?= 3.6.3
 
 # Include any user defined settings
 -include settings.mk
@@ -228,11 +228,11 @@ deploy-update: dist/update.zip ## Build and deploy update zip to remote device
 
 .PHONY: deploy-ext
 deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
-	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user
+	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user .local/bin
 	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/lib/extensions
 	scp rootfs/usr/lib/systemd/user/systemd-sysext-updater.service $(SSH_USER)@$(SSH_HOST):~/.config/systemd/user
-	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user enable systemd-sysext-updater
-	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user start systemd-sysext-updater
+	scp rootfs/usr/share/opengamepadui/scripts/update_systemd_ext.sh $(SSH_USER)@$(SSH_HOST):~/.local/bin
+	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user enable --now systemd-sysext-updater || echo "WARN: failed to restart sysext updater"
 	sleep 3
 	ssh -t $(SSH_USER)@$(SSH_HOST) sudo systemd-sysext refresh
 	ssh $(SSH_USER)@$(SSH_HOST) systemd-sysext status
@@ -313,7 +313,7 @@ dist/update.zip: build/metadata.json
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: dist-ext
 dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
-dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/powerstation.tar.gz
+dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/powerstation.tar.gz $(CACHE_DIR)/inputplumber.tar.gz
 	@echo "Building redistributable systemd extension"
 	mkdir -p dist
 	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
@@ -335,6 +335,16 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session
 	cd $(CACHE_DIR) && tar xvfz powerstation.tar.gz
 	cp -r $(CACHE_DIR)/powerstation/usr/* $(CACHE_DIR)/opengamepadui/usr
 
+	@# Copy inputplumber into the extension
+	cd $(CACHE_DIR) && tar xvfz inputplumber.tar.gz
+	cp -r $(CACHE_DIR)/inputplumber/usr/* $(CACHE_DIR)/opengamepadui/usr
+
+	@# Install libserialport for inputplumber in the extension for libiio compatibility in SteamOS
+	cp -r $(CACHE_DIR)/libserialport/usr/lib/libserialport* $(CACHE_DIR)/opengamepadui/usr/lib
+	
+	@# Install libiio for inputplumber in the extension for SteamOS compatibility
+	cp -r $(CACHE_DIR)/libiio/usr/lib/libiio* $(CACHE_DIR)/opengamepadui/usr/lib
+
 	@# Build the extension archive
 	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
 	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/gamescope-session-opengamepadui-main $(CACHE_DIR)/gamescope-session-main
@@ -353,6 +363,25 @@ $(CACHE_DIR)/powerstation.tar.gz:
 	export PS_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/PowerStation/releases/latest | jq -r '.name') && \
 		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation.tar.gz
 
+$(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
+	export IP_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/InputPlumber/releases/latest | jq -r '.name') && \
+		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber.tar.gz
+
+$(CACHE_DIR)/libiio:
+	rm -rf $(CACHE_DIR)/libiio*
+	wget https://archlinux.org/packages/extra/x86_64/libiio/download/ \
+		-O $(CACHE_DIR)/libiio.tar.zst
+	zstd -d $(CACHE_DIR)/libiio.tar.zst
+	mkdir -p $(CACHE_DIR)/libiio
+	tar xvf $(CACHE_DIR)/libiio.tar -C $(CACHE_DIR)/libiio
+
+$(CACHE_DIR)/libserialport:
+	rm -rf $(CACHE_DIR)/libserialport*
+	wget https://archlinux.org/packages/extra/x86_64/libserialport/download/ \
+	  -O $(CACHE_DIR)/libserialport.tar.zst
+	zstd -d $(CACHE_DIR)/libserialport.tar.zst
+	mkdir -p $(CACHE_DIR)/libserialport
+	tar xvf $(CACHE_DIR)/libserialport.tar -C $(CACHE_DIR)/libserialport
 
 # Refer to .releaserc.yaml for release configuration
 .PHONY: release 
