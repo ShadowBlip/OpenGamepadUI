@@ -11,27 +11,44 @@ offset_bottom = 31.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 focus_mode = 2
+mouse_filter = 0
 script = ExtResource("1_pn5mg")
 separator_visible = true
-button_pressed = true
 
-[node name="ToggleContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ToggleContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ToggleContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
 label_settings = ExtResource("2_msehc")
 
-[node name="CheckButton" type="CheckButton" parent="ToggleContainer"]
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer"]
 unique_name_in_owner = true
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
-button_pressed = true
+mouse_filter = 2
 
-[node name="DescriptionLabel" type="Label" parent="."]
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(100, 0)
@@ -39,5 +56,7 @@ layout_mode = 2
 label_settings = ExtResource("3_l7kb7")
 autowrap_mode = 3
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2

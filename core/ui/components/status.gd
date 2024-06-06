@@ -1,5 +1,7 @@
 @tool
+@icon("res://assets/editor-icons/pajamas--status-active.svg")
 extends VBoxContainer
+class_name StatusPanel
 
 enum STATUS {
 	ACTIVE,
@@ -41,18 +43,40 @@ var status_texture_map := {
 var color: String = "green":
 	set(v):
 		color = v
-		if texture_rect and theme:
-			texture_rect.modulate = theme.get_color(v, "Status")
+		if texture_rect:
+			texture_rect.modulate = get_theme_color(v, "Status")
 
 @onready var label := $%Label as Label
 @onready var description_label := $%DescriptionLabel as Label
 @onready var texture_rect := $%TextureRect as TextureRect
+@onready var panel := $%PanelContainer as PanelContainer
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	focus_entered.connect(_on_focus.bind(true))
+	focus_exited.connect(_on_focus.bind(false))
+	theme_changed.connect(_on_theme_changed)
+	_on_theme_changed()
+
 	label.text = title
 	description_label.text = description
 	description_label.visible = description != ""
 	texture_rect.texture = status_texture_map[status]
-	texture_rect.modulate = theme.get_color(color, "Status")
+	texture_rect.modulate = get_theme_color(color, "Status")
+
+
+func _on_theme_changed() -> void:
+	# Get the style from the set theme so it can be set on the panel container
+	var normal_stylebox := get_theme_stylebox("panel", "SelectableText").duplicate()
+	panel.add_theme_stylebox_override("panel", normal_stylebox)
+
+
+func _on_focus(focused: bool) -> void:
+	panel.remove_theme_stylebox_override("panel")
+	if focused:
+		var focus_stylebox := get_theme_stylebox("panel_focus", "SelectableText").duplicate()
+		panel.add_theme_stylebox_override("panel", focus_stylebox)
+		return
+	var normal_stylebox := get_theme_stylebox("panel", "SelectableText").duplicate()
+	panel.add_theme_stylebox_override("panel", normal_stylebox)
