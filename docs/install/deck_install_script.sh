@@ -112,7 +112,7 @@ fi
 (
 	echo "15"
 	echo "# Creating file structure"
-	sudo -u $SUDO_USER mkdir -p "${EXTENSIONS_FOLDER}" "${USER_DIR}/.config/systemd/user"
+	sudo -u $SUDO_USER mkdir -p "${EXTENSIONS_FOLDER}" "${USER_DIR}/.config/systemd/user" "${USER_DIR}/.local/bin"
 	if ! [ -s /var/lib/extensions ]; then
 		ln -s "${EXTENSIONS_FOLDER}" /var/lib/extensions
 	fi
@@ -125,6 +125,8 @@ fi
 	echo "# Installing systemd extension updater"
 	curl -L https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/rootfs/usr/lib/systemd/user/systemd-sysext-updater.service -o "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
 	chown $SUDO_USER "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
+	curl -L https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/rootfs/usr/share/opengamepadui/scripts/update_systemd_ext.sh -o "${USER_DIR}/.local/bin"
+	chown $SUDO_USER "${USER_DIR}/.local/bin/update_systemd_ext.sh"
 
 	echo "45"
 	echo "# Installing OpenGamepadUI extension"

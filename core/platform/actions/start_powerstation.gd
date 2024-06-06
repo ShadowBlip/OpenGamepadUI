@@ -1,7 +1,7 @@
 extends PlatformAction
 class_name ActionStartPowerStation
 
-const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/powertools"
+const POWERTOOLS_PATH := "/usr/share/opengamepadui/scripts/manage_input"
 
 
 func execute() -> void:
