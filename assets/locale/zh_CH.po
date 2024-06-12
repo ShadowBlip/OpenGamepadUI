@@ -1,0 +1,526 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+
+# Main Menu Messages
+msgid "Home"
+msgstr "主页"
+
+msgid "Library"
+msgstr "库"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Power"
+msgstr "电源"
+
+# General messages
+msgid "Accept"
+msgstr "接受"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Exit"
+msgstr "退出"
+
+msgid "Submit"
+msgstr "提交"
+
+# Help Menu Messages
+msgid "Open Main Menu"
+msgstr "打开主菜单"
+
+msgid "Open Quick Access Menu"
+msgstr "打开快速访问菜单"
+
+msgid "Open On-Screen Keyboard"
+msgstr "打开屏幕键盘"
+
+msgid "Scroll container"
+msgstr "滚动容器"
+
+msgid "Switch to left tab"
+msgstr "切换至左选项卡"
+
+msgid "Switch to right tab"
+msgstr "切换至右选项卡"
+
+msgid "Backspace"
+msgstr "空格"
+
+msgid "Close keyboard"
+msgstr "关闭键盘"
+
+msgid "Toggle Shift"
+msgstr "切换Shift"
+
+msgid "Enter"
+msgstr "进入"
+
+msgid "Steam Deck"
+msgstr "Steam Deck"
+
+msgid "Global"
+msgstr "全球"
+
+msgid "Unable to save gamepad profile"
+msgstr "无法保存手柄配置文件"
+
+msgid "Failed to save gamepad profile"
+msgstr "保存手柄配置文件失败"
+
+msgid "Gamepad profile saved"
+msgstr "手柄配置文件已保存"
+
+msgid "Play Now"
+msgstr "立即游戏"
+
+msgid "Install"
+msgstr "安装"
+
+msgid "Resume"
+msgstr "重新开始"
+
+msgid "Queued"
+msgstr "排队"
+
+msgid "Installing"
+msgstr "正在安装"
+
+msgid "Quick Access Menu"
+msgstr "快速访问菜单"
+
+msgid "Game Name"
+msgstr "游戏名称"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "启动"
+
+msgid "Boxart"
+msgstr "Boxart"
+
+msgid "Launch Provider"
+msgstr "游戏启动器"
+
+msgid "Library provider to launch this game with"
+msgstr "用于启动该游戏的游戏库"
+
+msgid "Launch Settings"
+msgstr "启动选项"
+
+msgid "Command"
+msgstr "指令"
+
+msgid "Command to use to launch the game"
+msgstr "游戏启动指令"
+
+msgid "Arguments"
+msgstr "参数"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "传递给游戏的命令行参数"
+
+msgid "Launch Directory"
+msgstr "启动目录"
+
+msgid "Directory to launch the game from"
+msgstr "启动游戏的目录"
+
+msgid "Environment Variables"
+msgstr "环境变量"
+
+msgid "Environment variables to use when launching the game"
+msgstr "启动游戏时使用的环境变量"
+
+msgid "Sandbox Settings"
+msgstr "沙盒设置"
+
+msgid "Use sandboxing"
+msgstr "使用沙盒"
+
+msgid "Launch the game in a sandbox"
+msgstr "在沙盒中启动游戏"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Boxart提供者"
+
+msgid "Images"
+msgstr "图像"
+
+msgid "Banner"
+msgstr "横幅"
+
+msgid "Logo"
+msgstr "标识"
+
+msgid "Grids"
+msgstr "网格"
+
+# Settings Menu
+msgid "General"
+msgstr "通用"
+
+msgid "Display"
+msgstr "显示"
+
+msgid "Network"
+msgstr "网络"
+
+msgid "Bluetooth"
+msgstr "蓝牙"
+
+msgid "Plugins"
+msgstr "插件"
+
+msgid "Plugin Store"
+msgstr "插件商城"
+
+msgid "Processes"
+msgstr "进程"
+
+msgid "Logging"
+msgstr "日志记录"
+
+msgid "Controllers"
+msgstr "控制器"
+
+msgid "Windows"
+msgstr "窗口"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "更新"
+
+msgid "Automatic Updates"
+msgstr "自动更新"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr "当更新可用时，在后台自动下载和应用更新"
+
+msgid "Check for Updates"
+msgstr "检查更新"
+
+msgid "Install Update"
+msgstr "安装更新"
+
+msgid "Appearance"
+msgstr "外观"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "System language"
+msgstr "系统语言"
+
+msgid "Theme"
+msgstr "主题"
+
+msgid "Maximum Recent Apps"
+msgstr "最近应用程序最大化"
+
+msgid "System Information"
+msgstr "系统信息"
+
+msgid "Platform"
+msgstr "平台"
+
+msgid "Client Version"
+msgstr "客户端版本"
+
+msgid "OS"
+msgstr "操作系统"
+
+msgid "Kernel Version"
+msgstr "内核版本"
+
+msgid "Vendor"
+msgstr "供应商"
+
+msgid "Product"
+msgstr "产品"
+
+msgid "BIOS Version"
+msgstr "BIOS版本"
+
+msgid "CPU Model"
+msgstr "CPU型号"
+
+msgid "GPU Model"
+msgstr "GPU型号"
+
+msgid "Driver Version"
+msgstr "驱动版本"
+
+# Display Menu
+msgid "Scale"
+msgstr "比例"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "未找到网络依赖项"
+
+msgid "Wireless Network"
+msgstr "无线网络"
+
+msgid "Visible Networks"
+msgstr "可见网络"
+
+msgid "Refresh Networks"
+msgstr "刷新网络"
+
+msgid "Wired Network"
+msgstr "有线网络"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Enter the password for this network"
+msgstr "请输入此网络的密码"
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr "蓝牙服务不可用"
+
+msgid "Enabled"
+msgstr "启用"
+
+msgid "Enable Discovery"
+msgstr "可被发现"
+
+# Audio Menu
+msgid "Audio"
+msgstr "音频"
+
+msgid "Volume"
+msgstr "音量"
+
+msgid "Output Device"
+msgstr "输出设备"
+
+msgid "Input Device"
+msgstr "输入设备"
+
+msgid "Microphone"
+msgstr "麦克风"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "未找到插件"
+
+# Processes Menu
+msgid "Kill"
+msgstr "终止"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "全局日志级别"
+
+msgid "Set the log level for all systems"
+msgstr "设置所有系统的日志级别"
+
+msgid "Per-system Logging"
+msgstr "系统级别的日志记录"
+
+# General Controller Settings Menu
+msgid "General Controller Settings"
+msgstr "控制器通用设置"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "启用SDL HIDAPI"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr ""
+"备用输入系统或导致双重输入。部分游戏将SDL用于陀螺仪控制或所有输入。需要重"
+"启。"
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "配置文件名称"
+
+msgid "Buttons"
+msgstr "按键"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "轴"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "改变输入"
+
+msgid "Keyboard"
+msgstr "键盘"
+
+msgid "Mouse"
+msgstr "鼠标"
+
+msgid "Gamepad"
+msgstr "手柄"
+
+msgid "Clear"
+msgstr "清除"
+
+msgid "Left Click"
+msgstr "左键点击"
+
+msgid "Right Click"
+msgstr "右键点击"
+
+msgid "Mouse Motion"
+msgstr "鼠标移动"
+
+msgid "Wheel Up"
+msgstr "向上滚动"
+
+msgid "Wheel Down"
+msgstr "向下滚动"
+
+msgid "Middle Click"
+msgstr "中键点击"
+
+# First Boot Menu
+msgid "Welcome"
+msgstr "欢迎"
+
+msgid "Select a language"
+msgstr "选择语言"
+
+msgid "Connect to your network"
+msgstr "连接你的网络"
+
+msgid "Next"
+msgstr "下一步"
+
+msgid "Install plugins"
+msgstr "安装插件"
+
+msgid "Configure your plugins"
+msgstr "配置插件"
+
+msgid "Finished"
+msgstr "已完成"
+
+msgid "You're ready to go"
+msgstr "已经准备好了"
+
+msgid "Start playing"
+msgstr "开始游戏"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "您想要玩什么？"
+
+msgid "Installed"
+msgstr "已安装"
+
+msgid "All Games"
+msgstr "所有游戏"
+
+msgid "Favorites"
+msgstr "喜爱"
+
+msgid "Collections"
+msgstr "收藏"
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr "快速设置"
+
+msgid "Performance"
+msgstr "表现"
+
+msgid "Power Tools"
+msgstr "电源工具"
+
+msgid "Brightness"
+msgstr "亮度"
+
+msgid "Saturation"
+msgstr "饱和度"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "性能界面"
+
+msgid "FPS Limit"
+msgstr "FPS限制"
+
+msgid "Refresh Rate"
+msgstr "刷新率"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "等待电源服务..."
+
+msgid "CPU Settings"
+msgstr "CPU设置"
+
+msgid "CPU Boost"
+msgstr "CPU超频"
+
+msgid "SMT Enabled"
+msgstr "SMT启用"
+
+msgid "CPU Cores"
+msgstr "CPU核心"
+
+msgid "GPU Settings"
+msgstr "GPU设置"
+
+msgid "TDP Boost"
+msgstr "TDP超频"
+
+msgid "Manual Freq"
+msgstr "手动频率"
+
+msgid "Min Freq"
+msgstr "最小频率"
+
+msgid "Max Freq"
+msgstr "最大频率"
+
+msgid "GPU Temp Limit"
+msgstr "GPU温度限制"
+
+msgid "Power Profile"
+msgstr "电源配置"
+
+msgid "Thermal Throttle Profile"
+msgstr "散热功率配置"
+
+# Power Menu
+msgid "Suspend"
+msgstr "休眠"
+
+msgid "Reboot"
+msgstr "重新启动"
+
+msgid "Shutdown"
+msgstr "关机"
