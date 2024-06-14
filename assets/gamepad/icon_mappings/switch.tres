@@ -35,7 +35,7 @@
 [resource]
 script = ExtResource("1_s4hvo")
 name = "Switch"
-device_names = PackedStringArray("Switch Controller", "Switch Pro Controller")
+device_names = PackedStringArray("Switch Controller", "Switch Pro Controller", "Nintendo Co., Ltd. Pro Controller")
 north = ExtResource("17_n3inh")
 south = ExtResource("29_qxbwx")
 east = ExtResource("6_riih2")
