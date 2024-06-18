@@ -147,6 +147,7 @@ visible = false
 layout_mode = 2
 
 [node name="SettingsMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("10_1ruvi")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 

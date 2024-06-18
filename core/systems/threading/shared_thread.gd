@@ -28,12 +28,15 @@ var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 @export var target_tick_rate := 60
 ## Priority (niceness) of the thread
 @export var niceness := 0
+## If watchdog should be enabled on this thread
+@export var watchdog_enabled = true
 
 
 func _init() -> void:
 	if Engine.is_editor_hint():
 		return
-	watchdog.add_thread(self)
+	if watchdog_enabled:
+		watchdog.add_thread(self)
 
 
 func _notification(what: int):
