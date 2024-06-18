@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://clbapexwfoqtu"]
+
+[ext_resource type="Script" path="res://core/ui/card_ui/disks/steam_removable_media.gd" id="1_jof60"]
+[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_vcrd0"]
+[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="3_50u8r"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_orkfl"]
+[ext_resource type="PackedScene" uid="uid://caeaxm6st4a4u" path="res://core/ui/components/drive_card.tscn" id="5_lw0ib"]
+
+[node name="SteamRemovableMedia" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jof60")
+
+[node name="VisibilityManager" parent="." instance=ExtResource("2_vcrd0")]
+
+[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("3_50u8r")]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DriveCardContainer" type="HFlowContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/DriveCardContainer" instance=ExtResource("4_orkfl")]
+unique_name_in_owner = true
+
+[node name="DriveCard" parent="MarginContainer/DriveCardContainer" instance=ExtResource("5_lw0ib")]
+layout_mode = 2
+
+[node name="DriveCard2" parent="MarginContainer/DriveCardContainer" instance=ExtResource("5_lw0ib")]
+layout_mode = 2
+
+[node name="DriveCard3" parent="MarginContainer/DriveCardContainer" instance=ExtResource("5_lw0ib")]
+layout_mode = 2

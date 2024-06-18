@@ -5,7 +5,6 @@ var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
 var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumber
-
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )

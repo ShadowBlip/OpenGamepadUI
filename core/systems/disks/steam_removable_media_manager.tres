@@ -1,0 +1,6 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dmugvvq8yqpmu"]
+
+[ext_resource type="Script" path="res://core/systems/disks/steam_removable_media_manager.gd" id="1_mo2au"]
+
+[resource]
+script = ExtResource("1_mo2au")

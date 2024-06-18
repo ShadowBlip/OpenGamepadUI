@@ -1,0 +1,6 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bqa1oyg8j861h"]
+
+[ext_resource type="Script" path="res://core/systems/disks/udisks2_block_device.gd" id="1_q6b6m"]
+
+[resource]
+script = ExtResource("1_q6b6m")
