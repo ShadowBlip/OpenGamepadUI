@@ -5,7 +5,6 @@ var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
 var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumber
-
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -136,9 +135,9 @@ func _setup_overlay_mode(args: Array) -> void:
 
 	# Remove unneeded/conflicting elements from default menues
 	var remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
-	_run_child_killer(remove_list, quick_bar_menu)
+	_remove_children(remove_list, quick_bar_menu)
 	var settings_remove_list: PackedStringArray = ["LibraryButton", "NetworkButton", "BluetoothButton", "AudioButton"]
-	_run_child_killer(settings_remove_list, settings_menu)
+	_remove_children(settings_remove_list, settings_menu)
 
 	# Setup inputplumber to receive guide presses.
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
@@ -154,26 +153,26 @@ func _setup_overlay_mode(args: Array) -> void:
 
 
 # Removes specified child elements from the given Node.
-func _run_child_killer(remove_list: PackedStringArray, parent:Node) -> void:
+func _remove_children(remove_list: PackedStringArray, parent:Node) -> void:
 	var child_count := parent.get_child_count()
 	var to_remove_list := []
 
 	for child_idx in child_count:
 		var child = parent.get_child(child_idx)
-		#logger.debug("Checking if " + child.name + " in remove list...")
+		logger.trace("Checking if " + child.name + " in remove list...")
 		if child.name in remove_list:
-			#logger.debug(child.name + " queued for removal!")
+			logger.trace(child.name + " queued for removal!")
 			to_remove_list.append(child)
 			continue
 
-		#logger.debug(child.name + " is not a node we are looking for.")
+		logger.trace(child.name + " is not a node we are looking for.")
 		var grandchild_count := child.get_child_count()
 		if grandchild_count > 0:
-			#logger.debug("Checking " + child.name + "'s children...")
-			_run_child_killer(remove_list, child)
+			logger.trace("Checking " + child.name + "'s children...")
+			_remove_children(remove_list, child)
 
 	for child in to_remove_list:
-		#logger.debug("Removing " + child.name)
+		logger.trace("Removing " + child.name)
 		child.queue_free()
 
 ## Starts Steam as an underlay process

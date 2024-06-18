@@ -31,9 +31,9 @@ func _stringify(arg1: Variant, arg2: Variant = null, arg3: Variant = null, arg4:
 		if argument == null:
 			continue
 		if argument is String:
-			array.push_back(argument)
+			array.push_back(argument as String)
 			continue
-		array.push_back(str(argument))
+		array.push_back(str(argument as String))
 	
 	return " ".join(array)
 

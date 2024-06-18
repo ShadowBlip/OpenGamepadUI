@@ -26,7 +26,7 @@ var gamepad_types := ["Xbox 360", "XBox One Elite" ,"DualSense Edge"]# "DualSens
 var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5"] # "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
-var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 
 @onready var in_game_panel := $%InGamePanel as Control
 @onready var gamepad_label := $%GamepadLabel as Label

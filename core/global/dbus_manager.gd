@@ -117,7 +117,7 @@ func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 	# Convert the objects dictionary into an array of objects
 	for obj_path in objs_dict.keys():
 		var obj_data := objs_dict[obj_path] as Dictionary
-		var object := ManagedObject.new(obj_path, obj_data)
+		var object := ManagedObject.new(obj_path as String, obj_data)
 		objects.append(object)
 
 	return objects
@@ -128,9 +128,9 @@ func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
 func get_names_for_owner(owner: String) -> PackedStringArray:
 	var names := PackedStringArray()
 	for name in well_known_names:
-		var name_owner := dbus_proxy.get_name_owner(name)
+		var name_owner := dbus_proxy.get_name_owner(name as String)
 		if name_owner == owner:
-			names.append(name)
+			names.append(name as String)
 
 	return names
 
@@ -153,7 +153,7 @@ class ObjectManager extends Resource:
 		_proxy.thread.exec(_proxy.watch.bind(IFACE_OBJECT_MANAGER, "InterfacesRemoved"))
 
 	## Returns a dictionary of manages objects for the given bus and path
-	func get_managed_objects(bus: String, path: String) -> Array[ManagedObject]:
+	func get_managed_objects(_bus: String, _path: String) -> Array[ManagedObject]:
 		var result := _proxy.call_method(IFACE_OBJECT_MANAGER, "GetManagedObjects", [], "")
 		if not result:
 			return []
@@ -169,7 +169,7 @@ class ObjectManager extends Resource:
 		# Convert the objects dictionary into an array of objects
 		for obj_path in objs_dict.keys():
 			var obj_data := objs_dict[obj_path] as Dictionary
-			var object := ManagedObject.new(obj_path, obj_data)
+			var object := ManagedObject.new(obj_path as String, obj_data)
 			objects.append(object)
 
 		return objects

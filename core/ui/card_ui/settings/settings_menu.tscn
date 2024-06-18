@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://d2jiecrd5sw4s"]
+[gd_scene load_steps=48 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
@@ -26,6 +26,7 @@
 [ext_resource type="Resource" uid="uid://5r7ehi4t5mri" path="res://assets/state/states/settings_bluetooth.tres" id="21_cbayw"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="22_ntyf3"]
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="23_ilbjf"]
+[ext_resource type="Resource" uid="uid://cn236k0ajm0uw" path="res://assets/state/states/settings_disks.tres" id="24_oep0o"]
 [ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="24_oscnu"]
 [ext_resource type="Resource" uid="uid://cakuo0qwrrkk8" path="res://assets/state/states/settings_logging.tres" id="25_nijem"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="27_krt45"]
@@ -42,6 +43,7 @@
 [ext_resource type="PackedScene" uid="uid://cliqk7lo4t8ao" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
 [ext_resource type="PackedScene" uid="uid://bfu4edkk5dqt2" path="res://core/ui/common/debug/processes_menu.tscn" id="36_hnokx"]
 [ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/common/settings/logging_settings_menu.tscn" id="37_iwtxk"]
+[ext_resource type="PackedScene" uid="uid://clbapexwfoqtu" path="res://core/ui/card_ui/disks/steam_removable_media.tscn" id="40_lyyu6"]
 [ext_resource type="PackedScene" uid="uid://cgxl1qiu50h15" path="res://core/ui/card_ui/settings/general_controller_settings_menu.tscn" id="40_uqw2r"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ob3o7"]
@@ -263,6 +265,20 @@ on_signal = "focus_entered"
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
+[node name="DisksButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
+layout_mode = 2
+text = "Disks"
+
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" instance=ExtResource("14_cid64")]
+state_machine = ExtResource("15_cb33u")
+state = ExtResource("24_oep0o")
+action = 3
+on_signal = "focus_entered"
+
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/SteamRemovableMediaMenu/MarginContainer/DriveCardContainer/FocusGroup")
+on_signal = "pressed"
+
 [node name="HSeparator4" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2
 
@@ -454,6 +470,10 @@ state = ExtResource("20_5v03o")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
 
+[node name="SteamRemovableMediaMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_lyyu6")]
+visible = false
+layout_mode = 2
+
 [node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_dooq8")]
 visible = false
 layout_mode = 2
@@ -495,6 +515,7 @@ layout_mode = 2
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu"]
+[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/SteamRemovableMediaMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu"]

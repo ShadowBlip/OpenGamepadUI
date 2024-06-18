@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="5_ghad7"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="6_oyayo"]
 [ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="7_qbq53"]
-[ext_resource type="PackedScene" path="res://core/ui/components/plugin_store_card.tscn" id="8_g4q4p"]
+[ext_resource type="PackedScene" uid="uid://cc7a35n2pqmmf" path="res://core/ui/components/plugin_store_card.tscn" id="8_g4q4p"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_c2505"]
 
 [node name="PluginStoreMenu" type="ScrollContainer"]

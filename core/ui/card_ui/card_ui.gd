@@ -24,6 +24,7 @@ var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 @onready var fade_transition := $%FadeTransitionPlayer
 @onready var fade_texture := $%FadeTexture
 @onready var power_timer := $%PowerTimer
+@onready var settings_menu := $%SettingsMenu
 
 var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
@@ -77,6 +78,10 @@ func _ready() -> void:
 
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	library_manager.reload_library()
+	
+	# Remove unneeded/conflicting elements from default menues
+	var settings_remove_list: PackedStringArray = ["DisksButton"]
+	_remove_children(settings_remove_list, settings_menu)
 
 	# Set the initial intercept mode
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
@@ -222,3 +227,27 @@ func _input(event: InputEvent) -> void:
 		var output: Array = []
 		if OS.execute("systemctl", ["suspend"], output) != OK:
 			logger.warn("Failed to suspend: '" + output[0] + "'")
+
+
+# Removes specified child elements from the given Node.
+func _remove_children(remove_list: PackedStringArray, parent:Node) -> void:
+	var child_count := parent.get_child_count()
+	var to_remove_list := []
+
+	for child_idx in child_count:
+		var child = parent.get_child(child_idx)
+		logger.trace("Checking if " + child.name + " in remove list...")
+		if child.name in remove_list:
+			logger.trace(child.name + " queued for removal!")
+			to_remove_list.append(child)
+			continue
+
+		logger.trace(child.name + " is not a node we are looking for.")
+		var grandchild_count := child.get_child_count()
+		if grandchild_count > 0:
+			logger.trace("Checking " + child.name + "'s children...")
+			_remove_children(remove_list, child)
+
+	for child in to_remove_list:
+		logger.trace("Removing " + child.name)
+		child.queue_free()

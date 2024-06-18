@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://caeaxm6st4a4u"]
+
+[ext_resource type="Script" path="res://core/ui/components/drive_card.gd" id="1_jlhco"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_jm832"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_84mee"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_c72py"]
+[ext_resource type="PackedScene" uid="uid://bkdsn268g6hx7" path="res://core/ui/components/partition_card.tscn" id="4_wgas0"]
+
+[node name="DriveCard" type="MarginContainer"]
+custom_minimum_size = Vector2(340, 200)
+script = ExtResource("1_jlhco")
+
+[node name="BackgroundPanel" type="Panel" parent="."]
+layout_mode = 2
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_jm832")]
+target = NodePath("../EdgeMarginContainer/LayoutHBox/DriveDataVBox/DriveFocusGroup")
+on_signal = "pressed"
+
+[node name="EdgeMarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="LayoutHBox" type="HBoxContainer" parent="EdgeMarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="EdgeMarginContainer/LayoutHBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="IconTextureRect" type="TextureRect" parent="EdgeMarginContainer/LayoutHBox/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DriveDataVBox" type="VBoxContainer" parent="EdgeMarginContainer/LayoutHBox"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="DriveName" type="Label" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Lipsum Industries SSD
+"
+horizontal_alignment = 2
+
+[node name="DriveSize" type="Label" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1337 Gb"
+horizontal_alignment = 2
+
+[node name="FormatButton" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox" instance=ExtResource("3_84mee")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Format Drive"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox"]
+layout_mode = 2
+
+[node name="DriveFocusGroup" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox" node_paths=PackedStringArray("focus_neighbor_right") instance=ExtResource("3_c72py")]
+unique_name_in_owner = true
+focus_neighbor_right = NodePath("../../PartitionsVBox/PartitionsFocusGroup")
+
+[node name="PartitionsVBox" type="VBoxContainer" parent="EdgeMarginContainer/LayoutHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="PartitionsFocusGroup" parent="EdgeMarginContainer/LayoutHBox/PartitionsVBox" node_paths=PackedStringArray("focus_neighbor_left") instance=ExtResource("3_c72py")]
+unique_name_in_owner = true
+focus_neighbor_left = NodePath("../../DriveDataVBox/DriveFocusGroup")
+
+[node name="PartitionCard" parent="EdgeMarginContainer/LayoutHBox/PartitionsVBox" instance=ExtResource("4_wgas0")]
+layout_mode = 2
+
+[node name="PartitionCard2" parent="EdgeMarginContainer/LayoutHBox/PartitionsVBox" instance=ExtResource("4_wgas0")]
+layout_mode = 2
