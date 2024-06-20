@@ -60,7 +60,6 @@ var should_manage_overlay := true
 
 # Connect to Gamescope signals
 func _init() -> void:
-
 	# When window focus changes, update the current app and gamepad profile
 	var on_focus_changed := func(from: int, to: int):
 		logger.info("Window focus changed from " + str(from) + " to: " + str(to))

@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_iwio6")
 logger_name = "NetworkOOBE"
+minimum_states = 0

@@ -25,7 +25,6 @@ var main_menu_state := preload("res://assets/state/states/main_menu.tres") as St
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var base_state = preload("res://assets/state/states/in_game.tres") as State
 
-var handle_back: bool = false
 var actions_pressed := {}
 
 ## Will show logger events with the prefix InputManager(Overlay Mode)
@@ -39,16 +38,6 @@ func _ready() -> void:
 
 	for device in input_plumber.composite_devices:
 		_watch_dbus_device(device)
-
-	state_machine.state_changed.connect(_on_state_changed)
-
-
-# Only process back input when not on the base state
-func _on_state_changed(_from: State, to: State) -> void:
-	if to == base_state:
-		handle_back = false
-		return
-	handle_back = true
 
 
 ## Queue a release event for the given action
@@ -205,22 +194,6 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	# Only proceed if this is a back event.
-	if not event.is_action("ogui_back"):
-		return
-
-	# If we're on the base state, don't pop the state.
-	if not handle_back:
-		return
-
-	# Only handle back on the down event
-	if not event.is_pressed():
-		return
-
-	# Pop the state off the state stack and prevent the event from propagating
-	state_machine.pop_state()
-	get_viewport().set_input_as_handled()
-
 
 ## Handle guide button events and determine whether this is a guide action
 ## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
@@ -240,9 +213,8 @@ func _guide_input(event: InputEvent) -> void:
 
 	# Emit the main menu action if this was not a guide action
 	logger.debug("Guide released. Additional events did not use guide action. Sending Guide.")
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	_close_focused_window()
 	_return_chord(["Gamepad:Button:Guide"])
-	_close_quickbar()
 
 
 ## Handle quick bar menu events to open the quick bar menu
@@ -256,15 +228,12 @@ func _quick_bar_input(event: InputEvent) -> void:
 
 	var state := state_machine.current_state()
 	logger.debug("Current State: " +str(state))
-	if state == quick_bar_state:
+	if state != base_state:
 		logger.debug("Close Quick Bar")
-		state_machine.pop_state()
-	elif state in [main_menu_state, in_game_menu_state]:
-		logger.debug("Replace state with Quick Bar")
-		state_machine.replace_state(quick_bar_state)
-	else:
-		logger.debug("Push Quick Bar")
-		state_machine.push_state(quick_bar_state)
+		_close_focused_window()
+		return
+	logger.debug("Push Quick Bar")
+	state_machine.push_state(quick_bar_state)
 
 
 ## Handle OSK events for bringing up the on-screen keyboard
@@ -272,9 +241,8 @@ func _osk_input(event: InputEvent) -> void:
 	logger.debug("Trigger Steam OSK")
 	if not event.is_pressed():
 		return
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	_close_focused_window()
 	_return_chord(["Gamepad:Button:Guide", "Gamepad:Button:East"])
-	_close_quickbar()
 
 
 ## Handle QAM events for bringing up the steam QAM
@@ -282,9 +250,8 @@ func _qam_input(event: InputEvent) -> void:
 	logger.debug("Trigger Steam QAM")
 	if not event.is_pressed():
 		return
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	_close_focused_window()
 	_return_chord(["Gamepad:Button:Guide", "Gamepad:Button:South"])
-	_close_quickbar()
 
 
 func _return_chord(actions: PackedStringArray) -> void:
@@ -292,7 +259,7 @@ func _return_chord(actions: PackedStringArray) -> void:
 	# Input.parse_input_event so we don't do this terrible loop. This is awful.
 	logger.debug("Return events to InputPlumber: " + str(actions))
 	for device in input_plumber.composite_devices:
-		device.intercept_mode = 0
+		device.intercept_mode = InputPlumber.INTERCEPT_MODE.PASS
 		device.send_button_chord(actions)
 
 
@@ -358,9 +325,7 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 		action_release(dbus_path, action)
 
 
-func _close_quickbar() -> void:
-	var state := state_machine.current_state()
-	logger.debug("Current State: " +str(state))
-	while state != base_state:
+# Closes all windows until we return to the base_state
+func _close_focused_window() -> void:
+	while state_machine.stack_length() > state_machine.minimum_states:
 		state_machine.pop_state()
-		state = state_machine.current_state()

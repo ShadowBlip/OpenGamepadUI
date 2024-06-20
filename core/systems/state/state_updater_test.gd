@@ -10,6 +10,7 @@ var node: Button
 func before_each() -> void:
 	# Create a state machine and state
 	state_machine = StateMachine.new()
+	state_machine.minimum_states = 0
 	state = State.new()
 
 	# Create and configure the state updater
