@@ -23,8 +23,7 @@ func before_each() -> void:
 func after_each() -> void:
 	if headless:
 		return
-	while state_machine.stack_length() > 0:
-		state_machine.pop_state()
+	state_machine.clear_states()
 
 
 # Stop all threads to prevent crashing

@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_k2cku")
 logger_name = "QuickBarStateMachine"
+minimum_states = 0

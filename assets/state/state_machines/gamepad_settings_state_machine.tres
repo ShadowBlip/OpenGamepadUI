@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_hgufk")
 logger_name = "StateMachine"
+minimum_states = 0

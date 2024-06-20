@@ -5,6 +5,7 @@ var state_machine: StateMachine
 
 func before_each() -> void:
 	state_machine = StateMachine.new()
+	state_machine.minimum_states = 0
 	watch_signals(state_machine)
 
 

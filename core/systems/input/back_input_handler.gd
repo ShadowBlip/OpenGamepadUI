@@ -42,6 +42,4 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 	# Pop the state machine stack to go back
-	if state_machine.stack_length() > minimum_states:
-		state_machine.pop_state()
-		return
+	state_machine.pop_state()

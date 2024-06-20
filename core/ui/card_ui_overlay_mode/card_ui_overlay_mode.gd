@@ -41,6 +41,7 @@ func _init():
 
 	# Back button wont close windows without this. OverlayInputManager prevents poping the last state.
 	state_machine.push_state(base_state)
+	state_machine.state_changed.connect(_on_no_state)
 
 	# Ensure LaunchManager doesn't override our custom overlay management l
 	launch_manager.should_manage_overlay = false
@@ -237,7 +238,6 @@ func _find_underlay_window_id() -> void:
 func _on_window_open(from: State) -> void:
 	if from:
 		logger.info("Quick bar open state: " + from.name)
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 	if game_running:
 		gamescope.set_overlay(overlay_window_id, 1, display)
 		gamescope.set_overlay(underlay_window_id, 0, display)
@@ -247,7 +247,6 @@ func _on_window_open(from: State) -> void:
 func _on_window_closed(to: State) -> void:
 	if to:
 		logger.info("Quick bar closed state: " + to.name)
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 	if game_running:
 		gamescope.set_overlay(overlay_window_id, 0, display)
 		gamescope.set_overlay(underlay_window_id, 1, display)
@@ -279,14 +278,20 @@ func _check_exit() -> void:
 
 
 ## Sets gamescope input focus to on so the user can interact with the UI
-
 func _on_base_state_exited(_to: State) -> void:
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 
 ## Sets gamescope input focus to off so the user can interact with the game
 func _on_base_state_entered(_from: State) -> void:
-
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
 	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+
+## Ensures there is always a state on the state stack.
+func _on_no_state(_from: State, to: State) -> void:
+	if state_machine.stack_length() == 0:
+		state_machine.push_state(base_state)

@@ -9,6 +9,8 @@ class_name StateMachine
 signal state_changed(from: State, to: State)
 
 @export var logger_name := "StateMachine"
+@export var minimum_states: int = 1
+
 var _state_stack: Array[State] = []
 var logger := Log.get_logger(logger_name)
 
@@ -17,7 +19,7 @@ func _init() -> void:
 	state_changed.connect(_on_state_changed)
 
 
-# Emit state changes on the state itself and log state changes
+## Emit state changes on the state itself and log state changes
 func _on_state_changed(from: State, to: State) -> void:
 	var from_str = "<null>"
 	var to_str = "<null>"
@@ -36,7 +38,7 @@ func _on_state_changed(from: State, to: State) -> void:
 	logger.info("Stack: " + "-> ".join(state_names))
 
 
-# Returns the current state at the end of the state stack
+## Returns the current state at the end of the state stack
 func current_state() -> State:
 	var length = len(_state_stack)
 	if length == 0:
@@ -44,8 +46,11 @@ func current_state() -> State:
 	return _state_stack[length-1]
 
 
-# Set state will set the entire state stack to the given array of states
+## Set state will set the entire state stack to the given array of states
 func set_state(stack: Array[State]) -> void:
+	if null in stack:
+		logger.warn("Invalid NULL state pushed.")
+		return
 	var cur := current_state()
 	var old_stack := _state_stack
 	_state_stack = stack
@@ -57,30 +62,41 @@ func set_state(stack: Array[State]) -> void:
 	state_changed.emit(cur, stack[-1])
 
 
-# Push state will push the given state to the top of the state stack. 
+## Push state will push the given state to the top of the state stack.
 func push_state(state: State) -> void:
+	if state == null:
+		logger.warn("Invalid NULL state pushed.")
+		return
 	var cur := current_state()
 	_push_unique(state)
 	state_changed.emit(cur, state)
 
 
-# Pushes the given state to the front of the stack
+## Pushes the given state to the front of the stack
 func push_state_front(state: State) -> void:
+	if state == null:
+		logger.warn("Invalid NULL state pushed.")
+		return
 	var cur = current_state()
 	_state_stack.push_front(state)
 	state_changed.emit(cur, current_state())
 
 
-# Pop state will remove the last state from the stack and return it.
+## Pop state will remove the last state from the stack and return it.
 func pop_state() -> State:
-	var popped = _state_stack.pop_back()
-	var cur = current_state()
-	state_changed.emit(popped, cur)
-	return popped
+	if self.stack_length() > minimum_states:
+		var popped = _state_stack.pop_back()
+		var cur = current_state()
+		state_changed.emit(popped, cur)
+		return popped
+	return current_state()
 
 
-# Replaces the current state at the end of the stack with the given state
+## Replaces the current state at the end of the stack with the given state
 func replace_state(state: State) -> void:
+	if state == null:
+		logger.warn("Invalid NULL state pushed.")
+		return
 	var popped := _state_stack.pop_back() as State
 	_push_unique(state)
 	if popped != null:
@@ -88,7 +104,7 @@ func replace_state(state: State) -> void:
 	state_changed.emit(popped, state)
 
 
-# Removes all instances of the given state from the stack
+## Removes all instances of the given state from the stack
 func remove_state(state: State) -> void:
 	var cur := current_state()
 	var new_state_stack: Array[State] = []
@@ -101,17 +117,22 @@ func remove_state(state: State) -> void:
 	state_changed.emit(cur, current_state())
 
 
-# Returns the length of the state stack
+## Removes all states
+func clear_states() -> void:
+	_state_stack.clear()
+
+
+## Returns the length of the state stack
 func stack_length() -> int:
 	return len(_state_stack)
 
 
-# Returns the current state stack
+## Returns the current state stack
 func stack() -> Array[State]:
 	return _state_stack.duplicate()
 
 
-# Returns true if the given state exists anywhere in the state stack
+## Returns true if the given state exists anywhere in the state stack
 func has_state(state: State) -> bool:
 	if _state_stack.find(state) != -1:
 		return true
