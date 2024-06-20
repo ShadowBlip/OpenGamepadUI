@@ -137,7 +137,7 @@ func _setup_overlay_mode(args: Array) -> void:
 	# Remove unneeded/conflicting elements from default menues
 	var remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
 	_run_child_killer(remove_list, quick_bar_menu)
-	var settings_remove_list: PackedStringArray = ["NetworkButton", "BluetoothButton", "AudioButton"]
+	var settings_remove_list: PackedStringArray = ["LibraryButton", "NetworkButton", "BluetoothButton", "AudioButton"]
 	_run_child_killer(settings_remove_list, settings_menu)
 
 	# Setup inputplumber to receive guide presses.
