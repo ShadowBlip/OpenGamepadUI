@@ -13,7 +13,7 @@ enum LEVEL {
 	WARN,	## Log warnings and errors
 	INFO,	## Log info, warnings, and errors
 	DEBUG,	## Log debug, info, warnings, and errors
-	TRACE,	## Log everything
+	TRACE,	## Log everything, you monster
 }
 
 ## Returns a named logger for logging
