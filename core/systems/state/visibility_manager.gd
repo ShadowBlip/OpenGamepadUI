@@ -35,7 +35,6 @@ var logger := Log.get_logger("VisibilityManager", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	state_machine.state_changed.connect(_on_state_changed)
-	visible_during.push_front(state)
 	
 	# Handle visibility transitions
 	var children := get_children()
@@ -56,9 +55,29 @@ func _ready() -> void:
 
 
 func _on_state_changed(_from: State, to: State) -> void:
-	if state_machine.has_state(state) and to in visible_during:
+	# Transition if this is the state being looked for
+	if to == state:
 		_transition(true)
 		return
+
+	# Loop through the state stack to see if visibility should be maintained.
+	var stack := state_machine.stack()
+	stack.reverse()
+	for s in stack:
+		# If the target state is found before reaching the end of the stack, this
+		# node should be visible.
+		if s == state:
+			_transition(true)
+			return
+		# If the state in the stack is one that this node should be visible during,
+		# keep searching for the target state. 
+		elif s in visible_during:
+			continue
+		# If the target state is not found, or a state that is not in the "visible_during"
+		# list, then this node should not be visible.
+		else:
+			break
+
 	_transition(false)
 
 
