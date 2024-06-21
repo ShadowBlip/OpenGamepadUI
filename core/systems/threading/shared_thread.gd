@@ -31,6 +31,8 @@ var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 
 
 func _init() -> void:
+	if Engine.is_editor_hint():
+		return
 	watchdog.add_thread(self)
 
 
