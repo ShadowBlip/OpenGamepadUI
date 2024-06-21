@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="LogManager" load_steps=2 format=3 uid="uid://dtwcm4jv5y2cp"]
 
-[ext_resource type="Script" path="res://core/systems/debug/log_manager.gd" id="1_fy8yk"]
+[ext_resource type="Script" path="res://core/systems/debug/log_manager.gd" id="1_3yjgj"]
 
 [resource]
-script = ExtResource("1_fy8yk")
+script = ExtResource("1_3yjgj")

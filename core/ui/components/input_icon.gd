@@ -60,12 +60,16 @@ var internal_children: Array[Node] = []
 @export_enum("Both", "Keyboard/Mouse", "Controller") var show_only: int = 0:
 	set(_show_only):
 		show_only = _show_only
+		if Engine.is_editor_hint():
+			return
 		_on_input_type_changed(input_icons.last_input_type)
 
 ## Force the icon to always show the given type of icon
 @export_enum("None", "Keyboard/Mouse", "Controller") var force_type: int = 0:
 	set(_force_type):
 		force_type = _force_type
+		if Engine.is_editor_hint():
+			return
 		_on_input_type_changed(input_icons.last_input_type)
 
 ## Force using the given icon mapping for a particular device
