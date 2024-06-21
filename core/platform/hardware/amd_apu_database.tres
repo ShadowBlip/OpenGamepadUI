@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="APUDatabase" load_steps=88 format=3 uid="uid://hm5433bg4nrm"]
+[gd_resource type="Resource" script_class="APUDatabase" load_steps=97 format=3 uid="uid://hm5433bg4nrm"]
 
 [ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_a4rxd"]
 [ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="2_pbguw"]
@@ -598,7 +598,70 @@ min_tdp = 3.0
 max_tdp = 15.0
 max_boost = 5.0
 
+[sub_resource type="Resource" id="Resource_i3yex"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 9 8945HS w/ Radeon 780M Graphics"
+min_tdp = 35.0
+max_tdp = 54.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_ydwb8"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 8845HS w/ Radeon 780M Graphics"
+min_tdp = 35.0
+max_tdp = 54.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_g7470"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 8840HS w/ Radeon 780M Graphics"
+min_tdp = 5.0
+max_tdp = 35.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_536ug"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 7 8840U w/ Radeon 780M Graphics"
+min_tdp = 5.0
+max_tdp = 35.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_0rol5"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 8645HS w/ Radeon 760M Graphics"
+min_tdp = 35.0
+max_tdp = 54.0
+max_boost = 8.0
+
+[sub_resource type="Resource" id="Resource_xclq2"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 8640HS w/ Radeon 760M Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_uujy8"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 8640U w/ Radeon 760M Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_m3pd4"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 5 8540U w/ Radeon 740M Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 5.0
+
+[sub_resource type="Resource" id="Resource_t6ua1"]
+script = ExtResource("1_a4rxd")
+model_name = "AMD Ryzen 3 8540U w/ Radeon 740M Graphics"
+min_tdp = 5.0
+max_tdp = 30.0
+max_boost = 0.0
+
 [resource]
 script = ExtResource("2_pbguw")
-apu_list = Array[ExtResource("1_a4rxd")]([SubResource("Resource_wio8w"), SubResource("Resource_tcfff"), SubResource("Resource_wmno8"), SubResource("Resource_b8fpu"), SubResource("Resource_1g34g"), SubResource("Resource_sp41q"), SubResource("Resource_h2si0"), SubResource("Resource_0pmlr"), SubResource("Resource_y8ihm"), SubResource("Resource_bvqtb"), SubResource("Resource_rk6b7"), SubResource("Resource_lnxua"), SubResource("Resource_0u6yf"), SubResource("Resource_6f80n"), SubResource("Resource_lbrm0"), SubResource("Resource_t5d1l"), SubResource("Resource_pnxln"), SubResource("Resource_e6tev"), SubResource("Resource_u52m2"), SubResource("Resource_uwui8"), SubResource("Resource_2ks23"), SubResource("Resource_yv37b"), SubResource("Resource_pwp6g"), SubResource("Resource_chr8q"), SubResource("Resource_2pyvv"), SubResource("Resource_3lvxu"), SubResource("Resource_rct3m"), SubResource("Resource_pps3c"), SubResource("Resource_5xvvv"), SubResource("Resource_pseh1"), SubResource("Resource_b2c3r"), SubResource("Resource_q76ve"), SubResource("Resource_xjgl8"), SubResource("Resource_n363j"), SubResource("Resource_bq0w7"), SubResource("Resource_5k7fn"), SubResource("Resource_msyku"), SubResource("Resource_8qb0g"), SubResource("Resource_ynh34"), SubResource("Resource_b6xme"), SubResource("Resource_soogm"), SubResource("Resource_t80ob"), SubResource("Resource_8p12x"), SubResource("Resource_duhig"), SubResource("Resource_20afn"), SubResource("Resource_cc6u3"), SubResource("Resource_fja1l"), SubResource("Resource_fmue3"), SubResource("Resource_wdxra"), SubResource("Resource_6o1lg"), SubResource("Resource_s24u0"), SubResource("Resource_nn84a"), SubResource("Resource_n0x5x"), SubResource("Resource_rj5oh"), SubResource("Resource_jnmf4"), SubResource("Resource_6crrv"), SubResource("Resource_a0hyt"), SubResource("Resource_4nd4h"), SubResource("Resource_fyb6g"), SubResource("Resource_bw227"), SubResource("Resource_u78ox"), SubResource("Resource_vyhi3"), SubResource("Resource_f4wf7"), SubResource("Resource_totkl"), SubResource("Resource_ip781"), SubResource("Resource_gwurq"), SubResource("Resource_4piv1"), SubResource("Resource_0buyr"), SubResource("Resource_i281s"), SubResource("Resource_tfm7x"), SubResource("Resource_6r8fs"), SubResource("Resource_r0vwt"), SubResource("Resource_flekc"), SubResource("Resource_087ib"), SubResource("Resource_aihsu"), SubResource("Resource_e2wwp"), SubResource("Resource_3mvmr"), SubResource("Resource_yqakw"), SubResource("Resource_ach5e"), SubResource("Resource_d5f1t"), SubResource("Resource_5hkqp"), SubResource("Resource_7mq4s"), SubResource("Resource_c8hi5"), SubResource("Resource_gabyr"), SubResource("Resource_dm5fp")])
+apu_list = Array[ExtResource("1_a4rxd")]([SubResource("Resource_wio8w"), SubResource("Resource_tcfff"), SubResource("Resource_wmno8"), SubResource("Resource_b8fpu"), SubResource("Resource_1g34g"), SubResource("Resource_sp41q"), SubResource("Resource_h2si0"), SubResource("Resource_0pmlr"), SubResource("Resource_y8ihm"), SubResource("Resource_bvqtb"), SubResource("Resource_rk6b7"), SubResource("Resource_lnxua"), SubResource("Resource_0u6yf"), SubResource("Resource_6f80n"), SubResource("Resource_lbrm0"), SubResource("Resource_t5d1l"), SubResource("Resource_pnxln"), SubResource("Resource_e6tev"), SubResource("Resource_u52m2"), SubResource("Resource_uwui8"), SubResource("Resource_2ks23"), SubResource("Resource_yv37b"), SubResource("Resource_pwp6g"), SubResource("Resource_chr8q"), SubResource("Resource_2pyvv"), SubResource("Resource_3lvxu"), SubResource("Resource_rct3m"), SubResource("Resource_pps3c"), SubResource("Resource_5xvvv"), SubResource("Resource_pseh1"), SubResource("Resource_b2c3r"), SubResource("Resource_q76ve"), SubResource("Resource_xjgl8"), SubResource("Resource_n363j"), SubResource("Resource_bq0w7"), SubResource("Resource_5k7fn"), SubResource("Resource_msyku"), SubResource("Resource_8qb0g"), SubResource("Resource_ynh34"), SubResource("Resource_b6xme"), SubResource("Resource_soogm"), SubResource("Resource_t80ob"), SubResource("Resource_8p12x"), SubResource("Resource_duhig"), SubResource("Resource_20afn"), SubResource("Resource_cc6u3"), SubResource("Resource_fja1l"), SubResource("Resource_fmue3"), SubResource("Resource_wdxra"), SubResource("Resource_6o1lg"), SubResource("Resource_s24u0"), SubResource("Resource_nn84a"), SubResource("Resource_n0x5x"), SubResource("Resource_rj5oh"), SubResource("Resource_jnmf4"), SubResource("Resource_6crrv"), SubResource("Resource_a0hyt"), SubResource("Resource_4nd4h"), SubResource("Resource_fyb6g"), SubResource("Resource_bw227"), SubResource("Resource_u78ox"), SubResource("Resource_vyhi3"), SubResource("Resource_f4wf7"), SubResource("Resource_totkl"), SubResource("Resource_ip781"), SubResource("Resource_gwurq"), SubResource("Resource_4piv1"), SubResource("Resource_0buyr"), SubResource("Resource_i281s"), SubResource("Resource_tfm7x"), SubResource("Resource_6r8fs"), SubResource("Resource_r0vwt"), SubResource("Resource_flekc"), SubResource("Resource_087ib"), SubResource("Resource_aihsu"), SubResource("Resource_e2wwp"), SubResource("Resource_3mvmr"), SubResource("Resource_yqakw"), SubResource("Resource_ach5e"), SubResource("Resource_d5f1t"), SubResource("Resource_5hkqp"), SubResource("Resource_7mq4s"), SubResource("Resource_c8hi5"), SubResource("Resource_gabyr"), SubResource("Resource_dm5fp"), SubResource("Resource_i3yex"), SubResource("Resource_ydwb8"), SubResource("Resource_g7470"), SubResource("Resource_536ug"), SubResource("Resource_0rol5"), SubResource("Resource_xclq2"), SubResource("Resource_uujy8"), SubResource("Resource_m3pd4"), SubResource("Resource_t6ua1")])
 database_name = "Intel"
