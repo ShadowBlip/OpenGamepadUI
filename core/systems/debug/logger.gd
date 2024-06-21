@@ -42,6 +42,14 @@ func set_level(level: Log.LEVEL) -> void:
 	_level = level
 
 
+func trace(message: Variant, xtra2: Variant = null, xtra3: Variant = null, xtra4: Variant = null, xtra5: Variant = null, xtra6: Variant = null):
+	if self._level < Log.LEVEL.TRACE:
+		return
+	var prefix := _format_prefix("TRACE", _get_caller())
+	var msg := _stringify(message, xtra2, xtra3, xtra4, xtra5, xtra6)
+	print_rich("[color=magenta]", prefix, "[/color]", msg)
+
+
 func debug(message: Variant, xtra2: Variant = null, xtra3: Variant = null, xtra4: Variant = null, xtra5: Variant = null, xtra6: Variant = null):
 	if self._level < Log.LEVEL.DEBUG:
 		return

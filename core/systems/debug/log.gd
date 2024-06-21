@@ -12,7 +12,8 @@ enum LEVEL {
 	ERROR,	## Only log errors
 	WARN,	## Log warnings and errors
 	INFO,	## Log info, warnings, and errors
-	DEBUG,	## Log everything
+	DEBUG,	## Log debug, info, warnings, and errors
+	TRACE,	## Log everything
 }
 
 ## Returns a named logger for logging
