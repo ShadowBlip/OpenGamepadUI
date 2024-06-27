@@ -67,6 +67,7 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
+	_trace_input_status("START")
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
@@ -84,115 +85,167 @@ func _input(event: InputEvent) -> void:
 		actions_pressed[action] = value
 
 	# Handle guide button inputs
-	if event.is_action("ogui_guide"):
+	if event.is_action("ogui_guide_ov"):
 		_guide_input(event)
 		get_viewport().set_input_as_handled()
+		_trace_input_status("END")
 		return
 
-	# Steam QAM open events
-	if event.is_action("ogui_qam"):
-		_qam_input(event)
+	# Steam chord events
+	if _send_steam_chord(event):
 		get_viewport().set_input_as_handled()
+		_trace_input_status("END")
 		return
 
 	# Quick Bar open events
-	if event.is_action("ogui_osk"):
-		_osk_input(event)
-		get_viewport().set_input_as_handled()
-		return
-
-	# Steam OSK open events
-	if event.is_action("ogui_qb"):
+	if event.is_action("ogui_qb_ov"):
 		_quick_bar_input(event)
 		get_viewport().set_input_as_handled()
+		_trace_input_status("END")
 		return
 
 	# Handle audio events
 	if event.is_action("ogui_volume_down") or event.is_action("ogui_volume_up") or event.is_action("ogui_volume_mute"):
 		_audio_input(event)
+		_trace_input_status("END")
 		return
 
 	# Handle guide action release events
 	if event.is_action_released("ogui_guide_action"):
 		logger.debug("Additional action as guide is released.")
 		# Steam OSK
-		if event.is_action_released("ogui_north"):
-			action_release(dbus_path, "ogui_osk")
+		if event.is_action_released("ogui_north_ov"):
+			action_release(dbus_path, "ogui_osk_ov")
 			get_viewport().set_input_as_handled()
+			_trace_input_status("END")
 			return
-		# Quick Bar
-		if event.is_action_released("ogui_east"):
-			action_release(dbus_path, "ogui_qb")
-			get_viewport().set_input_as_handled()
-			return
+
 		# Steam QAM
-		if event.is_action_released("ogui_south"):
-			action_release(dbus_path, "ogui_qam")
+		if event.is_action_released("ogui_south_ov"):
+			action_release(dbus_path, "ogui_qam_ov")
 			get_viewport().set_input_as_handled()
+			_trace_input_status("END")
+			return
+
+		# Steam Video Capture
+		if event.is_action_released("ogui_west_ov"):
+			action_release(dbus_path, "ogui_vc_ov")
+			get_viewport().set_input_as_handled()
+			_trace_input_status("END")
+			return
+
+		# Steam Screenshot
+		if event.is_action_released("ogui_rb_ov"):
+			action_release(dbus_path, "ogui_sc_ov")
+			get_viewport().set_input_as_handled()
+			_trace_input_status("END")
+			return
+
+		# Quick Bar
+		if event.is_action_released("ogui_east_ov"):
+			action_release(dbus_path, "ogui_qb_ov")
+			get_viewport().set_input_as_handled()
+			_trace_input_status("END")
 			return
 
 	# Handle inputs when the guide button is being held
-	if Input.is_action_pressed("ogui_guide"):
-		
+	if Input.is_action_pressed("ogui_guide_ov"):
 		if event.is_pressed():
 			logger.debug("Additional action while guide wad pressed.")
 			# Steam OSK
-			if event.is_action_pressed("ogui_north"):
+			if event.is_action_pressed("ogui_north_ov"):
 				action_press(dbus_path, "ogui_guide_action")
-				action_press(dbus_path, "ogui_osk")
-			# Quick Bar
-			if event.is_action_pressed("ogui_east"):
-				action_press(dbus_path, "ogui_guide_action")
-				action_press(dbus_path, "ogui_qb")
+				action_press(dbus_path, "ogui_osk_ov")
+
 			# Steam QAM
-			if event.is_action_pressed("ogui_south"):
+			if event.is_action_pressed("ogui_south_ov"):
 				action_press(dbus_path, "ogui_guide_action")
-				action_press(dbus_path, "ogui_qam")
+				action_press(dbus_path, "ogui_qam_ov")
+
+			# Steam Video Capture
+			if event.is_action_pressed("ogui_west_ov"):
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_vc_ov")
+
+			# Steam Screenshot
+			if event.is_action_pressed("ogui_rb_ov"):
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_sc_ov")
+
+			# Quick Bar
+			if event.is_action_pressed("ogui_east_ov"):
+				action_press(dbus_path, "ogui_guide_action")
+				action_press(dbus_path, "ogui_qb_ov")
+
+
 		elif event.is_released():
 			# Steam OSK
-			if event.is_action_released("ogui_north"):
-				action_release(dbus_path, "ogui_osk")
-				get_viewport().set_input_as_handled()
-				return
-			# Quick Bar
-			if event.is_action_released("ogui_east"):
-				action_release(dbus_path, "ogui_qb")
-				get_viewport().set_input_as_handled()
-				return
+			if event.is_action_released("ogui_north_ov"):
+				action_release(dbus_path, "ogui_osk_ov")
+
 			# Steam QAM
-			if event.is_action_released("ogui_south"):
-				action_release(dbus_path, "ogui_qam")
-				get_viewport().set_input_as_handled()
-				return
+			if event.is_action_released("ogui_south_ov"):
+				action_release(dbus_path, "ogui_qam_ov")
+
+			# Steam Video Capture
+			if event.is_action_released("ogui_west_ov"):
+				action_release(dbus_path, "ogui_vc_ov")
+
+			# Steam Screenshot
+			if event.is_action_pressed("ogui_rb_ov"):
+				action_release(dbus_path, "ogui_sc_ov")
+
+			# Quick Bar
+			if event.is_action_released("ogui_east_ov"):
+				action_release(dbus_path, "ogui_qb_ov")
+
 		# Prevent ALL input from propagating if guide is held!
 		get_viewport().set_input_as_handled()
+		_trace_input_status("END")
 		return
 
-	# Handle accept in the UI while it is open.
-	if event.is_action_pressed("ogui_south"):
+	# Handle events in the UI while it is open.
+	if event.is_action_pressed("ogui_south_ov"):
 		logger.debug("South pressed on its own.")
 		action_press(dbus_path, "ui_accept")
 		get_viewport().set_input_as_handled()
-		return
 
-	elif event.is_action_released("ogui_south"):
+	elif event.is_action_released("ogui_south_ov"):
 		logger.debug("South released on its own.")
 		action_release(dbus_path, "ui_accept")
 		get_viewport().set_input_as_handled()
-		return
 
-	# Handle back in the UI while it is open.
-	if event.is_action_pressed("ogui_east"):
+	if event.is_action_pressed("ogui_east_ov"):
 		logger.debug("East pressed on its own.")
-		action_press(dbus_path, "ui_back")
+		action_press(dbus_path, "ogui_east")
 		get_viewport().set_input_as_handled()
-		return
 
-	elif event.is_action_released("ogui_east"):
+	elif event.is_action_released("ogui_east_ov"):
 		logger.debug("East released on its own.")
-		action_release(dbus_path, "ui_back")
+		action_release(dbus_path, "ogui_east")
 		get_viewport().set_input_as_handled()
-		return
+
+	if event.is_action_pressed("ogui_rb_ov"):
+		logger.debug("East pressed on its own.")
+		action_press(dbus_path, "ogui_tab_right")
+		get_viewport().set_input_as_handled()
+
+	elif event.is_action_released("ogui_rb_ov"):
+		logger.debug("East released on its own.")
+		action_release(dbus_path, "ogui_tab_right")
+		get_viewport().set_input_as_handled()
+
+	if event.is_action_pressed("ogui_lb_ov"):
+		logger.debug("East pressed on its own.")
+		action_press(dbus_path, "ogui_tab_left")
+		get_viewport().set_input_as_handled()
+
+	elif event.is_action_released("ogui_lb_ov"):
+		logger.debug("East released on its own.")
+		action_release(dbus_path, "ogui_tab_left")
+		get_viewport().set_input_as_handled()
+
+	_trace_input_status("END")
 
 
 ## Handle guide button events and determine whether this is a guide action
@@ -232,26 +285,45 @@ func _quick_bar_input(event: InputEvent) -> void:
 		logger.debug("Close Quick Bar")
 		_close_focused_window()
 		return
+
 	logger.debug("Push Quick Bar")
 	state_machine.push_state(quick_bar_state)
 
 
-## Handle OSK events for bringing up the on-screen keyboard
-func _osk_input(event: InputEvent) -> void:
-	logger.debug("Trigger Steam OSK")
+## Handle Steam chord events. Returns true if this was a Steam chord.
+func _send_steam_chord(event: InputEvent) -> bool:
+	var chord: PackedStringArray = ["Gamepad:Button:Guide"]
+	# Block up events from doing weird things. InputPlumber will handle up events.
 	if not event.is_pressed():
-		return
-	_close_focused_window()
-	_return_chord(["Gamepad:Button:Guide", "Gamepad:Button:East"])
+		return false
 
+	# Steam Quick Bar
+	if event.is_action_pressed("ogui_qam_ov"):
+		logger.debug("Trigger Steam QAM")
+		chord.append("Gamepad:Button:South")
 
-## Handle QAM events for bringing up the steam QAM
-func _qam_input(event: InputEvent) -> void:
-	logger.debug("Trigger Steam QAM")
-	if not event.is_pressed():
-		return
+	# Steam On-Screen Keyboard
+	elif event.is_action_pressed("ogui_osk_ov"):
+			logger.debug("Trigger Steam OSK")
+			chord.append("Gamepad:Button:East")
+
+	# Steam Video-Capture
+	elif event.is_action_pressed("ogui_vc_ov"):
+			logger.debug("Trigger Steam VC")
+			chord.append("Gamepad:Button:West")
+
+	# Steam Screenshot
+	elif event.is_action_pressed("ogui_sc_ov"):
+			logger.debug("Trigger Steam Screenshot")
+			chord.append("Gamepad:Button:RightBumper")
+
+	# Not a steam chord
+	else:
+		return false
+
 	_close_focused_window()
-	_return_chord(["Gamepad:Button:Guide", "Gamepad:Button:South"])
+	_return_chord(chord)
+	return true
 
 
 func _return_chord(actions: PackedStringArray) -> void:
@@ -299,25 +371,25 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 	var action = event
 	match event:
 		"ui_accept":
-			action = "ogui_south"
+			action = "ogui_south_ov"
 		"ui_back":
-			action = "ogui_east"
+			action = "ogui_east_ov"
 		"ui_guide":
-			action = "ogui_guide"
+			action = "ogui_guide_ov"
 		"ui_action":
-			action = "ogui_west"
+			action = "ogui_west_ov"
 		"ui_context":
-			action = "ogui_north"
+			action = "ogui_north_ov"
 		"ui_quick":
-			action = "ogui_qam"
+			action = "ogui_qam_ov"
 		"ui_quick2":
-			action = "ogui_qb"
+			action = "ogui_qb_ov"
 		"ui_osk":
-			action = "ogui_osk"
+			action = "ogui_osk_ov"
 		"ui_r1":
-			action = "ogui_tab_right"
+			action = "ogui_rb_ov"
 		"ui_l1":
-			action = "ogui_tab_left"
+			action = "ogui_lb_ov"
 
 	if pressed:
 		action_press(dbus_path, action)
@@ -329,3 +401,14 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 func _close_focused_window() -> void:
 	while state_machine.stack_length() > state_machine.minimum_states:
 		state_machine.pop_state()
+
+
+# Does a trace print of the status of all events.
+func _trace_input_status(point: String) -> void:
+	logger.trace(point +": Guide Pressed: " + str(Input.is_action_pressed("ogui_guide_ov")))
+	logger.trace(point +": Guide Used: " + str(Input.is_action_pressed("ogui_guide_action")))
+	logger.trace(point +": QAM Pressed: " + str(Input.is_action_pressed("ogui_qam_ov")))
+	logger.trace(point +": OSK Pressed: " + str(Input.is_action_pressed("ogui_osk_ov")))
+	logger.trace(point +": SC Pressed: " + str(Input.is_action_pressed("ogui_sc_ov")))
+	logger.trace(point +": VC Pressed: " + str(Input.is_action_pressed("ogui_vc_ov")))
+	logger.trace(point +": QB Pressed: " + str(Input.is_action_pressed("ogui_qb_ov")))

@@ -221,7 +221,51 @@ ogui_volume_mute={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194381,"key_label":0,"unicode":0,"echo":false,"script":null)
 ]
 }
-ogui_qam={
+ogui_qam_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_vc_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_sc_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_qb_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_osk_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_rb_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_lb_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_north_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_south_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_east_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_west_ov={
+"deadzone": 0.5,
+"events": []
+}
+ogui_guide_ov={
 "deadzone": 0.5,
 "events": []
 }
