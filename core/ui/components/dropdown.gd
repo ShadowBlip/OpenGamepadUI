@@ -69,12 +69,16 @@ func _ready() -> void:
 	# Handle custom input for the popup menu
 	var option_popup := option_button.get_popup()
 	var on_option_button_input := func(event: InputEvent):
-		if event.is_action_pressed("ogui_south"):
+		if event.is_action_pressed("ogui_south") \
+		 or event.is_action_pressed("ui_accept") \
+		 or event.is_action_pressed("ogui_south_ov"):
 			var focused_item := option_popup.get_focused_item()
 			option_button.select(focused_item)
 			option_button.item_selected.emit(focused_item)
 			option_popup.visible = false
-		if event.is_action_pressed("ogui_east") or event.is_action_pressed("ogui_back"):
+		if event.is_action_pressed("ogui_east") \
+		 or event.is_action_pressed("ogui_back") \
+		 or event.is_action_pressed("ogui_east_ov"):
 			option_popup.visible = false
 	option_popup.window_input.connect(on_option_button_input)
 
