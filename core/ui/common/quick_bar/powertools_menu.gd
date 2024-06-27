@@ -192,16 +192,16 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 		if cpu_cores_slider.value > cores:
 			cpu_cores_slider.value = cores
 		cpu_cores_slider.max_value = cores
-	cpu_cores_slider.value = profile.cpu_core_count_current
+	cpu_cores_slider.value = round(profile.cpu_core_count_current)
 
 	# Update GPU UI components
-	tdp_slider.value = profile.tdp_current
-	tdp_boost_slider.value = profile.tdp_boost_current
+	tdp_slider.value = round(profile.tdp_current)
+	tdp_boost_slider.value = round(profile.tdp_boost_current)
 	gpu_freq_enable.button_pressed = profile.gpu_manual_enabled
 	gpu_freq_enable.pressed.emit()
-	gpu_freq_min_slider.value = profile.gpu_freq_min_current
-	gpu_freq_max_slider.value = profile.gpu_freq_max_current
-	gpu_temp_slider.value = profile.gpu_temp_current
+	gpu_freq_min_slider.value = round(profile.gpu_freq_min_current)
+	gpu_freq_max_slider.value = round(profile.gpu_freq_max_current)
+	gpu_temp_slider.value = round(profile.gpu_temp_current)
 
 	power_profile_dropdown.select(profile.gpu_power_profile)
 	thermal_profile_dropdown.select(profile.thermal_profile)
