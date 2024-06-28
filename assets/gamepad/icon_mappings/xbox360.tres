@@ -34,7 +34,7 @@
 [resource]
 script = ExtResource("5_qsuka")
 name = "XBox 360"
-device_names = PackedStringArray("Xbox 360 Controller")
+device_names = PackedStringArray("Xbox 360 Controller", "Microsoft X-Box 360 pad")
 diagram = ExtResource("1_ivcim")
 north = ExtResource("4_yf7fg")
 south = ExtResource("6_kekiu")

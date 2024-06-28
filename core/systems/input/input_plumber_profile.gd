@@ -8,13 +8,13 @@ class_name InputPlumberProfile
 
 ## Supported target devices to emulate
 enum TargetDevice {
-	Gamepad,
 	Mouse,
 	Keyboard,
 	DualSense,
 	DualSenseEdge,
 	SteamDeck,
 	XBox360,
+	XBoxElite,
 }
 
 ## Version of the config
@@ -61,8 +61,6 @@ static func from_dict(dict: Dictionary) -> InputPlumberProfile:
 		for target_device_str: String in target_devices_strs:
 			var target_device: TargetDevice
 			match target_device_str:
-				"gamepad":
-					target_device = TargetDevice.Gamepad
 				"mouse":
 					target_device = TargetDevice.Mouse
 				"keyboard":
@@ -75,6 +73,8 @@ static func from_dict(dict: Dictionary) -> InputPlumberProfile:
 					target_device = TargetDevice.SteamDeck
 				"xb360":
 					target_device = TargetDevice.XBox360
+				"xbox-elite":
+					target_device = TargetDevice.XBoxElite
 			devices.append(target_device)
 		obj.target_devices = devices
 
@@ -101,8 +101,6 @@ static func from_json(json: String) -> InputPlumberProfile:
 static func get_target_device_string(target_device: TargetDevice) -> String:
 	var target_device_str: String = ""
 	match target_device:
-		TargetDevice.Gamepad:
-			target_device_str = "gamepad"
 		TargetDevice.Mouse:
 			target_device_str = "mouse"
 		TargetDevice.Keyboard:
@@ -115,6 +113,8 @@ static func get_target_device_string(target_device: TargetDevice) -> String:
 			target_device_str = "deck"
 		TargetDevice.XBox360:
 			target_device_str = "xb360"
+		TargetDevice.XBoxElite:
+			target_device_str = "xbox-elite"
 	return target_device_str
 
 
@@ -122,8 +122,6 @@ static func get_target_device_string(target_device: TargetDevice) -> String:
 static func get_target_device(target_device_str: String) -> TargetDevice:
 	var target_device: TargetDevice
 	match target_device_str:
-		"gamepad":
-			target_device = TargetDevice.Gamepad
 		"mouse":
 			target_device = TargetDevice.Mouse
 		"keyboard":
@@ -136,6 +134,8 @@ static func get_target_device(target_device_str: String) -> TargetDevice:
 			target_device = TargetDevice.SteamDeck
 		"xb360":
 			target_device = TargetDevice.XBox360
+		"xbox-elite":
+			target_device = TargetDevice.XBoxElite
 	return target_device
 
 

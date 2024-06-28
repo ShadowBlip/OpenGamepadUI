@@ -22,11 +22,11 @@ var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
-var gamepad_types := ["Generic Gamepad", "DualSense Edge"]#"XBox 360", "DualSense", "Steam Deck"
-var gamepad_types_icons := ["XBox 360", "PS5"] #"XBox 360", "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
+var gamepad_types := ["Xbox 360", "XBox One Elite" ,"DualSense Edge"]# "DualSense", "Steam Deck"
+var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5"] # "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
-var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
+var logger := Log.get_logger("GamepadSettings", Log.LEVEL.DEBUG)
 
 @onready var in_game_panel := $%InGamePanel as Control
 @onready var gamepad_label := $%GamepadLabel as Label
@@ -548,18 +548,18 @@ func _on_mapping_selected(mapping: InputPlumberMapping) -> void:
 func get_selected_target_gamepad() -> InputPlumberProfile.TargetDevice:
 	var selected_gamepad := self.gamepad_types[self.gamepad_type_selected] as String
 	match selected_gamepad:
-		"Generic Gamepad":
-			return InputPlumberProfile.TargetDevice.Gamepad
 		"XBox 360":
 			return InputPlumberProfile.TargetDevice.XBox360
+		"XBox One Elite":
+			return InputPlumberProfile.TargetDevice.XBoxElite
 		"DualSense":
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
 		"DualSense Edge":
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
 		"Steam Deck":
 			return InputPlumberProfile.TargetDevice.SteamDeck
-
-	return InputPlumberProfile.TargetDevice.Gamepad
+	logger.error(selected_gamepad + " not found. Using XBox360")
+	return InputPlumberProfile.TargetDevice.XBox360
 
 
 ## Returns the name of the gamepad icon map to use for target capabilities
@@ -571,18 +571,19 @@ func get_selected_target_gamepad_icon_map() -> String:
 ## Returns the gamepad type text for the given InputPlumber gamepad string
 func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> String:
 	match gamepad_type:
-		InputPlumberProfile.TargetDevice.Gamepad:
-			return "Generic Gamepad"
-		InputPlumberProfile.TargetDevice.XBox360:
-			return "XBox 360"
 		InputPlumberProfile.TargetDevice.DualSense:
 			return "DualSense"
 		InputPlumberProfile.TargetDevice.DualSenseEdge:
 			return "DualSense Edge"
 		InputPlumberProfile.TargetDevice.SteamDeck:
 			return "Steam Deck"
-
-	return "Generic Gamepad"
+		InputPlumberProfile.TargetDevice.XBox360:
+			return "XBox 360"
+		InputPlumberProfile.TargetDevice.XBoxElite:
+			return "XBox One Elite"
+	
+	logger.error("Gamepad Type: " + str(gamepad_type) + " not found. Using XBox360")
+	return "XBox 360"
 
 
 #  Set the given profile for the given composte device.
