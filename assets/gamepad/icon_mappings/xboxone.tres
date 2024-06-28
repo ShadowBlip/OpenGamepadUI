@@ -34,7 +34,7 @@
 [resource]
 script = ExtResource("1_lckpp")
 name = "XBox One"
-device_names = PackedStringArray("Xbox One", "X-Box One", "Xbox Wireless Controller")
+device_names = PackedStringArray("Xbox One", "X-Box One", "Xbox Wireless Controller", "Microsoft X-Box One pad", "Microsoft X-Box One Elite pad")
 diagram = ExtResource("1_7rqq5")
 north = ExtResource("17_wbg38")
 south = ExtResource("28_e6a35")
