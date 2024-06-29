@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://1k8ksmex2cxj"]
+
+[ext_resource type="Script" path="res://addons/plugin-sdk/core/ui/plugin_dock.gd" id="1_syumv"]
+[ext_resource type="PackedScene" uid="uid://blx4vch7lo3ys" path="res://addons/plugin-sdk/core/ui/create_plugin_window.tscn" id="2_ap24o"]
+
+[node name="OGUI SDK" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_syumv")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="CreatePluginButton" type="Button" parent="PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create new plugin
+"
+
+[node name="CreatePluginWindow" parent="." instance=ExtResource("2_ap24o")]
+unique_name_in_owner = true
+visible = false

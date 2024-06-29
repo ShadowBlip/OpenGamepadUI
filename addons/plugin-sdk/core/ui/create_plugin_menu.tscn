@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://b7xql2n08lyqq"]
+
+[node name="ScrollContainer" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CreatePluginMenu" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/CreatePluginMenu"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="PanelContainer/CreatePluginMenu/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="PluginIdLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Plugin ID:"
+horizontal_alignment = 2
+
+[node name="PluginIdLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "my_plugin"
+
+[node name="PluginNameLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Plugin Name:"
+horizontal_alignment = 2
+
+[node name="PluginNameLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "My Plugin"
+
+[node name="PluginVersionLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Plugin Version:"
+horizontal_alignment = 2
+
+[node name="PluginVersionLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "1.0"
+
+[node name="DescriptionLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Description:"
+horizontal_alignment = 2
+
+[node name="DescriptionLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MinApiLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Minimum API Version:"
+horizontal_alignment = 2
+
+[node name="MinApiOptionButton" type="OptionButton" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "v1.0.0"
+popup/item_0/id = 0
+
+[node name="ProjectUrlLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Project URL:"
+horizontal_alignment = 2
+
+[node name="ProjectUrlLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "https://example.com"
+
+[node name="ProjectSourceUrlLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Project Source URL:"
+horizontal_alignment = 2
+
+[node name="ProjectSourceUrlLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "https://github.com/example/plugin"
+
+[node name="TagsLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Tags:"
+horizontal_alignment = 2
+
+[node name="TagsLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "tag1, tag2"
+
+[node name="AuthorLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Author:"
+horizontal_alignment = 2
+
+[node name="AuthorLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "John Doe"
+
+[node name="AuthorEmailLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Author Email:"
+horizontal_alignment = 2
+
+[node name="AuthorEmailLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "john@example.com"
+
+[node name="EntrypointLabel" type="Label" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Entrypoint:"
+horizontal_alignment = 2
+
+[node name="EntrypointLineEdit" type="LineEdit" parent="PanelContainer/CreatePluginMenu/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "plugin.gd"
