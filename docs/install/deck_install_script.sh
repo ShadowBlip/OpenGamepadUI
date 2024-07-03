@@ -148,6 +148,7 @@ fi
   systemctl enable systemd-sysext
   systemctl start systemd-sysext
   systemd-sysext refresh
+  systemd-sysext status
 
   echo "85"
   echo "# Enabling powerstation service"
