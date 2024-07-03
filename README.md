@@ -33,7 +33,7 @@ you to remap gamepad input to mouse and keyboard inputs.
 
 - In-game overlay menus
 - Power tools (TDP control, SMT, etc.) through [PowerStation](https://github.com/ShadowBlip/PowerStation)
-- Fully configurable gamepad input (buttons, axes, mouse & keyboard, etc.)
+- Fully configurable gamepad input (buttons, axes, mouse & keyboard, etc.) through [InputPlumber](https://github.com/ShadowBlip/InputPlumber/)
 - Per-game customizable gamepad profiles
 - Launch games from multiple sources
 - Automatic artwork downloading
