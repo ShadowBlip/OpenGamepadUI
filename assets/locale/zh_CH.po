@@ -131,10 +131,10 @@ msgid "Launch Settings"
 msgstr "启动选项"
 
 msgid "Command"
-msgstr "命令"
+msgstr "指令"
 
 msgid "Command to use to launch the game"
-msgstr "游戏启动命令"
+msgstr "游戏启动指令"
 
 msgid "Arguments"
 msgstr "参数"
@@ -241,7 +241,7 @@ msgid "Theme"
 msgstr "主题"
 
 msgid "Maximum Recent Apps"
-msgstr "最近使用的应用程序最大数量"
+msgstr "最近应用程序最大化"
 
 msgid "System Information"
 msgstr "系统信息"
@@ -498,13 +498,13 @@ msgid "TDP Boost"
 msgstr "TDP超频"
 
 msgid "Manual Freq"
-msgstr "手动设置频率"
+msgstr "手动频率"
 
 msgid "Min Freq"
-msgstr "最低频率"
+msgstr "最小频率"
 
 msgid "Max Freq"
-msgstr "最高频率"
+msgstr "最大频率"
 
 msgid "GPU Temp Limit"
 msgstr "GPU温度限制"
