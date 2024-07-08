@@ -8,9 +8,6 @@ class_name BlockDevice
 ## and partitions.
 
 signal updated
-signal format_complete(status: bool)
-signal init_complete(status: bool)
-signal trim_complete(status: bool)
 
 var _proxy: DBusManager.Proxy
 var dbus_path: String
@@ -25,6 +22,52 @@ func _init(proxy: DBusManager.Proxy) -> void:
 
 func _on_properties_changed(_iface: String, _props: Dictionary) -> void:
 	updated.emit()
+
+
+## Returns the human readable string equivalent of the given number of bytes.
+func get_readable_size() -> String:
+	if block_size <= 0:
+		return "0 B"
+	var block_size_f: float = float(block_size)
+	var length = str(block_size).length()
+	var size_simple: float
+
+	match length:
+		1, 2, 3:
+			return str(block_size) + " B"
+		4, 5, 6:
+			size_simple = block_size_f/1024.0
+			if size_simple < 1:
+				size_simple *= 1000
+				return str(snappedf(size_simple, 0.01)) + " B"
+			return str(snappedf(size_simple, 0.01)) + " KB"
+		7, 8, 9:
+			size_simple = block_size_f/1024.0/1024.0
+			if size_simple < 1:
+				size_simple *= 1000
+				return str(snappedf(size_simple, 0.01)) + " KB"
+			return str(snappedf(size_simple, 0.01)) + " MB"
+		10, 11, 12:
+			size_simple = block_size_f/1024.0/1024.0/1024.0
+			if size_simple < 1:
+				size_simple *= 1000
+				return str(snappedf(size_simple, 0.01)) + " MB"
+			return str(snappedf(size_simple, 0.01)) + " GB"
+		13, 14, 15:
+			size_simple = block_size_f/1024.0/1024.0/1024.0/1024.0
+			if size_simple < 1:
+				size_simple *= 1000
+				return str(snappedf(size_simple, 0.01)) + " GB"
+			return str(snappedf(size_simple, 0.01)) + " TB"
+		16, 17, 18:
+			size_simple = block_size_f/1024.0/1024.0/1024.0/1024.0/1024.0
+			if size_simple < 1:
+				size_simple *= 1000
+				return str(snappedf(size_simple, 0.01)) + " TB"
+			return str(snappedf(size_simple, 0.01)) + " PB"
+		_:
+			return "Undefined"
+
 
 # Block
 #func block_add_configuration_item() -> void: #(sa{sv})a{sv}

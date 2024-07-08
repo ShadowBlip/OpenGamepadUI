@@ -32,9 +32,22 @@ var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 @export var watchdog_enabled = true
 
 
-func _init() -> void:
+## Available options for starting a [SharedThread]. By default, threads will
+## be started with the WATCHDOG_ENABLE option to log warnings if long-running
+## tasks are blocking the thread.
+enum Option {
+	## Disables all other thread options if passed alone.
+	NONE = 0,
+	## Enable monitoring of this thread by the [WatchdogThread], which will log
+	## warnings if this thread is being blocked by a long-running task.
+	WATCHDOG_ENABLE = 1,
+}
+
+
+func _init(options: int = Option.WATCHDOG_ENABLE as int) -> void:
 	if Engine.is_editor_hint():
 		return
+	watchdog_enabled = Bitwise.has_flag(options, Option.WATCHDOG_ENABLE)
 	if watchdog_enabled:
 		watchdog.add_thread(self)
 

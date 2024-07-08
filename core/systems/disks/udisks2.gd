@@ -21,19 +21,48 @@ const IFACE_PARTITION_TABLE := UDISKS2_BUS + ".PartitionTable"
 const IFACE_DRIVE := UDISKS2_BUS + ".Drive"
 const IFACE_NVME_CONTROLLER := UDISKS2_BUS + ".NVMe.Controller"
 
+const protected_mounts = [
+	"/",
+	"/boot",
+	"/boot/efi",
+	"/efi",
+	"/frzr_root",
+	"/frzr_root/boot",
+	"/home",
+	"/var",
+	"/var/cache",
+	"/var/log",
+	]
+
 var dbus := load("res://core/global/dbus_system.tres") as DBusManager
 var manager := Manager.new(dbus.create_proxy(UDISKS2_BUS, UDISKS2_MANAGER_PATH))
 var object_manager := dbus.ObjectManager.new(dbus.create_proxy(UDISKS2_BUS, UDISKS2_PATH))
 
 signal devices_updated(devices: Array[BlockDevice])
+signal unprotected_devices_updated(unprotected_devices: Array[BlockDevice])
 
 var logger := Log.get_logger("UDisks2", Log.LEVEL.INFO)
+
+
+## Returns true if UDisks2 can be used on this system
+func supports_disk_management() -> bool:
+	return true
+	return dbus.bus_exists(UDISKS2_BUS)
 
 
 func _init() -> void:
 	logger.debug("Initalizing UDisks2 Dbus interface.")
 	object_manager.interfaces_added.connect(_drives_updated)
 	object_manager.interfaces_removed.connect(_drives_updated)
+
+
+## Signals when a changes to drives are detected
+func _drives_updated(iface: String) -> void:
+	logger.trace("Update from interface:", iface)
+	var devices = get_devices()
+	devices_updated.emit(devices)
+	var unprotected_devices = get_unprotected_devices(devices)
+	unprotected_devices_updated.emit(unprotected_devices)
 
 
 ## Returns all the current block devices detected by UDisks2
@@ -81,14 +110,44 @@ func get_devices() -> Array[BlockDevice]:
 		for drive in drive_array:
 			if block.drive_path == drive.dbus_path:
 				block.drive = drive
+
 	return block_array
 
 
-## Signals when a changes to drives are detected
-func _drives_updated(iface: String) -> void:
-	logger.trace("Update from interface:", iface)
-	var devices = get_devices()
-	self.devices_updated.emit(devices)
+## Returns all current devices that don't have protected mounts
+func get_unprotected_devices(devices: Array[BlockDevice] = []):
+	var device_tree: Array[BlockDevice]
+	if devices == []:
+		logger.debug("Got empty array, grabbing devices from udisks2")
+		devices = get_devices()
+	for block in devices:
+		if not block_device_has_protected_mount(block):
+			logger.debug(block.dbus_path, "has no protected mounts.")
+			device_tree.append(block)
+	return device_tree
+
+
+## Finds all partitions of the given block device and returns true if any of
+## them have mounts in the protected_mounts list.
+func block_device_has_protected_mount(device: BlockDevice) -> bool:
+	logger.debug("Checking block device", device.dbus_path, "for protected mounts.")
+	# Get all the partition dbus paths of this block device
+	for partition in device.partitions:
+		if partition_has_protected_mount(partition):
+			return true
+	return false
+
+
+## Loops through all mount points of the given partition and returns true if any of
+## them have mounts in the protected_mounts list.
+func partition_has_protected_mount(device: PartitionDevice) -> bool:
+	logger.debug("Checking partition", device.dbus_path, "for protected mounts.")
+	for mount_point in device.fs_mount_points:
+		logger.debug("Checking mount point", mount_point, "for protected mounts.")
+		if mount_point in protected_mounts:
+			logger.debug("Found a protected mount point on drive: " + device.dbus_path)
+			return true
+	return false
 
 
 func _id_type(device: DriveDevice) -> DriveDevice.INTERFACE_TYPE:

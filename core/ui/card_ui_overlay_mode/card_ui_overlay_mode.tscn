@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b13lnfkjbafkj"]
+[gd_scene load_steps=9 format=3 uid="uid://b13lnfkjbafkj"]
 
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" path="res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.gd" id="2_3ptao"]
@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="5_4sdt1"]
 [ext_resource type="PackedScene" uid="uid://cwarv58ju0sow" path="res://core/ui/card_ui/gamepad/gamepad_settings.tscn" id="6_oddte"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.tscn" id="7_e54f8"]
+[ext_resource type="PackedScene" uid="uid://eqqk1uve143x" path="res://core/ui/components/dialog.tscn" id="8_otm5f"]
 
-[node name="Main" type="Control" groups=["main"]]
+[node name="CardUIOverlayMode" type="Control" groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,3 +55,15 @@ theme_override_constants/margin_bottom = 70
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="Dialog" parent="." instance=ExtResource("8_otm5f")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2

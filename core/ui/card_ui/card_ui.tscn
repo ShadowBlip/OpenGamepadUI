@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=39 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_ajgj2"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="27_jq430"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="28_ex7w4"]
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="32_1lhvy"]
+[ext_resource type="PackedScene" uid="uid://eqqk1uve143x" path="res://core/ui/components/dialog.tscn" id="34_m8t53"]
 
 [sub_resource type="Gradient" id="Gradient_0h0x4"]
 interpolation_mode = 1
@@ -258,6 +259,11 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
+
+[node name="Dialog" parent="AlwaysVisibleContent" instance=ExtResource("34_m8t53")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="OnScreenKeyboard" parent="AlwaysVisibleContent" instance=ExtResource("18_462u5")]
 visible = false

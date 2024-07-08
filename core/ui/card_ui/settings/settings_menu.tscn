@@ -43,7 +43,7 @@
 [ext_resource type="PackedScene" uid="uid://cliqk7lo4t8ao" path="res://core/ui/card_ui/settings/plugin_settings_menu.tscn" id="35_dooq8"]
 [ext_resource type="PackedScene" uid="uid://bfu4edkk5dqt2" path="res://core/ui/common/debug/processes_menu.tscn" id="36_hnokx"]
 [ext_resource type="PackedScene" uid="uid://csor0e54svgja" path="res://core/ui/common/settings/logging_settings_menu.tscn" id="37_iwtxk"]
-[ext_resource type="PackedScene" uid="uid://clbapexwfoqtu" path="res://core/ui/card_ui/disks/steam_removable_media.tscn" id="40_lyyu6"]
+[ext_resource type="PackedScene" uid="uid://clbapexwfoqtu" path="res://core/ui/card_ui/settings/disks_settings_menu.tscn" id="40_lyyu6"]
 [ext_resource type="PackedScene" uid="uid://cgxl1qiu50h15" path="res://core/ui/card_ui/settings/general_controller_settings_menu.tscn" id="40_uqw2r"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_ob3o7"]
@@ -276,7 +276,7 @@ action = 3
 on_signal = "focus_entered"
 
 [node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/SteamRemovableMediaMenu/MarginContainer/DriveCardContainer/FocusGroup")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisksMenu/MarginContainer/DriveCardContainer/FocusGroup")
 on_signal = "pressed"
 
 [node name="HSeparator4" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
@@ -470,7 +470,7 @@ state = ExtResource("20_5v03o")
 
 [node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
 
-[node name="SteamRemovableMediaMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_lyyu6")]
+[node name="DisksMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_lyyu6")]
 visible = false
 layout_mode = 2
 
@@ -515,7 +515,7 @@ layout_mode = 2
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/SteamRemovableMediaMenu"]
+[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisksMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu"]
 [editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu"]

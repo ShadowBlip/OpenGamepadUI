@@ -1,4 +1,5 @@
 extends MarginContainer
+class_name DriveCard
 
 var steam_disks := load("res://core/systems/disks/steam_removable_media_manager.tres") as SteamRemovableMediaManager
 var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
@@ -6,9 +7,9 @@ var notification_manager := load("res://core/global/notification_manager.tres") 
 const partition_card_scene: PackedScene = preload("res://core/ui/components/partition_card.tscn")
 const hdd_icon = preload("res://assets/icons/interface-hdd.svg")
 const nvme_icon = preload("res://assets/icons/interface-nvme.svg")
-const sd_icon= preload("res://assets/icons/interface-sd.svg")
-const ssd_icon= preload("res://assets/icons/interface-ssd.svg")
-const usb_icon= preload("res://assets/icons/interface-usb.svg")
+const sd_icon = preload("res://assets/icons/interface-sd.svg")
+const ssd_icon = preload("res://assets/icons/interface-ssd.svg")
+const usb_icon = preload("res://assets/icons/interface-usb.svg")
 
 var device: BlockDevice
 var device_path: String
@@ -32,109 +33,88 @@ var log_level:= Log.LEVEL.INFO
 
 ## Performs _ready fucntionality with the given BlockDevice
 func setup(device: BlockDevice) -> void:
+	# Setup UDisks2 information
 	self.device = device
 	self.device_path = "/dev" + self.device.dbus_path.trim_prefix(steam_disks.BLOCK_PREFIX)
 	logger = Log.get_logger("DriveCard|"+self.device_path, log_level)
-
 	logger.debug("Setup Drive Card")
 	drive_name_label.text = self.device_path
-	drive_size_label.text = _get_readable_size(self.device.block_size)
-
-	format_button.visible = steam_disks.format_capable
-	format_button.pressed.connect(_on_format_drive)
-	if not steam_disks.format_capable && steam_disks.format_sd_capable && self.device_path == steam_disks.SDCARD_PATH:
-		format_button.pressed.connect(_on_format_sd_card)
-		format_button.pressed.disconnect(_on_format_drive)
-		format_button.visible = true
+	drive_size_label.text = device.get_readable_size()
 	_set_icon()
 	_populate_partitions()
 
+	# Setup SteamRemovableMedia interfaces
+	if steam_disks.format_capable:
+		format_button.pressed.connect(_srm_format_drive)
+		format_button.visible = true
+	if not steam_disks.format_capable && steam_disks.format_sd_capable && self.device_path == steam_disks.SDCARD_PATH:
+		format_button.pressed.connect(_srm_format_sd_card)
+		format_button.pressed.disconnect(_srm_format_drive)
+		format_button.visible = true
 
-func _on_format_drive() -> void:
-	if steam_disks.block_operations:
+
+func _srm_format_drive() -> void:
+	var dialog := get_tree().get_first_node_in_group("dialog") as Dialog
+	var msg := "WARNING: All data on " + device_path + " device will be wiped. " + \
+		"This action cannot be undone. Do you wish to continue?"
+	dialog.open(msg, "Cancel", "Continue Format")
+	var cancel := await dialog.choice_selected as bool
+	if cancel:
 		return
+
+	if steam_disks.block_operations:
+		logger.debug("Format operation blocked.")
+		return
+
 	logger.debug("Format Drive", device_path)
 	_clear_partitions()
 	_on_format_started()
-	format_drive.emit(self.device)
+	var note := Notification.new("Format Complete: " + self.device_path)
+	if await steam_disks.format_drive(device) != OK:
+		note.text = "Failed to format " + self.device_path
+	_on_format_complete(note)
 
 
-func _on_format_sd_card() -> void:
-	if steam_disks.block_operations:
+func _srm_format_sd_card() -> void:
+	var dialog := get_tree().get_first_node_in_group("dialog") as Dialog
+	var msg := "WARNING: All data on " + device_path + " device will be wiped. " + \
+		"This action cannot be undone. Do you wish to continue?"
+	dialog.open(msg, "Cancel", "Continue Format")
+	var cancel := await dialog.choice_selected as bool
+	if cancel:
 		return
+
+	if steam_disks.block_operations:
+		logger.debug("Format operation blocked.")
+		return
+
 	logger.debug("Format SD Card", device_path)
 	_clear_partitions()
 	_on_format_started()
-	format_sd_card.emit()
+	var note := Notification.new("Format Complete: " + self.device_path)
+	if await steam_disks.format_sd_card() != OK:
+		note.text = "Failed to format " + self.device_path
+	_on_format_complete(note)
 
 
 func _on_format_started() -> void:
 	logger.debug("Start formatting", device_path)
 	var note := Notification.new("Started Formatting " + self.device_path)
 	notification_manager.show(note)
-	device.format_complete.connect(_on_format_complete, CONNECT_ONE_SHOT)
 	format_button.text = "Formating..."
 
 
-func _on_format_complete(_status: bool) -> void:
+func _on_format_complete(note: Notification) -> void:
 	logger.debug("Done formatting", device_path)
 	format_button.text = "Format Drive"
-	steam_disks.block_operations = false
-	var note := Notification.new("Format Complete: " + self.device_path)
 	notification_manager.show(note)
 	_populate_partitions()
 
 
-
-func _on_init_drive(partition: PartitionDevice) -> void:
+func _srm_init_drive(partition: PartitionDevice) -> void:
 	logger.debug("Init Partition", "/dev" + partition.dbus_path.trim_prefix(steam_disks.BLOCK_PREFIX))
 	init_partition.emit(partition)
 
-
-# Returns the human readable string equivalent of the given number of bytes.
-func _get_readable_size(block_size: int) -> String:
-	
-	if block_size <= 0:
-		return "0 B"
-	var block_size_f: float = float(block_size)
-	var length = str(block_size).length()
-	var size_simple: float
-	match length:
-	
-		1, 2, 3:
-			return str(block_size) + " B"
-		4, 5, 6:
-			size_simple = block_size_f/1024.0
-			if size_simple < 1:
-				size_simple *= 1000
-				return str(snappedf(size_simple, 0.01)) + " B"
-			return str(snappedf(size_simple, 0.01)) + " KB"
-		7, 8, 9:
-			size_simple = block_size_f/1024.0/1024.0
-			if size_simple < 1:
-				size_simple *= 1000
-				return str(snappedf(size_simple, 0.01)) + " KB"
-			return str(snappedf(size_simple, 0.01)) + " MB"
-		10, 11, 12:
-			size_simple = block_size_f/1024.0/1024.0/1024.0
-			if size_simple < 1:
-				size_simple *= 1000
-				return str(snappedf(size_simple, 0.01)) + " MB"
-			return str(snappedf(size_simple, 0.01)) + " GB"
-		13, 14, 15:
-			size_simple = block_size_f/1024.0/1024.0/1024.0/1024.0
-			if size_simple < 1:
-				size_simple *= 1000
-				return str(snappedf(size_simple, 0.01)) + " GB"
-			return str(snappedf(size_simple, 0.01)) + " TB"
-		16, 17, 18:
-			size_simple = block_size_f/1024.0/1024.0/1024.0/1024.0/1024.0
-			if size_simple < 1:
-				size_simple *= 1000
-				return str(snappedf(size_simple, 0.01)) + " TB"
-			return str(snappedf(size_simple, 0.01)) + " PB"
-		_:
-			return "Undefined"
 
 
 func _clear_partitions() -> void:
@@ -148,6 +128,10 @@ func _clear_partitions() -> void:
 
 
 func _set_icon() -> void:
+	if not device or not device.drive:
+		logger.warn("Unable to detect drive to set icon for:", device)
+		drive_icon.texture = hdd_icon
+		return
 	match device.drive.interface_type:
 		DriveDevice.INTERFACE_TYPE.HDD:
 			drive_icon.texture = hdd_icon
@@ -167,14 +151,8 @@ func _populate_partitions() -> void:
 	var last_focus: FocusGroup
 	for partition in self.device.partitions:
 		logger.debug("Drive has partition to set up:", partition.dbus_path)
-		var partition_card := partition_card_scene.instantiate()
+		var partition_card := partition_card_scene.instantiate() as PartitionCard
 		partitions_container.add_child(partition_card)
 		partition_card.setup(partition)
 		partition_card.visible = true
-		partition_card.init_partition.connect(_on_init_drive)
-
-		var partition_focus: FocusGroup = partition_card.drive_focus_group
-		if last_focus:
-			last_focus.focus_neighbor_bottom = partition_focus
-			partition_focus.focus_neighbor_top = last_focus
-		last_focus = partition_focus
+		partition_card.init_partition.connect(_srm_init_drive)
