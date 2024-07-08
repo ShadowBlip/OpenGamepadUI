@@ -57,20 +57,20 @@ func _ready() -> void:
 	get_tree().get_root().transparent_bg = true
 	fade_texture.visible = true
 	boot_video.finished.connect(_on_boot_video_player_finished)
-	
+
 	# Configure the locale
 	var locale := settings_manager.get_value("general", "locale", "en_US") as String
 	TranslationServer.set_locale(locale)
-	
+
 	# Load any platform-specific logic
 	platform.load(get_tree().get_root())
-	
+
 	# Set the FPS limit
 	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
-	
+
 	# Listen for global state changes
 	state_machine.state_changed.connect(_on_state_changed)
-	
+
 	# Show/hide the overlay when we enter/exit the in-game state
 	in_game_state.state_entered.connect(_on_game_state_entered)
 	in_game_state.state_exited.connect(_on_game_state_exited)
@@ -78,10 +78,6 @@ func _ready() -> void:
 
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	library_manager.reload_library()
-	
-	# Remove unneeded/conflicting elements from default menues
-	var settings_remove_list: PackedStringArray = ["DisksButton"]
-	_remove_children(settings_remove_list, settings_menu)
 
 	# Set the initial intercept mode
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
@@ -108,6 +104,7 @@ func _ready() -> void:
 		else:
 			logger.debug("Unable to load theme")
 
+
 func _on_focus_changed(control: Control) -> void:
 	if control != null:
 		logger.debug("Focus changed to: " + control.get_parent().name + " | " + control.name)
@@ -126,11 +123,11 @@ func _on_game_state_entered(_from: State) -> void:
 
 	# Turn off gamescope blur effect
 	_set_blur(gamescope.BLUR_MODE.OFF)
-	
+
 	# Set gamescope input focus to off so the user can interact with the game
 	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
-	
+
 	# Ensure panel is invisible
 	panel.visible = false
 	for child in ui_container.get_children():
@@ -141,14 +138,14 @@ func _on_game_state_entered(_from: State) -> void:
 func _on_game_state_exited(to: State) -> void:
 	# Intercept all gamepad input when not in-game
 	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
-	
+
 	# Revert back to the default gamepad profile
 	#gamepad_manager.set_gamepads_profile(null)
-	
+
 	# Set gamescope input focus to on so the user can interact with the UI
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
-	
+
 	# If the in-game state still exists in the stack, set the blur state.
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
@@ -158,7 +155,7 @@ func _on_game_state_exited(to: State) -> void:
 				_set_blur(gamescope.BLUR_MODE.ALWAYS)
 	else:
 		_on_game_state_removed()
-	
+
 	# Un-hide all UI elements
 	for child in ui_container.get_children():
 		child.visible = true
@@ -168,10 +165,10 @@ func _on_game_state_exited(to: State) -> void:
 func _on_game_state_removed() -> void:
 	# Turn off gamescope blur
 	_set_blur(gamescope.BLUR_MODE.OFF)
-	
+
 	# Un-hide the background panel
 	panel.visible = true
-	
+
 	# Reset the state stack if no home state exists
 	if not state_machine.has_state(home_state):
 		state_machine.set_state([home_state])
