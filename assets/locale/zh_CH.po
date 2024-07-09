@@ -52,7 +52,7 @@ msgid "Open Main Menu"
 msgstr "打开主菜单"
 
 msgid "Open Quick Access Menu"
-msgstr "打开快速访问菜单"
+msgstr "打开快捷菜单"
 
 msgid "Open On-Screen Keyboard"
 msgstr "打开屏幕键盘"
@@ -100,7 +100,7 @@ msgid "Install"
 msgstr "安装"
 
 msgid "Resume"
-msgstr "重新开始"
+msgstr "继续"
 
 msgid "Queued"
 msgstr "排队"
@@ -109,7 +109,7 @@ msgid "Installing"
 msgstr "正在安装"
 
 msgid "Quick Access Menu"
-msgstr "快速访问菜单"
+msgstr "快捷菜单"
 
 msgid "Game Name"
 msgstr "游戏名称"
