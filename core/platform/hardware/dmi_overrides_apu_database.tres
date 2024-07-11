@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="APUDatabase" load_steps=8 format=3 uid="uid://jbsrng73ql4j"]
+
+[ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_2ndxe"]
+[ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="1_pyvkk"]
+
+[sub_resource type="Resource" id="Resource_42d24"]
+script = ExtResource("1_2ndxe")
+model_name = "NEO-01"
+min_tdp = 8.0
+max_tdp = 28.0
+max_boost = 4.0
+
+[sub_resource type="Resource" id="Resource_3vns2"]
+script = ExtResource("1_2ndxe")
+model_name = "AIR"
+min_tdp = 5.0
+max_tdp = 15.0
+max_boost = 0.0
+
+[sub_resource type="Resource" id="Resource_w0hoe"]
+script = ExtResource("1_2ndxe")
+model_name = "AIR Pro"
+min_tdp = 5.0
+max_tdp = 18.0
+max_boost = 0.0
+
+[sub_resource type="Resource" id="Resource_5sfce"]
+script = ExtResource("1_2ndxe")
+model_name = "ROG Ally RC71L_RC71L"
+min_tdp = 8.0
+max_tdp = 30.0
+max_boost = 10.0
+
+[sub_resource type="Resource" id="Resource_4wd0b"]
+script = ExtResource("1_2ndxe")
+model_name = "ROG Ally RC71L"
+min_tdp = 8.0
+max_tdp = 30.0
+max_boost = 10.0
+
+[resource]
+script = ExtResource("1_pyvkk")
+apu_list = Array[ExtResource("1_2ndxe")]([SubResource("Resource_42d24"), SubResource("Resource_3vns2"), SubResource("Resource_w0hoe"), SubResource("Resource_5sfce"), SubResource("Resource_4wd0b")])
+database_name = ""

@@ -7,9 +7,12 @@ class_name HardwareManager
 ## different aspects of the current hardware.
 
 const pci_ids_path := "/usr/share/hwdata/pci.ids"
-
+const amd_vendor_ids := ["AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]"]
+const intel_vendor_ids := ["Intel", "GenuineIntel", "Intel Corporation"]
 var amd_apu_database := load("res://core/platform/hardware/amd_apu_database.tres") as APUDatabase
 var intel_apu_database := load("res://core/platform/hardware/intel_apu_database.tres") as APUDatabase
+var dmi_overrides_apu_database := load("res://core/platform/hardware/dmi_overrides_apu_database.tres") as APUDatabase
+
 var logger := Log.get_logger("HardwareManager", Log.LEVEL.INFO)
 var cards := get_gpu_cards()
 var card_ports: Array[DRMCardPort]
@@ -53,7 +56,7 @@ func get_cpu() -> CPU:
 	# Create a new cpu info instance and take over the caching path
 	var cpu_info := CPU.new()
 	cpu_info.take_over_path(res_path)
-	logger.debug("Got CPU info: " + str(cpu_info))
+	logger.debug("Got CPU info: ", cpu_info)
 
 	return cpu_info
 
@@ -78,7 +81,7 @@ func get_gpu_info() -> GPUInfo:
 			logger.info("Nvidia devices are not suppored.")
 			return null
 		_:
-			logger.warn("Device vendor string not recognized: " + RenderingServer.get_video_adapter_vendor())
+			logger.warn("Device vendor string not recognized:", RenderingServer.get_video_adapter_vendor())
 			return null
 
 	gpu_info.model = RenderingServer.get_video_adapter_name()
@@ -91,7 +94,7 @@ func get_gpu_info() -> GPUInfo:
 
 	var active_gpu_data := get_active_gpu_device()
 	if active_gpu_data.size() == 0:
-		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Found GPU:", gpu_info)
 		logger.error("Could not identify active GPU.")
 		return gpu_info
 
@@ -102,58 +105,44 @@ func get_gpu_info() -> GPUInfo:
 			gpu_info.card = card
 
 	if not gpu_info.card:
-		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Found GPU:", gpu_info)
 		logger.error("Could not identify active GPU.")
 		return gpu_info
 
 	if gpu_info.card.device_type != "PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU":
-		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Found GPU:", gpu_info)
 		logger.debug("Active GPU is not an APU. Skipping APU Setup.")
 		return gpu_info
 
 	if not cpu:
-		logger.debug("Found GPU: " + str(gpu_info))
+		logger.debug("Found GPU:", gpu_info)
 		logger.debug("Cannot check APU database without CPU information.")
 		return gpu_info
 
 	# Get APU data, if it exists
-	var apu_data: APUEntry = null
-	match cpu.vendor:
-		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
-			apu_data = amd_apu_database.get_apu(cpu.model)
-			if not apu_data:
-				logger.debug("Found GPU: " + str(gpu_info))
-				logger.debug("No APU Match for device: " + cpu.model)
-				return gpu_info
-			logger.debug("Found APU Data: " +str(apu_data.model_name))
-			gpu_info.tj_temp_capable = true
-			gpu_info.power_profile_capable = true
-			gpu_info.clk_capable = true
-			gpu_info.tdp_min = apu_data.min_tdp
-			gpu_info.tdp_max = apu_data.max_tdp
-			gpu_info.max_boost = apu_data.max_boost
-			gpu_info.tdp_capable = true
+	product_name = get_product_name()
+	var is_amd: bool = cpu.vendor in amd_vendor_ids
+	var apu_data: APUEntry = dmi_overrides_apu_database.get_apu(product_name)
+	if not apu_data && is_amd:
+		apu_data = amd_apu_database.get_apu(cpu.model)
+	if not apu_data && !is_amd:
+		apu_data = intel_apu_database.get_apu(cpu.model)
 
-		"Intel", "GenuineIntel", "Intel Corporation":
-			apu_data = intel_apu_database.get_apu(cpu.model)
-			if not apu_data:
-				logger.debug("Found GPU: " + str(gpu_info))
-				logger.debug("No APU Match for device: " + cpu.model)
-				return gpu_info
-			logger.debug("Found APU Data: " +str(apu_data.model_name))
-			gpu_info.clk_capable = true
-			gpu_info.tdp_min = apu_data.min_tdp
-			gpu_info.tdp_max = apu_data.max_tdp
-			gpu_info.max_boost = apu_data.max_boost
-			gpu_info.tdp_capable = true
+	if not apu_data:
+		logger.debug("Found GPU:", gpu_info)
+		logger.debug("No APU Match for device:", cpu.model)
+		return gpu_info
 
-		_:
-			logger.debug("No match: " + cpu.vendor)
-			logger.debug("Found GPU: " + str(gpu_info))
-			return gpu_info
+	logger.debug("Found APU Data:", apu_data.model_name)
+	gpu_info.tj_temp_capable = is_amd
+	gpu_info.power_profile_capable = is_amd
+	gpu_info.clk_capable = true
+	gpu_info.tdp_min = apu_data.min_tdp
+	gpu_info.tdp_max = apu_data.max_tdp
+	gpu_info.max_boost = apu_data.max_boost
+	gpu_info.tdp_capable = true
 
-	logger.debug("APU Data Loaded")
-	logger.debug("Found GPU: " + str(gpu_info))
+	logger.debug("Found GPU:", gpu_info)
 
 	return gpu_info
 
@@ -192,7 +181,7 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 	var vendor := ""
 	var device := ""
 	var subdevice := ""
-	logger.debug("Getting device info from: " + vendor_id + " " + device_id + " " + subvendor_id + " " + subdevice_id)
+	logger.debug("Getting device info from:", vendor_id, device_id, subvendor_id, subdevice_id)
 	while not hwids.eof_reached():
 		var line := hwids.get_line()
 		var line_clean := line.strip_escapes()
@@ -201,7 +190,7 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 			continue
 		if line.begins_with(vendor_id):
 			vendor = line.lstrip(vendor_id).strip_edges()
-			logger.debug("Found vendor name: " + vendor)
+			logger.debug("Found vendor name:", vendor)
 			vendor_found = true
 			continue
 		if vendor_found and not line.begins_with("\t"):
@@ -215,7 +204,7 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 
 		if line_clean.begins_with(device_id):
 			device = line_clean.lstrip(device_id).strip_edges()
-			logger.debug("Found device name: " + device)
+			logger.debug("Found device name:", device)
 			device_found = true
 
 		if device_found and not line.begins_with("\t\t"):
@@ -225,7 +214,7 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 		var prefix := subvendor_id + " " + subdevice_id
 		if line_clean.begins_with(prefix):
 			subdevice = line.lstrip(prefix)
-			logger.debug("Found subdevice name: " + subdevice)
+			logger.debug("Found subdevice name:", subdevice)
 			break
 
 	# Sanitize the vendor strings so they are standard.
@@ -240,7 +229,7 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 			# TODO: Handle this case
 			return null
 		_:
-			logger.warn("Device vendor string not recognized: " + vendor)
+			logger.warn("Device vendor string not recognized:", vendor)
 			# TODO: Handle this case
 			return null
 
@@ -292,7 +281,7 @@ func get_gpu_cards() -> Array[DRMCardInfo]:
 		for info in vulkan_info:
 			if card.vendor_id == info[0] and card.device_id == info[1]:
 				card.device_type = info[2]
-				logger.debug("Assigning type " + card.device_type + " to device " + card.device)
+				logger.debug("Assigning type", card.device_type, "to device", card.device)
 
 	return found_cards
 
@@ -337,21 +326,21 @@ func get_active_gpu_device() -> PackedStringArray:
 		regex.compile("0[xX][0-9a-fA-F]+\\)$")
 		var result := regex.search(line)
 		if not result:
-			logger.debug("Got no result: " + str(result))
+			logger.debug("Got no result:", result)
 			continue
 
 		var match_str := result.get_string()
 		if "Device: " in line:
 			device = match_str.replace("0x", "").replace(")", "").to_lower()
-			logger.debug("Found device: " + device)
+			logger.debug("Found device:", device)
 		if "Vendor: " in line:
 			vendor = match_str.replace("0x", "").replace(")", "").to_lower()
-			logger.debug("Found vendor: " + vendor)
+			logger.debug("Found vendor:", vendor)
 		if vendor and device:
 			break
 
 	if not vendor or not device:
-		logger.error("Unable to identify currently active device. ")
+		logger.error("Unable to identify currently active device.")
 		return []
 
 	return [vendor, device]
@@ -413,7 +402,7 @@ func _get_cards_from_vulkan() ->Array[PackedStringArray]:
 		device_type = split_line[1].strip_edges()
 		var device_info: PackedStringArray = [vendor_id, device_id, device_type]
 		vulkan_cards.append(device_info)
-		logger.debug("Found vulkan device: " + vendor_id + "|" + device_id + "|" + device_type)
+		logger.debug("Found vulkan device:", vendor_id, "|", device_id, "|", device_type)
 		i += 1
 	return vulkan_cards
 
