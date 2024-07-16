@@ -1,5 +1,5 @@
 @icon("res://assets/icons/database.svg")
-extends Object
+extends RefCounted
 class_name Cache
 
 const CHUNK_SIZE = 256

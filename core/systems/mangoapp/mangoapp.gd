@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name MangoApp
 
 const LOGGER_NAME := "MangoApp"

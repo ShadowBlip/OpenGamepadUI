@@ -1,2 +1,2 @@
-extends Object
+extends RefCounted
 class_name StoreItemDetails
