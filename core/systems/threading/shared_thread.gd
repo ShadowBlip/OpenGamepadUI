@@ -20,6 +20,7 @@ var process_funcs: Array[Callable] = []
 var scheduled_funcs: Array[ScheduledTask] = []
 var one_shots: Array[Callable] = []
 var last_time: int
+var task_id_count := 0
 var logger := Log.get_logger("SharedThread", Log.LEVEL.INFO)
 
 ## Name of the thread group
@@ -137,40 +138,46 @@ func exec(method: Callable) -> Variant:
 	return out[1]
 
 
-## Calls the given method from the thread after 'wait_time_ms' has passed.
-func scheduled_exec(method: Callable, wait_time_ms: int) -> void:
+## Calls the given method from the thread after 'wait_time_ms' has passed. By
+## default, this method will execute as a "oneshot" task. Optionally, the "task_type"
+## parameter can be set to "RECURRING" if this task should run every 'wait_time_ms'.
+func scheduled_exec(method: Callable, wait_time_ms: int, task_type: ScheduledTaskType = ScheduledTaskType.ONESHOT) -> int:
 	var task := ScheduledTask.new()
+	mutex.lock()
+	var task_id := task_id_count
+	task_id_count += 1
+	mutex.unlock()
+
+	task.task_id = task_id
 	task.method = method
 	task.wait_time_ms = wait_time_ms
 	task.start_time = Time.get_ticks_msec()
+	task.task_type = task_type
+
 	mutex.lock()
 	scheduled_funcs.append(task)
 	mutex.unlock()
 
+	return task_id
 
-## Cancels a given Sheduled Task before it is executed.
-func cancel_scheduled_exec(task: ScheduledTask) -> void:
+
+## Cancels a given Sheduled Task
+func cancel_scheduled_exec(task_id: int) -> void:
 	mutex.lock()
 	var all_sched_funcs := scheduled_funcs.duplicate()
 	mutex.unlock()
-	if task not in all_sched_funcs:
-		logger.warn("Scheduled Task " + task.method.get_method() + " canceled but not found in scheduled functions."  )
+	var found_task: ScheduledTask
+	for task in all_sched_funcs:
+		if task.task_id != task_id:
+			continue
+		found_task = task
+		break
+	if not found_task:
+		logger.warn("Scheduled Task with ID", task_id, "canceled but not found in scheduled functions.")
 		return
 	mutex.lock()
-	scheduled_funcs.erase(task)
+	scheduled_funcs.erase(found_task)
 	mutex.unlock()
-
-
-## Finds all SheduledTask's who's method matches the given method.
-func find_scheduled_exec(method: Callable) -> Array[ScheduledTask]:
-	mutex.lock()
-	var all_sched_funcs := scheduled_funcs.duplicate()
-	mutex.unlock()
-	var matching_tasks: Array[ScheduledTask] = []
-	for task in all_sched_funcs:
-		if task.method == method:
-			matching_tasks.append(task)
-	return matching_tasks
 
 
 ## Adds the given method to the thread process loop. This method will be called
@@ -290,9 +297,12 @@ func _process(delta: float) -> void:
 			continue
 		_set_executing_task(ExecutingTask.from_callable(method))
 		method.call()
-		mutex.lock()
-		scheduled_funcs.erase(task)
-		mutex.unlock()
+		if task.task_type == ScheduledTaskType.ONESHOT:
+			mutex.lock()
+			scheduled_funcs.erase(task)
+			mutex.unlock()
+		if task.task_type == ScheduledTaskType.RECURRING:
+			task.start_time = current_time
 		_set_executing_task(null)
 
 
@@ -323,15 +333,28 @@ func get_target_frame_time() -> int:
 	return int((1.0 / target_tick_rate) * 1000000.0)
 
 
+## Determines how scheduled tasks should be executed. Scheduled tasks can be
+## run as "oneshot" tasks, which will only be run once, or they can be scheduled
+## to run as recurring tasks.
+enum ScheduledTaskType {
+	## Run the scheduled task once after wait period
+	ONESHOT = 0,
+	## Run the scheduled task every wait period interval
+	RECURRING = 1,
+}
+
+
 ## Container for holding a scheduled task to run in a thread
-class ScheduledTask:
+class ScheduledTask extends RefCounted:
+	var task_id: int
 	var start_time: int
 	var wait_time_ms: int
 	var method: Callable
+	var task_type: ScheduledTaskType
 
 
 ## Container for holding information about the currently executing task
-class ExecutingTask:
+class ExecutingTask extends RefCounted:
 	var object: String
 	var method: String
 	var args: Array

@@ -36,13 +36,19 @@ var logger := Log.get_logger("InputPlumber", Log.LEVEL.INFO)
 var dbus := load("res://core/global/dbus_system.tres") as DBusManager
 var manager := Manager.new(dbus.create_proxy(INPUT_PLUMBER_BUS, INPUT_PLUMBER_MANAGER_PATH))
 var object_manager := dbus.ObjectManager.new(dbus.create_proxy(INPUT_PLUMBER_BUS, INPUT_PLUMBER_PATH))
+var system_thread := load("res://core/systems/threading/system_thread.tres") as SharedThread
 
+var is_running := false
 var composite_devices: Array[CompositeDevice] = []
 var composite_devices_map: Dictionary = {}
 var intercept_mode_current: INTERCEPT_MODE = INTERCEPT_MODE.NONE
 var intercept_triggers_current: PackedStringArray = ["Gamepad:Button:Guide"]
 var intercept_target_current: String = "Gamepad:Button:Guide"
 
+## Emitted when InputPlumber is detected as running
+signal started
+## Emitted when InputPlumber is detected as stopped
+signal stopped
 ## Emitted when a CompositeDevice is dicovered and identified as a new device
 signal composite_device_added(device: CompositeDevice)
 ## Emitted when a CompositeDevice is dicovered over dbus but already exists in
@@ -70,6 +76,47 @@ func _init() -> void:
 	logger.debug("Writing default global profile to: " + DEFAULT_GLOBAL_PROFILE)
 	var global_default_profile := FileAccess.open(DEFAULT_GLOBAL_PROFILE, FileAccess.WRITE)
 	global_default_profile.store_string(default_profile_data)
+
+	# Start a task that monitors whether or not InputPlumber is started or stopped,
+	# and emits signals when its running state changes.
+	started.connect(_on_inputplumber_started)
+	stopped.connect(_on_inputplumber_stopped)
+	var running_check := func():
+		var update_running := func():
+			var running := dbus.bus_exists(INPUT_PLUMBER_BUS)
+			if running == self.is_running:
+				return
+			self.is_running = running
+			if running:
+				started.emit()
+			else:
+				stopped.emit()
+		update_running.call_deferred()
+	system_thread.exec(running_check)
+	system_thread.scheduled_exec(running_check, 5000, SharedThread.ScheduledTaskType.RECURRING)
+
+
+func _on_inputplumber_started() -> void:
+	logger.info("InputPlumber started")
+	
+	# Remove any Godot gamepad input maps and rely completely on InputPlumber for
+	# gamepad input
+	var actions := InputMap.get_actions()
+	var to_erase: Array[InputEvent] = []
+	for action in actions:
+		var events := InputMap.action_get_events(action)
+		for event in events:
+			if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+				logger.debug("Erasing mapping for", action, ":", event)
+				InputMap.action_erase_event(action, event)
+
+
+func _on_inputplumber_stopped() -> void:
+	logger.warn("InputPlumber stopped")
+	
+	# Reload Godot input mappings if InputPlumber shuts down
+	logger.debug("Restoring input mappings from project settings")
+	InputMap.load_from_project_settings()
 
 
 func _on_interfaces_added(dbus_path: String) -> void:
