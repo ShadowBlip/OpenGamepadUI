@@ -1,5 +1,5 @@
 # Source: https://github.com/binogure-studio/godot-uuid
-extends Object
+extends RefCounted
 class_name UUID
 
 const MODULO_8_BIT = 256

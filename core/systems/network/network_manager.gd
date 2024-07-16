@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name NetworkManager
 
 ## Manage and interact with the system network settings

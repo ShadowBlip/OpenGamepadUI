@@ -1,5 +1,5 @@
 @icon("res://assets/icons/battery-charging.svg")
-extends Object
+extends RefCounted
 class_name Battery
 
 const power_supply_dir = "/sys/class/power_supply"
