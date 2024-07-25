@@ -22,8 +22,8 @@ var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
-var gamepad_types := ["Xbox 360", "XBox One Elite" ,"DualSense Edge"]# "DualSense", "Steam Deck"
-var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5"] # "PS5", "Steam Deck"  From res://assets/gamepad/icon_mappings
+var gamepad_types := ["Xbox 360", "XBox One Elite", "DualSense Edge", "Steam Deck"]
+var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5", "Steam Deck"] #From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
@@ -550,6 +550,8 @@ func get_selected_target_gamepad() -> InputPlumberProfile.TargetDevice:
 	match selected_gamepad:
 		"XBox 360":
 			return InputPlumberProfile.TargetDevice.XBox360
+		"XBox Series":
+			return InputPlumberProfile.TargetDevice.XBoxSeries
 		"XBox One Elite":
 			return InputPlumberProfile.TargetDevice.XBoxElite
 		"DualSense":
@@ -579,6 +581,8 @@ func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> 
 			return "Steam Deck"
 		InputPlumberProfile.TargetDevice.XBox360:
 			return "XBox 360"
+		InputPlumberProfile.TargetDevice.XBoxSeries:
+			return "XBox Series"
 		InputPlumberProfile.TargetDevice.XBoxElite:
 			return "XBox One Elite"
 	

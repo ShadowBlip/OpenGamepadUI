@@ -14,6 +14,7 @@ enum TargetDevice {
 	DualSenseEdge,
 	SteamDeck,
 	XBox360,
+	XBoxSeries,
 	XBoxElite,
 }
 
@@ -73,6 +74,8 @@ static func from_dict(dict: Dictionary) -> InputPlumberProfile:
 					target_device = TargetDevice.SteamDeck
 				"xb360":
 					target_device = TargetDevice.XBox360
+				"xbox-series":
+					target_device = TargetDevice.XBoxSeries
 				"xbox-elite":
 					target_device = TargetDevice.XBoxElite
 			devices.append(target_device)
@@ -113,6 +116,8 @@ static func get_target_device_string(target_device: TargetDevice) -> String:
 			target_device_str = "deck"
 		TargetDevice.XBox360:
 			target_device_str = "xb360"
+		TargetDevice.XBoxSeries:
+			target_device_str = "xbox-series"
 		TargetDevice.XBoxElite:
 			target_device_str = "xbox-elite"
 	return target_device_str
@@ -136,6 +141,8 @@ static func get_target_device(target_device_str: String) -> TargetDevice:
 			target_device = TargetDevice.XBox360
 		"xbox-elite":
 			target_device = TargetDevice.XBoxElite
+		"xbox-series":
+			target_device = TargetDevice.XBoxSeries
 	return target_device
 
 
