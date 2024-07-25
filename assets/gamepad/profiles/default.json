@@ -4,26 +4,6 @@
 	"name": "Default",
 	"mapping": [
 		{
-			"name": "QuickAccess",
-			"source_event": {
-				"gamepad": {
-					"button": "QuickAccess"
-				}
-			},
-			"target_events": [
-				{
-					"gamepad": {
-						"button": "Guide"
-					}
-				},
-				{
-					"gamepad": {
-						"button": "South"
-					}
-				}
-			]
-		},
-		{
 			"name": "LeftTop",
 			"source_event": {
 				"gamepad": {
@@ -59,36 +39,6 @@
 				{
 					"gamepad": {
 						"button": "East"
-					}
-				}
-			]
-		},
-		{
-			"name": "LeftPaddle",
-			"source_event": {
-				"gamepad": {
-					"button": "LeftPaddle1"
-				}
-			},
-			"target_events": [
-				{
-					"gamepad": {
-						"button": "LeftStick"
-					}
-				}
-			]
-		},
-		{
-			"name": "RightPaddle",
-			"source_event": {
-				"gamepad": {
-					"button": "RightPaddle1"
-				}
-			},
-			"target_events": [
-				{
-					"gamepad": {
-						"button": "RightStick"
 					}
 				}
 			]
