@@ -303,6 +303,7 @@ class CompositeDevice extends Resource:
 	var _proxy: DBusManager.Proxy
 	var dbus_targets: Array[DBusDevice]
 	var dbus_path: String
+	var logger := Log.get_logger("InputPlumber CompositeDevice", Log.LEVEL.INFO)
 
 	func _init(proxy: DBusManager.Proxy) -> void:
 		var dbus := load("res://core/global/dbus_system.tres") as DBusManager
@@ -378,12 +379,66 @@ class CompositeDevice extends Resource:
 	func set_target_devices(devices: PackedStringArray) -> void:
 		_proxy.call_method( IFACE_COMPOSITE_DEVICE, "SetTargetDevices", [devices], "as")
 
+	func target_modify_profile(path: String, profile_modifier: String = "") -> void:
+		logger.debug("Loading Profile:", path)
+		if path == "" or not path.ends_with(".json") or not FileAccess.file_exists(path):
+			logger.error("Profile path:", path," is not a valid profile path.")
+			return
+
+		var profile := InputPlumberProfile.load(path)
+
+		var c_pad_cap = "Touchpad:CenterPad:Motion"
+		var l_pad_cap = "Touchpad:LeftPad:Motion"
+		var r_pad_cap = "Touchpad:RightPad:Motion"
+		var mouse_cap = "Mouse:Motion"
+
+		if !profile_modifier.is_empty():
+			var mapped_capabilities := profile.to_json()
+			logger.debug("Mapped Capabilities (before):", mapped_capabilities)
+			match profile_modifier:
+					"deck":
+						logger.debug("Steam Deck Profile")
+						if c_pad_cap not in mapped_capabilities:
+							logger.debug("Map", c_pad_cap)
+							var c_pad_map := InputPlumberMapping.from_source_capability(c_pad_cap)
+							var r_pad_event := InputPlumberEvent.from_capability(r_pad_cap)
+							c_pad_map.target_events = [r_pad_event]
+							profile.mapping.append(c_pad_map)
+
+					"ds5", "ds5-edge":
+						logger.debug("Dualsense Profile")
+						if l_pad_cap not in mapped_capabilities:
+							logger.debug("Map", l_pad_cap)
+							var l_pad_map := InputPlumberMapping.from_source_capability(l_pad_cap)
+							var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
+							l_pad_map.target_events = [c_pad_event]
+							profile.mapping.append(l_pad_map)
+						if r_pad_cap not in mapped_capabilities:
+							logger.debug("Map", r_pad_cap)
+							var r_pad_map := InputPlumberMapping.from_source_capability(r_pad_cap)
+							var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
+							r_pad_map.target_events = [c_pad_event]
+							profile.mapping.append(r_pad_map)
+
+					_:
+						logger.debug("Target device needs no modifications:", profile_modifier)
+
+			mapped_capabilities = profile.to_json()
+			logger.debug("Mapped Capabilities (after):", mapped_capabilities)
+
+		profile.name += " Modified"
+		path = path.rstrip(".json") + profile_modifier +".json"
+		if profile.save(path) != OK:
+			logger.error("Failed to save", profile.name, "to", path)
+			return
+		load_profile_path(path)
+
 	func load_profile_path(path: String) -> void:
-		# Normalize the path if it is a resource path
-		var normalized_path := path
+		# Get the absolute path if this is a resource path
+		var absolute_path := path
 		if path.begins_with("res://") or path.begins_with("user://"):
-			normalized_path = ProjectSettings.globalize_path(path)
-		_proxy.call_method(IFACE_COMPOSITE_DEVICE, "LoadProfilePath", [normalized_path], "s")
+			absolute_path = ProjectSettings.globalize_path(path)
+		_proxy.call_method(IFACE_COMPOSITE_DEVICE, "LoadProfilePath", [absolute_path], "s")
 
 	func send_event(action: String, value: Variant) -> void:
 		_proxy.call_method( IFACE_COMPOSITE_DEVICE, "SendEvent", [action, value], "sv")
