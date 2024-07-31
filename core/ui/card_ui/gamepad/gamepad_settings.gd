@@ -22,7 +22,7 @@ var gamepad: InputPlumber.CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
-var gamepad_types := ["Xbox 360", "XBox One Elite", "DualSense Edge", "Steam Deck"]
+var gamepad_types := ["Xbox 360", "XBox One Elite", "DualSense Edge", "Steam Deck (experimental)"]
 var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5", "Steam Deck"] #From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
@@ -429,6 +429,7 @@ func _update_mapping_elements() -> void:
 		else:
 			var mapping := InputPlumberMapping.from_source_capability(capability)
 			var target_event = InputPlumberEvent.from_capability(capability)
+			logger.debug("Adding", capability, "to mappings as:", mapping, " with event:", target_event)
 			mapping.target_events = [target_event]
 			mappings = [mapping]
 
@@ -558,7 +559,7 @@ func get_selected_target_gamepad() -> InputPlumberProfile.TargetDevice:
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
 		"DualSense Edge":
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
-		"Steam Deck":
+		"Steam Deck (experimental)":
 			return InputPlumberProfile.TargetDevice.SteamDeck
 	logger.error(selected_gamepad + " not found. Using XBox360")
 	return InputPlumberProfile.TargetDevice.XBox360
@@ -578,7 +579,7 @@ func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> 
 		InputPlumberProfile.TargetDevice.DualSenseEdge:
 			return "DualSense Edge"
 		InputPlumberProfile.TargetDevice.SteamDeck:
-			return "Steam Deck"
+			return "Steam Deck (experimental)"
 		InputPlumberProfile.TargetDevice.XBox360:
 			return "XBox 360"
 		InputPlumberProfile.TargetDevice.XBoxSeries:
@@ -608,11 +609,18 @@ func _set_gamepad_profile(gamepad: InputPlumber.CompositeDevice, profile_path: S
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
 
 	logger.debug("Setting " + gamepad.name + " to profile: " + profile_path)
-	gamepad.load_profile_path(profile_path)
-	if not profile_gamepad.is_empty():
-		logger.debug("Setting target gamepad to: " + profile_gamepad)
-		gamepad.set_target_devices([profile_gamepad, "keyboard", "mouse"])
+	gamepad.target_modify_profile(profile_path, profile_gamepad)
 
+	# Set the target gamepad if one was specified
+	if not profile_gamepad.is_empty():
+		var target_devices := [profile_gamepad, "keyboard", "mouse"]
+		match profile_gamepad:
+			"xb360", "xbox-series", "xbox-elite", "gamepad":
+				target_devices.append("touchpad")
+			_:
+				logger.debug(profile_gamepad, "needs no additional target devices.")
+		logger.debug("Setting target devices to: ", target_devices)
+		gamepad.set_target_devices(target_devices)
 
 # Save the current profile to a file
 func _save_profile() -> void:

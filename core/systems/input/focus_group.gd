@@ -57,15 +57,15 @@ func _ready():
 
 ## Recalculate the focus neighbors of the container's children
 func recalculate_focus() -> void:
-	logger.debug("Rebuilding the focus tree")
+	logger.trace("Rebuilding the focus tree")
 	# Get existing children so we can manage focus
 	if parent.get_child_count() == 0:
-		logger.debug("No children to set focus to; nothing to do.")
+		logger.trace("No children to set focus to; nothing to do.")
 		return
 	
 	# Only update focus if the node is inside the scene tree
 	if not is_inside_tree():
-		logger.debug("Not updating focus; not yet in the scene tree")
+		logger.trace("Not updating focus; not yet in the scene tree")
 		return
 
 	var control_children: Array[Control] = []
@@ -81,11 +81,11 @@ func recalculate_focus() -> void:
 			child.focus_entered.connect(_on_child_focused.bind(child))
 
 	if control_children.size() == 0:
-		logger.debug("No control children. Nothing to do.")
+		logger.trace("No control children. Nothing to do.")
 		return
 
 	if control_children.size() == 1:
-		logger.debug("One control child. Setting all focus neighbors to itself.")
+		logger.trace("One control child. Setting all focus neighbors to itself.")
 		# Block leaving the UI element unless B button is pressed.
 		var child := control_children[0]
 		_single_set_focus_tree(child)
@@ -116,7 +116,7 @@ func grab_focus() -> void:
 		focus_stack.push(self)
 	if not current_focus:
 		current_focus = _find_focusable(parent.get_children(), parent)
-		logger.debug("Found focus node: " + str(current_focus))
+		logger.trace("Found focus node: " + str(current_focus))
 	if current_focus:
 		logger.info(parent.name + " grabbing focus on node: " + current_focus.name)
 		current_focus.grab_focus.call_deferred()
@@ -191,70 +191,70 @@ func _on_visibility_changed() -> void:
 # null if none are found.
 func _find_child_focus_group(nodes: Array[Node], root: Node = null) -> FocusGroup:
 	if nodes.size() == 0:
-		logger.debug("Node has no children to check.")
+		logger.trace("Node has no children to check.")
 		return null
 
 	for node in nodes:
 		var focusable: Node
-		logger.debug("Considering node: " + node.name)
+		logger.trace("Considering node: " + node.name)
 		# Check if node is a child FocusGroup
 		if node is FocusGroup and node.get_parent() != root:
 			return node
 		# If the node is not a Control, try to find a child control node
 		if not node is Control:
-			logger.debug("Node not control. Checking children.")
+			logger.trace("Node not control. Checking children.")
 			focusable = _find_child_focus_group(node.get_children(), root)
 			if focusable:
 				return focusable
-			logger.debug("Node: " + node.name + " has no more children to check.")
+			logger.trace("Node: " + node.name + " has no more children to check.")
 			continue
 		# Skip if the node is not visible
 		if not node.visible:
-			logger.debug("Node: " + node.name + " not visible. Skipping.")
+			logger.trace("Node: " + node.name + " not visible. Skipping.")
 			continue
 		# Otherwise try and recursively find a child that can be focused
-		logger.debug("Node: " + node.name + " is not focusable. Checking its children.")
+		logger.trace("Node: " + node.name + " is not focusable. Checking its children.")
 		focusable = _find_child_focus_group(node.get_children(), root)
 		if focusable:
 			return focusable
-	logger.debug("Node has no focusable children.")
+	logger.trace("Node has no focusable children.")
 	return null
 
 
 # Recursively searches the given node children for a focusable node.
 func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 	if nodes.size() == 0:
-		logger.debug("Node has no children to check.")
+		logger.trace("Node has no children to check.")
 		return null
 
 	for node in nodes:
 		var focusable: Node
-		logger.debug("Considering node: " + node.name)
+		logger.trace("Considering node: " + node.name)
 		# If the node is not a Control, try to find a child control node
 		if not node is Control:
-			logger.debug("Node not control. Checking children.")
+			logger.trace("Node not control. Checking children.")
 			focusable = _find_focusable(node.get_children(), root)
 			if focusable:
 				return focusable
-			logger.debug("Node: " + node.name + " has no more children to check.")
+			logger.trace("Node: " + node.name + " has no more children to check.")
 			continue
 		# Skip if the node is not visible
 		if not node.visible:
-			logger.debug("Node: " + node.name + " not visible. Skipping.")
+			logger.trace("Node: " + node.name + " not visible. Skipping.")
 			continue
 		# Skip if the node is a FocusGroupNeighbor node
 		if node.name == "FocusGroupNeighbor":
 			continue
 		# If the Control node has FOCUS_ALL set, return it
 		if node.focus_mode == Control.FOCUS_ALL:
-			logger.debug("Found good node: " + node.name)
+			logger.trace("Found good node: " + node.name)
 			return node
 		# Otherwise try and recursively find a child that can be focused
-		logger.debug("Node: " + node.name + " is not focusable. Checking its children.")
+		logger.trace("Node: " + node.name + " is not focusable. Checking its children.")
 		focusable = _find_focusable(node.get_children(), root)
 		if focusable:
 			return focusable
-	logger.debug("Node has no focusable children.")
+	logger.trace("Node has no focusable children.")
 	return null
 
 
@@ -262,7 +262,7 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 func _get_focusable_children(node: Control) -> Array[Control]:
 	var focusable: Array[Control] = []
 	if node.get_child_count() == 0:
-		logger.debug("Node has no children to check.")
+		logger.trace("Node has no children to check.")
 		return focusable
 
 	for child in node.get_children():
@@ -290,7 +290,7 @@ func _is_focusable(node: Node) -> bool:
 
 # Called when nodes are added or removed from the parent
 func _on_child_tree_changed(_node) -> void:
-	logger.debug("Child tree changed.")
+	logger.trace("Child tree changed.")
 	recalculate_focus()
 
 

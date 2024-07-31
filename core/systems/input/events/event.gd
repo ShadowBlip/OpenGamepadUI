@@ -5,6 +5,7 @@ class_name InputPlumberEvent
 @export var mouse: InputPlumberMouseEvent
 @export var dbus: String
 @export var gamepad: InputPlumberGamepadEvent
+@export var touchpad: InputPlumberTouchpadEvent
 
 
 ## Create a new InputPlumberEvent from the given capability string
@@ -32,6 +33,8 @@ static func from_event(godot_event: InputEvent) -> InputPlumberEvent:
 		return null
 	elif godot_event is InputEventAction:
 		return null
+	elif godot_event is InputEventAction:
+		return null
 	
 	return null
 
@@ -47,6 +50,8 @@ static func from_dict(dict: Dictionary) -> InputPlumberEvent:
 		event.dbus = dict["dbus"]
 	if "gamepad" in dict:
 		event.gamepad = InputPlumberGamepadEvent.from_dict(dict["gamepad"] as Dictionary)
+	if "touchpad" in dict:
+		event.touchpad = InputPlumberTouchpadEvent.from_dict(dict["touchpad"] as Dictionary)
 
 	return event
 
@@ -62,6 +67,8 @@ func to_dict() -> Dictionary:
 		dict["dbus"] = self.dbus
 	if self.gamepad:
 		dict["gamepad"] = self.gamepad.to_dict()
+	if self.touchpad:
+		dict["touchpad"] = self.touchpad.to_dict()
 
 	return dict
 
@@ -102,7 +109,17 @@ func to_capability() -> String:
 			capability += "Motion"
 			return capability
 		return ""
-
+	if touchpad:
+		capability += "Touchpad:"
+		if touchpad.name:
+			capability += touchpad.name + ":"
+		else:
+			return ""
+		if touchpad.touch and touchpad.touch.button:
+			capability += "Button:" + touchpad.touch.button
+			return capability
+		if touchpad.touch and touchpad.touch.motion:
+			capability += "Motion"
 	return capability
 
 
@@ -142,7 +159,23 @@ func set_capability(capability: String) -> int:
 		gyro.name = "Gyro"
 		gamepad.gyro = gyro
 		return OK
+	if capability.begins_with("Touchpad"):
+		touchpad = InputPlumberTouchpadEvent.new()
+		var parts := capability.split(":")
+		if not parts.size() in [3, 4]:
+			return ERR_CANT_CREATE
+		touchpad.name = parts[1]
+		var touch := InputPlumberTouchEvent.new()
+		if parts[2] == "Button":
+			touch.button = parts[3]
+		if parts[2] == "Motion":
+			var motion := InputPlumberTouchMotionEvent.new()
+			touch.motion = motion
+		touchpad.touch = touch
+
+		return OK
 	
+
 	return ERR_DOES_NOT_EXIST
 
 

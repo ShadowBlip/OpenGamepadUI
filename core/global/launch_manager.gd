@@ -286,6 +286,7 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 		logger.debug("No app available to set gamepad profile")
 		set_gamepad_profile("")
 		return
+
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
@@ -297,6 +298,11 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
+	# Discover the currently set gamepad to properly add additional capabilities based on that gamepad
+	var profile_modifier = target_gamepad
+	if target_gamepad.is_empty():
+		profile_modifier = settings_manager.get_value("input", "gamepad_profile_target", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
 		# Try check to see if there is a global gamepad setting
@@ -304,11 +310,21 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 		if not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
 			profile_path = InputPlumber.DEFAULT_GLOBAL_PROFILE
 		logger.debug("Loading global gamepad profile: " + profile_path)
+
 		for gamepad in input_plumber.composite_devices:
-			gamepad.load_profile_path(profile_path)
+			gamepad.target_modify_profile(profile_path, profile_modifier)
+
 			# Set the target gamepad if one was specified
 			if not target_gamepad.is_empty():
-				gamepad.set_target_devices([target_gamepad, "keyboard", "mouse"])
+				var target_devices := [target_gamepad, "keyboard", "mouse"]
+				match target_gamepad:
+					"xb360", "xbox-series", "xbox-elite", "gamepad":
+						target_devices.append("touchpad")
+					_:
+						logger.debug(target_gamepad, "needs no additional target devices.")
+				logger.debug("Setting target devices to: ", target_devices)
+				gamepad.set_target_devices(target_devices)
+
 		return
 
 	logger.debug("Loading gamepad profile: " + path)
@@ -324,11 +340,19 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 
 	# TODO: Save profiles for individual controllers?
 	for gamepad in input_plumber.composite_devices:
-		gamepad.load_profile_path(path)
+		gamepad.target_modify_profile(path, profile_modifier)
+
 		# Set the target gamepad if one was specified
 		if not target_gamepad.is_empty():
-			logger.debug("Setting target gamepad to: " + target_gamepad)
-			gamepad.set_target_devices([target_gamepad, "keyboard", "mouse"])
+			var target_devices := [target_gamepad, "keyboard", "mouse"]
+			match target_gamepad:
+				"xb360", "xbox-series", "xbox-elite", "gamepad":
+					target_devices.append("touchpad")
+				_:
+					logger.debug(target_gamepad, "needs no additional target devices.")
+			logger.debug("Setting target devices to: ", target_devices)
+			gamepad.set_target_devices(target_devices)
+
 	var notify := Notification.new("Using gamepad profile: " + profile.name)
 	NotificationManager.show(notify)
 

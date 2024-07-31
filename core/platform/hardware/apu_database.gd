@@ -24,6 +24,7 @@ func get_apu(apu_name: String) -> APUEntry:
 	if not loaded:
 		load_db()
 	if not apu_name in apu_map:
-		logger.info("APU " + apu_name + " not in APU Database")
+		logger.debug("APU " + apu_name + " not in " + database_name)
 		return null
+	logger.info("Found APU " + apu_name + " in " + database_name)
 	return apu_map[apu_name]
