@@ -33,8 +33,6 @@ static func from_event(godot_event: InputEvent) -> InputPlumberEvent:
 		return null
 	elif godot_event is InputEventAction:
 		return null
-	elif godot_event is InputEventAction:
-		return null
 	
 	return null
 

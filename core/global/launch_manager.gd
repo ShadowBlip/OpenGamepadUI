@@ -299,9 +299,9 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 	# Discover the currently set gamepad to properly add additional capabilities based on that gamepad
-	var profile_modifier = target_gamepad
+	var profile_modifier := target_gamepad
 	if target_gamepad.is_empty():
-		profile_modifier = settings_manager.get_value("input", "gamepad_profile_target", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+		profile_modifier = settings_manager.get_value("input", "gamepad_profile_target", "gamepad") as String
 
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
