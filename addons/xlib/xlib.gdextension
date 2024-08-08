@@ -1,9 +1,0 @@
-[configuration]
-
-entry_symbol = "xlib_library_init"
-compatibility_minimum = 4.1
-
-[libraries]
-
-linux.debug.x86_64 = "res://addons/xlib/bin/libxlib.linux.template_debug.x86_64.so"
-linux.release.x86_64 = "res://addons/xlib/bin/libxlib.linux.template_release.x86_64.so"

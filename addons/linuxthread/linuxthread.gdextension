@@ -1,9 +1,0 @@
-[configuration]
-
-entry_symbol = "linux_thread_library_init"
-compatibility_minimum = 4.1
-
-[libraries]
-
-linux.debug.x86_64 = "res://addons/linuxthread/bin/liblinuxthread.linux.template_debug.x86_64.so"
-linux.release.x86_64 = "res://addons/linuxthread/bin/liblinuxthread.linux.template_release.x86_64.so"
