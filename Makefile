@@ -1,26 +1,32 @@
 PREFIX ?= $(HOME)/.local
 CACHE_DIR ?= .cache
+IMPORT_DIR := .godot
 ROOTFS ?= $(CACHE_DIR)/rootfs
 OGUI_VERSION ?= $(shell grep 'core = ' core/global/version.tres | cut -d '"' -f2)
-GODOT ?= /usr/bin/godot
+GODOT ?= godot
 GODOT_VERSION ?= $(shell $(GODOT) --version | grep -o '[0-9].*[0-9]\.' | sed 's/.$$//')
 GODOT_RELEASE ?= $(shell $(GODOT) --version | grep -oP '^[0-9].*?[a-z]\.' | grep -oP '[a-z]+')
 GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
-GAMESCOPE ?= /usr/bin/gamescope
+GAMESCOPE ?= gamescope
 GAMESCOPE_CMD ?= $(GAMESCOPE) -e --xwayland-count 2 --
+BUILD_TYPE ?= release
 
-EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_debug.x86_64
+EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_$(BUILD_TYPE).x86_64
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
+ALL_ADDONS := ./addons/dbus/bin/libdbus.linux.template_$(BUILD_TYPE).x86_64.so ./addons/linuxthread/bin/liblinuxthread.linux.template_$(BUILD_TYPE).x86_64.so ./addons/pty/bin/libpty.linux.template_$(BUILD_TYPE).x86_64.so ./addons/unixsock/bin/libunixsock.linux.template_$(BUILD_TYPE).x86_64.so ./addons/xlib/bin/libxlib.linux.template_$(BUILD_TYPE).x86_64.so
+ALL_ADDON_FILES := $(shell find ./addons -regex  '.*\(\.cpp\|\.h\|\.hpp\)$$')
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
-ALL_RESOURCES := $(shell find ./ -regex  '.*\(tres\|svg\|png\)$$')
-PROJECT_FILES := $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES)
+ALL_RESOURCES := $(shell find ./ -regex  '.*\(\.tres\|\.svg\|\.png\)$$')
+PROJECT_FILES := $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES)
 
 # Docker image variables
 IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-builder
 IMAGE_TAG ?= latest
+ADDONS_IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-addons-builder
+ADDONS_IMAGE_TAG ?= latest
 
 # Remote debugging variables 
 SSH_USER ?= deck
@@ -50,8 +56,8 @@ SYSEXT_VERSION_ID ?= 3.6.3
 
 .PHONY: help
 help: ## Display this help.
+	@echo "Godot Version: '$(GODOT_VERSION)'"
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
-	echo $(GODOT_VERSION)
 
 .PHONY: install 
 install: rootfs ## Install OpenGamepadUI (default: ~/.local)
@@ -95,7 +101,7 @@ HEADLESS := --headless
 endif
 
 .PHONY: test
-test: ## Run all unit tests
+test: $(IMPORT_DIR) ## Run all unit tests
 	$(GAMESCOPE_CMD) $(GODOT) \
 		--position 320,140 \
 		--path $(PWD) $(HEADLESS) \
@@ -103,10 +109,10 @@ test: ## Run all unit tests
 
 .PHONY: build
 build: build/opengamepad-ui.x86_64 ## Build and export the project
-build/opengamepad-ui.x86_64: $(PROJECT_FILES) $(EXPORT_TEMPLATE)
+build/opengamepad-ui.x86_64: $(IMPORT_DIR) $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	@echo "Building OpenGamepadUI v$(OGUI_VERSION)"
 	mkdir -p build
-	$(GODOT) --headless --export-debug "Linux/X11"
+	$(GODOT) -v --headless --export-$(BUILD_TYPE) "Linux/X11"
 
 .PHONY: metadata
 metadata: build/metadata.json ## Build update metadata
@@ -122,14 +128,14 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 		FILE_SIGS="$$FILE_SIGS\"$$lib\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	done; \
 	# Sign the binary files \
-	echo "Signing file: opengamepad-ui.sh"; \
-	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.sh | base64 -w 0); \
-	HASH=$$(sha256sum opengamepad-ui.sh | cut -d' ' -f1); \
-	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.sh\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	echo "Signing file: opengamepad-ui.x86_64"; \
 	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.x86_64 | base64 -w 0); \
 	HASH=$$(sha256sum opengamepad-ui.x86_64 | cut -d' ' -f1); \
-	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}}"; \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
+	echo "Signing file: opengamepad-ui.pck"; \
+	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.pck | base64 -w 0); \
+	HASH=$$(sha256sum opengamepad-ui.pck | cut -d' ' -f1); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.pck\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}}"; \
 	# Write out the signatures to metadata.json \
 	echo "{\"version\": \"$(OGUI_VERSION)\", \"engine_version\": \"$(GODOT_REVISION)\", \"files\": $$FILE_SIGS}" > metadata.json
 
@@ -137,12 +143,21 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 
 
 .PHONY: import
-import: ## Import project assets
+import: $(IMPORT_DIR) ## Import project assets
+$(IMPORT_DIR): $(ALL_ADDONS)
 	@echo "Importing project assets. This will take some time..."
-	timeout --foreground 60 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+	command -v $(GODOT) > /dev/null 2>&1
+	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+	touch $(IMPORT_DIR)
+
+.PHONY: addons
+addons: $(ALL_ADDONS) ## Build GDExtension addons
+$(ALL_ADDONS) &: $(ALL_ADDON_FILES)
+	@echo "Building native GDExtension addons..."
+	cd ./gdext && $(MAKE) build
 
 .PHONY: edit
-edit: ## Open the project in the Godot editor
+edit: $(IMPORT_DIR) ## Open the project in the Godot editor
 	$(GODOT) --editor .
 
 .PHONY: clean
@@ -151,7 +166,8 @@ clean: ## Remove build artifacts
 	rm -rf $(ROOTFS)
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
-	rm -rf .godot
+	rm -rf $(IMPORT_DIR)
+	cd ./gdext && $(MAKE) clean
 
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
@@ -169,20 +185,20 @@ $(EXPORT_TEMPLATE):
 	mv $(HOME)/.local/share/godot/export_templates/templates $(@D)
 
 .PHONY: debug 
-debug: ## Run the project in debug mode in gamescope
+debug: $(IMPORT_DIR) ## Run the project in debug mode in gamescope
 	$(GAMESCOPE) --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
 .PHONY: debug-overlay
-debug-overlay: ## Run the project in debug mode in gamescope with --overlay-mode
+debug-overlay: $(IMPORT_DIR) ## Run the project in debug mode in gamescope with --overlay-mode
 	$(GAMESCOPE) --xwayland-count 2 -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn --overlay-mode -- steam -gamepadui -steamos3 -steampal -steamdeck
 
 .PHONY: docs
 docs: docs/api/classes/.generated ## Generate docs
-docs/api/classes/.generated: $(ALL_GDSCRIPT)
+docs/api/classes/.generated: $(IMPORT_DIR) $(ALL_GDSCRIPT)
 	rm -rf docs/api/classes
 	$(GODOT) \
 		--editor \
@@ -195,7 +211,7 @@ docs/api/classes/.generated: $(ALL_GDSCRIPT)
 	$(MAKE) -C docs/api rst
 
 .PHONY: inspect
-inspect: ## Launch Gamescope inspector
+inspect: $(IMPORT_DIR) ## Launch Gamescope inspector
 	$(GODOT) --path $(PWD) res://core/ui/menu/debug/gamescope_inspector.tscn
 
 
@@ -269,6 +285,7 @@ rootfs: build/opengamepad-ui.x86_64
 	mkdir -p $(ROOTFS)/usr/share/opengamepadui
 	cp -r build/*.so $(ROOTFS)/usr/share/opengamepadui
 	cp -r build/opengamepad-ui.x86_64 $(ROOTFS)/usr/share/opengamepadui
+	cp -r build/opengamepad-ui.pck $(ROOTFS)/usr/share/opengamepadui
 	touch $(ROOTFS)/.gdignore
 
 
@@ -395,6 +412,14 @@ release: ## Publish a release with semantic release
 # E.g. make in-docker TARGET=build
 .PHONY: in-docker
 in-docker:
+	@# Build addons in a seperate container for glibc compatibility
+	docker run --rm \
+		-v $(PWD):/src \
+		--workdir /src \
+		-e PWD=/src \
+		--user $(shell id -u):$(shell id -g) \
+		$(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) \
+		make addons
 	@# Run the given make target inside Docker
 	docker run --rm \
 		-v $(PWD):/src \
@@ -403,7 +428,7 @@ in-docker:
 		-e PWD=/src \
 		--user $(shell id -u):$(shell id -g) \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
-		make $(TARGET)
+		make GODOT=/usr/sbin/godot $(TARGET)
 
 .PHONY: docker-builder
 docker-builder:
@@ -415,3 +440,14 @@ docker-builder:
 .PHONY: docker-builder-push
 docker-builder-push: docker-builder
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: docker-builder-addons
+docker-builder-addons:
+	@# Pull any existing image to cache it
+	docker pull $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) || echo "No remote image to pull"
+	@# Build the Docker image that will build the project
+	docker build -t $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) -f docker/Dockerfile.addons ./docker
+
+.PHONY: docker-builder-addons-push
+docker-builder-addons-push: docker-builder-addons
+	docker push $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG)
