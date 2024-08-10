@@ -1,0 +1,19 @@
+[submodule "gdext/godot-dbus"]
+	path = gdext/godot-dbus
+	url = https://github.com/ShadowBlip/godot-dbus.git
+[submodule "gdext/godot-cpp"]
+	path = gdext/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 4.2
+[submodule "gdext/godot-linuxthread"]
+	path = gdext/godot-linuxthread
+	url = https://github.com/ShadowBlip/godot-linuxthread.git
+[submodule "gdext/godot-pty"]
+	path = gdext/godot-pty
+	url = https://github.com/ShadowBlip/godot-pty.git
+[submodule "gdext/godot-unix-socket"]
+	path = gdext/godot-unix-socket
+	url = https://github.com/ShadowBlip/godot-unix-socket.git
+[submodule "gdext/godot-xlib"]
+	path = gdext/godot-xlib
+	url = https://github.com/ShadowBlip/godot-xlib.git

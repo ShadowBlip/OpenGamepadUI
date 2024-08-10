@@ -22,16 +22,12 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 	install -Dm644 usr/share/icons/hicolor/scalable/apps/opengamepadui.svg \
 		$(PREFIX)/share/icons/hicolor/scalable/apps/opengamepadui.svg
 	mkdir -p $(PREFIX)/share/opengamepadui
-	install -Dm644 usr/share/opengamepadui/libdbus.linux.template_debug.x86_64.so \
-		$(PREFIX)/share/opengamepadui/libdbus.linux.template_debug.x86_64.so
-	install -Dm644 usr/share/opengamepadui/liblinuxthread.linux.template_debug.x86_64.so \
-		$(PREFIX)/share/opengamepadui/liblinuxthread.linux.template_debug.x86_64.so
-	install -Dm644 usr/share/opengamepadui/libpty.linux.template_debug.x86_64.so \
-		$(PREFIX)/share/opengamepadui/libpty.linux.template_debug.x86_64.so
-	install -Dm644 usr/share/opengamepadui/libxlib.linux.template_debug.x86_64.so \
-		$(PREFIX)/share/opengamepadui/libxlib.linux.template_debug.x86_64.so
+	install -Dm644 usr/share/opengamepadui/*.so \
+		$(PREFIX)/share/opengamepadui/
 	install -Dm755 usr/share/opengamepadui/opengamepad-ui.x86_64 \
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
+	install -Dm644 usr/share/opengamepadui/opengamepad-ui.pck \
+		$(PREFIX)/share/opengamepadui/opengamepad-ui.pck
 	setcap 'cap_sys_nice=eip' $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64 || true
 	mkdir -p $(PREFIX)/share/opengamepadui/scripts
 	install -Dm755 usr/share/opengamepadui/scripts/manage_input \
@@ -54,6 +50,7 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/icons/hicolor/scalable/apps/opengamepadui.svg
 	rm -rf $(PREFIX)/bin/opengamepadui
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
+	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.pck
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
 	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	rm -rf $(PREFIX)/lib/systemd/user/ogui-overlay-mode.service

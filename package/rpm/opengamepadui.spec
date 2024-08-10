@@ -30,6 +30,7 @@ make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix}
 /usr/share/opengamepadui/*.so
 /usr/share/opengamepadui/scripts/*
 /usr/share/opengamepadui/opengamepad-ui.x86_64
+/usr/share/opengamepadui/opengamepad-ui.pck
 /usr/share/applications/opengamepadui.desktop
 /usr/share/icons/hicolor/scalable/apps/opengamepadui.svg
 /usr/share/polkit-1/actions/*

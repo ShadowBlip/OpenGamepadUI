@@ -43,7 +43,7 @@ plugins:
   # Execute commands to build the project
   - - "@semantic-release/exec"
     - shell: true
-      prepareCmd: "make in-docker IMAGE_TAG=4.2.2 TARGET='import' && make in-docker IMAGE_TAG=4.2.2 TARGET='import dist'"
+      prepareCmd: "make in-docker IMAGE_TAG=4.2.2 TARGET='dist'"
 
   # Publish artifacts as a GitHub release
   - - "@semantic-release/github"

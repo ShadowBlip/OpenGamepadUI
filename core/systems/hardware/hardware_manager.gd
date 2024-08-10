@@ -6,9 +6,9 @@ class_name HardwareManager
 ## HardwareManager is responsible for providing a way to discover and query
 ## different aspects of the current hardware.
 
-const pci_ids_path := "/usr/share/hwdata/pci.ids"
 const amd_vendor_ids := ["AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]"]
 const intel_vendor_ids := ["Intel", "GenuineIntel", "Intel Corporation"]
+var pci_ids_path := Xdg.with_system_path("hwdata/pci.ids")
 var amd_apu_database := load("res://core/platform/hardware/amd_apu_database.tres") as APUDatabase
 var intel_apu_database := load("res://core/platform/hardware/intel_apu_database.tres") as APUDatabase
 var dmi_overrides_apu_database := load("res://core/platform/hardware/dmi_overrides_apu_database.tres") as APUDatabase
@@ -175,6 +175,9 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 		return card_info
 
 	# Lookup the card details
+	if not FileAccess.file_exists(pci_ids_path):
+		logger.error("hwdata not found to look up GPU info:", pci_ids_path)
+		return null
 	var hwids := FileAccess.open(pci_ids_path, FileAccess.READ)
 	var vendor_found: bool = false
 	var device_found: bool = false
