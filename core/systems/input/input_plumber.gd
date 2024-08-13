@@ -379,10 +379,18 @@ class CompositeDevice extends Resource:
 	func set_target_devices(devices: PackedStringArray) -> void:
 		_proxy.call_method( IFACE_COMPOSITE_DEVICE, "SetTargetDevices", [devices], "as")
 
+	## Load the given profile on the composite device, optionally specifying a profile
+	## modifier, which is a target device string (e.g. "deck", "ds5-edge", etc.) to
+	## adapt the profile for. This will update the profile with target-specific
+	## defaults, like mapping left/right pads to the DualSense center pad if no
+	## other mappings are defined.
 	func target_modify_profile(path: String, profile_modifier: String = "") -> void:
 		logger.debug("Loading Profile:", path)
 		if path == "" or not path.ends_with(".json") or not FileAccess.file_exists(path):
 			logger.error("Profile path:", path," is not a valid profile path.")
+			return
+		if profile_modifier.is_empty():
+			load_profile_path(path)
 			return
 
 		var profile := InputPlumberProfile.load(path)
@@ -426,8 +434,7 @@ class CompositeDevice extends Resource:
 			mapped_capabilities = profile.to_json()
 			logger.debug("Mapped Capabilities (after):", mapped_capabilities)
 
-		profile.name += " Modified"
-		path = path.rstrip(".json") + profile_modifier +".json"
+		path = path.rstrip(".json") + profile_modifier + ".json"
 		if profile.save(path) != OK:
 			logger.error("Failed to save", profile.name, "to", path)
 			return
