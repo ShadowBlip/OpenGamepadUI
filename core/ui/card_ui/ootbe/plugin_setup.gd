@@ -17,6 +17,7 @@ var logger := Log.get_logger("PluginSetup")
 
 # Called when the node enters the scene tree for the first time.`
 func _ready() -> void:
+	plugin_state_machine.minimum_states = 0
 	plugin_setup_state.state_entered.connect(_on_state_entered)
 	next_button.button_up.connect(_on_next_pressed)
 
