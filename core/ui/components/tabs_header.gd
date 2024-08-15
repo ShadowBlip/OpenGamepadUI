@@ -11,8 +11,6 @@ var current_tab: TabLabel
 
 @onready var l_sep := $%LSeparator
 @onready var r_sep := $%RSeparator
-@onready var l_texture := $%TextureLB
-@onready var r_texture := $%TextureRB
 @onready var container := $%TabLabelContainer
 
 
