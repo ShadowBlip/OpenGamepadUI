@@ -71,8 +71,8 @@ func _ready() -> void:
 	gamepad_type_dropdown.item_selected.connect(on_gamepad_selected)
 
 	# Load the default profile
-	var profile_path = settings_manager.get_value("input", "gamepad_profile")
-	profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target")
+	var profile_path = settings_manager.get_value("input", "gamepad_profile", "")
+	profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "")
 	for gamepad in input_plumber.composite_devices:
 			_set_gamepad_profile(gamepad, profile_path)
 
@@ -604,7 +604,7 @@ func _set_gamepad_profile(gamepad: InputPlumber.CompositeDevice, profile_path: S
 
 		# If no library item was set with the state, then use the default
 		if not library_item:
-			profile_path = settings_manager.get_value("input", "gamepad_profile")
+			profile_path = settings_manager.get_value("input", "gamepad_profile", "") as String
 		else:
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
 
