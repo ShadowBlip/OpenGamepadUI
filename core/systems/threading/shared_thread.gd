@@ -362,7 +362,6 @@ class ExecutingTask extends RefCounted:
 	static func from_callable(callable: Callable) -> ExecutingTask:
 		var task := ExecutingTask.new()
 		task.object = str(callable.get_object())
-		task.method = callable.get_method()
 		task.args = callable.get_bound_arguments()
 		return task
 
@@ -373,4 +372,4 @@ class ExecutingTask extends RefCounted:
 		return task
 
 	func _to_string() -> String:
-		return "{0}.{1}({2})".format([self.object, self.method, str(self.args)])
+		return "{0}.func({2})".format([self.object, str(self.args)])
