@@ -6,7 +6,8 @@ var LaunchManager := preload("res://core/global/launch_manager.tres") as LaunchM
 var InstallManager := preload("res://core/global/install_manager.tres")
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
-var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var overlay_state_machine := preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
@@ -21,7 +22,7 @@ var logger := Log.get_logger("HomeMenu", Log.LEVEL.INFO)
 
 @onready var container: HBoxContainer = $%CardContainer
 @onready var banner: TextureRect = $%BannerTexture
-@onready var library_banner := $%LibraryBanner
+@onready var library_banner := $%LibraryBanner as Control
 @onready var player: AnimationPlayer = $%AnimationPlayer
 @onready var scroll_container: ScrollContainer = $%ScrollContainer
 @onready var library_deck: LibraryDeck = $%LibraryDeck
@@ -33,6 +34,7 @@ func _ready() -> void:
 	# Connect to state entered/exited signals
 	home_state.state_entered.connect(_on_state_entered)
 	home_state.state_exited.connect(_on_state_exited)
+	home_state.refreshed.connect(_on_state_refreshed)
 	
 	# Clear any example grid items
 	for child in container.get_children():
@@ -54,8 +56,6 @@ func _ready() -> void:
 	
 	# Show the library banner when the library deck is focused
 	var on_library_focused := func():
-		if state_machine.current_state() != home_state:
-			return
 		player.stop()
 		player.play("fade_in")
 		library_banner.visible = true
@@ -83,7 +83,7 @@ func refresh() -> void:
 	refresh.call_deferred()
 
 
-func _on_state_entered(from: State) -> void:
+func _on_state_entered(_from: State) -> void:
 	set_process_input(true)
 	library_banner.visible = false
 	_grab_focus()
@@ -91,6 +91,10 @@ func _on_state_entered(from: State) -> void:
 
 func _on_state_exited(_to: State) -> void:
 	set_process_input(false)
+
+
+func _on_state_refreshed() -> void:
+	_grab_focus()
 
 
 # Push the main menu state when the back button is pressed
@@ -103,7 +107,7 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 	# Push the main menu state when the back button is pressed
-	state_machine.push_state(main_menu_state)
+	overlay_state_machine.push_state(main_menu_state)
 
 
 # When an install is queued, connect signals to show a progress bar on the library
@@ -193,8 +197,6 @@ func _grab_focus() -> void:
 
 # Called when a card is focused
 func _on_card_focused(item: LibraryItem, card: Control) -> void:
-	if state_machine.current_state() != home_state:
-		return
 	player.stop()
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)

@@ -23,6 +23,8 @@ signal state_exited(to: State)
 signal state_added
 ## Emitted whenever a [StateMachine] has removed this [State] from its state stack.
 signal state_removed
+## Emitted whenever a [StateMachine] calls "refresh" on the current [State]
+signal refreshed
 
 ## Optional human-readable name for the state
 @export var name: String

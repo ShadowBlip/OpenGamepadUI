@@ -1,14 +1,12 @@
-[gd_scene load_steps=26 format=3 uid="uid://58qlqqbh58im"]
+[gd_scene load_steps=24 format=3 uid="uid://58qlqqbh58im"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_1eqgx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pga6u"]
 [ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="3_s80bx"]
-[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="4_qjhtj"]
-[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="5_t4x4x"]
-[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="6_c6jr8"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="7_7cc3x"]
-[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_j5oy4"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_e1xsr"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="4_5bv80"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_0v30m"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_5qmye"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="11_u6frn"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="12_86g2h"]
 [ext_resource type="Resource" uid="uid://cc6i4i264dmqd" path="res://core/ui/card_ui/launch/game_settings_focus.tres" id="12_e0uun"]
@@ -35,12 +33,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vrr6s")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_pga6u")]
-state = ExtResource("3_s80bx")
-visible_during = Array[Resource]([ExtResource("4_qjhtj"), ExtResource("5_t4x4x"), ExtResource("6_c6jr8"), ExtResource("7_7cc3x"), ExtResource("8_j5oy4")])
+[node name="InputWatcher" parent="." instance=ExtResource("2_1eqgx")]
+stop_propagation = true
+action = "ogui_back"
 
-[node name="BackInputHandler" parent="." instance=ExtResource("9_e1xsr")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_s80bx")])
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("15_lmmqq")]
+state_machine = ExtResource("4_5bv80")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_0v30m")]
+state = ExtResource("3_s80bx")
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("7_5qmye")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

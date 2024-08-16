@@ -176,7 +176,6 @@ visible = false
 layout_mode = 2
 
 [node name="TopMargin" type="MarginContainer" parent="MenuContent"]
-z_index = 20
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 30

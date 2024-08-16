@@ -25,6 +25,15 @@ func _ready() -> void:
 	if action.is_empty():
 		set_process_input(false)
 
+	# Only process input if the parent node is visible
+	var parent := get_parent()
+	if parent is Control:
+		var control := parent as Control
+		var on_visibility := func():
+			set_process_input(control.is_visible_in_tree())
+		control.visibility_changed.connect(on_visibility)
+		set_process_input(control.is_visible_in_tree())
+
 
 func _input(event: InputEvent) -> void:
 	if not event.is_action(action):

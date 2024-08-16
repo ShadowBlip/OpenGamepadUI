@@ -9,6 +9,10 @@ var input_plumber := load("res://core/systems/input/input_plumber.tres") as Inpu
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
+var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var overlay_state_machine := preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
+var menu_state := preload("res://assets/state/states/menu.tres") as State
+var overlay_state := preload("res://assets/state/states/overlay.tres") as State
 var first_boot_state := preload("res://assets/state/states/first_boot_menu.tres") as State
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
@@ -16,15 +20,15 @@ var osk_state := preload("res://assets/state/states/osk.tres") as State
 var power_state := preload("res://assets/state/states/power_menu.tres") as State
 
 var PID: int = OS.get_process_id()
-var overlay_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
-@onready var panel := $%Panel
-@onready var ui_container := $%MenuContent
-@onready var boot_video := $%BootVideoPlayer
-@onready var fade_transition := $%FadeTransitionPlayer
-@onready var fade_texture := $%FadeTexture
-@onready var power_timer := $%PowerTimer
-@onready var settings_menu := $%SettingsMenu
+@onready var panel := $%Panel as Panel
+@onready var ui_container := $%MenuContent as MarginContainer
+@onready var boot_video := $%BootVideoPlayer as VideoStreamPlayer
+@onready var fade_transition := $%FadeTransitionPlayer as AnimationPlayer
+@onready var fade_texture := $%FadeTexture as TextureRect
+@onready var power_timer := $%PowerTimer as Timer
+@onready var settings_menu := $%SettingsMenu as Control
 
 var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
@@ -68,8 +72,30 @@ func _ready() -> void:
 	# Set the FPS limit
 	Engine.max_fps = settings_manager.get_value("general", "max_fps", 60) as int
 
-	# Listen for global state changes
-	state_machine.state_changed.connect(_on_state_changed)
+	# Always push the menu state if we end up with an empty stack.
+	var on_states_emptied := func():
+		state_machine.push_state.call_deferred(menu_state)
+	state_machine.emptied.connect(on_states_emptied)
+
+	# Whenever the menu state is refreshed, refresh the menu state machine to
+	# re-grab focus.
+	var on_menu_refreshed := func():
+		menu_state_machine.refresh()
+	menu_state.refreshed.connect(on_menu_refreshed)
+
+	# Whenever the menu state is entered, refresh the menu state machine to
+	# re-grab focus
+	var on_menu_state_entered := func(_from: State):
+		menu_state_machine.refresh()
+	menu_state.state_entered.connect(on_menu_state_entered)
+
+	# Whenever an overlay state is pushed, update the global state
+	var on_overlay_state_changed := func(_from: State, to: State):
+		if to:
+			state_machine.push_state(overlay_state)
+		else:
+			state_machine.remove_state(overlay_state)
+	overlay_state_machine.state_changed.connect(on_overlay_state_changed)
 
 	# Show/hide the overlay when we enter/exit the in-game state
 	in_game_state.state_entered.connect(_on_game_state_entered)
@@ -110,12 +136,6 @@ func _on_focus_changed(control: Control) -> void:
 		logger.debug("Focus changed to: " + control.get_parent().name + " | " + control.name)
 
 
-# Always push the home state if we end up with an empty stack.
-func _on_state_changed(_from: State, _to: State) -> void:
-	if state_machine.stack_length() == 0:
-		state_machine.push_state.call_deferred(home_state)
-
-
 ## Invoked when the in-game state was entered
 func _on_game_state_entered(_from: State) -> void:
 	# Pass all gamepad input to the game
@@ -131,7 +151,9 @@ func _on_game_state_entered(_from: State) -> void:
 	# Ensure panel is invisible
 	panel.visible = false
 	for child in ui_container.get_children():
-		child.visible = false
+		if not child is Control:
+			continue
+		(child as Control).visible = false
 
 
 ## Invoked when the in-game state is exited
@@ -158,7 +180,9 @@ func _on_game_state_exited(to: State) -> void:
 
 	# Un-hide all UI elements
 	for child in ui_container.get_children():
-		child.visible = true
+		if not child is Control:
+			continue
+		(child as Control).visible = true
 
 
 ## Invoked when the in-game state is removed
@@ -169,8 +193,10 @@ func _on_game_state_removed() -> void:
 	# Un-hide the background panel
 	panel.visible = true
 
-	# Reset the state stack if no home state exists
-	if not state_machine.has_state(home_state):
+	# Reset the state stack if no menu state exists
+	if not state_machine.has_state(menu_state):
+		state_machine.set_state([menu_state])
+	if not menu_state_machine.has_state(home_state):
 		state_machine.set_state([home_state])
 
 
@@ -192,13 +218,16 @@ func _on_boot_video_player_finished() -> void:
 	fade_transition.play("fade")
 	boot_video.visible = false
 
+	# Set the initial global state
+	state_machine.push_state(menu_state)
+
 	# If this is the first boot, enter the first-boot menu state. Otherwise,
 	# go to the home state.
 	if settings_manager.get_value("general", "first_boot", true):
-		state_machine.push_state(first_boot_state)
+		menu_state_machine.push_state(first_boot_state)
 	else:
 		# Initialize the state machine with its initial state
-		state_machine.push_state(home_state)
+		menu_state_machine.push_state(home_state)
 
 
 ## Called when any unhandled input reaches the main node
@@ -210,7 +239,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ogui_power"):
 		var open_power_menu := func():
 			logger.info("Power menu requested")
-			state_machine.push_state(power_state)
+			overlay_state_machine.push_state(power_state)
 		power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
 		power_timer.start()
 		return

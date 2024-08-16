@@ -1,13 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://dj1fooc3gh13l"]
+[gd_scene load_steps=13 format=3 uid="uid://dj1fooc3gh13l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/help/help_menu.gd" id="1_7fti5"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pli5u"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="3_effq8"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_cxu4x"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_10mqr"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="3_hidel"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="4_8croa"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_1uaoh"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="5_uocjd"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_wfsen"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="7_15bya"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_dlovl"]
 [ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="8_swg2f"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="8_ut6gk"]
 
 [node name="HelpMenu" type="Control"]
 layout_mode = 3
@@ -18,11 +22,31 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7fti5")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_pli5u")]
+[node name="InputWatcher" parent="." instance=ExtResource("2_cxu4x")]
+stop_propagation = true
+action = "ogui_back"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_10mqr")]
+state_machine = ExtResource("4_8croa")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_1uaoh")]
 state = ExtResource("3_hidel")
 
-[node name="BackInputHandler" parent="." instance=ExtResource("3_effq8")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_hidel")])
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("7_dlovl")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="SlideEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("8_ut6gk")]
+target = NodePath("../../MarginContainer")
+slide_speed = 0.2
+direction = "down"
+on_signal = "state_entered"
+slide_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

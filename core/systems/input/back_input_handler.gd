@@ -2,6 +2,8 @@
 extends Node
 class_name BackInputHandler
 
+## DEPRECATED: Use [InputWatcher] with [StateUpdater] instead
+
 ## The state machine to use to update when back input is pressed
 @export var state_machine: StateMachine = preload(
 	"res://assets/state/state_machines/global_state_machine.tres"
