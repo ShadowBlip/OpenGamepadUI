@@ -1,7 +1,7 @@
 extends Control
 
 var state_machine := (
-	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+	preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
 )
 var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger := Log.get_logger("PowerMenu")
@@ -50,10 +50,12 @@ func _on_state_entered(_from: State) -> void:
 
 
 func _on_systemctl_cmd(command: String) -> void:
-	state_machine.pop_state()
-	var output: Array = []
-	if OS.execute("systemctl", [command], output) != OK:
-		logger.warn("Failed to " + command + ": '" + output[0] + "'")
+	state_machine.clear_states()
+	var exec := func():
+		var output: Array = []
+		if OS.execute("systemctl", [command], output) != OK:
+			logger.warn("Failed to " + command + ": '" + output[0] + "'")
+	exec.call_deferred()
 
 
 func _on_exit() -> void:

@@ -15,9 +15,12 @@ const in_game := preload("res://assets/state/states/in_game.tres")
 ## Possible state actions to take
 enum ACTION {
 	PUSH, ## Pushes the state on top of the state stack
+	PUSH_FRONT, ## Pushes the state to the beginning of the state stack
 	POP, ## Removes the state at the top of the state stack
 	REPLACE, ## Replaces the state at the top of the state stack
 	SET, ## Removes all states and sets the given state
+	REFRESH, ## Calls the 'refresh' signal on the current state of the [StateMachine]
+	CLEAR, ## Clear all states from the [StateMachine]
 }
 
 ## The state machine instance to use for managing state changes
@@ -46,6 +49,8 @@ func _on_signal(metakey: String = "", metadata: Variant = null):
 	match action:
 		ACTION.PUSH:
 			sm.push_state(state)
+		ACTION.PUSH_FRONT:
+			sm.push_state_front(state)
 		ACTION.POP:
 			sm.pop_state()
 		ACTION.REPLACE:
@@ -56,6 +61,10 @@ func _on_signal(metakey: String = "", metadata: Variant = null):
 			if sm.has_state(in_game):
 				states.push_front(in_game)
 			sm.set_state(states)
+		ACTION.REFRESH:
+			sm.refresh()
+		ACTION.CLEAR:
+			sm.clear_states()
 
 
 # Customize editor properties that we expose. Here we dynamically look up

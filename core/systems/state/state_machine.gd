@@ -21,9 +21,18 @@ class_name StateMachine
 
 ## Emitted whenever this [StateMachine] has changed states
 signal state_changed(from: State, to: State)
+## Emitted whenever all states have been removed from the state machine
+signal emptied
 
+## Name of the state machine to use for logging purposes
 @export var logger_name := "StateMachine"
+## The minimum number of states that this [StateMachine] must have. This parameter
+## can be used to ensure that states cannot be popped below this number of states.
 @export var minimum_states: int = 1
+## If set, only the given [State] objects will be allowed to be added to the [StateMachine].
+## Will panic if an invalid state is added to the stack. If empty, all [State]
+## objects will be allowed.
+@export var allowed_states: Array[State] = []
 
 var _state_stack: Array[State] = []
 var logger := Log.get_logger(logger_name)
@@ -47,6 +56,8 @@ func _on_state_changed(from: State, to: State) -> void:
 	var state_names := PackedStringArray()
 	for state in _state_stack:
 		state_names.append(state.name)
+	if not to:
+		emptied.emit()
 	logger.info("Stack: " + "-> ".join(state_names))
 
 
@@ -58,6 +69,15 @@ func current_state() -> State:
 	return _state_stack[length-1]
 
 
+## Emits the 'refreshed' signal on the current [State]. This can be used to
+## trigger hand-offs between multiple state machines.
+func refresh() -> void:
+	var current := current_state()
+	if not current:
+		return
+	current.refreshed.emit()
+
+
 ## Set state will set the entire state stack to the given array of states
 func set_state(new_stack: Array[State]) -> void:
 	if null in new_stack:
@@ -66,6 +86,7 @@ func set_state(new_stack: Array[State]) -> void:
 	var states_added: Array[State] = []
 	var states_removed: Array[State] = []
 	for state: State in new_stack:
+		_ensure_state_allowed(state)
 		if not has_state(state):
 			states_added.push_back(state)
 	for state: State in _state_stack:
@@ -91,6 +112,7 @@ func push_state(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
+	_ensure_state_allowed(state)
 	var current := current_state()
 	if state == current:
 		return
@@ -109,6 +131,7 @@ func push_state_front(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
+	_ensure_state_allowed(state)
 	var is_new := not has_state(state)
 	var last_current := current_state()
 	_push_front_unique(state)
@@ -143,6 +166,7 @@ func replace_state(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
+	_ensure_state_allowed(state)
 	var current := current_state()
 	if state == current:
 		return
@@ -221,3 +245,18 @@ func _push_front_unique(state: State) -> void:
 	if i >= 0:
 		_state_stack.remove_at(i)
 	_state_stack.push_front(state)
+
+
+func _ensure_state_allowed(state: State) -> void:
+	if allowed_states.is_empty():
+		return
+	if state in allowed_states:
+		return
+	var msg := "State '{name}' is not in allowed states for state machine '{sm}'. Allowed: {list}".format(
+		{
+			"name": str(state),
+			"sm": str(logger_name),
+			"list": str(allowed_states)
+		}
+	)
+	assert(false, msg)

@@ -1,23 +1,18 @@
-[gd_scene load_steps=25 format=3 uid="uid://bcdk1lj6enq3l"]
+[gd_scene load_steps=20 format=3 uid="uid://bcdk1lj6enq3l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_135m3"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_oae7b"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_slsfk"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="3_dp3a3"]
 [ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="3_w7th1"]
-[ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="4_le731"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="4_aqvfw"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_4ja2v"]
 [ext_resource type="Texture2D" uid="uid://bec6fhiswf6ve" path="res://assets/ui/icons/gamepad-bold.svg" id="5_ewj68"]
-[ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="5_tdidy"]
-[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="6_gnrnf"]
-[ext_resource type="Resource" uid="uid://dja3m1mevv6xw" path="res://assets/state/states/osk.tres" id="7_qt0bt"]
-[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="8_3e46i"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="9_hnl5c"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="9_k6q8g"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_ch3qu"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="14_3h1st"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="15_f3ktw"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="15_lat8h"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="16_m8g5y"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="17_7ydn0"]
 [ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="19_b21vy"]
 [ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="21_agq5k"]
@@ -58,15 +53,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_u3ehs")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_135m3")]
+[node name="InputWatcher" parent="." instance=ExtResource("2_slsfk")]
+stop_propagation = true
+action = "ogui_back"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("15_lat8h")]
+state_machine = ExtResource("4_aqvfw")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_4ja2v")]
 state = ExtResource("3_w7th1")
-visible_during = Array[Resource]([ExtResource("4_le731"), ExtResource("5_tdidy"), ExtResource("6_gnrnf"), ExtResource("7_qt0bt"), ExtResource("8_3e46i")])
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("9_k6q8g")]
-root_node = NodePath("../..")
-
-[node name="BackInputHandler" parent="." instance=ExtResource("9_hnl5c")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_w7th1")])
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("7_ch3qu")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -162,7 +165,7 @@ layout_mode = 2
 texture = ExtResource("5_ewj68")
 
 [node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/GamepadButton" instance=ExtResource("15_lat8h")]
-state_machine = ExtResource("16_m8g5y")
+state_machine = ExtResource("4_aqvfw")
 state = ExtResource("17_7ydn0")
 on_signal = "player_button_up"
 
@@ -177,7 +180,7 @@ custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 
 [node name="StateUpdater" parent="CenterContainer/HBoxContainer/ExtraMenu/MarginContainer/HBoxContainer/SettingsButton" instance=ExtResource("15_lat8h")]
-state_machine = ExtResource("16_m8g5y")
+state_machine = ExtResource("4_aqvfw")
 state = ExtResource("19_b21vy")
 on_signal = "button_up"
 

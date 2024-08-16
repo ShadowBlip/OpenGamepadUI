@@ -5,7 +5,7 @@ signal refresh_completed
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var install_manager := load("res://core/global/install_manager.tres") as InstallManager
-var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var menu_state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var library_state := load("res://assets/state/states/library.tres") as State
 var launcher_state := load("res://assets/state/states/game_launcher.tres") as State
 var osk_state := load("res://assets/state/states/osk.tres") as State
@@ -87,8 +87,6 @@ func _on_state_entered(_from: State):
 
 # Handle searches
 func _on_search(text: String):
-	if not state_machine.current_state() in [library_state, osk_state]:
-		return
 	text = text.to_lower()
 	
 	# If the text is empty, set all items to visible
@@ -157,7 +155,7 @@ func _build_card(item: LibraryItem) -> GameCard:
 	# Listen for button presses and pass the library item with the state
 	var on_button_up := func():
 		launcher_state.data = {"item": item}
-		state_machine.push_state(launcher_state)
+		menu_state_machine.push_state(launcher_state)
 	card.button_up.connect(on_button_up)
 	
 	return card

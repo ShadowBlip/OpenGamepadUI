@@ -1,15 +1,14 @@
-[gd_scene load_steps=13 format=3 uid="uid://by0i08fw1fwty"]
+[gd_scene load_steps=12 format=3 uid="uid://by0i08fw1fwty"]
 
+[ext_resource type="PackedScene" uid="uid://bfiia7vnbfw3s" path="res://core/systems/state/states_watcher.tscn" id="1_onljq"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="1_te2kv"]
-[ext_resource type="Script" path="res://core/systems/state/visibility_manager.gd" id="1_ue0mf"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="2_1q5o3"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="2_a2ifc"]
-[ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="3_5xjwl"]
 [ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="4_g6or7"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="4_lk3ix"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_m8oxr"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_b4g8u"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="9_74mn5"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_nhibw"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="10_5h6sh"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="11_eo1bd"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_q3ls8"]
 
@@ -20,13 +19,14 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 theme_type_variation = &"ButtonMenu"
 
-[node name="VisibilityManager" type="Node" parent="."]
-script = ExtResource("1_ue0mf")
-state = ExtResource("2_a2ifc")
-visible_during = Array[Resource]([ExtResource("2_a2ifc"), ExtResource("3_5xjwl"), ExtResource("4_g6or7")])
+[node name="StatesWatcher" parent="." instance=ExtResource("1_onljq")]
+states = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("2_a2ifc"), ExtResource("4_g6or7")])
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("4_lk3ix")]
-root_node = NodePath("..")
+[node name="FadeEffect" parent="StatesWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_m8oxr")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -37,6 +37,7 @@ theme_override_constants/margin_right = 10
 layout_mode = 2
 
 [node name="NotifyButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("6_b4g8u")]
+visible = false
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 texture = ExtResource("1_te2kv")
@@ -47,7 +48,7 @@ layout_mode = 2
 texture = ExtResource("2_1q5o3")
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/HelpButton" instance=ExtResource("9_nhibw")]
-state_machine = ExtResource("10_5h6sh")
+state_machine = ExtResource("9_74mn5")
 state = ExtResource("11_q3ls8")
 on_signal = "button_up"
 
@@ -56,6 +57,6 @@ custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/SettingsButton" instance=ExtResource("9_nhibw")]
-state_machine = ExtResource("10_5h6sh")
+state_machine = ExtResource("9_74mn5")
 state = ExtResource("11_eo1bd")
 on_signal = "button_up"
