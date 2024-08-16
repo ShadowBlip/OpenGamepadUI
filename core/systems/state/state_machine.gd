@@ -1,11 +1,25 @@
-# https://www.reddit.com/r/godot/comments/vodp2a/comment/iegv4fs/?utm_source=reddit&utm_medium=web2x&context=3
-# The state machine takes advantage of the fact that resources are globally unique.
-# This allows you to load a state machine resource from anywhere to subscribe to
-# state changes.
 @icon("res://assets/editor-icons/state-machine.svg")
 extends Resource
 class_name StateMachine
 
+## Manages the current [State] for some part of the application.
+##
+## A [StateMachine] is responsible for managing an arbitrary number of [State]
+## objects. The [StateMachine] keeps a "stack" of states that can be set, pushed,
+## popped, removed, or cleared, and will fire signals for each kind of change.
+## This can allow the application to update and respond to different states of
+## the [StateMachine].
+##
+## Only one [State] is considered the "current" state in a [StateMachine]: the
+## last state in the stack. A [State] will fire the "entered" signal whenever it
+## becomes the "current" state, and fires the "exited" signal whenever it leaves
+## the "current" state.
+##
+## The [StateMachine] takes advantage of the fact that Godot resources are globally
+## unique. This allows you to load a [StateMachine] resource from anywhere in the
+## project to subscribe to state changes.
+
+## Emitted whenever this [StateMachine] has changed states
 signal state_changed(from: State, to: State)
 
 @export var logger_name := "StateMachine"
@@ -25,10 +39,8 @@ func _on_state_changed(from: State, to: State) -> void:
 	var to_str = "<null>"
 	if from != null:
 		from_str = from.name
-		from.state_exited.emit(to)
 	if to != null:
 		to_str = to.name
-		to.state_entered.emit(from)
 	if logger.get_name() != logger_name:
 		logger = Log.get_logger(logger_name)
 	logger.info("Switched from state {0} to {1}".format([from_str, to_str]))
@@ -47,19 +59,31 @@ func current_state() -> State:
 
 
 ## Set state will set the entire state stack to the given array of states
-func set_state(stack: Array[State]) -> void:
-	if null in stack:
+func set_state(new_stack: Array[State]) -> void:
+	if null in new_stack:
 		logger.warn("Invalid NULL state pushed.")
 		return
-	var cur := current_state()
-	var old_stack := _state_stack
-	_state_stack = stack
-	for s in old_stack:
-		var state := s as State
-		if has_state(state):
-			continue
+	var states_added: Array[State] = []
+	var states_removed: Array[State] = []
+	for state: State in new_stack:
+		if not has_state(state):
+			states_added.push_back(state)
+	for state: State in _state_stack:
+		if not state in new_stack:
+			states_removed.push_back(state)
+	var last_current := current_state()
+	_state_stack = new_stack
+	var new_current := current_state()
+	if last_current != new_current:
+		if last_current:
+			last_current.state_exited.emit(new_current)
+		if new_current:
+			new_current.state_entered.emit(last_current)
+		state_changed.emit(last_current, new_current)
+	for state: State in states_removed:
 		state.state_removed.emit()
-	state_changed.emit(cur, stack[-1])
+	for state: State in states_added:
+		state.state_added.emit()
 
 
 ## Push state will push the given state to the top of the state stack.
@@ -67,9 +91,17 @@ func push_state(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
-	var cur := current_state()
+	var current := current_state()
+	if state == current:
+		return
+	var is_new := not has_state(state)
 	_push_unique(state)
-	state_changed.emit(cur, state)
+	if is_new:
+		state.state_added.emit()
+	if current:
+		current.state_exited.emit(state)
+	state.state_entered.emit(current)
+	state_changed.emit(current, state)
 
 
 ## Pushes the given state to the front of the stack
@@ -77,17 +109,31 @@ func push_state_front(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
-	var cur = current_state()
-	_state_stack.push_front(state)
-	state_changed.emit(cur, current_state())
+	var is_new := not has_state(state)
+	var last_current := current_state()
+	_push_front_unique(state)
+	var new_current := current_state()
+	if is_new:
+		state.state_added.emit()
+	if last_current != new_current:
+		if last_current:
+			last_current.state_exited.emit(new_current)
+		if new_current:
+			new_current.state_entered.emit(last_current)
+		state_changed.emit(last_current, new_current)
 
 
 ## Pop state will remove the last state from the stack and return it.
 func pop_state() -> State:
 	if self.stack_length() > minimum_states:
-		var popped = _state_stack.pop_back()
-		var cur = current_state()
-		state_changed.emit(popped, cur)
+		var popped := _state_stack.pop_back() as State
+		var current := current_state()
+		if popped:
+			popped.state_exited.emit(current)
+			popped.state_removed.emit()
+		if current:
+			current.state_entered.emit(popped)
+		state_changed.emit(popped, current)
 		return popped
 	return current_state()
 
@@ -97,29 +143,53 @@ func replace_state(state: State) -> void:
 	if state == null:
 		logger.warn("Invalid NULL state pushed.")
 		return
+	var current := current_state()
+	if state == current:
+		return
+	var is_new := not has_state(state)
 	var popped := _state_stack.pop_back() as State
 	_push_unique(state)
-	if popped != null:
+	if is_new:
+		state.state_added.emit()
+	if popped:
+		popped.state_exited.emit(state)
 		popped.state_removed.emit()
+	state.state_entered.emit(popped)
 	state_changed.emit(popped, state)
 
 
 ## Removes all instances of the given state from the stack
 func remove_state(state: State) -> void:
-	var cur := current_state()
+	if not state:
+		return
+	if not has_state(state):
+		return
+	var last_current := current_state()
 	var new_state_stack: Array[State] = []
-	for i in range(0, len(_state_stack)):
-		var s := _state_stack[i]
-		if state != s:
-			new_state_stack.push_back(s)
+	for existing_state: State in _state_stack:
+		if state == existing_state:
+			continue
+		new_state_stack.push_back(existing_state)
 	_state_stack = new_state_stack
+	if last_current == state:
+		state.state_exited.emit(current_state())
 	state.state_removed.emit()
-	state_changed.emit(cur, current_state())
+	var new_current := current_state()
+	if last_current != new_current:
+		if new_current:
+			new_current.state_entered.emit(last_current)
+		state_changed.emit(last_current, new_current)
 
 
 ## Removes all states
 func clear_states() -> void:
+	var current := current_state()
+	if current:
+		current.state_exited.emit(null)
+	for state: State in _state_stack:
+		state.state_removed.emit()
 	_state_stack.clear()
+	state_changed.emit(current, null)
 
 
 ## Returns the length of the state stack
@@ -140,8 +210,14 @@ func has_state(state: State) -> bool:
 
 
 func _push_unique(state: State) -> void:
-	var i = _state_stack.find(state)
+	var i := _state_stack.find(state)
 	if i >= 0:
 		_state_stack.remove_at(i)
 	_state_stack.push_back(state)
 
+
+func _push_front_unique(state: State) -> void:
+	var i := _state_stack.find(state)
+	if i >= 0:
+		_state_stack.remove_at(i)
+	_state_stack.push_front(state)
