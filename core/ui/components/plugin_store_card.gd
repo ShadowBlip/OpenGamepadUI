@@ -41,7 +41,12 @@ func _ready() -> void:
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
+
 	update_button.visible = PluginLoader.is_upgradable(plugin_id)
 	action_button.pressed.connect(_on_install_button)
 	update_button.pressed.connect(_on_update_button)

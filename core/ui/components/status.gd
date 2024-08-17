@@ -54,16 +54,23 @@ var color: String = "green":
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(_on_focus.bind(true))
-	focus_exited.connect(_on_focus.bind(false))
-	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
-
 	label.text = title
 	description_label.text = description
 	description_label.visible = description != ""
 	texture_rect.texture = status_texture_map[status]
 	texture_rect.modulate = get_theme_color(color, "Status")
+
+	if Engine.is_editor_hint():
+		return
+
+	focus_entered.connect(_on_focus.bind(true))
+	focus_exited.connect(_on_focus.bind(false))
+	theme_changed.connect(_on_theme_changed)
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 
 func _on_theme_changed() -> void:
