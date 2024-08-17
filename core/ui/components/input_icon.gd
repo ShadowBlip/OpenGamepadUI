@@ -105,6 +105,9 @@ var internal_children: Array[Node] = []
 				texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 
 func _ready():
+	# Don't run in the editor
+	if Engine.is_editor_hint():
+		return
 	# Add the children
 	self.add_child(label)
 	# Only listen for input type changes if no mapping is forced

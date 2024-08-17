@@ -3,7 +3,7 @@ class_name SearchBar
 
 signal search_submitted(text: String)
 
-var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var library_state := load("res://assets/state/states/library.tres")
 
 var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.GODOT, self)

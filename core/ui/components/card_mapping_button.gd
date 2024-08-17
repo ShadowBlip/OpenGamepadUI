@@ -66,10 +66,17 @@ func _ready() -> void:
 	target_label.vertical_alignment = vertical_alignment
 	target_label.autowrap_mode = autowrap_mode
 	target_label.uppercase = uppercase
-	
+
+	if Engine.is_editor_hint():
+		return
+
 	# Connect signals
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 
 ## Set the source input icon's icon mapping

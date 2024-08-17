@@ -41,16 +41,18 @@ signal item_selected(index: int)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(_grab_focus)
 	label.text = title
 	description_label.text = description
 	option_button.disabled = disabled
+	if Engine.is_editor_hint():
+		return
 	option_button.focus_neighbor_bottom = focus_neighbor_bottom
 	option_button.focus_neighbor_left = focus_neighbor_left
 	option_button.focus_neighbor_right = focus_neighbor_right
 	option_button.focus_neighbor_top = focus_neighbor_top
 	option_button.focus_previous = focus_previous
 	option_button.focus_next = focus_next
+	focus_entered.connect(_grab_focus)
 
 	# Hide labels if nothing is specified
 	if title == "":
@@ -76,10 +78,12 @@ func _ready() -> void:
 			option_button.select(focused_item)
 			option_button.item_selected.emit(focused_item)
 			option_popup.visible = false
-		if event.is_action_pressed("ogui_east") \
-		 or event.is_action_pressed("ogui_back") \
-		 or event.is_action_pressed("ogui_east_ov"):
+			get_viewport().set_input_as_handled()
+		if event.is_action_released("ogui_east") \
+		 or event.is_action_released("ogui_back") \
+		 or event.is_action_released("ogui_east_ov"):
 			option_popup.visible = false
+			get_viewport().set_input_as_handled()
 	option_popup.window_input.connect(on_option_button_input)
 
 

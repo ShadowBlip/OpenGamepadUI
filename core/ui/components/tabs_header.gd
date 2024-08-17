@@ -29,6 +29,10 @@ func _ready() -> void:
 		tab.text = tab_text
 		container.add_child(tab)
 
+	# Don't run in the editor
+	if Engine.is_editor_hint():
+		return
+
 	# Set the currently selected tab
 	_on_tab_changed(tabs_state.current_tab)
 

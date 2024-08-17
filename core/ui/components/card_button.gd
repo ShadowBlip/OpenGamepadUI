@@ -71,7 +71,10 @@ func _ready() -> void:
 	label.vertical_alignment = vertical_alignment
 	label.autowrap_mode = autowrap_mode
 	label.uppercase = uppercase
-	
+
+	if Engine.is_editor_hint():
+		return
+
 	# Connect signals
 	pressed.connect(_play_sound.bind(select_audio_stream))
 	focus_entered.connect(_on_focus)
@@ -79,7 +82,11 @@ func _ready() -> void:
 	mouse_entered.connect(_on_focus)
 	mouse_exited.connect(_on_unfocus)
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 
 func _on_theme_changed() -> void:

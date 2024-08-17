@@ -22,7 +22,11 @@ var logger := Log.get_logger("CardInputIconButton")
 func _ready() -> void:
 	# Connect signals
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 
 func _on_theme_changed() -> void:

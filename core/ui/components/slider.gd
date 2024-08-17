@@ -83,7 +83,7 @@ func _ready() -> void:
 	slider.focus_neighbor_top = focus_neighbor_top
 	slider.focus_previous = focus_previous
 	slider.focus_next = focus_next
-	
+
 	# Wire up all slider signals
 	var on_drag_ended := func(changed: bool):
 		drag_ended.emit(changed)
@@ -98,7 +98,11 @@ func _ready() -> void:
 
 	# Set color based on theme
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 
 func _on_theme_changed() -> void:
