@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://core/systems/state/state_machine.gd" id="1_dw1uo"]
 [ext_resource type="Resource" uid="uid://bmgs1ngma1523" path="res://assets/state/states/in_game_menu.tres" id="2_pg6ge"]
 [ext_resource type="Resource" uid="uid://cv3vduo0ojk1u" path="res://assets/state/states/menu.tres" id="3_4n6bo"]
-[ext_resource type="Resource" uid="uid://dgbe422crufa4" path="res://assets/state/states/overlay.tres" id="4_j3a4g"]
+[ext_resource type="Resource" uid="uid://dgbe422crufa4" path="res://assets/state/states/popup.tres" id="4_j3a4g"]
 
 [resource]
 script = ExtResource("1_dw1uo")

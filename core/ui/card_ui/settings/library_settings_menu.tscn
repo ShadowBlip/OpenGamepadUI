@@ -1,13 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://drbp6ec8646v3"]
+[gd_scene load_steps=11 format=3 uid="uid://drbp6ec8646v3"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/library_settings_menu.gd" id="1_0w1vu"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_obgkx"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_guba0"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_oc808"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_k7tqg"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_x5lfl"]
 [ext_resource type="Resource" uid="uid://blcfrofi5oawd" path="res://assets/state/states/settings_library.tres" id="3_ykj28"]
-[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_148sd"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_cd7pj"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_sh522"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="6_ou60g"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_5nxbl"]
 
 [node name="LibrarySettingsMenu" type="ScrollContainer"]
 anchors_preset = 15
@@ -18,13 +20,21 @@ grow_vertical = 2
 follow_focus = true
 script = ExtResource("1_0w1vu")
 
+[node name="InputWatcher" parent="." instance=ExtResource("2_oc808")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_k7tqg")]
+state_machine = ExtResource("4_cd7pj")
+action = 2
+on_signal = "input_released"
+
 [node name="StateWatcher" parent="." instance=ExtResource("2_guba0")]
 state = ExtResource("3_ykj28")
 
-[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_148sd")]
-target = NodePath("../..")
-on_signal = "state_entered"
-fade_out_signal = "state_exited"
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_5nxbl")
+target = NodePath("../../MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "state_entered"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -42,7 +52,6 @@ layout_mode = 2
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("5_sh522")]
 current_focus = NodePath("../MaxRecentAppsSlider")
-focus_stack = ExtResource("6_ou60g")
 
 [node name="HomeLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_x5lfl")]
 layout_mode = 2

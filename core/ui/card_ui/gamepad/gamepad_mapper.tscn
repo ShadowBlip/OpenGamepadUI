@@ -1,12 +1,13 @@
-[gd_scene load_steps=22 format=3 uid="uid://b3o3wo40sfih1"]
+[gd_scene load_steps=23 format=3 uid="uid://b3o3wo40sfih1"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_4osef"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_o3mis"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_2kcao"]
 [ext_resource type="Resource" uid="uid://c4er7pfmn7x50" path="res://assets/state/state_machines/gamepad_settings_state_machine.tres" id="3_wgp64"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_scwwv"]
 [ext_resource type="Resource" uid="uid://46cu324n427u" path="res://assets/state/states/gamepad_change_input.tres" id="4_sv30y"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_i6uqd"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_roi3c"]
 [ext_resource type="Texture2D" uid="uid://dyemqkvdtk43e" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="8_5jaa6"]
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_okgql"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_an8os"]
@@ -34,6 +35,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_alala")
 
+[node name="InputWatcher" parent="." instance=ExtResource("2_o3mis")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_2kcao")]
+state_machine = ExtResource("3_wgp64")
+action = 2
+on_signal = "input_released"
+
 [node name="StateWatcher" parent="." instance=ExtResource("2_4osef")]
 state = ExtResource("4_sv30y")
 
@@ -46,11 +56,6 @@ on_signal = "state_entered"
 [node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_i6uqd")]
 target = NodePath("../../VBoxContainer/TabContainer/Gamepad/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/GamepadInputContainer/GamepadFocusGroup")
 on_signal = "state_entered"
-
-[node name="BackInputHandler" parent="." instance=ExtResource("5_roi3c")]
-state_machine = ExtResource("3_wgp64")
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("4_sv30y")])
-minimum_states = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1

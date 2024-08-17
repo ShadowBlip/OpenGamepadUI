@@ -1,11 +1,16 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://b4uvvjgnbxj25"]
 
 [ext_resource type="Script" path="res://core/ui/common/settings/audio_settings_menu.gd" id="1_hjnkk"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="1_x5cm4"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_73ivm"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_n36nh"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_qsi2y"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="3_pfahh"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="3_pixnq"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_r3dmc"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_sfspm"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_06jyg"]
+[ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="6_v2pqc"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_l6bmd"]
 
 [node name="AudioSettingsMenu" type="MarginContainer"]
 anchors_preset = 15
@@ -19,13 +24,29 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 script = ExtResource("1_hjnkk")
 
+[node name="InputWatcher" parent="." instance=ExtResource("2_n36nh")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_r3dmc")]
+state_machine = ExtResource("4_sfspm")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_06jyg")]
+state = ExtResource("6_v2pqc")
+
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_l6bmd")
+target = NodePath("../../VBoxContainer/FocusGroup")
+on_signal = "state_entered"
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="FocusGroup" parent="VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_73ivm")]
 current_focus = NodePath("../VolumeSlider")
-focus_stack = ExtResource("3_pfahh")
 
 [node name="AudioLabel" parent="VBoxContainer" instance=ExtResource("1_x5cm4")]
 layout_mode = 2

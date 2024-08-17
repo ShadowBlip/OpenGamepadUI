@@ -1,18 +1,18 @@
-[gd_scene load_steps=26 format=3 uid="uid://hroo3ll4inrb"]
+[gd_scene load_steps=27 format=3 uid="uid://hroo3ll4inrb"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.gd" id="1_56jo7"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_6rvrx"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_kmwe3"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_cxjne"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_l64vu"]
+[ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="4_n117t"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="5_i1kur"]
-[ext_resource type="PackedScene" uid="uid://ccd4sw84h1qbc" path="res://core/systems/input/back_input_handler.tscn" id="5_ro2hl"]
 [ext_resource type="PackedScene" uid="uid://4t4jt26o2fbr" path="res://core/ui/card_ui/navigation/system_container.tscn" id="7_xtcf0"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_5082k"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="9_6qs1m"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="10_4yppf"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="11_a0ma3"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="12_ldp5y"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="13_u3r8o"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_didkb"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="14_gr3i0"]
 [ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="15_0l0p5"]
@@ -21,6 +21,7 @@
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="16_74m7a"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="17_qgen2"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_4nxly"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="18_lj3fv"]
 [ext_resource type="PackedScene" uid="uid://bjy50kdrebgre" path="res://core/ui/card_ui/quick_bar/notifications_card.tscn" id="19_pppbi"]
 [ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/quick_bar/quick_settings_card.tscn" id="20_17ks0"]
 [ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/quick_bar/performance_card.tscn" id="21_uw510"]
@@ -36,6 +37,15 @@ anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("1_56jo7")
+
+[node name="InputWatcher" parent="." instance=ExtResource("2_kmwe3")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("4_n117t")
+action = 2
+on_signal = "input_released"
 
 [node name="StateWatcher" parent="." instance=ExtResource("2_6rvrx")]
 state = ExtResource("3_cxjne")
@@ -53,9 +63,6 @@ slide_speed = 0.15
 on_signal = "state_entered"
 slide_out_signal = "state_exited"
 on_signal = "state_entered"
-
-[node name="BackInputHandler" parent="." instance=ExtResource("5_ro2hl")]
-process_input_during = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("3_cxjne")])
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -95,6 +102,7 @@ focus_neighbor_bottom = NodePath("../../ScrollContainer/Viewport/FocusGroup")
 
 [node name="NotifyButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 texture = ExtResource("10_4yppf")
@@ -105,7 +113,7 @@ layout_mode = 2
 texture = ExtResource("11_a0ma3")
 
 [node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/HelpButton" instance=ExtResource("12_ldp5y")]
-state_machine = ExtResource("13_u3r8o")
+state_machine = ExtResource("4_n117t")
 state = ExtResource("14_gr3i0")
 on_signal = "button_up"
 
@@ -115,9 +123,14 @@ layout_mode = 2
 texture = ExtResource("15_0l0p5")
 
 [node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/GamepadButton" instance=ExtResource("12_ldp5y")]
-state_machine = ExtResource("13_u3r8o")
+state_machine = ExtResource("18_lj3fv")
 state = ExtResource("16_74m7a")
 on_signal = "player_button_up"
+
+[node name="ClearOverlay" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/GamepadButton" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("4_n117t")
+action = 6
+on_signal = "button_up"
 
 [node name="Spacer" type="Control" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer"]
 layout_mode = 2
@@ -128,8 +141,13 @@ custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 
 [node name="StateUpdater" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_ldp5y")]
-state_machine = ExtResource("13_u3r8o")
+state_machine = ExtResource("18_lj3fv")
 state = ExtResource("14_didkb")
+on_signal = "button_up"
+
+[node name="ClearOverlay" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("12_ldp5y")]
+state_machine = ExtResource("4_n117t")
+action = 6
 on_signal = "button_up"
 
 [node name="PlayingNowContainer" type="HBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]

@@ -26,7 +26,7 @@ tabs_state = ExtResource("2_4hmwr")
 
 [node name="InputWatcher" parent="." instance=ExtResource("3_l8ff2")]
 stop_propagation = true
-action = "ogui_back"
+action = "ogui_east"
 
 [node name="StateUpdater" parent="InputWatcher" instance=ExtResource("4_qje1c")]
 state_machine = ExtResource("5_nj5st")

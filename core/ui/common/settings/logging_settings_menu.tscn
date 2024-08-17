@@ -1,11 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://csor0e54svgja"]
+[gd_scene load_steps=13 format=3 uid="uid://csor0e54svgja"]
 
 [ext_resource type="Script" path="res://core/ui/common/settings/logging_settings_menu.gd" id="1_qleso"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_5va5m"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="3_qmfyc"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_w6ipu"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_86i0s"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="3_udmnv"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_hqn56"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_6uj1s"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_ufggl"]
+[ext_resource type="Resource" uid="uid://cakuo0qwrrkk8" path="res://assets/state/states/settings_logging.tres" id="6_3ewnc"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="6_ljvn8"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_2p4q3"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="7_fbxhf"]
 
 [node name="LoggingSettings" type="ScrollContainer"]
@@ -18,6 +23,23 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 script = ExtResource("1_qleso")
+
+[node name="InputWatcher" parent="." instance=ExtResource("2_w6ipu")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_86i0s")]
+state_machine = ExtResource("4_hqn56")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_ufggl")]
+state = ExtResource("6_3ewnc")
+
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_2p4q3")
+target = NodePath("../../MarginContainer/VBoxContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -37,7 +59,6 @@ size_flags_vertical = 3
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_5va5m")]
 unique_name_in_owner = true
 current_focus = NodePath("../GlobalDropdown")
-focus_stack = ExtResource("3_qmfyc")
 
 [node name="LoggingLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_udmnv")]
 layout_mode = 2

@@ -10,9 +10,9 @@ var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
 var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var overlay_state_machine := preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
+var popup_state_machine := preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 var menu_state := preload("res://assets/state/states/menu.tres") as State
-var overlay_state := preload("res://assets/state/states/overlay.tres") as State
+var popup_state := preload("res://assets/state/states/popup.tres") as State
 var first_boot_state := preload("res://assets/state/states/first_boot_menu.tres") as State
 var home_state := preload("res://assets/state/states/home.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
@@ -88,14 +88,17 @@ func _ready() -> void:
 	var on_menu_state_entered := func(_from: State):
 		menu_state_machine.refresh()
 	menu_state.state_entered.connect(on_menu_state_entered)
+	var on_menu_state_removed := func(_to: State):
+		menu_state_machine.clear_states()
+	menu_state.state_removed.connect(on_menu_state_removed)
 
-	# Whenever an overlay state is pushed, update the global state
-	var on_overlay_state_changed := func(_from: State, to: State):
+	# Whenever an popup state is pushed, update the global state
+	var on_popup_state_changed := func(_from: State, to: State):
 		if to:
-			state_machine.push_state(overlay_state)
+			state_machine.push_state(popup_state)
 		else:
-			state_machine.remove_state(overlay_state)
-	overlay_state_machine.state_changed.connect(on_overlay_state_changed)
+			state_machine.remove_state(popup_state)
+	popup_state_machine.state_changed.connect(on_popup_state_changed)
 
 	# Show/hide the overlay when we enter/exit the in-game state
 	in_game_state.state_entered.connect(_on_game_state_entered)
@@ -114,21 +117,13 @@ func _ready() -> void:
 	input_plumber.composite_device_changed.connect(on_device_changed)
 
 	# Set the theme if one was set
-	var theme_path := settings_manager.get_value("general", "theme", "") as String
-	if theme_path == "":
-		logger.debug("No theme set. Using default theme.")
-
-	var current_theme = get_theme()
-	if theme_path != "" && current_theme.resource_path != theme_path:
-		logger.debug("Setting theme to: " + theme_path)
-		var loaded_theme = load(theme_path)
-		if loaded_theme != null:
-			# TODO: This is a workaround, themes aren't properly set the first time.
-			call_deferred("set_theme", loaded_theme)
-			call_deferred("set_theme", current_theme)
-			call_deferred("set_theme", loaded_theme)
-		else:
-			logger.debug("Unable to load theme")
+	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
+	logger.debug("Setting theme to: " + theme_path)
+	var loaded_theme = load(theme_path)
+	if loaded_theme != null:
+		set_theme(loaded_theme)
+	else:
+		logger.debug("Unable to load theme")
 
 
 func _on_focus_changed(control: Control) -> void:
@@ -239,7 +234,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ogui_power"):
 		var open_power_menu := func():
 			logger.info("Power menu requested")
-			overlay_state_machine.push_state(power_state)
+			popup_state_machine.push_state(power_state)
 		power_timer.timeout.connect(open_power_menu, CONNECT_ONE_SHOT)
 		power_timer.start()
 		return

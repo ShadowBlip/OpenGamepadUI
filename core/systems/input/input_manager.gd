@@ -21,8 +21,8 @@ var audio_manager := load("res://core/global/audio_manager.tres") as AudioManage
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
 
 ## State machine to use to switch menu states in response to input events.
-var overlay_state_machine := (
-	preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
+var popup_state_machine := (
+	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 )
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
@@ -188,15 +188,15 @@ func _main_menu_input(event: InputEvent) -> void:
 		return
 
 	# Open the main menu
-	var state := overlay_state_machine.current_state()
+	var state := popup_state_machine.current_state()
 	var menu_state := main_menu_state
 
 	if state == menu_state:
-		overlay_state_machine.pop_state()
+		popup_state_machine.pop_state()
 	elif state in [quick_bar_state, osk_state]:
-		overlay_state_machine.replace_state(menu_state)
+		popup_state_machine.replace_state(menu_state)
 	else:
-		overlay_state_machine.push_state(menu_state)
+		popup_state_machine.push_state(menu_state)
 
 
 ## Handle quick bar menu events to open the quick bar menu
@@ -205,13 +205,13 @@ func _on_quick_bar_open(event: InputEvent) -> void:
 	if not event.is_pressed():
 		return
 
-	var state := overlay_state_machine.current_state()
+	var state := popup_state_machine.current_state()
 	if state == quick_bar_state:
-		overlay_state_machine.pop_state()
+		popup_state_machine.pop_state()
 	elif state in [main_menu_state, in_game_menu_state, osk_state]:
-		overlay_state_machine.replace_state(quick_bar_state)
+		popup_state_machine.replace_state(quick_bar_state)
 	else:
-		overlay_state_machine.push_state(quick_bar_state)
+		popup_state_machine.push_state(quick_bar_state)
 
 
 ## Handle OSK events for bringing up the on-screen keyboard
@@ -224,13 +224,13 @@ func _osk_input(event: InputEvent) -> void:
 	context.type = KeyboardContext.TYPE.X11
 	osk.open(context)
 
-	var state := overlay_state_machine.current_state()
+	var state := popup_state_machine.current_state()
 	if state == osk_state:
-		overlay_state_machine.pop_state()
+		popup_state_machine.pop_state()
 	elif state in [main_menu_state, in_game_menu_state, quick_bar_state]:
-		overlay_state_machine.replace_state(osk_state)
+		popup_state_machine.replace_state(osk_state)
 	else:
-		overlay_state_machine.push_state(osk_state)
+		popup_state_machine.push_state(osk_state)
 
 
 ## Handle audio input events such as mute, volume up, and volume down

@@ -39,11 +39,18 @@ var logger := Log.get_logger("RunningGameCard", Log.LEVEL.INFO)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
 	pressed.connect(_on_pressed)
 	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 	# Auto-close when visibility is lost
 	var on_visibility_changed := func():

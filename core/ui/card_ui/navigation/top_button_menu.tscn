@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://by0i08fw1fwty"]
+[gd_scene load_steps=13 format=3 uid="uid://by0i08fw1fwty"]
 
 [ext_resource type="PackedScene" uid="uid://bfiia7vnbfw3s" path="res://core/systems/state/states_watcher.tscn" id="1_onljq"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="1_te2kv"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_m8oxr"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="6_b4g8u"]
 [ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="9_74mn5"]
+[ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="9_atx4m"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_nhibw"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="11_eo1bd"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_q3ls8"]
@@ -48,7 +49,7 @@ layout_mode = 2
 texture = ExtResource("2_1q5o3")
 
 [node name="StateUpdater" parent="MarginContainer/HBoxContainer/HelpButton" instance=ExtResource("9_nhibw")]
-state_machine = ExtResource("9_74mn5")
+state_machine = ExtResource("9_atx4m")
 state = ExtResource("11_q3ls8")
 on_signal = "button_up"
 
