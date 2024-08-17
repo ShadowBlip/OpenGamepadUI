@@ -35,6 +35,9 @@ func _ready() -> void:
 
 	# Connect to state entered signals
 	library_state.state_entered.connect(_on_state_entered)
+	var on_refresh := func():
+		_on_state_entered(null)
+	library_state.refreshed.connect(on_refresh)
 	
 	# Listen for tab container changes
 	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)

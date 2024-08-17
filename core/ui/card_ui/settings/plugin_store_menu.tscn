@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3 uid="uid://cf5bdr4sh2irb"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/plugin_store_menu.gd" id="1_o3w0b"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_vfjyq"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_stwp6"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_7o5pg"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_o8kc3"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="4_moq21"]
 [ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="5_5l7jt"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="5_ghad7"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_gh7kv"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="6_oyayo"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="7_qbq53"]
-[ext_resource type="PackedScene" uid="uid://cc7a35n2pqmmf" path="res://core/ui/components/plugin_store_card.tscn" id="8_g4q4p"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_u7s1j"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_c2505"]
 
 [node name="PluginStoreMenu" type="ScrollContainer"]
@@ -22,11 +22,22 @@ horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 script = ExtResource("1_o3w0b")
 
-[node name="VisibilityManager" parent="." instance=ExtResource("2_vfjyq")]
+[node name="InputWatcher" parent="." instance=ExtResource("2_stwp6")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_o8kc3")]
 state_machine = ExtResource("3_7o5pg")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_gh7kv")]
 state = ExtResource("4_moq21")
 
-[node name="TransitionFadeIn" parent="VisibilityManager" instance=ExtResource("5_ghad7")]
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_u7s1j")
+target = NodePath("../../MarginContainer/HFlowContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="HTTPImageFetcher" type="Node" parent="."]
 script = ExtResource("5_5l7jt")
@@ -47,18 +58,5 @@ theme_override_constants/v_separation = 42
 
 [node name="FocusGroup" parent="MarginContainer/HFlowContainer" instance=ExtResource("6_oyayo")]
 unique_name_in_owner = true
-focus_stack = ExtResource("7_qbq53")
-
-[node name="PluginStoreCard" parent="MarginContainer/HFlowContainer" instance=ExtResource("8_g4q4p")]
-layout_mode = 2
-
-[node name="PluginStoreCard2" parent="MarginContainer/HFlowContainer" instance=ExtResource("8_g4q4p")]
-layout_mode = 2
-
-[node name="PluginStoreCard3" parent="MarginContainer/HFlowContainer" instance=ExtResource("8_g4q4p")]
-layout_mode = 2
-
-[node name="PluginStoreCard4" parent="MarginContainer/HFlowContainer" instance=ExtResource("8_g4q4p")]
-layout_mode = 2
 
 [node name="ScrollerJoystick" parent="." instance=ExtResource("10_c2505")]

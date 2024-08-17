@@ -1,10 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfu4edkk5dqt2"]
+[gd_scene load_steps=11 format=3 uid="uid://bfu4edkk5dqt2"]
 
 [ext_resource type="Script" path="res://core/ui/common/debug/processes_menu.gd" id="1_i5gve"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_t6r8e"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_tbk5a"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_2ttlw"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="4_1h6bm"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_10x0l"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_dva4v"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_cqojd"]
 [ext_resource type="Script" path="res://core/systems/input/focus_group.gd" id="5_nqvca"]
+[ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="6_kfvag"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_use1k"]
 
 [node name="ProcessesMenu" type="Control"]
 layout_mode = 3
@@ -14,6 +19,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_i5gve")
+
+[node name="InputWatcher" parent="." instance=ExtResource("2_tbk5a")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_10x0l")]
+state_machine = ExtResource("4_dva4v")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." instance=ExtResource("5_cqojd")]
+state = ExtResource("6_kfvag")
+
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_use1k")
+target = NodePath("../../MarginContainer/VBoxContainer/HBoxContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="RefreshTimer" type="Timer" parent="."]
 
@@ -38,7 +60,6 @@ size_flags_vertical = 3
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_right") instance=ExtResource("3_2ttlw")]
 current_focus = NodePath("../PIDInspector")
-focus_stack = ExtResource("4_1h6bm")
 focus_neighbor_right = NodePath("../MarginContainer/VBoxContainer/FocusGroup")
 
 [node name="PIDInspector" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer"]

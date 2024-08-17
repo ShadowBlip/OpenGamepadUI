@@ -3,26 +3,20 @@ extends ScrollContainer
 signal plugin_store_loaded(plugin_items: Dictionary)
 
 const plugin_store_card_scene: PackedScene = preload("res://core/ui/components/plugin_store_card.tscn")
-var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
-var plugin_store_state := preload("res://assets/state/states/settings_plugin_store.tres") as State
-var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
+var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
+var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var plugin_nodes := {}
 
-@onready var container := $%HFlowContainer
-@onready var focus_group := $%FocusGroup
-@onready var http_image := $HTTPImageFetcher
-@onready var settings_menu := $"../../../.." #verbose?
+@onready var container := $%HFlowContainer as HFlowContainer
+@onready var focus_group := $%FocusGroup as FocusGroup
+@onready var http_image := $HTTPImageFetcher as HTTPImageFetcher
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	plugin_store_loaded.connect(_on_plugin_store_loaded)
-	plugin_store_state.state_entered.connect(_on_state_entered)
-	PluginLoader.plugin_upgradable.connect(_on_plugin_upgradable)
-	load_plugin_store_items()
-
-
-func _on_state_entered(_from: State) -> void:
+	plugin_loader.plugin_upgradable.connect(_on_plugin_upgradable)
+	visibility_changed.connect(load_plugin_store_items)
 	load_plugin_store_items()
 
 
@@ -30,7 +24,7 @@ func _on_state_entered(_from: State) -> void:
 # signal with the loaded items
 func load_plugin_store_items():
 	# Fetch available plugins from the plugin store
-	var plugin_items = await PluginLoader.get_plugin_store_items()
+	var plugin_items = await plugin_loader.get_plugin_store_items()
 	plugin_store_loaded.emit(plugin_items)
 
 
@@ -89,4 +83,4 @@ func _on_plugin_upgradable(plugin_id: String, update_type: int) -> void:
 	if update_type == PluginLoader.update_type.UPDATE:
 		notify.text=("Plugin upgrade available: {0}".format([plugin_id]))
 
-	NotificationManager.show(notify)
+	notification_manager.show(notify)

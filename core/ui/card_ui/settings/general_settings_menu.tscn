@@ -1,15 +1,17 @@
-[gd_scene load_steps=21 format=3 uid="uid://dsgrw1grwef4m"]
+[gd_scene load_steps=23 format=3 uid="uid://dsgrw1grwef4m"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/general_settings_menu.gd" id="1_if7xt"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_b5gbi"]
 [ext_resource type="PackedScene" uid="uid://bnhxravpuheh2" path="res://core/systems/updater/software_updater.tscn" id="2_ogwq4"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_36sdt"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_bxo72"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="4_fyrmg"]
-[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="4_td88v"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_31ujl"]
+[ext_resource type="Script" path="res://core/systems/state/state_watcher.gd" id="5_7jxnc"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_caxj0"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="6_ghdw1"]
+[ext_resource type="Resource" uid="uid://4n3376qdy3y3" path="res://assets/state/states/settings_general.tres" id="6_vwiy7"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="7_qenel"]
+[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_sb10a"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="8_2m3jw"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="8_r15pa"]
 [ext_resource type="Texture2D" uid="uid://ckbrrln8fngno" path="res://assets/images/platform/ayaneoair-ctr_v1a_1172023.png" id="9_00g0t"]
@@ -35,12 +37,21 @@ script = ExtResource("1_if7xt")
 
 [node name="InputWatcher" parent="." instance=ExtResource("2_b5gbi")]
 stop_propagation = true
-action = "ogui_back"
+action = "ogui_east"
 
 [node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_bxo72")]
-state_machine = ExtResource("4_td88v")
-action = 5
+state_machine = ExtResource("4_31ujl")
+action = 2
 on_signal = "input_released"
+
+[node name="StateWatcher" type="Node" parent="."]
+script = ExtResource("5_7jxnc")
+state = ExtResource("6_vwiy7")
+
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("7_sb10a")
+target = NodePath("../../MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
+on_signal = "state_entered"
 
 [node name="SoftwareUpdater" parent="." instance=ExtResource("2_ogwq4")]
 
@@ -68,7 +79,7 @@ theme_override_constants/separation = 10
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../AutoUpdateToggle")
-focus_stack = ExtResource("4_fyrmg")
+wrap_focus = false
 focus_neighbor_bottom = NodePath("../../ThemeButtonContainer/FocusGroup")
 
 [node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
@@ -122,7 +133,7 @@ theme_override_constants/v_separation = 10
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/ThemeButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../ThemeDraculaButton")
-focus_stack = ExtResource("4_fyrmg")
+wrap_focus = false
 focus_neighbor_bottom = NodePath("../../VBoxContainer3/FocusGroup")
 focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
 
@@ -172,7 +183,7 @@ theme_override_constants/separation = 10
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer3" node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../ClientVersionText")
-focus_stack = ExtResource("4_fyrmg")
+wrap_focus = false
 focus_neighbor_top = NodePath("../../ThemeButtonContainer/FocusGroup")
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer3"]

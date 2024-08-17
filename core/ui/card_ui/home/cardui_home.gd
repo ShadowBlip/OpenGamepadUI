@@ -7,7 +7,7 @@ var InstallManager := preload("res://core/global/install_manager.tres")
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var LibraryManager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var overlay_state_machine := preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
+var popup_state_machine := preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 var home_state := preload("res://assets/state/states/home.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var launcher_state := preload("res://assets/state/states/game_launcher.tres") as State
@@ -107,7 +107,7 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 	# Push the main menu state when the back button is pressed
-	overlay_state_machine.push_state(main_menu_state)
+	popup_state_machine.push_state(main_menu_state)
 
 
 # When an install is queued, connect signals to show a progress bar on the library

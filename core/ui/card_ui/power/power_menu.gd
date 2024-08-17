@@ -1,7 +1,7 @@
 extends Control
 
 var state_machine := (
-	preload("res://assets/state/state_machines/overlay_state_machine.tres") as StateMachine
+	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 )
 var power_state := load("res://assets/state/states/power_menu.tres") as State
 var logger := Log.get_logger("PowerMenu")

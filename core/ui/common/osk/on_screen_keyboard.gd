@@ -28,6 +28,9 @@ var logger := Log.get_logger("OSK")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Don't run in the editor
+	if Engine.is_editor_hint():
+		return
 	if not layout:
 		logger.warn("No keyboard layout was defined")
 		return

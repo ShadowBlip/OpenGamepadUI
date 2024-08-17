@@ -15,7 +15,14 @@ signal nonchild_focused
 
 @export_category("Card")
 @export var title := "Section"
-@export var is_toggled := false
+@export var is_toggled := false:
+	set(v):
+		is_toggled = v
+		if is_toggled:
+			toggled_on.emit()
+		else:
+			toggled_off.emit()
+		toggled.emit(is_toggled)
 
 @onready var header_container := $%HeaderContainer as VBoxContainer
 @onready var label := $%SectionLabel as Label
@@ -31,16 +38,21 @@ var logger := Log.get_logger("QBCard", Log.LEVEL.INFO)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(_on_focus)
-	focus_exited.connect(_on_unfocus)
-	pressed.connect(_on_pressed)
-	theme_changed.connect(_on_theme_changed)
-	_on_theme_changed()
 	label.text = title
-	
+
 	# Do nothing if running in the editor
 	if Engine.is_editor_hint():
 		return
+
+	focus_entered.connect(_on_focus)
+	focus_exited.connect(_on_unfocus)
+	button_up.connect(_on_button_up)
+	theme_changed.connect(_on_theme_changed)
+
+	# Find the parent theme and update if required
+	var effective_theme := ThemeUtils.get_effective_theme(self)
+	if effective_theme:
+		_on_theme_changed()
 
 	# Try to find a scroll container to do smooth scrolling on expansion
 	var scroll_container := find_parent("ScrollContainer")
@@ -51,11 +63,9 @@ func _ready() -> void:
 		grower.effect_finished.connect(on_grow_finished)
 
 	# Auto-close when visibility is lost
-	var on_visibility_changed := func():
-		var grower := get_node("GrowerEffect") as GrowerEffect
-		grower.shrink()
+	var on_hidden := func():
 		is_toggled = false
-	hidden.connect(on_visibility_changed)
+	hidden.connect(on_hidden)
 
 	# Resize any children that are Control nodes
 	for child in content_container.get_children():
@@ -132,7 +142,7 @@ func _on_focus() -> void:
 	# the user has focused outside the card, and we should shrink to hide the
 	# content
 	if is_toggled:
-		_on_pressed()
+		_on_button_up()
 
 
 func _on_unfocus() -> void:
@@ -148,7 +158,7 @@ func _on_unfocus() -> void:
 	nonchild_focused.emit()
 
 
-func _on_pressed() -> void:
+func _on_button_up() -> void:
 	is_toggled = !is_toggled
 	if is_toggled:
 		toggled_on.emit()
@@ -168,3 +178,24 @@ func _gui_input(event: InputEvent) -> void:
 			pressed.emit()
 		else:
 			button_up.emit()
+
+
+func _input(event: InputEvent) -> void:
+	if not is_toggled:
+		return
+	if not event.is_action("ogui_east"):
+		return
+	if not event.is_released():
+		return
+
+	# Only process input if a child node has focus
+	#var focus_owner := get_viewport().gui_get_focus_owner()
+	#if not self.is_ancestor_of(focus_owner):
+	#	return
+
+	# Handle back input
+	is_toggled = false
+
+	# Stop the event from propagating
+	#logger.debug("Consuming input event '{action}' for node {n}".format({"action": action, "n": str(self)}))
+	get_viewport().set_input_as_handled()

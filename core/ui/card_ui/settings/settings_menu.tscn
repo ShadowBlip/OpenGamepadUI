@@ -1,11 +1,12 @@
-[gd_scene load_steps=46 format=3 uid="uid://d2jiecrd5sw4s"]
+[gd_scene load_steps=47 format=3 uid="uid://d2jiecrd5sw4s"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/settings_menu.gd" id="1_x5bjx"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_xfs0b"]
-[ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_xwevg"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="3_an6bd"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_0rio2"]
+[ext_resource type="Script" path="res://core/systems/state/state_machine_watcher.gd" id="5_wwlng"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="9_rn3rv"]
+[ext_resource type="Script" path="res://core/systems/state/state_updater.gd" id="9_xkw8n"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="10_k4kqs"]
 [ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="11_5dh5k"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="11_s3f5p"]
@@ -14,9 +15,11 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="14_obber"]
 [ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="14_t8wf4"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="15_cb33u"]
+[ext_resource type="Script" path="res://core/systems/user_interface/tab_setter.gd" id="16_l8xyu"]
 [ext_resource type="Resource" uid="uid://4n3376qdy3y3" path="res://assets/state/states/settings_general.tres" id="16_sfk74"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="18_axp35"]
 [ext_resource type="Resource" uid="uid://bfx7p4n4fhjwd" path="res://assets/state/states/settings_display.tres" id="18_ljeud"]
+[ext_resource type="Script" path="res://core/systems/user_interface/text_setter.gd" id="18_wbniw"]
 [ext_resource type="Resource" uid="uid://2efht48q7i6v" path="res://assets/state/states/settings_network.tres" id="19_l8vuu"]
 [ext_resource type="Resource" uid="uid://blcfrofi5oawd" path="res://assets/state/states/settings_library.tres" id="19_wexln"]
 [ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="20_5v03o"]
@@ -25,16 +28,14 @@
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="22_ntyf3"]
 [ext_resource type="Resource" uid="uid://cffkiat2h10ms" path="res://assets/state/states/settings_processes.tres" id="23_ilbjf"]
 [ext_resource type="Resource" uid="uid://cn236k0ajm0uw" path="res://assets/state/states/settings_disks.tres" id="24_oep0o"]
-[ext_resource type="Resource" uid="uid://0f3pirade1ok" path="res://assets/state/states/settings_windows.tres" id="24_oscnu"]
 [ext_resource type="Resource" uid="uid://cakuo0qwrrkk8" path="res://assets/state/states/settings_logging.tres" id="25_nijem"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="27_krt45"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="27_x4tym"]
 [ext_resource type="Resource" uid="uid://bcekyu20uvkxv" path="res://assets/state/states/settings_general_controller.tres" id="28_nmfnj"]
 [ext_resource type="PackedScene" uid="uid://dsgrw1grwef4m" path="res://core/ui/card_ui/settings/general_settings_menu.tscn" id="29_8hwjo"]
-[ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_grs7x"]
 [ext_resource type="PackedScene" uid="uid://521da7e2cdxd" path="res://core/ui/common/settings/display_settings_menu.tscn" id="30_22tgj"]
 [ext_resource type="PackedScene" uid="uid://cpss2bhdwm8t7" path="res://core/ui/common/settings/network_settings_menu.tscn" id="31_35x2h"]
-[ext_resource type="PackedScene" path="res://core/ui/common/settings/audio_settings_menu.tscn" id="32_dqi6v"]
+[ext_resource type="PackedScene" uid="uid://b4uvvjgnbxj25" path="res://core/ui/common/settings/audio_settings_menu.tscn" id="32_dqi6v"]
 [ext_resource type="PackedScene" uid="uid://6ygxdkvh1hib" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.tscn" id="33_a7xb2"]
 [ext_resource type="PackedScene" uid="uid://drbp6ec8646v3" path="res://core/ui/card_ui/settings/library_settings_menu.tscn" id="34_lrrl0"]
 [ext_resource type="PackedScene" uid="uid://cf5bdr4sh2irb" path="res://core/ui/card_ui/settings/plugin_store_menu.tscn" id="35_0u4bv"]
@@ -52,14 +53,7 @@ grow_begin = -10.0
 grow_end = -10.0
 vertical = true
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2j6m7"]
-resource_local_to_scene = true
-bg_color = Color(0.105882, 0.109804, 0.141176, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a60ci"]
 
 [node name="SettingsMenu" type="Control"]
 layout_mode = 3
@@ -72,7 +66,7 @@ script = ExtResource("1_x5bjx")
 
 [node name="InputWatcher" parent="." instance=ExtResource("9_rn3rv")]
 stop_propagation = true
-action = "ogui_back"
+action = "ogui_east"
 
 [node name="StateUpdater" parent="InputWatcher" instance=ExtResource("14_cid64")]
 state_machine = ExtResource("11_5dh5k")
@@ -92,9 +86,23 @@ on_signal = "state_entered"
 target = NodePath("../../MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/FocusGroup")
 on_signal = "state_entered"
 
-[node name="FocusGroupSetterRefresh" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
+[node name="RefreshFocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
 target = NodePath("../../MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/FocusGroup")
 on_signal = "state_refreshed"
+
+[node name="StateUpdater" type="Node" parent="StateWatcher"]
+script = ExtResource("9_xkw8n")
+state_machine = ExtResource("15_cb33u")
+action = 6
+on_signal = "state_removed"
+
+[node name="StateMachineWatcher" type="Node" parent="."]
+script = ExtResource("5_wwlng")
+state_machine = ExtResource("15_cb33u")
+
+[node name="FocusGroupSetter" parent="StateMachineWatcher" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
+target = NodePath("../../MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/FocusGroup")
+on_signal = "emptied"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -203,11 +211,18 @@ text = "General"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("16_sfk74")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/GeneralButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "General"
+on_signal = "focus_entered"
 
 [node name="LibraryButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -217,11 +232,19 @@ text = "Library"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("19_wexln")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LibraryButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 1
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LibraryButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LibrarySettingsMenu/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LibraryButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Library"
+on_signal = "focus_entered"
 
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -234,11 +257,19 @@ text = "Display"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("18_ljeud")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisplayButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 2
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisplayButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisplayButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Display"
+on_signal = "focus_entered"
 
 [node name="NetworkButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -248,11 +279,19 @@ text = "Network"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("19_l8vuu")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/NetworkButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/NetworkButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/NetworkButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Network"
+on_signal = "focus_entered"
 
 [node name="BluetoothButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -262,11 +301,19 @@ text = "Bluetooth"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("21_cbayw")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/BluetoothButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 4
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/BluetoothButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/BluetoothButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Bluetooth"
+on_signal = "focus_entered"
 
 [node name="AudioButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -276,11 +323,19 @@ text = "Audio"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("20_5v03o")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/AudioButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 5
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/AudioButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/AudioButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Audio"
+on_signal = "focus_entered"
 
 [node name="DisksButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -290,11 +345,19 @@ text = "Disks"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("24_oep0o")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 6
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisksMenu/MarginContainer/DriveCardContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/DisksButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Disks"
+on_signal = "focus_entered"
 
 [node name="HSeparator4" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -307,11 +370,19 @@ text = "Plugins"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("21_6lg2v")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 7
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginsButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Plugins"
+on_signal = "focus_entered"
 
 [node name="PluginStoreButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -321,11 +392,19 @@ text = "Plugin Store"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("22_ntyf3")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginStoreButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 8
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginStoreButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu/MarginContainer/HFlowContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/PluginStoreButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Plugin Store"
+on_signal = "focus_entered"
 
 [node name="HSeparator5" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer"]
 layout_mode = 2
@@ -338,24 +417,19 @@ text = "Processes"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("23_ilbjf")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ProcessesButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 9
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ProcessesButton" instance=ExtResource("18_axp35")]
-on_signal = "pressed"
-
-[node name="WindowsButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
-visible = false
-layout_mode = 2
-text = "Windows"
-
-[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/WindowsButton" instance=ExtResource("14_cid64")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("24_oscnu")
-action = 3
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ProcessesButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Processes"
 on_signal = "focus_entered"
-
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/WindowsButton" instance=ExtResource("18_axp35")]
-on_signal = "pressed"
 
 [node name="LoggingButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -365,11 +439,19 @@ text = "Logging"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("25_nijem")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LoggingButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 10
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LoggingButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/LoggingButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Logging"
+on_signal = "focus_entered"
 
 [node name="ControllerButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer" instance=ExtResource("14_obber")]
 layout_mode = 2
@@ -379,11 +461,19 @@ text = "Controllers"
 state_machine = ExtResource("15_cb33u")
 state = ExtResource("28_nmfnj")
 action = 3
+on_signal = "button_up"
+
+[node name="TabSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ControllerButton" node_paths=PackedStringArray("target")]
+script = ExtResource("16_l8xyu")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer")
+tab_number = 11
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ControllerButton" node_paths=PackedStringArray("target") instance=ExtResource("18_axp35")]
-target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralControllerSettings/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "button_up"
+[node name="TextSetter" type="Node" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/SettingButtonsContainer/ControllerButton" node_paths=PackedStringArray("target")]
+script = ExtResource("18_wbniw")
+target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer/SectionLabel")
+text = "Controllers"
+on_signal = "focus_entered"
 
 [node name="ScrollerJoystick" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer" instance=ExtResource("27_krt45")]
 
@@ -428,113 +518,55 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("29_8hwjo")]
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_a60ci")
+tabs_visible = false
+
+[node name="GeneralSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("29_8hwjo")]
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("16_sfk74")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="LibrarySettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("34_lrrl0")]
+[node name="LibrarySettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("34_lrrl0")]
 visible = false
 layout_mode = 2
 
-[node name="DisplaySettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("30_22tgj")]
+[node name="DisplaySettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("30_22tgj")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("18_ljeud")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="NetworkSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("31_35x2h")]
+[node name="NetworkSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("31_35x2h")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("19_l8vuu")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="BluetoothSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("33_a7xb2")]
+[node name="BluetoothSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("33_a7xb2")]
 visible = false
 layout_mode = 2
 
-[node name="EnableToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" index="1"]
-button_pressed = true
-
-[node name="DiscoverToggle" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" index="2"]
-button_pressed = true
-
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("21_cbayw")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="AudioSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("32_dqi6v")]
+[node name="AudioSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("32_dqi6v")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("20_5v03o")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="DisksMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_lyyu6")]
+[node name="DisksMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("40_lyyu6")]
 visible = false
 layout_mode = 2
 
-[node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_dooq8")]
+[node name="PluginSettingsMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("35_dooq8")]
 visible = false
 layout_mode = 2
 
-[node name="ExpandableCard" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu/MarginContainer/ContentContainer" index="2"]
-theme_override_styles/panel = SubResource("StyleBoxFlat_2j6m7")
-
-[node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("35_0u4bv")]
+[node name="PluginStoreMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("35_0u4bv")]
 visible = false
 layout_mode = 2
 
-[node name="ProcessesMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("36_hnokx")]
+[node name="ProcessesMenu" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("36_hnokx")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("23_ilbjf")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="LoggingSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("37_iwtxk")]
+[node name="LoggingSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("37_iwtxk")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings" instance=ExtResource("2_xwevg")]
-state_machine = ExtResource("15_cb33u")
-state = ExtResource("25_nijem")
-
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings/VisibilityManager" instance=ExtResource("29_grs7x")]
-
-[node name="GeneralControllerSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("40_uqw2r")]
+[node name="GeneralControllerSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/TabContainer" instance=ExtResource("40_uqw2r")]
 visible = false
 layout_mode = 2
-
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralSettings"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LibrarySettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisplaySettings"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/NetworkSettings"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BluetoothSettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/AudioSettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/DisksMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginSettingsMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/PluginStoreMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/ProcessesMenu"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LoggingSettings"]
-[editable path="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/GeneralControllerSettings"]
