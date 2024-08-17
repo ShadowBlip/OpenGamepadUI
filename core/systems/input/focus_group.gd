@@ -15,6 +15,8 @@ class_name FocusGroup
 @export var focus_stack: FocusStack
 ## The InputEvent that will trigger focusing a parent focus group
 @export var back_action := "ogui_east"
+## Whether or not to wrap around focus chains
+@export var wrap_focus: bool = true
 
 @export_category("Focus Group Neighbors")
 @export var focus_neighbor_bottom: FocusGroup
@@ -144,7 +146,7 @@ func _input(event: InputEvent) -> void:
 		return
 
 	# Only handle back button pressed and when the guide button is not held
-	if not event.is_action_pressed(back_action) or Input.is_action_pressed("ogui_guide"):
+	if not event.is_action_released(back_action) or Input.is_action_pressed("ogui_guide"):
 		return
 
 	# Only handle input if a focus stack is defined
@@ -421,12 +423,20 @@ func _vbox_set_focus_tree(control_children: Array[Control]) -> void:
 			child.focus_next = control_children[i + 1].get_path()
 			child.focus_neighbor_bottom = control_children[i + 1].get_path()
 		else:
-			child.focus_next = control_children[0].get_path()
-			child.focus_neighbor_bottom = control_children[0].get_path()
+			if wrap_focus:
+				child.focus_next = control_children[0].get_path()
+				child.focus_neighbor_bottom = control_children[0].get_path()
+			else:
+				child.focus_next = control_children[i].get_path()
+				child.focus_neighbor_bottom = control_children[i].get_path()
 
 		# Index -1
-		child.focus_previous = control_children[i - 1].get_path()
-		child.focus_neighbor_top = control_children[i - 1].get_path()
+		if i == 0 and not wrap_focus:
+			child.focus_previous = control_children[i].get_path()
+			child.focus_neighbor_top = control_children[i].get_path()
+		else:
+			child.focus_previous = control_children[i - 1].get_path()
+			child.focus_neighbor_top = control_children[i - 1].get_path()
 
 		# Block leaving the UI element unless B button is pressed.
 		child.focus_neighbor_left = control_children[i].get_path()
