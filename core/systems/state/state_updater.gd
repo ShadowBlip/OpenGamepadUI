@@ -24,7 +24,11 @@ enum ACTION {
 }
 
 ## The state machine instance to use for managing state changes
-@export var state_machine: StateMachine
+@export var state_machine: StateMachine:
+	set(v):
+		state_machine = v
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
 ## Signal on our parent to connect to. When this signal fires, the [StateUpdater] 
 ## will change the state machine to the given state.
 var on_signal: String
@@ -35,6 +39,9 @@ var on_signal: String
 
 
 func _ready() -> void:
+	# Don't run in the editor
+	if Engine.is_editor_hint():
+		return
 	notify_property_list_changed()
 	get_parent().connect(on_signal, _on_signal)
 
@@ -94,3 +101,9 @@ func _get_property_list():
 	)
 
 	return properties
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if not state_machine:
+		return ["No state machine configured!"]
+	return []
