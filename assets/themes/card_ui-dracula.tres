@@ -16,7 +16,7 @@
 [ext_resource type="StyleBox" uid="uid://y3qbwgrt2wai" path="res://assets/styles/dracula/settings_menu_panel.tres" id="10_rxp5w"]
 [ext_resource type="StyleBox" uid="uid://dj0ysj0o6beba" path="res://assets/styles/dracula/power_menu_panel.tres" id="10_u1qhh"]
 [ext_resource type="StyleBox" uid="uid://bifp73vg5vmau" path="res://assets/styles/dracula/plugin_store_card_panel.tres" id="11_83cpl"]
-[ext_resource type="StyleBox" uid="uid://daavpt58e7jlj" path="res://assets/styles/darksoul/quick_bar_panel.tres" id="14_fm0xr"]
+[ext_resource type="StyleBox" uid="uid://br2w1fnanqkfa" path="res://assets/styles/dracula/quick_bar_panel.tres" id="15_354e6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s2sy6"]
 bg_color = Color(0.133333, 0.137255, 0.180392, 1)
@@ -112,14 +112,14 @@ MainMenu/styles/panel = ExtResource("7_n80rp")
 Notification/base_type = &"PanelContainer"
 Notification/styles/panel = ExtResource("9_sy73e")
 Panel/styles/panel = ExtResource("2_f7nj8")
-PanelContainer/styles/panel = ExtResource("2_f7nj8")
+PanelContainer/styles/panel = ExtResource("4_wqh56")
 PluginStoreCard/base_type = &"PanelContainer"
 PluginStoreCard/styles/panel = ExtResource("11_83cpl")
 PowerMenu/base_type = &"PanelContainer"
 PowerMenu/styles/panel = ExtResource("10_u1qhh")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_4nys6")
 QuickBar/base_type = &"PanelContainer"
-QuickBar/styles/panel = ExtResource("14_fm0xr")
+QuickBar/styles/panel = ExtResource("15_354e6")
 RoundedPanel/base_type = &"PanelContainer"
 RoundedPanel/styles/panel = SubResource("StyleBoxFlat_knf7f")
 SearchBar/base_type = &"PanelContainer"
