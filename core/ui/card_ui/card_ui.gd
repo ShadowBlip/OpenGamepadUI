@@ -150,6 +150,9 @@ func _on_game_state_entered(_from: State) -> void:
 			continue
 		(child as Control).visible = false
 
+	# Clear all menu states
+	menu_state_machine.clear_states()
+
 
 ## Invoked when the in-game state is exited
 func _on_game_state_exited(to: State) -> void:
@@ -192,7 +195,7 @@ func _on_game_state_removed() -> void:
 	if not state_machine.has_state(menu_state):
 		state_machine.set_state([menu_state])
 	if not menu_state_machine.has_state(home_state):
-		state_machine.set_state([home_state])
+		menu_state_machine.set_state([home_state])
 
 
 # Sets the blur mode in gamescope
