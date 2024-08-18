@@ -428,6 +428,9 @@ func _update_mapping_elements() -> void:
 			mappings = profile.get_mappings_by_source_capability(capability)
 		else:
 			var mapping := InputPlumberMapping.from_source_capability(capability)
+			if not mapping:
+				logger.error("Failed to create Mapping from Capability", capability)
+				continue
 			var target_event = InputPlumberEvent.from_capability(capability)
 			logger.debug("Adding", capability, "to mappings as:", mapping, " with event:", target_event)
 			mapping.target_events = [target_event]
