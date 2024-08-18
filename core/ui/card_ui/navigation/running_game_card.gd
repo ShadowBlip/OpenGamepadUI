@@ -16,6 +16,8 @@ var launch_manager := load("res://core/global/launch_manager.tres") as LaunchMan
 var boxart_manager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var menu_state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var popup_state_machine := load("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
 
@@ -62,6 +64,8 @@ func _ready() -> void:
 	# Connect sub-buttons
 	var on_resume_game := func():
 		state_machine.set_state([in_game_state])
+		menu_state_machine.clear_states()
+		popup_state_machine.clear_states()
 	resume_button.pressed.connect(on_resume_game)
 	var on_exit_game := func():
 		# TODO: Handle this better
