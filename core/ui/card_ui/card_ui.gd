@@ -91,6 +91,9 @@ func _ready() -> void:
 	var on_menu_state_removed := func(_to: State):
 		menu_state_machine.clear_states()
 	menu_state.state_removed.connect(on_menu_state_removed)
+	var on_menu_states_empty := func():
+		state_machine.remove_state(menu_state)
+	menu_state_machine.emptied.connect(on_menu_states_empty)
 
 	# Whenever an popup state is pushed, update the global state
 	var on_popup_state_changed := func(_from: State, to: State):
