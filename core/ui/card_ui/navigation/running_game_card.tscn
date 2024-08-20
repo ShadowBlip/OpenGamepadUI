@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dlouq0b0bnm41"]
+[gd_scene load_steps=19 format=3 uid="uid://dlouq0b0bnm41"]
 
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="1_4m4go"]
 [ext_resource type="Script" path="res://core/ui/card_ui/navigation/running_game_card.gd" id="1_vgpef"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="4_f5kjd"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_smmwr"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="6_s452c"]
-[ext_resource type="Resource" uid="uid://bytra6gw0dr4c" path="res://core/ui/card_ui/main-menu/main_menu_focus.tres" id="6_xmlue"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="8_ixs6g"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_nyd1y"]
 [ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="13_aslkr"]
@@ -18,7 +17,7 @@
 [ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="15_p4kr0"]
 [ext_resource type="Resource" uid="uid://cv3vduo0ojk1u" path="res://assets/state/states/menu.tres" id="16_vmedb"]
 
-[sub_resource type="Image" id="Image_upl55"]
+[sub_resource type="Image" id="Image_iwm6i"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -28,7 +27,7 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_osglk"]
-image = SubResource("Image_upl55")
+image = SubResource("Image_iwm6i")
 
 [node name="RunningGameCard" type="PanelContainer"]
 anchors_preset = 10
@@ -146,7 +145,6 @@ size_flags_vertical = 3
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/ContentContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("5_smmwr")]
 unique_name_in_owner = true
 current_focus = NodePath("../ResumeButton")
-focus_stack = ExtResource("6_xmlue")
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/ContentContainer"]
 layout_mode = 2
@@ -156,10 +154,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Resume"
 
-[node name="SuspendButton" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("8_ixs6g")]
+[node name="PauseButton" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("8_ixs6g")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Suspend"
+text = "Pause"
 
 [node name="GamepadButton" parent="MarginContainer/VBoxContainer/ContentContainer" instance=ExtResource("8_ixs6g")]
 layout_mode = 2
@@ -184,3 +182,8 @@ on_signal = "button_up"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
+
+[node name="ClearOverlay" parent="MarginContainer/VBoxContainer/ContentContainer/ExitButton" instance=ExtResource("6_s452c")]
+state_machine = ExtResource("15_70rxc")
+action = 6
+on_signal = "button_up"
