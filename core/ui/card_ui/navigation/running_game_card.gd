@@ -22,13 +22,20 @@ var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
 
 @export_category("Card")
-@export var is_toggled := false
+@export var is_toggled := false:
+	set(v):
+		is_toggled = v
+		if is_toggled:
+			toggled_on.emit()
+		else:
+			toggled_off.emit()
+		toggled.emit(is_toggled)
 
 @onready var content_container := $%ContentContainer
 @onready var game_logo := $%GameLogo
 @onready var game_label := $%GameLabel
 @onready var resume_button := $%ResumeButton as CardButton
-@onready var suspend_button := $%SuspendButton as CardButton
+@onready var pause_button := $%PauseButton as CardButton
 @onready var exit_button := $%ExitButton as CardButton
 @onready var highlight_rect := $%HighlightTextureRect
 @onready var focus_group := $%FocusGroup as FocusGroup
@@ -46,7 +53,7 @@ func _ready() -> void:
 
 	focus_entered.connect(_on_focus)
 	focus_exited.connect(_on_unfocus)
-	pressed.connect(_on_pressed)
+	button_up.connect(_on_button_up)
 	theme_changed.connect(_on_theme_changed)
 
 	# Find the parent theme and update if required
@@ -68,17 +75,16 @@ func _ready() -> void:
 		popup_state_machine.clear_states()
 	resume_button.pressed.connect(on_resume_game)
 	var on_exit_game := func():
-		# TODO: Handle this better
+		# TODO: Handle "this" better?
 		launch_manager.stop(running_app)
-		state_machine.pop_state()
 	exit_button.pressed.connect(on_exit_game)
 	var on_suspend := func():
 		running_app.suspend(not running_app.is_suspended)
 		if running_app.is_suspended:
-			suspend_button.text = "Continue"
+			pause_button.text = "Unpause"
 		else:
-			suspend_button.text = "Suspend"
-	suspend_button.pressed.connect(on_suspend)
+			pause_button.text = "Pause"
+	pause_button.pressed.connect(on_suspend)
 
 
 func _on_theme_changed() -> void:
@@ -145,7 +151,7 @@ func _on_focus() -> void:
 	# the user has focused outside the card, and we should shrink to hide the
 	# content
 	if is_toggled:
-		_on_pressed()
+		_on_button_up()
 
 
 func _on_unfocus() -> void:
@@ -159,7 +165,7 @@ func _on_unfocus() -> void:
 		return
 
 
-func _on_pressed() -> void:
+func _on_button_up() -> void:
 	is_toggled = !is_toggled
 	if is_toggled:
 		toggled_on.emit()
@@ -170,9 +176,34 @@ func _on_pressed() -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	var is_valid := [event is InputEventAction, event is InputEventKey]
+	if not true in is_valid:
+		return
 	if event.is_action("ui_accept"):
 		if event.is_pressed():
 			button_down.emit()
 			pressed.emit()
 		else:
 			button_up.emit()
+
+
+func _input(event: InputEvent) -> void:
+	if not is_toggled:
+		return
+	if not event.is_action("ogui_east"):
+		return
+	if not event.is_released():
+		return
+
+	# Only process input if a child node has focus
+	#var focus_owner := get_viewport().gui_get_focus_owner()
+	#if not self.is_ancestor_of(focus_owner):
+	#	return
+
+	# Handle back input
+	is_toggled = false
+
+	# Stop the event from propagating
+	#logger.debug("Consuming input event '{action}' for node {n}".format({"action": action, "n": str(self)}))
+	get_viewport().set_input_as_handled()
+	self.grab_focus()
