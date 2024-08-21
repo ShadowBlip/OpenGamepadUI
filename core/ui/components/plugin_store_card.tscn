@@ -1,14 +1,17 @@
-[gd_scene load_steps=12 format=3 uid="uid://cc7a35n2pqmmf"]
+[gd_scene load_steps=15 format=3 uid="uid://cc7a35n2pqmmf"]
 
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_8yjid"]
 [ext_resource type="Script" path="res://core/ui/components/plugin_store_card.gd" id="1_mpwli"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_bs6e3"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="2_cg18p"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="2_wtj1w"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="3_3jc55"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_73lox"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_6yau4"]
 [ext_resource type="Texture2D" uid="uid://54ncgpi6yy3p" path="res://assets/ui/icons/download-cloud-2-fill.svg" id="4_b4p24"]
 [ext_resource type="Texture2D" uid="uid://dt1r8cyx48k2p" path="res://assets/ui/icons/upgrade.svg" id="6_dsefr"]
-[ext_resource type="Resource" uid="uid://dgi16frh3mgj8" path="res://core/ui/card_ui/settings/settings_menu_focus.tres" id="6_fo8lr"]
+[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="7_wgty6"]
+[ext_resource type="Script" path="res://core/systems/input/focus_setter.gd" id="8_kpm75"]
 
 [sub_resource type="Gradient" id="Gradient_2e33l"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
@@ -18,20 +21,39 @@ gradient = SubResource("Gradient_2e33l")
 fill = 1
 fill_to = Vector2(1, 2)
 
-[node name="PluginStoreCard" type="PanelContainer"]
-clip_children = 2
-custom_minimum_size = Vector2(340, 200)
-offset_right = 253.0
-offset_bottom = 143.0
+[node name="PluginStoreCard" type="MarginContainer"]
+custom_minimum_size = Vector2(360, 200)
+offset_right = 360.0
+offset_bottom = 200.0
 focus_mode = 2
 theme_type_variation = &"PluginStoreCard"
 script = ExtResource("1_mpwli")
 
-[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_wtj1w")]
-target = NodePath("../MarginContainer/HBoxContainer/FocusGroup")
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_bs6e3")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_bs6e3")]
+audio = "res://assets/audio/interface/select_002.ogg"
 on_signal = "pressed"
 
-[node name="HighlightTexture" type="TextureRect" parent="."]
+[node name="HighlightFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_73lox")]
+target = NodePath("../PanelContainer/HighlightTexture")
+on_signal = "focus_entered"
+fade_out_signal = "nonchild_focused"
+on_signal = "focus_entered"
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_wtj1w")]
+target = NodePath("../MarginContainer/HBoxContainer/FocusGroup")
+on_signal = "button_up"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+clip_children = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"PluginStoreCard"
+
+[node name="HighlightTexture" type="TextureRect" parent="PanelContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -100,10 +122,19 @@ size_flags_horizontal = 8
 size_flags_vertical = 8
 alignment = 2
 
+[node name="InputWatcher" type="Node" parent="MarginContainer/HBoxContainer"]
+script = ExtResource("7_wgty6")
+stop_propagation = true
+action = "ogui_east"
+
+[node name="FocusSetter" type="Node" parent="MarginContainer/HBoxContainer/InputWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("8_kpm75")
+target = NodePath("../../../..")
+on_signal = "input_released"
+
 [node name="FocusGroup" parent="MarginContainer/HBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("4_6yau4")]
 unique_name_in_owner = true
 current_focus = NodePath("../ActionButton")
-focus_stack = ExtResource("6_fo8lr")
 
 [node name="UpgradeButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_3jc55")]
 unique_name_in_owner = true
@@ -121,6 +152,3 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 texture = ExtResource("4_b4p24")
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
