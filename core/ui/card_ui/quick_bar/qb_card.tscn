@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5xnora73yd8x"]
+[gd_scene load_steps=10 format=3 uid="uid://b5xnora73yd8x"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/quick_bar/qb_card.gd" id="1_g6c8x"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_blp6j"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_2hiwt"]
 [ext_resource type="PackedScene" uid="uid://btg3dylh0tqoi" path="res://core/systems/effects/smooth_scroll_effect.tscn" id="6_hklca"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="6_qh1ai"]
+[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="8_7kulb"]
+[ext_resource type="Script" path="res://core/systems/input/focus_setter.gd" id="9_wwxqw"]
 
 [node name="QuickBarCard" type="PanelContainer"]
 anchors_preset = 10
@@ -100,3 +102,13 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="InputWatcher" type="Node" parent="MarginContainer/CardVBoxContainer/ContentContainer"]
+script = ExtResource("8_7kulb")
+stop_propagation = true
+action = "ogui_east"
+
+[node name="FocusSetter" type="Node" parent="MarginContainer/CardVBoxContainer/ContentContainer/InputWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("9_wwxqw")
+target = NodePath("../../../../..")
+on_signal = "input_released"

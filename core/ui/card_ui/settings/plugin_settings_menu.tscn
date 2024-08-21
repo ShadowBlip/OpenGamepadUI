@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://cliqk7lo4t8ao"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/plugin_settings_menu.gd" id="1_1p4dc"]
-[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_700w4"]
+[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="2_5h71d"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_a1fhd"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_q7mwh"]
 [ext_resource type="Resource" uid="uid://doxatxmp2mlty" path="res://assets/state/states/settings_plugins.tres" id="4_m0d4b"]
@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_veuxu"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_nbqrj"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5hfw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l6jww"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -31,7 +31,8 @@ follow_focus = true
 horizontal_scroll_mode = 0
 script = ExtResource("1_1p4dc")
 
-[node name="InputWatcher" parent="." instance=ExtResource("2_700w4")]
+[node name="InputWatcher" type="Node" parent="."]
+script = ExtResource("2_5h71d")
 stop_propagation = true
 action = "ogui_east"
 
@@ -71,6 +72,6 @@ horizontal_alignment = 1
 
 [node name="ExpandableCard" parent="MarginContainer/ContentContainer" instance=ExtResource("8_veuxu")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_i5hfw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_l6jww")
 
 [node name="ScrollerJoystick" parent="." instance=ExtResource("10_nbqrj")]
