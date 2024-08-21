@@ -23,7 +23,7 @@ func _ready() -> void:
 	
 	# Launch the main interface if no child pid exists
 	if child_pid < 0:
-		get_tree().change_scene_to_file("res://core/main.tscn")
+		_change_to_scene("res://core/main.tscn")
 		return
 	
 	logger.info("Supervising child process")
@@ -45,6 +45,14 @@ func _ready() -> void:
 	timer.wait_time = 2
 	timer.autostart = true
 	add_child(timer)
+
+
+# Change to the given scene
+func _change_to_scene(scene_path: String) -> void:
+	var scene := load(scene_path) as PackedScene
+	var root := get_window()
+	root.add_child.call_deferred(scene.instantiate())
+	queue_free()
 
 
 # Applies any update packs to load newer scripts and resources
