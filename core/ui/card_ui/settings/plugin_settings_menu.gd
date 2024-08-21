@@ -108,7 +108,6 @@ func _config_settings_menu(plugin_settings: Control, plugin_content_container: C
 	# Create a focus group for the plugin settings
 	var plugin_focus_group := FocusGroup.new()
 	plugin_focus_group.name = "FocusGroup"
-	plugin_focus_group.focus_stack = load("res://core/ui/card_ui/settings/settings_menu_focus.tres")
 	plugin_settings.add_child(plugin_focus_group)
 	for child in plugin_settings.get_children():
 		if not child is Control:

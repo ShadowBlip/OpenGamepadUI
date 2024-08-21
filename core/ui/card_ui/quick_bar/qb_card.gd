@@ -3,7 +3,7 @@
 extends Container
 class_name QuickBarCard
 
-# DEPRECATED
+# DEPRECATED: Change this to [ExpandableCard]
 
 signal pressed
 signal button_up
@@ -44,8 +44,10 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 
+	var on_focus_exited := func():
+		self._on_unfocus.call_deferred()
+	focus_exited.connect(on_focus_exited)
 	focus_entered.connect(_on_focus)
-	focus_exited.connect(_on_unfocus)
 	button_up.connect(_on_button_up)
 	theme_changed.connect(_on_theme_changed)
 
@@ -146,16 +148,29 @@ func _on_focus() -> void:
 
 
 func _on_unfocus() -> void:
-	# If a child focus group is focused, don't do anything. That means that
-	if not focus_group:
-		logger.warn("No focus group defined!")
+	# Emit a signal if a non-child node grabs focus
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if not self.is_ancestor_of(focus_owner):
+		nonchild_focused.emit()
+		is_toggled = false
 		return
 
-	# a child node is focused and we want the card to remain "selected"
-	if focus_group.is_in_focus_stack():
+	# If a child has focus, listen for focus changes until a non-child has focus
+	get_viewport().gui_focus_changed.connect(_on_focus_change)
+
+
+func _on_focus_change(focused: Control) -> void:
+	# Don't do anything if the focused node is a child
+	if self.is_ancestor_of(focused):
 		return
-	
+
+	# If a non-child has focus, emit a signal to indicate that this node and none
+	# of its children have focus.
 	nonchild_focused.emit()
+	is_toggled = false
+	var viewport := get_viewport()
+	if viewport.gui_focus_changed.is_connected(_on_focus_change):
+		viewport.gui_focus_changed.disconnect(_on_focus_change)
 
 
 func _on_button_up() -> void:
