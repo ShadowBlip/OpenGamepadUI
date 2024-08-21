@@ -1,26 +1,18 @@
-extends PanelContainer
+@tool
+extends Container
 
 signal pressed
 signal button_up
 signal button_down
+signal nonchild_focused
 
 const plugin_icon := preload("res://assets/ui/icons/plugin-solid.svg")
 const install_icon := preload("res://assets/ui/icons/download-cloud-2-fill.svg")
 const upgrade_icon := preload("res://assets/ui/icons/upgrade.svg")
 const delete_icon := preload("res://assets/ui/icons/round-delete-forever.svg")
 
-@export_category("Animation")
-@export var highlight_speed := 0.1
-
-@export_category("AudioSteamPlayer")
-@export_file("*.ogg") var focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-@export_file("*.ogg") var select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
-
-var NotificationManager := load("res://core/global/notification_manager.tres") as NotificationManager
-var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
-var highlight_tween: Tween
-var focus_audio_stream = load(focus_audio)
-var select_audio_stream = load(select_audio)
+var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
+var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var download_url: String
 var project_url: String
 var sha256: String
@@ -38,8 +30,13 @@ var logger: Logger
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	focus_entered.connect(_on_focus)
-	focus_exited.connect(_on_unfocus)
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
+	
+	var on_focus_exited := func():
+		self._on_unfocus.call_deferred()
+	focus_exited.connect(on_focus_exited)
 	theme_changed.connect(_on_theme_changed)
 
 	# Find the parent theme and update if required
@@ -47,10 +44,10 @@ func _ready() -> void:
 	if effective_theme:
 		_on_theme_changed()
 
-	update_button.visible = PluginLoader.is_upgradable(plugin_id)
+	update_button.visible = plugin_loader.is_upgradable(plugin_id)
 	action_button.pressed.connect(_on_install_button)
 	update_button.pressed.connect(_on_update_button)
-	PluginLoader.plugin_upgradable.connect(_on_update_available)
+	plugin_loader.plugin_upgradable.connect(_on_update_available)
 	_set_installed_state()
 
 
@@ -63,7 +60,7 @@ func _on_theme_changed() -> void:
 
 # Updates the store item based on whether it is installed
 func _set_installed_state():
-	if PluginLoader.is_installed(plugin_id):
+	if plugin_loader.is_installed(plugin_id):
 		action_button.texture = delete_icon
 		return
 	action_button.texture = install_icon
@@ -78,23 +75,23 @@ func _on_install_button() -> void:
 	var notify := Notification.new("Installing plugin " + plugin_id)
 	notify.icon = plugin_icon
 	# Handle uninstall
-	if PluginLoader.is_installed(plugin_id):
+	if plugin_loader.is_installed(plugin_id):
 		notify.text = "Plugin " + plugin_id + " uninstalled"
-		if PluginLoader.uninstall_plugin(plugin_id) != OK:
+		if plugin_loader.uninstall_plugin(plugin_id) != OK:
 			notify.text = "Plugin " + plugin_id + " failed to uninstall"
 			logger.error("Failed to uninstall plugin: " + plugin_id)
 		_set_installed_state()
-		NotificationManager.show(notify)
+		notification_manager.show(notify)
 		return
 
 	# Handle install
-	NotificationManager.show(notify)
-	PluginLoader.install_plugin(plugin_id, download_url, sha256)
-	await PluginLoader.plugin_installed
+	notification_manager.show(notify)
+	plugin_loader.install_plugin(plugin_id, download_url, sha256)
+	await plugin_loader.plugin_installed
 	_set_installed_state()
 	notify = Notification.new("Plugin " + plugin_id + " installed")
 	notify.icon = plugin_icon
-	NotificationManager.show(notify)
+	notification_manager.show(notify)
 
 
 # Shows in the store item if an update is available
@@ -111,55 +108,38 @@ func _on_update_available(name: String, type: int) -> void:
 func _on_update_button() -> void:
 	var notify := Notification.new("Updating plugin " + plugin_id)
 	notify.icon = plugin_icon
-	NotificationManager.show(notify)
-	PluginLoader.install_plugin(plugin_id, download_url, sha256)
-	await PluginLoader.plugin_installed
+	notification_manager.show(notify)
+	plugin_loader.install_plugin(plugin_id, download_url, sha256)
+	await plugin_loader.plugin_installed
 	notify = Notification.new("Plugin " + plugin_id + " updated")
 	notify.icon = plugin_icon
-	NotificationManager.show(notify)
-	PluginLoader.set_plugin_upgraded(plugin_id)
+	notification_manager.show(notify)
+	plugin_loader.set_plugin_upgraded(plugin_id)
 	update_button.visible = false
 
 
-func _on_focus() -> void:
-	_highlight()
-
-
 func _on_unfocus() -> void:
-	# If a child focus group is focused, don't do anything. That means that
-	if not focus_group:
-		logger.warn("No focus group defined!")
+	# Emit a signal if a non-child node grabs focus
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if not self.is_ancestor_of(focus_owner):
+		nonchild_focused.emit()
 		return
 
-	# a child node is focused and we want the card to remain "selected"
-	if focus_group.is_in_focus_stack():
+	# If a child has focus, listen for focus changes until a non-child has focus
+	get_viewport().gui_focus_changed.connect(_on_focus_change)
+
+
+func _on_focus_change(focused: Control) -> void:
+	# Don't do anything if the focused node is a child
+	if self.is_ancestor_of(focused):
 		return
-	
-	_unhighlight()
 
-
-func _highlight() -> void:
-	if highlight_tween:
-		highlight_tween.kill()
-	highlight_tween = get_tree().create_tween()
-	highlight_tween.tween_property(highlight, "visible", true, 0)
-	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), 0)
-	_play_sound(focus_audio_stream)
-	
-	
-func _unhighlight() -> void:
-	if highlight_tween:
-		highlight_tween.kill()
-	highlight_tween = get_tree().create_tween()
-	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 1), 0)
-	highlight_tween.tween_property(highlight, "modulate", Color(1, 1, 1, 0), highlight_speed)
-	highlight_tween.tween_property(highlight, "visible", false, 0)
-
-
-func _play_sound(stream: AudioStream) -> void:
-	var audio_player: AudioStreamPlayer = $AudioStreamPlayer
-	audio_player.stream = stream
-	audio_player.play()
+	# If a non-child has focus, emit a signal to indicate that this node and none
+	# of its children have focus.
+	nonchild_focused.emit()
+	var viewport := get_viewport()
+	if viewport.gui_focus_changed.is_connected(_on_focus_change):
+		viewport.gui_focus_changed.disconnect(_on_focus_change)
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -169,3 +149,20 @@ func _gui_input(event: InputEvent) -> void:
 			pressed.emit()
 		else:
 			button_up.emit()
+
+#
+#func _input(event: InputEvent) -> void:
+#	if not event.is_action("ogui_east"):
+#		return
+#	if not event.is_released():
+#		return
+#
+#	# Only process input if a child node has focus
+#	var focus_owner := get_viewport().gui_get_focus_owner()
+#	if not self.is_ancestor_of(focus_owner):
+#		return
+#
+#	# Stop the event from propagating
+#	#logger.debug("Consuming input event '{action}' for node {n}".format({"action": action, "n": str(self)}))
+#	get_viewport().set_input_as_handled()
+#
