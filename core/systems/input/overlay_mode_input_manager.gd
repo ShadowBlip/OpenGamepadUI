@@ -15,11 +15,15 @@ class_name OverlayInputManager
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 ## InputPlumber receives and sends DBus input events.
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
-
+## LaunchManager provides context on the currently running app so we can switch profiles
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
+## The Global State Machine
+var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 ## State machine to use to switch menu states in response to input events.
-var state_machine := (
-	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var popup_state_machine := (
+	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 )
+var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
@@ -67,7 +71,6 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
-	_trace_input_status("START")
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
@@ -88,26 +91,22 @@ func _input(event: InputEvent) -> void:
 	if event.is_action("ogui_guide_ov"):
 		_guide_input(event)
 		get_viewport().set_input_as_handled()
-		_trace_input_status("END")
 		return
 
 	# Steam chord events
 	if _send_steam_chord(event):
 		get_viewport().set_input_as_handled()
-		_trace_input_status("END")
 		return
 
 	# Quick Bar open events
 	if event.is_action("ogui_qb_ov"):
 		_quick_bar_input(event)
 		get_viewport().set_input_as_handled()
-		_trace_input_status("END")
 		return
 
 	# Handle audio events
 	if event.is_action("ogui_volume_down") or event.is_action("ogui_volume_up") or event.is_action("ogui_volume_mute"):
 		_audio_input(event)
-		_trace_input_status("END")
 		return
 
 	# Handle guide action release events
@@ -117,39 +116,37 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_released("ogui_north_ov"):
 			action_release(dbus_path, "ogui_osk_ov")
 			get_viewport().set_input_as_handled()
-			_trace_input_status("END")
 			return
 
 		# Steam QAM
 		if event.is_action_released("ogui_south_ov"):
 			action_release(dbus_path, "ogui_qam_ov")
 			get_viewport().set_input_as_handled()
-			_trace_input_status("END")
 			return
 
 		# Steam Video Capture
 		if event.is_action_released("ogui_west_ov"):
 			action_release(dbus_path, "ogui_vc_ov")
 			get_viewport().set_input_as_handled()
-			_trace_input_status("END")
 			return
 
 		# Steam Screenshot
 		if event.is_action_released("ogui_rb_ov"):
 			action_release(dbus_path, "ogui_sc_ov")
 			get_viewport().set_input_as_handled()
-			_trace_input_status("END")
 			return
 
 		# Quick Bar
 		if event.is_action_released("ogui_east_ov"):
 			action_release(dbus_path, "ogui_qb_ov")
 			get_viewport().set_input_as_handled()
-			_trace_input_status("END")
 			return
 
 	# Handle inputs when the guide button is being held
 	if Input.is_action_pressed("ogui_guide_ov"):
+		# Prevent ALL input from propagating if guide is held!
+		get_viewport().set_input_as_handled()
+
 		if event.is_pressed():
 			logger.debug("Additional action while guide wad pressed.")
 			# Steam OSK
@@ -177,7 +174,6 @@ func _input(event: InputEvent) -> void:
 				action_press(dbus_path, "ogui_guide_action")
 				action_press(dbus_path, "ogui_qb_ov")
 
-
 		elif event.is_released():
 			# Steam OSK
 			if event.is_action_released("ogui_north_ov"):
@@ -199,9 +195,6 @@ func _input(event: InputEvent) -> void:
 			if event.is_action_released("ogui_east_ov"):
 				action_release(dbus_path, "ogui_qb_ov")
 
-		# Prevent ALL input from propagating if guide is held!
-		get_viewport().set_input_as_handled()
-		_trace_input_status("END")
 		return
 
 	# Handle events in the UI while it is open.
@@ -245,8 +238,6 @@ func _input(event: InputEvent) -> void:
 		action_release(dbus_path, "ogui_tab_left")
 		get_viewport().set_input_as_handled()
 
-	_trace_input_status("END")
-
 
 ## Handle guide button events and determine whether this is a guide action
 ## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
@@ -255,6 +246,8 @@ func _guide_input(event: InputEvent) -> void:
 	# Only act on release events
 	if event.is_pressed():
 		logger.debug("Guide pressed. Waiting for additional events.")
+		# Set the gamepad profile to the global default so we can capture button events
+		launch_manager.set_gamepad_profile("")
 		return
 
 	# If a guide action combo was pressed and we released the guide button,
@@ -272,22 +265,17 @@ func _guide_input(event: InputEvent) -> void:
 
 ## Handle quick bar menu events to open the quick bar menu
 func _quick_bar_input(event: InputEvent) -> void:
-	logger.debug("Trigger Quick Bar")
-
 	# Only act on press events
 	if not event.is_pressed():
-		logger.debug("Event is up event, ignore.")
 		return
 
-	var state := state_machine.current_state()
-	logger.debug("Current State: " +str(state))
-	if state != base_state:
-		logger.debug("Close Quick Bar")
-		_close_focused_window()
-		return
-
-	logger.debug("Push Quick Bar")
-	state_machine.push_state(quick_bar_state)
+	var state := popup_state_machine.current_state()
+	if state == quick_bar_state:
+		popup_state_machine.pop_state()
+	elif state in [main_menu_state, in_game_menu_state]:
+		popup_state_machine.replace_state(quick_bar_state)
+	else:
+		popup_state_machine.push_state(quick_bar_state)
 
 
 ## Handle Steam chord events. Returns true if this was a Steam chord.
@@ -399,16 +387,5 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 
 # Closes all windows until we return to the base_state
 func _close_focused_window() -> void:
-	while state_machine.stack_length() > state_machine.minimum_states:
-		state_machine.pop_state()
-
-
-# Does a trace print of the status of all events.
-func _trace_input_status(point: String) -> void:
-	logger.trace(point +": Guide Pressed: " + str(Input.is_action_pressed("ogui_guide_ov")))
-	logger.trace(point +": Guide Used: " + str(Input.is_action_pressed("ogui_guide_action")))
-	logger.trace(point +": QAM Pressed: " + str(Input.is_action_pressed("ogui_qam_ov")))
-	logger.trace(point +": OSK Pressed: " + str(Input.is_action_pressed("ogui_osk_ov")))
-	logger.trace(point +": SC Pressed: " + str(Input.is_action_pressed("ogui_sc_ov")))
-	logger.trace(point +": VC Pressed: " + str(Input.is_action_pressed("ogui_vc_ov")))
-	logger.trace(point +": QB Pressed: " + str(Input.is_action_pressed("ogui_qb_ov")))
+	popup_state_machine.clear_states()
+	menu_state_machine.clear_states()

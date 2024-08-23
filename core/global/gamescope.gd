@@ -248,7 +248,7 @@ func get_window_pid(window_id: int, display: XWAYLAND) -> int:
 ## window was found.
 func get_window_id(pid: int, display: XWAYLAND) -> int:
 	var display_name := get_display_name(display)
-	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display_name]))
+	logger.trace("Getting Window ID for {0} on display {1}".format([pid, display_name]))
 	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return -1
@@ -270,7 +270,7 @@ func get_window_id(pid: int, display: XWAYLAND) -> int:
 func get_window_ids(pid: int, display: XWAYLAND) -> PackedInt32Array:
 	var window_ids := PackedInt32Array()
 	var display_name := get_display_name(display)
-	logger.debug("Getting Window ID for {0} on display {1}".format([pid, display_name]))
+	logger.trace("Getting Window ID for {0} on display {1}".format([pid, display_name]))
 	var xwayland := get_xwayland(display)
 	if not xwayland:
 		return window_ids

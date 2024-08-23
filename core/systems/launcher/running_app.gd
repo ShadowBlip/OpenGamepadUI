@@ -122,10 +122,10 @@ func update() -> void:
 	# Ensure that the running app has a corresponding window ID
 	var has_valid_window := false
 	if needs_window_id():
-		logger.debug("App needs a valid window id")
+		logger.trace("App needs a valid window id")
 		var id := _discover_window_id()
 		if id > 0 and window_id != id:
-			logger.debug("Setting window ID " + str(id) + " for " + launch_item.name)
+			logger.trace("Setting window ID " + str(id) + " for " + launch_item.name)
 			window_id = id
 	else:
 		has_valid_window = true
@@ -155,13 +155,13 @@ func update() -> void:
 		STATE.STOPPING: "stopping", 
 		STATE.STOPPED: "stopped"
 	}
-	logger.debug(launch_item.name + " current state: " + state_str[state])
+	logger.trace(launch_item.name + " current state: " + state_str[state])
 
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
 	# so we can kill Steam gracefully
 	if is_steam_app() and state == STATE.MISSING_WINDOW and is_ogui_managed:
-		logger.debug(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
+		logger.trace(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
 		# Don't try closing Steam immediately. Wait a few more ticks before attempting
 		# to close Steam.
 		if steam_close_tries < 4:
@@ -204,7 +204,7 @@ func get_all_window_ids() -> PackedInt32Array:
 	var window_ids := PackedInt32Array()
 	var pids := get_child_pids()
 	pids.append(pid)
-	logger.debug(app_name + " found related PIDs: " + str(pids))
+	logger.trace(app_name + " found related PIDs: " + str(pids))
 
 	for process_id in pids:
 		var windows := Gamescope.get_window_ids(process_id, display_type)
@@ -214,7 +214,7 @@ func get_all_window_ids() -> PackedInt32Array:
 			if window in window_ids:
 				continue
 			window_ids.append(window)
-	logger.debug(app_name + " found related window IDs: " + str(window_ids))
+	logger.trace(app_name + " found related window IDs: " + str(window_ids))
 
 	return window_ids
 
@@ -227,19 +227,19 @@ func is_running() -> bool:
 		return true
 
 	# If that failed, check if reaper can get the status.
-	logger.debug("Reaper pid State: " + Reaper.get_pid_state(pid))
+	logger.trace("Reaper pid State: " + Reaper.get_pid_state(pid))
 	if Reaper.get_pid_state(pid) in ["R (running)", "S (sleeping)"]:
 		return true
 
-	logger.debug("Original process not running. Checking child PID's...")
+	logger.trace("Original process not running. Checking child PID's...")
 	# If it's not running, let's check to make sure it's REALLY not running
 	# and hasn't re-parented itself
 	var children := get_child_pids()
 	if children.size() > 0:
 		var pids := Array(children)
-		logger.debug("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
+		logger.trace("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
 		return true
-	logger.debug("Process " + str(pid) + " has died and no child PID's could be found.")
+	logger.trace("Process " + str(pid) + " has died and no child PID's could be found.")
 	return false
 
 
@@ -348,18 +348,18 @@ func _ensure_app_id() -> void:
 ## Returns whether or not the window id of the running app needs to be discovered
 func needs_window_id() -> bool:
 	if window_id <= 0:
-		logger.debug(launch_item.name + " has a bad window ID: " + str(window_id))
+		logger.trace(launch_item.name + " has a bad window ID: " + str(window_id))
 		return true
 	var focusable_windows := Gamescope.get_focusable_windows()
 	if not window_id in focusable_windows:
-		logger.debug(str(window_id) + " is not in the list of focusable windows")
+		logger.trace(str(window_id) + " is not in the list of focusable windows")
 		return true
 
 	# Check if the current window ID exists in the list of open windows
 	var root_window := Gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
 	var all_windows := Gamescope.get_all_windows(root_window, Gamescope.XWAYLAND.GAME)
 	if not window_id in all_windows:
-		logger.debug(str(window_id) + " is not in the list of all windows")
+		logger.trace(str(window_id) + " is not in the list of all windows")
 		return true
 
 	# If this is a Steam app, the only acceptable window will have its STEAM_GAME
@@ -368,10 +368,10 @@ func needs_window_id() -> bool:
 		var display_type := Gamescope.get_display_type(display)
 		var steam_app_id := get_meta("steam_app_id") as int
 		if not Gamescope.has_app_id(window_id, display_type):
-			logger.debug(str(window_id) + " does not have an app ID already set by Steam")
+			logger.trace(str(window_id) + " does not have an app ID already set by Steam")
 			return true
 		if Gamescope.get_app_id(window_id) != steam_app_id:
-			logger.debug(str(window_id) + " has an app ID but it does not match " + str(steam_app_id))
+			logger.trace(str(window_id) + " has an app ID but it does not match " + str(steam_app_id))
 			return true
 
 	# Track that a window has been successfully detected at least once.
@@ -387,7 +387,7 @@ func _discover_window_id() -> int:
 	# If there's a window directly associated with the PID, return that
 	var win_id := get_window_id_from_pid()
 	if win_id > 0:
-		logger.debug("Found window ID for {0} from PID: {1}".format([launch_item.name, window_id]))
+		logger.trace("Found window ID for {0} from PID: {1}".format([launch_item.name, window_id]))
 		return win_id
 
 	# Get all windows associated with the running app
@@ -427,7 +427,7 @@ func find_steam() -> int:
 			continue
 		var process_name := pid_info["Name"] as String
 		if process_name == "steam":
-			logger.debug("Found steam PID: " + str(child_pid))
+			logger.trace("Found steam PID: " + str(child_pid))
 			return child_pid
 
 	return -1
