@@ -34,7 +34,7 @@ var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
 func _init() -> void:
 	# Tell gamescope that we're an overlay
-	if overlay_window_id < 0:
+	if overlay_window_id <= 0:
 		logger.error("Unable to detect Window ID. Overlay is not going to work!")
 	logger.debug("Found primary window id: {0}".format([overlay_window_id]))
 	_setup(overlay_window_id)
@@ -42,7 +42,7 @@ func _init() -> void:
 
 # Lets us run as an overlay in gamescope
 func _setup(window_id: int) -> void:
-	if window_id < 0:
+	if window_id <= 0:
 		logger.error("Unable to configure gamescope atoms")
 		return
 	# Pretend to be Steam

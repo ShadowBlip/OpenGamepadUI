@@ -8,6 +8,10 @@ var input_plumber := preload("res://core/systems/input/input_plumber.tres") as I
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
+var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var popup_state_machine := preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
+var menu_state := preload("res://assets/state/states/menu.tres") as State
+var popup_state := preload("res://assets/state/states/popup.tres") as State
 var quick_bar_state = preload("res://assets/state/states/quick_bar_menu.tres") as State
 var settings_state = preload("res://assets/state/states/settings.tres") as State
 var gamepad_state = preload("res://assets/state/states/gamepad_settings.tres") as State
@@ -18,8 +22,7 @@ var PID: int = OS.get_process_id()
 var args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
 var display := Gamescope.XWAYLAND.OGUI
-var game_running: bool = false
-var overlay_window_id: int
+var overlay_window_id := gamescope.get_window_id(PID, display)
 var underlay_log: FileAccess
 var underlay_process: int
 var underlay_window_id: int
@@ -31,16 +34,13 @@ var logger := Log.get_logger("Main", Log.LEVEL.INFO)
 
 ## Sets up overlay mode.
 func _init():
-
-	logger.debug("Overlay start _init")
-	# Tell gamescope that we're an overlay
-	if overlay_window_id < 0:
+	# Discover the OpenGamepadUI window ID
+	if overlay_window_id <= 0:
 		logger.error("Unable to detect Window ID. Overlay is not going to work!")
-	logger.debug("Found primary window id: {0}".format([overlay_window_id]))
+	logger.info("Found primary window id: {0}".format([overlay_window_id]))
 
 	# Back button wont close windows without this. OverlayInputManager prevents poping the last state.
 	state_machine.push_state(base_state)
-	state_machine.state_changed.connect(_on_no_state)
 
 	# Ensure LaunchManager doesn't override our custom overlay management l
 	launch_manager.should_manage_overlay = false
@@ -53,15 +53,9 @@ func _init():
 	var plugin_manager := plugin_manager_scene.instantiate()
 	add_child(plugin_manager)
 
-	# Listen for home state changes
-	base_state.state_entered.connect(_on_base_state_entered)
-	base_state.state_exited.connect(_on_base_state_exited)
-	logger.debug("Overlay finish _init")
-
 
 ## Starts the --overlay-mode session.
 func _ready() -> void:
-	logger.debug("Overlay start _ready")
 	# Workaround old versions that don't pass launch args via update pack
 	# TODO: Parse the parent PID's CLI args and use those instead.
 	if "--skip-update-pack" in cmdargs and args.size() == 0:
@@ -90,7 +84,6 @@ func _ready() -> void:
 	# Set up the session
 	logger.debug("Setup Overlay Mode")
 	_setup_overlay_mode(args)
-	launch_manager.app_switched.connect(_on_app_switched)
 
 	# Set the theme if one was set
 	logger.debug("Setup Theme")
@@ -114,10 +107,40 @@ func _ready() -> void:
 ## Finds needed PID's and global vars, Starts the user defined program as an
 ## underlay process.
 func _setup_overlay_mode(args: Array) -> void:
-	overlay_window_id = gamescope.get_window_id(PID, display)
-	for state in managed_states:
-		state.state_entered.connect(_on_window_open)
-		state.state_exited.connect(_on_window_closed)
+	# Always push the base state if we end up with an empty stack.
+	var on_states_emptied := func():
+		state_machine.push_state.call_deferred(base_state)
+	state_machine.emptied.connect(on_states_emptied)
+
+	# Whenever the menu state is refreshed, refresh the menu state machine to
+	# re-grab focus.
+	var on_menu_refreshed := func():
+		menu_state_machine.refresh()
+	menu_state.refreshed.connect(on_menu_refreshed)
+
+	# Whenever the menu state is entered, refresh the menu state machine to
+	# re-grab focus
+	var on_menu_state_entered := func(_from: State):
+		menu_state_machine.refresh()
+	menu_state.state_entered.connect(on_menu_state_entered)
+	var on_menu_state_removed := func():
+		menu_state_machine.clear_states()
+	menu_state.state_removed.connect(on_menu_state_removed)
+	var on_menu_states_empty := func():
+		state_machine.remove_state(menu_state)
+	menu_state_machine.emptied.connect(on_menu_states_empty)
+
+	# Whenever an popup state is pushed, update the global state
+	var on_popup_state_changed := func(_from: State, to: State):
+		if to:
+			state_machine.push_state(popup_state)
+		else:
+			state_machine.remove_state(popup_state)
+	popup_state_machine.state_changed.connect(on_popup_state_changed)
+
+	# Show/hide the overlay when we enter/exit the in-game state
+	base_state.state_entered.connect(_on_base_state_entered)
+	base_state.state_exited.connect(_on_base_state_exited)
 
 	# Don't crash if we're not launching another program.
 	if args == []:
@@ -129,9 +152,6 @@ func _setup_overlay_mode(args: Array) -> void:
 	else:
 		var log_path := OS.get_environment("HOME") + "/.underlay-stdout.log"
 		_start_underlay_process(args, log_path)
-
-	# Establish overlay focus in gamescope.
-	gamescope.set_overlay(overlay_window_id, 1, display)
 
 	# Remove unneeded/conflicting elements from default menues
 	var remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
@@ -218,13 +238,15 @@ func _find_underlay_window_id() -> void:
 	for window in all_windows:
 		if window == overlay_window_id:
 			continue
-		if gamescope.has_xprop(window, "STEAM_OVERLAY", display):
+		if gamescope.has_xprop(window, "STEAM_NOTIFICATION", display):
 			underlay_window_id = window
-			logger.debug("Found steam! " + str(underlay_window_id))
+			logger.info("Found steam! " + str(underlay_window_id))
+			gamescope.focused_app_updated.connect(_on_app_focus_changed)
 			break
 
 	# If we didn't find the window_id, set up a tiemr to loop back and try again.
-	if not underlay_window_id:
+	if underlay_window_id <= 0:
+		logger.debug("Unable to find steam PID. Checking again in 1 second...")
 		var underlay_window_timer := Timer.new()
 		underlay_window_timer.set_one_shot(true)
 		underlay_window_timer.set_timer_process_callback(Timer.TIMER_PROCESS_IDLE)
@@ -233,37 +255,28 @@ func _find_underlay_window_id() -> void:
 		underlay_window_timer.start()
 
 
-## Called when "quick_bar_state" is entered.
-func _on_window_open(from: State) -> void:
-	if from:
-		logger.info("Quick bar open state: " + from.name)
-	if game_running:
-		gamescope.set_overlay(overlay_window_id, 1, display)
-		gamescope.set_overlay(underlay_window_id, 0, display)
+## Called when the base state is entered.
+func _on_base_state_entered(from: State) -> void:
+	# Manage input focus
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
-
-## Called when "quick_bar_state" is exited.
-func _on_window_closed(to: State) -> void:
-	if to:
-		logger.info("Quick bar closed state: " + to.name)
-	if game_running:
-		gamescope.set_overlay(overlay_window_id, 0, display)
-		gamescope.set_overlay(underlay_window_id, 1, display)
-
-
-## Called when a RunningApp is changed to another RunningApp, or to no app.
-## Changes the overlay focus to the overlay if no game is running or to the
-## underlay process if a game is running.
-func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
-	if to == null:
-		# Establish overlay focus in gamescope.
-		gamescope.set_overlay(overlay_window_id, 1, display)
-		gamescope.set_overlay(underlay_window_id, 0, display)
-		game_running = false
-		return
+	# Manage overlay
 	gamescope.set_overlay(overlay_window_id, 0, display)
 	gamescope.set_overlay(underlay_window_id, 1, display)
-	game_running = true
+
+
+## Called when a the base state is exited.
+func _on_base_state_exited(to: State) -> void:
+	# Manage input focus
+	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
+	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
+		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+	# Manage overlay
+	gamescope.set_overlay(overlay_window_id, 1, display)
+	gamescope.set_overlay(underlay_window_id, 0, display)
 
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.
@@ -276,21 +289,16 @@ func _check_exit() -> void:
 	get_tree().quit()
 
 
-## Sets gamescope input focus to on so the user can interact with the UI
-func _on_base_state_exited(_to: State) -> void:
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
-	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+func _on_app_focus_changed(_from: int, to: int) -> void:
+	# On focus to the steam overlay, ensure the default profile is used.
+	logger.warn("Changed window focus to app ID:", to)
+	if to in [Gamescope.OVERLAY_GAME_ID, 0]:
+		launch_manager.set_gamepad_profile("")
+		return
 
-
-## Sets gamescope input focus to off so the user can interact with the game
-func _on_base_state_entered(_from: State) -> void:
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
-	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
-
-
-## Ensures there is always a state on the state stack.
-func _on_no_state(_from: State, to: State) -> void:
-	if state_machine.stack_length() == 0:
-		state_machine.push_state(base_state)
+	# On focus back to the game, ensure the game profile is set
+	var _current_app := launch_manager.get_current_app()
+	if not _current_app:
+		logger.error("Unable to set gamepad profile. Current app is NULL and we aren't focused")
+		return
+	launch_manager.set_app_gamepad_profile(_current_app)
