@@ -13,11 +13,11 @@
 [ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="7_wgty6"]
 [ext_resource type="Script" path="res://core/systems/input/focus_setter.gd" id="8_kpm75"]
 
-[sub_resource type="Gradient" id="Gradient_2e33l"]
+[sub_resource type="Gradient" id="Gradient_fhi2i"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_thoiv"]
-gradient = SubResource("Gradient_2e33l")
+gradient = SubResource("Gradient_fhi2i")
 fill = 1
 fill_to = Vector2(1, 2)
 

@@ -60,6 +60,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "1000 Gb"
 
+[node name="Control" type="Control" parent="EdgeMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="HBoxContainer" type="HBoxContainer" parent="EdgeMarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4

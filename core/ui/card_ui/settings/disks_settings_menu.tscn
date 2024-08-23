@@ -48,7 +48,7 @@ Verify your media device is plugged in and that it is not mounted to a protected
 horizontal_alignment = 1
 uppercase = true
 
-[node name="DriveCardContainer" type="HFlowContainer" parent="MarginContainer"]
+[node name="DriveCardContainer" type="VBoxContainer" parent="MarginContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

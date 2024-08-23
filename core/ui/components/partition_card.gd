@@ -41,7 +41,7 @@ func _srm_init_drive() -> void:
 	var dialog := get_tree().get_first_node_in_group("dialog") as Dialog
 	var msg := "INFO: Adding " + device_path + " as a steam path will NOT cause data loss. " + \
 		"The drive will be made available to Steam for installing games. Do you wish to continue?"
-	dialog.open(msg, "Cancel", "Continue")
+	dialog.open(init_button, msg, "Cancel", "Continue")
 	var cancel := await dialog.choice_selected as bool
 	if cancel:
 		return

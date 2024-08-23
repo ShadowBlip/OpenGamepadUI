@@ -37,11 +37,11 @@ signal choice_selected(accepted: bool)
 @export var close_on_selected := true
 
 @onready var label := $%Label as Label
-@onready var confirm_button := $%ConfirmButton as Button
-@onready var cancel_button := $%CancelButton as Button
+@onready var confirm_button := $%ConfirmButton as CardButton
+@onready var cancel_button := $%CancelButton as CardButton
 @onready var fade_effect := $%FadeEffect as Effect
 
-
+var _return_node: Control = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	confirm_button.button_up.connect(_on_selected.bind(true))
@@ -53,17 +53,20 @@ func _on_selected(accepted: bool) -> void:
 	if close_on_selected:
 		closed.emit()
 	choice_selected.emit(accepted)
+	if _return_node:
+		_return_node.grab_focus.call_deferred()
+	_return_node = null
 
 
 ## Opens the dialog box with the given settings
-func open(message: String = "", confirm_txt: String = "", cancel_txt: String = "") -> void:
+func open(return_node: Control, message: String = "", confirm_txt: String = "", cancel_txt: String = "") -> void:
 	if message != "":
 		text = message
 	if confirm_txt != "":
 		confirm_text = confirm_txt
 	if cancel_txt != "":
 		cancel_text = cancel_txt
-
+	_return_node = return_node
 	opened.emit()
 	await fade_effect.effect_finished
 	confirm_button.grab_focus.call_deferred()

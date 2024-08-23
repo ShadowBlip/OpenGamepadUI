@@ -261,6 +261,8 @@ size_flags_vertical = 0
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="OnScreenKeyboard" parent="AlwaysVisibleContent" instance=ExtResource("18_462u5")]
 visible = false
