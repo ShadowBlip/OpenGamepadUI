@@ -178,7 +178,8 @@ func _on_game_state_exited(to: State) -> void:
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
 		# Only blur if the focused GFX app is set
-		if gamescope.get_focused_app_gfx() != Gamescope.OVERLAY_GAME_ID:
+		var should_blur := settings_manager.get_value("display", "enable_overlay_blur", true) as bool
+		if should_blur and gamescope.get_focused_app_gfx() != Gamescope.OVERLAY_GAME_ID:
 			_set_blur(gamescope.BLUR_MODE.ALWAYS)
 
 	else:
