@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://521da7e2cdxd"]
+[gd_scene load_steps=13 format=3 uid="uid://521da7e2cdxd"]
 
 [ext_resource type="Script" path="res://core/ui/common/settings/display_settings_menu.gd" id="1_w4xaq"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_jrm6t"]
@@ -11,6 +11,7 @@
 [ext_resource type="Resource" uid="uid://bfx7p4n4fhjwd" path="res://assets/state/states/settings_display.tres" id="6_5275c"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="6_hgrqi"]
 [ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_tlkhc"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="11_a21ac"]
 
 [node name="DisplaySettings" type="ScrollContainer"]
 anchors_preset = 15
@@ -58,9 +59,24 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Scale"
-value = 1.2
-max_value = 5.0
+value = 1.0
+max_value = 3.0
 min_value = 0.2
-step = 0.2
+step = 0.02
+
+[node name="OverlayLabel" parent="VBoxContainer" instance=ExtResource("3_nmfgp")]
+layout_mode = 2
+text = "Overlay"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BlurToggle" parent="VBoxContainer" instance=ExtResource("11_a21ac")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Blur"
+separator_visible = false
+description = "Blur background game when overlay is open"
+button_pressed = true
 
 [node name="ScrollerJoystick" parent="." instance=ExtResource("6_hgrqi")]
