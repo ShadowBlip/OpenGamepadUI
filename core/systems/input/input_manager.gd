@@ -13,13 +13,16 @@ class_name InputManager
 
 ## Reference to the on-screen keyboard instance to open when the OSK action is
 ## pressed.
-const osk := preload("res://core/global/keyboard_instance.tres")
+var osk := load("res://core/global/keyboard_instance.tres") as KeyboardInstance
 
 ## The audio manager to use to adjust the audio when audio input events happen.
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 ## InputPlumber receives and sends DBus input events.
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
-
+## LaunchManager provides context on the currently running app so we can switch profiles
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
+## The Global State Machine
+var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 ## State machine to use to switch menu states in response to input events.
 var popup_state_machine := (
 	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
@@ -28,6 +31,7 @@ var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres")
 var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
 var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
+var popup_state := preload("res://assets/state/states/popup.tres") as State
 
 ## Map of pressed actions to prevent double inputs
 var actions_pressed := {}
@@ -135,6 +139,8 @@ func _input(event: InputEvent) -> void:
 
 	# Handle inputs when the guide button is being held
 	if Input.is_action_pressed("ogui_guide"):
+		# Prevent ALL input from propagating if guide is held!
+		get_viewport().set_input_as_handled()
 		logger.debug("Additional action while guide wad pressed.")
 		# OSK
 		if event.is_action_pressed("ogui_north"):
@@ -146,9 +152,6 @@ func _input(event: InputEvent) -> void:
 			logger.debug("Trigger QB")
 			action_press(dbus_path, "ogui_qb")
 			action_press(dbus_path, "ogui_guide_action")
-
-		# Prevent ALL input from propagating if guide is held!
-		get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("ogui_south"):
@@ -165,7 +168,9 @@ func _guide_input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 	# Only act on release events
 	if event.is_pressed():
-		logger.debug("Guide pressed. Waiting for additional events.")
+		logger.warn("Guide pressed. Waiting for additional events.")
+		# Set the gamepad profile to the global default so we can capture button events
+		launch_manager.set_gamepad_profile("")
 		return
 
 	# If a guide action combo was pressed and we released the guide button,
@@ -220,17 +225,22 @@ func _osk_input(event: InputEvent) -> void:
 	if not event.is_pressed():
 		return
 
-	var context := KeyboardContext.new()
-	context.type = KeyboardContext.TYPE.X11
-	osk.open(context)
-
 	var state := popup_state_machine.current_state()
 	if state == osk_state:
+		logger.error("POP POP MUTHAFUCKA")
+		osk.close()
 		popup_state_machine.pop_state()
-	elif state in [main_menu_state, in_game_menu_state, quick_bar_state]:
+		return
+
+	if state in [main_menu_state, in_game_menu_state, quick_bar_state]:
 		popup_state_machine.replace_state(osk_state)
 	else:
 		popup_state_machine.push_state(osk_state)
+	state_machine.push_state(popup_state)
+
+	var context := KeyboardContext.new()
+	context.type = KeyboardContext.TYPE.X11
+	osk.open(context)
 
 
 ## Handle audio input events such as mute, volume up, and volume down

@@ -10,10 +10,6 @@ func _init() -> void:
 	launch_manager._load_persist_data()
 
 
-func _ready() -> void:
-	# Set a timer that will update our state based on if anything is running.
-	var running_timer = Timer.new()
-	running_timer.timeout.connect(launch_manager._check_running)
-	running_timer.wait_time = 1
-	add_child(running_timer)
-	running_timer.start()
+# TODO: Replace this with dbus signaling. This is super shitty.
+func _process(delta) -> void:
+	launch_manager.check_running()

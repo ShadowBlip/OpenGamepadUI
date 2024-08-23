@@ -88,7 +88,7 @@ func _ready() -> void:
 	var on_menu_state_entered := func(_from: State):
 		menu_state_machine.refresh()
 	menu_state.state_entered.connect(on_menu_state_entered)
-	var on_menu_state_removed := func(_to: State):
+	var on_menu_state_removed := func():
 		menu_state_machine.clear_states()
 	menu_state.state_removed.connect(on_menu_state_removed)
 	var on_menu_states_empty := func():
@@ -166,16 +166,21 @@ func _on_game_state_exited(to: State) -> void:
 	#gamepad_manager.set_gamepads_profile(null)
 
 	# Set gamescope input focus to on so the user can interact with the UI
+	if to == popup_state:
+		var current_popup := popup_state_machine.current_state()
+		if current_popup == osk_state:
+			return
+
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# If the in-game state still exists in the stack, set the blur state.
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
-		if to != osk_state:
-			# Only blur if the focused GFX app is set
-			if gamescope.get_focused_app_gfx() != Gamescope.OVERLAY_GAME_ID:
-				_set_blur(gamescope.BLUR_MODE.ALWAYS)
+		# Only blur if the focused GFX app is set
+		if gamescope.get_focused_app_gfx() != Gamescope.OVERLAY_GAME_ID:
+			_set_blur(gamescope.BLUR_MODE.ALWAYS)
+
 	else:
 		_on_game_state_removed()
 
