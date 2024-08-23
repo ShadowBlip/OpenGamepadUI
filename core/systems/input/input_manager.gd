@@ -161,6 +161,13 @@ func _input(event: InputEvent) -> void:
 		logger.debug("South released on its own.")
 		action_release(dbus_path, "ui_accept")
 
+	if event.is_action_pressed("ogui_north"):
+		logger.debug("North pressed on its own.")
+		action_press(dbus_path, "ogui_search")
+	elif event.is_action_released("ogui_north"):
+		logger.debug("North released on its own.")
+		action_release(dbus_path, "ogui_search")
+
 
 ## Handle guide button events and determine whether this is a guide action
 ## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
