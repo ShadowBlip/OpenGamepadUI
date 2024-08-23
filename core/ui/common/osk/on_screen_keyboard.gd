@@ -10,6 +10,12 @@ signal closed
 
 const Gamescope := preload("res://core/global/gamescope.tres")
 const key_scene := preload("res://core/ui/components/button.tscn")
+
+## State machine to use to switch menu states in response to input events.
+var popup_state_machine := (
+	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
+)
+var osk_state := preload("res://assets/state/states/osk.tres") as State
 var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
 # Different states of mode shift (i.e. when the user presses "shift" or "caps")
@@ -158,8 +164,6 @@ func _nearest_neighbor(idx: int, from_size: int, to_size: int) -> int:
 # Opens the OSK with the given context. The keyboard context determines where
 # keyboard inputs should go, and how to handle submits.
 func open() -> void:
-	visible = true
-	
 	# Grab focus on the first key in the first row
 	for r in rows_container.get_children():
 		var row := r as HBoxContainer
@@ -193,7 +197,7 @@ func open() -> void:
 
 # Closes the OSK
 func close() -> void:
-	visible = false
+	popup_state_machine.remove_state(osk_state)
 	closed.emit()
 
 
@@ -212,13 +216,16 @@ func set_mode_shift(mode: MODE_SHIFT) -> void:
 
 # Handle gamepad keyboard shortcuts
 func _input(event: InputEvent) -> void:
-	if not visible:
+	if not is_visible_in_tree():
 		return
-	if event.is_action_pressed("ogui_east"):
+	# Block propagation of any input if guide is held, avoids conflicts.
+	if Input.is_action_pressed("ogui_guide"):
+		return
+	if event.is_action_released("ogui_east"):
 		instance.close()
 		get_viewport().set_input_as_handled()
 		return 
-	if event.is_action_pressed("ogui_north"):
+	if event.is_action_released("ogui_north"):
 		var key := KeyboardKeyConfig.new()
 		key.input = InputEventKey.new()
 		key.input.keycode = KEY_BACKSPACE

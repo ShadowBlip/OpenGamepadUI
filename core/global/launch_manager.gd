@@ -55,28 +55,32 @@ var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
+var _ogui_window_id: int
 var should_manage_overlay := true
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
+
 
 # Connect to Gamescope signals
 func _init() -> void:
+	# Grab the window ID of OpenGamepadUI
+	_ogui_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+
 	# When window focus changes, update the current app and gamepad profile
 	var on_focus_changed := func(from: int, to: int):
 		logger.info("Window focus changed from " + str(from) + " to: " + str(to))
 		var last_app := _current_app
-		_current_app = get_running_from_window_id(to)
-		# If there is no _current_app then another process opened this window. Find it.
-		if _current_app == null:
-			_current_app = _detect_running_app(to)
+		_current_app = _detect_running_app(to)
 
 		logger.debug("Last app: " + str(last_app) + " current_app: " + str(_current_app))
 		app_switched.emit(last_app, _current_app)
-		# If the app has a gamepad profile, set it
-		set_app_gamepad_profile(_current_app)
 
-		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
-		if not should_manage_overlay:
-			return
+		# If the app has a gamepad profile, set it
+		if to != _ogui_window_id and _current_app:
+			set_app_gamepad_profile(_current_app)
+
+			# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
+			if not should_manage_overlay:
+				return
 
 	gamescope.focused_window_updated.connect(on_focus_changed)
 
@@ -94,20 +98,19 @@ func _init() -> void:
 		if not should_manage_overlay:
 			return
 
-		logger.debug("Enabling STEAM_OVERLAY.")
-		var ogui_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
-		gamescope.set_overlay(ogui_window_id, 0)
-		
+		logger.debug("Enabling STEAM_OVERLAY atom")
+		gamescope.set_overlay(_ogui_window_id, 0)
+
 	var on_game_state_exited := func(_to: State):
 		# Set the gamepad profile to the global profile
 		set_gamepad_profile("")
-		
+
 		# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
 		if not should_manage_overlay:
 			return
 
-		logger.debug("Removing STEAM_OVERLAY.")
 		var ogui_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+		logger.debug("Disabling STEAM_OVERLAY atom")
 		gamescope.set_overlay(ogui_window_id, 1)
 
 	in_game_state.state_entered.connect(on_game_state_entered)
@@ -118,12 +121,12 @@ func _init() -> void:
 func _load_persist_data():
 	# Create the data directory if it doesn't exist
 	DirAccess.make_dir_absolute(_data_dir)
-	
+
 	# Create our data file if it doesn't exist
 	if not FileAccess.file_exists(_persist_path):
 		logger.debug("LaunchManager: Launcher data does not exist. Creating it.")
 		_save_persist_data()
-	
+
 	# Read our persistent data and parse it
 	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.READ)
 	var data: String = file.get_as_text()
@@ -168,12 +171,12 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 		env = user_env
 	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
 	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, true) as bool
-	
+
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
 		env["DISPLAY"] = gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
 	var display := env["DISPLAY"] as String
-	
+
 	# Set the OGUI ID environment variable
 	env["OGUI_ID"] = app.name
 
@@ -298,6 +301,7 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
+	logger.warn("Set gamepad profile to:", path, "With target_gamepad:", target_gamepad)
 	# Discover the currently set gamepad to properly add additional capabilities based on that gamepad
 	var profile_modifier := target_gamepad
 	if target_gamepad.is_empty():
@@ -409,7 +413,7 @@ func _remove_running(app: RunningApp):
 
 
 # Checks for running apps and updates our state accordingly
-func _check_running() -> void:
+func check_running() -> void:
 	# Find the root window
 	var root_id := gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
 	if root_id < 0:
