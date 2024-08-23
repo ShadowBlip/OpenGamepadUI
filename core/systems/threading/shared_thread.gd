@@ -55,6 +55,9 @@ func _init(options: int = Option.WATCHDOG_ENABLE as int) -> void:
 
 func _notification(what: int):
 	if what == NOTIFICATION_PREDELETE:
+		if not self:
+			logger.error("Unable to stop thread, lost reference to self... Somehow...")
+			return
 		stop()
 
 

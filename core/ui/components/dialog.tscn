@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://eqqk1uve143x"]
+[gd_scene load_steps=6 format=3 uid="uid://eqqk1uve143x"]
 
 [ext_resource type="Script" path="res://core/ui/components/dialog.gd" id="1_yqaeg"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_q0yos"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="3_hbrr5"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_vp527"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="5_clb01"]
 
 [node name="Dialog" type="Control" groups=["dialog", "popup"]]
 editor_description = "Opens a dialog choice to the user."
@@ -80,26 +81,10 @@ alignment = 1
 
 [node name="FocusGroup" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_vp527")]
 
-[node name="CancelButton" type="Button" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="CancelButton" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_clb01")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-focus_neighbor_left = NodePath("../ConfirmButton")
-focus_neighbor_top = NodePath(".")
-focus_neighbor_right = NodePath("../ConfirmButton")
-focus_neighbor_bottom = NodePath(".")
-focus_next = NodePath("../ConfirmButton")
-focus_previous = NodePath("../ConfirmButton")
-text = "No"
 
-[node name="ConfirmButton" type="Button" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="ConfirmButton" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_clb01")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-focus_neighbor_left = NodePath("../CancelButton")
-focus_neighbor_top = NodePath(".")
-focus_neighbor_right = NodePath("../CancelButton")
-focus_neighbor_bottom = NodePath(".")
-focus_next = NodePath("../CancelButton")
-focus_previous = NodePath("../CancelButton")
-text = "Yes"

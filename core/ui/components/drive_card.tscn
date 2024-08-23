@@ -1,16 +1,74 @@
-[gd_scene load_steps=6 format=3 uid="uid://caeaxm6st4a4u"]
+[gd_scene load_steps=13 format=3 uid="uid://caeaxm6st4a4u"]
 
 [ext_resource type="Script" path="res://core/ui/components/drive_card.gd" id="1_jlhco"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_kr6y1"]
 [ext_resource type="Texture2D" uid="uid://bidhj1jikg827" path="res://assets/icons/interface-hdd.svg" id="2_uf6p1"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_84mee"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_aof0c"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_c72py"]
 [ext_resource type="PackedScene" uid="uid://bkdsn268g6hx7" path="res://core/ui/components/partition_card.tscn" id="4_wgas0"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="4_y8uw0"]
+[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="5_7gf3k"]
+[ext_resource type="Script" path="res://core/systems/input/focus_setter.gd" id="6_gomk5"]
+
+[sub_resource type="Gradient" id="Gradient_2e33l"]
+colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ag6ju"]
+gradient = SubResource("Gradient_2e33l")
+fill = 1
+fill_to = Vector2(1, 2)
 
 [node name="DriveCard" type="MarginContainer"]
 custom_minimum_size = Vector2(340, 200)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 209.0
+grow_horizontal = 2
+focus_mode = 2
 script = ExtResource("1_jlhco")
 
-[node name="BackgroundPanel" type="PanelContainer" parent="."]
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_kr6y1")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_kr6y1")]
+audio = "res://assets/audio/interface/select_002.ogg"
+on_signal = "pressed"
+
+[node name="HighlightFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_aof0c")]
+target = NodePath("../PanelContainer/HighlightTexture")
+on_signal = "focus_entered"
+fade_out_signal = "nonchild_focused"
+on_signal = "focus_entered"
+
+[node name="FocusGroupSetter" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_y8uw0")]
+target = NodePath("../EdgeMarginContainer/LayoutHBox/DriveDataVBox/DriveFocusGroup")
+on_signal = "button_up"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+clip_children = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"PluginStoreCard"
+
+[node name="HighlightTexture" type="TextureRect" parent="PanelContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+texture = SubResource("GradientTexture2D_ag6ju")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="InsidePanelMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="InsidePanel" type="Panel" parent="InsidePanelMargin"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PluginStoreCard"
 
@@ -24,6 +82,16 @@ theme_override_constants/margin_bottom = 20
 [node name="LayoutHBox" type="HBoxContainer" parent="EdgeMarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
+
+[node name="InputWatcher" type="Node" parent="EdgeMarginContainer/LayoutHBox"]
+script = ExtResource("5_7gf3k")
+stop_propagation = true
+action = "ogui_east"
+
+[node name="FocusSetter" type="Node" parent="EdgeMarginContainer/LayoutHBox/InputWatcher" node_paths=PackedStringArray("target")]
+script = ExtResource("6_gomk5")
+target = NodePath("../../../..")
+on_signal = "input_released"
 
 [node name="IconTextureRect" type="TextureRect" parent="EdgeMarginContainer/LayoutHBox"]
 unique_name_in_owner = true
@@ -51,28 +119,30 @@ layout_mode = 2
 text = "1337 Gb"
 horizontal_alignment = 2
 
+[node name="Control" type="Control" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="FormatButton" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox" instance=ExtResource("3_84mee")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Format Drive"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox"]
-layout_mode = 2
-
 [node name="DriveFocusGroup" parent="EdgeMarginContainer/LayoutHBox/DriveDataVBox" node_paths=PackedStringArray("focus_neighbor_right") instance=ExtResource("3_c72py")]
 unique_name_in_owner = true
-focus_neighbor_right = NodePath("../../PartitionsVBox/PartitionsFocusGroup")
+focus_neighbor_right = NodePath("../../PartitionsHBox/PartitionsFocusGroup")
 
-[node name="PartitionsVBox" type="VBoxContainer" parent="EdgeMarginContainer/LayoutHBox"]
+[node name="PartitionsHBox" type="HBoxContainer" parent="EdgeMarginContainer/LayoutHBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 20
 
-[node name="PartitionsFocusGroup" parent="EdgeMarginContainer/LayoutHBox/PartitionsVBox" node_paths=PackedStringArray("focus_neighbor_left") instance=ExtResource("3_c72py")]
+[node name="PartitionsFocusGroup" parent="EdgeMarginContainer/LayoutHBox/PartitionsHBox" node_paths=PackedStringArray("focus_neighbor_left", "focus_neighbor_right") instance=ExtResource("3_c72py")]
 unique_name_in_owner = true
 focus_neighbor_left = NodePath("../../DriveDataVBox/DriveFocusGroup")
+focus_neighbor_right = NodePath("../../DriveDataVBox/DriveFocusGroup")
 
-[node name="PartitionCard" parent="EdgeMarginContainer/LayoutHBox/PartitionsVBox" instance=ExtResource("4_wgas0")]
+[node name="PartitionCard" parent="EdgeMarginContainer/LayoutHBox/PartitionsHBox" instance=ExtResource("4_wgas0")]
 layout_mode = 2

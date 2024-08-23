@@ -7,7 +7,7 @@ const drive_card_scene: PackedScene = preload("res://core/ui/components/drive_ca
 
 var logger := Log.get_logger("DisksMenu", Log.LEVEL.INFO)
 
-@onready var container: HFlowContainer = $%DriveCardContainer
+@onready var container: VBoxContainer = $%DriveCardContainer
 @onready var focus_group: FocusGroup = $%FocusGroup
 @onready var no_drive_label: Label = $%NoDisksLabel
 
@@ -42,6 +42,12 @@ func _on_drives_updated(devices: Array[BlockDevice]) -> void:
 	# Poplulate drives
 	var last_focus: FocusGroup
 	for drive in devices:
+		var drive_type = drive.dbus_path.trim_prefix(steam_disks.BLOCK_PREFIX)
+
+		# Ignore loop devices
+		if drive_type.contains("loop"):
+			continue
+
 		# Create Drive Card
 		var drive_card := drive_card_scene.instantiate()
 		container.add_child(drive_card)
