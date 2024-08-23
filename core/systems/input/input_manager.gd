@@ -302,8 +302,12 @@ func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> voi
 			action = "ogui_osk"
 		"ui_r1":
 			action = "ogui_tab_right"
+		"ui_r2":
+			action = "ogui_right_trigger"
 		"ui_l1":
 			action = "ogui_tab_left"
+		"ui_l2":
+			action = "ogui_left_trigger"
 
 	if pressed:
 		action_press(dbus_path, action)
