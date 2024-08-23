@@ -148,8 +148,10 @@ func _on_focus() -> void:
 
 
 func _on_unfocus() -> void:
-	# Emit a signal if a non-child node grabs focus
+	# Get the new focus owner
 	var focus_owner := get_viewport().gui_get_focus_owner()
+
+	# Emit a signal if a non-child node grabs focus
 	if not self.is_ancestor_of(focus_owner):
 		nonchild_focused.emit()
 		is_toggled = false
@@ -163,6 +165,15 @@ func _on_focus_change(focused: Control) -> void:
 	# Don't do anything if the focused node is a child
 	if self.is_ancestor_of(focused):
 		return
+
+	# If the focus owner is a child of an on-screen keyboard, don't do anything
+	# so the card remains open.
+	var virtual_keyboards := get_tree().get_nodes_in_group("osk")
+	for kb in virtual_keyboards:
+		if not kb:
+			continue
+		if kb.is_ancestor_of(focused):
+			return
 
 	# If a non-child has focus, emit a signal to indicate that this node and none
 	# of its children have focus.
