@@ -55,16 +55,13 @@ var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var _ogui_window_id: int
+var _ogui_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 var should_manage_overlay := true
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 
 
 # Connect to Gamescope signals
 func _init() -> void:
-	# Grab the window ID of OpenGamepadUI
-	_ogui_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
-
 	# When window focus changes, update the current app and gamepad profile
 	var on_focus_changed := func(from: int, to: int):
 		logger.info("Window focus changed from " + str(from) + " to: " + str(to))
@@ -109,9 +106,8 @@ func _init() -> void:
 		if not should_manage_overlay:
 			return
 
-		var ogui_window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 		logger.debug("Disabling STEAM_OVERLAY atom")
-		gamescope.set_overlay(ogui_window_id, 1)
+		gamescope.set_overlay(_ogui_window_id, 1)
 
 	in_game_state.state_entered.connect(on_game_state_entered)
 	in_game_state.state_exited.connect(on_game_state_exited)
@@ -301,7 +297,6 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
-	logger.warn("Set gamepad profile to:", path, "With target_gamepad:", target_gamepad)
 	# Discover the currently set gamepad to properly add additional capabilities based on that gamepad
 	var profile_modifier := target_gamepad
 	if target_gamepad.is_empty():
@@ -313,7 +308,7 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 		var profile_path := settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
 		if not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
 			profile_path = InputPlumber.DEFAULT_GLOBAL_PROFILE
-		logger.debug("Loading global gamepad profile: " + profile_path)
+		logger.info("Loading global gamepad profile: " + profile_path)
 
 		for gamepad in input_plumber.composite_devices:
 			gamepad.target_modify_profile(profile_path, profile_modifier)
@@ -326,12 +321,12 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 						target_devices.append("touchpad")
 					_:
 						logger.debug(target_gamepad, "needs no additional target devices.")
-				logger.debug("Setting target devices to: ", target_devices)
+				logger.info("Setting target devices to: ", target_devices)
 				gamepad.set_target_devices(target_devices)
 
 		return
 
-	logger.debug("Loading gamepad profile: " + path)
+	logger.info("Loading gamepad profile: " + path)
 	if not FileAccess.file_exists(path):
 		logger.warn("Gamepad profile not found: " + path)
 		return
@@ -354,7 +349,7 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 					target_devices.append("touchpad")
 				_:
 					logger.debug(target_gamepad, "needs no additional target devices.")
-			logger.debug("Setting target devices to: ", target_devices)
+			logger.info("Setting target devices to: ", target_devices)
 			gamepad.set_target_devices(target_devices)
 
 	var notify := Notification.new("Using gamepad profile: " + profile.name)

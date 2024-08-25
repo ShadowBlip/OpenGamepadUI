@@ -176,7 +176,9 @@ func _guide_input(event: InputEvent) -> void:
 	# Only act on release events
 	if event.is_pressed():
 		logger.warn("Guide pressed. Waiting for additional events.")
-		# Set the gamepad profile to the global default so we can capture button events
+		# Set the gamepad profile to the global default so we can capture button events.
+		# This ensures that we use the global profile and not the game's input profile for
+		# processing guide button combos and navigating the menu.
 		launch_manager.set_gamepad_profile("")
 		return
 
@@ -201,14 +203,13 @@ func _main_menu_input(event: InputEvent) -> void:
 
 	# Open the main menu
 	var state := popup_state_machine.current_state()
-	var menu_state := main_menu_state
 
-	if state == menu_state:
+	if state == main_menu_state:
 		popup_state_machine.pop_state()
 	elif state in [quick_bar_state, osk_state]:
-		popup_state_machine.replace_state(menu_state)
+		popup_state_machine.replace_state(main_menu_state)
 	else:
-		popup_state_machine.push_state(menu_state)
+		popup_state_machine.push_state(main_menu_state)
 
 
 ## Handle quick bar menu events to open the quick bar menu
@@ -234,7 +235,6 @@ func _osk_input(event: InputEvent) -> void:
 
 	var state := popup_state_machine.current_state()
 	if state == osk_state:
-		logger.error("POP POP MUTHAFUCKA")
 		osk.close()
 		popup_state_machine.pop_state()
 		return
