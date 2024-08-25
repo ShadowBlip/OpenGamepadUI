@@ -396,9 +396,10 @@ $(CACHE_DIR)/libiio:
 	tar xvf $(CACHE_DIR)/libiio.tar -C $(CACHE_DIR)/libiio
 
 
+LIBSERIALPORT_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libserialport-0.1.1-5-x86_64.pkg.tar.zst
 $(CACHE_DIR)/libserialport:
 	rm -rf $(CACHE_DIR)/libserialport*
-	wget https://archlinux.org/packages/extra/x86_64/libserialport/download/ \
+	wget $(LIBSERIALPORT_URL) \
 	  -O $(CACHE_DIR)/libserialport.tar.zst
 	zstd -d $(CACHE_DIR)/libserialport.tar.zst
 	mkdir -p $(CACHE_DIR)/libserialport
