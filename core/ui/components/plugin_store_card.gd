@@ -33,7 +33,7 @@ func _ready() -> void:
 	# Do nothing if running in the editor
 	if Engine.is_editor_hint():
 		return
-	
+
 	var on_focus_exited := func():
 		self._on_unfocus.call_deferred()
 	focus_exited.connect(on_focus_exited)
