@@ -150,6 +150,13 @@ $(IMPORT_DIR): $(ALL_ADDONS)
 	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 	touch $(IMPORT_DIR)
 
+.PHONY: force-import
+force-import: $(ALL_ADDONS)
+	@echo "Force importing project assets. This will take some time..."
+	command -v $(GODOT) > /dev/null 2>&1
+	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+
 .PHONY: addons
 addons: $(ALL_ADDONS) ## Build GDExtension addons
 $(ALL_ADDONS) &: $(ALL_ADDON_FILES)
