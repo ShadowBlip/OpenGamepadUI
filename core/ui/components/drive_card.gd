@@ -77,7 +77,7 @@ func _srm_format_drive() -> void:
 	var dialog := get_tree().get_first_node_in_group("dialog") as Dialog
 	var msg := "WARNING: All data on " + device_path + " device will be wiped. " + \
 		"This action cannot be undone. Do you wish to continue?"
-	dialog.open(self, msg, "Cancel", "Continue Format")
+	dialog.open(format_button, msg, "Cancel", "Continue Format")
 	var cancel := await dialog.choice_selected as bool
 	if cancel:
 		return

@@ -11,6 +11,7 @@ class_name FocusGroup
 @export_category("Focus Control")
 ## The current focus of the focus group
 @export var current_focus: Control
+## DEPRECATED: Use [InputWatcher] nodes with [FocusSetter] to handle back input.
 ## Menus with multiple levels of focus groups can be part of a chain of focus
 @export var focus_stack: FocusStack
 ## The InputEvent that will trigger focusing a parent focus group
@@ -423,6 +424,7 @@ func _vbox_set_focus_tree(control_children: Array[Control]) -> void:
 			child.focus_next = control_children[i + 1].get_path()
 			child.focus_neighbor_bottom = control_children[i + 1].get_path()
 		else:
+			# If wrap focus is enabled, then link focus of the last node to the first node.
 			if wrap_focus:
 				child.focus_next = control_children[0].get_path()
 				child.focus_neighbor_bottom = control_children[0].get_path()

@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://o0equu1tyr4s" path="res://core/ui/components/expandable_card.tscn" id="8_veuxu"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_nbqrj"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l6jww"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xcwv0"]
 resource_local_to_scene = true
 bg_color = Color(0.105882, 0.109804, 0.141176, 1)
 border_blend = true
@@ -72,6 +72,6 @@ horizontal_alignment = 1
 
 [node name="ExpandableCard" parent="MarginContainer/ContentContainer" instance=ExtResource("8_veuxu")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_l6jww")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xcwv0")
 
 [node name="ScrollerJoystick" parent="." instance=ExtResource("10_nbqrj")]

@@ -246,7 +246,9 @@ func _guide_input(event: InputEvent) -> void:
 	# Only act on release events
 	if event.is_pressed():
 		logger.debug("Guide pressed. Waiting for additional events.")
-		# Set the gamepad profile to the global default so we can capture button events
+		# Set the gamepad profile to the global default so we can capture button events.
+		# This ensures that we use the global profile and not the game's input profile for
+		# processing guide button combos and navigating the menu.
 		launch_manager.set_gamepad_profile("")
 		return
 

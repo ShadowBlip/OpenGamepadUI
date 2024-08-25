@@ -679,7 +679,7 @@ func _save_profile() -> void:
 	if running_app:
 		if running_app.launch_item.name != library_item.name:
 			pass
-		logger.warn("Reloading gamepad profile for running game")
+		logger.debug("Reloading gamepad profile for running game")
 		launch_manager.set_gamepad_profile(path)
 
 

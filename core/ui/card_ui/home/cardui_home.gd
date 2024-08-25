@@ -20,13 +20,13 @@ var recent_apps: Array
 var tween: Tween
 var logger := Log.get_logger("HomeMenu", Log.LEVEL.INFO)
 
-@onready var container: HBoxContainer = $%CardContainer
-@onready var banner: TextureRect = $%BannerTexture
+@onready var container := $%CardContainer as HBoxContainer
+@onready var banner := $%BannerTexture as TextureRect
 @onready var library_banner := $%LibraryBanner as Control
-@onready var player: AnimationPlayer = $%AnimationPlayer
-@onready var scroll_container: ScrollContainer = $%ScrollContainer
-@onready var library_deck: LibraryDeck = $%LibraryDeck
-@onready var end_spacer := $%EndSpacer
+@onready var player := $%AnimationPlayer as AnimationPlayer
+@onready var scroll_container := $%ScrollContainer as ScrollContainer
+@onready var library_deck := $%LibraryDeck as LibraryDeck
+@onready var end_spacer := $%EndSpacer as Control
 
 
 # Called when the node enters the scene tree for the first time.

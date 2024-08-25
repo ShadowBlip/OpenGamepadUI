@@ -149,20 +149,3 @@ func _gui_input(event: InputEvent) -> void:
 			pressed.emit()
 		else:
 			button_up.emit()
-
-#
-#func _input(event: InputEvent) -> void:
-#	if not event.is_action("ogui_east"):
-#		return
-#	if not event.is_released():
-#		return
-#
-#	# Only process input if a child node has focus
-#	var focus_owner := get_viewport().gui_get_focus_owner()
-#	if not self.is_ancestor_of(focus_owner):
-#		return
-#
-#	# Stop the event from propagating
-#	#logger.debug("Consuming input event '{action}' for node {n}".format({"action": action, "n": str(self)}))
-#	get_viewport().set_input_as_handled()
-#
