@@ -39,6 +39,7 @@ func remove_overlay(overlay: OverlayProvider) -> void:
 		return
 	if overlay in get_children():
 		remove_child(overlay)
+		overlay.queue_free()
 	overlays.erase(overlay.provider_id)
 
 

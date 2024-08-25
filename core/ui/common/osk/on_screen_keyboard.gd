@@ -50,6 +50,7 @@ func populate_keyboard() -> void:
 	# Clear the current layout
 	for child in rows_container.get_children():
 		rows_container.remove_child(child)
+		child.queue_free()
 	
 	# Populate the keyboard keys based on the given layout
 	var idx := 0

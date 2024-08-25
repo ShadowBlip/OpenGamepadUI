@@ -386,9 +386,10 @@ $(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
 		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber.tar.gz
 
 
+LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libiio-0.25-3-x86_64.pkg.tar.zst
 $(CACHE_DIR)/libiio:
 	rm -rf $(CACHE_DIR)/libiio*
-	wget https://archlinux.org/packages/extra/x86_64/libiio/download/ \
+	wget $(LIBIIO_URL) \
 		-O $(CACHE_DIR)/libiio.tar.zst
 	zstd -d $(CACHE_DIR)/libiio.tar.zst
 	mkdir -p $(CACHE_DIR)/libiio
