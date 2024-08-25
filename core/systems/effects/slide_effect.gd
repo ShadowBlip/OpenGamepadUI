@@ -22,6 +22,9 @@ var slide_out_signal: String
 
 func _ready() -> void:
 	notify_property_list_changed()
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
 	if slide_out_signal != "":
 		get_parent().connect(slide_out_signal, _on_out_signal)
 

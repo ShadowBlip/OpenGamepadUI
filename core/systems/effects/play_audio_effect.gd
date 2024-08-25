@@ -11,6 +11,9 @@ var stream = load(audio)
 
 
 func _ready() -> void:
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
 	var on_finished := func():
 		effect_finished.emit()
 	audio_player.finished.connect(on_finished)

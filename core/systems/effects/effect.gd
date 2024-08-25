@@ -23,6 +23,9 @@ func _init() -> void:
 
 func _on_ready() -> void:
 	notify_property_list_changed()
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
 	if on_signal != "":
 		get_parent().connect(on_signal, _on_signal)
 

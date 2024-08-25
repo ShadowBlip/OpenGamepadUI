@@ -24,6 +24,9 @@ func _ready() -> void:
 		orig_shadow_size = panel_style.get("shadow_size")
 		orig_shadow_color = panel_style.get("shadow_color")
 	notify_property_list_changed()
+	# Do nothing if running in the editor
+	if Engine.is_editor_hint():
+		return
 	if lower_signal != "":
 		get_parent().connect(lower_signal, _on_lower_signal)
 

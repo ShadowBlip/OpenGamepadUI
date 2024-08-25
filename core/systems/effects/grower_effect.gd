@@ -29,12 +29,11 @@ var shrink_signal: String
 
 func _ready() -> void:
 	notify_property_list_changed()
-	if shrink_signal != "":
-		get_parent().connect(shrink_signal, _on_shrink_signal)
-
 	# Do nothing if running in the editor
 	if Engine.is_editor_hint():
 		return
+	if shrink_signal != "":
+		get_parent().connect(shrink_signal, _on_shrink_signal)
 
 
 func _on_signal() -> void:
