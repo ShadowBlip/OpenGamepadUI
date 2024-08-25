@@ -3,7 +3,7 @@ extends MarginContainer
 var state_machine := load("res://assets/state/state_machines/first_boot_state_machine.tres") as StateMachine
 var next_state := load("res://assets/state/states/first_boot_finished.tres") as State
 var plugin_setup_state := load("res://assets/state/states/first_boot_plugin_setup.tres") as State
-var PluginLoader := load("res://core/global/plugin_loader.tres") as PluginLoader
+var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 var visibility_manager_scene := load("res://core/systems/state/visibility_manager.tscn") as PackedScene
 
 var plugin_state_machine := StateMachine.new()
@@ -65,7 +65,7 @@ func _add_plugin_menu(plugin_id: String, menu: Control) -> State:
 	state.name = plugin_id
 	
 	# Get the plugin metadata
-	var meta := PluginLoader.get_plugin_meta(plugin_id)
+	var meta := plugin_loader.get_plugin_meta(plugin_id)
 	var plugin_name := meta["plugin.name"] as String
 	
 	# Add a visibility manager to the menu using the new state
@@ -105,9 +105,9 @@ func _add_plugin_menu(plugin_id: String, menu: Control) -> State:
 ## the plugin ID to the settings menu. E.g. {"steam": <Control>}
 func get_plugin_setup_menus() -> Dictionary:
 	var menus := {}
-	for plugin_id in PluginLoader.get_loaded_plugins():
+	for plugin_id in plugin_loader.get_loaded_plugins():
 		# Get the settings menu from the plugin if it exists
-		var plugin := PluginLoader.get_plugin(plugin_id)
+		var plugin := plugin_loader.get_plugin(plugin_id)
 		if not plugin:
 			continue
 		var plugin_settings := plugin.get_settings_menu()

@@ -1,9 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://cx0pugv62qwkw"]
+[gd_scene load_steps=15 format=3 uid="uid://cx0pugv62qwkw"]
 
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_k5enj"]
 [ext_resource type="Script" path="res://core/ui/card_ui/ootbe/plugin_setup.gd" id="1_q8rl5"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_akyvd"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_x2suo"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="3_frsar"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_o3j5s"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="4_bqgae"]
 [ext_resource type="Resource" uid="uid://j1csnsnb672v" path="res://assets/state/states/first_boot_plugin_setup.tres" id="4_jqk8c"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_t7ff7"]
@@ -28,6 +30,16 @@ grow_vertical = 2
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_right = 100
 script = ExtResource("1_q8rl5")
+
+[node name="InputWatcher" parent="." instance=ExtResource("2_x2suo")]
+stop_propagation = true
+process_input_mode = 1
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_o3j5s")]
+state_machine = ExtResource("8_se3gk")
+action = 2
+on_signal = "input_released"
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_akyvd")]
 state_machine = ExtResource("8_se3gk")

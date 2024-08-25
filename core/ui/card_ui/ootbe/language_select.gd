@@ -20,7 +20,7 @@ func _ready() -> void:
 		var state_updater := state_updater_scene.instantiate() as StateUpdater
 		state_updater.state_machine = load("res://assets/state/state_machines/first_boot_state_machine.tres")
 		state_updater.state = load("res://assets/state/states/first_boot_network.tres")
-		state_updater.action = state_updater.ACTION.REPLACE
+		state_updater.action = state_updater.ACTION.PUSH
 		state_updater.on_signal = "button_up"
 		
 		# Create the button and set the language name

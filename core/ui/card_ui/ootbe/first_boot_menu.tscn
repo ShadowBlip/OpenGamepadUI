@@ -23,11 +23,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_37dam")
 
-[node name="StateUpdater" parent="." instance=ExtResource("2_ikevm")]
-state_machine = ExtResource("3_0m4gw")
-state = ExtResource("4_pe1rt")
-on_signal = "ready"
-
 [node name="StateWatcher" parent="." instance=ExtResource("5_ipx1n")]
 state = ExtResource("3_yp1h6")
 
@@ -35,6 +30,11 @@ state = ExtResource("3_yp1h6")
 target = NodePath("../..")
 on_signal = "state_entered"
 fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="StateUpdater" parent="StateWatcher" instance=ExtResource("2_ikevm")]
+state_machine = ExtResource("3_0m4gw")
+state = ExtResource("4_pe1rt")
 on_signal = "state_entered"
 
 [node name="ContentContainer" type="MarginContainer" parent="."]

@@ -68,6 +68,12 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="InputWatcher" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu" index="0"]
+process_input_mode = 1
+
+[node name="StateUpdater" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu/InputWatcher" index="0"]
+state_machine = ExtResource("2_8r7jx")
+
 [node name="FocusGroup" parent="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu/MarginContainer/HFlowContainer" index="0" node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top")]
 focus_neighbor_bottom = NodePath("../../../../FocusGroup")
 focus_neighbor_top = NodePath("../../../../FocusGroup")
@@ -82,7 +88,6 @@ click_focuses = false
 [node name="StateUpdater" parent="HBoxContainer/MarginContainer/VBoxContainer/NextButton" instance=ExtResource("8_7mmqh")]
 state_machine = ExtResource("2_8r7jx")
 state = ExtResource("11_83y3o")
-action = 2
 on_signal = "button_up"
 
 [editable path="HBoxContainer/MarginContainer/VBoxContainer/PluginStoreMenu"]

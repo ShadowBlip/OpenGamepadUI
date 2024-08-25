@@ -135,6 +135,7 @@ mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
 [node name="CardUIHome" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("6_12lhu")]
+visible = false
 layout_mode = 2
 
 [node name="GameLaunchMenu" parent="MenuContent/AboveContextBarContainer/AboveContextBarMargin" instance=ExtResource("9_m34in")]

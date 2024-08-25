@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://lbf0ycha2pav"]
+[gd_scene load_steps=16 format=3 uid="uid://lbf0ycha2pav"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/ootbe/finished_menu.gd" id="1_ugtes"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_ffrvf"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_oaqfm"]
 [ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="3_q8b04"]
 [ext_resource type="Resource" uid="uid://nap8yimxtnpm" path="res://assets/state/states/first_boot_finished.tres" id="4_v76vv"]
@@ -11,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="8_n7pwn"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="9_e5vxk"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="11_gl4s4"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="12_js4mn"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="12_enml1"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="13_8jjwv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_qw5vb"]
@@ -26,6 +27,15 @@ grow_vertical = 2
 theme_override_constants/margin_left = 100
 theme_override_constants/margin_right = 100
 script = ExtResource("1_ugtes")
+
+[node name="InputWatcher" parent="." instance=ExtResource("2_ffrvf")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("11_gl4s4")]
+state_machine = ExtResource("3_q8b04")
+action = 2
+on_signal = "input_released"
 
 [node name="VisibilityManager" parent="." instance=ExtResource("2_oaqfm")]
 state_machine = ExtResource("3_q8b04")
@@ -81,7 +91,7 @@ text = "Start playing"
 click_focuses = false
 
 [node name="StateUpdater" parent="HBoxContainer/VBoxContainer2/NextButton" instance=ExtResource("11_gl4s4")]
-state_machine = ExtResource("12_js4mn")
+state_machine = ExtResource("12_enml1")
 state = ExtResource("13_8jjwv")
-action = 2
+action = 3
 on_signal = "button_up"
