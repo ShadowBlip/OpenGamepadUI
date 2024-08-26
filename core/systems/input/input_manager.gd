@@ -18,7 +18,7 @@ var osk := load("res://core/global/keyboard_instance.tres") as KeyboardInstance
 ## The audio manager to use to adjust the audio when audio input events happen.
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 ## InputPlumber receives and sends DBus input events.
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 ## LaunchManager provides context on the currently running app so we can switch profiles
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 ## The Global State Machine
@@ -45,7 +45,7 @@ func _ready() -> void:
 	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
 
-	for device in input_plumber.composite_devices:
+	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
 
@@ -270,9 +270,9 @@ func _audio_input(event: InputEvent) -> void:
 		return
 
 
-func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
-		for target in device.dbus_targets:
-			logger.debug("Adding watch for " + device.name + " " + target.name)
+func _watch_dbus_device(device: CompositeDevice) -> void:
+		for target in device.dbus_devices:
+			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))
 			target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))

@@ -15,12 +15,12 @@ EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
-ALL_ADDONS := ./addons/dbus/bin/libdbus.linux.template_$(BUILD_TYPE).x86_64.so ./addons/linuxthread/bin/liblinuxthread.linux.template_$(BUILD_TYPE).x86_64.so ./addons/pty/bin/libpty.linux.template_$(BUILD_TYPE).x86_64.so ./addons/unixsock/bin/libunixsock.linux.template_$(BUILD_TYPE).x86_64.so ./addons/xlib/bin/libxlib.linux.template_$(BUILD_TYPE).x86_64.so
-ALL_ADDON_FILES := $(shell find ./addons -regex  '.*\(\.cpp\|\.h\|\.hpp\)$$')
+ALL_EXTENSIONS := ./addons/core/bin/libopengamepadui-core.linux.template_$(BUILD_TYPE).x86_64.so
+ALL_EXTENSION_FILES := $(shell find ./extensions/ -regex  '.*\(\.rs|\.toml\|\.lock\)$$')
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
 ALL_RESOURCES := $(shell find ./ -regex  '.*\(\.tres\|\.svg\|\.png\)$$')
-PROJECT_FILES := $(ALL_ADDONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES)
+PROJECT_FILES := $(ALL_EXTENSIONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES)
 
 # Docker image variables
 IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-builder
@@ -144,24 +144,24 @@ build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadu
 
 .PHONY: import
 import: $(IMPORT_DIR) ## Import project assets
-$(IMPORT_DIR): $(ALL_ADDONS)
+$(IMPORT_DIR): $(ALL_EXTENSIONS)
 	@echo "Importing project assets. This will take some time..."
 	command -v $(GODOT) > /dev/null 2>&1
 	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 	touch $(IMPORT_DIR)
 
 .PHONY: force-import
-force-import: $(ALL_ADDONS)
+force-import: $(ALL_EXTENSIONS)
 	@echo "Force importing project assets. This will take some time..."
 	command -v $(GODOT) > /dev/null 2>&1
 	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 
-.PHONY: addons
-addons: $(ALL_ADDONS) ## Build GDExtension addons
-$(ALL_ADDONS) &: $(ALL_ADDON_FILES)
-	@echo "Building native GDExtension addons..."
-	cd ./gdext && $(MAKE) build
+.PHONY: extensions
+extensions: $(ALL_EXTENSIONS) ## Build native extensions
+$(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
+	@echo "Building native extensions..."
+	cd ./extensions/core && $(MAKE) build
 
 .PHONY: edit
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
@@ -174,7 +174,7 @@ clean: ## Remove build artifacts
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
 	rm -rf $(IMPORT_DIR)
-	cd ./gdext && $(MAKE) clean
+	cd ./extensions/core && $(MAKE) clean
 
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

@@ -1,32 +1,33 @@
 extends GutTest
 
-var bluetooth := load("res://core/systems/bluetooth/bluetooth_manager.tres") as BluetoothManager
+var bluetooth := load("res://core/systems/bluetooth/bluetooth_manager.tres") as BluezInstance
 
 
 func before_all() -> void:
-	if not bluetooth.supports_bluetooth():
+	if not bluetooth.is_running():
 		@warning_ignore("unsafe_method_access")
 		gut.p("Bluetooth is not supported")
 		return
 
 
 func test_get_adapter() -> void:
-	if not bluetooth.supports_bluetooth():
+	if not bluetooth.is_running():
 		pass_test("Bluetooth not supported, skipping")
 		return
-	var adapter := bluetooth.get_adapter()
-	if not adapter:
+	var adapters := bluetooth.get_adapters()
+	if adapters.is_empty():
 		pass_test("No bluetooth adapter found, skipping")
 	pass_test("Skipping")
 
 
 func test_discovery() -> void:
-	if not bluetooth.supports_bluetooth():
+	if not bluetooth.is_running():
 		pass_test("Bluetooth not supported, skipping")
 		return
-	var adapter := bluetooth.get_adapter()
-	if not adapter:
+	var adapters := bluetooth.get_adapters()
+	if adapters.is_empty():
 		pass_test("No bluetooth adapter found, skipping")
+	var adapter := adapters[0] as BluetoothAdapter
 
 	adapter.start_discovery()
 	await wait_seconds(3, "waiting for discovery")

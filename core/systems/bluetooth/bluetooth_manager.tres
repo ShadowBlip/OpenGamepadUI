@@ -1,6 +1,3 @@
-[gd_resource type="Resource" script_class="BluetoothManager" load_steps=2 format=3 uid="uid://cyra53o28hppt"]
-
-[ext_resource type="Script" path="res://core/systems/bluetooth/bluetooth_manager.gd" id="1_q2n5i"]
+[gd_resource type="BluezInstance" format=3 uid="uid://peeajgfcx2fw"]
 
 [resource]
-script = ExtResource("1_q2n5i")

@@ -5,7 +5,7 @@ class_name RunningApp
 ##
 ## RunningApp contains details and methods around running applications
 
-const Gamescope := preload("res://core/global/gamescope.tres")
+const gamescope := preload("res://core/systems/gamescope/gamescope.tres")
 
 
 ## Emitted when all child processes of the app are no longer running
@@ -187,27 +187,35 @@ func suspend(enable: bool) -> void:
 func get_window_title(win_id: int) -> String:
 	if not win_id in window_ids:
 		return ""
-	return Gamescope.get_window_name(win_id)
+	var xwayland := gamescope.get_xwayland_by_name(display)
+	if not xwayland:
+		return ""
+	return xwayland.get_window_name(win_id)
 
 
 ## Attempt to discover the window ID from the PID of the given application
 func get_window_id_from_pid() -> int:
-	var display_type := Gamescope.get_display_type(display)
-	return Gamescope.get_window_id(pid, display_type)
+	var xwayland := gamescope.get_xwayland_by_name(display)
+	if not xwayland:
+		return -1
+	var windows := xwayland.get_windows_for_pid(pid)
+	if windows.is_empty():
+		return -1
+	return windows[0]
 
 
 ## Attempt to discover all window IDs from the PID of the given application and
 ## the PIDs of all processes in the same process group.
 func get_all_window_ids() -> PackedInt32Array:
 	var app_name := launch_item.name
-	var display_type := Gamescope.get_display_type(display)
 	var window_ids := PackedInt32Array()
 	var pids := get_child_pids()
+	var xwayland := gamescope.get_xwayland_by_name(display)
 	pids.append(pid)
 	logger.trace(app_name + " found related PIDs: " + str(pids))
 
 	for process_id in pids:
-		var windows := Gamescope.get_window_ids(process_id, display_type)
+		var windows := xwayland.get_windows_for_pid(process_id)
 		for window in windows:
 			if window < 0:
 				continue
@@ -287,7 +295,10 @@ func can_focus() -> bool:
 func is_focused() -> bool:
 	if not can_focus():
 		return false
-	var focused_window := Gamescope.get_focused_window()
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	if not xwayland_primary:
+		return false
+	var focused_window := xwayland_primary.focused_window
 	return window_id == focused_window or focused_window in window_ids
 
 
@@ -295,7 +306,10 @@ func is_focused() -> bool:
 func grab_focus() -> void:
 	if not can_focus():
 		return
-	Gamescope.set_baselayer_window(window_id)
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	if not xwayland_primary:
+		return
+	xwayland_primary.set_baselayer_window(window_id)
 	focused = true
 
 
@@ -305,9 +319,14 @@ func switch_window(win_id: int, focus: bool = true) -> int:
 	# Error if the window does not belong to the running app
 	if not win_id in window_ids:
 		return ERR_DOES_NOT_EXIST
-	
+
+	# Get the primary XWayland instance
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	if not xwayland_primary:
+		return ERR_UNAVAILABLE
+
 	# Check if this app is a focusable window.
-	if not win_id in Gamescope.get_focusable_windows():
+	if not win_id in xwayland_primary.focusable_windows:
 		return ERR_UNAVAILABLE
 	
 	# Update the window ID and optionally grab focus
@@ -332,6 +351,11 @@ func _ensure_app_id() -> void:
 	if is_steam_app() or not is_ogui_managed:
 		return
 
+	# Get the xwayland instance this app is running on
+	var xwayland := gamescope.get_xwayland_by_name(display)
+	if not xwayland:
+		return
+
 	# Get all windows associated with the running app
 	var possible_windows := window_ids.duplicate()
 
@@ -339,25 +363,32 @@ func _ensure_app_id() -> void:
 	# gamescope will make these windows available as focusable windows.
 	var app_name := launch_item.name
 	for window in possible_windows:
-		var display_type := Gamescope.get_display_type(display)
-		if Gamescope.has_app_id(window, display_type):
+		if xwayland.has_app_id(window):
 			continue
-		Gamescope.set_app_id(window, window, display_type)
+		xwayland.set_app_id(window, window)
 
 
 ## Returns whether or not the window id of the running app needs to be discovered
 func needs_window_id() -> bool:
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	if not xwayland_primary:
+		return false
+
 	if window_id <= 0:
 		logger.trace(launch_item.name + " has a bad window ID: " + str(window_id))
 		return true
-	var focusable_windows := Gamescope.get_focusable_windows()
+	var focusable_windows := xwayland_primary.focusable_windows
 	if not window_id in focusable_windows:
 		logger.trace(str(window_id) + " is not in the list of focusable windows")
 		return true
 
+	var xwayland := gamescope.get_xwayland_by_name(display)
+	if not xwayland:
+		return false
+
 	# Check if the current window ID exists in the list of open windows
-	var root_window := Gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
-	var all_windows := Gamescope.get_all_windows(root_window, Gamescope.XWAYLAND.GAME)
+	var root_window := xwayland.root_window_id
+	var all_windows := xwayland.get_all_windows(root_window)
 	if not window_id in all_windows:
 		logger.trace(str(window_id) + " is not in the list of all windows")
 		return true
@@ -365,12 +396,11 @@ func needs_window_id() -> bool:
 	# If this is a Steam app, the only acceptable window will have its STEAM_GAME
 	# property set.
 	if is_steam_app():
-		var display_type := Gamescope.get_display_type(display)
 		var steam_app_id := get_meta("steam_app_id") as int
-		if not Gamescope.has_app_id(window_id, display_type):
+		if not xwayland.has_app_id(window_id):
 			logger.trace(str(window_id) + " does not have an app ID already set by Steam")
 			return true
-		if Gamescope.get_app_id(window_id) != steam_app_id:
+		if xwayland.get_app_id(window_id) != steam_app_id:
 			logger.trace(str(window_id) + " has an app ID but it does not match " + str(steam_app_id))
 			return true
 
@@ -392,9 +422,14 @@ func _discover_window_id() -> int:
 
 	# Get all windows associated with the running app
 	var possible_windows := window_ids.duplicate()
-	
+
+	# Get the primary XWayland instance
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	if not xwayland_primary:
+		return -1
+
 	# Look for the app window in the list of focusable windows
-	var focusable := Gamescope.get_focusable_windows()
+	var focusable := xwayland_primary.focusable_windows
 	for window in possible_windows:
 		if window in focusable:
 			return window

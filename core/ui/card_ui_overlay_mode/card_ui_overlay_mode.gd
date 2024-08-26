@@ -4,7 +4,7 @@ var platform := preload("res://core/global/platform.tres") as Platform
 var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
-var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 )
@@ -160,15 +160,15 @@ func _setup_overlay_mode(args: Array) -> void:
 	_remove_children(settings_remove_list, settings_menu)
 
 	# Setup inputplumber to receive guide presses.
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 	input_plumber.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 
 	# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
-	var on_device_changed := func(device: InputPlumber.CompositeDevice):
-		var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
+	var on_device_changed := func(device: CompositeDevice):
+		var intercept_mode := input_plumber.intercept_mode
 		logger.debug("Setting intercept mode to: " + str(intercept_mode))
-		input_plumber.set_intercept_mode_single(intercept_mode, device)
-		input_plumber.set_intercept_activation_single(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2", device)
+		device.intercept_mode = intercept_mode
+		device.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 	input_plumber.composite_device_changed.connect(on_device_changed)
 
 
@@ -258,7 +258,7 @@ func _find_underlay_window_id() -> void:
 ## Called when the base state is entered.
 func _on_base_state_entered(from: State) -> void:
 	# Manage input focus
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
@@ -270,7 +270,7 @@ func _on_base_state_entered(from: State) -> void:
 ## Called when a the base state is exited.
 func _on_base_state_exited(to: State) -> void:
 	# Manage input focus
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
 	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 

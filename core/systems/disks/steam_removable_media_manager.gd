@@ -1,7 +1,7 @@
 extends Resource
 class_name SteamRemovableMediaManager
 
-var udisks2 := load("res://core/systems/disks/udisks2.tres") as UDisks2
+var udisks2 := load("res://core/systems/disks/disk_manager.tres") as UDisks2Instance
 
 var logger := Log.get_logger("SteamRemovableMediaManager", Log.LEVEL.INFO)
 
@@ -26,7 +26,7 @@ var trim_capable: bool = false
 
 
 func _init() -> void:
-	if not udisks2.supports_disk_management():
+	if not udisks2.is_running():
 		return
 
 	# Check the required system files exist for steam_removable_media

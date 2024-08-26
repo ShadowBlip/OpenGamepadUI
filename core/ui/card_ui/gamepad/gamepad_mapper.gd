@@ -72,7 +72,7 @@ func _ready() -> void:
 func _on_state_entered(_from: State) -> void:
 	var texture := change_input_state.get_meta("texture") as Texture2D
 	var mapping := change_input_state.get_meta("mappings") as InputPlumberMapping
-	var gamepad := change_input_state.get_meta("gamepad") as InputPlumber.CompositeDevice
+	var gamepad := change_input_state.get_meta("gamepad") as CompositeDevice
 	var gamepad_type := change_input_state.get_meta("gamepad_type") as String
 	var gamepad_icons_type := change_input_state.get_meta("gamepad_type_icon_map") as String
 	

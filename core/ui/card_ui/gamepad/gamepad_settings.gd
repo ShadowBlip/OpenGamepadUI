@@ -12,13 +12,13 @@ var notification_manager := load("res://core/global/notification_manager.tres") 
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var global_state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var state_machine := load("res://assets/state/state_machines/gamepad_settings_state_machine.tres") as StateMachine
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 var button_scene := load("res://core/ui/components/card_mapping_button.tscn") as PackedScene
 var container_scene := load("res://core/ui/components/card_mapping_button_group.tscn") as PackedScene
 var expandable_scene := load("res://core/ui/card_ui/quick_bar/qb_card.tscn") as PackedScene
 
-var gamepad: InputPlumber.CompositeDevice
+var gamepad: CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
@@ -73,7 +73,7 @@ func _ready() -> void:
 	# Load the default profile
 	var profile_path = settings_manager.get_value("input", "gamepad_profile", "")
 	profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "")
-	for gamepad in input_plumber.composite_devices:
+	for gamepad in input_plumber.get_composite_devices():
 			_set_gamepad_profile(gamepad, profile_path)
 
 	# Grab focus when the mapper exits
@@ -85,7 +85,7 @@ func _ready() -> void:
 
 	# Ensure new devices are set to the correct profile when added
 	input_plumber.composite_device_added.connect(_set_gamepad_profile)
-	input_plumber.composite_device_changed.connect(_set_gamepad_profile)
+	#input_plumber.composite_device_changed.connect(_set_gamepad_profile) #TODO: fixme
 
 
 ## Called when the gamepad settings state is entered
@@ -114,7 +114,7 @@ func _on_state_entered(_from: State) -> void:
 	var dbus_path := gamepad_state.get_meta("dbus_path") as String
 	
 	# Find the composite device to configure
-	for device: InputPlumber.CompositeDevice in input_plumber.composite_devices:
+	for device: CompositeDevice in input_plumber.composite_devices:
 		if device.dbus_path == dbus_path:
 			gamepad = device
 			break
@@ -196,7 +196,7 @@ func _on_state_exited(_to: State) -> void:
 
 
 ## Populates the button mappings for the given gamepad
-func populate_mappings_for(gamepad: InputPlumber.CompositeDevice) -> void:
+func populate_mappings_for(gamepad: CompositeDevice) -> void:
 	var gamepad_name := gamepad.name
 	var capabilities := gamepad.capabilities
 	
@@ -595,7 +595,7 @@ func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> 
 
 
 #  Set the given profile for the given composte device.
-func _set_gamepad_profile(gamepad: InputPlumber.CompositeDevice, profile_path: String = "") -> void:
+func _set_gamepad_profile(gamepad: CompositeDevice, profile_path: String = "") -> void:
 	if profile_path == "":
 		if gamepad_state.has_meta("item"):
 			library_item = gamepad_state.get_meta("item") as LibraryItem
@@ -612,7 +612,7 @@ func _set_gamepad_profile(gamepad: InputPlumber.CompositeDevice, profile_path: S
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
 
 	logger.debug("Setting " + gamepad.name + " to profile: " + profile_path)
-	gamepad.target_modify_profile(profile_path, profile_gamepad)
+	#gamepad.target_modify_profile(profile_path, profile_gamepad) #TODO: fixme
 
 	# Set the target gamepad if one was specified
 	if not profile_gamepad.is_empty():

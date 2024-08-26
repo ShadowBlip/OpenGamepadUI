@@ -1,23 +1,29 @@
-[gd_scene load_steps=38 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=44 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="2_600i0"]
 [ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
 [ext_resource type="Script" path="res://core/systems/input/input_icon_processor.gd" id="3_y116l"]
+[ext_resource type="Script" path="res://core/systems/gamescope/gamescope.gd" id="4_ksi1t"]
 [ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
+[ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="5_wmkau"]
 [ext_resource type="PackedScene" uid="uid://o70x5igrlq30" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
 [ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="8_hyc1j"]
 [ext_resource type="PackedScene" uid="uid://bcdk1lj6enq3l" path="res://core/ui/card_ui/launch/game_launch_menu.tscn" id="9_m34in"]
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="10_1ruvi"]
 [ext_resource type="PackedScene" uid="uid://d4bmkauhrlhq0" path="res://core/ui/card_ui/navigation/search_bar_menu.tscn" id="10_7bl6b"]
 [ext_resource type="PackedScene" uid="uid://58qlqqbh58im" path="res://core/ui/card_ui/launch/game_settings.tscn" id="10_7cj6o"]
+[ext_resource type="Script" path="res://core/systems/power/power_manager.gd" id="10_opsp8"]
 [ext_resource type="PackedScene" uid="uid://uqkwpeq7f1o" path="res://core/ui/card_ui/library/library_menu.tscn" id="10_uqodp"]
+[ext_resource type="UPowerInstance" uid="uid://pgiv8yxro3n8" path="res://core/systems/power/power_manager.tres" id="11_nk5v7"]
 [ext_resource type="PackedScene" uid="uid://by0i08fw1fwty" path="res://core/ui/card_ui/navigation/top_button_menu.tscn" id="11_x7ns7"]
 [ext_resource type="PackedScene" uid="uid://cd2p3lu01aric" path="res://core/ui/card_ui/navigation/context_bar_menu.tscn" id="12_bstc8"]
 [ext_resource type="PackedScene" uid="uid://jfacx7uys32r" path="res://core/ui/card_ui/main-menu/main_menu.tscn" id="13_46tck"]
 [ext_resource type="PackedScene" uid="uid://cwarv58ju0sow" path="res://core/ui/card_ui/gamepad/gamepad_settings.tscn" id="13_n64ve"]
+[ext_resource type="Script" path="res://core/systems/performance/power_station.gd" id="13_tag7s"]
+[ext_resource type="PowerStationInstance" uid="uid://c2mmrnh3rcs58" path="res://core/systems/performance/power_station.tres" id="14_a5vk3"]
 [ext_resource type="PackedScene" uid="uid://b30stcxjwk3od" path="res://core/ui/card_ui/ootbe/first_boot_menu.tscn" id="14_dpfu1"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.tscn" id="14_lsaok"]
 [ext_resource type="PackedScene" uid="uid://dj1fooc3gh13l" path="res://core/ui/card_ui/help/help_menu.tscn" id="15_m1wp2"]
@@ -89,6 +95,10 @@ script = ExtResource("1_f8851")
 [node name="InputIconProcessor" type="Node" parent="."]
 script = ExtResource("3_y116l")
 
+[node name="Gamescope" type="Node" parent="."]
+script = ExtResource("4_ksi1t")
+instance = ExtResource("5_wmkau")
+
 [node name="BoxArtLocal" parent="." instance=ExtResource("2_600i0")]
 
 [node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
@@ -97,7 +107,15 @@ script = ExtResource("3_y116l")
 
 [node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]
 
+[node name="PowerManager" type="Node" parent="."]
+script = ExtResource("10_opsp8")
+instance = ExtResource("11_nk5v7")
+
 [node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
+
+[node name="PowerStation" type="Node" parent="."]
+script = ExtResource("13_tag7s")
+instance = ExtResource("14_a5vk3")
 
 [node name="PowerTimer" type="Timer" parent="."]
 unique_name_in_owner = true
