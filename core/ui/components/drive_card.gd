@@ -148,15 +148,15 @@ func _set_icon() -> void:
 		drive_icon.texture = hdd_icon
 		return
 	match device.drive.interface_type:
-		DriveDevice.INTERFACE_TYPE.HDD:
+		DriveDevice.INTERFACE_TYPE_HDD:
 			drive_icon.texture = hdd_icon
-		DriveDevice.INTERFACE_TYPE.NVME:
+		DriveDevice.INTERFACE_TYPE_NVME:
 			drive_icon.texture = nvme_icon
-		DriveDevice.INTERFACE_TYPE.SD:
+		DriveDevice.INTERFACE_TYPE_SD:
 			drive_icon.texture = sd_icon
-		DriveDevice.INTERFACE_TYPE.SSD:
+		DriveDevice.INTERFACE_TYPE_SSD:
 			drive_icon.texture = ssd_icon
-		DriveDevice.INTERFACE_TYPE.USB:
+		DriveDevice.INTERFACE_TYPE_USB:
 			drive_icon.texture = usb_icon
 
 

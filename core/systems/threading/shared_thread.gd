@@ -94,17 +94,18 @@ func set_priority(value: int) -> int:
 	mutex.lock()
 	var thread_id := tid
 	mutex.unlock()
-	if LinuxThread.get_tid() != thread_id:
-		logger.debug("Set thread priority was called from another thread")
-		return await exec(set_priority.bind(value))
+	# TODO: fixme
+	#if LinuxThread.get_tid() != thread_id:
+	#	logger.debug("Set thread priority was called from another thread")
+	#	return await exec(set_priority.bind(value))
 
 	# Set the thread priority if this function was called from the SharedThread
-	var err := LinuxThread.set_thread_priority(value)
-	if err == OK:
-		niceness = value
-		logger.info("Set thread niceness on {0} ({1}) to: {2}".format([name, thread_id, value]))
+	#var err := LinuxThread.set_thread_priority(value)
+	#if err == OK:
+	#	niceness = value
+	#	logger.info("Set thread niceness on {0} ({1}) to: {2}".format([name, thread_id, value]))
 	
-	return err
+	return OK
 
 
 ## Add the given [NodeThread] to the list of nodes to process. This should
@@ -204,9 +205,9 @@ func remove_process(method: Callable) -> void:
 func _run() -> void:
 	# Update the thread ID
 	mutex.lock()
-	tid = LinuxThread.get_tid()
+	#tid = LinuxThread.get_tid()
 	mutex.unlock()
-	logger.info("Started thread with thread ID: " + str(LinuxThread.get_tid()))
+	#logger.info("Started thread with thread ID: " + str(LinuxThread.get_tid()))
 
 	# If the nice value isn't default, reassign the thread priority
 	if niceness != 0:

@@ -4,10 +4,10 @@ signal notification_received
 signal notification_finished
 
 var PID: int = OS.get_process_id()
-var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 var notification_manager := load("res://core/global/notification_manager.tres") as NotificationManager
 var default_icon := preload("res://icon.svg")
-var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+var overlay_window_id: int
 
 @onready var panel := $%PanelContainer as PanelContainer
 @onready var texture := $%TextureRect as TextureRect
@@ -18,6 +18,11 @@ var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+	if xwayland:
+		var overlay_window_ids := xwayland.get_windows_for_pid(PID)
+		if not overlay_window_ids.is_empty():
+			overlay_window_id = overlay_window_ids[0]
 	panel.visible = false
 	# Subscribe to any notifications
 	notification_manager.notification_queued.connect(_on_notification_queued)

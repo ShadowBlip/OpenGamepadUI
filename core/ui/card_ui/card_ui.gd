@@ -1,10 +1,10 @@
 extends Control
 
 var platform := load("res://core/global/platform.tres") as Platform
-var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -20,7 +20,9 @@ var osk_state := preload("res://assets/state/states/osk.tres") as State
 var power_state := preload("res://assets/state/states/power_menu.tres") as State
 
 var PID: int = OS.get_process_id()
-var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+var _xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+var _xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+var overlay_window_id := 0
 
 @onready var panel := $%Panel as Panel
 @onready var ui_container := $%MenuContent as MarginContainer
@@ -33,6 +35,12 @@ var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
 func _init() -> void:
+	# Discover the window id of OpenGamepadUI
+	if _xwayland_ogui:
+		var ogui_windows := _xwayland_ogui.get_windows_for_pid(PID)
+		if not ogui_windows.is_empty():
+			overlay_window_id = ogui_windows[0]
+	
 	# Tell gamescope that we're an overlay
 	if overlay_window_id <= 0:
 		logger.error("Unable to detect Window ID. Overlay is not going to work!")
@@ -47,10 +55,10 @@ func _setup(window_id: int) -> void:
 		return
 	# Pretend to be Steam
 	# Gamescope is hard-coded to look for appId 769
-	if gamescope.set_main_app(window_id) != OK:
+	if _xwayland_primary.set_main_app(window_id) != OK:
 		logger.error("Unable to set STEAM_GAME atom!")
 	# Sets ourselves to the input focus
-	if gamescope.set_input_focus(window_id, 1) != OK:
+	if _xwayland_primary.set_input_focus(window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 
@@ -112,18 +120,20 @@ func _ready() -> void:
 	library_manager.reload_library()
 
 	# Set the initial intercept mode
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
-	var on_device_changed := func(device: InputPlumber.CompositeDevice):
-		var intercept_mode : InputPlumber.INTERCEPT_MODE = input_plumber.intercept_mode_current
-		logger.debug("Setting intercept mode to: " + str(intercept_mode))
-		input_plumber.set_intercept_mode_single(intercept_mode, device)
-	input_plumber.composite_device_changed.connect(on_device_changed)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
+	#var on_device_changed := func(device: CompositeDevice):
+	#	var intercept_mode := input_plumber.intercept_mode
+	#	logger.debug("Setting intercept mode to: " + str(intercept_mode))
+	#	device.intercept_mode = intercept_mode
+	## TODO: Do we still need this..?
+	#input_plumber.composite_device_changed.connect(on_device_changed)
 
 	# Set the theme if one was set
 	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
 	logger.debug("Setting theme to: " + theme_path)
 	var loaded_theme = load(theme_path)
 	if loaded_theme != null:
+		@warning_ignore("unsafe_call_argument")
 		set_theme(loaded_theme)
 	else:
 		logger.debug("Unable to load theme")
@@ -137,13 +147,13 @@ func _on_focus_changed(control: Control) -> void:
 ## Invoked when the in-game state was entered
 func _on_game_state_entered(_from: State) -> void:
 	# Pass all gamepad input to the game
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.PASS)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 
 	# Turn off gamescope blur effect
-	_set_blur(gamescope.BLUR_MODE.OFF)
+	_set_blur(GamescopeXWayland.BLUR_MODE_OFF)
 
 	# Set gamescope input focus to off so the user can interact with the game
-	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
+	if _xwayland_ogui and _xwayland_ogui.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Ensure panel is invisible
@@ -160,7 +170,7 @@ func _on_game_state_entered(_from: State) -> void:
 ## Invoked when the in-game state is exited
 func _on_game_state_exited(to: State) -> void:
 	# Intercept all gamepad input when not in-game
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
+	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
 
 	# Revert back to the default gamepad profile
 	#gamepad_manager.set_gamepads_profile(null)
@@ -171,16 +181,18 @@ func _on_game_state_exited(to: State) -> void:
 		if current_popup == osk_state:
 			return
 
-	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	if _xwayland_primary:
+		if _xwayland_primary.set_input_focus(overlay_window_id, 1) != OK:
+			logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# If the in-game state still exists in the stack, set the blur state.
 	if state_machine.has_state(in_game_state):
 		panel.visible = false
 		# Only blur if the focused GFX app is set
-		var should_blur := settings_manager.get_value("display", "enable_overlay_blur", true) as bool
-		if should_blur and gamescope.get_focused_app_gfx() != Gamescope.OVERLAY_GAME_ID:
-			_set_blur(gamescope.BLUR_MODE.ALWAYS)
+		if _xwayland_primary:
+			var should_blur := settings_manager.get_value("display", "enable_overlay_blur", true) as bool
+			if should_blur and _xwayland_primary.get_focused_app_gfx() != gamescope.OVERLAY_GAME_ID:
+				_set_blur(GamescopeXWayland.BLUR_MODE_ALWAYS)
 
 	else:
 		_on_game_state_removed()
@@ -195,7 +207,7 @@ func _on_game_state_exited(to: State) -> void:
 ## Invoked when the in-game state is removed
 func _on_game_state_removed() -> void:
 	# Turn off gamescope blur
-	_set_blur(gamescope.BLUR_MODE.OFF)
+	_set_blur(GamescopeXWayland.BLUR_MODE_OFF)
 
 	# Un-hide the background panel
 	panel.visible = true
@@ -208,12 +220,12 @@ func _on_game_state_removed() -> void:
 
 
 # Sets the blur mode in gamescope
-func _set_blur(mode: Gamescope.BLUR_MODE) -> void:
+func _set_blur(mode: int) -> void:
 	# Sometimes setting this may fail when Steam closes. Retry several times.
 	for try in range(10):
-		if gamescope.set_blur_mode(mode) != OK:
-			logger.warn("Unable to set blur mode atom!")
-		var current := gamescope.get_blur_mode()
+		if _xwayland_primary:
+			_xwayland_primary.set_blur_mode(mode)
+		var current := _xwayland_primary.get_blur_mode()
 		if mode == current:
 			break
 		logger.warn("Retrying in " + str(try) + "ms")
@@ -255,7 +267,7 @@ func _input(event: InputEvent) -> void:
 	if not power_timer.is_stopped():
 		logger.info("Received suspend signal")
 		for connection in power_timer.timeout.get_connections():
-			power_timer.timeout.disconnect(connection["callable"])
+			power_timer.timeout.disconnect(connection["callable"] as Callable)
 		power_timer.stop()
 		var output: Array = []
 		if OS.execute("systemctl", ["suspend"], output) != OK:
@@ -263,12 +275,12 @@ func _input(event: InputEvent) -> void:
 
 
 # Removes specified child elements from the given Node.
-func _remove_children(remove_list: PackedStringArray, parent:Node) -> void:
+func _remove_children(remove_list: PackedStringArray, parent: Node) -> void:
 	var child_count := parent.get_child_count()
-	var to_remove_list := []
+	var to_remove_list: Array[Node]
 
 	for child_idx in child_count:
-		var child = parent.get_child(child_idx)
+		var child := parent.get_child(child_idx)
 		logger.trace("Checking if " + child.name + " in remove list...")
 		if child.name in remove_list:
 			logger.trace(child.name + " queued for removal!")

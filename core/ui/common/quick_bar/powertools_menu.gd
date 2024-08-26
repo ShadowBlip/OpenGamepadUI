@@ -3,7 +3,7 @@ extends VBoxContainer
 var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
 var platform := load("res://core/global/platform.tres") as Platform
 var performance_manager := load("res://core/systems/performance/performance_manager.tres") as PerformanceManager
-var power_station := load("res://core/systems/performance/power_station.tres") as PowerStation
+var power_station := load("res://core/systems/performance/power_station.tres") as PowerStationInstance
 
 @onready var cpu_boost_button := $CPUBoostButton as Toggle
 @onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
@@ -159,7 +159,7 @@ func _on_apply_timer_timeout() -> void:
 
 # Triggers every timeout to monitor the PowerStation DBus
 func _on_service_timer_timeout() -> void:
-	var bus_running := power_station.supports_power_station()
+	var bus_running := power_station.is_running()
 	if bus_running == power_station_running:
 		return
 
@@ -170,7 +170,7 @@ func _on_service_timer_timeout() -> void:
 
 ## Called when a performance profile is loaded
 func _on_profile_loaded(profile: PerformanceProfile) -> void:
-	if not power_station.supports_power_station():
+	if not power_station.is_running():
 		logger.info("Unable to load performance profile. PowerStation not detected.")
 		return
 	var core_count := 1
@@ -213,7 +213,7 @@ func _on_profile_loaded(profile: PerformanceProfile) -> void:
 # features.
 func _setup_interface() -> void:
 	# If powerstation is not running, disable everything
-	if not power_station.supports_power_station():
+	if not power_station.is_running():
 		wait_label.visible = true
 		for node in get_children():
 			if node == wait_label:
@@ -263,8 +263,8 @@ func _setup_interface() -> void:
 
 
 ## Returns the primary integrated GPU instance
-func _get_integrated_card() -> PowerStation.GPUCard:
-		var card: PowerStation.GPUCard
+func _get_integrated_card() -> GpuCard:
+		var card: GpuCard
 		var cards := power_station.gpu.get_cards()
 		for c in cards:
 			if c.class_type != "integrated":

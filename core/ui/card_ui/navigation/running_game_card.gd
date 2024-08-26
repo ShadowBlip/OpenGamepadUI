@@ -10,8 +10,7 @@ signal toggled_off
 signal finished_growing
 signal finished_shrinking
 
-const Gamescope := preload("res://core/global/gamescope.tres")
-
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var boxart_manager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
@@ -112,7 +111,8 @@ func set_running_app(app: RunningApp):
 	
 	# Connect to app signals to allow switching between app windows
 	var on_windows_changed := func(_from: PackedInt32Array, to: PackedInt32Array):
-		var focusable_windows := Gamescope.get_focusable_windows()
+		var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+		var focusable_windows := xwayland.get_focusable_windows()
 		# Add a button to switch to a given window
 		for window_id in to:
 			# A button already exists for this window

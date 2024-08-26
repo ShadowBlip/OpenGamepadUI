@@ -5,7 +5,7 @@ class_name InteractiveProcess
 ##
 ## Starts an interactive session
 
-var pty: PTY
+var pty: Pty
 var cmd: String
 var args: PackedStringArray = []
 var pid: int
@@ -18,17 +18,8 @@ func _init(command: String, cmd_args: PackedStringArray = []) -> void:
 
 
 ## Start the interactive process
+# TODO: Fixme
 func start() -> int:
-	pty = PTY.new()
-	if pty.open() != OK:
-		pty = null
-		return ERR_CANT_CREATE
-
-	pid = pty.create_process(cmd, args)
-	if pid < 0:
-		pty = null
-		return ERR_CANT_FORK
-
 	return OK
 
 
@@ -42,6 +33,7 @@ func send(input: String) -> void:
 
 
 ## Read from the stdout of the running process
+#TODO: Fixme
 func read(chunk_size: int = 1024) -> String:
 	if not pty:
 		logger.debug("Unable to read from closed PTY")
@@ -49,10 +41,6 @@ func read(chunk_size: int = 1024) -> String:
 
 	# Keep reading from the process until the buffer is empty
 	var output := ""
-	var buffer := pty.read(chunk_size)
-	while buffer.size() != 0:
-		output += buffer.get_string_from_utf8()
-		buffer = pty.read(chunk_size)
 
 	return output
 
@@ -69,6 +57,7 @@ func is_running() -> bool:
 	return OS.is_process_running(pid)
 
 
+# TODO: Fixme
 func output_to_log_file(log_file: FileAccess, chunk_size: int = 1024) -> int:
 	if not log_file:
 		logger.warn("Unable to log output. Log file has not been opened.")
@@ -79,10 +68,6 @@ func output_to_log_file(log_file: FileAccess, chunk_size: int = 1024) -> int:
 		return ERR_DOES_NOT_EXIST
 
 	# Keep reading from the process until the buffer is empty
-	var buffer := pty.read(chunk_size)
-	while buffer.size() != 0:
-		log_file.store_buffer(buffer)
-		buffer = pty.read(chunk_size)
 
 	log_file.flush()
 	return OK

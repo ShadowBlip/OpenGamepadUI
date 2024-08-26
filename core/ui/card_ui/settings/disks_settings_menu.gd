@@ -1,6 +1,6 @@
 extends ScrollContainer
 
-var udisks2 := load("res://core/systems/disks/udisks2.tres") as UDisks2
+var udisks2 := load("res://core/systems/disks/disk_manager.tres") as UDisks2Instance
 var steam_disks := load("res://core/systems/disks/steam_removable_media_manager.tres") as SteamRemovableMediaManager
 
 const drive_card_scene: PackedScene = preload("res://core/ui/components/drive_card.tscn")
@@ -13,10 +13,10 @@ var logger := Log.get_logger("DisksMenu", Log.LEVEL.INFO)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if not udisks2.supports_disk_management():
+	if not udisks2.is_running():
 		return
-	udisks2.unprotected_devices_updated.connect(_on_drives_updated)
-	_on_drives_updated(udisks2.get_unprotected_devices())
+	#udisks2.unprotected_devices_updated.connect(_on_drives_updated)
+	#_on_drives_updated(udisks2.get_unprotected_devices())
 
 
 func _on_drives_updated(devices: Array[BlockDevice]) -> void:

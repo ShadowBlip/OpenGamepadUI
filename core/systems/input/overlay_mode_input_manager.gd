@@ -14,7 +14,7 @@ class_name OverlayInputManager
 ## The audio manager to use to adjust the audio when audio input events happen.
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 ## InputPlumber receives and sends DBus input events.
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 ## LaunchManager provides context on the currently running app so we can switch profiles
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 ## The Global State Machine
@@ -321,7 +321,7 @@ func _return_chord(actions: PackedStringArray) -> void:
 	# Input.parse_input_event so we don't do this terrible loop. This is awful.
 	logger.debug("Return events to InputPlumber: " + str(actions))
 	for device in input_plumber.composite_devices:
-		device.intercept_mode = InputPlumber.INTERCEPT_MODE.PASS
+		device.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_PASS
 		device.send_button_chord(actions)
 
 
@@ -347,7 +347,7 @@ func _audio_input(event: InputEvent) -> void:
 		return
 
 
-func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
+func _watch_dbus_device(device: CompositeDevice) -> void:
 		for target in device.dbus_targets:
 			logger.debug("Adding watch for " + device.name + " " + target.name)
 			logger.debug(str(target.get_instance_id()))

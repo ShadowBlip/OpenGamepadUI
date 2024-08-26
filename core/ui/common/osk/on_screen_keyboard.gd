@@ -8,9 +8,9 @@ signal mode_shifted(mode: MODE_SHIFT)
 signal opened
 signal closed
 
-const Gamescope := preload("res://core/global/gamescope.tres")
 const key_scene := preload("res://core/ui/components/button.tscn")
 
+var gamescope := load("res://core/global/gamescope.tres") as GamescopeInstance
 ## State machine to use to switch menu states in response to input events.
 var popup_state_machine := (
 	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
@@ -279,7 +279,7 @@ func _on_key_pressed(key: KeyboardKeyConfig) -> void:
 
 # Handle sending key presses to an xwayland instance
 func _handle_x11(key: KeyboardKeyConfig) -> void:
-	var xwayland := Gamescope.get_xwayland(Gamescope.XWAYLAND.GAME)
+	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
 
 	# Check for shift or capslock inputs 
 	if key.input.keycode in [KEY_SHIFT, KEY_CAPSLOCK]:
@@ -293,7 +293,7 @@ func _handle_x11(key: KeyboardKeyConfig) -> void:
 
 	# Send a shift keypress if mode shifted
 	if _mode_shift > MODE_SHIFT.OFF:
-		xwayland.send_key(KEY_SHIFT, true)
+		xwayland.send_key(KEY_SHIFT, true) # TODO: Fix this
 
 	xwayland.send_key(event.keycode, true)
 	xwayland.send_key(event.keycode, false)

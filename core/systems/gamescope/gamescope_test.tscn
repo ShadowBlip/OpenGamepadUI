@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://83606lflpyo5"]
+
+[ext_resource type="Script" path="res://core/systems/gamescope/gamescope_test.gd" id="1_e433b"]
+[ext_resource type="Script" path="res://core/systems/gamescope/gamescope.gd" id="1_ukgov"]
+[ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="2_fbm81"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="4_j1wlf"]
+
+[node name="GamescopeTest" type="Node2D"]
+script = ExtResource("1_e433b")
+
+[node name="Gamescope" type="Node" parent="."]
+script = ExtResource("1_ukgov")
+instance = ExtResource("2_fbm81")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(609, 401)
+texture = ExtResource("4_j1wlf")

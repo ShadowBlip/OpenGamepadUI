@@ -1,5 +1,1 @@
-dbus/
-linuxthread/
-pty/
-unixsock/
-xlib/
+*.so
