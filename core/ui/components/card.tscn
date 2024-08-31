@@ -38,7 +38,6 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 200.0
 offset_bottom = 300.0
-size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 2
 mouse_filter = 1
