@@ -72,8 +72,9 @@ theme_override_constants/margin_right = 15
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/h_separation = 4
+theme_override_constants/h_separation = 26
 theme_override_constants/v_separation = 16
+alignment = 1
 
 [node name="Card" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
 layout_mode = 2
@@ -108,9 +109,6 @@ layout_mode = 2
 [node name="Card11" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
 layout_mode = 2
 
-[node name="Card12" parent="TabContainer/InstalledTab/MarginContainer/InstalledGrid" instance=ExtResource("11_bj8cj")]
-layout_mode = 2
-
 [node name="AllGamesTab" type="ScrollContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -130,5 +128,6 @@ theme_override_constants/margin_right = 15
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/h_separation = 4
+theme_override_constants/h_separation = 26
 theme_override_constants/v_separation = 16
+alignment = 1
