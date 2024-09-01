@@ -3,7 +3,7 @@
 extends Control
 class_name GameCard
 
-var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
+var boxart_manager := load("res://core/global/boxart_manager.tres") as BoxArtManager
 
 signal button_up
 signal button_down
@@ -73,9 +73,9 @@ func set_library_item(item: LibraryItem, free_on_remove: bool = true) -> void:
 	
 	# Get the boxart for the item
 	var layout = BoxArtProvider.LAYOUT.GRID_PORTRAIT
-	var card_texture: Texture2D = await BoxArtManager.get_boxart(item, layout)
+	var card_texture: Texture2D = await boxart_manager.get_boxart(item, layout)
 	if not card_texture:
-		card_texture = BoxArtManager.get_placeholder(layout)
+		card_texture = boxart_manager.get_placeholder(layout)
 		show_label = true
 		text = item.name
 	set_texture(card_texture)
