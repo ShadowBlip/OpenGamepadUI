@@ -11,7 +11,7 @@ const sd_icon = preload("res://assets/icons/interface-sd.svg")
 const ssd_icon = preload("res://assets/icons/interface-ssd.svg")
 const usb_icon = preload("res://assets/icons/interface-usb.svg")
 
-var device: BlockDevice
+var block_device: BlockDevice
 var device_path: String
 var highlight_tween: Tween
 
@@ -39,8 +39,8 @@ var log_level:= Log.LEVEL.INFO
 ## Performs _ready fucntionality with the given BlockDevice
 func setup(device: BlockDevice) -> void:
 	# Setup UDisks2 information
-	self.device = device
-	self.device_path = "/dev" + self.device.dbus_path.trim_prefix(steam_disks.BLOCK_PREFIX)
+	self.block_device = device
+	self.device_path = "/dev" + self.block_device.dbus_path.trim_prefix(steam_disks.BLOCK_PREFIX)
 
 	logger = Log.get_logger("DriveCard|"+self.device_path, log_level)
 	logger.debug("Setup Drive Card")
@@ -86,7 +86,7 @@ func _srm_format_drive() -> void:
 	_clear_partitions()
 	_on_format_started()
 	var note := Notification.new("Format Complete: " + self.device_path)
-	if await steam_disks.format_drive(device) != OK:
+	if await steam_disks.format_drive(block_device) != OK:
 		note.text = "Failed to format " + self.device_path
 	_on_format_complete(note)
 
@@ -132,22 +132,19 @@ func _srm_init_drive(partition: PartitionDevice) -> void:
 	init_partition.emit(partition)
 
 
-func _clear_partitions() -> void:
-	# Clear the current grid of items
-	var keep_nodes := [partitions_focus_group]
-	for child in partitions_container.get_children():
-		if child in keep_nodes:
-			continue
-		partitions_container.remove_child(child)
-		child.queue_free()
-
 
 func _set_icon() -> void:
-	if not device or not device.drive:
-		logger.warn("Unable to detect drive to set icon for:", device)
+	if not block_device:
+		logger.warn("Unable to detect drive to set icon for something?")
 		drive_icon.texture = hdd_icon
 		return
-	match device.drive.interface_type:
+	var drive := block_device.get_drive() as DriveDevice
+	if not drive:
+		logger.warn("Unable to detect drive to set icon for:", block_device)
+		drive_icon.texture = hdd_icon
+		return
+
+	match drive.interface_type():
 		DriveDevice.INTERFACE_TYPE_HDD:
 			drive_icon.texture = hdd_icon
 		DriveDevice.INTERFACE_TYPE_NVME:
@@ -158,13 +155,26 @@ func _set_icon() -> void:
 			drive_icon.texture = ssd_icon
 		DriveDevice.INTERFACE_TYPE_USB:
 			drive_icon.texture = usb_icon
+		DriveDevice.INTERFACE_TYPE_UNKNOWN:
+			# TODO: Assign a unique texture for this
+			drive_icon.texture = hdd_icon
+
+
+func _clear_partitions() -> void:
+	# Clear the current grid of items
+	var keep_nodes := [partitions_focus_group]
+	for child in partitions_container.get_children():
+		if child in keep_nodes:
+			continue
+		partitions_container.remove_child(child)
+		child.queue_free()
 
 
 ## Populates the partition grid with an item for every PartitionDevice on this BlockDevice
 func _populate_partitions() -> void:
 	_clear_partitions()
 	var last_focus: FocusGroup
-	for partition in self.device.partitions:
+	for partition in self.block_device.get_partitions():
 
 		# Ignore loop devices
 		if partition.partition_name.contains("/dev/loop"):

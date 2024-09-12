@@ -7,6 +7,8 @@ const icon_half = preload("res://assets/ui/icons/battery-half.svg")
 const icon_low = preload("res://assets/ui/icons/battery-low.svg")
 const icon_empty = preload("res://assets/ui/icons/battery-empty.svg")
 
+const no_battery_names := ["battery-missing-symbolic"]
+
 var power_manager := load("res://core/systems/power/power_manager.tres") as UPowerInstance
 var display_device := power_manager.get_display_device()
 
@@ -18,6 +20,11 @@ var logger := Log.get_logger("BatteryContainer", Log.LEVEL.INFO)
 
 func _ready():
 	if not display_device:
+		logger.debug("No battery detected. nothing to do.")
+		visible = false
+		return
+
+	if display_device.icon_name in no_battery_names:
 		logger.debug("No battery detected. nothing to do.")
 		visible = false
 		return

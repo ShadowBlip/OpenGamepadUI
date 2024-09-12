@@ -1,7 +1,7 @@
 extends GutHookScript
 
 var PID: int = OS.get_process_id()
-var gamescope := load("res://core/global/gamescope.tres") as Gamescope
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as Gamescope
 var window_id = gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
 

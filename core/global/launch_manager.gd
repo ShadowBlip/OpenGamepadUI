@@ -76,18 +76,15 @@ func _init() -> void:
 		var on_focus_changed := func(from: int, to: int):
 			logger.info("Window focus changed from " + str(from) + " to: " + str(to))
 			var last_app := _current_app
+
 			_current_app = _detect_running_app(to)
 
 			logger.debug("Last app: " + str(last_app) + " current_app: " + str(_current_app))
 			app_switched.emit(last_app, _current_app)
 
 			# If the app has a gamepad profile, set it
-			if to != _ogui_window_id and _current_app:
+			if _current_app:
 				set_app_gamepad_profile(_current_app)
-
-				# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
-				if not should_manage_overlay:
-					return
 
 		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
@@ -326,11 +323,11 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 		logger.info("Loading global gamepad profile: " + profile_path)
 
 		for gamepad in input_plumber.get_composite_devices():
-			gamepad.target_modify_profile(profile_path, profile_modifier)
+			InputPlumber.load_target_modified_profile(gamepad, profile_path, profile_modifier)
 
 			# Set the target gamepad if one was specified
 			if not target_gamepad.is_empty():
-				var target_devices := [target_gamepad, "keyboard", "mouse"]
+				var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
 				match target_gamepad:
 					"xb360", "xbox-series", "xbox-elite", "gamepad":
 						target_devices.append("touchpad")
@@ -354,11 +351,11 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 
 	# TODO: Save profiles for individual controllers?
 	for gamepad in input_plumber.get_composite_devices():
-		gamepad.target_modify_profile(path, profile_modifier)
+		InputPlumber.load_target_modified_profile(gamepad, path, profile_modifier)
 
 		# Set the target gamepad if one was specified
 		if not target_gamepad.is_empty():
-			var target_devices := [target_gamepad, "keyboard", "mouse"]
+			var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
 			match target_gamepad:
 				"xb360", "xbox-series", "xbox-elite", "gamepad":
 					target_devices.append("touchpad")
@@ -407,7 +404,7 @@ func _on_app_state_changed(_from: RunningApp.STATE, to: RunningApp.STATE, app: R
 	_remove_running(app)
 	if state_machine.has_state(in_game_state) and _running.size() == 0:
 		logger.info("No more apps are running. Removing in-game state.")
-		gamescope.remove_baselayer_window()
+		_xwayland_primary.remove_baselayer_window()
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
 
@@ -516,6 +513,9 @@ func _is_app_id_running(app_id) -> bool:
 # creates a new RunningApp instance.
 func _detect_running_app(window_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
+	if window_id == _ogui_window_id:
+		return null
+
 	var app_name: String
 
 	# Check if this window ID is a child of an existing RunningApp
