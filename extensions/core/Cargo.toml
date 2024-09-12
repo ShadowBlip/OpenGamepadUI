@@ -19,3 +19,4 @@ zbus = "4.4.0"
 zvariant = "4.2.0"
 gamescope-x11-client = { git = "https://github.com/ShadowBlip/gamescope-x11-client", branch = "main" }
 inotify = "0.11.0"
+byte-unit = "5.1.4"

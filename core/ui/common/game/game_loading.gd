@@ -3,7 +3,6 @@ extends Control
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var on_app_launched := func(app: RunningApp):

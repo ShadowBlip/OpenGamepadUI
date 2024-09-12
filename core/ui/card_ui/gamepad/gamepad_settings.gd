@@ -612,11 +612,11 @@ func _set_gamepad_profile(gamepad: CompositeDevice, profile_path: String = "") -
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
 
 	logger.debug("Setting " + gamepad.name + " to profile: " + profile_path)
-	#gamepad.target_modify_profile(profile_path, profile_gamepad) #TODO: fixme
+	InputPlumber.load_target_modified_profile(gamepad, profile_path, profile_gamepad)
 
 	# Set the target gamepad if one was specified
 	if not profile_gamepad.is_empty():
-		var target_devices := [profile_gamepad, "keyboard", "mouse"]
+		var target_devices := PackedStringArray([profile_gamepad, "keyboard", "mouse"])
 		match profile_gamepad:
 			"xb360", "xbox-series", "xbox-elite", "gamepad":
 				target_devices.append("touchpad")

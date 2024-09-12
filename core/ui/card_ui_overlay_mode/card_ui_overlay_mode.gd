@@ -1,7 +1,7 @@
 extends Control
 
 var platform := preload("res://core/global/platform.tres") as Platform
-var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
+var gamescope := preload("res://core/systems/gamescope/gamescope.tres") as Gamescope
 var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
 var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumberInstance

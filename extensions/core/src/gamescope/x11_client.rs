@@ -872,7 +872,7 @@ impl GamescopeXWayland {
 
     /// Process and dispatch the given signal
     fn process_signal(&mut self, signal: Signal) {
-        godot_print!("Got signal: {signal:?}");
+        //godot_print!("Got signal: {signal:?}");
         match signal {
             Signal::WindowCreated { window_id } => {
                 self.base_mut()

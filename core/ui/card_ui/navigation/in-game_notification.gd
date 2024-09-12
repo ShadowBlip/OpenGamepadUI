@@ -30,7 +30,9 @@ func _ready() -> void:
 	
 	# Continue showing any other queued messages
 	var on_finished := func():
-		gamescope.set_notification(overlay_window_id, 0)
+		var xwland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+		if xwland:
+			xwland.set_notification(overlay_window_id, 0)
 		_on_notification_queued(null)
 	effect.slide_out_finished.connect(on_finished)
 
@@ -43,7 +45,9 @@ func _on_notification_queued(_notify: Notification) -> void:
 	var notify := notification_manager.next()
 	if not notify:
 		return
-	gamescope.set_notification(overlay_window_id, 1)
+	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+	if xwayland:
+		xwayland.set_notification(overlay_window_id, 1)	
 	show_toast(notify.text, notify.icon, notify.timeout)
 
 

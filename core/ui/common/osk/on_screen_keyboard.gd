@@ -10,7 +10,7 @@ signal closed
 
 const key_scene := preload("res://core/ui/components/button.tscn")
 
-var gamescope := load("res://core/global/gamescope.tres") as GamescopeInstance
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 ## State machine to use to switch menu states in response to input events.
 var popup_state_machine := (
 	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine

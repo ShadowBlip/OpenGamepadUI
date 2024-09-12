@@ -58,12 +58,6 @@ func format_drive(device: BlockDevice) -> Error:
 		logger.error("System is not format capable")
 		return ERR_UNAVAILABLE
 
-	# This should never hit if using our device tree, but  the method is public so
-	# make sure.
-	if udisks2.block_device_has_protected_mount(device):
-		logger.error("Attempted to format device with protected mount. Illegal Operation.")
-		return ERR_UNAUTHORIZED
-
 	var drive = "/dev" + device.dbus_path.trim_prefix(BLOCK_PREFIX)
 	logger.debug("Formatting drive:", drive)
 	var args := ["--full", "--device", drive]
@@ -82,12 +76,6 @@ func init_steam_lib(partition: PartitionDevice) -> Error:
 	if not init_capable:
 		logger.error("System cannot initialize steam libraries")
 		return ERR_UNAVAILABLE
-
-	# This should never hit if using our device tree, but  the method is public so
-	# make sure.
-	if udisks2.partition_has_protected_mount(partition):
-		logger.error("Attempted to initialize steam library on device with protected mount. Illegal Operation.")
-		return ERR_UNAUTHORIZED
 
 	var drive := "/dev" + partition.dbus_path.trim_prefix(BLOCK_PREFIX)
 	logger.debug("Intitializing partition as Steam Library: " + drive)

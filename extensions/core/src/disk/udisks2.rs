@@ -125,6 +125,11 @@ impl UDisks2Instance {
     #[signal]
     fn filesystem_removed(dbus_path: GString);
 
+    /// Emitted when any state change occurs and emits an [Array] of [BlockDevice] that have no
+    /// [FilesystemDevice] with mounts located in [PROTECTED_MOUNTS].
+    #[signal]
+    fn unprotected_devices_updated(devices: Array<Gd<BlockDevice>>);
+
     /// Returns true if the UDisks2 service is currently running
     #[func]
     fn is_running(&self) -> bool {
@@ -139,7 +144,7 @@ impl UDisks2Instance {
         dbus.name_has_owner(bus.clone()).unwrap_or_default()
     }
 
-    /// Get managed objects
+    /// Returns a HashMap of all the objects managed by this dbus interface
     fn get_managed_objects(&self) -> Result<ManagedObjects, zbus::fdo::Error> {
         let Some(conn) = self.conn.as_ref() else {
             return Err(zbus::fdo::Error::Disconnected(
@@ -160,10 +165,54 @@ impl UDisks2Instance {
         object_manager.get_managed_objects()
     }
 
+    /// Returns a HashMap of all the objects managed by this dbus interface that don't have
+    /// [FilesystemDevice] objects with mounts in [PROTECTED_MOUNTS]
+    #[func]
+    fn get_unprotected_devices(&self) -> Array<Gd<BlockDevice>> {
+        let mut unprotected_devices = array![];
+        'outer: for (dbus_path, block_device) in self.block_devices.iter() {
+            let partitions = block_device.bind().get_partitions();
+            if partitions.is_empty() {
+                if !self.partition_devices.contains_key(dbus_path) {
+                    godot_print!(
+                        "Adding {dbus_path} as unprotected device. It is not a partition_devices"
+                    );
+                    unprotected_devices.push(block_device.clone());
+                    continue;
+                }
+                godot_print!("Skipping {dbus_path}. It is a partition_device.");
+            } else {
+                for partition_device in partitions.iter_shared() {
+                    let Some(filesystem_device) = partition_device.bind().get_filesystem() else {
+                        godot_print!(
+                            "Adding {dbus_path} as unprotected device. It does not have a FilesystemDevice"
+                        );
+                        unprotected_devices.push(block_device.clone());
+                        continue;
+                    };
+
+                    let mounts = filesystem_device.bind().get_mounts();
+                    for mount in mounts.as_slice() {
+                        if PROTECTED_MOUNTS.contains(&mount.to_string().as_str()) {
+                            continue 'outer;
+                        }
+                    }
+                }
+                godot_print!(
+                    "Adding {dbus_path} as unprotected device. It does not have any mounts in PROTECTED_MOUNTS"
+                );
+                unprotected_devices.push(block_device.clone());
+            }
+        }
+
+        unprotected_devices
+    }
+
     /// Process UDisks2 signals and emit them as Godot signals. This method
     /// should be called every frame in the "_process" loop of a node.
     #[func]
     fn process(&mut self) {
+        let mut state_updated = false;
         // Drain all messages from the channel to process them
         loop {
             let signal = match self.rx.try_recv() {
@@ -176,22 +225,17 @@ impl UDisks2Instance {
                     }
                 },
             };
+            state_updated = true;
             self.process_signal(signal);
         }
-
-        // Process all child objects
-        for block in self.block_devices.values_mut() {
-            block.bind_mut().process();
+        if !state_updated {
+            return;
         }
-        for drive in self.drive_devices.values_mut() {
-            drive.bind_mut().process();
-        }
-        for partition in self.partition_devices.values_mut() {
-            partition.bind_mut().process();
-        }
-        for fs in self.filesystem_devices.values_mut() {
-            fs.bind_mut().process();
-        }
+        let unprotected_devices = self.get_unprotected_devices();
+        self.base_mut().emit_signal(
+            "unprotected_devices_updated".into(),
+            &[unprotected_devices.to_variant()],
+        );
     }
 
     /// Process and dispatch the given signal
@@ -264,18 +308,6 @@ impl UDisks2Instance {
             }
         }
     }
-
-    //// Return a proxy instance to the UDisks2 object
-    //fn get_proxy(&self) -> Option<UDisks2ProxyBlocking> {
-    //    if let Some(conn) = self.conn.as_ref() {
-    //        UDisks2ProxyBlocking::builder(conn)
-    //            .path(UDISKS2_PATH)
-    //            .ok()
-    //            .and_then(|builder| builder.build().ok())
-    //    } else {
-    //        None
-    //    }
-    //}
 }
 
 #[godot_api]
