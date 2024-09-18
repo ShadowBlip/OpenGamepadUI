@@ -465,7 +465,7 @@ func _get_pid_from_focused_window(window_id: int) -> int:
 
 # First method, try to get the name from the window_id using gamescope.
 func _get_app_name_from_window_id(window_id: int) -> String:
-	return gamescope.get_window_name(window_id)
+	return _xwayland_game.get_window_name(window_id)
 
 
 # Last resort, try to use the parent dir of the executable from /proc/pid/cwd to return

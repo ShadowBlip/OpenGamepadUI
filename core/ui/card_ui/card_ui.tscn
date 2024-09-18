@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="3_68bes"]
 [ext_resource type="Script" path="res://core/systems/input/input_icon_processor.gd" id="3_y116l"]
 [ext_resource type="Script" path="res://core/systems/gamescope/gamescope.gd" id="4_ksi1t"]
-[ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launch_manager.tscn" id="4_tgw75"]
+[ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launcher.tscn" id="4_tgw75"]
 [ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="5_dv70s"]
 [ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="5_wmkau"]
 [ext_resource type="PackedScene" uid="uid://o70x5igrlq30" path="res://core/ui/card_ui/home/cardui_home.tscn" id="6_12lhu"]
@@ -33,7 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://bbcd5tclmp2ux" path="res://core/ui/card_ui/navigation/library_loading_notification.tscn" id="20_7tnsn"]
 [ext_resource type="PackedScene" uid="uid://lfm3ps837gy5" path="res://core/ui/card_ui/power/power_menu.tscn" id="20_noim3"]
 [ext_resource type="VideoStream" path="res://assets/videos/boot.ogv" id="21_s3peg"]
-[ext_resource type="PackedScene" path="res://core/ui/common/game/game_loading.tscn" id="22_morxu"]
+[ext_resource type="PackedScene" uid="uid://b1kist0rarpcy" path="res://core/ui/common/game/game_loading.tscn" id="22_morxu"]
 [ext_resource type="PackedScene" uid="uid://ccwn4n40imfg8" path="res://core/ui/components/containers/overlay_container.tscn" id="23_h8glb"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="27_jq430"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="28_ex7w4"]
@@ -103,7 +103,7 @@ instance = ExtResource("5_wmkau")
 
 [node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
 
-[node name="LaunchManager" parent="." instance=ExtResource("4_tgw75")]
+[node name="Launcher" parent="." instance=ExtResource("4_tgw75")]
 
 [node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]
 

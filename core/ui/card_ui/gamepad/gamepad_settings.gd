@@ -85,7 +85,7 @@ func _ready() -> void:
 
 	# Ensure new devices are set to the correct profile when added
 	input_plumber.composite_device_added.connect(_set_gamepad_profile)
-	#input_plumber.composite_device_changed.connect(_set_gamepad_profile) #TODO: fixme
+	#input_plumber.composite_device_changed.connect(_set_gamepad_profile) #TODO: fixme?
 
 
 ## Called when the gamepad settings state is entered
@@ -94,7 +94,7 @@ func _on_state_entered(_from: State) -> void:
 	in_game_panel.visible = global_state_machine.has_state(in_game_state)
 	
 	# Ensure that InputPlumber is running
-	if not input_plumber.supports_input_plumber():
+	if not input_plumber.is_running():
 		not_available.visible = true
 		main_container.visible = false
 		$ServiceNotAvailableContainer/Label.text = "InputPlumber service not available"
@@ -114,7 +114,7 @@ func _on_state_entered(_from: State) -> void:
 	var dbus_path := gamepad_state.get_meta("dbus_path") as String
 	
 	# Find the composite device to configure
-	for device: CompositeDevice in input_plumber.composite_devices:
+	for device: CompositeDevice in input_plumber.get_composite_devices():
 		if device.dbus_path == dbus_path:
 			gamepad = device
 			break
@@ -648,7 +648,7 @@ func _save_profile() -> void:
 		settings_manager.set_value("input", "gamepad_profile", path)
 		settings_manager.set_value("input", "gamepad_profile_target", profile_gamepad)
 
-		for gamepad in input_plumber.composite_devices:
+		for gamepad in input_plumber.get_composite_devices():
 			_set_gamepad_profile(gamepad, path)
 
 		logger.debug("Saved global gamepad profile to: " + path)
