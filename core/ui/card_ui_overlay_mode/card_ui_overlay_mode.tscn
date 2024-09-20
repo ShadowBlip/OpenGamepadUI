@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" path="res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.gd" id="2_3ptao"]
 [ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/overlay_mode_input_manager.tscn" id="3_klhmb"]
-[ext_resource type="PackedScene" uid="uid://cbboox5bujlx1" path="res://core/systems/launcher/launcher.tscn" id="4_b1ok4"]
+[ext_resource type="Script" path="res://core/systems/launcher/launcher.gd" id="4_o0rva"]
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="5_4sdt1"]
 [ext_resource type="PackedScene" uid="uid://cwarv58ju0sow" path="res://core/ui/card_ui/gamepad/gamepad_settings.tscn" id="6_oddte"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.tscn" id="7_e54f8"]
@@ -21,7 +21,8 @@ script = ExtResource("2_3ptao")
 
 [node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
 
-[node name="Launcher" parent="." instance=ExtResource("4_b1ok4")]
+[node name="Launcher" type="Node" parent="."]
+script = ExtResource("4_o0rva")
 
 [node name="MenuContent" type="MarginContainer" parent="."]
 unique_name_in_owner = true

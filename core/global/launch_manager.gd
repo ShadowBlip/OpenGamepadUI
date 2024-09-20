@@ -59,7 +59,7 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
 
 
 # Connect to Gamescope signals
@@ -220,6 +220,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
 	_update_recent_apps(app)
+
 	return running_app
 
 

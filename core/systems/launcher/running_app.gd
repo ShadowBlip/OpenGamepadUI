@@ -5,7 +5,7 @@ class_name RunningApp
 ##
 ## RunningApp contains details and methods around running applications
 
-const gamescope := preload("res://core/systems/gamescope/gamescope.tres")
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 
 
 ## Emitted when all child processes of the app are no longer running
@@ -102,7 +102,7 @@ var steam_close_tries := 0
 ## Flag for if OGUI should manage this app. Set to false if app is launched
 ## outside OGUI and we just want to track it.
 var is_ogui_managed: bool = true
-var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
+var logger := Log.get_logger("RunningApp", Log.LEVEL.TRACE)
 
 
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
@@ -111,6 +111,7 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	display = dsp
 
 
+# TODO: Only call this on window creation/deletion
 ## Updates the running app and fires signals
 func update() -> void:
 	# Update all windows related to the app's PID
@@ -214,14 +215,16 @@ func get_all_window_ids() -> PackedInt32Array:
 	pids.append(pid)
 	logger.trace(app_name + " found related PIDs: " + str(pids))
 
-	for process_id in pids:
-		var windows := xwayland.get_windows_for_pid(process_id)
-		for window in windows:
-			if window < 0:
-				continue
-			if window in window_ids:
-				continue
-			window_ids.append(window)
+	# Loop through all windows and check if the window belongs to one of our
+	# processes
+	var all_windows := xwayland.get_all_windows(xwayland.root_window_id)
+	for window_id in all_windows:
+		var window_pids := xwayland.get_pids_for_window(window_id)
+		for window_pid in window_pids:
+			if window_pid in pids:
+				#logger.trace("Found window for pid", window_pid, ":", window_id)
+				window_ids.append(window_id)
+
 	logger.trace(app_name + " found related window IDs: " + str(window_ids))
 
 	return window_ids
