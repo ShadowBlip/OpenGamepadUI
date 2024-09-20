@@ -52,11 +52,13 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_xn2qp")
+current_tab = 0
 tabs_visible = false
 
 [node name="InstalledTab" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
 horizontal_scroll_mode = 0
+metadata/_tab_index = 0
 
 [node name="ScrollerJoystick" parent="TabContainer/InstalledTab" instance=ExtResource("11_27umd")]
 
@@ -113,6 +115,7 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 horizontal_scroll_mode = 0
+metadata/_tab_index = 1
 
 [node name="ScrollerJoystick" parent="TabContainer/AllGamesTab" instance=ExtResource("11_27umd")]
 

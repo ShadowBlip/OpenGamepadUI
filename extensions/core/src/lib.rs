@@ -5,6 +5,7 @@ pub mod gamescope;
 pub mod input;
 pub mod performance;
 pub mod power;
+pub mod resource;
 pub mod system;
 
 use std::{sync::Arc, time::Duration};

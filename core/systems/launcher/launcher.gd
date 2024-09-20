@@ -1,5 +1,6 @@
 @icon("res://assets/editor-icons/ph-rocket-launch-fill.svg")
 extends Node
+class_name Launcher
 
 @export var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 

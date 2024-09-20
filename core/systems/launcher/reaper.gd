@@ -12,7 +12,7 @@ enum SIG {
 ## Spawn a process with PR_SET_CHILD_SUBREAPER set so child processes will
 ## reparent themselves to OpenGamepadUI. Returns the PID of the spawned process.
 static func create_process(cmd: String, args: PackedStringArray) -> int:
-	return OS.create_process(cmd, args)
+	#return OS.create_process(cmd, args)
 	return SubReaper.create_process(cmd, args)
 
 
