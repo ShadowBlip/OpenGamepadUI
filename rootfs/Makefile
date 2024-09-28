@@ -28,6 +28,8 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	install -Dm644 usr/share/opengamepadui/opengamepad-ui.pck \
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.pck
+	install -Dm755 usr/share/opengamepadui/reaper \
+		$(PREFIX)/share/opengamepadui/reaper
 	setcap 'cap_sys_nice=eip' $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64 || true
 	mkdir -p $(PREFIX)/share/opengamepadui/scripts
 	install -Dm755 usr/share/opengamepadui/scripts/manage_input \
@@ -51,6 +53,7 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/bin/opengamepadui
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.pck
+	rm -rf $(PREFIX)/share/opengamepadui/reaper
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
 	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	rm -rf $(PREFIX)/lib/systemd/user/ogui-overlay-mode.service

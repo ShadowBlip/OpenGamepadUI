@@ -884,7 +884,7 @@ impl GamescopeXWayland {
             } => {
                 self.base_mut().emit_signal(
                     "window_property_updated".into(),
-                    &[window_id.to_variant(), property.into_godot().to_variant()],
+                    &[window_id.to_variant(), property.to_godot().to_variant()],
                 );
             }
             Signal::PropertyChanged { property } => {

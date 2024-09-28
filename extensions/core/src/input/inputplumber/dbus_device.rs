@@ -136,7 +136,7 @@ impl DBusDevice {
             Signal::InputEvent { type_code, value } => {
                 self.base_mut().emit_signal(
                     "input_event".into(),
-                    &[type_code.into_godot().to_variant(), value.to_variant()],
+                    &[type_code.to_godot().to_variant(), value.to_variant()],
                 );
             }
             Signal::TouchEvent {
@@ -150,7 +150,7 @@ impl DBusDevice {
                 self.base_mut().emit_signal(
                     "touch_event".into(),
                     &[
-                        type_code.into_godot().to_variant(),
+                        type_code.to_godot().to_variant(),
                         index.to_variant(),
                         is_touching.to_variant(),
                         pressure.to_variant(),

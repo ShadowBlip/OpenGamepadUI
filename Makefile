@@ -161,7 +161,7 @@ force-import: $(ALL_EXTENSIONS)
 extensions: $(ALL_EXTENSIONS) ## Build native extensions
 $(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
 	@echo "Building native extensions..."
-	cd ./extensions/core && $(MAKE) build
+	cd ./extensions && $(MAKE) build
 
 .PHONY: edit
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
@@ -193,7 +193,7 @@ $(EXPORT_TEMPLATE):
 
 .PHONY: debug 
 debug: $(IMPORT_DIR) ## Run the project in debug mode in gamescope
-	$(GAMESCOPE) -e --xwayland-count 2 -- \
+	$(GAMESCOPE) -e --xwayland-count 2 --expose-wayland -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
@@ -293,6 +293,7 @@ rootfs: build/opengamepad-ui.x86_64
 	cp -r build/*.so $(ROOTFS)/usr/share/opengamepadui
 	cp -r build/opengamepad-ui.x86_64 $(ROOTFS)/usr/share/opengamepadui
 	cp -r build/opengamepad-ui.pck $(ROOTFS)/usr/share/opengamepadui
+	cp ./extensions/target/release/reaper $(ROOTFS)/usr/share/opengamepadui
 	touch $(ROOTFS)/.gdignore
 
 

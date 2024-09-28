@@ -212,7 +212,7 @@ impl Cpu {
             return Default::default();
         };
         let features = proxy.features().unwrap_or_default();
-        let features: Vec<GString> = features.into_iter().map(|f| f.into_godot()).collect();
+        let features: Vec<GString> = features.into_iter().map(|f| f.to_godot()).collect();
         features.into()
     }
 
