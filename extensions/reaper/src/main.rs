@@ -2,7 +2,10 @@ use std::{env, ffi::CString, process::exit};
 
 use nix::{
     errno::Errno,
-    sys::{prctl, wait::wait},
+    sys::{
+        prctl,
+        wait::{wait, WaitStatus},
+    },
     unistd::{execvp, fork, ForkResult},
 };
 
@@ -42,10 +45,17 @@ fn main() {
         Ok(ForkResult::Parent { child }) => {
             println!("reaper: got child PID: {child}");
 
+            // Keep track of child exit codes
+            let mut exit_codes = vec![];
+
             // Wait for all child processes to exit
             loop {
                 match wait() {
-                    Ok(_) => (),
+                    Ok(status) => {
+                        if let WaitStatus::Exited(_, code) = status {
+                            exit_codes.push(code);
+                        }
+                    }
                     Err(e) => {
                         if e == Errno::ECHILD {
                             break;
@@ -56,7 +66,10 @@ fn main() {
             }
 
             println!("reaper: no more children exist; exiting");
-            exit(0);
+
+            // Return the exit code of the last exited child process
+            let exit_code = exit_codes.last().unwrap_or(&0);
+            exit(*exit_code);
         }
 
         // Child process of the fork should execute the requested command

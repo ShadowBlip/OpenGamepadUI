@@ -1,8 +1,8 @@
 PREFIX ?= addons
-EXT_NAME := $(shell grep 'name =' Cargo.toml | head -n 1 | cut -d'"' -f2)
-LIB_NAME := $(shell grep 'name =' Cargo.toml | head -n 1 | cut -d'"' -f2 | sed 's/-/_/g')
-ALL_RS := $(shell find ./src -name '*.rs')
-ADDON_PATH := ../../addons/core
+EXT_NAME := $(shell grep 'name =' core/Cargo.toml | head -n 1 | cut -d'"' -f2)
+LIB_NAME := $(shell grep 'name =' core/Cargo.toml | head -n 1 | cut -d'"' -f2 | sed 's/-/_/g')
+ALL_RS := $(shell find ./ -name '*.rs')
+ADDON_PATH := ../addons/core
 RELEASE_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_release.x86_64.so
 DEBUG_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_debug.x86_64.so
 
