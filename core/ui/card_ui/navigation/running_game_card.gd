@@ -30,9 +30,9 @@ var button_scene := load("res://core/ui/components/card_button.tscn") as PackedS
 			toggled_off.emit()
 		toggled.emit(is_toggled)
 
-@onready var content_container := $%ContentContainer
-@onready var game_logo := $%GameLogo
-@onready var game_label := $%GameLabel
+@onready var content_container := $%ContentContainer as Container
+@onready var game_logo := $%GameLogo as TextureRect
+@onready var game_label := $%GameLabel as Label
 @onready var resume_button := $%ResumeButton as CardButton
 @onready var pause_button := $%PauseButton as CardButton
 @onready var exit_button := $%ExitButton as CardButton

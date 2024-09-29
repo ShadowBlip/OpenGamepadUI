@@ -174,7 +174,7 @@ clean: ## Remove build artifacts
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
 	rm -rf $(IMPORT_DIR)
-	cd ./extensions/core && $(MAKE) clean
+	cd ./extensions && $(MAKE) clean
 
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

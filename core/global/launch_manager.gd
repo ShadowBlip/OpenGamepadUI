@@ -74,23 +74,41 @@ func _init() -> void:
 	if _xwayland_primary:
 		# When window focus changes, update the current app and gamepad profile
 		var on_focus_changed := func(from: int, to: int):
+			if from == to:
+				return
 			logger.info("Window focus changed from " + str(from) + " to: " + str(to))
-			var last_app := _current_app
-
-			_current_app = _detect_running_app(to)
-
-			logger.debug("Last app: " + str(last_app) + " current_app: " + str(_current_app))
-			app_switched.emit(last_app, _current_app)
-
-			# If the app has a gamepad profile, set it
-			if _current_app:
-				set_app_gamepad_profile(_current_app)
-
 		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
 		# Debug print when the focused app changed
 		var on_focused_app_changed := func(from: int, to: int) -> void:
+			if from == to:
+				return
 			logger.debug("Focused app changed from " + str(from) + " to " + str(to))
+			
+			# If OGUI was focused, set the global gamepad profile
+			if to == gamescope.OVERLAY_GAME_ID or to == 0:
+				set_gamepad_profile("")
+				return
+			
+			# Find the running app for the given app id
+			var last_app := self._current_app
+			var detected_app: RunningApp
+			for app in _running:
+				if app.app_id == to:
+					detected_app = app
+			
+			# If the running app was not launched by OpenGamepadUI, then detect it.
+			if not detected_app:
+				detected_app = _detect_running_app(to)
+			self._current_app = detected_app
+
+			logger.debug("Last app: " + str(last_app) + " current_app: " + str(self._current_app))
+			app_switched.emit(last_app, self._current_app)
+
+			# If the app has a gamepad profile, set it
+			if self._current_app:
+				set_app_gamepad_profile(self._current_app)
+
 		_xwayland_primary.focused_app_updated.connect(on_focused_app_changed)
 
 	# Whenever the in-game state is entered, set the gamepad profile
@@ -208,13 +226,8 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
 
 	# Launch the application process
-	var pid := Reaper.create_process(exec, command)
-	logger.info("Launched with PID: {0}".format([pid]))
-
-	# Create a running app instance
-	var running_app := _make_running_app(app, pid, display)
-	running_app.command = command
-	running_app.environment = env
+	var running_app := RunningApp.spawn(app, env, exec, command)
+	logger.info("Launched with PID: {0}".format([running_app.pid]))
 
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
@@ -304,7 +317,10 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path := settings_manager.get_value(section, "gamepad_profile", "") as String
 	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
-	logger.debug("Using profile '" + profile_path + "' with gamepad type '" + profile_gamepad + "'")
+	if profile_path.is_empty():
+		logger.debug("Using global gamepad profile")
+	else:
+		logger.debug("Using profile '" + profile_path + "' with gamepad type '" + profile_gamepad + "'")
 	set_gamepad_profile(profile_path, profile_gamepad)
 
 
@@ -399,10 +415,12 @@ func _add_running(app: RunningApp):
 
 
 ## Called when a running app's state changes
-func _on_app_state_changed(_from: RunningApp.STATE, to: RunningApp.STATE, app: RunningApp) -> void:
+func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: RunningApp) -> void:
+	logger.debug("App state changed from", from, "to", to, "for app:", app)
 	if to != RunningApp.STATE.STOPPED:
 		return
 	_remove_running(app)
+	logger.debug("Currently running apps:", _running)
 	if state_machine.has_state(in_game_state) and _running.size() == 0:
 		logger.info("No more apps are running. Removing in-game state.")
 		_xwayland_primary.remove_baselayer_window()
@@ -512,8 +530,11 @@ func _is_app_id_running(app_id) -> bool:
 
 # Identifies the running app from the given window_id. If none is found,
 # creates a new RunningApp instance.
-func _detect_running_app(window_id: int) -> RunningApp:
+func _detect_running_app(_app_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
+	
+	# Get the currently focused window id
+	var window_id := _xwayland_primary.focused_window
 	if window_id == _ogui_window_id:
 		return null
 
