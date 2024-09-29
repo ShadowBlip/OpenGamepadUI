@@ -86,7 +86,7 @@ func _init() -> void:
 			logger.debug("Focused app changed from " + str(from) + " to " + str(to))
 			
 			# If OGUI was focused, set the global gamepad profile
-			if to == gamescope.OVERLAY_GAME_ID or to == 0:
+			if to in [gamescope.OVERLAY_GAME_ID, 0]:
 				set_gamepad_profile("")
 				return
 			

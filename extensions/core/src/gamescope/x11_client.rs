@@ -432,6 +432,57 @@ impl GamescopeXWayland {
         }
     }
 
+    /// Returns whether or not the given window has the STEAM_NOTIFICATION property
+    #[func]
+    fn has_notification(&self, window_id: u32) -> bool {
+        match self
+            .xwayland
+            .has_xprop(window_id, GamescopeAtom::SteamNotification)
+        {
+            Ok(v) => v,
+            Err(e) => {
+                godot_error!(
+                    "Failed to check window '{window_id}' has STEAM_NOTIFICATION property: {e:?}"
+                );
+                false
+            }
+        }
+    }
+
+    /// Returns whether or not the given window has the STEAM_INPUT_FOCUS property
+    #[func]
+    fn has_input_focus(&self, window_id: u32) -> bool {
+        match self
+            .xwayland
+            .has_xprop(window_id, GamescopeAtom::SteamInputFocus)
+        {
+            Ok(v) => v,
+            Err(e) => {
+                godot_error!(
+                    "Failed to check window '{window_id}' has STEAM_INPUT_FOCUS property: {e:?}"
+                );
+                false
+            }
+        }
+    }
+
+    /// Returns whether or not the given window has the STEAM_OVERLAY property
+    #[func]
+    fn has_overlay(&self, window_id: u32) -> bool {
+        match self
+            .xwayland
+            .has_xprop(window_id, GamescopeAtom::SteamOverlay)
+        {
+            Ok(v) => v,
+            Err(e) => {
+                godot_error!(
+                    "Failed to check window '{window_id}' has STEAM_OVERLAY property: {e:?}"
+                );
+                false
+            }
+        }
+    }
+
     /// --- XWayland Primary ---
 
     /// Return a list of focusable apps
