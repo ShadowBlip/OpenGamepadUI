@@ -40,7 +40,7 @@ func _ready() -> void:
 	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
 
-	for device in input_plumber.composite_devices:
+	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
 
@@ -74,7 +74,7 @@ func _input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
-	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
+	var possible_doubles := PackedStringArray(["ui_left", "ui_right", "ui_up", "ui_down"])
 	for action in possible_doubles:
 		if not event.is_action(action):
 			continue
@@ -320,7 +320,7 @@ func _return_chord(actions: PackedStringArray) -> void:
 	# TODO: Figure out a way to get the device who sent the event through
 	# Input.parse_input_event so we don't do this terrible loop. This is awful.
 	logger.debug("Return events to InputPlumber: " + str(actions))
-	for device in input_plumber.composite_devices:
+	for device in input_plumber.get_composite_devices():
 		device.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_PASS
 		device.send_button_chord(actions)
 
@@ -348,8 +348,8 @@ func _audio_input(event: InputEvent) -> void:
 
 
 func _watch_dbus_device(device: CompositeDevice) -> void:
-		for target in device.dbus_targets:
-			logger.debug("Adding watch for " + device.name + " " + target.name)
+		for target in device.dbus_devices:
+			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))
 			target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))
@@ -358,7 +358,7 @@ func _watch_dbus_device(device: CompositeDevice) -> void:
 func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> void:
 	var pressed := value == 1.0
 	logger.debug("Handling dbus input event: " + event + " pressed: " + str(pressed))
-	var action = event
+	var action := event
 	match event:
 		"ui_accept":
 			action = "ogui_south_ov"

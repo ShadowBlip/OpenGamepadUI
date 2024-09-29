@@ -1,28 +1,28 @@
 extends Control
 
-var platform := preload("res://core/global/platform.tres") as Platform
-var gamescope := preload("res://core/systems/gamescope/gamescope.tres") as Gamescope
-var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
-var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
-var input_plumber := preload("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
-var state_machine := (
-	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-)
-var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var popup_state_machine := preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
-var menu_state := preload("res://assets/state/states/menu.tres") as State
-var popup_state := preload("res://assets/state/states/popup.tres") as State
-var quick_bar_state = preload("res://assets/state/states/quick_bar_menu.tres") as State
-var settings_state = preload("res://assets/state/states/settings.tres") as State
-var gamepad_state = preload("res://assets/state/states/gamepad_settings.tres") as State
-var base_state = preload("res://assets/state/states/in_game.tres") as State
+var platform := load("res://core/global/platform.tres") as Platform
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
+var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+
+var menu_state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var popup_state_machine := load("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
+var menu_state := load("res://assets/state/states/menu.tres") as State
+var popup_state := load("res://assets/state/states/popup.tres") as State
+var quick_bar_state := load("res://assets/state/states/quick_bar_menu.tres") as State
+var settings_state := load("res://assets/state/states/settings.tres") as State
+var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as State
+var base_state := load("res://assets/state/states/in_game.tres") as State
 
 var managed_states: Array[State] = [quick_bar_state, settings_state, gamepad_state]
 var PID: int = OS.get_process_id()
-var args := OS.get_cmdline_user_args()
+var launch_args := OS.get_cmdline_user_args()
 var cmdargs := OS.get_cmdline_args()
-var display := Gamescope.XWAYLAND.OGUI
-var overlay_window_id := gamescope.get_window_id(PID, display)
+var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+var xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+var overlay_window_id := 0
 var underlay_log: FileAccess
 var underlay_process: int
 var underlay_window_id: int
@@ -35,6 +35,10 @@ var logger := Log.get_logger("Main", Log.LEVEL.INFO)
 ## Sets up overlay mode.
 func _init():
 	# Discover the OpenGamepadUI window ID
+	if xwayland_ogui:
+		var ogui_windows := xwayland_ogui.get_windows_for_pid(PID)
+		if not ogui_windows.is_empty():
+			overlay_window_id = ogui_windows[0]
 	if overlay_window_id <= 0:
 		logger.error("Unable to detect Window ID. Overlay is not going to work!")
 	logger.info("Found primary window id: {0}".format([overlay_window_id]))
@@ -58,9 +62,9 @@ func _init():
 func _ready() -> void:
 	# Workaround old versions that don't pass launch args via update pack
 	# TODO: Parse the parent PID's CLI args and use those instead.
-	if "--skip-update-pack" in cmdargs and args.size() == 0:
+	if "--skip-update-pack" in cmdargs and launch_args.size() == 0:
 		logger.warn("Launched via update pack without arguments! Falling back to default.")
-		args = ["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"]
+		launch_args = ["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"]
 
 	# Configure the locale
 	logger.debug("Setup Locale")
@@ -83,25 +87,17 @@ func _ready() -> void:
 
 	# Set up the session
 	logger.debug("Setup Overlay Mode")
-	_setup_overlay_mode(args)
+	_setup_overlay_mode(launch_args)
 
 	# Set the theme if one was set
-	logger.debug("Setup Theme")
-	var theme_path := settings_manager.get_value("general", "theme", "") as String
-	if theme_path == "":
-		logger.debug("No theme set. Using default theme.")
-
-	var current_theme = get_theme()
-	if theme_path != "" && current_theme.resource_path != theme_path:
-		logger.debug("Setting theme to: " + theme_path)
-		var loaded_theme = load(theme_path)
-		if loaded_theme != null:
-			# TODO: This is a workaround, themes aren't properly set the first time.
-			call_deferred("set_theme", loaded_theme)
-			call_deferred("set_theme", current_theme)
-			call_deferred("set_theme", loaded_theme)
-		else:
-			logger.debug("Unable to load theme")
+	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
+	logger.debug("Setting theme to: " + theme_path)
+	var loaded_theme = load(theme_path)
+	if loaded_theme != null:
+		@warning_ignore("unsafe_call_argument")
+		set_theme(loaded_theme)
+	else:
+		logger.debug("Unable to load theme")
 
 
 ## Finds needed PID's and global vars, Starts the user defined program as an
@@ -163,22 +159,23 @@ func _setup_overlay_mode(args: Array) -> void:
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 	input_plumber.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
 
+	# TODO: Do we need this?
 	# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
-	var on_device_changed := func(device: CompositeDevice):
-		var intercept_mode := input_plumber.intercept_mode
-		logger.debug("Setting intercept mode to: " + str(intercept_mode))
-		device.intercept_mode = intercept_mode
-		device.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
-	input_plumber.composite_device_changed.connect(on_device_changed)
+	#var on_device_changed := func(device: CompositeDevice):
+	#	var intercept_mode := input_plumber.intercept_mode
+	#	logger.debug("Setting intercept mode to: " + str(intercept_mode))
+	#	device.intercept_mode = intercept_mode
+	#	device.set_intercept_activation(["Gamepad:Button:Guide", "Gamepad:Button:East"], "Gamepad:Button:QuickAccess2")
+	#input_plumber.composite_device_changed.connect(on_device_changed)
 
 
 # Removes specified child elements from the given Node.
 func _remove_children(remove_list: PackedStringArray, parent:Node) -> void:
 	var child_count := parent.get_child_count()
-	var to_remove_list := []
+	var to_remove_list: Array[Node] = []
 
 	for child_idx in child_count:
-		var child = parent.get_child(child_idx)
+		var child := parent.get_child(child_idx)
 		logger.trace("Checking if " + child.name + " in remove list...")
 		if child.name in remove_list:
 			logger.trace(child.name + " queued for removal!")
@@ -195,10 +192,11 @@ func _remove_children(remove_list: PackedStringArray, parent:Node) -> void:
 		logger.trace("Removing " + child.name)
 		child.queue_free()
 
+
 ## Starts Steam as an underlay process
 func _start_steam_process(args: Array) -> void:
 	logger.debug("Starting steam: " + str(args))
-	var underlay_log_path = OS.get_environment("HOME") + "/.steam-stdout.log"
+	var underlay_log_path := OS.get_environment("HOME") + "/.steam-stdout.log"
 	_start_underlay_process(args, underlay_log_path)
 	_find_underlay_window_id()
 
@@ -221,7 +219,7 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 
 	# Setup logging
 	underlay_log = FileAccess.open(log_path, FileAccess.WRITE)
-	var error := underlay_log.get_open_error()
+	var error := FileAccess.get_open_error()
 	if error != OK:
 		logger.warn("Got error opening log file.")
 	else:
@@ -233,15 +231,15 @@ func _start_underlay_process(args: Array, log_path: String) -> void:
 ## Called to identify the xwayland window ID of the underlay process.
 func _find_underlay_window_id() -> void:
 	# Find Steam in the display tree
-	var root_win_id := gamescope.get_root_window_id(display)
-	var all_windows := gamescope.get_all_windows(root_win_id, display)
+	var root_win_id := xwayland_ogui.root_window_id
+	var all_windows := xwayland_ogui.get_all_windows(root_win_id)
 	for window in all_windows:
 		if window == overlay_window_id:
 			continue
-		if gamescope.has_xprop(window, "STEAM_NOTIFICATION", display):
+		if xwayland_ogui.has_notification(window):
 			underlay_window_id = window
 			logger.info("Found steam! " + str(underlay_window_id))
-			gamescope.focused_app_updated.connect(_on_app_focus_changed)
+			xwayland_primary.focused_app_updated.connect(_on_app_focus_changed)
 			break
 
 	# If we didn't find the window_id, set up a tiemr to loop back and try again.
@@ -256,43 +254,43 @@ func _find_underlay_window_id() -> void:
 
 
 ## Called when the base state is entered.
-func _on_base_state_entered(from: State) -> void:
+func _on_base_state_entered(_from: State) -> void:
 	# Manage input focus
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
-	if gamescope.set_input_focus(overlay_window_id, 0) != OK:
+	if xwayland_ogui.set_input_focus(overlay_window_id, 0) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Manage overlay
-	gamescope.set_overlay(overlay_window_id, 0, display)
-	gamescope.set_overlay(underlay_window_id, 1, display)
+	xwayland_ogui.set_overlay(overlay_window_id, 0)
+	xwayland_ogui.set_overlay(underlay_window_id, 1)
 
 
 ## Called when a the base state is exited.
-func _on_base_state_exited(to: State) -> void:
+func _on_base_state_exited(_to: State) -> void:
 	# Manage input focus
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
-	if gamescope.set_input_focus(overlay_window_id, 1) != OK:
+	if xwayland_ogui.set_input_focus(overlay_window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Manage overlay
-	gamescope.set_overlay(overlay_window_id, 1, display)
-	gamescope.set_overlay(underlay_window_id, 0, display)
+	xwayland_ogui.set_overlay(overlay_window_id, 1)
+	xwayland_ogui.set_overlay(underlay_window_id, 0)
 
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.
 func _check_exit() -> void:
 	if Reaper.get_pid_state(underlay_process) in ["R (running)", "S (sleeping)"]:
 		return
-	if gamescope.has_xprop(underlay_window_id, "STEAM_OVERLAY", display):
+	if xwayland_ogui.has_overlay(underlay_window_id):
 		return
 	logger.debug("Steam closed. Shutting down.")
 	get_tree().quit()
 
 
-func _on_app_focus_changed(_from: int, to: int) -> void:
+func _on_app_focus_changed(from: int, to: int) -> void:
 	# On focus to the steam overlay, ensure the default profile is used.
-	logger.warn("Changed window focus to app ID:", to)
-	if to in [Gamescope.OVERLAY_GAME_ID, 0]:
+	logger.warn("Changed window focus from", from, "to app ID:", to)
+	if to in [gamescope.OVERLAY_GAME_ID, 0]:
 		launch_manager.set_gamepad_profile("")
 		return
 
