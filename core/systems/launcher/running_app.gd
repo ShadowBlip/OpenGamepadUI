@@ -12,6 +12,8 @@ var gamescope := load("res://core/systems/gamescope/gamescope.tres") as Gamescop
 signal app_killed
 ## Emitted when the given app is gracefully stopped
 signal app_stopped
+## Emitted when the app type is detected
+signal app_type_detected
 ## Emitted when the window id of the given app has changed
 signal window_id_changed
 ## Emitted whenever the windows change for the app
@@ -34,6 +36,12 @@ enum STATE {
 	MISSING_WINDOW, ## App was running, but now its window cannot be discovered
 	STOPPING, ## App is being killed gracefully
 	STOPPED, ## App is no longer running
+}
+
+enum APP_TYPE {
+	UNKNOWN,
+	X11,
+	WAYLAND,
 }
 
 ## The LibraryLaunchItem associated with the running application
@@ -79,6 +87,8 @@ var app_id: int:
 	set(v):
 		app_id = v
 		app_id_changed.emit()
+## The type of app
+var app_type: APP_TYPE = APP_TYPE.UNKNOWN
 ## Whether or not the app is currently focused
 var focused: bool = false:
 	set(v):
@@ -102,7 +112,7 @@ var steam_close_tries := 0
 ## Flag for if OGUI should manage this app. Set to false if app is launched
 ## outside OGUI and we just want to track it.
 var is_ogui_managed: bool = true
-var logger := Log.get_logger("RunningApp", Log.LEVEL.TRACE)
+var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
 func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
@@ -111,11 +121,101 @@ func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
 	display = dsp
 
 
+## Run the given command and return it as a [RunningApp]
+static func spawn(app: LibraryLaunchItem, env: Dictionary, cmd: String, args: PackedStringArray) -> RunningApp:
+	# Generate an app id for the running application based on its name
+	var app_id := app.get_app_id()
+
+	# Launch the application process
+	var pid := Reaper.create_process(cmd, args, app_id)
+	var display := env["DISPLAY"] as String
+	var command := PackedStringArray([cmd])
+	command.append_array(args)
+
+	# Create a running app instance
+	var running_app := RunningApp.new(app, pid, display)
+	running_app.command = command
+	running_app.environment = env
+	running_app.app_id = app_id
+
+	return running_app
+
+
 # TODO: Only call this on window creation/deletion
 ## Updates the running app and fires signals
 func update() -> void:
+	match self.app_type:
+		APP_TYPE.UNKNOWN:
+			self.app_type = discover_app_type()
+			if self.app_type != APP_TYPE.UNKNOWN:
+				app_type_detected.emit()
+				self.update()
+		APP_TYPE.X11:
+			update_xwayland_app()
+		APP_TYPE.WAYLAND:
+			update_wayland_app()
+
+
+func discover_app_type() -> APP_TYPE:
+	# Update all the windows
+	self.window_ids = get_all_window_ids()
+
+	# Check to see if running app's app_id exists in focusable_apps
+	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	var focused_app := xwayland_primary.focused_app
+	var focusable_apps := xwayland_primary.focusable_apps
+	if (self.app_id == focused_app or self.app_id in focusable_apps) and self.window_ids.is_empty():
+		logger.debug("Discovered app type: Wayland")
+		return APP_TYPE.WAYLAND
+	
+	if self.app_id in focusable_apps and not self.window_ids.is_empty():
+		logger.debug("Discovered app type: X11")
+		return APP_TYPE.X11
+	
+	return APP_TYPE.UNKNOWN
+
+
+func update_wayland_app() -> void:
+	# Check if the app, or any of its children, are still running
+	var running := is_running()
+	if not running:
+		self.not_running_count += 1
+
+	# Update the running app's state
+	if not_running_count > 3:
+		state = STATE.STOPPED
+		app_killed.emit()
+	elif state == STATE.STARTED:
+		state = STATE.RUNNING
+		#grab_focus() # How can we grab wayland window focus?
+
+	var state_str := {
+		STATE.STARTED: "started", 
+		STATE.RUNNING: "running", 
+		STATE.MISSING_WINDOW: "no window",
+		STATE.STOPPING: "stopping", 
+		STATE.STOPPED: "stopped"
+	}
+	logger.trace(launch_item.name + " current state: " + state_str[state])
+
+	# If this was launched by Steam, try and detect if the game closed 
+	# so we can kill Steam gracefully
+	if is_steam_app() and state == STATE.STOPPED and is_ogui_managed:
+		logger.trace(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
+		# Don't try closing Steam immediately. Wait a few more ticks before attempting
+		# to close Steam.
+		if steam_close_tries < 4:
+			steam_close_tries += 1
+			return
+		var steam_pid := find_steam()
+		if steam_pid > 0:
+			logger.info("Trying to stop steam with pid: " + str(steam_pid))
+			OS.execute("kill", ["-15", str(steam_pid)])
+
+
+func update_xwayland_app() -> void:
 	# Update all windows related to the app's PID
-	window_ids = get_all_window_ids()
+	self.window_ids = get_all_window_ids()
 
 	# Ensure that all windows related to the app have an app ID set
 	_ensure_app_id()
@@ -233,25 +333,7 @@ func get_all_window_ids() -> PackedInt32Array:
 ## Returns true if the app's PID is running or any decendents with the same
 ## process group.
 func is_running() -> bool:
-	# If the app is still running, great!
-	if OS.is_process_running(pid):
-		return true
-
-	# If that failed, check if reaper can get the status.
-	logger.trace("Reaper pid State: " + Reaper.get_pid_state(pid))
-	if Reaper.get_pid_state(pid) in ["R (running)", "S (sleeping)"]:
-		return true
-
-	logger.trace("Original process not running. Checking child PID's...")
-	# If it's not running, let's check to make sure it's REALLY not running
-	# and hasn't re-parented itself
-	var children := get_child_pids()
-	if children.size() > 0:
-		var pids := Array(children)
-		logger.trace("{0} is not running, but lives on in {1}".format([pid, ",".join(pids)]))
-		return true
-	logger.trace("Process " + str(pid) + " has died and no child PID's could be found.")
-	return false
+	return OS.is_process_running(pid)
 
 
 ## Return a list of child PIDs. When launching apps with [Reaper], PR_SET_CHILD_SUBREAPER
@@ -469,3 +551,9 @@ func find_steam() -> int:
 			return child_pid
 
 	return -1
+
+
+func _to_string() -> String:
+	if not self.launch_item:
+		return "<RunningApp.Unknown>"
+	return "<RunningApp.{0}#{1}>".format([self.launch_item.name, self.app_id])
