@@ -39,7 +39,11 @@ var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
 func _ready() -> void:
 	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
+	input_plumber.started.connect(_init_inputplumber)
+	_init_inputplumber()
 
+
+func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
@@ -74,7 +78,7 @@ func _input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
-	var possible_doubles := PackedStringArray(["ui_left", "ui_right", "ui_up", "ui_down"])
+	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
 	for action in possible_doubles:
 		if not event.is_action(action):
 			continue
@@ -349,6 +353,8 @@ func _audio_input(event: InputEvent) -> void:
 
 func _watch_dbus_device(device: CompositeDevice) -> void:
 		for target in device.dbus_devices:
+			if target.input_event.is_connected(_on_dbus_input_event.bind(device.dbus_path)):
+				continue
 			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))
@@ -357,7 +363,8 @@ func _watch_dbus_device(device: CompositeDevice) -> void:
 
 func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> void:
 	var pressed := value == 1.0
-	logger.debug("Handling dbus input event: " + event + " pressed: " + str(pressed))
+	logger.debug("Handling dbus input event from" + dbus_path + ": " + event + " pressed: " + str(pressed))
+
 	var action := event
 	match event:
 		"ui_accept":
