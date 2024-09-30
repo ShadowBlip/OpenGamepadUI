@@ -1,9 +1,9 @@
 extends Control
 
-var Gamescope := preload("res://core/global/gamescope.tres") as Gamescope
 var AudioManager := preload("res://core/global/audio_manager.tres") as AudioManager
 var DisplayManager := preload("res://core/global/display_manager.tres") as DisplayManager
 
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 var backlights := DisplayManager.get_backlight_paths()
 
 var logger := Log.get_logger("QuickSettings", Log.LEVEL.INFO)
@@ -48,7 +48,10 @@ func _on_brightness_slider_changed(value: float) -> void:
 	DisplayManager.set_brightness(percent)
 
 
+# TODO: Deprecate
 func _on_saturation_changed(value: float) -> void:
-	var code := Gamescope.set_saturation(value / 100.0)
-	if code != OK:
-		logger.warn("Unable to set saturation. Code: " + str(code))
+	pass
+	#var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+	#var code := xwayland.set_saturation(value / 100.0)
+	#if code != OK:
+	#	logger.warn("Unable to set saturation. Code: " + str(code))

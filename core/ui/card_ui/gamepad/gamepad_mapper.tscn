@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_scwwv"]
 [ext_resource type="Resource" uid="uid://46cu324n427u" path="res://assets/state/states/gamepad_change_input.tres" id="4_sv30y"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="5_i6uqd"]
-[ext_resource type="Texture2D" uid="uid://dyemqkvdtk43e" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="8_5jaa6"]
+[ext_resource type="Texture2D" uid="uid://cxvxwgt1vox0" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="8_5jaa6"]
 [ext_resource type="PackedScene" uid="uid://cgmb4kr2ec4ha" path="res://core/ui/components/tabs_header.tscn" id="8_okgql"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_an8os"]
 [ext_resource type="Resource" uid="uid://b58i2ue2qwe6f" path="res://core/ui/card_ui/gamepad/gamepad_mapper_tabs_state.tres" id="10_gr678"]
@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="11_taofv"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="12_30f1c"]
 [ext_resource type="Texture2D" uid="uid://dj1ohb74chydb" path="res://assets/ui/icons/round-delete-forever.svg" id="12_akkxd"]
-[ext_resource type="Texture2D" uid="uid://bie2sf8kjawr" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="13_hvmil"]
+[ext_resource type="Texture2D" uid="uid://ceyt88pt5sogo" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="13_hvmil"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="16_bkk3w"]
 [ext_resource type="Texture2D" uid="uid://05mc8os4g5ax" path="res://assets/images/mouse/diagram.svg" id="18_lkxxd"]
 [ext_resource type="Script" path="res://core/global/keyboard_instance.gd" id="18_u0i73"]
@@ -114,10 +114,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_t62r6")
+current_tab = 0
 tabs_visible = false
 
 [node name="Gamepad" type="MarginContainer" parent="VBoxContainer/TabContainer"]
 layout_mode = 2
+metadata/_tab_index = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Gamepad"]
 layout_mode = 2
@@ -219,6 +221,7 @@ text = "Touch Pads"
 [node name="Keyboard" type="MarginContainer" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Keyboard"]
 layout_mode = 2
@@ -248,6 +251,7 @@ size_flags_vertical = 3
 [node name="Mouse" type="MarginContainer" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/Mouse"]
 layout_mode = 2
@@ -305,6 +309,7 @@ text = "Buttons"
 [node name="System" type="MarginContainer" parent="VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
+metadata/_tab_index = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/System"]
 layout_mode = 2

@@ -11,7 +11,7 @@ signal profile_loaded(profile: PerformanceProfile)
 signal profile_saved(profile: PerformanceProfile, path: String)
 
 const USER_PROFILES := "user://data/performance/profiles"
-const DOCKED_STATES := [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED, PowerManager.DEVICE_STATE.PENDING_CHARGE]
+const DOCKED_STATES := [UPowerDevice.STATE_CHARGING, UPowerDevice.STATE_FULLY_CHARGED, UPowerDevice.STATE_PENDING_CHARGE]
 
 ## Performance profiles are separated into these states, so users can have different
 ## performance depending on whether or not they are plugged in to an external power
@@ -22,11 +22,12 @@ enum PROFILE_STATE {
 }
 
 var _hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
-var _power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
+var _power_manager := load("res://core/systems/power/power_manager.tres") as UPowerInstance
 var _settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
-var _power_station := load("res://core/systems/performance/power_station.tres") as PowerStation
+var _power_station := load("res://core/systems/performance/power_station.tres") as PowerStationInstance
 var _launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
+var display_device := _power_manager.get_display_device()
 var current_profile: PerformanceProfile
 var current_profile_state: PROFILE_STATE # docked or undocked
 var logger := Log.get_logger("PerformanceManager", Log.LEVEL.INFO)
@@ -39,15 +40,13 @@ func _init() -> void:
 	
 	# Connect to battery state changes to switch between "docked" and "undocked"
 	# performance profiles.
-	var batteries := _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
-	if batteries.size() > 1:
-		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
-	if batteries.size() > 0:
-		var battery := batteries[0]
-		battery.updated.connect(_on_battery_updated.bind(battery))
-	
+	if display_device:
+		display_device.updated.connect(_on_battery_updated.bind(display_device))
+
+	# TODO: Listen for signals if PowerStation starts/stops
+
 	# Do nothing if PowerStation is not detected
-	if not _power_station.supports_power_station():
+	if not _power_station.is_running():
 		return
 	
 	# Load and apply the default profile
@@ -109,14 +108,14 @@ func create_profile(library_item: LibraryLaunchItem = null) -> PerformanceProfil
 		profile.cpu_smt_enabled = _power_station.cpu.smt_enabled
 
 	# Detect all GPU cards
-	var cards: Array[PowerStation.GPUCard] = []
+	var cards: Array[GpuCard] = []
 	if _power_station.gpu:
 		cards = _power_station.gpu.get_cards()
 
 	# Configure GPU settings
 	# TODO: Support multiple GPUs?
 	for card in cards:
-		if card.class_type != "integrated":
+		if card.class != "integrated":
 			continue
 
 		profile.tdp_current = card.tdp
@@ -161,7 +160,7 @@ func load_or_create_profile(profile_path: String, library_item: LibraryLaunchIte
 
 ## Applies the given performance profile to the system
 func apply_profile(profile: PerformanceProfile) -> void:
-	if not _power_station.supports_power_station():
+	if not _power_station.is_running():
 		logger.info("Unable to apply performance profile. PowerStation not detected.")
 		return
 	
@@ -178,14 +177,14 @@ func apply_profile(profile: PerformanceProfile) -> void:
 			_power_station.cpu.cores_enabled = profile.cpu_core_count_current
 
 	# Detect all GPU cards
-	var cards: Array[PowerStation.GPUCard] = []
+	var cards: Array[GpuCard] = []
 	if _power_station.gpu:
 		cards = _power_station.gpu.get_cards()
 
 	# Configure GPU settings
 	# TODO: Support mutliple GPUs?
 	for card in cards:
-		if card.class_type != "integrated":
+		if card.class != "integrated":
 			continue
 		logger.debug("Applying GPU performance settings from profile")
 		if card.manual_clock != profile.gpu_manual_enabled:
@@ -242,26 +241,22 @@ func apply_and_save_profile(profile: PerformanceProfile) -> void:
 ## Returns the current profile state. I.e. whether or not the "docked" or "undocked"
 ## performance profiles should be used.
 func get_profile_state() -> PROFILE_STATE:
-	var batteries := _power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
-	if batteries.size() > 1:
-		logger.warn("You somehow have more than one battery. We don't know what to do with that.")
-	if batteries.size() > 0:
-		var battery := batteries[0]
-		return get_profile_state_from_battery(battery)
+	if display_device:
+		return get_profile_state_from_battery(display_device)
 
 	return PROFILE_STATE.DOCKED
 
 
 ## Returns the current profile state. I.e. whether or not the "docked" or "undocked"
 ## performance profiles should be used.
-func get_profile_state_from_battery(battery: PowerManager.Device) -> PROFILE_STATE:
+func get_profile_state_from_battery(battery: UPowerDevice) -> PROFILE_STATE:
 	if battery.state not in DOCKED_STATES:
 		return PROFILE_STATE.UNDOCKED
 	return PROFILE_STATE.DOCKED
 
 
 ## Called whenever a battery is updated
-func _on_battery_updated(battery: PowerManager.Device) -> void:
+func _on_battery_updated(battery: UPowerDevice) -> void:
 	# Get the current profile state to see if we need to load the docked or
 	# undocked profile.
 	var profile_state := get_profile_state_from_battery(battery)

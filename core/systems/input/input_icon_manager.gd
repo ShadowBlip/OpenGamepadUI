@@ -20,7 +20,7 @@ enum InputType {
 }
 
 var in_game_state := load("res://assets/state/states/in_game.tres") as State
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 var logger := Log.get_logger("InputIconManager", Log.LEVEL.INFO)
 
 ## Disable/Enable signaling on input type changes
@@ -154,7 +154,7 @@ func _init():
 	in_game_state.state_exited.connect(on_in_game_exited)
 
 	# Listen for InputPlumber device change events
-	var on_comp_device_added := func(_device: InputPlumber.CompositeDevice):
+	var on_comp_device_added := func(_device: CompositeDevice):
 		_on_joy_connection_changed(true)
 	input_plumber.composite_device_added.connect(on_comp_device_added)
 	var on_comp_device_removed := func(_path: String):

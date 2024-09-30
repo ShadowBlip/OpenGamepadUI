@@ -1,45 +1,51 @@
-extends Node2D
-
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+extends GutTest
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	for compo in input_plumber.composite_devices:
-		print(compo.dbus_targets)
-		for dt in compo.dbus_targets:
-			dt.input_event.connect(_on_input_event)
-
-	input_plumber.composite_device_added.connect(_on_dev_add)
-	input_plumber.composite_device_removed.connect(_on_dev_rm)
-	input_plumber.set_intercept_mode(InputPlumber.INTERCEPT_MODE.ALL)
-	get_tree().root.mode = Window.MODE_MINIMIZED
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
-
-func _on_input_event(event: String, value: float) -> void:
-	print("Got input event " + event + " with value " + str(value))
-	if event == "ui_guide":
-		var pressed = value == 1.0
-		for device in input_plumber.composite_devices:
-			device.intercept_mode = 0
-			device.send_event("Gamepad:Button:Guide", pressed)
-			device.intercept_mode = InputPlumber.INTERCEPT_MODE.ALL as int
-
-	if event == "ui_accept":
-		for device in input_plumber.composite_devices:
-			var intercept_mode = device.intercept_mode
-			device.intercept_mode = 0
-			device.send_button_chord(["Gamepad:Button:Guide", "Gamepad:Button:South"])
-			device.intercept_mode = InputPlumber.INTERCEPT_MODE.ALL  as int
+# Configure the given composite device to set intercept mode and print input
+# events
+func _watch_device(device: CompositeDevice) -> void:
+	gut.p("  Found device " + str(device) + " at " + device.dbus_path)
+	device.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_ALL
+	assert_eq(device.intercept_mode, InputPlumberInstance.INTERCEPT_MODE_ALL)
+	var dbus_devices := device.dbus_devices
+	if dbus_devices.is_empty():
+		gut.p("  No dbus devices found for device")
+		return
+	var dbus_device := dbus_devices[0]
+	gut.p("  Found DBus device: " + str(dbus_device) + " at " + dbus_device.dbus_path)
+	var on_input_event := func(event: String, value: float):
+		gut.p("[DBus Event] " + event + ": " + str(value))
+	dbus_device.input_event.connect(on_input_event)
 
 
-func _on_dev_add() -> void:
-	print("Newbie doobie")
+func test_inputplumber() -> void:
+	var inputplumber := InputPlumber.new()
+	inputplumber.instance = load("res://core/systems/input/input_plumber.tres")
+	add_child_autoqfree(inputplumber)
+	
+	if not inputplumber.instance.is_running():
+		pass_test("InputPlumber is not running. Skipping tests.")
+		return
 
-func _on_dev_rm() -> void:
-	print("bubye")
+	# Set intercept mode
+	gut.p("Setting intercept mode to ALL")
+	inputplumber.instance.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_ALL
+	assert_eq(inputplumber.instance.intercept_mode, InputPlumberInstance.INTERCEPT_MODE_ALL)
+
+	# Find all composite devices
+	gut.p("Discovering all composite devices")
+	var devices := inputplumber.instance.get_composite_devices()
+	for device in devices:
+		_watch_device(device)
+
+	# Add listeners for any new devices
+	inputplumber.instance.composite_device_added.connect(_watch_device)
+	
+	# Add listeners when devices are removed
+	var on_device_removed := func(dbus_path: String):
+		gut.p("Device was removed: " + dbus_path)
+	inputplumber.instance.composite_device_removed.connect(on_device_removed)
+
+	await wait_seconds(30, "Waiting 30s... Press buttons to test")
+
+	inputplumber.instance.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_NONE

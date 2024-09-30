@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://6ygxdkvh1hib"]
+[gd_scene load_steps=12 format=3 uid="uid://6ygxdkvh1hib"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.gd" id="1_7sjpd"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_36ef6"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_p7et2"]
+[ext_resource type="Script" path="res://core/systems/bluetooth/bluetooth_manager.gd" id="2_yoi1n"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_2trn0"]
+[ext_resource type="BluezInstance" uid="uid://peeajgfcx2fw" path="res://core/systems/bluetooth/bluetooth_manager.tres" id="3_aju5k"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="4_isnhb"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_l428g"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_ivwga"]
@@ -18,6 +20,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7sjpd")
+
+[node name="BluetoothManager" type="Node" parent="."]
+script = ExtResource("2_yoi1n")
+instance = ExtResource("3_aju5k")
 
 [node name="InputWatcher" parent="." instance=ExtResource("2_p7et2")]
 stop_propagation = true
@@ -35,9 +41,6 @@ state = ExtResource("6_2ogat")
 script = ExtResource("7_klxjh")
 target = NodePath("../../MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer/FocusGroup")
 on_signal = "state_entered"
-
-[node name="DiscoverTimer" type="Timer" parent="."]
-unique_name_in_owner = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

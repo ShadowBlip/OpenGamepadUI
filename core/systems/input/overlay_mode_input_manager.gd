@@ -1,4 +1,4 @@
-@icon("res://assets/icons/navigation.svg")
+@icon("res://assets/editor-icons/material-symbols-joystick.svg")
 extends Node
 class_name OverlayInputManager
 
@@ -14,7 +14,7 @@ class_name OverlayInputManager
 ## The audio manager to use to adjust the audio when audio input events happen.
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 ## InputPlumber receives and sends DBus input events.
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 ## LaunchManager provides context on the currently running app so we can switch profiles
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 ## The Global State Machine
@@ -39,8 +39,12 @@ var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
 func _ready() -> void:
 	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
+	input_plumber.started.connect(_init_inputplumber)
+	_init_inputplumber()
 
-	for device in input_plumber.composite_devices:
+
+func _init_inputplumber() -> void:
+	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
 
@@ -320,8 +324,8 @@ func _return_chord(actions: PackedStringArray) -> void:
 	# TODO: Figure out a way to get the device who sent the event through
 	# Input.parse_input_event so we don't do this terrible loop. This is awful.
 	logger.debug("Return events to InputPlumber: " + str(actions))
-	for device in input_plumber.composite_devices:
-		device.intercept_mode = InputPlumber.INTERCEPT_MODE.PASS
+	for device in input_plumber.get_composite_devices():
+		device.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_PASS
 		device.send_button_chord(actions)
 
 
@@ -347,9 +351,11 @@ func _audio_input(event: InputEvent) -> void:
 		return
 
 
-func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
-		for target in device.dbus_targets:
-			logger.debug("Adding watch for " + device.name + " " + target.name)
+func _watch_dbus_device(device: CompositeDevice) -> void:
+		for target in device.dbus_devices:
+			if target.input_event.is_connected(_on_dbus_input_event.bind(device.dbus_path)):
+				continue
+			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))
 			target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))
@@ -357,8 +363,9 @@ func _watch_dbus_device(device: InputPlumber.CompositeDevice) -> void:
 
 func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> void:
 	var pressed := value == 1.0
-	logger.debug("Handling dbus input event: " + event + " pressed: " + str(pressed))
-	var action = event
+	logger.debug("Handling dbus input event from" + dbus_path + ": " + event + " pressed: " + str(pressed))
+
+	var action := event
 	match event:
 		"ui_accept":
 			action = "ogui_south_ov"

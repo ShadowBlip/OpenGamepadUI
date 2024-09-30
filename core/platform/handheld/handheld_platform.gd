@@ -11,6 +11,6 @@ class_name HandheldPlatform
 
 @export_category("Controller Icons")
 ## Image of the device as a diagram to show in the gamepad configuration menus.
-@export var diagram: Texture2D = load("res://addons/controller_icons/assets/xboxone/diagram_simple.png")
+@export var diagram: Texture2D = load("res://assets/images/gamepad/xbox/XboxOne_Diagram_Simple.png")
 ## Custom icon images to use when displaying buttons/joysticks in the interface
 @export var icon_mappings: Array[HandheldIconMapping]

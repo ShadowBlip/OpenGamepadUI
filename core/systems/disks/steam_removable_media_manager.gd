@@ -1,7 +1,7 @@
 extends Resource
 class_name SteamRemovableMediaManager
 
-var udisks2 := load("res://core/systems/disks/udisks2.tres") as UDisks2
+var udisks2 := load("res://core/systems/disks/disk_manager.tres") as UDisks2Instance
 
 var logger := Log.get_logger("SteamRemovableMediaManager", Log.LEVEL.INFO)
 
@@ -26,7 +26,7 @@ var trim_capable: bool = false
 
 
 func _init() -> void:
-	if not udisks2.supports_disk_management():
+	if not udisks2.is_running():
 		return
 
 	# Check the required system files exist for steam_removable_media
@@ -58,12 +58,6 @@ func format_drive(device: BlockDevice) -> Error:
 		logger.error("System is not format capable")
 		return ERR_UNAVAILABLE
 
-	# This should never hit if using our device tree, but  the method is public so
-	# make sure.
-	if udisks2.block_device_has_protected_mount(device):
-		logger.error("Attempted to format device with protected mount. Illegal Operation.")
-		return ERR_UNAUTHORIZED
-
 	var drive = "/dev" + device.dbus_path.trim_prefix(BLOCK_PREFIX)
 	logger.debug("Formatting drive:", drive)
 	var args := ["--full", "--device", drive]
@@ -82,12 +76,6 @@ func init_steam_lib(partition: PartitionDevice) -> Error:
 	if not init_capable:
 		logger.error("System cannot initialize steam libraries")
 		return ERR_UNAVAILABLE
-
-	# This should never hit if using our device tree, but  the method is public so
-	# make sure.
-	if udisks2.partition_has_protected_mount(partition):
-		logger.error("Attempted to initialize steam library on device with protected mount. Illegal Operation.")
-		return ERR_UNAUTHORIZED
 
 	var drive := "/dev" + partition.dbus_path.trim_prefix(BLOCK_PREFIX)
 	logger.debug("Intitializing partition as Steam Library: " + drive)

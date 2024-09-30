@@ -1,19 +1,26 @@
 extends Control
 
-const Gamescope := preload("res://core/global/gamescope.tres")
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 
-signal displays_updated
+## Currently selected PID
+var _selected_pid := -1
+## Map of gamescope displays to XWayland instance
+## E.g. {":0": <XWayland>, ":1": <XWayland>}
+var _xwaylands := {}
 
-var selected_pid := -1
-
-@onready var displays := Gamescope.discover_gamescope_displays()
-@onready var refresh_timer := $RefreshTimer
+@onready var refresh_timer := $RefreshTimer as Timer
 @onready var pid_inspector := $%PIDInspector as Tree
 @onready var kill_button := $%KillButton as Button
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Discover Gamescope displays
+	var xwaylands := gamescope.get_xwaylands()
+	for xwayland in xwaylands:
+		var xwayland_name := xwayland.name
+		_xwaylands[xwayland_name] = xwayland
+	
 	# Pause refresh when the inspector is not visible
 	var on_visible_changed := func():
 		if visible:
@@ -21,7 +28,6 @@ func _ready() -> void:
 			return
 		refresh_timer.stop()
 	visibility_changed.connect(on_visible_changed)
-	refresh_timer.timeout.connect(_update_displays)
 	refresh_timer.timeout.connect(_update_pid_tree)
 	
 	# Configure the PID inspector
@@ -41,34 +47,26 @@ func _on_pid_selected() -> void:
 	var selected := pid_inspector.get_selected()
 	var metadata = selected.get_metadata(0)
 	if not metadata:
-		selected_pid = -1
+		_selected_pid = -1
 		kill_button.disabled = true
 		return
 	var pid := metadata as int
-	selected_pid = pid
+	_selected_pid = pid
 	kill_button.disabled = false
 
 
 # Triggers when the kill button is pressed
 func _on_kill_pressed() -> void:
-	if selected_pid < 1:
+	if _selected_pid < 1:
 		return
-	Reaper.reap(selected_pid)
-	OS.kill(selected_pid)
+	Reaper.reap(_selected_pid)
+	OS.kill(_selected_pid)
 	kill_button.disabled = true
-
-
-# Looks for gamescope displays at refresh interval
-func _update_displays() -> void:
-	if len(displays) != 0:
-		return
-	displays = Gamescope.discover_gamescope_displays()
-	displays_updated.emit()
 
 
 # Update the PID tree component
 func _update_pid_tree() -> void:
-	if len(displays) == 0:
+	if _xwaylands.size() == 0:
 		return
 	
 	# Get the PID tree component and get the root element
@@ -76,10 +74,9 @@ func _update_pid_tree() -> void:
 	var root := tree.get_root()
 
 	# Loop through all displays and find any processes with windows
-	for display in displays:
-		
+	for xwayland_name: String in _xwaylands.keys():
 		# Create a display root element if it does not exist
-		var display_str := "Display %s" % display
+		var display_str := "Display %s" % xwayland_name
 		var display_root: TreeItem
 		for child in root.get_children():
 			var text := child.get_text(0)
@@ -90,26 +87,30 @@ func _update_pid_tree() -> void:
 			display_root.set_text(0, display_str)
 		
 		# Update the tree for the given display
-		_update_tree_for_display(display, tree, display_root)
+		_update_tree_for_display(xwayland_name, tree, display_root)
 
 
 # Updates the given tree for the given display
 func _update_tree_for_display(display_name: String, tree: Tree, root: TreeItem) -> void:
-	var display := Gamescope.get_display_type(display_name)
+	if not display_name in _xwaylands:
+		return
+	var xwayland := _xwaylands[display_name] as GamescopeXWayland
 
 	# Get all windows for the given Gamescope display
-	var windows_root := Gamescope.get_root_window_id(display)
-	var windows_all := Gamescope.get_all_windows(windows_root, display)
+	var windows_root := xwayland.root_window_id
+	var windows_all := xwayland.get_all_windows(windows_root)
 	var pids := {}
 	for window in windows_all:
-		var pid := Gamescope.get_window_pid(window, display)
-		if not pid in pids:
-			pids[pid] = []
-		pids[pid].append(window)
+		var window_pids := xwayland.get_windows_for_pid(window)
+		for pid in window_pids:
+			if not pid in pids:
+				pids[pid] = []
+			@warning_ignore("unsafe_method_access")
+			pids[pid].append(window)
 	
 	# Create a list of tree nodes to add or remove
-	var needs_creation := []
-	var needs_removal := []
+	var needs_creation: Array[int] = []
+	var needs_removal: Array[TreeItem] = []
 
 	# Get a list of all the current children in the tree so we can reconcile
 	# it with what processes are currently running
@@ -140,9 +141,8 @@ func _update_tree_for_display(display_name: String, tree: Tree, root: TreeItem) 
 		pid_child.set_metadata(0, pid)
 		
 		# Create a tree node for each window associated with the PID
-		for window in pids[pid]:
+		for window: int in pids[pid]:
 			var window_child := tree.create_item(pid_child)
-			var window_name := Gamescope.get_window_name(window, display)
+			var window_name := xwayland.get_window_name(window)
 			window_child.set_text(0, "Window {0} ({1})".format([window, window_name]))
 			window_child.set_metadata(0, pid)
-

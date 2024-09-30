@@ -2,8 +2,8 @@ extends Control
 
 var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
 var PID: int = OS.get_process_id()
-var gamescope := load("res://core/global/gamescope.tres") as Gamescope
-var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
+var overlay_window_id: int
 
 @onready var timer := $%Timer as Timer
 @onready var level_indicator := $%LevelIndicator
@@ -11,6 +11,11 @@ var overlay_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+	if xwayland:
+		var window_ids := xwayland.get_windows_for_pid(PID)
+		if not window_ids.is_empty():
+			overlay_window_id = window_ids[0]
 	audio_manager.volume_changed.connect(_on_volume_changed)
 	timer.timeout.connect(_on_timeout)
 	visible = false

@@ -1,6 +1,3 @@
-[gd_resource type="Resource" script_class="PowerStation" load_steps=2 format=3 uid="uid://cdyeux8mdf6l6"]
-
-[ext_resource type="Script" path="res://core/systems/performance/power_station.gd" id="1_bdrpq"]
+[gd_resource type="PowerStationInstance" format=3 uid="uid://c2mmrnh3rcs58"]
 
 [resource]
-script = ExtResource("1_bdrpq")

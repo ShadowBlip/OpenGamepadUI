@@ -11,9 +11,54 @@ enum SIG {
 
 ## Spawn a process with PR_SET_CHILD_SUBREAPER set so child processes will
 ## reparent themselves to OpenGamepadUI. Returns the PID of the spawned process.
-static func create_process(cmd: String, args: PackedStringArray) -> int:
-	#return OS.create_process(cmd, args)
-	return LinuxThread.subreaper_create_process(cmd, args)
+static func create_process(cmd: String, args: PackedStringArray, app_id: int = -1) -> int:
+	var logger := Log.get_logger("Reaper")
+	logger.debug("Got command to execute:", cmd, args)
+	var reaper_cmd := get_reaper_command()
+	logger.debug("Got reaper command:", reaper_cmd)
+	if reaper_cmd.is_empty():
+		logger.warn("'reaper' binary not found, launching without reaper")
+		logger.info("Executing OS command:", cmd, args)
+		return OS.create_process(cmd, args)
+
+	# Build the arguments for reaper.
+	var reaper_args := PackedStringArray()
+	if app_id >= 0:
+		reaper_args.append("SteamLaunch")
+		reaper_args.append("AppId={0}".format([app_id]))
+	reaper_args.append("--")
+	reaper_args.append(cmd)
+	reaper_args.append_array(args)
+	logger.info("Executing REAPER command:", reaper_cmd, reaper_args)
+	return OS.create_process(reaper_cmd, reaper_args)
+
+## Discovers the 'reaper' binary to execute commands with PR_SET_CHILD_SUBREAPER.
+static func get_reaper_command() -> String:
+	var logger := Log.get_logger("Reaper")
+	var home := OS.get_environment("HOME")
+	var search_paths := [
+		"./extensions/target/release",
+		"/usr/share/opengamepadui",
+		"{0}/.local/share/opengamepadui".format([home]),
+		"/run/current-system/sw/share/opengamepadui"
+	]
+	
+	for path in search_paths:
+		logger.debug("Checking for reaper in path:", path)
+		# Check if the path exists, its the responsible thing to do.
+		if not DirAccess.dir_exists_absolute(path):
+			logger.debug("Path does not exists!")
+			continue
+		logger.debug("Path does exists!")
+		var directory := DirAccess.open(path)
+		if not directory:
+			logger.warn("Failed to open path:", path)
+			continue
+		if directory.file_exists("reaper"):
+			var reaper_path := "{0}/reaper".format([path])
+			return reaper_path
+	
+	return ""
 
 
 # Kills the given PID and all its descendants
@@ -72,9 +117,7 @@ static func get_pid_group(pid: int) -> int:
 static func get_pid_state(pid: int) -> String:
 	var status: Dictionary = get_pid_status(pid)
 	if not "State" in status:
-		var logger := Log.get_logger("Reaper")
-		logger.warn("Unable to check state of PID " + str(pid))
-		return ""
+		return "D (dead)"
 	return status["State"]
 
 

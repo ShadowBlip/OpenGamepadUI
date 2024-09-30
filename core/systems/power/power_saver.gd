@@ -6,7 +6,7 @@ class_name PowerSaver
 
 var display := load("res://core/global/display_manager.tres") as DisplayManager
 var settings := load("res://core/global/settings_manager.tres") as SettingsManager
-var power_manager := load("res://core/systems/power/power_manager.tres") as PowerManager
+var power_manager := load("res://core/systems/power/power_manager.tres") as UPowerInstance
 
 const MINUTE := 60
 
@@ -27,14 +27,13 @@ var dimmed := false
 var prev_brightness := {}
 var supports_brightness := display.supports_brightness()
 var has_battery := false
-var batteries : Array[PowerManager.Device]
+var display_device := power_manager.get_display_device()
 var logger := Log.get_logger("PowerSaver")
 
 
 func _ready() -> void:
-	batteries = power_manager.get_devices_by_type(PowerManager.DEVICE_TYPE.BATTERY)
-	if batteries.size() > 0:
-		has_battery = true
+	if display_device:
+		has_battery = display_device.is_present
 	
 	if dim_screen_enabled and supports_brightness:
 		dim_timer.timeout.connect(_on_dim_timer_timeout)
@@ -46,9 +45,9 @@ func _ready() -> void:
 
 func _on_dim_timer_timeout() -> void:
 	# If dimming is disabled when charging, check the battery state
-	if has_battery and not dim_when_charging:
-		var status: int = batteries[0].state
-		if status in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED]:
+	if has_battery and display_device and not dim_when_charging:
+		var status := display_device.state
+		if status in [UPowerDevice.STATE_CHARGING, UPowerDevice.STATE_FULLY_CHARGED]:
 			logger.debug("Not dimming because battery is charging")
 			return
 	if not has_battery and not dim_when_charging:
@@ -71,9 +70,9 @@ func _on_dim_timer_timeout() -> void:
 
 func _on_suspend_timer_timeout() -> void:
 	# If suspend is disabled when charging, check the battery state
-	if has_battery and not suspend_when_charging:
-		var status: int = batteries[0].state
-		if status in [PowerManager.DEVICE_STATE.CHARGING, PowerManager.DEVICE_STATE.FULLY_CHARGED]:
+	if has_battery and display_device and not suspend_when_charging:
+		var status := display_device.state
+		if status in [UPowerDevice.STATE_CHARGING, UPowerDevice.STATE_FULLY_CHARGED]:
 			logger.debug("Not suspending because battery is charging")
 			return
 	if not has_battery and not suspend_when_charging:

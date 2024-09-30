@@ -1,4 +1,4 @@
-@icon("res://assets/editor-icons/dialog-2-bold.svg")
+@icon("res://assets/editor-icons/solar--dialog-2-bold.svg")
 @tool
 extends Control
 class_name ProgressDialog

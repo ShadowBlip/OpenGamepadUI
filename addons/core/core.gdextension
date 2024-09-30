@@ -1,0 +1,15 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.3
+reloadable = false
+
+[libraries]
+linux.debug.x86_64 = "res://addons/core/bin/libopengamepadui-core.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/core/bin/libopengamepadui-core.linux.template_release.x86_64.so"
+
+[icons]
+BluezInstance = "res://assets/editor-icons/bluetooth.svg"
+GamescopeInstance = "res://assets/editor-icons/streamline--desktop-game-solid.svg"
+InputPlumberInstance = "res://addons/core/assets/icons/inputplumber.svg"
+PowerStationInstance = "res://assets/editor-icons/game-icons--power-generator.svg"
+UPowerInstance = "res://assets/editor-icons/material-symbols--battery-profile-sharp.svg"

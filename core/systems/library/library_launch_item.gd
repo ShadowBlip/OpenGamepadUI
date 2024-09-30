@@ -65,3 +65,23 @@ static func from_dict(d: Dictionary) -> LibraryLaunchItem:
 	if "metadata" in d:
 		item.metadata = d["metadata"]
 	return item
+
+
+## Returns a numerical app ID associated with the launch item
+func get_app_id() -> int:
+	# If this launch item launches a Steam game, use the Steam app id instead
+	for arg in self.args:
+		if not arg.contains("steam://rungameid/"):
+			continue
+		var parts := arg.split("/", false)
+		if parts.is_empty():
+			continue
+		var id := parts[-1] as String
+		if not id.is_valid_int():
+			continue
+		return int(id)
+
+	# In all other cases, use the hash of the app name for its app id
+	var app_id := hash(self.name)
+
+	return app_id

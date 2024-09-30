@@ -12,21 +12,21 @@ class_name LaunchManager
 ## periodically check on launched games to see if they have exited, or are 
 ## opening new windows that might need attention. Example:
 ##     [codeblock]
-##     const LaunchManager := preload("res://core/global/launch_manager.tres")
+##     var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 ##     ...
 ##     # Create a LibraryLaunchItem to run something
 ##     var item := LibraryLaunchItem.new()
 ##     item.command = "vkcube"
 ##     
 ##     # Launch the app with LaunchManager
-##     var running_app := LaunchManager.launch(item)
+##     var running_app := launch_manager.launch(item)
 ##     
 ##     # Get a list of running apps
-##     var running := LaunchManager.get_running()
+##     var running := launch_manager.get_running()
 ##     print(running)
 ##     
 ##     # Stop an app with LaunchManager
-##     LaunchManager.stop(running_app)
+##     launch_manager.stop(running_app)
 ##     [/codeblock]
 
 signal app_launched(app: RunningApp)
@@ -35,59 +35,96 @@ signal app_switched(from: RunningApp, to: RunningApp)
 signal recent_apps_changed()
 
 const settings_manager := preload("res://core/global/settings_manager.tres")
-const NotificationManager := preload("res://core/global/notification_manager.tres")
+const notification_manager := preload("res://core/global/notification_manager.tres")
 
-var gamescope := preload("res://core/global/gamescope.tres") as Gamescope
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var gamescope := preload("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 
 var state_machine := preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
 
 var PID: int = OS.get_process_id()
+var _xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+var _xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+var _xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
 var _sandbox := Sandbox.get_sandbox()
 var _current_app: RunningApp
 var _pid_to_windows := {}
 var _running: Array[RunningApp] = []
-var _stopping: Array[RunningApp] = []
 var _apps_by_pid: Dictionary = {}
 var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
 var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
-var _ogui_window_id := gamescope.get_window_id(PID, gamescope.XWAYLAND.OGUI)
+var _ogui_window_id := 0
 var should_manage_overlay := true
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
 
 
 # Connect to Gamescope signals
 func _init() -> void:
-	# When window focus changes, update the current app and gamepad profile
-	var on_focus_changed := func(from: int, to: int):
-		logger.info("Window focus changed from " + str(from) + " to: " + str(to))
-		var last_app := _current_app
-		_current_app = _detect_running_app(to)
+	# Get the window ID of OpenGamepadUI
+	if _xwayland_ogui:
+		var ogui_windows := _xwayland_ogui.get_windows_for_pid(PID)
+		if not ogui_windows.is_empty():
+			_ogui_window_id = ogui_windows[0]
 
-		logger.debug("Last app: " + str(last_app) + " current_app: " + str(_current_app))
-		app_switched.emit(last_app, _current_app)
-
-		# If the app has a gamepad profile, set it
-		if to != _ogui_window_id and _current_app:
-			set_app_gamepad_profile(_current_app)
-
-			# If we don't want LaunchManager to manage overlay (I.E. overlay mode), return false always.
-			if not should_manage_overlay:
+	# Listen for signals from the primary Gamescope XWayland
+	if _xwayland_primary:
+		# When window focus changes, update the current app and gamepad profile
+		var on_focus_changed := func(from: int, to: int):
+			if from == to:
 				return
+			logger.info("Window focus changed from " + str(from) + " to: " + str(to))
+		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
-	gamescope.focused_window_updated.connect(on_focus_changed)
+		# Debug print when the focused app changed
+		var on_focused_app_changed := func(from: int, to: int) -> void:
+			if from == to:
+				return
+			logger.debug("Focused app changed from " + str(from) + " to " + str(to))
+			
+			# If OGUI was focused, set the global gamepad profile
+			if to in [gamescope.OVERLAY_GAME_ID, 0]:
+				set_gamepad_profile("")
+				return
+			
+			# Find the running app for the given app id
+			var last_app := self._current_app
+			var detected_app: RunningApp
+			for app in _running:
+				if app.app_id == to:
+					detected_app = app
+			
+			# If the running app was not launched by OpenGamepadUI, then detect it.
+			if not detected_app:
+				detected_app = _detect_running_app(to)
+			self._current_app = detected_app
 
-	# Debug print when the focused app changed
-	var on_focused_app_changed := func(from: int, to: int) -> void:
-		logger.debug("Focused app changed from " + str(from) + " to " + str(to))
-	gamescope.focused_app_updated.connect(on_focused_app_changed)
+			logger.debug("Last app: " + str(last_app) + " current_app: " + str(self._current_app))
+			app_switched.emit(last_app, self._current_app)
+
+			# If the app has a gamepad profile, set it
+			if self._current_app:
+				set_app_gamepad_profile(self._current_app)
+		_xwayland_primary.focused_app_updated.connect(on_focused_app_changed)
+
+		# Listen for when focusable apps change
+		var on_focusable_apps_changed := func(from: PackedInt64Array, to: PackedInt64Array):
+			if from == to:
+				return
+			logger.debug("Focusable apps changed from", from, "to", to)
+			# If focusable apps has changed and the currently focused app no longer exists,
+			# remove the manual focus
+			var baselayer_app := _xwayland_primary.baselayer_app
+			to.append(_xwayland_primary.focused_app)
+			if baselayer_app > 0 and not baselayer_app in to:
+				_xwayland_primary.remove_baselayer_app()
+		_xwayland_primary.focusable_apps_updated.connect(on_focusable_apps_changed)
 
 	# Whenever the in-game state is entered, set the gamepad profile
-	var on_game_state_entered := func(from: State):
+	var on_game_state_entered := func(_from: State):
 		if _current_app:
 			set_app_gamepad_profile(_current_app)
 
@@ -95,8 +132,9 @@ func _init() -> void:
 		if not should_manage_overlay:
 			return
 
-		logger.debug("Enabling STEAM_OVERLAY atom")
-		gamescope.set_overlay(_ogui_window_id, 0)
+		if _xwayland_ogui:
+			logger.debug("Enabling STEAM_OVERLAY atom")
+			_xwayland_ogui.set_overlay(_ogui_window_id, 0)
 
 	var on_game_state_exited := func(_to: State):
 		# Set the gamepad profile to the global profile
@@ -106,8 +144,9 @@ func _init() -> void:
 		if not should_manage_overlay:
 			return
 
-		logger.debug("Disabling STEAM_OVERLAY atom")
-		gamescope.set_overlay(_ogui_window_id, 1)
+		if _xwayland_ogui:
+			logger.debug("Disabling STEAM_OVERLAY atom")
+			_xwayland_ogui.set_overlay(_ogui_window_id, 1)
 
 	in_game_state.state_entered.connect(on_game_state_entered)
 	in_game_state.state_exited.connect(on_game_state_exited)
@@ -170,8 +209,10 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
-		env["DISPLAY"] = gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
-	var display := env["DISPLAY"] as String
+		if _xwayland_game:
+			env["DISPLAY"] = _xwayland_game.name
+		else:
+			env["DISPLAY"] = ""
 
 	# Set the OGUI ID environment variable
 	env["OGUI_ID"] = app.name
@@ -196,18 +237,14 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
 
 	# Launch the application process
-	var pid = Reaper.create_process(exec, command)
-	logger.info("Launched with PID: {0}".format([pid]))
-
-	# Create a running app instance
-	var running_app := _make_running_app(app, pid, display)
-	running_app.command = command
-	running_app.environment = env
+	var running_app := RunningApp.spawn(app, env, exec, command)
+	logger.info("Launched with PID: {0}".format([running_app.pid]))
 
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
 	_update_recent_apps(app)
+
 	return running_app
 
 
@@ -289,9 +326,12 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	# Check to see if this game has any gamepad profiles. If so, set our 
 	# gamepads to use them.
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
-	var profile_path = settings_manager.get_value(section, "gamepad_profile", "")
+	var profile_path := settings_manager.get_value(section, "gamepad_profile", "") as String
 	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
-	logger.debug("Using profile '" + profile_path + "' with gamepad type '" + profile_gamepad + "'")
+	if profile_path.is_empty():
+		logger.debug("Using global gamepad profile")
+	else:
+		logger.debug("Using profile '" + profile_path + "' with gamepad type '" + profile_gamepad + "'")
 	set_gamepad_profile(profile_path, profile_gamepad)
 
 
@@ -310,12 +350,12 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 			profile_path = InputPlumber.DEFAULT_GLOBAL_PROFILE
 		logger.info("Loading global gamepad profile: " + profile_path)
 
-		for gamepad in input_plumber.composite_devices:
-			gamepad.target_modify_profile(profile_path, profile_modifier)
+		for gamepad in input_plumber.get_composite_devices():
+			InputPlumber.load_target_modified_profile(gamepad, profile_path, profile_modifier)
 
 			# Set the target gamepad if one was specified
 			if not target_gamepad.is_empty():
-				var target_devices := [target_gamepad, "keyboard", "mouse"]
+				var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
 				match target_gamepad:
 					"xb360", "xbox-series", "xbox-elite", "gamepad":
 						target_devices.append("touchpad")
@@ -338,12 +378,12 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 		return
 
 	# TODO: Save profiles for individual controllers?
-	for gamepad in input_plumber.composite_devices:
-		gamepad.target_modify_profile(path, profile_modifier)
+	for gamepad in input_plumber.get_composite_devices():
+		InputPlumber.load_target_modified_profile(gamepad, path, profile_modifier)
 
 		# Set the target gamepad if one was specified
 		if not target_gamepad.is_empty():
-			var target_devices := [target_gamepad, "keyboard", "mouse"]
+			var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
 			match target_gamepad:
 				"xb360", "xbox-series", "xbox-elite", "gamepad":
 					target_devices.append("touchpad")
@@ -353,11 +393,11 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 			gamepad.set_target_devices(target_devices)
 
 	var notify := Notification.new("Using gamepad profile: " + profile.name)
-	NotificationManager.show(notify)
+	notification_manager.show(notify)
 
 
 ## Sets the given running app as the current app
-func set_current_app(app: RunningApp, switch_baselayer: bool = true) -> void:
+func set_current_app(app: RunningApp, _switch_baselayer: bool = true) -> void:
 	if app == null:
 		return
 	app.grab_focus()
@@ -386,13 +426,15 @@ func _add_running(app: RunningApp):
 
 
 ## Called when a running app's state changes
-func _on_app_state_changed(_from: RunningApp.STATE, to: RunningApp.STATE, app: RunningApp) -> void:
+func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: RunningApp) -> void:
+	logger.debug("App state changed from", from, "to", to, "for app:", app)
 	if to != RunningApp.STATE.STOPPED:
 		return
 	_remove_running(app)
+	logger.debug("Currently running apps:", _running)
 	if state_machine.has_state(in_game_state) and _running.size() == 0:
 		logger.info("No more apps are running. Removing in-game state.")
-		gamescope.remove_baselayer_window()
+		_xwayland_primary.remove_baselayer_window()
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
 
@@ -410,12 +452,11 @@ func _remove_running(app: RunningApp):
 # Checks for running apps and updates our state accordingly
 func check_running() -> void:
 	# Find the root window
-	var root_id := gamescope.get_root_window_id(Gamescope.XWAYLAND.GAME)
+	if not _xwayland_game:
+		return
+	var root_id := _xwayland_game.root_window_id
 	if root_id < 0:
 		return
-	
-	# Update the Gamescope state
-	gamescope.update()
 	
 	# Update our view of running processes and what windows they have
 	_update_pids(root_id)
@@ -428,29 +469,33 @@ func check_running() -> void:
 # Updates our mapping of PIDs to Windows. This gives us a good view of what
 # processes are running, and what windows they have.
 func _update_pids(root_id: int):
+	if not _xwayland_game:
+		return
 	var pids := {}
-	var all_windows := gamescope.get_all_windows(root_id, Gamescope.XWAYLAND.GAME)
+	var all_windows := _xwayland_game.get_all_windows(root_id)
 	for window in all_windows:
-		var pid := gamescope.get_window_pid(window, Gamescope.XWAYLAND.GAME)
-		if not pid in pids:
-			pids[pid] = []
-		pids[pid].append(window)
+		var window_pids := _xwayland_game.get_pids_for_window(window)
+		for window_pid in window_pids:
+			if not window_pid in pids:
+				pids[window_pid] = []
+			pids[window_pid].append(window)
 	_pid_to_windows = pids
 
 
 # Below functions detect launched game from other processes
 # Returns the process ID
 func _get_pid_from_focused_window(window_id: int) -> int:
-	var pid := -1
-	logger.debug(str(gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).list_xprops(window_id)))
-	pid = gamescope.get_xwayland(Gamescope.XWAYLAND.GAME).get_xprop(window_id, "_NET_WM_PID")
-	logger.debug("PID: " + str(pid))
-	return pid
+	if not _xwayland_game:
+		return -1
+	var window_pids := _xwayland_game.get_pids_for_window(window_id)
+	if window_pids.is_empty():
+		return -1
+	return window_pids[0]
 
 
 # First method, try to get the name from the window_id using gamescope.
 func _get_app_name_from_window_id(window_id: int) -> String:
-	return gamescope.get_window_name(window_id)
+	return _xwayland_game.get_window_name(window_id)
 
 
 # Last resort, try to use the parent dir of the executable from /proc/pid/cwd to return
@@ -459,16 +504,18 @@ func _get_app_name_from_proc(pid: int) -> String:
 	var process_name: String
 	var path := "/proc/" + str(pid) + "/cwd"
 	var output := []
-	var exit_code := OS.execute("ls", ["-l", path], output)
+	var _exit_code := OS.execute("ls", ["-l", path], output)
 	var process_path: PackedStringArray = output[0].strip_edges().split("/")
 	process_name = process_path[process_path.size()-1]
 	return process_name
 
 
-# Primary nw app ID method. Identifies the running app from steam's library.vdf
+# Primary new app ID method. Identifies the running app from steam's library.vdf
 # and appmanifest_<app_id>.acf files.
 func _get_name_from_steam_library() -> String:
-	var missing_app_id := gamescope.get_focused_app()
+	var missing_app_id := -1
+	if _xwayland_primary:
+		missing_app_id = _xwayland_primary.focused_app
 
 	logger.debug("Found unclaimed app id: " +str(missing_app_id))
 	var steam_library_path := OS.get_environment("HOME") +"/.steam/steam"
@@ -494,8 +541,14 @@ func _is_app_id_running(app_id) -> bool:
 
 # Identifies the running app from the given window_id. If none is found,
 # creates a new RunningApp instance.
-func _detect_running_app(window_id: int) -> RunningApp:
+func _detect_running_app(_app_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
+	
+	# Get the currently focused window id
+	var window_id := _xwayland_primary.focused_window
+	if window_id == _ogui_window_id:
+		return null
+
 	var app_name: String
 
 	# Check if this window ID is a child of an existing RunningApp
@@ -540,7 +593,7 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 	logger.debug("Creating running app from process")
 
 	# Create a dummy LibraryLaunchItem to make our RunningApp.
-	var lauch_dict = {
+	var lauch_dict := {
 		"_id": "",
 		"_provider_id": "",
 		"provider_app_id": "",
@@ -553,7 +606,9 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 	}
 
 	var launch_item: LibraryLaunchItem = LibraryLaunchItem.from_dict(lauch_dict)
-	var display:= gamescope.get_display_name(Gamescope.XWAYLAND.GAME)
+	var display := ""
+	if _xwayland_game:
+		display = _xwayland_game.name
 	var running_app: RunningApp = _make_running_app(launch_item, pid, display)
 	running_app.window_id = window_id
 	running_app.state = RunningApp.STATE.RUNNING

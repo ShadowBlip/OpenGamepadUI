@@ -6,7 +6,7 @@ class_name InputIconProcessor
 
 const DEADZONE := 0.4
 
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumber
+var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
 var icon_manager := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
 
@@ -23,8 +23,9 @@ func _input(event: InputEvent) -> void:
 			# If this is an InputPlumber event, use the name from the device
 			if event.has_meta("dbus_path") and not event.get_meta("dbus_path", "").is_empty():
 				var dbus_path := event.get_meta("dbus_path") as String
-				var device := input_plumber.get_device(dbus_path)
-				device_name = device.name
+				var device := input_plumber.get_composite_device(dbus_path)
+				if device:
+					device_name = device.name
 			# Otherwise, use the detected device name
 			else:
 				device_name = Input.get_joy_name(event.device)
