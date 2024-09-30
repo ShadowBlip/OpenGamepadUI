@@ -44,7 +44,11 @@ var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 func _ready() -> void:
 	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
+	input_plumber.started.connect(_init_inputplumber)
+	_init_inputplumber()
 
+
+func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
@@ -175,7 +179,7 @@ func _guide_input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 	# Only act on release events
 	if event.is_pressed():
-		logger.warn("Guide pressed. Waiting for additional events.")
+		logger.debug("Guide pressed. Waiting for additional events.")
 		# Set the gamepad profile to the global default so we can capture button events.
 		# This ensures that we use the global profile and not the game's input profile for
 		# processing guide button combos and navigating the menu.
@@ -272,6 +276,8 @@ func _audio_input(event: InputEvent) -> void:
 
 func _watch_dbus_device(device: CompositeDevice) -> void:
 		for target in device.dbus_devices:
+			if target.input_event.is_connected(_on_dbus_input_event.bind(device.dbus_path)):
+				continue
 			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
 			logger.debug(str(target.get_instance_id()))
 			logger.debug(str(target.get_rid()))

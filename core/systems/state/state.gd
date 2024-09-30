@@ -36,4 +36,3 @@ func _to_string() -> String:
 	if not name.is_empty():
 		return "<State:{name}>".format({"name": name})
 	return "<State:{rid}>".format({"rid": get_rid()})
-
