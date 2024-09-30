@@ -28,12 +28,14 @@ trait Device1 {
     fn connect(&self) -> zbus::Result<()>;
 
     /// ConnectProfile method
+    #[allow(non_snake_case)]
     fn connect_profile(&self, UUID: &str) -> zbus::Result<()>;
 
     /// Disconnect method
     fn disconnect(&self) -> zbus::Result<()>;
 
     /// DisconnectProfile method
+    #[allow(non_snake_case)]
     fn disconnect_profile(&self, UUID: &str) -> zbus::Result<()>;
 
     /// Pair method

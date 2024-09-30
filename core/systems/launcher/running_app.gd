@@ -189,6 +189,9 @@ func update_wayland_app() -> void:
 		state = STATE.RUNNING
 		#grab_focus() # How can we grab wayland window focus?
 
+	# Update the focus state of the app
+	focused = is_focused()
+
 	var state_str := {
 		STATE.STARTED: "started", 
 		STATE.RUNNING: "running", 
@@ -373,7 +376,7 @@ func get_child_pids() -> PackedInt32Array:
 
 ## Returns whether or not the app can be switched to/focused
 func can_focus() -> bool:
-	return window_id > 0
+	return self.app_id > 0
 
 
 ## Return true if the currently running app is focused
@@ -383,8 +386,8 @@ func is_focused() -> bool:
 	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 	if not xwayland_primary:
 		return false
-	var focused_window := xwayland_primary.focused_window
-	return window_id == focused_window or focused_window in window_ids
+	var focused_app := xwayland_primary.focused_app
+	return self.app_id == focused_app
 
 
 ## Focuses to the app's window
@@ -394,7 +397,7 @@ func grab_focus() -> void:
 	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 	if not xwayland_primary:
 		return
-	xwayland_primary.set_baselayer_window(window_id)
+	xwayland_primary.baselayer_app = self.app_id
 	focused = true
 
 
@@ -402,6 +405,7 @@ func grab_focus() -> void:
 ## to switch to the window
 func switch_window(win_id: int, focus: bool = true) -> int:
 	# Error if the window does not belong to the running app
+	# TODO: Look into how window switching can work with Wayland windows
 	if not win_id in window_ids:
 		return ERR_DOES_NOT_EXIST
 
@@ -418,6 +422,7 @@ func switch_window(win_id: int, focus: bool = true) -> int:
 	window_id = win_id
 	if focus:
 		grab_focus()
+		xwayland_primary.baselayer_window = win_id
 	return OK
 
 
@@ -446,11 +451,10 @@ func _ensure_app_id() -> void:
 
 	# Try setting the app ID on each possible Window. If they are valid windows,
 	# gamescope will make these windows available as focusable windows.
-	var app_name := launch_item.name
 	for window in possible_windows:
 		if xwayland.has_app_id(window):
 			continue
-		xwayland.set_app_id(window, window)
+		xwayland.set_app_id(window, self.app_id)
 
 
 ## Returns whether or not the window id of the running app needs to be discovered

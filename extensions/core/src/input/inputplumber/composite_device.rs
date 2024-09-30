@@ -7,7 +7,7 @@ use crate::dbus::DBusVariant;
 use crate::get_dbus_system_blocking;
 
 use super::dbus_device::DBusDevice;
-use super::{InputPlumberInstance, INPUT_PLUMBER_BUS};
+use super::INPUT_PLUMBER_BUS;
 
 #[derive(GodotClass)]
 #[class(no_init, base=Resource)]

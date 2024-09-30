@@ -80,6 +80,9 @@ pub struct GamescopeXWayland {
     /// Current manually focused window
     #[var(get = get_baselayer_window, set = set_baselayer_window)]
     baselayer_window: u32,
+    /// Current manually focused app
+    #[var(get = get_baselayer_app, set = set_baselayer_app)]
+    baselayer_app: u32,
 }
 
 #[godot_api]
@@ -98,22 +101,25 @@ impl GamescopeXWayland {
     fn window_property_updated(window_id: u32, property: GString);
 
     #[signal]
-    fn focused_app_updated();
+    fn focused_app_updated(from: u32, to: u32);
 
     #[signal]
-    fn focused_app_gfx_updated();
+    fn focused_app_gfx_updated(from: u32, to: u32);
 
     #[signal]
-    fn focusable_apps_updated();
+    fn focusable_apps_updated(from: PackedInt64Array, to: PackedInt64Array);
 
     #[signal]
-    fn focused_window_updated();
+    fn focused_window_updated(from: u32, to: u32);
 
     #[signal]
-    fn focusable_windows_updated();
+    fn focusable_windows_updated(from: PackedInt64Array, to: PackedInt64Array);
 
     #[signal]
-    fn baselayer_window_updated();
+    fn baselayer_window_updated(from: u32, to: u32);
+
+    #[signal]
+    fn baselayer_app_updated(from: u32, to: u32);
 
     /// Create a new [GamescopeXWayland] with the given name (e.g. ":0")
     pub fn from_name(name: GString) -> Gd<Self> {
@@ -189,6 +195,7 @@ impl GamescopeXWayland {
                 blur_radius: Default::default(),
                 allow_tearing: Default::default(),
                 baselayer_window: Default::default(),
+                baselayer_app: Default::default(),
             }
         })
     }
@@ -895,6 +902,47 @@ impl GamescopeXWayland {
         self.baselayer_window = 0;
     }
 
+    /// Returns the app id of the currently manually focused app
+    #[func]
+    fn get_baselayer_app(&mut self) -> u32 {
+        if !self.is_primary {
+            godot_error!("XWayland instance is not primary!");
+            return Default::default();
+        }
+        let value = match self.xwayland.get_baselayer_app_id() {
+            Ok(value) => value,
+            Err(e) => {
+                godot_error!("Failed to get baselayer app id: {e:?}");
+                return Default::default();
+            }
+        };
+
+        self.baselayer_window = value.unwrap_or_default();
+        self.baselayer_window
+    }
+
+    /// Focuses the app with the given app id
+    #[func]
+    fn set_baselayer_app(&mut self, app_id: u32) {
+        if !self.is_primary {
+            godot_error!("XWayland instance is not primary!");
+            return;
+        }
+        if let Err(e) = self.xwayland.set_baselayer_app_id(app_id) {
+            godot_error!("Failed to set baselayer app id to {app_id}: {e:?}");
+        }
+        self.baselayer_window = app_id;
+    }
+
+    /// Removes the baselayer property to un-focus apps
+    #[func]
+    fn remove_baselayer_app(&mut self) {
+        if let Err(e) = self.xwayland.remove_baselayer_app_id() {
+            godot_error!("Failed to remove baselayer app: {e:?}");
+        }
+        self.baselayer_window = 0;
+    }
+
     /// Request a screenshot from Gamescope
     #[func]
     fn request_screenshot(&self) {
@@ -985,6 +1033,14 @@ impl GamescopeXWayland {
                         let to = self.get_baselayer_window();
                         self.base_mut().emit_signal(
                             "baselayer_window_updated".into(),
+                            &[from.to_variant(), to.to_variant()],
+                        );
+                    }
+                    property if property == GamescopeAtom::BaselayerAppId.to_string() => {
+                        let from = self.baselayer_app;
+                        let to = self.get_baselayer_app();
+                        self.base_mut().emit_signal(
+                            "baselayer_app_updated".into(),
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
