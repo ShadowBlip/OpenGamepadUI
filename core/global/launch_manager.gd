@@ -108,8 +108,20 @@ func _init() -> void:
 			# If the app has a gamepad profile, set it
 			if self._current_app:
 				set_app_gamepad_profile(self._current_app)
-
 		_xwayland_primary.focused_app_updated.connect(on_focused_app_changed)
+
+		# Listen for when focusable apps change
+		var on_focusable_apps_changed := func(from: PackedInt64Array, to: PackedInt64Array):
+			if from == to:
+				return
+			logger.debug("Focusable apps changed from", from, "to", to)
+			# If focusable apps has changed and the currently focused app no longer exists,
+			# remove the manual focus
+			var baselayer_app := _xwayland_primary.baselayer_app
+			to.append(_xwayland_primary.focused_app)
+			if baselayer_app > 0 and not baselayer_app in to:
+				_xwayland_primary.remove_baselayer_app()
+		_xwayland_primary.focusable_apps_updated.connect(on_focusable_apps_changed)
 
 	# Whenever the in-game state is entered, set the gamepad profile
 	var on_game_state_entered := func(_from: State):
@@ -201,7 +213,6 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 			env["DISPLAY"] = _xwayland_game.name
 		else:
 			env["DISPLAY"] = ""
-	var display := env["DISPLAY"] as String
 
 	# Set the OGUI ID environment variable
 	env["OGUI_ID"] = app.name
