@@ -3,6 +3,7 @@ pub mod dbus;
 pub mod disk;
 pub mod gamescope;
 pub mod input;
+pub mod logger;
 pub mod performance;
 pub mod power;
 pub mod resource;
@@ -45,20 +46,21 @@ unsafe impl ExtensionLibrary for OpenGamepadUICore {
         if level != InitLevel::Scene {
             return;
         }
-        godot_print!("Initializing OpenGamepadUI Core");
+        logger::init();
+        log::info!("Initializing OpenGamepadUI Core");
     }
 
     fn on_level_deinit(level: InitLevel) {
         if level != InitLevel::Scene {
             return;
         }
-        godot_print!("De-initializing OpenGamepadUI Core");
+        log::info!("De-initializing OpenGamepadUI Core");
         tokio_deinit();
     }
 }
 
 fn tokio_init() -> Handle {
-    godot_print!("Initializing tokio runtime");
+    log::info!("Initializing tokio runtime");
     let runtime = Builder::new_multi_thread().enable_all().build().unwrap();
     let handle = runtime.handle().clone();
 
@@ -66,12 +68,12 @@ fn tokio_init() -> Handle {
 
     std::thread::spawn(move || {
         runtime.block_on(async {
-            godot_print!("Tokio runtime started");
+            log::info!("Tokio runtime started");
             let _ = rx.lock().await.recv().await;
         });
-        godot_print!("Shutting down Tokio runtime");
+        log::info!("Shutting down Tokio runtime");
         runtime.shutdown_timeout(Duration::from_secs(1));
-        godot_print!("Tokio runtime stopped");
+        log::info!("Tokio runtime stopped");
     });
 
     handle
@@ -80,7 +82,7 @@ fn tokio_init() -> Handle {
 fn tokio_deinit() {
     let result = CHANNEL.0.clone().blocking_send(());
     if let Err(e) = result {
-        godot_print!("Failed to shut down tokio runtime: {e}");
+        log::error!("Failed to shut down tokio runtime: {e}");
     }
 }
 

@@ -92,14 +92,14 @@ impl Pty {
     #[func]
     fn write(&self, data: PackedByteArray) -> i32 {
         let Some(pty_tx) = self.pty_tx.as_ref() else {
-            godot_error!("PTY is not open to write line");
+            log::error!("PTY is not open to write line");
             return -1;
         };
         let slice = data.as_slice();
         let data = slice.to_vec();
         let command = PtyCommand::Write { data };
         if let Err(e) = pty_tx.blocking_send(command) {
-            println!("Error sending write line to PTY: {e:?}");
+            log::error!("Error sending write line to PTY: {e:?}");
             return -1;
         }
 
@@ -111,12 +111,12 @@ impl Pty {
     #[func]
     fn write_line(&self, line: GString) -> i32 {
         let Some(pty_tx) = self.pty_tx.as_ref() else {
-            godot_error!("PTY is not open to write line");
+            log::error!("PTY is not open to write line");
             return -1;
         };
         let command = PtyCommand::WriteLine { line: line.into() };
         if let Err(e) = pty_tx.blocking_send(command) {
-            godot_error!("Error sending write line to PTY: {e:?}");
+            log::error!("Error sending write line to PTY: {e:?}");
             return -1;
         }
 
@@ -128,12 +128,12 @@ impl Pty {
     #[func]
     fn kill(&self) -> i32 {
         let Some(cmd_tx) = self.cmd_tx.as_ref() else {
-            godot_error!("PTY is not open to kill process");
+            log::error!("PTY is not open to kill process");
             return -1;
         };
         let command = ProcessCommand::Kill;
         if let Err(e) = cmd_tx.blocking_send(command) {
-            godot_error!("Error sending kill command to PTY: {e:?}");
+            log::error!("Error sending kill command to PTY: {e:?}");
             return -1;
         }
         0
@@ -144,7 +144,7 @@ impl Pty {
     #[func]
     fn exec(&mut self, command: GString, args: PackedStringArray) -> i32 {
         if self.running {
-            godot_error!("PTY is already running a process");
+            log::error!("PTY is already running a process");
             return -1;
         }
 
@@ -158,12 +158,12 @@ impl Pty {
         let pty = match openpty(Some(&window_size), None) {
             Ok(pty) => pty,
             Err(e) => {
-                godot_error!("Failed to open pty: {e}");
+                log::error!("Failed to open pty: {e}");
                 return -1;
             }
         };
 
-        godot_print!("Executing command async in pty");
+        log::debug!("Executing command async in pty");
         let command: String = command.into();
         let command = OsString::from(command);
         let args: Vec<String> = args.as_slice().iter().map(String::from).collect();
@@ -195,7 +195,7 @@ impl Pty {
             if let Some(pid) = pid {
                 let signal = Signal::Started { pid };
                 if let Err(e) = signals_tx.send(signal) {
-                    println!("Error sending started signal: {e:?}");
+                    log::error!("Error sending started signal: {e:?}");
                 }
             }
 
@@ -205,7 +205,7 @@ impl Pty {
             // Send the exit code with the finished signal
             let signal = Signal::Finished { exit_code };
             if let Err(e) = signals_tx.send(signal) {
-                println!("Error sending exit code: {e:?}");
+                log::error!("Error sending exit code: {e:?}");
             }
         });
 
@@ -216,7 +216,7 @@ impl Pty {
         // Spawn a task to read/write from/to the PTY
         let signals_tx = self.tx.clone();
         RUNTIME.spawn(async move {
-            println!("Task spawned to read/write PTY");
+            log::info!("Task spawned to read/write PTY");
 
             // Create readers/writers
             let output = std::fs::File::from(master.try_clone().unwrap());
@@ -245,7 +245,7 @@ impl Pty {
                     }
                 }
             }
-            println!("Finished");
+            log::debug!("Finished");
         });
         self.running = true;
 
@@ -265,7 +265,7 @@ impl Pty {
                     let status = match child_result {
                         Ok(status) => status,
                         Err(e) => {
-                            godot_error!("Error executing child: {e:?}");
+                            log::error!("Error executing child: {e:?}");
                             break -1;
                         }
                     };
@@ -294,7 +294,7 @@ impl Pty {
             let line = line.to_string();
             let signal = Signal::LineWritten { line };
             if let Err(e) = signals_tx.send(signal) {
-                println!("Error sending line: {e:?}");
+                log::error!("Error sending line: {e:?}");
             }
         }
     }
@@ -365,7 +365,7 @@ impl INode for Pty {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },

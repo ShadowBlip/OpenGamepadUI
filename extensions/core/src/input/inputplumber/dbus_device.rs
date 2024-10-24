@@ -57,14 +57,14 @@ impl DBusDevice {
     /// Create a new [DBusDevice] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        godot_print!("DBusDevice created with path: {path}");
+        log::info!("DBusDevice created with path: {path}");
         let (tx, rx) = channel();
         let dbus_path = path.clone().into();
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx, dbus_path).await {
-                godot_error!("Failed to run DBusDevice task: ${e:?}");
+                log::error!("Failed to run DBusDevice task: ${e:?}");
             }
         });
 
@@ -89,9 +89,7 @@ impl DBusDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!(
-                    "Resource already exists with path '{res_path}', loading that instead"
-                );
+                log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<DBusDevice> = res.cast();
                 device
             } else {
@@ -120,7 +118,7 @@ impl DBusDevice {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -131,7 +129,7 @@ impl DBusDevice {
 
     /// Process and dispatch the given signal
     fn process_signal(&mut self, signal: Signal) {
-        godot_print!("Got signal: {signal:?}");
+        log::trace!("Got signal: {signal:?}");
         match signal {
             Signal::InputEvent { type_code, value } => {
                 self.base_mut().emit_signal(
@@ -165,7 +163,7 @@ impl DBusDevice {
 
 impl Drop for DBusDevice {
     fn drop(&mut self) {
-        godot_print!("DBusDevice '{}' is being destroyed!", self.dbus_path);
+        log::trace!("DBusDevice '{}' is being destroyed!", self.dbus_path);
     }
 }
 
@@ -190,7 +188,7 @@ async fn run(tx: Sender<Signal>, path: String) -> Result<(), RunError> {
                 break;
             }
         }
-        godot_print!("DBusDevice input_event task stopped");
+        log::info!("DBusDevice input_event task stopped");
     });
 
     let signals_tx = tx.clone();
@@ -212,7 +210,7 @@ async fn run(tx: Sender<Signal>, path: String) -> Result<(), RunError> {
                 break;
             }
         }
-        godot_print!("DBusDevice touch_event task stopped");
+        log::info!("DBusDevice touch_event task stopped");
     });
 
     Ok(())

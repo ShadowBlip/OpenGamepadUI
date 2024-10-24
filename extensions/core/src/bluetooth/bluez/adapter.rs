@@ -110,14 +110,14 @@ impl BluetoothAdapter {
     /// Create a new [BluetoothAdapter] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        godot_print!("BluetoothAdapter created with path: {path}");
+        log::info!("BluetoothAdapter created with path: {path}");
         let (tx, rx) = channel();
         let dbus_path = path.clone().into();
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx, dbus_path).await {
-                godot_error!("Failed to run DBusDevice task: ${e:?}");
+                log::error!("Failed to run DBusDevice task: ${e:?}");
             }
         });
 
@@ -176,9 +176,7 @@ impl BluetoothAdapter {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!(
-                    "Resource already exists with path '{res_path}', loading that instead"
-                );
+                log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BluetoothAdapter> = res.cast();
                 device
             } else {
@@ -460,7 +458,7 @@ impl BluetoothAdapter {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -498,7 +496,7 @@ impl BluetoothAdapter {
 
 impl Drop for BluetoothAdapter {
     fn drop(&mut self) {
-        godot_print!("BluetoothAdapter '{}' is being destroyed!", self.dbus_path);
+        log::trace!("BluetoothAdapter '{}' is being destroyed!", self.dbus_path);
     }
 }
 

@@ -35,7 +35,7 @@ impl BlockDevice {
     /// Create a new [BlockDevice] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        godot_print!("BlockDevice created with path: {path}");
+        log::info!("BlockDevice created with path: {path}");
 
         Gd::from_init_fn(|base| {
             // Create a connection to DBus
@@ -87,9 +87,7 @@ impl BlockDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!(
-                    "Resource already exists with path '{res_path}', loading that instead"
-                );
+                log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BlockDevice> = res.cast();
                 device
             } else {
@@ -151,6 +149,6 @@ impl BlockDevice {
 
 impl Drop for BlockDevice {
     fn drop(&mut self) {
-        godot_print!("BlockDevice '{}' is being destroyed!", self.dbus_path);
+        log::trace!("BlockDevice '{}' is being destroyed!", self.dbus_path);
     }
 }

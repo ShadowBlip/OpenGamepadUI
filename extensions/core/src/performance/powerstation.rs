@@ -91,7 +91,7 @@ impl PowerStationInstance {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -129,7 +129,7 @@ impl PowerStationInstance {
 impl IResource for PowerStationInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        godot_print!("Initializing PowerStation instance");
+        log::debug!("Initializing PowerStation instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
@@ -137,7 +137,7 @@ impl IResource for PowerStationInstance {
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx).await {
-                godot_error!("Failed to run PowerStation task: ${e:?}");
+                log::error!("Failed to run PowerStation task: ${e:?}");
             }
         });
 
@@ -163,7 +163,7 @@ impl IResource for PowerStationInstance {
 /// Runs PowerStation tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    godot_print!("Spawning PowerStation tasks");
+    log::debug!("Spawning PowerStation tasks");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 

@@ -881,6 +881,7 @@ dependencies = [
  "gamescope-x11-client",
  "godot",
  "inotify",
+ "log",
  "nix",
  "once_cell",
  "tokio",

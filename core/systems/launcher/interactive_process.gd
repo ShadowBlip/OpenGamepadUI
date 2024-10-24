@@ -18,12 +18,18 @@ var logger := Log.get_logger("InteractiveProcess", Log.LEVEL.INFO)
 
 
 func _init(command: String, cmd_args: PackedStringArray = []) -> void:
+	# Hack for steam plugin running steamcmd on NixOS
+	if command.ends_with("steamcmd.sh"):
+		cmd = "steam-run"
+		args = PackedStringArray([command])
+		args.append_array(cmd_args)
+		return
+
 	cmd = command
 	args = cmd_args
 
 
 ## Start the interactive process
-# TODO: Fixme
 func start() -> int:
 	# Create a new PTY instance and start the process
 	self.pty = Pty.new()
@@ -47,13 +53,12 @@ func _on_line_written(line: String):
 func send(input: String) -> void:
 	if not pty:
 		return
-	logger.info("Writing input: " + input)
-	if pty.write_line(input) < 0:
+	#if pty.write_line(input) < 0:
+	if pty.write(input.to_utf8_buffer()) < 0:
 		logger.debug("Unable to write to PTY")
 
 
 ## Read from the stdout of the running process
-#TODO: Fixme
 func read(_chunk_size: int = 1024) -> String:
 	if not pty:
 		logger.debug("Unable to read from closed PTY")

@@ -94,7 +94,7 @@ impl UPowerInstance {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -137,7 +137,7 @@ impl UPowerInstance {
 impl IResource for UPowerInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        godot_print!("Initializing UPower instance");
+        log::debug!("Initializing UPower instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
@@ -145,7 +145,7 @@ impl IResource for UPowerInstance {
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx).await {
-                godot_error!("Failed to run UPower task: ${e:?}");
+                log::error!("Failed to run UPower task: ${e:?}");
             }
         });
 
@@ -164,7 +164,7 @@ impl IResource for UPowerInstance {
 /// Runs UPower tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    godot_print!("Spawning UPower tasks");
+    log::debug!("Spawning UPower tasks");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 

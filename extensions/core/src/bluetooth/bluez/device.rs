@@ -105,14 +105,14 @@ impl BluetoothDevice {
     /// Create a new [BluetoothDevice] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        godot_print!("BluetoothDevice created with path: {path}");
+        log::info!("BluetoothDevice created with path: {path}");
         let (tx, rx) = channel();
         let dbus_path = path.clone().into();
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx, dbus_path).await {
-                godot_error!("Failed to run BluetoothDevice task: ${e:?}");
+                log::error!("Failed to run BluetoothDevice task: ${e:?}");
             }
         });
 
@@ -173,9 +173,7 @@ impl BluetoothDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!(
-                    "Resource already exists with path '{res_path}', loading that instead"
-                );
+                log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BluetoothDevice> = res.cast();
                 device
             } else {
@@ -455,7 +453,7 @@ impl BluetoothDevice {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -466,7 +464,7 @@ impl BluetoothDevice {
 
     /// Process and dispatch the given signal
     fn process_signal(&mut self, signal: Signal) {
-        godot_print!("Got signal: {signal:?}");
+        log::trace!("Got signal: {signal:?}");
         match signal {
             Signal::Updated => {
                 self.base_mut().emit_signal("updated".into(), &[]);
@@ -485,7 +483,7 @@ impl BluetoothDevice {
 
 impl Drop for BluetoothDevice {
     fn drop(&mut self) {
-        godot_print!("BluetoothDevice '{}' is being destroyed!", self.dbus_path);
+        log::trace!("BluetoothDevice '{}' is being destroyed!", self.dbus_path);
     }
 }
 
