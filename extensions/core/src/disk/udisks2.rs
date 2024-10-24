@@ -174,17 +174,17 @@ impl UDisks2Instance {
             let partitions = block_device.bind().get_partitions();
             if partitions.is_empty() {
                 if !self.partition_devices.contains_key(dbus_path) {
-                    godot_print!(
+                    log::info!(
                         "Adding {dbus_path} as unprotected device. It is not a partition_devices"
                     );
                     unprotected_devices.push(block_device.clone());
                     continue;
                 }
-                godot_print!("Skipping {dbus_path}. It is a partition_device.");
+                log::info!("Skipping {dbus_path}. It is a partition_device.");
             } else {
                 for partition_device in partitions.iter_shared() {
                     let Some(filesystem_device) = partition_device.bind().get_filesystem() else {
-                        godot_print!(
+                        log::info!(
                             "Adding {dbus_path} as unprotected device. It does not have a FilesystemDevice"
                         );
                         unprotected_devices.push(block_device.clone());
@@ -198,7 +198,7 @@ impl UDisks2Instance {
                         }
                     }
                 }
-                godot_print!(
+                log::info!(
                     "Adding {dbus_path} as unprotected device. It does not have any mounts in PROTECTED_MOUNTS"
                 );
                 unprotected_devices.push(block_device.clone());
@@ -220,7 +220,7 @@ impl UDisks2Instance {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -314,7 +314,7 @@ impl UDisks2Instance {
 impl IResource for UDisks2Instance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        godot_print!("Initializing UDisks2 instance");
+        log::info!("Initializing UDisks2 instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
@@ -322,7 +322,7 @@ impl IResource for UDisks2Instance {
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx).await {
-                godot_error!("Failed to run UDisks2 task: ${e:?}");
+                log::error!("Failed to run UDisks2 task: ${e:?}");
             }
         });
 
@@ -382,7 +382,7 @@ impl IResource for UDisks2Instance {
 /// Runs UDisks2 tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    godot_print!("Spawning UDisks2 tasks");
+    log::info!("Spawning UDisks2 tasks");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 
@@ -436,7 +436,7 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
             let args = match signal.args() {
                 Ok(args) => args,
                 Err(e) => {
-                    godot_warn!("Failed to get signal args: ${e:?}");
+                    log::warn!("Failed to get signal args: ${e:?}");
                     continue;
                 }
             };
@@ -462,7 +462,7 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
             let args = match signal.args() {
                 Ok(args) => args,
                 Err(e) => {
-                    godot_warn!("Failed to get signal args: ${e:?}");
+                    log::warn!("Failed to get signal args: ${e:?}");
                     continue;
                 }
             };

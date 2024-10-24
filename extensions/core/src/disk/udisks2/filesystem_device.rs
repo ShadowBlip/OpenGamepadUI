@@ -26,7 +26,7 @@ impl FilesystemDevice {
     /// Create a new [FilesystemDevice] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        godot_print!("FilesystemDevice created with path: {path}");
+        log::info!("FilesystemDevice created with path: {path}");
 
         Gd::from_init_fn(|base| {
             // Create a connection to DBus
@@ -64,9 +64,7 @@ impl FilesystemDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!(
-                    "Resource already exists with path '{res_path}', loading that instead"
-                );
+                log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<FilesystemDevice> = res.cast();
                 device
             } else {
@@ -106,6 +104,6 @@ impl FilesystemDevice {
 
 impl Drop for FilesystemDevice {
     fn drop(&mut self) {
-        godot_print!("FilesystemDevice '{}' is being destroyed!", self.dbus_path);
+        log::trace!("FilesystemDevice '{}' is being destroyed!", self.dbus_path);
     }
 }

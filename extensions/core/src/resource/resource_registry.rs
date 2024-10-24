@@ -19,7 +19,7 @@ impl ResourceRegistry {
     #[func]
     pub fn register(&mut self, resource: Gd<Resource>) {
         if !resource.has_method("process".into()) {
-            godot_error!(
+            log::error!(
                 "Tried to register resource for processing, but resource has no process method: {resource}"
             );
             return;

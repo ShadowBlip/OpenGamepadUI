@@ -132,7 +132,7 @@ impl GpuCard {
             let dbus_path = path.clone().into();
             RUNTIME.spawn(async move {
                 if let Err(e) = run(tx, dbus_path).await {
-                    godot_error!("Failed to run GPU Card task: ${e:?}");
+                    log::error!("Failed to run GPU Card task: ${e:?}");
                 }
             });
 
@@ -216,7 +216,7 @@ impl GpuCard {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!("Resource already exists, loading that instead");
+                log::info!("Resource already exists, loading that instead");
                 let device: Gd<GpuCard> = res.cast();
                 device
             } else {
@@ -496,7 +496,7 @@ impl GpuCard {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -512,7 +512,7 @@ impl GpuCard {
 
     /// Process and dispatch the given signal
     fn process_signal(&mut self, signal: Signal) {
-        godot_print!("Got signal: {signal:?}");
+        log::trace!("Got signal: {signal:?}");
         match signal {
             Signal::Updated => {
                 self.base_mut().emit_signal("updated".into(), &[]);

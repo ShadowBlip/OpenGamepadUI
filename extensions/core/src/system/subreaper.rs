@@ -39,7 +39,7 @@ impl SubReaper {
 
             // If forking fails, return an invalid PID
             Err(e) => {
-                godot_error!("Error forking command: {command} | {e}");
+                log::error!("Error forking command: {command} | {e}");
                 -1
             }
         }

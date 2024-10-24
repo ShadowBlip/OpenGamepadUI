@@ -247,7 +247,7 @@ impl UPowerDevice {
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx, dbus_path).await {
-                godot_error!("Failed to run UPowerDevice task: ${e:?}");
+                log::error!("Failed to run UPowerDevice task: ${e:?}");
             }
         });
 
@@ -317,7 +317,7 @@ impl UPowerDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.clone().into()) {
             if let Some(res) = resource_loader.load(res_path.clone().into()) {
-                godot_print!("Resource already exists, loading that instead");
+                log::debug!("Resource already exists, loading that instead");
                 let device: Gd<UPowerDevice> = res.cast();
                 device
             } else {
@@ -573,7 +573,7 @@ impl UPowerDevice {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },

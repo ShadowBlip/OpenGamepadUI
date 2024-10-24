@@ -90,14 +90,14 @@ impl GamescopeInstance {
 impl IResource for GamescopeInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        godot_print!("Initializing Gamescope instance");
+        log::info!("Initializing Gamescope instance");
 
         // Discover any gamescope instances
         let result = gamescope_x11_client::discover_gamescope_displays();
         let x11_displays = match result {
             Ok(displays) => displays,
             Err(e) => {
-                godot_error!("Failed to get Gamescope displays: {e:?}");
+                log::error!("Failed to get Gamescope displays: {e:?}");
                 return Self {
                     base,
                     xwaylands: HashMap::new(),
@@ -119,7 +119,7 @@ impl IResource for GamescopeInstance {
 
         // Create an XWayland instance for each discovered XWayland display
         for display in x11_displays {
-            godot_print!("Discovered XWayland display: {display}");
+            log::info!("Discovered XWayland display: {display}");
             let xwayland = GamescopeXWayland::new(display.as_str());
 
             // Categorize the discovered displays

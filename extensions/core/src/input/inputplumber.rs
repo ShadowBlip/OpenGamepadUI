@@ -158,7 +158,7 @@ impl InputPlumberInstance {
         let objects = match self.get_managed_objects() {
             Ok(paths) => paths,
             Err(e) => {
-                godot_error!("Failed to get managed objects: {e:?}");
+                log::error!("Failed to get managed objects: {e:?}");
                 return devices;
             }
         };
@@ -190,7 +190,7 @@ impl InputPlumberInstance {
         let objects = match self.get_managed_objects() {
             Ok(paths) => paths,
             Err(e) => {
-                godot_error!("Failed to get managed objects: {e:?}");
+                log::error!("Failed to get managed objects: {e:?}");
                 return devices;
             }
         };
@@ -242,7 +242,7 @@ impl InputPlumberInstance {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        godot_error!("Backend thread is not running!");
+                        log::error!("Backend thread is not running!");
                         return;
                     }
                 },
@@ -269,7 +269,7 @@ impl InputPlumberInstance {
     #[func]
     fn set_intercept_mode(&mut self, mode: i64) {
         if !(0..=2).contains(&mode) {
-            godot_error!("Invalid intercept mode: {mode}");
+            log::error!("Invalid intercept mode: {mode}");
             return;
         }
         self.intercept_mode = mode;
@@ -340,7 +340,7 @@ impl InputPlumberInstance {
         match kind {
             ObjectType::Unknown => (),
             ObjectType::CompositeDevice => {
-                godot_print!("CompositeDevice added: {path}");
+                log::info!("CompositeDevice added: {path}");
                 let device = CompositeDevice::new(path.as_str());
                 self.composite_devices.insert(path, device.clone());
                 self.base_mut()
@@ -350,7 +350,7 @@ impl InputPlumberInstance {
             ObjectType::SourceHidRawDevice => (),
             ObjectType::SourceIioDevice => (),
             ObjectType::TargetDBusDevice => {
-                godot_print!("DBusDevice added: {path}");
+                log::info!("DBusDevice added: {path}");
                 let device = DBusDevice::new(path.as_str());
                 self.dbus_devices.insert(path, device);
             }
@@ -365,7 +365,7 @@ impl InputPlumberInstance {
         match kind {
             ObjectType::Unknown => (),
             ObjectType::CompositeDevice => {
-                godot_print!("CompositeDevice device removed: {path}");
+                log::info!("CompositeDevice device removed: {path}");
                 self.composite_devices.remove(&path);
                 self.base_mut().emit_signal(
                     "composite_device_removed".into(),
@@ -376,7 +376,7 @@ impl InputPlumberInstance {
             ObjectType::SourceHidRawDevice => (),
             ObjectType::SourceIioDevice => (),
             ObjectType::TargetDBusDevice => {
-                godot_print!("DBusDevice device removed: {path}");
+                log::info!("DBusDevice device removed: {path}");
                 self.dbus_devices.remove(&path);
             }
             ObjectType::TargetGamepadDevice => (),
@@ -390,7 +390,7 @@ impl InputPlumberInstance {
 impl IResource for InputPlumberInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        godot_print!("Initializing InputPlumber instance");
+        log::info!("Initializing InputPlumber instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
@@ -398,7 +398,7 @@ impl IResource for InputPlumberInstance {
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
             if let Err(e) = run(tx).await {
-                godot_error!("Failed to run InputPlumber task: ${e:?}");
+                log::error!("Failed to run InputPlumber task: ${e:?}");
             }
         });
 
@@ -435,7 +435,7 @@ impl IResource for InputPlumberInstance {
 /// Runs InputPlumber tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    godot_print!("Spawning inputplumber");
+    log::info!("Spawning inputplumber");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 
@@ -489,7 +489,7 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
             let args = match signal.args() {
                 Ok(args) => args,
                 Err(e) => {
-                    godot_warn!("Failed to get signal args: ${e:?}");
+                    log::warn!("Failed to get signal args: ${e:?}");
                     continue;
                 }
             };
@@ -511,7 +511,7 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
             let args = match signal.args() {
                 Ok(args) => args,
                 Err(e) => {
-                    godot_warn!("Failed to get signal args: ${e:?}");
+                    log::warn!("Failed to get signal args: ${e:?}");
                     continue;
                 }
             };
