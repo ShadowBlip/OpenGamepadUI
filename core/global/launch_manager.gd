@@ -72,14 +72,14 @@ func _init() -> void:
 
 	# Listen for signals from the primary Gamescope XWayland
 	if _xwayland_primary:
-		# When window focus changes, update the current app and gamepad profile
+		# Debug print when the focused window changes
 		var on_focus_changed := func(from: int, to: int):
 			if from == to:
 				return
 			logger.info("Window focus changed from " + str(from) + " to: " + str(to))
 		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
-		# Debug print when the focused app changed
+		# When focused app changes, update the current app and gamepad profile
 		var on_focused_app_changed := func(from: int, to: int) -> void:
 			if from == to:
 				return
@@ -150,7 +150,7 @@ func _init() -> void:
 
 	in_game_state.state_entered.connect(on_game_state_entered)
 	in_game_state.state_exited.connect(on_game_state_exited)
-
+	set_gamepad_profile("")
 
 # Loads persistent data like recent games launched, etc.
 func _load_persist_data():
@@ -345,26 +345,10 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
 		# Try check to see if there is a global gamepad setting
-		var profile_path := settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
-		if not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
-			profile_path = InputPlumber.DEFAULT_GLOBAL_PROFILE
-		logger.info("Loading global gamepad profile: " + profile_path)
-
-		for gamepad in input_plumber.get_composite_devices():
-			InputPlumber.load_target_modified_profile(gamepad, profile_path, profile_modifier)
-
-			# Set the target gamepad if one was specified
-			if not target_gamepad.is_empty():
-				var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
-				match target_gamepad:
-					"xb360", "xbox-series", "xbox-elite", "gamepad":
-						target_devices.append("touchpad")
-					_:
-						logger.debug(target_gamepad, "needs no additional target devices.")
-				logger.info("Setting target devices to: ", target_devices)
-				gamepad.set_target_devices(target_devices)
-
-		return
+		path = settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+		# Verify we loaded a valid profile, or fallback.
+		if not path.ends_with(".json") or not FileAccess.file_exists(path):
+			path = InputPlumber.DEFAULT_GLOBAL_PROFILE
 
 	logger.info("Loading gamepad profile: " + path)
 	if not FileAccess.file_exists(path):

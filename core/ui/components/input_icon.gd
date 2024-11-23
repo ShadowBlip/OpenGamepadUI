@@ -31,15 +31,15 @@ var internal_children: Array[Node] = []
 			self.textures = input_icons.parse_path(path, force_mapping, force_type - 1)
 		else:
 			self.textures = input_icons.parse_path(path, force_mapping)
-		
+
 		# If no textures are found, become invisible
 		self.visible = !self.textures.is_empty()
-		
+
 		# Remove old children
 		for child in internal_children.duplicate():
 			_remove_internal_child(child)
 		internal_children.clear()
-		
+
 		# Add new children
 		var i := 0
 		for texture in self.textures:
@@ -123,8 +123,7 @@ func _on_input_type_changed(input_type: InputIconManager.InputType):
 		(show_only == 2 and input_type == InputIconManager.InputType.GAMEPAD):
 		self.visible = true
 		self.path = path
-		var width := self.max_width
-		self.max_width = width
+		self.max_width = max_width
 	else:
 		self.visible = false
 
