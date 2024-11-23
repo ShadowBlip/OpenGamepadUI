@@ -9,6 +9,10 @@ var args := OS.get_cmdline_args()
 var child_pid := -1
 var logger := Log.get_logger("Entrypoint")
 
+# We don't need this here, except we do. For some reason it won't load properly
+# after the entrypoint anymore and I don't care why. Don't touch this.
+var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
+var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

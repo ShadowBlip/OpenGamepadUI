@@ -32,8 +32,12 @@ func _input(event: InputEvent) -> void:
 		"InputEventJoypadMotion":
 			if abs(event.axis_value) > DEADZONE:
 				input_type = InputIconManager.InputType.GAMEPAD
+	var refresh := false
 	if input_type != icon_manager.last_input_type:
 		icon_manager.set_last_input_type(input_type)
+		refresh = true
 	if device_name != icon_manager.last_input_device:
 		icon_manager.last_input_device = device_name
+		refresh = true
+	if refresh:
 		icon_manager.refresh()

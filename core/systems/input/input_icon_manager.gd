@@ -402,8 +402,6 @@ func _get_matching_event(path: String, input_type: InputType) -> Array[InputEven
 ## Set the last input type to the given value and emit a signal
 func set_last_input_type(_last_input_type: InputType):
 	last_input_type = _last_input_type
-	if not self.disabled:
-		input_type_changed.emit(_last_input_type)
 
 
 ## Signal whenever a gamepad is connected/disconnected

@@ -97,6 +97,9 @@ func _ready() -> void:
 
 	# Set the theme if one was set
 	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
+	if theme_path.is_empty():
+		logger.error("Failed to load theme from settings manager.")
+		return
 	logger.debug("Setting theme to: " + theme_path)
 	var loaded_theme = load(theme_path)
 	if loaded_theme != null:
@@ -252,7 +255,6 @@ func _find_underlay_window_id() -> void:
 		if xwayland_ogui.has_notification(window):
 			underlay_window_id = window
 			logger.info("Found steam! " + str(underlay_window_id))
-			xwayland_primary.focused_app_updated.connect(_on_app_focus_changed)
 			break
 
 	# If we didn't find the window_id, set up a tiemr to loop back and try again.
@@ -306,18 +308,3 @@ func _check_exit() -> void:
 		return
 	logger.debug("Steam closed. Shutting down.")
 	get_tree().quit()
-
-
-func _on_app_focus_changed(from: int, to: int) -> void:
-	# On focus to the steam overlay, ensure the default profile is used.
-	logger.warn("Changed window focus from", from, "to app ID:", to)
-	if to in [gamescope.OVERLAY_GAME_ID, 0]:
-		launch_manager.set_gamepad_profile("")
-		return
-
-	# On focus back to the game, ensure the game profile is set
-	var _current_app := launch_manager.get_current_app()
-	if not _current_app:
-		logger.error("Unable to set gamepad profile. Current app is NULL and we aren't focused")
-		return
-	launch_manager.set_app_gamepad_profile(_current_app)

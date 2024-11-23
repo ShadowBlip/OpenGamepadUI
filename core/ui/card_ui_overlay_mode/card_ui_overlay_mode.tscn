@@ -1,13 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://b13lnfkjbafkj"]
+[gd_scene load_steps=16 format=3 uid="uid://b13lnfkjbafkj"]
 
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" path="res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.gd" id="2_3ptao"]
 [ext_resource type="PackedScene" uid="uid://bxnb8t7i08vma" path="res://core/systems/input/overlay_mode_input_manager.tscn" id="3_klhmb"]
+[ext_resource type="Script" path="res://core/systems/input/input_icon_processor.gd" id="4_6rltg"]
 [ext_resource type="Script" path="res://core/systems/launcher/launcher.gd" id="4_o0rva"]
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="5_4sdt1"]
+[ext_resource type="Script" path="res://core/systems/gamescope/gamescope.gd" id="5_sgddx"]
+[ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="6_jj3bv"]
 [ext_resource type="PackedScene" uid="uid://cwarv58ju0sow" path="res://core/ui/card_ui/gamepad/gamepad_settings.tscn" id="6_oddte"]
 [ext_resource type="PackedScene" uid="uid://hroo3ll4inrb" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.tscn" id="7_e54f8"]
+[ext_resource type="Script" path="res://core/systems/plugin/plugin_manager.gd" id="7_qqh0e"]
+[ext_resource type="Script" path="res://core/systems/performance/power_station.gd" id="8_kxe4b"]
 [ext_resource type="PackedScene" uid="uid://eqqk1uve143x" path="res://core/ui/components/dialog.tscn" id="8_otm5f"]
+[ext_resource type="ResourceRegistry" uid="uid://bsr58xihnpn1j" path="res://core/systems/resource/resource_registry.tres" id="9_4si0w"]
+[ext_resource type="PowerStationInstance" uid="uid://c2mmrnh3rcs58" path="res://core/systems/performance/power_station.tres" id="9_nw6s5"]
 
 [node name="CardUIOverlayMode" type="Control" groups=["main"]]
 layout_mode = 3
@@ -21,8 +28,25 @@ script = ExtResource("2_3ptao")
 
 [node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
 
+[node name="InputIconProcessor" type="Node" parent="."]
+script = ExtResource("4_6rltg")
+
+[node name="Gamescope" type="Node" parent="."]
+script = ExtResource("5_sgddx")
+instance = ExtResource("6_jj3bv")
+
 [node name="Launcher" type="Node" parent="."]
 script = ExtResource("4_o0rva")
+
+[node name="PluginManager" type="Node" parent="."]
+script = ExtResource("7_qqh0e")
+
+[node name="PowerStation" type="Node" parent="."]
+script = ExtResource("8_kxe4b")
+instance = ExtResource("9_nw6s5")
+
+[node name="ResourceProcessor" type="ResourceProcessor" parent="."]
+registry = ExtResource("9_4si0w")
 
 [node name="MenuContent" type="MarginContainer" parent="."]
 unique_name_in_owner = true

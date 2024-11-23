@@ -143,6 +143,7 @@ func _on_apply_timer_timeout() -> void:
 	logger.debug("Applying and saving profile")
 
 	# Update the profile based on the currently set values
+	current_profile.gpu_power_profile = power_profile_dropdown.selected
 	current_profile.cpu_boost_enabled = cpu_boost_button.button_pressed
 	current_profile.cpu_smt_enabled = smt_button.button_pressed
 	current_profile.cpu_core_count_current = int(cpu_cores_slider.value)
@@ -152,7 +153,6 @@ func _on_apply_timer_timeout() -> void:
 	current_profile.gpu_freq_min_current = gpu_freq_min_slider.value
 	current_profile.gpu_freq_max_current = gpu_freq_max_slider.value
 	current_profile.gpu_temp_current = gpu_temp_slider.value
-	current_profile.gpu_power_profile = power_profile_dropdown.selected
 
 	performance_manager.apply_and_save_profile(current_profile)
 
@@ -267,7 +267,7 @@ func _get_integrated_card() -> GpuCard:
 		var card: GpuCard
 		var cards := power_station.gpu.get_cards()
 		for c in cards:
-			if c.class_type != "integrated":
+			if c.class != "integrated":
 				continue
 			card = c
 		return card
