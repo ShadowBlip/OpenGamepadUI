@@ -182,13 +182,23 @@ impl Pty {
         // Spawn a task to run the command
         let signals_tx = self.tx.clone();
         RUNTIME.spawn(async move {
-            let mut binding = Command::new(command);
+            let mut binding = Command::new(command.clone());
             let cmd = binding
                 .args(args)
                 .stdin(stdin)
                 .stdout(stdout)
                 .stderr(stderr);
-            let child = cmd.spawn().unwrap();
+            let child = match cmd.spawn() {
+                Ok(child) => child,
+                Err(e) => {
+                    log::error!("Failed to spawn child process with command: {command:?} {e:?}");
+                    let signal = Signal::Finished { exit_code: -1 };
+                    if let Err(e) = signals_tx.send(signal) {
+                        log::error!("Error sending exit code: {e:?}");
+                    }
+                    return;
+                }
+            };
 
             // Get the PID of the process and emit a started signal
             let pid = child.id();
