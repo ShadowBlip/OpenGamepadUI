@@ -19,14 +19,14 @@ var logger := Log.get_logger("InteractiveProcess", Log.LEVEL.INFO)
 
 func _init(command: String, cmd_args: PackedStringArray = []) -> void:
 	# Hack for steam plugin running steamcmd on NixOS
-	if command.ends_with("steamcmd.sh"):
-		cmd = "steam-run"
-		args = PackedStringArray([command])
-		args.append_array(cmd_args)
-		return
+	#if command.ends_with("steamcmd.sh"):
+		#cmd = "steam-run"
+		#args = PackedStringArray([command])
+		#args.append_array(cmd_args)
+		#return
 
-	cmd = command
-	args = cmd_args
+	self.cmd = command
+	self.args = cmd_args
 
 
 ## Start the interactive process
