@@ -17,6 +17,17 @@ const PROFILES_DIR := "user://data/gamepad/profiles"
 var _dbus_devices := {}
 
 
+func _init() -> void:
+	# Ensure the default global profile exists in the user directory.
+	if not FileAccess.file_exists(DEFAULT_GLOBAL_PROFILE):
+		var file := FileAccess.open(DEFAULT_PROFILE, FileAccess.READ)
+		var content := file.get_as_text()
+		file.close()
+		var new_file := FileAccess.open(DEFAULT_GLOBAL_PROFILE, FileAccess.WRITE)
+		new_file.store_string(content)
+		new_file.close()
+
+
 func _ready() -> void:
 	# Add listeners for any new devices
 	var on_device_added := func(device: CompositeDevice):

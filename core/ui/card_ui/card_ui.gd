@@ -119,14 +119,17 @@ func _ready() -> void:
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	library_manager.reload_library()
 
-	# Set the initial intercept mode
+	# Setup inputplumber to receive guide presses.
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
-	#var on_device_changed := func(device: CompositeDevice):
-	#	var intercept_mode := input_plumber.intercept_mode
-	#	logger.debug("Setting intercept mode to: " + str(intercept_mode))
-	#	device.intercept_mode = intercept_mode
-	## TODO: Do we still need this..?
-	#input_plumber.composite_device_changed.connect(on_device_changed)
+	input_plumber.set_intercept_activation(PackedStringArray(["Gamepad:Button:Guide"]), "Gamepad:Button:Guide")
+
+	# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
+	var on_device_changed := func(device: CompositeDevice):
+		var intercept_mode := input_plumber.intercept_mode
+		logger.debug("Setting intercept mode to: " + str(intercept_mode))
+		device.intercept_mode = intercept_mode
+		device.set_intercept_activation(PackedStringArray(["Gamepad:Button:Guide"]), "Gamepad:Button:Guide")
+	input_plumber.composite_device_added.connect(on_device_changed)
 
 	# Set the theme if one was set
 	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
