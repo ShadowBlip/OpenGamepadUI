@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"kind": "DeviceProfile",
-	"name": "Default",
+	"name": "OpenGamepadUI Default",
 	"mapping": [
 		{
 			"name": "LeftTop",
@@ -80,6 +80,19 @@
 					"gamepad": {
 						"button": "East"
 					}
+				}
+			]
+		},
+		{
+			"name": "QuickAccess",
+			"source_event": {
+				"gamepad": {
+					"button": "QuickAccess"
+				}
+			},
+			"target_events": [
+				{
+					"dbus": "ui_quick"
 				}
 			]
 		}

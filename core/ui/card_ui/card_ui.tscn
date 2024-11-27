@@ -105,6 +105,9 @@ instance = ExtResource("5_wmkau")
 [node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
 
 [node name="Launcher" type="Node" parent="."]
+process_thread_group = 2
+process_thread_group_order = 0
+process_thread_messages = 0
 script = ExtResource("14_fs00k")
 
 [node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]

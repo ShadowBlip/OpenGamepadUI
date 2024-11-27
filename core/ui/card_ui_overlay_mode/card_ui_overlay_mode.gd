@@ -173,7 +173,6 @@ func _setup_overlay_mode(args: PackedStringArray) -> void:
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 	input_plumber.set_intercept_activation(PackedStringArray(["Gamepad:Button:Guide", "Gamepad:Button:East"]), "Gamepad:Button:QuickAccess2")
 
-	# TODO: Do we need this?
 	# Sets the intercept mode and intercept activation keys to what overlay_mode expects.
 	var on_device_changed := func(device: CompositeDevice):
 		var intercept_mode := input_plumber.intercept_mode
