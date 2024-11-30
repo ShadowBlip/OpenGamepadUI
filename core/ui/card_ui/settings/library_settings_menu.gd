@@ -2,7 +2,7 @@ extends ScrollContainer
 
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
-var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
+var state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var settings_state := load("res://assets/state/states/settings.tres") as State
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
 var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene

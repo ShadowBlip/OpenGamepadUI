@@ -64,6 +64,8 @@ var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
 
 # Connect to Gamescope signals
 func _init() -> void:
+	_load_persist_data()
+
 	# Get the window ID of OpenGamepadUI
 	if _xwayland_ogui:
 		var ogui_windows := _xwayland_ogui.get_windows_for_pid(PID)
@@ -77,6 +79,7 @@ func _init() -> void:
 			if from == to:
 				return
 			logger.info("Window focus changed from " + str(from) + " to: " + str(to))
+			self.check_running.call_deferred()
 		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
 		# When focused app changes, update the current app and gamepad profile
@@ -115,6 +118,7 @@ func _init() -> void:
 			if from == to:
 				return
 			logger.debug("Focusable apps changed from", from, "to", to)
+			self.check_running.call_deferred()
 			# If focusable apps has changed and the currently focused app no longer exists,
 			# remove the manual focus
 			var baselayer_app := _xwayland_primary.baselayer_app
@@ -122,6 +126,14 @@ func _init() -> void:
 			if baselayer_app > 0 and not baselayer_app in to:
 				_xwayland_primary.remove_baselayer_app()
 		_xwayland_primary.focusable_apps_updated.connect(on_focusable_apps_changed)
+
+	# Listen for signals from the secondary Gamescope XWayland
+	if _xwayland_game:
+		# Listen for window created/destroyed events
+		var on_window_created := func(window_id: int):
+			logger.debug("Window created:", window_id)
+			self.check_running.call_deferred()
+		_xwayland_ogui.window_created.connect(on_window_created)
 
 	# Whenever the in-game state is entered, set the gamepad profile
 	var on_game_state_entered := func(_from: State):
@@ -151,6 +163,7 @@ func _init() -> void:
 	in_game_state.state_entered.connect(on_game_state_entered)
 	in_game_state.state_exited.connect(on_game_state_exited)
 	set_gamepad_profile("")
+
 
 # Loads persistent data like recent games launched, etc.
 func _load_persist_data():
@@ -189,20 +202,20 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	# Override any parameters that may be in the user's config for this game
 	var section := ".".join(["game", app.name.to_lower()])
 	var cmd_key := ".".join(["command", app._provider_id])
-	var user_cmd = settings_manager.get_value(section, cmd_key)
-	if user_cmd and user_cmd is String:
+	var user_cmd = settings_manager.get_value(section, cmd_key, "")
+	if user_cmd and user_cmd is String and not (user_cmd as String).is_empty():
 		cmd = user_cmd
 	var args_key := ".".join(["args", app._provider_id])
-	var user_args = settings_manager.get_value(section, args_key)
-	if user_args and user_args is PackedStringArray:
+	var user_args = settings_manager.get_value(section, args_key, PackedStringArray())
+	if user_args and user_args is PackedStringArray and not (user_args as PackedStringArray).is_empty():
 		args = user_args
 	var cwd_key := ".".join(["cwd", app._provider_id])
-	var user_cwd = settings_manager.get_value(section, cwd_key)
-	if user_cwd and user_cwd is String:
+	var user_cwd = settings_manager.get_value(section, cwd_key, "")
+	if user_cwd and user_cwd is String and not (user_cwd as String).is_empty():
 		cwd = user_cwd
 	var env_key := ".".join(["env", app._provider_id])
-	var user_env = settings_manager.get_value(section, env_key)
-	if user_env and user_env is Dictionary:
+	var user_env = settings_manager.get_value(section, env_key, {})
+	if user_env and user_env is Dictionary and not (user_env as Dictionary).is_empty():
 		env = user_env
 	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
 	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, true) as bool
@@ -376,8 +389,8 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 			logger.info("Setting target devices to: ", target_devices)
 			gamepad.set_target_devices(target_devices)
 
-	var notify := Notification.new("Using gamepad profile: " + profile.name)
-	notification_manager.show(notify)
+	#var notify := Notification.new("Using gamepad profile: " + profile.name)
+	#notification_manager.show(notify)
 
 
 ## Sets the given running app as the current app

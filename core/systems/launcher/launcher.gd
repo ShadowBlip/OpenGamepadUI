@@ -11,6 +11,10 @@ func _init() -> void:
 	launch_manager._load_persist_data()
 
 
-# TODO: Replace this with dbus signaling. This is super shitty.
-func _process(delta) -> void:
-	launch_manager.check_running()
+func _ready() -> void:
+	var timer := Timer.new()
+	timer.autostart = true
+	timer.one_shot = false
+	timer.wait_time = 1
+	timer.timeout.connect(launch_manager.check_running)
+	add_child(timer)

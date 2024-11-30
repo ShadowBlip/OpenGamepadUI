@@ -23,6 +23,7 @@ func _ready() -> void:
 	quick_bar_menu_state.state_entered.connect(_on_state_entered)
 	quick_bar_menu_state.state_exited.connect(_on_state_exited)
 	launch_manager.app_switched.connect(_on_app_switched)
+	launch_manager.app_stopped.connect(_on_app_stopped)
 
 	# Handle when the notifications button is pressed
 	var on_notify_pressed := func():
@@ -52,6 +53,11 @@ func _on_app_switched(_from: RunningApp, to: RunningApp) -> void:
 	playing_container.visible = true
 	game_label.text = to.launch_item.name
 	# TODO: Implement fetching game icon and setting it
+
+
+func _on_app_stopped(app: RunningApp) -> void:
+	if launch_manager.get_running().is_empty():
+		playing_container.visible = false
 
 
 # Adds the given Control menu to the quick bar. A focus node can be given which will

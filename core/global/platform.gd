@@ -44,6 +44,7 @@ enum PLATFORM {
 	STEAMOS,
 	MANJARO,
 	ARCH_LIKE,
+	NIXOS,
 }
 
 var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
@@ -51,7 +52,7 @@ var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres"
 ## Detected Operating System information
 var os_info := _detect_os()
 ## The OS platform provider detected
-var os: PlatformProvider
+var os: OSPlatform
 ## The hardware platform provider detected
 var platform: PlatformProvider
 var logger := Log.get_logger("Platform", Log.LEVEL.INFO)
@@ -127,6 +128,8 @@ func _init() -> void:
 		os = load("res://core/platform/os/chimeraos.tres")
 	if PLATFORM.MANJARO in flags:
 		os = load("res://core/platform/os/manjaro.tres")
+	if PLATFORM.NIXOS in flags:
+		os = load("res://core/platform/os/nixos.tres")
 
 	if os:
 		for action in os.startup_actions:
@@ -286,6 +289,8 @@ func _read_os() -> Array[PLATFORM]:
 		flags.append(PLATFORM.MANJARO)
 	if os_info.id_like == "arch":
 		flags.append(PLATFORM.ARCH_LIKE)
+	if os_info.id == "nixos":
+		flags.append(PLATFORM.NIXOS)
 
 	return flags
 

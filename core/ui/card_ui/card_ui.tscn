@@ -104,17 +104,14 @@ instance = ExtResource("5_wmkau")
 
 [node name="DesktopLibrary" parent="." instance=ExtResource("3_68bes")]
 
-[node name="Launcher" type="Node" parent="."]
-process_thread_group = 2
-process_thread_group_order = 0
-process_thread_messages = 0
-script = ExtResource("14_fs00k")
-
 [node name="PluginManager" parent="." instance=ExtResource("5_dv70s")]
 
 [node name="PowerManager" type="Node" parent="."]
 script = ExtResource("10_opsp8")
 instance = ExtResource("11_nk5v7")
+
+[node name="Launcher" type="Node" parent="."]
+script = ExtResource("14_fs00k")
 
 [node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
 
@@ -129,6 +126,10 @@ one_shot = true
 
 [node name="ResourceProcessor" type="ResourceProcessor" parent="."]
 registry = ExtResource("15_ne50o")
+
+[node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
+visible = false
+layout_mode = 1
 
 [node name="Panel" type="Panel" parent="."]
 unique_name_in_owner = true
@@ -244,10 +245,6 @@ layout_mode = 2
 [node name="QuickBarMenu" parent="MenuContent/MenuContainer" instance=ExtResource("14_lsaok")]
 visible = false
 layout_mode = 2
-
-[node name="GameLoading" parent="." instance=ExtResource("22_morxu")]
-visible = false
-layout_mode = 1
 
 [node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
 editor_description = "Anything in this container will always be visible, even during in-game states.

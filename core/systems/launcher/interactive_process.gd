@@ -11,6 +11,7 @@ var pty: Pty
 var cmd: String
 var args: PackedStringArray = []
 var pid: int
+var platform := load("res://core/global/platform.tres") as Platform
 var registry := load("res://core/systems/resource/resource_registry.tres") as ResourceRegistry
 var lines_mutex := Mutex.new()
 var lines_buffer := PackedStringArray()
@@ -18,12 +19,15 @@ var logger := Log.get_logger("InteractiveProcess", Log.LEVEL.INFO)
 
 
 func _init(command: String, cmd_args: PackedStringArray = []) -> void:
-	# Hack for steam plugin running steamcmd on NixOS
-	#if command.ends_with("steamcmd.sh"):
-		#cmd = "steam-run"
-		#args = PackedStringArray([command])
-		#args.append_array(cmd_args)
-		#return
+	# Check to see if this OS requires running the command through a binary
+	# compatibility tool.
+	if platform and platform.os:
+		var compatibility_cmd := platform.os.get_binary_compatibility_cmd(command, cmd_args)
+		if not compatibility_cmd.is_empty():
+			logger.debug("Using binary compatibility tool")
+			self.cmd = compatibility_cmd.pop_front()
+			self.args = PackedStringArray(compatibility_cmd)
+			return
 
 	self.cmd = command
 	self.args = cmd_args
