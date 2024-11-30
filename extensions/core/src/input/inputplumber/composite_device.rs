@@ -101,19 +101,19 @@ impl CompositeDevice {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<CompositeDevice> = res.cast();
                 device
             } else {
                 let mut device = CompositeDevice::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = CompositeDevice::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -193,7 +193,7 @@ impl CompositeDevice {
         for path in paths.as_slice() {
             let dbus_path = String::from(path);
             let device = DBusDevice::new(dbus_path.as_str());
-            devices.push(device);
+            devices.push(&device);
         }
         devices
     }
@@ -271,7 +271,7 @@ impl CompositeDevice {
         let path = String::from(path);
         let absolute_path = if path.starts_with("res://") || path.starts_with("user://") {
             let project_settings = ProjectSettings::singleton();
-            project_settings.globalize_path(path.into()).into()
+            project_settings.globalize_path(path.as_str()).into()
         } else {
             path
         };

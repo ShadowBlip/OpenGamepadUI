@@ -174,19 +174,19 @@ impl BluetoothAdapter {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BluetoothAdapter> = res.cast();
                 device
             } else {
                 let mut device = BluetoothAdapter::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = BluetoothAdapter::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -472,23 +472,23 @@ impl BluetoothAdapter {
         match signal {
             Signal::Discoverable { value } => {
                 self.base_mut()
-                    .emit_signal("discoverable_changed".into(), &[value.to_variant()]);
+                    .emit_signal("discoverable_changed", &[value.to_variant()]);
             }
             Signal::Discovering { value } => {
                 self.base_mut()
-                    .emit_signal("discovering_changed".into(), &[value.to_variant()]);
+                    .emit_signal("discovering_changed", &[value.to_variant()]);
             }
             Signal::Pairable { value } => {
                 self.base_mut()
-                    .emit_signal("pairable_changed".into(), &[value.to_variant()]);
+                    .emit_signal("pairable_changed", &[value.to_variant()]);
             }
             Signal::Powered { value } => {
                 self.base_mut()
-                    .emit_signal("powered_changed".into(), &[value.to_variant()]);
+                    .emit_signal("powered_changed", &[value.to_variant()]);
             }
             Signal::PowerState { value } => {
                 self.base_mut()
-                    .emit_signal("power_state_changed".into(), &[value.to_variant()]);
+                    .emit_signal("power_state_changed", &[value.to_variant()]);
             }
         }
     }

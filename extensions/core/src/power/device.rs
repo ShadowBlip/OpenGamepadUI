@@ -315,19 +315,19 @@ impl UPowerDevice {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::debug!("Resource already exists, loading that instead");
                 let device: Gd<UPowerDevice> = res.cast();
                 device
             } else {
                 let mut device = UPowerDevice::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = UPowerDevice::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -586,7 +586,7 @@ impl UPowerDevice {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Updated => {
-                self.base_mut().emit_signal("updated".into(), &[]);
+                self.base_mut().emit_signal("updated", &[]);
             }
         }
     }

@@ -168,7 +168,7 @@ impl InputPlumberInstance {
                 continue;
             }
             let device = CompositeDevice::new(path.as_str());
-            devices.push(device);
+            devices.push(&device);
         }
 
         devices
@@ -200,7 +200,7 @@ impl InputPlumberInstance {
                 continue;
             }
             let device = DBusDevice::new(path.as_str());
-            devices.push(device);
+            devices.push(&device);
         }
 
         devices
@@ -318,13 +318,13 @@ impl InputPlumberInstance {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Started => {
-                self.base_mut().emit_signal("started".into(), &[]);
+                self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
                 // Clear all known devices
                 self.composite_devices.clear();
                 self.dbus_devices.clear();
-                self.base_mut().emit_signal("stopped".into(), &[]);
+                self.base_mut().emit_signal("stopped", &[]);
             }
             Signal::ObjectAdded { path, kind } => {
                 self.on_object_added(path, kind);
@@ -344,7 +344,7 @@ impl InputPlumberInstance {
                 let device = CompositeDevice::new(path.as_str());
                 self.composite_devices.insert(path, device.clone());
                 self.base_mut()
-                    .emit_signal("composite_device_added".into(), &[device.to_variant()]);
+                    .emit_signal("composite_device_added", &[device.to_variant()]);
             }
             ObjectType::SourceEventDevice => (),
             ObjectType::SourceHidRawDevice => (),
@@ -368,7 +368,7 @@ impl InputPlumberInstance {
                 log::info!("CompositeDevice device removed: {path}");
                 self.composite_devices.remove(&path);
                 self.base_mut().emit_signal(
-                    "composite_device_removed".into(),
+                    "composite_device_removed",
                     &[GString::from(path).to_variant()],
                 );
             }

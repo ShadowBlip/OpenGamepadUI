@@ -289,6 +289,10 @@ pointing/emulate_touch_from_mouse=true
 locale/translations=PackedStringArray("res://assets/locale/en_US.po", "res://assets/locale/es_MX.po", "res://assets/locale/fr_FR.po", "res://assets/locale/zh_CH.po")
 locale/fallback="en_US"
 
+[network]
+
+limits/debugger/max_queued_messages=4096
+
 [rendering]
 
 viewport/transparent_background=true

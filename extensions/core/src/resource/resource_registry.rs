@@ -18,7 +18,7 @@ impl ResourceRegistry {
     /// Register the given resource with the registry. The given resource will have its "process()" method called every frame by a [ResourceProcessor].
     #[func]
     pub fn register(&mut self, resource: Gd<Resource>) {
-        if !resource.has_method("process".into()) {
+        if !resource.has_method("process") {
             log::error!(
                 "Tried to register resource for processing, but resource has no process method: {resource}"
             );
@@ -27,7 +27,7 @@ impl ResourceRegistry {
         if self.resources.contains(&resource) {
             return;
         }
-        self.resources.push(resource);
+        self.resources.push(&resource);
     }
 
     /// Unregister the given resource from the registry.
@@ -40,7 +40,7 @@ impl ResourceRegistry {
     #[func]
     pub fn process(&mut self, delta: f64) {
         for mut resource in self.resources.iter_shared() {
-            resource.call("process".into(), &[delta.to_variant()]);
+            resource.call("process", &[delta.to_variant()]);
         }
     }
 
@@ -48,9 +48,9 @@ impl ResourceRegistry {
     /// This provides a way for resources to add nodes into the scene tree.
     #[func]
     pub fn add_child(&mut self, child: Gd<Node>) {
-        self.child_nodes.push(child.clone());
+        self.child_nodes.push(&child);
         self.base_mut()
-            .emit_signal("child_added".into(), &[child.to_variant()]);
+            .emit_signal("child_added", &[child.to_variant()]);
     }
 
     /// Removes the given node from the scene tree
@@ -58,7 +58,7 @@ impl ResourceRegistry {
     pub fn remove_child(&mut self, child: Gd<Node>) {
         self.child_nodes.erase(&child);
         self.base_mut()
-            .emit_signal("child_removed".into(), &[child.to_variant()]);
+            .emit_signal("child_removed", &[child.to_variant()]);
     }
 
     /// Returns a list of all nodes that should be added as children to a [ResourceProcessor]

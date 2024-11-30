@@ -1,6 +1,6 @@
 use gamescope_x11_client::{
     atoms::GamescopeAtom,
-    xwayland::{BlurMode, Primary, XWayland},
+    xwayland::{BlurMode, Primary, WindowLifecycleEvent, XWayland},
 };
 use std::{
     collections::HashMap,
@@ -19,6 +19,7 @@ use crate::RUNTIME;
 #[derive(Debug)]
 enum Signal {
     WindowCreated { window_id: u32 },
+    WindowDestroyed { window_id: u32 },
     WindowPropertyChanged { window_id: u32, property: String },
     PropertyChanged { property: String },
 }
@@ -98,6 +99,9 @@ impl GamescopeXWayland {
     fn window_created(window_id: u32);
 
     #[signal]
+    fn window_destroyed(window_id: u32);
+
+    #[signal]
     fn window_property_updated(window_id: u32, property: GString);
 
     #[signal]
@@ -155,19 +159,22 @@ impl GamescopeXWayland {
         }
 
         // Spawn a task to listen for window creation events
-        if let Ok((_, windows_rx)) = xwayland.listen_for_window_created() {
+        if let Ok((_, windows_rx)) = xwayland.listen_for_window_lifecycle() {
             let signals_tx = tx.clone();
             RUNTIME.spawn_blocking(move || {
-                for window_id in windows_rx.into_iter() {
-                    let signal = Signal::WindowCreated { window_id };
+                for (event, window_id) in windows_rx.into_iter() {
+                    let signal = match event {
+                        WindowLifecycleEvent::Created => Signal::WindowCreated { window_id },
+                        WindowLifecycleEvent::Destroyed => Signal::WindowDestroyed { window_id },
+                    };
                     if let Err(e) = signals_tx.send(signal) {
-                        log::error!("Error sending window created signal: {e:?}");
+                        log::error!("Error sending window signal: {e:?}");
                         break;
                     }
                 }
             });
         } else {
-            log::error!("Failed to listen for XWayland windows created");
+            log::error!("Failed to listen for XWayland windows created/destroyed");
         }
 
         // Setup the initial state
@@ -208,19 +215,19 @@ impl GamescopeXWayland {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::debug!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<GamescopeXWayland> = res.cast();
                 device
             } else {
                 let mut device = GamescopeXWayland::from_name(name.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = GamescopeXWayland::from_name(name.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -236,7 +243,7 @@ impl GamescopeXWayland {
     /// [unwatch_window] to stop watching the given window.
     #[func]
     pub fn watch_window(&mut self, window_id: u32) -> i32 {
-        if self.watched_windows.contains(&(window_id as i64)) {
+        if self.watched_windows.contains(window_id as i64) {
             log::warn!("Window {window_id} is already being watched");
             return 0;
         }
@@ -297,10 +304,10 @@ impl GamescopeXWayland {
     #[func]
     pub fn unwatch_window(&mut self, window_id: u32) -> i32 {
         let window_id = window_id as i64;
-        if !self.watched_windows.contains(&window_id) {
+        if !self.watched_windows.contains(window_id) {
             return 0;
         }
-        if let Some(idx) = self.watched_windows.find(&window_id, None) {
+        if let Some(idx) = self.watched_windows.find(window_id, None) {
             self.watched_windows.remove(idx);
         }
 
@@ -973,14 +980,18 @@ impl GamescopeXWayland {
         match signal {
             Signal::WindowCreated { window_id } => {
                 self.base_mut()
-                    .emit_signal("window_created".into(), &[window_id.to_variant()]);
+                    .emit_signal("window_created", &[window_id.to_variant()]);
+            }
+            Signal::WindowDestroyed { window_id } => {
+                self.base_mut()
+                    .emit_signal("window_destroyed", &[window_id.to_variant()]);
             }
             Signal::WindowPropertyChanged {
                 window_id,
                 property,
             } => {
                 self.base_mut().emit_signal(
-                    "window_property_updated".into(),
+                    "window_property_updated",
                     &[window_id.to_variant(), property.to_godot().to_variant()],
                 );
             }
@@ -990,7 +1001,7 @@ impl GamescopeXWayland {
                         let from = self.focused_app;
                         let to = self.get_focused_app();
                         self.base_mut().emit_signal(
-                            "focused_app_updated".into(),
+                            "focused_app_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -998,7 +1009,7 @@ impl GamescopeXWayland {
                         let from = self.focused_app_gfx;
                         let to = self.get_focused_app_gfx();
                         self.base_mut().emit_signal(
-                            "focused_app_gfx_updated".into(),
+                            "focused_app_gfx_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -1006,7 +1017,7 @@ impl GamescopeXWayland {
                         let from = self.focusable_apps.clone();
                         let to = self.get_focusable_apps();
                         self.base_mut().emit_signal(
-                            "focusable_apps_updated".into(),
+                            "focusable_apps_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -1014,7 +1025,7 @@ impl GamescopeXWayland {
                         let from = self.focused_window;
                         let to = self.get_focused_window();
                         self.base_mut().emit_signal(
-                            "focused_window_updated".into(),
+                            "focused_window_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -1022,7 +1033,7 @@ impl GamescopeXWayland {
                         let from = self.focusable_windows.clone();
                         let to = self.get_focusable_windows();
                         self.base_mut().emit_signal(
-                            "focusable_windows_updated".into(),
+                            "focusable_windows_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -1030,7 +1041,7 @@ impl GamescopeXWayland {
                         let from = self.baselayer_window;
                         let to = self.get_baselayer_window();
                         self.base_mut().emit_signal(
-                            "baselayer_window_updated".into(),
+                            "baselayer_window_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }
@@ -1038,7 +1049,7 @@ impl GamescopeXWayland {
                         let from = self.baselayer_app;
                         let to = self.get_baselayer_app();
                         self.base_mut().emit_signal(
-                            "baselayer_app_updated".into(),
+                            "baselayer_app_updated",
                             &[from.to_variant(), to.to_variant()],
                         );
                     }

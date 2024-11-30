@@ -112,10 +112,10 @@ impl UPowerInstance {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Started => {
-                self.base_mut().emit_signal("started".into(), &[]);
+                self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
-                self.base_mut().emit_signal("stopped".into(), &[]);
+                self.base_mut().emit_signal("stopped", &[]);
             }
         }
     }

@@ -62,19 +62,19 @@ impl FilesystemDevice {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<FilesystemDevice> = res.cast();
                 device
             } else {
                 let mut device = FilesystemDevice::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = FilesystemDevice::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -89,7 +89,7 @@ impl FilesystemDevice {
         let mount_points_bytes = proxy.mount_points().unwrap_or_default();
         for mount_point_bytes in mount_points_bytes {
             let mount_point = String::from_utf8_lossy(mount_point_bytes.as_slice());
-            mount_points.push(mount_point.to_string().to_godot());
+            mount_points.push(mount_point.to_string().as_str());
         }
 
         mount_points
