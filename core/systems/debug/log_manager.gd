@@ -88,4 +88,3 @@ func get_available_loggers() -> PackedStringArray:
 	var logger_names := loggers_by_name.keys()
 	mutex.unlock()
 	return logger_names
-

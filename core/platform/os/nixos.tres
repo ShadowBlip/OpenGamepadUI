@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PlatformNixOS" load_steps=3 format=3 uid="uid://byxeetkb11b3e"]
+
+[ext_resource type="Script" path="res://core/platform/os/nixos.gd" id="1_h88kc"]
+[ext_resource type="Script" path="res://core/platform/actions/platform_action.gd" id="2_tc12v"]
+
+[resource]
+script = ExtResource("1_h88kc")
+name = ""
+startup_actions = Array[ExtResource("2_tc12v")]([])
+shutdown_actions = Array[ExtResource("2_tc12v")]([])

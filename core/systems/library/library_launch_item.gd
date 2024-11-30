@@ -83,5 +83,6 @@ func get_app_id() -> int:
 
 	# In all other cases, use the hash of the app name for its app id
 	var app_id := hash(self.name)
+	const MAX_APP_ID := 800483647
 
-	return app_id
+	return app_id % MAX_APP_ID

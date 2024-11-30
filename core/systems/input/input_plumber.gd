@@ -23,6 +23,9 @@ func _init() -> void:
 		var file := FileAccess.open(DEFAULT_PROFILE, FileAccess.READ)
 		var content := file.get_as_text()
 		file.close()
+		if DirAccess.make_dir_recursive_absolute(PROFILES_DIR) != OK:
+			var logger := Log.get_logger("InputPlumber", Log.LEVEL.DEBUG)
+			logger.error("Failed to create gamepad profiles directory")
 		var new_file := FileAccess.open(DEFAULT_GLOBAL_PROFILE, FileAccess.WRITE)
 		new_file.store_string(content)
 		new_file.close()

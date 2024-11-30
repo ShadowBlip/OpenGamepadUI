@@ -147,7 +147,7 @@ static func get_pid_status(pid: int) -> Dictionary:
 	var status_file: FileAccess = FileAccess.open(status_path, FileAccess.READ)
 	if not status_file:
 		var logger := Log.get_logger("Reaper")
-		logger.error("Unable to check status for pid: {0}".format([pid]))
+		logger.debug("Unable to check status for pid: {0}".format([pid]))
 		return {}
 	
 	# Parse the status output
@@ -215,7 +215,7 @@ static func is_gamescope_pid(pid: int) -> bool:
 	var status: Dictionary = get_pid_status(pid)
 	if not "Name" in status:
 		var logger := Log.get_logger("Reaper")
-		logger.error("No name was found in pid status!")
+		logger.debug("No name was found in pid status!")
 		return false
 	if status["Name"] == "gamescope-wl":
 		return true
