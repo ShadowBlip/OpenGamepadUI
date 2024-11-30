@@ -87,19 +87,19 @@ impl DBusDevice {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<DBusDevice> = res.cast();
                 device
             } else {
                 let mut device = DBusDevice::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = DBusDevice::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -133,7 +133,7 @@ impl DBusDevice {
         match signal {
             Signal::InputEvent { type_code, value } => {
                 self.base_mut().emit_signal(
-                    "input_event".into(),
+                    "input_event",
                     &[type_code.to_godot().to_variant(), value.to_variant()],
                 );
             }
@@ -146,7 +146,7 @@ impl DBusDevice {
                 y,
             } => {
                 self.base_mut().emit_signal(
-                    "touch_event".into(),
+                    "touch_event",
                     &[
                         type_code.to_godot().to_variant(),
                         index.to_variant(),

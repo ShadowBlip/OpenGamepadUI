@@ -214,19 +214,19 @@ impl GpuCard {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists, loading that instead");
                 let device: Gd<GpuCard> = res.cast();
                 device
             } else {
                 let mut device = GpuCard::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = GpuCard::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -254,7 +254,7 @@ impl GpuCard {
         let paths = proxy.enumerate_connectors().unwrap_or_default();
         for path in paths {
             let connector = GpuConnector::new(path.as_str());
-            connectors.push(connector);
+            connectors.push(&connector);
         }
 
         connectors
@@ -515,7 +515,7 @@ impl GpuCard {
         log::trace!("Got signal: {signal:?}");
         match signal {
             Signal::Updated => {
-                self.base_mut().emit_signal("updated".into(), &[]);
+                self.base_mut().emit_signal("updated", &[]);
             }
         }
     }

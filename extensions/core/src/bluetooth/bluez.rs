@@ -125,7 +125,7 @@ impl BluezInstance {
     fn get_adapters(&self) -> Array<Gd<BluetoothAdapter>> {
         let mut adapters = array![];
         for adapter in self.adapters.values() {
-            adapters.push(adapter.clone());
+            adapters.push(adapter);
         }
 
         adapters
@@ -136,7 +136,7 @@ impl BluezInstance {
     fn get_discovered_devices(&self) -> Array<Gd<BluetoothDevice>> {
         let mut devices = array![];
         for device in self.devices.values() {
-            devices.push(device.clone());
+            devices.push(device);
         }
 
         devices
@@ -174,10 +174,10 @@ impl BluezInstance {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Started => {
-                self.base_mut().emit_signal("started".into(), &[]);
+                self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
-                self.base_mut().emit_signal("stopped".into(), &[]);
+                self.base_mut().emit_signal("stopped", &[]);
             }
             Signal::ObjectAdded { path, ifaces } => {
                 let obj_type = ObjectType::from_ifaces(ifaces);
@@ -187,13 +187,13 @@ impl BluezInstance {
                         let adapter = BluetoothAdapter::new(path.as_str());
                         self.adapters.insert(path, adapter.clone());
                         self.base_mut()
-                            .emit_signal("adapter_added".into(), &[adapter.to_variant()]);
+                            .emit_signal("adapter_added", &[adapter.to_variant()]);
                     }
                     ObjectType::Device => {
                         let device = BluetoothDevice::new(path.as_str());
                         self.devices.insert(path, device.clone());
                         self.base_mut()
-                            .emit_signal("device_added".into(), &[device.to_variant()]);
+                            .emit_signal("device_added", &[device.to_variant()]);
                     }
                 }
             }
@@ -204,12 +204,12 @@ impl BluezInstance {
                     ObjectType::Adapter => {
                         self.adapters.remove(&path);
                         self.base_mut()
-                            .emit_signal("adapter_removed".into(), &[path.to_variant()]);
+                            .emit_signal("adapter_removed", &[path.to_variant()]);
                     }
                     ObjectType::Device => {
                         self.devices.remove(&path);
                         self.base_mut()
-                            .emit_signal("device_removed".into(), &[path.to_variant()]);
+                            .emit_signal("device_removed", &[path.to_variant()]);
                     }
                 }
             }

@@ -67,19 +67,19 @@ impl Gpu {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists, loading that instead");
                 let device: Gd<Gpu> = res.cast();
                 device
             } else {
                 let mut device = Gpu::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = Gpu::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -94,7 +94,7 @@ impl Gpu {
     pub fn get_cards(&self) -> Array<Gd<GpuCard>> {
         let mut cores = array![];
         for core in self.cards.values() {
-            cores.push(core.clone());
+            cores.push(core);
         }
 
         cores

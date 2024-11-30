@@ -327,19 +327,18 @@ impl Pty {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Started { pid } => {
-                self.base_mut()
-                    .emit_signal("started".into(), &[pid.to_variant()]);
+                self.base_mut().emit_signal("started", &[pid.to_variant()]);
             }
             Signal::Finished { exit_code } => {
                 self.running = false;
                 self.pty_tx = None;
                 self.cmd_tx = None;
                 self.base_mut()
-                    .emit_signal("finished".into(), &[exit_code.to_variant()]);
+                    .emit_signal("finished", &[exit_code.to_variant()]);
             }
             Signal::LineWritten { line } => {
                 self.base_mut()
-                    .emit_signal("line_written".into(), &[line.to_godot().to_variant()]);
+                    .emit_signal("line_written", &[line.to_godot().to_variant()]);
             }
         }
     }

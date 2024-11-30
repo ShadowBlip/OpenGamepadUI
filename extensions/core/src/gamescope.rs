@@ -62,8 +62,7 @@ impl GamescopeInstance {
     pub fn get_xwaylands(&self) -> Array<Gd<GamescopeXWayland>> {
         let mut xwaylands = array![];
         for xwayland in self.xwaylands.values() {
-            let item = xwayland.clone();
-            xwaylands.push(item);
+            xwaylands.push(xwayland);
         }
 
         xwaylands

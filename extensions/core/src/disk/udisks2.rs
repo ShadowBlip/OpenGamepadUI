@@ -177,7 +177,7 @@ impl UDisks2Instance {
                     log::info!(
                         "Adding {dbus_path} as unprotected device. It is not a partition_devices"
                     );
-                    unprotected_devices.push(block_device.clone());
+                    unprotected_devices.push(block_device);
                     continue;
                 }
                 log::info!("Skipping {dbus_path}. It is a partition_device.");
@@ -187,7 +187,7 @@ impl UDisks2Instance {
                         log::info!(
                             "Adding {dbus_path} as unprotected device. It does not have a FilesystemDevice"
                         );
-                        unprotected_devices.push(block_device.clone());
+                        unprotected_devices.push(block_device);
                         continue;
                     };
 
@@ -201,7 +201,7 @@ impl UDisks2Instance {
                 log::info!(
                     "Adding {dbus_path} as unprotected device. It does not have any mounts in PROTECTED_MOUNTS"
                 );
-                unprotected_devices.push(block_device.clone());
+                unprotected_devices.push(block_device);
             }
         }
 
@@ -233,7 +233,7 @@ impl UDisks2Instance {
         }
         let unprotected_devices = self.get_unprotected_devices();
         self.base_mut().emit_signal(
-            "unprotected_devices_updated".into(),
+            "unprotected_devices_updated",
             &[unprotected_devices.to_variant()],
         );
     }
@@ -242,10 +242,10 @@ impl UDisks2Instance {
     fn process_signal(&mut self, signal: Signal) {
         match signal {
             Signal::Started => {
-                self.base_mut().emit_signal("started".into(), &[]);
+                self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
-                self.base_mut().emit_signal("stopped".into(), &[]);
+                self.base_mut().emit_signal("stopped", &[]);
             }
             Signal::ObjectAdded { path, ifaces } => {
                 let obj_types = ObjectType::from_ifaces(ifaces);
@@ -255,26 +255,26 @@ impl UDisks2Instance {
                             let block = BlockDevice::new(path.as_str());
                             self.block_devices.insert(path.clone(), block.clone());
                             self.base_mut()
-                                .emit_signal("block_device_added".into(), &[block.to_variant()]);
+                                .emit_signal("block_device_added", &[block.to_variant()]);
                         }
                         ObjectType::Drive => {
                             let drive = DriveDevice::new(path.as_str());
                             self.drive_devices.insert(path.clone(), drive.clone());
                             self.base_mut()
-                                .emit_signal("drive_device_added".into(), &[drive.to_variant()]);
+                                .emit_signal("drive_device_added", &[drive.to_variant()]);
                         }
                         ObjectType::Partition => {
                             let partition = PartitionDevice::new(path.as_str());
                             self.partition_devices
                                 .insert(path.clone(), partition.clone());
                             self.base_mut()
-                                .emit_signal("partition_added".into(), &[partition.to_variant()]);
+                                .emit_signal("partition_added", &[partition.to_variant()]);
                         }
                         ObjectType::Filesystem => {
                             let fs = FilesystemDevice::new(path.as_str());
                             self.filesystem_devices.insert(path.clone(), fs.clone());
                             self.base_mut()
-                                .emit_signal("filesystem_added".into(), &[fs.to_variant()]);
+                                .emit_signal("filesystem_added", &[fs.to_variant()]);
                         }
                     }
                 }
@@ -286,22 +286,22 @@ impl UDisks2Instance {
                         ObjectType::Block => {
                             self.block_devices.remove(&path);
                             self.base_mut()
-                                .emit_signal("block_device_removed".into(), &[path.to_variant()]);
+                                .emit_signal("block_device_removed", &[path.to_variant()]);
                         }
                         ObjectType::Drive => {
                             self.drive_devices.remove(&path);
                             self.base_mut()
-                                .emit_signal("drive_device_removed".into(), &[path.to_variant()]);
+                                .emit_signal("drive_device_removed", &[path.to_variant()]);
                         }
                         ObjectType::Partition => {
                             self.partition_devices.remove(&path);
                             self.base_mut()
-                                .emit_signal("partition_removed".into(), &[path.to_variant()]);
+                                .emit_signal("partition_removed", &[path.to_variant()]);
                         }
                         ObjectType::Filesystem => {
                             self.filesystem_devices.remove(&path);
                             self.base_mut()
-                                .emit_signal("filesystem_removed".into(), &[path.to_variant()]);
+                                .emit_signal("filesystem_removed", &[path.to_variant()]);
                         }
                     }
                 }

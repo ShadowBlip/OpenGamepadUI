@@ -115,11 +115,11 @@ impl PowerStationInstance {
             Signal::Started => {
                 // Create an instance for the CPU
                 self.cpu_instance = Some(Cpu::new(POWERSTATION_CPU_PATH));
-                self.base_mut().emit_signal("started".into(), &[]);
+                self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
                 self.cpu_instance = None;
-                self.base_mut().emit_signal("stopped".into(), &[]);
+                self.base_mut().emit_signal("stopped", &[]);
             }
         }
     }

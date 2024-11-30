@@ -171,19 +171,19 @@ impl BluetoothDevice {
 
         // Check to see if a resource already exists for this device
         let mut resource_loader = ResourceLoader::singleton();
-        if resource_loader.exists(res_path.clone().into()) {
-            if let Some(res) = resource_loader.load(res_path.clone().into()) {
+        if resource_loader.exists(res_path.as_str()) {
+            if let Some(res) = resource_loader.load(res_path.as_str()) {
                 log::info!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BluetoothDevice> = res.cast();
                 device
             } else {
                 let mut device = BluetoothDevice::from_path(path.to_string().into());
-                device.take_over_path(res_path.into());
+                device.take_over_path(res_path.as_str());
                 device
             }
         } else {
             let mut device = BluetoothDevice::from_path(path.to_string().into());
-            device.take_over_path(res_path.into());
+            device.take_over_path(res_path.as_str());
             device
         }
     }
@@ -467,15 +467,15 @@ impl BluetoothDevice {
         log::trace!("Got signal: {signal:?}");
         match signal {
             Signal::Updated => {
-                self.base_mut().emit_signal("updated".into(), &[]);
+                self.base_mut().emit_signal("updated", &[]);
             }
             Signal::ConnectedChanged { value } => {
                 self.base_mut()
-                    .emit_signal("connected_changed".into(), &[value.to_variant()]);
+                    .emit_signal("connected_changed", &[value.to_variant()]);
             }
             Signal::PairedChanged { value } => {
                 self.base_mut()
-                    .emit_signal("paired_changed".into(), &[value.to_variant()]);
+                    .emit_signal("paired_changed", &[value.to_variant()]);
             }
         }
     }
