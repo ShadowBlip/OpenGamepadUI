@@ -19,6 +19,7 @@ var menu_state_machine := load("res://assets/state/state_machines/menu_state_mac
 var popup_state_machine := load("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
+var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as State
 
 @export_category("Card")
 @export var is_toggled := false:
@@ -38,6 +39,7 @@ var button_scene := load("res://core/ui/components/card_button.tscn") as PackedS
 @onready var exit_button := $%ExitButton as CardButton
 @onready var highlight_rect := $%HighlightTextureRect
 @onready var focus_group := $%FocusGroup as FocusGroup
+@onready var gamepad_button := $%GamepadButton
 
 var tween: Tween
 var running_app: RunningApp
@@ -54,6 +56,7 @@ func _ready() -> void:
 	focus_exited.connect(_on_unfocus)
 	button_up.connect(_on_button_up)
 	theme_changed.connect(_on_theme_changed)
+	gamepad_button.button_down.connect(_on_gampad_button_pressed)
 
 	# Find the parent theme and update if required
 	var effective_theme := ThemeUtils.get_effective_theme(self)
@@ -207,3 +210,12 @@ func _input(event: InputEvent) -> void:
 	#logger.debug("Consuming input event '{action}' for node {n}".format({"action": action, "n": str(self)}))
 	get_viewport().set_input_as_handled()
 	self.grab_focus()
+
+
+## Ensure that the library item meta data is always set before opening the gamepad
+## settings menu
+func _on_gampad_button_pressed() -> void:
+	var library_item: LibraryItem = null
+	if running_app and running_app.launch_item:
+		library_item = LibraryItem.new_from_launch_item(running_app.launch_item)
+	gamepad_state.set_meta("item", library_item)

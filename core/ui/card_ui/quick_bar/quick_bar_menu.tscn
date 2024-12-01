@@ -120,6 +120,7 @@ state = ExtResource("14_gr3i0")
 on_signal = "button_up"
 
 [node name="GamepadButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("9_6qs1m")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 texture = ExtResource("15_0l0p5")

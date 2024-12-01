@@ -193,7 +193,7 @@ func _on_game_state_exited(to: State) -> void:
 		panel.visible = false
 		# Only blur if the focused GFX app is set
 		if _xwayland_primary:
-			var should_blur := settings_manager.get_value("display", "enable_overlay_blur", true) as bool
+			var should_blur := settings_manager.get_value("display", "enable_overlay_blur", false) as bool
 			if should_blur and _xwayland_primary.get_focused_app_gfx() != gamescope.OVERLAY_GAME_ID:
 				_set_blur(GamescopeXWayland.BLUR_MODE_ALWAYS)
 

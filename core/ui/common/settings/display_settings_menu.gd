@@ -12,7 +12,7 @@ func _ready() -> void:
 	get_window().content_scale_factor = display_scale
 	scale_slider.value_changed.connect(_on_scale_changed)
 	
-	var blur_enabled := settings_manager.get_value("display", "enable_overlay_blur", true) as bool
+	var blur_enabled := settings_manager.get_value("display", "enable_overlay_blur", false) as bool
 	blur_toggle.button_pressed = blur_enabled
 	blur_toggle.toggled.connect(_on_blur_toggled)
 
