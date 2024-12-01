@@ -60,6 +60,7 @@ var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
+var _focused_app_id := 0
 
 
 # Connect to Gamescope signals
@@ -83,23 +84,24 @@ func _init() -> void:
 		_xwayland_primary.focused_window_updated.connect(on_focus_changed)
 
 		# When focused app changes, update the current app and gamepad profile
-		var on_focused_app_changed := func(from: int, to: int) -> void:
-			if from == to:
+		var on_focused_app_changed := func(_from: int, to: int) -> void:
+			if _focused_app_id == to:
 				return
-			logger.debug("Focused app changed from " + str(from) + " to " + str(to))
-			
+			logger.debug("Focused app changed from " + str(_focused_app_id) + " to " + str(to))
+			_focused_app_id = to
+
 			# If OGUI was focused, set the global gamepad profile
 			if to in [gamescope.OVERLAY_GAME_ID, 0]:
 				set_gamepad_profile("")
 				return
-			
+
 			# Find the running app for the given app id
 			var last_app := self._current_app
 			var detected_app: RunningApp
 			for app in _running:
 				if app.app_id == to:
 					detected_app = app
-			
+
 			# If the running app was not launched by OpenGamepadUI, then detect it.
 			if not detected_app:
 				detected_app = _detect_running_app(to)
@@ -427,6 +429,7 @@ func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: Ru
 	logger.debug("App state changed from", from, "to", to, "for app:", app)
 	if to != RunningApp.STATE.STOPPED:
 		return
+	logger.debug("Cleaning up pid {0}".format([app.pid]))
 	_remove_running(app)
 	logger.debug("Currently running apps:", _running)
 	if state_machine.has_state(in_game_state) and _running.size() == 0:
@@ -438,11 +441,10 @@ func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: Ru
 
 # Removes the given PID from our list of running apps
 func _remove_running(app: RunningApp):
-	logger.info("Cleaning up pid {0}".format([app.pid]))
+	logger.info("Removing app", app, "from running apps.")
 	_running.erase(app)
 	_apps_by_name.erase(app.launch_item.name)
 	_apps_by_pid.erase(app.pid)
-	
 	app_stopped.emit(app)
 
 
@@ -454,10 +456,10 @@ func check_running() -> void:
 	var root_id := _xwayland_game.root_window_id
 	if root_id < 0:
 		return
-	
+
 	# Update our view of running processes and what windows they have
 	_update_pids(root_id)
-	
+
 	# Update the state of all running apps
 	for app in _running:
 		app.update()

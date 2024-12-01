@@ -45,7 +45,7 @@ script = ExtResource("1_1u2cn")
 texture = ExtResource("1_jaecb")
 offset = Vector2(128, 128)
 hframes = 43
-frame = 20
+frame = 31
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
 root_node = NodePath("../..")

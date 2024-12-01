@@ -118,6 +118,7 @@ func _on_state_entered(_from: State) -> void:
 		if device.dbus_path == dbus_path:
 			self.gamepad = device
 			break
+
 	if self.gamepad == null:
 		logger.error("Unable to find CompositeDevice with path: " + dbus_path)
 		not_available.visible = true
@@ -152,10 +153,9 @@ func _on_state_entered(_from: State) -> void:
 	else:
 		self.profile_label.text = self.library_item.name
 		profile_path = settings_manager.get_library_value(self.library_item, "gamepad_profile", "") as String
-	
+		self.profile_gamepad = settings_manager.get_library_value(self.library_item, "gamepad_profile_target", "") as String
+
 	self.profile = _load_profile(profile_path)
-	self.profile_gamepad = settings_manager.get_library_value(self.library_item, "gamepad_profile_target", "") as String
-	
 	_update_mapping_elements()
 
 	# Clear focus

@@ -7,15 +7,19 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if visible:
+	if is_visible_in_tree():
+		set_process(true)
 		animation_player.play("play")
+	else:
+		set_process(false)
+		animation_player.stop()
 	visibility_changed.connect(_on_visibility_changed)
 
 
 func _on_visibility_changed() -> void:
 	if not animation_player:
 		return
-	if visible:
+	if is_visible_in_tree():
 		set_process(true)
 		animation_player.play("play")
 		return
@@ -26,5 +30,9 @@ func _on_visibility_changed() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	var sprite_scale := 1 / (sprite.texture.get_height() / size.y)
-	sprite.offset = size / 2 / sprite_scale
-	sprite.scale = Vector2(sprite_scale, sprite_scale)
+	var new_offset := size / 2 / sprite_scale
+	if new_offset != sprite.offset:
+		sprite.offset = new_offset
+	var new_scale := Vector2(sprite_scale, sprite_scale)
+	if new_scale != sprite.scale:
+		sprite.scale = new_scale

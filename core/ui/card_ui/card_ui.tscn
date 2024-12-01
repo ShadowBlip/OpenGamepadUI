@@ -231,6 +231,7 @@ size_flags_vertical = 8
 layout_mode = 2
 
 [node name="ContextBar" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("12_bstc8")]
+visible = false
 layout_mode = 2
 
 [node name="MenuContainer" type="MarginContainer" parent="MenuContent"]
