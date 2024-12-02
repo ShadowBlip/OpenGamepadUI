@@ -71,7 +71,8 @@ func get_gpu_info() -> GPUInfo:
 	# to look into vulkaninfo as this can only gather the data
 	# for the currently active GPU. Vulkaninfo can provide data
 	# on all detected GPU devices.
-	match RenderingServer.get_video_adapter_vendor():
+	gpu_info.vendor = RenderingServer.get_video_adapter_vendor()
+	match gpu_info.vendor:
 		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
 			gpu_info.vendor = "AMD"
 		"Intel", "GenuineIntel", "Intel Corporation":
@@ -160,11 +161,11 @@ func get_kernel_version() -> String:
 ## (e.g. get_gpu_card("card1"))
 func get_gpu_card(card_dir: String) -> DRMCardInfo:
 	var file_prefix := "/".join(["/sys/class/drm", card_dir, "device"])
-	var vendor_id := _get_card_property_from_path("/".join([file_prefix, "vendor"]))
-	var device_id := _get_card_property_from_path("/".join([file_prefix, "device"]))
-	var revision_id := _get_card_property_from_path("/".join([file_prefix, "revision"]))
-	var subvendor_id := _get_card_property_from_path("/".join([file_prefix, "subsystem_vendor"]))
-	var subdevice_id := _get_card_property_from_path("/".join([file_prefix, "subsystem_device"]))
+	var vendor_id := _get_card_property_from_cat("/".join([file_prefix, "vendor"]))
+	var device_id := _get_card_property_from_cat("/".join([file_prefix, "device"]))
+	var revision_id := _get_card_property_from_cat("/".join([file_prefix, "revision"]))
+	var subvendor_id := _get_card_property_from_cat("/".join([file_prefix, "subsystem_vendor"]))
+	var subdevice_id := _get_card_property_from_cat("/".join([file_prefix, "subsystem_device"]))
 
 	# Try to load the card info if it already exists
 	var res_path := "/".join(["drmcardinfo://", vendor_id, device_id, subvendor_id, subdevice_id])
@@ -272,7 +273,7 @@ func get_gpu_cards() -> Array[DRMCardInfo]:
 		var card_info := get_gpu_card(card_name)
 		if not card_info:
 			continue
-		
+
 		found_cards.append(card_info)
 
 	var vulkan_info := _get_cards_from_vulkan()
@@ -376,6 +377,16 @@ func start_gpu_watch() -> void:
 ## Helper function that simplifies reading id values from a given path.
 func _get_card_property_from_path(path: String) -> String:
 	return FileAccess.get_file_as_string(path).lstrip("0x").to_lower().strip_escapes()
+
+
+func _get_card_property_from_cat(path: String) -> String:
+	var output := []
+	OS.execute("cat", [path], output)
+	if output.is_empty():
+		return ""
+	var value := output[0] as String
+	logger.debug("Got cat output:", value)
+	return value.lstrip("0x").to_lower().strip_escapes()
 
 
 ## Returns a an array of PackedStringArray's that each represent a sing GPU
