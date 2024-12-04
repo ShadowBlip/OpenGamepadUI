@@ -25,8 +25,6 @@ PROJECT_FILES := $(ALL_EXTENSIONS) $(ALL_GDSCRIPT) $(ALL_SCENES) $(ALL_RESOURCES
 # Docker image variables
 IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-builder
 IMAGE_TAG ?= latest
-ADDONS_IMAGE_NAME ?= ghcr.io/shadowblip/opengamepadui-addons-builder
-ADDONS_IMAGE_TAG ?= latest
 
 # Remote debugging variables 
 SSH_USER ?= deck
@@ -37,6 +35,8 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
 SYSEXT_VERSION_ID ?= 3.6.3
+SYSEXT_LIBIIO_VERSION ?= 0.26-1
+SYSEXT_LIBSERIALPORT_VERSION ?= 0.1.2-1
 
 # Include any user defined settings
 -include settings.mk
@@ -158,9 +158,9 @@ force-import: $(ALL_EXTENSIONS)
 	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
 
 .PHONY: extensions
-extensions: $(ALL_EXTENSIONS) ## Build native extensions
+extensions: $(ALL_EXTENSIONS) ## Build engine extensions
 $(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
-	@echo "Building native extensions..."
+	@echo "Building engine extensions..."
 	cd ./extensions && $(MAKE) build
 
 .PHONY: edit
@@ -237,7 +237,7 @@ assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
 ##@ Remote Debugging
 
 .PHONY: deploy
-deploy: dist-archive $(SSH_MOUNT_PATH)/.mounted ## Build, deploy, and tunnel to a remote device
+deploy: dist-archive ## Build and deploy to a remote device
 	scp dist/opengamepadui.tar.gz $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH)
 	cd $(SSH_MOUNT_PATH) #&& tar xvfz opengamepadui.tar.gz
 	ssh -t $(SSH_USER)@$(SSH_HOST) tar xvfz "$(SSH_DATA_PATH)/opengamepadui.tar.gz"
@@ -272,14 +272,6 @@ enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
 .PHONY: tunnel
 tunnel: ## Create an SSH tunnel to allow remote debugging
 	ssh $(SSH_USER)@$(SSH_HOST) -N -f -R 6007:localhost:6007
-
-
-# Mounts the remote device and creates an SSH tunnel for remote debugging
-$(SSH_MOUNT_PATH)/.mounted:
-	mkdir -p $(SSH_MOUNT_PATH)
-	sshfs -o default_permissions $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH) $(SSH_MOUNT_PATH)
-	$(MAKE) tunnel
-	touch $(SSH_MOUNT_PATH)/.mounted
 
 
 ##@ Distribution
@@ -394,7 +386,7 @@ $(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
 		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber.tar.gz
 
 
-LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libiio-0.25-3-x86_64.pkg.tar.zst
+LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libiio-$(SYSEXT_LIBIIO_VERSION)-x86_64.pkg.tar.zst
 $(CACHE_DIR)/libiio:
 	rm -rf $(CACHE_DIR)/libiio*
 	wget $(LIBIIO_URL) \
@@ -404,7 +396,7 @@ $(CACHE_DIR)/libiio:
 	tar xvf $(CACHE_DIR)/libiio.tar -C $(CACHE_DIR)/libiio
 
 
-LIBSERIALPORT_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libserialport-0.1.1-5-x86_64.pkg.tar.zst
+LIBSERIALPORT_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libserialport-$(SYSEXT_LIBSERIALPORT_VERSION)-x86_64.pkg.tar.zst
 $(CACHE_DIR)/libserialport:
 	rm -rf $(CACHE_DIR)/libserialport*
 	wget $(LIBSERIALPORT_URL) \
@@ -422,14 +414,6 @@ release: ## Publish a release with semantic release
 # E.g. make in-docker TARGET=build
 .PHONY: in-docker
 in-docker:
-	@# Build addons in a seperate container for glibc compatibility
-	docker run --rm \
-		-v $(PWD):/src \
-		--workdir /src \
-		-e PWD=/src \
-		--user $(shell id -u):$(shell id -g) \
-		$(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) \
-		make addons
 	@# Run the given make target inside Docker
 	docker run --rm \
 		-v $(PWD):/src \
@@ -450,14 +434,3 @@ docker-builder:
 .PHONY: docker-builder-push
 docker-builder-push: docker-builder
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
-
-.PHONY: docker-builder-addons
-docker-builder-addons:
-	@# Pull any existing image to cache it
-	docker pull $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) || echo "No remote image to pull"
-	@# Build the Docker image that will build the project
-	docker build -t $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG) -f docker/Dockerfile.addons ./docker
-
-.PHONY: docker-builder-addons-push
-docker-builder-addons-push: docker-builder-addons
-	docker push $(ADDONS_IMAGE_NAME):$(ADDONS_IMAGE_TAG)
