@@ -71,6 +71,11 @@ static func reap(pid: int, sig: SIG = SIG.TERM) -> void:
 	pids.reverse()
 	var logger := Log.get_logger("Reaper")
 	for p in pids:
+		# Don't kill the actual reaper PID
+		if p == pid:
+			logger.debug("Skipping killing reaper pid:", pid)
+			continue
+		
 		# Kill PGID
 		var cmd := "kill"
 		var args := [sig_arg, "--", "-{0}".format([p])]
