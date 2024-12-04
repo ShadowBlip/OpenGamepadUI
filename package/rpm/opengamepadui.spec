@@ -28,6 +28,7 @@ make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix}
 %files
 /usr/bin/opengamepadui
 /usr/share/opengamepadui/*.so
+/usr/share/opengamepadui/reaper
 /usr/share/opengamepadui/scripts/*
 /usr/share/opengamepadui/opengamepad-ui.x86_64
 /usr/share/opengamepadui/opengamepad-ui.pck
