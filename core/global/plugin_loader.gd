@@ -18,7 +18,7 @@ class_name PluginLoader
 ## pack.
 
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
-const PLUGIN_API_VERSION = "1.0.0"
+const PLUGIN_API_VERSION = "1.1.0"
 const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]
@@ -545,14 +545,34 @@ func _is_plugin_upgradable(plugin_id: String, store_db: Dictionary) -> bool:
 	# Check if we've already found this is upgradable
 	if plugin_id in plugins_upgradable:
 		return false
-	var current_version = plugins[plugin_id]["plugin.version"]
-	var new_version = store_db[plugin_id]["plugin.version"]
-	if SemanticVersion.is_greater(new_version, current_version):
-		logger.info("Plugin update available: {0}.".format([plugin_id]))
-		plugin_upgradable.emit(plugin_id, update_type.UPDATE)
-		plugins_upgradable.append(plugin_id)
-		return true
-	return false
+	# Validate the correct data exists
+	if not plugin_id in plugins or not "plugin.version" in plugins[plugin_id]:
+		return false
+	if not plugin_id in store_db or not "plugin.version" in store_db[plugin_id]:
+		return false
+	var current_version := plugins[plugin_id]["plugin.version"] as String
+	var new_version := store_db[plugin_id]["plugin.version"] as String
+
+	# If the plugin version in the store is not greater than the currently
+	# installed version, then this plugin is not upgradable.
+	if not SemanticVersion.is_greater(new_version, current_version):
+		logger.debug("Plugin", plugin_id, "with version", current_version, "is not greater than", new_version)
+		return false
+
+	# Check to see if the new plugin is compatible with the OpenGamepadUI's current
+	# plugin API.
+	if not "plugin.min-api-version" in store_db[plugin_id]:
+		logger.error("No minimum api version specified in store for plugin:", plugin_id)
+		return false
+	var plugin_min_api_version := store_db[plugin_id]["plugin.min-api-version"] as String
+	if not SemanticVersion.is_feature_compatible(plugin_min_api_version, PLUGIN_API_VERSION):
+		logger.info("Plugin", plugin_id, "requires plugin API version", plugin_min_api_version, "but current plugin API version is", PLUGIN_API_VERSION)
+		return false
+
+	logger.info("Plugin update available: {0}.".format([plugin_id]))
+	plugin_upgradable.emit(plugin_id, update_type.UPDATE)
+	plugins_upgradable.append(plugin_id)
+	return true
 
 
 # Checks if a given plugin is already in the plugin database
@@ -579,6 +599,7 @@ func filter_by_tag(plugins: Dictionary, tag: String) -> Array[String]:
 			continue
 		logger.debug(plugin["plugin.id"] + " will not be loaded. " + str(tags))
 	return filtered_ids
+
 
 # Sets the filters for the plugin list
 func set_plugin_filters(filters: Array[Callable]) -> void:
