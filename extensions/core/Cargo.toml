@@ -21,3 +21,4 @@ gamescope-x11-client = { git = "https://github.com/ShadowBlip/gamescope-x11-clie
 inotify = "0.11.0"
 byte-unit = "5.1.4"
 log = "0.4.22"
+keyvalues-parser = "0.2.0"

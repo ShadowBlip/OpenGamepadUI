@@ -8,6 +8,7 @@ pub mod performance;
 pub mod power;
 pub mod resource;
 pub mod system;
+pub mod vdf;
 
 use std::{sync::Arc, time::Duration};
 
