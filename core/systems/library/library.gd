@@ -94,5 +94,13 @@ func has_update(item: LibraryLaunchItem) -> bool:
 	return false
 
 
+## This method should be overridden if the library requires executing callbacks
+## at certain points in an app's lifecycle, such as when an app is starting or
+## stopping.
+func get_app_lifecycle_hooks() -> Array[AppLifecycleHook]:
+	var hooks: Array[AppLifecycleHook]
+	return hooks
+
+
 func _exit_tree() -> void:
 	LibraryManager.unregister_library(self)
