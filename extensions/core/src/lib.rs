@@ -4,6 +4,7 @@ pub mod disk;
 pub mod gamescope;
 pub mod input;
 pub mod logger;
+pub mod network;
 pub mod performance;
 pub mod power;
 pub mod resource;
@@ -61,7 +62,7 @@ unsafe impl ExtensionLibrary for OpenGamepadUICore {
 }
 
 fn tokio_init() -> Handle {
-    log::info!("Initializing tokio runtime");
+    log::debug!("Initializing tokio runtime");
     let runtime = Builder::new_multi_thread().enable_all().build().unwrap();
     let handle = runtime.handle().clone();
 
@@ -69,12 +70,12 @@ fn tokio_init() -> Handle {
 
     std::thread::spawn(move || {
         runtime.block_on(async {
-            log::info!("Tokio runtime started");
+            log::debug!("Tokio runtime started");
             let _ = rx.lock().await.recv().await;
         });
-        log::info!("Shutting down Tokio runtime");
+        log::debug!("Shutting down Tokio runtime");
         runtime.shutdown_timeout(Duration::from_secs(1));
-        log::info!("Tokio runtime stopped");
+        log::debug!("Tokio runtime stopped");
     });
 
     handle
