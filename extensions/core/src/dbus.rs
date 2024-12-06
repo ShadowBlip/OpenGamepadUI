@@ -3,6 +3,7 @@ use zvariant::NoneValue;
 
 pub mod bluez;
 pub mod inputplumber;
+pub mod networkmanager;
 pub mod powerstation;
 pub mod udisks2;
 pub mod upower;
@@ -26,6 +27,68 @@ impl From<zbus::fdo::Error> for RunError {
     }
 }
 
+/// Interface for converting DBus types -> Godot types
+pub trait GodotVariant {
+    fn as_godot_variant(&self) -> Option<Variant>;
+}
+
+impl GodotVariant for zvariant::OwnedValue {
+    /// Convert the DBus variant type into a Godot variant type
+    fn as_godot_variant(&self) -> Option<Variant> {
+        let value = zvariant::Value::try_from(self).ok()?;
+        value.as_godot_variant()
+    }
+}
+
+impl<'a> GodotVariant for zvariant::Value<'a> {
+    /// Convert the DBus variant type into a Godot variant type
+    fn as_godot_variant(&self) -> Option<Variant> {
+        match self {
+            zvariant::Value::U8(value) => Some(value.to_variant()),
+            zvariant::Value::Bool(value) => Some(value.to_variant()),
+            zvariant::Value::I16(value) => Some(value.to_variant()),
+            zvariant::Value::U16(value) => Some(value.to_variant()),
+            zvariant::Value::I32(value) => Some(value.to_variant()),
+            zvariant::Value::U32(value) => Some(value.to_variant()),
+            zvariant::Value::I64(value) => Some(value.to_variant()),
+            zvariant::Value::U64(value) => Some(value.to_variant()),
+            zvariant::Value::F64(value) => Some(value.to_variant()),
+            zvariant::Value::Str(value) => Some(value.to_string().to_variant()),
+            zvariant::Value::Signature(_) => None,
+            zvariant::Value::ObjectPath(value) => Some(value.to_string().to_variant()),
+            zvariant::Value::Value(_) => None,
+            zvariant::Value::Array(value) => {
+                let mut arr = array![];
+                for item in value.iter() {
+                    let Some(variant) = item.as_godot_variant() else {
+                        continue;
+                    };
+                    arr.push(&variant);
+                }
+
+                Some(arr.to_variant())
+            }
+            zvariant::Value::Dict(value) => {
+                let mut dict = Dictionary::new();
+                for (key, val) in value.iter() {
+                    let Some(key) = key.as_godot_variant() else {
+                        continue;
+                    };
+                    let Some(val) = val.as_godot_variant() else {
+                        continue;
+                    };
+                    dict.set(key, val);
+                }
+
+                Some(dict.to_variant())
+            }
+            zvariant::Value::Structure(_) => None,
+            zvariant::Value::Fd(_) => None,
+        }
+    }
+}
+
+/// Interface for converting Godot types -> DBus types
 pub trait DBusVariant {
     fn as_zvariant(&self) -> Option<zvariant::Value>;
 }
@@ -55,44 +118,44 @@ impl DBusVariant for Variant {
                 let value: String = value.into();
                 Some(zvariant::Value::new(value))
             }
-            VariantType::VECTOR2 => todo!(),
-            VariantType::VECTOR2I => todo!(),
-            VariantType::RECT2 => todo!(),
-            VariantType::RECT2I => todo!(),
-            VariantType::VECTOR3 => todo!(),
-            VariantType::VECTOR3I => todo!(),
-            VariantType::TRANSFORM2D => todo!(),
-            VariantType::VECTOR4 => todo!(),
-            VariantType::VECTOR4I => todo!(),
-            VariantType::PLANE => todo!(),
-            VariantType::QUATERNION => todo!(),
-            VariantType::AABB => todo!(),
-            VariantType::BASIS => todo!(),
-            VariantType::TRANSFORM3D => todo!(),
-            VariantType::PROJECTION => todo!(),
-            VariantType::COLOR => todo!(),
-            VariantType::STRING_NAME => todo!(),
-            VariantType::NODE_PATH => todo!(),
+            VariantType::VECTOR2 => None,
+            VariantType::VECTOR2I => None,
+            VariantType::RECT2 => None,
+            VariantType::RECT2I => None,
+            VariantType::VECTOR3 => None,
+            VariantType::VECTOR3I => None,
+            VariantType::TRANSFORM2D => None,
+            VariantType::VECTOR4 => None,
+            VariantType::VECTOR4I => None,
+            VariantType::PLANE => None,
+            VariantType::QUATERNION => None,
+            VariantType::AABB => None,
+            VariantType::BASIS => None,
+            VariantType::TRANSFORM3D => None,
+            VariantType::PROJECTION => None,
+            VariantType::COLOR => None,
+            VariantType::STRING_NAME => None,
+            VariantType::NODE_PATH => None,
             VariantType::RID => {
                 let value: i64 = self.to();
                 Some(zvariant::Value::new(value))
             }
-            VariantType::OBJECT => todo!(),
-            VariantType::CALLABLE => todo!(),
-            VariantType::SIGNAL => todo!(),
-            VariantType::DICTIONARY => todo!(),
-            VariantType::ARRAY => todo!(),
-            VariantType::PACKED_BYTE_ARRAY => todo!(),
-            VariantType::PACKED_INT32_ARRAY => todo!(),
-            VariantType::PACKED_INT64_ARRAY => todo!(),
-            VariantType::PACKED_FLOAT32_ARRAY => todo!(),
-            VariantType::PACKED_FLOAT64_ARRAY => todo!(),
-            VariantType::PACKED_STRING_ARRAY => todo!(),
-            VariantType::PACKED_VECTOR2_ARRAY => todo!(),
-            VariantType::PACKED_VECTOR3_ARRAY => todo!(),
-            VariantType::PACKED_COLOR_ARRAY => todo!(),
-            VariantType::PACKED_VECTOR4_ARRAY => todo!(),
-            VariantType::MAX => todo!(),
+            VariantType::OBJECT => None,
+            VariantType::CALLABLE => None,
+            VariantType::SIGNAL => None,
+            VariantType::DICTIONARY => None,
+            VariantType::ARRAY => None,
+            VariantType::PACKED_BYTE_ARRAY => None,
+            VariantType::PACKED_INT32_ARRAY => None,
+            VariantType::PACKED_INT64_ARRAY => None,
+            VariantType::PACKED_FLOAT32_ARRAY => None,
+            VariantType::PACKED_FLOAT64_ARRAY => None,
+            VariantType::PACKED_STRING_ARRAY => None,
+            VariantType::PACKED_VECTOR2_ARRAY => None,
+            VariantType::PACKED_VECTOR3_ARRAY => None,
+            VariantType::PACKED_COLOR_ARRAY => None,
+            VariantType::PACKED_VECTOR4_ARRAY => None,
+            VariantType::MAX => None,
 
             // Unsupported conversion
             _ => None,

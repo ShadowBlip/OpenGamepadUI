@@ -39,7 +39,7 @@ impl DriveDevice {
     /// Create a new [DriveDevice] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        log::info!("DriveDevice created with path: {path}");
+        log::debug!("DriveDevice created with path: {path}");
 
         Gd::from_init_fn(|base| {
             // Create a connection to DBus
@@ -77,7 +77,7 @@ impl DriveDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.as_str()) {
             if let Some(res) = resource_loader.load(res_path.as_str()) {
-                log::info!("Resource already exists with path '{res_path}', loading that instead");
+                log::debug!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<DriveDevice> = res.cast();
                 device
             } else {

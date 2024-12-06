@@ -10,7 +10,7 @@ use std::{
 };
 
 use cpu::Cpu;
-use godot::prelude::*;
+use godot::{classes::Engine, prelude::*};
 use gpu::Gpu;
 use zbus::names::BusName;
 
@@ -27,6 +27,7 @@ enum Signal {
     Stopped,
 }
 
+/// PowerStation dbus proxy
 #[derive(GodotClass)]
 #[class(base=Resource)]
 pub struct PowerStationInstance {
@@ -133,6 +134,21 @@ impl IResource for PowerStationInstance {
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
+        let conn = get_dbus_system_blocking().ok();
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                rx,
+                conn,
+                cpu_instance: Default::default(),
+                gpu_instance: Default::default(),
+                cpu: Default::default(),
+                gpu: Default::default(),
+            };
+        }
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -147,7 +163,6 @@ impl IResource for PowerStationInstance {
         let gpu = Some(Gpu::new(POWERSTATION_GPU_PATH));
 
         // Create a new PowerStation instance
-        let conn = get_dbus_system_blocking().ok();
         Self {
             base,
             rx,

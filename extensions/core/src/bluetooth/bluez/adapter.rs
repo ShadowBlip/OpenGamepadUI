@@ -110,7 +110,7 @@ impl BluetoothAdapter {
     /// Create a new [BluetoothAdapter] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         // Create a channel to communicate with the signals task
-        log::info!("BluetoothAdapter created with path: {path}");
+        log::debug!("BluetoothAdapter created with path: {path}");
         let (tx, rx) = channel();
         let dbus_path = path.clone().into();
 
@@ -176,7 +176,7 @@ impl BluetoothAdapter {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.as_str()) {
             if let Some(res) = resource_loader.load(res_path.as_str()) {
-                log::info!("Resource already exists with path '{res_path}', loading that instead");
+                log::debug!("Resource already exists with path '{res_path}', loading that instead");
                 let device: Gd<BluetoothAdapter> = res.cast();
                 device
             } else {

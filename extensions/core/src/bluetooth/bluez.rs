@@ -10,7 +10,7 @@ use std::{
 use adapter::BluetoothAdapter;
 use device::BluetoothDevice;
 use futures_util::stream::StreamExt;
-use godot::{obj::WithBaseField, prelude::*};
+use godot::{classes::Engine, obj::WithBaseField, prelude::*};
 use zbus::fdo::ObjectManagerProxy;
 use zbus::{fdo::ManagedObjects, names::BusName};
 
@@ -221,10 +221,23 @@ impl BluezInstance {
 impl IResource for BluezInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        log::info!("Initializing Bluez instance");
+        log::debug!("Initializing Bluez instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
+        let conn = get_dbus_system_blocking().ok();
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                rx,
+                conn,
+                adapters: Default::default(),
+                devices: Default::default(),
+            };
+        }
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -234,7 +247,6 @@ impl IResource for BluezInstance {
         });
 
         // Create a new Bluez instance
-        let conn = get_dbus_system_blocking().ok();
         let mut instance = Self {
             base,
             rx,
@@ -276,7 +288,7 @@ impl IResource for BluezInstance {
 /// Runs Bluez tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    log::info!("Spawning Bluez tasks");
+    log::debug!("Spawning Bluez tasks");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 

@@ -6,7 +6,7 @@ use x11_client::GamescopeXWayland;
 
 use godot::prelude::*;
 
-use godot::classes::Resource;
+use godot::classes::{Engine, Resource};
 
 #[derive(GodotClass)]
 #[class(base=Resource)]
@@ -89,14 +89,26 @@ impl GamescopeInstance {
 impl IResource for GamescopeInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        log::info!("Initializing Gamescope instance");
+        log::debug!("Initializing Gamescope instance");
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                xwaylands: Default::default(),
+                xwayland_primary: Default::default(),
+                xwayland_ogui: Default::default(),
+                xwayland_game: Default::default(),
+            };
+        }
 
         // Discover any gamescope instances
         let result = gamescope_x11_client::discover_gamescope_displays();
         let x11_displays = match result {
             Ok(displays) => displays,
             Err(e) => {
-                log::error!("Failed to get Gamescope displays: {e:?}");
+                log::warn!("Failed to get Gamescope displays: {e:?}");
                 return Self {
                     base,
                     xwaylands: HashMap::new(),
@@ -118,7 +130,7 @@ impl IResource for GamescopeInstance {
 
         // Create an XWayland instance for each discovered XWayland display
         for display in x11_displays {
-            log::info!("Discovered XWayland display: {display}");
+            log::debug!("Discovered XWayland display: {display}");
             let xwayland = GamescopeXWayland::new(display.as_str());
 
             // Categorize the discovered displays
