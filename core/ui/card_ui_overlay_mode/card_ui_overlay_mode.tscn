@@ -26,8 +26,6 @@ grow_vertical = 2
 theme = ExtResource("1_0qmlq")
 script = ExtResource("2_3ptao")
 
-[node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
-
 [node name="InputIconProcessor" type="Node" parent="."]
 script = ExtResource("4_6rltg")
 
@@ -92,3 +90,5 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
