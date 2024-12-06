@@ -201,6 +201,15 @@ func _on_card_focused(item: LibraryItem, card: Control) -> void:
 	player.play("fade_in")
 	banner.texture = await BoxArtManager.get_boxart_or_placeholder(item, BoxArtProvider.LAYOUT.BANNER)
 	library_banner.visible = false
+
+	# Don't scroll to the card if mouse or touch is being used
+	var input_manager := get_tree().get_first_node_in_group("InputManager")
+	if input_manager:
+		if (input_manager as InputManager).current_touches > 0:
+			return
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			return
+
 	_scroll_to(card)
 
 

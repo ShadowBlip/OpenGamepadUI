@@ -75,7 +75,19 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 ## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
+	# Don't process Godot events if InputPlumber is running
+	if input_plumber.is_running() and not InputManager.is_inputplumber_event(event):
+		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			logger.debug("Skipping Godot event while InputPlumber is running:", event)
+			get_viewport().set_input_as_handled()
+			return
+
 	var dbus_path := event.get_meta("dbus_path", "") as String
+	
+	# Don't process Godot events if InputPlumber is running
+	if input_plumber.is_running() and not InputManager.is_inputplumber_event(event):
+		logger.trace("Skipping Godot event while InputPlumber is running:", event)
+		return
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
 	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]

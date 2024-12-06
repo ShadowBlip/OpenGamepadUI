@@ -244,7 +244,16 @@ func _on_uninstalled(req: InstallManager.Request) -> void:
 
 # Called when a library card is focused
 func _on_focus_updated(card: Control, tab: int) -> void:
+	# Update the currently selected card
 	_current_selection[tab] = card
+	
+	# Don't scroll to the card if mouse or touch is being used
+	var input_manager := get_tree().get_first_node_in_group("InputManager")
+	if input_manager:
+		if (input_manager as InputManager).current_touches > 0:
+			return
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			return
 	
 	# Get the scroll container for this card
 	var scroll_container := tab_container.get_child(tab) as ScrollContainer

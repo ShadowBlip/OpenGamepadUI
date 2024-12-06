@@ -65,6 +65,7 @@ clip_children = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ygsnb")
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer"]
@@ -136,3 +137,8 @@ show_behind_parent = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_st1t5")
+
+[node name="TapTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true

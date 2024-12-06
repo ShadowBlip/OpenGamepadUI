@@ -36,6 +36,9 @@ var popup_state := preload("res://assets/state/states/popup.tres") as State
 ## Map of pressed actions to prevent double inputs
 var actions_pressed := {}
 
+## Number of currently pressed touches
+var current_touches := 0
+
 ## Will show logger events with the prefix InputManager
 var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 
@@ -51,6 +54,11 @@ func _ready() -> void:
 func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
+
+
+## Returns true if the given event is an InputPlumber event
+static func is_inputplumber_event(event: InputEvent) -> bool:
+	return event.has_meta("dbus_path")
 
 
 ## Queue a release event for the given action
@@ -76,10 +84,26 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 	Input.parse_input_event(input_action)
 
 
-## Process all unhandled input, possibly preventing the input from propagating further.
-## https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
+## Process all window input. Window input is processed before all _input and
+## _gui_input node methods.
+## @tutorial https://docs.godotengine.org/en/latest/tutorials/inputs/inputevent.html#how-does-it-work
 func _input(event: InputEvent) -> void:
 	logger.debug("Got input event to handle: " + str(event))
+
+	# Keep track of the current number of touch inputs
+	if event is InputEventScreenTouch:
+		if event.is_pressed():
+			self.current_touches += 1
+		else:
+			self.current_touches -= 1
+
+	# Don't process Godot events if InputPlumber is running
+	if input_plumber.is_running() and not is_inputplumber_event(event):
+		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			logger.debug("Skipping Godot event while InputPlumber is running:", event)
+			get_viewport().set_input_as_handled()
+			return
+
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
@@ -275,18 +299,18 @@ func _audio_input(event: InputEvent) -> void:
 
 
 func _watch_dbus_device(device: CompositeDevice) -> void:
-		for target in device.dbus_devices:
-			if target.input_event.is_connected(_on_dbus_input_event.bind(device.dbus_path)):
-				continue
-			logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
-			logger.debug(str(target.get_instance_id()))
-			logger.debug(str(target.get_rid()))
-			target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))
+	for target in device.dbus_devices:
+		if target.input_event.is_connected(_on_dbus_input_event.bind(device.dbus_path)):
+			continue
+		logger.debug("Adding watch for " + device.name + " " + target.dbus_path)
+		logger.debug(str(target.get_instance_id()))
+		logger.debug(str(target.get_rid()))
+		target.input_event.connect(_on_dbus_input_event.bind(device.dbus_path))
 
 
 func _on_dbus_input_event(event: String, value: float, dbus_path: String) -> void:
 	var pressed := value == 1.0
-	logger.debug("Handling dbus input event from" + dbus_path + ": " + event + " pressed: " + str(pressed))
+	logger.debug("Handling dbus input event from '" + dbus_path + "': " + event + " pressed: " + str(pressed))
 
 	var action := event
 	match event:

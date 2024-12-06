@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/devicon-plain--bash.svg")
 extends Resource
 class_name InteractiveProcess
 

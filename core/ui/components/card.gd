@@ -35,12 +35,14 @@ signal unhighlighted
 			progress.value = v
 
 var library_item: LibraryItem
+var tapped_count := 0
 var logger := Log.get_logger("GameCard")
 
 @onready var texture := $%TextureRect
 @onready var name_container := $%NameMargin
 @onready var name_label := $%NameLabel
 @onready var progress := $%ProgressBar as ProgressBar
+@onready var tap_timer := $%TapTimer as Timer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -53,7 +55,12 @@ func _ready() -> void:
 	focus_exited.connect(_on_unfocus)
 	texture.mouse_entered.connect(_on_focus)
 	texture.mouse_exited.connect(_on_unfocus)
-	
+
+	# Setup a timer callback to clear number of taps on the card
+	var on_timeout := func():
+		tapped_count = 0
+	tap_timer.timeout.connect(on_timeout)
+
 	var parent := get_parent()
 	if parent and parent is Container:
 		parent.queue_sort()
@@ -101,6 +108,14 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.is_pressed() and event.double_click:
 			button_up.emit()
+	if event is InputEventScreenTouch:
+		if event.is_pressed():
+			tapped_count += 1
+			if tapped_count > 1:
+				tapped_count = 0
+				button_up.emit()
+			else:
+				tap_timer.start()
 	if event.is_action("ui_accept"):
 		if event.is_pressed():
 			button_down.emit()
