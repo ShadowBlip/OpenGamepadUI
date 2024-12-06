@@ -13,3 +13,7 @@ GamescopeInstance = "res://assets/editor-icons/streamline--desktop-game-solid.sv
 InputPlumberInstance = "res://addons/core/assets/icons/inputplumber.svg"
 PowerStationInstance = "res://assets/editor-icons/game-icons--power-generator.svg"
 UPowerInstance = "res://assets/editor-icons/material-symbols--battery-profile-sharp.svg"
+ResourceProcessor = "res://addons/core/assets/icons/clarity--process-on-vm-line.svg"
+ResourceRegistry = "res://addons/core/assets/icons/carbon--cloud-registry.svg"
+Pty = "res://assets/editor-icons/devicon-plain--bash.svg"
+Vdf = "res://addons/core/assets/icons/material-symbols-light--valve.svg"
