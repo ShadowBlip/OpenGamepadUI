@@ -60,7 +60,7 @@ impl KeyboardDevice {
         let mut resource_loader = ResourceLoader::singleton();
         if resource_loader.exists(res_path.as_str()) {
             if let Some(res) = resource_loader.load(res_path.as_str()) {
-                log::info!("Resource already exists, loading that instead");
+                log::debug!("Resource already exists, loading that instead");
                 let device: Gd<KeyboardDevice> = res.cast();
                 device
             } else {

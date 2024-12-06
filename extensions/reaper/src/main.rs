@@ -87,6 +87,7 @@ fn main() {
             }
 
             // Execute the command
+            #[allow(irrefutable_let_patterns)]
             if let Err(e) = execvp(cmd.as_c_str(), c_args.as_slice()) {
                 panic!("reaper: failed executing command: {e:?}");
             }

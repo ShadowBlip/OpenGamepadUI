@@ -226,7 +226,7 @@ impl Pty {
         // Spawn a task to read/write from/to the PTY
         let signals_tx = self.tx.clone();
         RUNTIME.spawn(async move {
-            log::info!("Task spawned to read/write PTY");
+            log::debug!("Task spawned to read/write PTY");
 
             // Create readers/writers
             let output = std::fs::File::from(master.try_clone().unwrap());

@@ -4,7 +4,7 @@ use std::{
     time::Duration,
 };
 
-use godot::prelude::*;
+use godot::{classes::Engine, prelude::*};
 use zbus::names::BusName;
 
 use crate::{
@@ -25,6 +25,7 @@ enum Signal {
     Stopped,
 }
 
+/// UPower dbus proxy for power management
 #[derive(GodotClass)]
 #[class(base=Resource)]
 pub struct UPowerInstance {
@@ -70,8 +71,7 @@ impl UPowerInstance {
         proxy.on_battery().ok().unwrap_or_default()
     }
 
-    /// Get the object to the "display device", a composite device that represents
-    /// the status icon to show in desktop environments.
+    /// Get the object to the "display device", a composite device that represents the status icon to show in desktop environments.
     #[func]
     pub fn get_display_device(&mut self) -> Gd<UPowerDevice> {
         if let Some(device) = self.devices.get(DISPLAY_DEVICE_PATH) {
@@ -83,8 +83,7 @@ impl UPowerInstance {
         device
     }
 
-    /// Process UPower signals and emit them as Godot signals. This method
-    /// should be called every frame in the "_process" loop of a node.
+    /// Process UPower signals and emit them as Godot signals. This method should be called every frame in the `_process` loop of a node.
     #[func]
     fn process(&mut self) {
         // Drain all messages from the channel to process them
@@ -141,6 +140,19 @@ impl IResource for UPowerInstance {
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
+        let conn = get_dbus_system_blocking().ok();
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                rx,
+                conn,
+                devices: Default::default(),
+                on_battery: Default::default(),
+            };
+        }
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -150,7 +162,6 @@ impl IResource for UPowerInstance {
         });
 
         // Create a new UPower instance
-        let conn = get_dbus_system_blocking().ok();
         Self {
             base,
             rx,

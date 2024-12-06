@@ -13,7 +13,7 @@ use std::time::Duration;
 use composite_device::CompositeDevice;
 use godot::prelude::*;
 
-use godot::classes::Resource;
+use godot::classes::{Engine, Resource};
 use zbus::fdo::ObjectManagerProxy;
 use zbus::names::BusName;
 
@@ -340,7 +340,7 @@ impl InputPlumberInstance {
         match kind {
             ObjectType::Unknown => (),
             ObjectType::CompositeDevice => {
-                log::info!("CompositeDevice added: {path}");
+                log::debug!("CompositeDevice added: {path}");
                 let device = CompositeDevice::new(path.as_str());
                 self.composite_devices.insert(path, device.clone());
                 self.base_mut()
@@ -350,7 +350,7 @@ impl InputPlumberInstance {
             ObjectType::SourceHidRawDevice => (),
             ObjectType::SourceIioDevice => (),
             ObjectType::TargetDBusDevice => {
-                log::info!("DBusDevice added: {path}");
+                log::debug!("DBusDevice added: {path}");
                 let device = DBusDevice::new(path.as_str());
                 self.dbus_devices.insert(path, device);
             }
@@ -365,7 +365,7 @@ impl InputPlumberInstance {
         match kind {
             ObjectType::Unknown => (),
             ObjectType::CompositeDevice => {
-                log::info!("CompositeDevice device removed: {path}");
+                log::debug!("CompositeDevice device removed: {path}");
                 self.composite_devices.remove(&path);
                 self.base_mut().emit_signal(
                     "composite_device_removed",
@@ -376,7 +376,7 @@ impl InputPlumberInstance {
             ObjectType::SourceHidRawDevice => (),
             ObjectType::SourceIioDevice => (),
             ObjectType::TargetDBusDevice => {
-                log::info!("DBusDevice device removed: {path}");
+                log::debug!("DBusDevice device removed: {path}");
                 self.dbus_devices.remove(&path);
             }
             ObjectType::TargetGamepadDevice => (),
@@ -390,10 +390,26 @@ impl InputPlumberInstance {
 impl IResource for InputPlumberInstance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        log::info!("Initializing InputPlumber instance");
+        log::debug!("Initializing InputPlumber instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
+        let conn = get_dbus_system_blocking().ok();
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                rx,
+                conn,
+                composite_devices: Default::default(),
+                dbus_devices: Default::default(),
+                intercept_mode: Default::default(),
+                intercept_triggers: Default::default(),
+                intercept_target: Default::default(),
+            };
+        }
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -403,7 +419,6 @@ impl IResource for InputPlumberInstance {
         });
 
         // Create a new InputPlumber instance
-        let conn = get_dbus_system_blocking().ok();
         let mut instance = Self {
             base,
             rx,
@@ -435,7 +450,7 @@ impl IResource for InputPlumberInstance {
 /// Runs InputPlumber tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    log::info!("Spawning inputplumber");
+    log::debug!("Spawning inputplumber");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 

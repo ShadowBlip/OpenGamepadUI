@@ -13,7 +13,7 @@ use block_device::BlockDevice;
 use drive_device::DriveDevice;
 use filesystem_device::FilesystemDevice;
 use futures_util::stream::StreamExt;
-use godot::{obj::WithBaseField, prelude::*};
+use godot::{classes::Engine, obj::WithBaseField, prelude::*};
 use partition_device::PartitionDevice;
 use zbus::fdo::{ManagedObjects, ObjectManagerProxy};
 use zbus::names::BusName;
@@ -174,17 +174,17 @@ impl UDisks2Instance {
             let partitions = block_device.bind().get_partitions();
             if partitions.is_empty() {
                 if !self.partition_devices.contains_key(dbus_path) {
-                    log::info!(
+                    log::debug!(
                         "Adding {dbus_path} as unprotected device. It is not a partition_devices"
                     );
                     unprotected_devices.push(block_device);
                     continue;
                 }
-                log::info!("Skipping {dbus_path}. It is a partition_device.");
+                log::debug!("Skipping {dbus_path}. It is a partition_device.");
             } else {
                 for partition_device in partitions.iter_shared() {
                     let Some(filesystem_device) = partition_device.bind().get_filesystem() else {
-                        log::info!(
+                        log::debug!(
                             "Adding {dbus_path} as unprotected device. It does not have a FilesystemDevice"
                         );
                         unprotected_devices.push(block_device);
@@ -198,7 +198,7 @@ impl UDisks2Instance {
                         }
                     }
                 }
-                log::info!(
+                log::debug!(
                     "Adding {dbus_path} as unprotected device. It does not have any mounts in PROTECTED_MOUNTS"
                 );
                 unprotected_devices.push(block_device);
@@ -314,10 +314,25 @@ impl UDisks2Instance {
 impl IResource for UDisks2Instance {
     /// Called upon object initialization in the engine
     fn init(base: Base<Self::Base>) -> Self {
-        log::info!("Initializing UDisks2 instance");
+        log::debug!("Initializing UDisks2 instance");
 
         // Create a channel to communicate with the service
         let (tx, rx) = channel();
+        let conn = get_dbus_system_blocking().ok();
+
+        // Don't run in the editor
+        let engine = Engine::singleton();
+        if engine.is_editor_hint() {
+            return Self {
+                base,
+                rx,
+                conn,
+                block_devices: Default::default(),
+                drive_devices: Default::default(),
+                partition_devices: Default::default(),
+                filesystem_devices: Default::default(),
+            };
+        }
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -327,7 +342,6 @@ impl IResource for UDisks2Instance {
         });
 
         // Create a new UDisks2 instance
-        let conn = get_dbus_system_blocking().ok();
         let mut instance = Self {
             base,
             rx,
@@ -382,7 +396,7 @@ impl IResource for UDisks2Instance {
 /// Runs UDisks2 tasks in Tokio to listen for DBus signals and send them
 /// over the given channel so they can be processed during each engine frame.
 async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
-    log::info!("Spawning UDisks2 tasks");
+    log::debug!("Spawning UDisks2 tasks");
     // Establish a connection to the system bus
     let conn = get_dbus_system().await?;
 
