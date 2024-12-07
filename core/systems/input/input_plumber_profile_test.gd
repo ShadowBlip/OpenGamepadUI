@@ -3,7 +3,7 @@ extends GutTest
 
 func test_load() -> void:
 	var profile := InputPlumberProfile.load("res://assets/gamepad/profiles/default.json")
-	assert_eq(profile.name, "Default")
+	assert_eq(profile.name, "OpenGamepadUI Default")
 
 
 func test_save() -> void:
