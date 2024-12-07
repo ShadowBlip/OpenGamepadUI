@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b64v61ut4e1qv"]
+[gd_scene load_steps=21 format=3 uid="uid://b64v61ut4e1qv"]
 
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_isj2i"]
 [ext_resource type="Script" path="res://core/ui/card_ui/ootbe/network_select.gd" id="1_lbpas"]
@@ -16,7 +16,6 @@
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="10_oxokr"]
 [ext_resource type="PackedScene" uid="uid://btg3dylh0tqoi" path="res://core/systems/effects/smooth_scroll_effect.tscn" id="10_umeai"]
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="11_hldpx"]
-[ext_resource type="Resource" uid="uid://bpi21xakop5wy" path="res://assets/state/states/first_boot_plugin_select.tres" id="14_bvbb6"]
 [ext_resource type="Resource" uid="uid://b5e8kjinft7rs" path="res://assets/state/state_machines/first_boot_network_state_machine.tres" id="16_ckd3v"]
 [ext_resource type="Resource" uid="uid://bm3fu76wxxmnt" path="res://assets/state/states/first_boot_network_password.tres" id="17_mmuaj"]
 [ext_resource type="Script" path="res://core/systems/state/state_watcher.gd" id="17_umvp2"]
@@ -60,11 +59,11 @@ fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
 [node name="FocusGroupSetter" parent="StateWatcher/FadeEffect" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
-target = NodePath("../../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
+target = NodePath("../../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/NetworkSelectFocusGroup")
 on_signal = "effect_finished"
 
 [node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
-target = NodePath("../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
+target = NodePath("../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/NetworkSelectFocusGroup")
 on_signal = "state_refreshed"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -103,7 +102,7 @@ theme_override_constants/margin_bottom = 80
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="FocusGroup" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("6_c8yx4")]
+[node name="NetworkSelectFocusGroup" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("6_c8yx4")]
 current_focus = NodePath("../WifiNetworkTree")
 
 [node name="Spacer" type="Control" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
@@ -115,16 +114,12 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="NextButton" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_nucyf")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 text = "Next"
 click_focuses = false
-
-[node name="StateUpdater" parent="HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/NextButton" instance=ExtResource("9_d1uu0")]
-state_machine = ExtResource("2_0fb0p")
-state = ExtResource("14_bvbb6")
-on_signal = "button_up"
 
 [node name="PopupContainer" type="CenterContainer" parent="."]
 unique_name_in_owner = true
@@ -145,13 +140,19 @@ on_signal = "input_released"
 script = ExtResource("17_umvp2")
 state = ExtResource("17_mmuaj")
 
-[node name="FocusOnPopupOpen" parent="PopupContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
-target = NodePath("../../PanelContainer/MarginContainer/VBoxContainer/FocusGroup")
+[node name="FocusOnPopupClose" parent="PopupContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
+target = NodePath("../../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/NetworkSelectFocusGroup")
+on_signal = "state_exited"
+
+[node name="FadeEffect" parent="PopupContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("7_2d2el")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
-[node name="FocusOnPopupClose" parent="PopupContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
-target = NodePath("../../../HBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/FocusGroup")
-on_signal = "state_exited"
+[node name="FocusOnPopupOpen" parent="PopupContainer/StateWatcher/FadeEffect" node_paths=PackedStringArray("target") instance=ExtResource("4_y44we")]
+target = NodePath("../../../PanelContainer/MarginContainer/VBoxContainer/PasswordFocusGroup")
+on_signal = "effect_finished"
 
 [node name="PanelContainer" type="PanelContainer" parent="PopupContainer"]
 layout_mode = 2
@@ -169,7 +170,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="PopupContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("6_c8yx4")]
+[node name="PasswordFocusGroup" parent="PopupContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("6_c8yx4")]
 current_focus = NodePath("../WifiPasswordTextInput")
 
 [node name="WifiPasswordTextInput" parent="PopupContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("11_hldpx")]

@@ -1,14 +1,14 @@
 extends MarginContainer
 
+var network_manager := load("res://core/systems/network/network_manager.tres") as NetworkManagerInstance
 var state_machine := load("res://assets/state/state_machines/first_boot_state_machine.tres") as StateMachine
-var next_state := load("res://assets/state/states/first_boot_plugin_select.tres") as State
-var network_state := load("res://assets/state/states/first_boot_network.tres") as State
-
+var no_networking_state := load("res://assets/state/states/first_boot_finished.tres") as State
 var network_state_machine := load("res://assets/state/state_machines/first_boot_network_state_machine.tres") as StateMachine
 var password_popup_state := load("res://assets/state/states/first_boot_network_password.tres") as State
 
 var logger := Log.get_logger("NetworkSelect")
 
+@onready var next_button := $%NextButton as CardButton
 @onready var wifi_tree := $%WifiNetworkTree as WifiNetworkTree
 @onready var wifi_pass_box := $%WifiPasswordTextInput
 @onready var wifi_pass_button := $%WifiPasswordButton
@@ -16,17 +16,21 @@ var logger := Log.get_logger("NetworkSelect")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	network_state.state_entered.connect(_on_state_entered)
+	next_button.button_up.connect(_on_next_button)
 	wifi_tree.challenge_required.connect(_on_challenge_required)
 
 
-# When this menu is shown, check if networking is supported. If not,
-# proceed to the next OOBE menu.
-func _on_state_entered(_from: State) -> void:
-	if NetworkManager.supports_network():
+func _on_next_button() -> void:
+	# Determine the next state to go to
+	if not network_manager.is_running():
+		state_machine.push_state(no_networking_state)
 		return
-	logger.info("Networking is not supported. Skipping.")
-	state_machine.replace_state(next_state)
+	var next_state: State
+	if network_manager.state >= network_manager.NM_STATE_CONNECTED_GLOBAL:
+		next_state = load("res://assets/state/states/first_boot_plugin_select.tres") as State
+	else:
+		next_state = load("res://assets/state/states/first_boot_finished.tres") as State
+	state_machine.push_state(next_state)
 
 
 # If a wifi password is needed, this method will be called. The callback

@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/material-symbols--battery-profile-sharp.svg")
 extends Node
 class_name PowerManager
 

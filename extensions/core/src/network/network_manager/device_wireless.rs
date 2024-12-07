@@ -2,14 +2,23 @@ use std::collections::HashMap;
 
 use godot::prelude::*;
 
-use godot::classes::{ProjectSettings, Resource, ResourceLoader};
+use godot::classes::{Resource, ResourceLoader};
 
-use crate::dbus::networkmanager::wireless::WirelessProxyBlocking;
-use crate::dbus::DBusVariant;
-use crate::get_dbus_system_blocking;
+use crate::dbus::networkmanager::wireless::{WirelessProxy, WirelessProxyBlocking};
+use crate::dbus::RunError;
+use crate::{get_dbus_system, get_dbus_system_blocking, RUNTIME};
+use futures_util::stream::StreamExt;
+use std::sync::mpsc::{channel, Receiver, Sender, TryRecvError};
 
 use super::access_point::NetworkAccessPoint;
 use super::NETWORK_MANAGER_BUS;
+
+/// Signals that can be emitted by this resource
+#[derive(Debug)]
+enum Signal {
+    AccessPointAdded(String),
+    AccessPointRemoved,
+}
 
 #[derive(GodotClass)]
 #[class(no_init, base=Resource)]
@@ -17,6 +26,7 @@ pub struct NetworkDeviceWireless {
     base: Base<Resource>,
 
     conn: Option<zbus::blocking::Connection>,
+    rx: Receiver<Signal>,
     path: String,
 
     /// The DBus path of the [NetworkDeviceWireless]
@@ -43,16 +53,35 @@ pub struct NetworkDeviceWireless {
 
 #[godot_api]
 impl NetworkDeviceWireless {
+    /// Emitted when a new access point is detected
+    #[signal]
+    fn access_point_added(ap: Gd<NetworkAccessPoint>);
+    /// Emitted when an access point disappears
+    #[signal]
+    fn access_point_removed();
+
     /// Create a new [NetworkDeviceWireless] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         Gd::from_init_fn(|base| {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Create a channel to communicate with the service
+            let (tx, rx) = channel();
+
+            // Spawn a task using the shared tokio runtime to listen for signals
+            let dbus_path = path.to_string();
+            RUNTIME.spawn(async move {
+                if let Err(e) = run(dbus_path, tx).await {
+                    log::error!("Failed to run NetworkDevice task: ${e:?}");
+                }
+            });
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
                 conn,
+                rx,
                 path: path.clone().into(),
                 dbus_path: path,
                 hardware_address: Default::default(),
@@ -178,6 +207,92 @@ impl NetworkDeviceWireless {
         proxy.hw_address().unwrap_or_default().into()
     }
 
-    /// Dispatches signals
-    pub fn process(&mut self) {}
+    /// Process signals and emit them as Godot signals.
+    pub fn process(&mut self) {
+        // Drain all messages from the channel to process them
+        loop {
+            let signal = match self.rx.try_recv() {
+                Ok(value) => value,
+                Err(e) => match e {
+                    TryRecvError::Empty => break,
+                    TryRecvError::Disconnected => {
+                        log::error!("Backend thread is not running!");
+                        return;
+                    }
+                },
+            };
+            self.process_signal(signal);
+        }
+    }
+
+    /// Process and dispatch the given signal
+    fn process_signal(&mut self, signal: Signal) {
+        match signal {
+            Signal::AccessPointAdded(path) => {
+                let ap = NetworkAccessPoint::new(path.as_str());
+                self.base_mut()
+                    .emit_signal("access_point_added", &[ap.to_variant()]);
+            }
+            Signal::AccessPointRemoved => {
+                self.base_mut().emit_signal("access_point_removed", &[]);
+            }
+        }
+    }
+}
+
+/// Runs NetworkDevice tasks in Tokio to listen for DBus signals and send them
+/// over the given channel so they can be processed during each engine frame.
+async fn run(path: String, tx: Sender<Signal>) -> Result<(), RunError> {
+    log::debug!("Spawning device task for {path}");
+    // Establish a connection to the system bus
+    let conn = get_dbus_system().await?;
+
+    // Get a proxy instance to the device
+    let device = WirelessProxy::builder(&conn).path(path)?.build().await?;
+
+    // Spawn a task to listen for property changes
+    let mut access_point_added = device.receive_access_point_added().await?;
+    let mut access_point_removed = device.receive_access_point_removed().await?;
+    let signals_tx = tx.clone();
+    RUNTIME.spawn(async move {
+        loop {
+            tokio::select! {
+                signal = access_point_added.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let args = match signal.args() {
+                        Ok(args) => args,
+                        Err(e) => {
+                            log::warn!("Failed to get signal args: ${e:?}");
+                            continue;
+                        }
+                    };
+                    let access_point_path = args.access_point;
+                    let signal = Signal::AccessPointAdded(access_point_path.to_string());
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
+                signal = access_point_removed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    match signal.args() {
+                        Ok(_) => (),
+                        Err(e) => {
+                            log::warn!("Failed to get signal args: ${e:?}");
+                            continue;
+                        }
+                    };
+                    let signal = Signal::AccessPointRemoved;
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    Ok(())
 }
