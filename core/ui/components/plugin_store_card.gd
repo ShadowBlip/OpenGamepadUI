@@ -120,13 +120,16 @@ func _on_update_button() -> void:
 
 func _on_unfocus() -> void:
 	# Emit a signal if a non-child node grabs focus
-	var focus_owner := get_viewport().gui_get_focus_owner()
+	var viewport := get_viewport()
+	if not viewport:
+		return
+	var focus_owner := viewport.gui_get_focus_owner()
 	if not self.is_ancestor_of(focus_owner):
 		nonchild_focused.emit()
 		return
 
 	# If a child has focus, listen for focus changes until a non-child has focus
-	get_viewport().gui_focus_changed.connect(_on_focus_change)
+	viewport.gui_focus_changed.connect(_on_focus_change)
 
 
 func _on_focus_change(focused: Control) -> void:

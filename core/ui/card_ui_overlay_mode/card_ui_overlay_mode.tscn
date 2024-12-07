@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b13lnfkjbafkj"]
+[gd_scene load_steps=17 format=3 uid="uid://b13lnfkjbafkj"]
 
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" path="res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.gd" id="2_3ptao"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://eqqk1uve143x" path="res://core/ui/components/dialog.tscn" id="8_otm5f"]
 [ext_resource type="ResourceRegistry" uid="uid://bsr58xihnpn1j" path="res://core/systems/resource/resource_registry.tres" id="9_4si0w"]
 [ext_resource type="PowerStationInstance" uid="uid://c2mmrnh3rcs58" path="res://core/systems/performance/power_station.tres" id="9_nw6s5"]
+[ext_resource type="Script" path="res://core/systems/network/network_manager.gd" id="10_atypa"]
 
 [node name="CardUIOverlayMode" type="Control" groups=["main"]]
 layout_mode = 3
@@ -42,6 +43,9 @@ script = ExtResource("7_qqh0e")
 [node name="PowerStation" type="Node" parent="."]
 script = ExtResource("8_kxe4b")
 instance = ExtResource("9_nw6s5")
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("10_atypa")
 
 [node name="ResourceProcessor" type="ResourceProcessor" parent="."]
 registry = ExtResource("9_4si0w")

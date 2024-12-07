@@ -5,10 +5,14 @@ pub mod device_wireless;
 pub mod ip4_config;
 
 use crate::{
-    dbus::{networkmanager::network_manager::NetworkManagerProxyBlocking, RunError},
+    dbus::{
+        networkmanager::network_manager::{NetworkManagerProxy, NetworkManagerProxyBlocking},
+        RunError,
+    },
     get_dbus_system, get_dbus_system_blocking, RUNTIME,
 };
 use access_point::NetworkAccessPoint;
+use active_connection::NetworkActiveConnection;
 use device::NetworkDevice;
 use device_wireless::NetworkDeviceWireless;
 use futures_util::stream::StreamExt;
@@ -20,7 +24,7 @@ use std::{
 };
 use zbus::fdo::{ManagedObjects, ObjectManagerProxy};
 
-use godot::{classes::Engine, prelude::*};
+use godot::{classes::Engine, obj::WithBaseField, prelude::*};
 use zbus::names::BusName;
 
 const NETWORK_MANAGER_BUS: &str = "org.freedesktop.NetworkManager";
@@ -87,6 +91,9 @@ enum Signal {
         path: String,
         ifaces: Vec<ObjectType>,
     },
+    PropertyStateChanged(u32),
+    PropertyConnectivityChanged(u32),
+    PropertyPrimaryConnectionChanged(String),
 }
 
 #[derive(GodotClass)]
@@ -95,6 +102,7 @@ pub struct NetworkManagerInstance {
     base: Base<Resource>,
     rx: Receiver<Signal>,
     conn: Option<zbus::blocking::Connection>,
+    active_connections: HashMap<String, Gd<NetworkActiveConnection>>,
     access_points: HashMap<String, Gd<NetworkAccessPoint>>,
     devices: HashMap<String, Gd<NetworkDevice>>,
     devices_wireless: HashMap<String, Gd<NetworkDeviceWireless>>,
@@ -104,10 +112,47 @@ pub struct NetworkManagerInstance {
     #[allow(dead_code)]
     #[var(get = get_connectivity)]
     connectivity: i32,
+    /// The primary active connection being used to access the network
+    #[allow(dead_code)]
+    #[var(get = get_primary_connection)]
+    primary_connection: Option<Gd<NetworkActiveConnection>>,
+    /// The network connectivity state
+    #[allow(dead_code)]
+    #[var(get = get_state)]
+    state: u32,
+    /// Indicates if wireless is enabled or not
+    #[allow(dead_code)]
+    #[var(get = get_wireless_enabled, set = set_wireless_enabled)]
+    wireless_enabled: bool,
 }
 
 #[godot_api]
 impl NetworkManagerInstance {
+    /// networking state is unknown
+    #[constant]
+    const NM_STATE_UNKNOWN: u32 = 0;
+    /// networking is not enabled
+    #[constant]
+    const NM_STATE_ASLEEP: u32 = 10;
+    /// there is no active network connection
+    #[constant]
+    const NM_STATE_DISCONNECTED: u32 = 20;
+    /// network connections are being cleaned up
+    #[constant]
+    const NM_STATE_DISCONNECTING: u32 = 30;
+    /// a network connection is being started
+    #[constant]
+    const NM_STATE_CONNECTING: u32 = 40;
+    /// there is only local IPv4 and/or IPv6 connectivity
+    #[constant]
+    const NM_STATE_CONNECTED_LOCAL: u32 = 50;
+    /// there is only site-wide IPv4 and/or IPv6 connectivity
+    #[constant]
+    const NM_STATE_CONNECTED_SITE: u32 = 60;
+    /// there is global IPv4 and/or IPv6 Internet connectivity
+    #[constant]
+    const NM_STATE_CONNECTED_GLOBAL: u32 = 70;
+
     /// Network connectivity is unknown.
     #[constant]
     const NM_CONNECTIVITY_UNKNOWN: i32 = 1;
@@ -131,6 +176,18 @@ impl NetworkManagerInstance {
     /// Emitted when NetworkManager is detected as stopped
     #[signal]
     fn stopped();
+
+    /// Emitted when the network state changes
+    #[signal]
+    fn state_changed(state: u32);
+
+    /// Emitted when network connectivity changes
+    #[signal]
+    fn connectivity_changed(connectivity: u32);
+
+    /// Emitted when the primary connection changes
+    #[signal]
+    fn primary_connection_changed(connection: Option<Gd<NetworkActiveConnection>>);
 
     /// Return a proxy instance to the NetworkManager
     fn get_proxy(&self) -> Option<NetworkManagerProxyBlocking> {
@@ -166,6 +223,47 @@ impl NetworkManagerInstance {
             .ok()
             .unwrap_or(NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN as u32);
         value as i32
+    }
+
+    /// The network connectivity state
+    #[func]
+    pub fn get_state(&self) -> u32 {
+        let Some(proxy) = self.get_proxy() else {
+            return NetworkManagerInstance::NM_STATE_UNKNOWN;
+        };
+        proxy.state().unwrap_or_default()
+    }
+
+    /// Indicates if wireless is currently enabled or not
+    #[func]
+    pub fn get_wireless_enabled(&self) -> bool {
+        let Some(proxy) = self.get_proxy() else {
+            return Default::default();
+        };
+        proxy.wireless_enabled().unwrap_or_default()
+    }
+
+    /// Set whether wireless networking should be enabled
+    #[func]
+    pub fn set_wireless_enabled(&self, value: bool) {
+        let Some(proxy) = self.get_proxy() else {
+            return Default::default();
+        };
+        proxy.set_wireless_enabled(value).unwrap_or_default()
+    }
+
+    /// The primary active connection being used to access the network
+    #[func]
+    pub fn get_primary_connection(&self) -> Option<Gd<NetworkActiveConnection>> {
+        let Some(proxy) = self.get_proxy() else {
+            return Default::default();
+        };
+        let path = proxy.primary_connection().unwrap_or_default();
+        if path.is_empty() || path.as_str() == "/" {
+            return None;
+        }
+        let path = path.to_string();
+        self.active_connections.get(&path).cloned()
     }
 
     /// Returns an array of all network devices
@@ -219,13 +317,19 @@ impl NetworkManagerInstance {
             self.process_signal(signal);
         }
 
-        // Process signals from tracked devices
-        //for (_, device) in self.dbus_devices.iter_mut() {
-        //    device.bind_mut().process();
-        //}
-        //for (_, device) in self.composite_devices.iter_mut() {
-        //    device.bind_mut().process();
-        //}
+        // Process signals from tracked objects
+        for (_, device) in self.devices.iter_mut() {
+            device.bind_mut().process();
+        }
+        for (_, device) in self.devices_wireless.iter_mut() {
+            device.bind_mut().process();
+        }
+        for (_, connection) in self.active_connections.iter_mut() {
+            connection.bind_mut().process();
+        }
+        for (_, ap) in self.access_points.iter_mut() {
+            ap.bind_mut().process();
+        }
     }
 
     /// Process and dispatch the given signal
@@ -235,7 +339,6 @@ impl NetworkManagerInstance {
                 self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
-                // Clear all known devices
                 self.devices.clear();
                 self.base_mut().emit_signal("stopped", &[]);
             }
@@ -244,6 +347,23 @@ impl NetworkManagerInstance {
             }
             Signal::ObjectRemoved { path, ifaces } => {
                 self.on_object_removed(path.as_str(), ifaces);
+            }
+            Signal::PropertyStateChanged(value) => {
+                self.base_mut()
+                    .emit_signal("state_changed", &[value.to_variant()]);
+            }
+            Signal::PropertyConnectivityChanged(value) => {
+                self.base_mut()
+                    .emit_signal("connectivity_changed", &[value.to_variant()]);
+            }
+            Signal::PropertyPrimaryConnectionChanged(path) => {
+                let conn = if path.is_empty() || path.as_str() == "/" {
+                    None
+                } else {
+                    Some(NetworkActiveConnection::new(path.as_str()))
+                };
+                self.base_mut()
+                    .emit_signal("primary_connection_changed", &[conn.to_variant()]);
             }
         }
     }
@@ -258,7 +378,11 @@ impl NetworkManagerInstance {
                     self.access_points.insert(path.to_string(), ap.clone());
                 }
                 ObjectType::AgentManager => (),
-                ObjectType::ConnectionActive => (),
+                ObjectType::ConnectionActive => {
+                    let connection = NetworkActiveConnection::new(path);
+                    self.active_connections
+                        .insert(path.to_string(), connection.clone());
+                }
                 ObjectType::Device => {
                     let device = NetworkDevice::new(path);
                     self.devices.insert(path.to_string(), device.clone());
@@ -293,7 +417,9 @@ impl NetworkManagerInstance {
                     self.access_points.remove(path);
                 }
                 ObjectType::AgentManager => (),
-                ObjectType::ConnectionActive => (),
+                ObjectType::ConnectionActive => {
+                    self.active_connections.remove(path);
+                }
                 ObjectType::Device => {
                     self.devices.remove(path);
                 }
@@ -334,10 +460,14 @@ impl IResource for NetworkManagerInstance {
                 rx,
                 conn,
                 connectivity: NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN,
+                active_connections: Default::default(),
                 access_points: Default::default(),
                 devices: Default::default(),
                 devices_wireless: Default::default(),
                 ipv4_configs: Default::default(),
+                state: Default::default(),
+                wireless_enabled: Default::default(),
+                primary_connection: Default::default(),
             };
         }
 
@@ -354,10 +484,14 @@ impl IResource for NetworkManagerInstance {
             rx,
             conn,
             connectivity: NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN,
+            active_connections: Default::default(),
             access_points: Default::default(),
             devices: Default::default(),
             devices_wireless: Default::default(),
             ipv4_configs: Default::default(),
+            state: Default::default(),
+            wireless_enabled: Default::default(),
+            primary_connection: Default::default(),
         };
         if !instance.is_running() {
             return instance;
@@ -425,52 +559,102 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
         .build()
         .await?;
 
-    // Spawn a task to listen for objects added
+    // Spawn a task to listen for objects added/removed
     let mut ifaces_added = object_manager.receive_interfaces_added().await?;
+    let mut ifaces_removed = object_manager.receive_interfaces_removed().await?;
     let signals_tx = tx.clone();
     RUNTIME.spawn(async move {
-        while let Some(signal) = ifaces_added.next().await {
-            let args = match signal.args() {
-                Ok(args) => args,
-                Err(e) => {
-                    log::warn!("Failed to get signal args: ${e:?}");
-                    continue;
-                }
-            };
+        loop {
+            tokio::select! {
+                signal = ifaces_added.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let args = match signal.args() {
+                        Ok(args) => args,
+                        Err(e) => {
+                            log::warn!("Failed to get signal args: ${e:?}");
+                            continue;
+                        }
+                    };
 
-            let path = args.object_path.to_string();
-            let ifaces = args
-                .interfaces_and_properties
-                .keys()
-                .map(|v| v.to_string())
-                .collect();
-            let ifaces = ObjectType::from_ifaces(ifaces);
-            let signal = Signal::ObjectAdded { path, ifaces };
-            if signals_tx.send(signal).is_err() {
-                break;
+                    let path = args.object_path.to_string();
+                    let ifaces = args
+                        .interfaces_and_properties
+                        .keys()
+                        .map(|v| v.to_string())
+                        .collect();
+                    let ifaces = ObjectType::from_ifaces(ifaces);
+                    let signal = Signal::ObjectAdded { path, ifaces };
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
+                signal = ifaces_removed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let args = match signal.args() {
+                        Ok(args) => args,
+                        Err(e) => {
+                            log::warn!("Failed to get signal args: ${e:?}");
+                            continue;
+                        }
+                    };
+
+                    let path = args.object_path.to_string();
+                    let ifaces = args.interfaces.iter().map(|v| v.to_string()).collect();
+                    let ifaces = ObjectType::from_ifaces(ifaces);
+                    let signal = Signal::ObjectRemoved { path, ifaces };
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
             }
         }
     });
 
-    // Spawn a task to listen for objects removed
-    let mut ifaces_removed = object_manager.receive_interfaces_removed().await?;
+    // Get a proxy instance to Networkmanager
+    let network_manager = NetworkManagerProxy::builder(&conn).build().await?;
+
+    // Spawn a task for property changes
+    let mut state_changed = network_manager.receive_state_changed().await;
+    let mut connectivity_changed = network_manager.receive_connectivity_changed().await;
+    let mut primary_changed = network_manager.receive_primary_connection_changed().await;
     let signals_tx = tx.clone();
     RUNTIME.spawn(async move {
-        while let Some(signal) = ifaces_removed.next().await {
-            let args = match signal.args() {
-                Ok(args) => args,
-                Err(e) => {
-                    log::warn!("Failed to get signal args: ${e:?}");
-                    continue;
+        loop {
+            tokio::select! {
+                signal = state_changed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let value = signal.get().await.unwrap_or_default();
+                    let signal = Signal::PropertyStateChanged(value);
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
                 }
-            };
-
-            let path = args.object_path.to_string();
-            let ifaces = args.interfaces.iter().map(|v| v.to_string()).collect();
-            let ifaces = ObjectType::from_ifaces(ifaces);
-            let signal = Signal::ObjectRemoved { path, ifaces };
-            if signals_tx.send(signal).is_err() {
-                break;
+                signal = connectivity_changed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let value = signal.get().await.unwrap_or_default();
+                    let signal = Signal::PropertyConnectivityChanged(value);
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
+                signal = primary_changed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let value = signal.get().await.unwrap_or_default().to_string();
+                    let signal = Signal::PropertyPrimaryConnectionChanged(value);
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
             }
         }
     });

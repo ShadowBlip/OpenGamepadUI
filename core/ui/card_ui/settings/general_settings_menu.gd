@@ -114,7 +114,7 @@ func _ready() -> void:
 	var i := 0
 	for locale in TranslationServer.get_loaded_locales():
 		var language := locale.split("_")[0]
-		var language_name := TranslationServer.get_language_name(language)
+		var language_name := tr(TranslationServer.get_language_name(language))
 		lang_dropdown.add_item(language_name)
 		lang_dropdown.option_button.set_item_metadata(i, locale)
 		if locale == current_locale:
@@ -123,6 +123,9 @@ func _ready() -> void:
 
 	# Update the locale when it is changed
 	var on_language_change := func(idx: int) -> void:
+		if idx < 0:
+			logger.warn("Invalid language index selected:", idx)
+			return
 		var locale := lang_dropdown.option_button.get_item_metadata(idx) as String
 		var language_name := lang_dropdown.option_button.get_item_text(idx)
 		logger.info("Setting language to: " + locale)

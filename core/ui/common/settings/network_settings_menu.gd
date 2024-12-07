@@ -1,31 +1,51 @@
 extends Control
 
-const thread := preload("res://core/systems/threading/thread_pool.tres")
-const bar_0 := preload("res://assets/ui/icons/wifi-none.svg")
-const bar_1 := preload("res://assets/ui/icons/wifi-low.svg")
-const bar_2 := preload("res://assets/ui/icons/wifi-medium.svg")
-const bar_3 := preload("res://assets/ui/icons/wifi-high.svg")
+var network_manager := load("res://core/systems/network/network_manager.tres") as NetworkManagerInstance
 
 var connecting := false
 @onready var no_net_label := $%NoNetworkLabel
-@onready var wifi_tree := $%WifiNetworkTree as Tree
-@onready var refresh_button := $%RefreshButton as Button
+@onready var wifi_tree := $%WifiNetworkTree as WifiNetworkTree
+@onready var wireless_toggle := $%WirelessEnableToggle as Toggle
+@onready var wifi_label := $%WifiLabel
 @onready var password_button := $%WifiPasswordButton
 @onready var password_input := $%WifiPasswordTextInput
 @onready var password_popup := $%PopupContainer
+@onready var ip_text := $%IPAddressText as SelectableText
+@onready var mask_text := $%SubnetText as SelectableText
+@onready var gateway_text := $%GatewayText as SelectableText
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if not NetworkManager.supports_network():
-		no_net_label.visible = true
-		return
+	# Display label if no networking is available
+	var on_networking_available := func():
+		no_net_label.visible = not network_manager.is_running()
+	network_manager.started.connect(on_networking_available)
+	network_manager.stopped.connect(on_networking_available)
+	on_networking_available.call()
 
-	thread.start()
+	# Connect the wireless enable toggle
+	var wireless_enabled := network_manager.wireless_enabled
+	wireless_toggle.button_pressed = wireless_enabled
+	wifi_label.visible = wireless_enabled
+	wifi_tree.visible = wireless_enabled
+	var on_wireless_toggled := func(enabled: bool):
+		network_manager.wireless_enabled = enabled
+		wifi_label.visible = enabled
+		wifi_tree.visible = enabled
+		if enabled:
+			await get_tree().create_timer(4.0).timeout
+			wifi_tree.refresh_networks()
+	wireless_toggle.toggled.connect(on_wireless_toggled)
+
+	# Fill out the connection details
+	var connection := network_manager.primary_connection
+	_on_connection_changed(connection)
+	network_manager.primary_connection_changed.connect(_on_connection_changed)
+
+	# Connect visibility and challenge signals
 	visibility_changed.connect(_on_visible_changed)
-	refresh_button.pressed.connect(_refresh_networks)
-	wifi_tree.item_activated.connect(_on_wifi_selected)
-	wifi_tree.create_item()
+	wifi_tree.challenge_required.connect(_on_wifi_challenge)
 
 	# Configure the OSK with the password input box
 	var password_context := password_input.keyboard_context as KeyboardContext
@@ -35,116 +55,59 @@ func _ready() -> void:
 	password_context.close_on_submit = true
 
 
+func _on_connection_changed(connection: NetworkActiveConnection) -> void:
+	await get_tree().create_timer(3.0).timeout
+	if not connection:
+		ip_text.text = "0.0.0.0"
+		mask_text.text = "0"
+		gateway_text.text = "0.0.0.0"
+		return
+	var devices := connection.devices
+	if devices.is_empty():
+		ip_text.text = "0.0.0.0"
+		mask_text.text = "0"
+		gateway_text.text = "0.0.0.0"
+		return
+	var device := devices[0]
+	var ip := device.ip4_config
+	if not ip:
+		ip_text.text = "0.0.0.0"
+		mask_text.text = "0"
+		gateway_text.text = "0.0.0.0"
+		return
+	var gateway := ip.gateway
+	if not gateway.is_empty():
+		gateway_text.text = gateway
+	var addresses := ip.addresses
+	if addresses.is_empty():
+		ip_text.text = "0.0.0.0"
+		mask_text.text = "0"
+		gateway_text.text = "0.0.0.0"
+		return
+	var info := addresses[0]
+	if "prefix" in info:
+		mask_text.text = str(info["prefix"])
+	if "address" in info:
+		ip_text.text = info["address"]
+
+
 func _on_visible_changed() -> void:
-	_refresh_networks()
+	_on_connection_changed(network_manager.primary_connection)
+	wifi_tree.refresh_networks()
 	password_popup.visible = false
 
 
-func _on_wifi_selected() -> void:
-	if connecting:
-		return
-	connecting = true
-	refresh_button.disabled = true
-
-	var item := wifi_tree.get_selected()
-	var ssid := item.get_text(1)
-	var connect_ap := func() -> int:
-		return NetworkManager.connect_access_point(ssid)
-	item.set_text(4, "Connecting")
-	var code := await thread.exec(connect_ap) as int
-
-	connecting = false
-	refresh_button.disabled = false
-	if code == OK:
-		_refresh_networks()
-		return
-
-	# If we fail to connect, open the wifi challenge
-	_on_wifi_challenge(item, ssid)
-
-
-func _on_wifi_challenge(item: TreeItem, ssid: String) -> void:
+func _on_wifi_challenge(callback: Callable) -> void:
 	password_popup.visible = true
 	password_input.grab_focus.call_deferred()
 
 	var on_pass_submit := func():
 		connecting = true
-		refresh_button.disabled = true
 		password_popup.visible = false
-		refresh_button.grab_focus.call_deferred()
+		wifi_tree.grab_focus.call_deferred()
 		var password := password_input.text as String
-
-		var connect_ap := func() -> int:
-			return NetworkManager.connect_access_point(ssid, password)
-		item.set_text(4, "Connecting")
-		var code := await thread.exec(connect_ap) as int
-
-		connecting = false
-		refresh_button.disabled = false
-		if code == OK:
-			_refresh_networks()
-			return
-
-		item.set_text(4, "Failed to connect")
-
+		callback.call(password)
 	password_button.pressed.connect(on_pass_submit, CONNECT_ONE_SHOT)
-
-
-func _refresh_networks() -> void:
-	# Disable the refresh button while refreshing
-	refresh_button.disabled = true
-
-	# Fetch all the available access points from NetworkManager
-	var tree := wifi_tree as Tree
-	var root := tree.get_root()
-	var access_points: Array[NetworkManager.WifiAP]
-	var get_aps := func() -> Array[NetworkManager.WifiAP]:
-		return NetworkManager.get_access_points()
-	access_points = await thread.exec(get_aps)
-
-	# Create an array of BSSIDs from our access points
-	var bssids := []
-	for ap in access_points:
-		bssids.append(ap.bssid)
-
-	# Look at the current tree items to see if any need to be removed
-	var tree_bssids := {}
-	for item in root.get_children():
-		var bssid := item.get_metadata(0) as String
-		if bssid in bssids:
-			tree_bssids[bssid] = item
-			continue
-		root.remove_child(item)
-
-	# Look at the current APs to see if any tree items need to be created
-	# or updated
-	for ap in access_points:
-		var item: TreeItem
-		if ap.bssid in tree_bssids:
-			item = tree_bssids[ap.bssid]
-		else:
-			item = tree.create_item(root)
-		item.set_metadata(0, ap.bssid)
-		item.set_icon(0, NetworkManager.get_strength_texture(ap.strength))
-		item.set_text(1, ap.ssid)
-		item.set_text(2, ap.security)
-		item.set_text(3, ap.rate)
-		if ap.in_use:
-			item.set_text(4, "Connected")
-		else:
-			item.set_text(4, "")
-
-	refresh_button.disabled = false
-
-
-func _get_strength_texture(strength: int) -> Texture2D:
-	if strength >= 80:
-		return bar_3
-	if strength >= 60:
-		return bar_2
-	if strength >= 40:
-		return bar_1
-	return bar_0
 
 
 # Intercept back input when the password dialog is open

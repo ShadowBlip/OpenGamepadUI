@@ -224,6 +224,8 @@ func _on_game_state_removed() -> void:
 
 # Sets the blur mode in gamescope
 func _set_blur(mode: int) -> void:
+	if not _xwayland_primary:
+		return
 	# Sometimes setting this may fail when Steam closes. Retry several times.
 	for try in range(10):
 		if _xwayland_primary:

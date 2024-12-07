@@ -2,18 +2,26 @@ use std::collections::HashMap;
 
 use godot::prelude::*;
 
-use godot::classes::{ProjectSettings, Resource, ResourceLoader};
+use godot::classes::{Resource, ResourceLoader};
 use zvariant::ObjectPath;
 
-use crate::dbus::networkmanager::access_point::AccessPointProxyBlocking;
+use crate::dbus::networkmanager::access_point::{AccessPointProxy, AccessPointProxyBlocking};
 use crate::dbus::networkmanager::network_manager::NetworkManagerProxyBlocking;
 use crate::dbus::networkmanager::settings::SettingsProxyBlocking;
-use crate::dbus::DBusVariant;
-use crate::get_dbus_system_blocking;
+use crate::dbus::RunError;
+use crate::{get_dbus_system, get_dbus_system_blocking, RUNTIME};
+use futures_util::stream::StreamExt;
+use std::sync::mpsc::{channel, Receiver, Sender, TryRecvError};
 
 use super::active_connection::NetworkActiveConnection;
 use super::device::NetworkDevice;
 use super::NETWORK_MANAGER_BUS;
+
+/// Signals that can be emitted by this resource
+#[derive(Debug)]
+enum Signal {
+    PropertyStrengthChanged(u8),
+}
 
 #[derive(GodotClass)]
 #[class(no_init, base=Resource)]
@@ -21,6 +29,7 @@ pub struct NetworkAccessPoint {
     base: Base<Resource>,
 
     conn: Option<zbus::blocking::Connection>,
+    rx: Receiver<Signal>,
     path: String,
 
     /// The DBus path of the [NetworkAccessPoint]
@@ -121,16 +130,32 @@ impl NetworkAccessPoint {
     #[constant]
     const NM_802_11_MODE_AP: u32 = 3;
 
+    /// Emitted whenever the connection strength changes
+    #[signal]
+    fn strength_changed(strength: u8);
+
     /// Create a new [NetworkAccessPoint] with the given DBus path
     pub fn from_path(path: GString) -> Gd<Self> {
         Gd::from_init_fn(|base| {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Create a channel to communicate with the service
+            let (tx, rx) = channel();
+
+            // Spawn a task using the shared tokio runtime to listen for signals
+            let dbus_path = path.to_string();
+            RUNTIME.spawn(async move {
+                if let Err(e) = run(dbus_path, tx).await {
+                    log::error!("Failed to run AccessPoint task: ${e:?}");
+                }
+            });
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
                 conn,
+                rx,
                 path: path.clone().into(),
                 dbus_path: path,
                 ssid: Default::default(),
@@ -377,6 +402,64 @@ impl NetworkAccessPoint {
         proxy.last_seen().unwrap_or_default()
     }
 
-    /// Dispatches signals
-    pub fn process(&mut self) {}
+    /// Process signals and emit them as Godot signals.
+    pub fn process(&mut self) {
+        // Drain all messages from the channel to process them
+        loop {
+            let signal = match self.rx.try_recv() {
+                Ok(value) => value,
+                Err(e) => match e {
+                    TryRecvError::Empty => break,
+                    TryRecvError::Disconnected => {
+                        log::error!("Backend thread is not running!");
+                        return;
+                    }
+                },
+            };
+            self.process_signal(signal);
+        }
+    }
+
+    /// Process and dispatch the given signal
+    fn process_signal(&mut self, signal: Signal) {
+        match signal {
+            Signal::PropertyStrengthChanged(value) => {
+                self.base_mut()
+                    .emit_signal("strength_changed", &[value.to_variant()]);
+            }
+        }
+    }
+}
+
+/// Runs NetworkAccessPoint tasks in Tokio to listen for DBus signals and send them
+/// over the given channel so they can be processed during each engine frame.
+async fn run(path: String, tx: Sender<Signal>) -> Result<(), RunError> {
+    log::debug!("Spawning access point task for {path}");
+    // Establish a connection to the system bus
+    let conn = get_dbus_system().await?;
+
+    // Get a proxy instance to the device
+    let connection = AccessPointProxy::builder(&conn).path(path)?.build().await?;
+
+    // Spawn a task to listen for property changes
+    let mut state_changed = connection.receive_strength_changed().await;
+    let signals_tx = tx.clone();
+    RUNTIME.spawn(async move {
+        loop {
+            tokio::select! {
+                signal = state_changed.next() => {
+                    let Some(signal) = signal else {
+                        break;
+                    };
+                    let value = signal.get().await.unwrap_or_default();
+                    let signal = Signal::PropertyStrengthChanged(value);
+                    if signals_tx.send(signal).is_err() {
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    Ok(())
 }
