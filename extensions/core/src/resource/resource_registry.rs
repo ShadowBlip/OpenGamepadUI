@@ -1,4 +1,7 @@
-use godot::prelude::*;
+use godot::{classes::ResourceLoader, prelude::*};
+
+/// Path to the main [ResourceRegistry] instance
+const RESOURCE_REGISTRY: &str = "res://core/systems/resource/resource_registry.tres";
 
 /// Class for registering [Resource] objects with a [method process] method that will get executed every frame by a [ResourceProcessor].
 ///
@@ -16,7 +19,7 @@ use godot::prelude::*;
 #[class(init, base=Resource)]
 pub struct ResourceRegistry {
     base: Base<Resource>,
-    resources: Array<Gd<Resource>>,
+    resources: Array<Gd<RefCounted>>,
     child_nodes: Array<Gd<Node>>,
 }
 
@@ -27,9 +30,19 @@ impl ResourceRegistry {
     #[signal]
     fn child_removed(child: Gd<Node>);
 
+    /// Gets the main [ResourceRegistry] instance
+    #[func]
+    pub fn get_registry() -> Option<Gd<Self>> {
+        let mut resource_loader = ResourceLoader::singleton();
+        let resource = resource_loader.load(RESOURCE_REGISTRY)?;
+        let registry: Gd<Self> = resource.cast();
+        Some(registry)
+    }
+
     /// Register the given resource with the registry. The given resource will have its [method process] method called every frame by a [ResourceProcessor] in the scene tree.
     #[func]
-    pub fn register(&mut self, resource: Gd<Resource>) {
+    pub fn register(&mut self, resource: Gd<RefCounted>) {
+        log::trace!("Registering resource: {resource}");
         if !resource.has_method("process") {
             log::error!(
                 "Tried to register resource for processing, but resource has no process method: {resource}"
@@ -37,20 +50,29 @@ impl ResourceRegistry {
             return;
         }
         if self.resources.contains(&resource) {
+            log::trace!("Resource already registered: {resource}");
             return;
         }
         self.resources.push(&resource);
+        log::trace!("Registered resources: {}", self.resources);
     }
 
     /// Unregister the given resource from the registry.
     #[func]
-    pub fn unregister(&mut self, resource: Gd<Resource>) {
+    pub fn unregister(&mut self, resource: Gd<RefCounted>) {
+        log::trace!("Unregistering resource: {resource}");
+        if !self.resources.contains(&resource) {
+            log::warn!("Resource is not registered: {resource}");
+            return;
+        }
         self.resources.erase(&resource);
+        log::trace!("Registered resources: {}", self.resources);
     }
 
     /// Calls the `process()` method on all registered [Resource] objects. This should be called from a [Node] in the scene tree like the [ResourceProcessor].
     #[func]
     pub fn process(&mut self, delta: f64) {
+        // Call process on each registered resource
         for mut resource in self.resources.iter_shared() {
             resource.call("process", &[delta.to_variant()]);
         }

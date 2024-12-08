@@ -161,13 +161,11 @@ func trim_sd_card() -> Error:
 	return ERR_SCRIPT_FAILED
 
 
-func _execute_in_thread(path: String, args: Array = []) -> Array:
+func _execute_in_thread(path: String, args: Array[String] = []) -> Array:
 	block_operations = true
-	var thread_options := SharedThread.Option.NONE
-	var thread := SharedThread.new(thread_options)
-	thread.start()
-	var cmd := Command.new(path, args, thread)
-	var code := await cmd.execute() as int
-	thread.stop()
+	var cmd := Command.create(path, args)
+	if cmd.execute() != OK:
+		return ["", -1]
+	var code := await cmd.finished as int
 	block_operations = false
 	return [cmd.stdout, code]

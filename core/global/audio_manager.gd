@@ -18,9 +18,6 @@ enum VOLUME {
 ## Limit the maximum volume to 200%
 const volume_limit := "2.0"
 
-## Thread to run audio changes on
-var thread := load("res://core/systems/threading/thread_pool.tres")
-
 ## Current volume
 var current_volume := await _get_current_volume()
 var _muted := false
@@ -29,7 +26,6 @@ var _current_output := ""
 
 
 func _init() -> void:
-	thread.start()
 	current_volume = await _get_current_volume()
 	_output_devices = await _get_output_devices()
 
@@ -80,8 +76,11 @@ func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
 			suffix = "%+"
 		
 	var percent := value * 100
-	var args := ["set-volume", "--limit", volume_limit, "@DEFAULT_AUDIO_SINK@", str(percent) + suffix]
-	var code := await thread.exec(OS.execute.bind("wpctl", args)) as int
+	var args: Array[String] = ["set-volume", "--limit", volume_limit, "@DEFAULT_AUDIO_SINK@", str(percent) + suffix]
+	var cmd := Command.create("wpctl", args)
+	cmd.timeout = 5.0
+	cmd.execute()
+	var code := await cmd.finished as int
 	
 	return code
 
@@ -90,7 +89,10 @@ func set_volume(value: float, type: VOLUME = VOLUME.ABSOLUTE) -> int:
 func toggle_mute() -> int:
 	_muted = !_muted
 	volume_mute_toggled.emit()
-	var code := await thread.exec(OS.execute.bind("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])) as int
+	var cmd := Command.create("wpctl", ["set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
+	cmd.timeout = 5.0
+	cmd.execute()
+	var code := await cmd.finished as int
 	return code
 
 
@@ -116,7 +118,11 @@ func set_output_device(device: String) -> int:
 	var i := devices.find(device)
 	var device_id := ids[i]
 
-	return await thread.exec(OS.execute.bind("wpctl", ["set-default", device_id]))
+	var cmd := Command.create("wpctl", ["set-default", device_id])
+	cmd.timeout = 5.0
+	cmd.execute()
+
+	return await cmd.finished as int
 
 
 ## Returns the currently set output device
@@ -135,16 +141,16 @@ func get_current_volume() -> float:
 
 ## Fetch the volume for the current output device
 func _get_current_volume() -> float:
-	var output := []
-	var code := await thread.exec(OS.execute.bind("wpctl", ["get-volume", "@DEFAULT_AUDIO_SINK@"], output)) as int
-	if code != 0:
-		return -1
-	if output.size() == 0:
+	var cmd := Command.create("wpctl", ["get-volume", "@DEFAULT_AUDIO_SINK@"])
+	cmd.timeout = 5.0
+	cmd.execute()
+	var code := await cmd.finished as int
+	if code != OK:
 		return -1
 
 	# Parse the output of wpctl
 	# Example: Volume: 0.52
-	var text := output[0] as String
+	var text := cmd.stdout
 	var parts := text.split(" ")
 	if parts.size() < 2:
 		return -1
@@ -178,28 +184,26 @@ func _get_output_devices() -> PackedStringArray:
 
 # Inspects the given wirepipe object
 func _wpctl_inspect(id: String) -> PackedStringArray:
-	var out := PackedStringArray()
-	var output := []
-	var code := await thread.exec(OS.execute.bind("wpctl", ["inspect", id], output)) as int
-	if code != 0:
-		return out
-	if output.size() == 0:
-		return out
-	var text := output[0] as String
-	return text.split("\n")
+	var cmd := Command.create("wpctl", ["inspect", id])
+	cmd.timeout = 5.0
+	cmd.execute()
+	var code := await cmd.finished as int
+	if code != OK:
+		return PackedStringArray()
+	return cmd.stdout.split("\n")
 
 
 # Returns an array of discovered Wirepipe object IDs
 func _get_wpctl_object_ids() -> PackedStringArray:
 	var ids := PackedStringArray()
 
-	var output := []
-	var code := await thread.exec(OS.execute.bind("wpctl", ["status"], output)) as int
-	if code != 0:
+	var cmd := Command.create("wpctl", ["status"])
+	cmd.timeout = 5.0
+	cmd.execute()
+	var code := await cmd.finished as int
+	if code != OK:
 		return ids
-	if output.size() == 0:
-		return ids
-	var text := output[0] as String
+	var text := cmd.stdout
 	var parts := text.split(" ")
 	if parts.size() < 2:
 		return ids

@@ -1,12 +1,8 @@
 extends PanelContainer
 
-const thread := preload("res://core/systems/threading/thread_pool.tres")
-
 var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-var battery_capacity := -1
 var logger := Log.get_logger("ContextBar")
 
-@onready var battery: String = Battery.find_battery_path()
 @onready var time_label: Label = $%TimeLabel
 
 
