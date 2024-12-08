@@ -1,9 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://bkhrcemal7uxo"]
+[gd_scene load_steps=13 format=3 uid="uid://bkhrcemal7uxo"]
 
 [ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_701dj"]
 [ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_gyi80"]
+[ext_resource type="Shader" path="res://assets/shaders/highlight_shine.gdshader" id="5_0n631"]
+[ext_resource type="Shader" path="res://assets/shaders/god_rays.gdshader" id="7_8n7dp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygsnb"]
 corner_radius_top_left = 26
@@ -20,6 +22,37 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1bdvx"]
+resource_local_to_scene = true
+shader = ExtResource("5_0n631")
+shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Width = 0.075
+shader_parameter/Brightness = 0.81
+shader_parameter/Rotation_deg = 35.0
+shader_parameter/Distortion = 1.67
+shader_parameter/Speed = 0.31
+shader_parameter/Position = 0.0
+shader_parameter/Position_Min = 0.25
+shader_parameter/Position_Max = 0.5
+shader_parameter/Alpha = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1nde2"]
+resource_local_to_scene = true
+shader = ExtResource("7_8n7dp")
+shader_parameter/angle = 0.0
+shader_parameter/position = 0.0
+shader_parameter/spread = 1.0
+shader_parameter/cutoff = -1.0
+shader_parameter/falloff = 1.0
+shader_parameter/edge_fade = 0.904
+shader_parameter/speed = 20.0
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.3
+shader_parameter/color = Color(0.960784, 0.937255, 1, 0.117647)
+shader_parameter/hdr = false
+shader_parameter/seed = 5.96
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_st1t5"]
 resource_local_to_scene = true
@@ -63,8 +96,8 @@ on_signal = "highlighted"
 [node name="PanelContainer" type="PanelContainer" parent="."]
 clip_children = 1
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 200.0
+offset_bottom = 300.0
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_ygsnb")
 
@@ -94,6 +127,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_gtppc")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/TextureRect/NameMargin/NamePanel"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
@@ -119,6 +153,20 @@ grow_vertical = 0
 theme_override_styles/fill = SubResource("StyleBoxFlat_up8ek")
 value = 50.0
 rounded = true
+
+[node name="ShineShader" type="ColorRect" parent="PanelContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_1bdvx")
+layout_mode = 2
+mouse_filter = 2
+
+[node name="GodRaysShader" type="ColorRect" parent="PanelContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_1nde2")
+layout_mode = 2
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 show_behind_parent = true
