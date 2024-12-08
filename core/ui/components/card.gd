@@ -43,6 +43,8 @@ var logger := Log.get_logger("GameCard")
 @onready var name_label := $%NameLabel
 @onready var progress := $%ProgressBar as ProgressBar
 @onready var tap_timer := $%TapTimer as Timer
+@onready var shine_rect := $%ShineShader as ColorRect
+@onready var god_rays_rect := $%GodRaysShader as ColorRect
 
 
 # Called when the node enters the scene tree for the first time.
@@ -98,10 +100,62 @@ func set_library_item(item: LibraryItem, free_on_remove: bool = true) -> void:
 
 func _on_focus() -> void:
 	highlighted.emit()
+	_shader_godrays_fade_in()
+	_shader_shine_fade_in()
+
+
+func _shader_godrays_fade_in() -> void:
+	var tween := create_tween()
+	var shader := god_rays_rect.material as ShaderMaterial
+	var final_color := Color(0.961, 0.937, 1.0, 0.2)
+	var start_color := Color(0.961, 0.937, 1.0, 0.0)
+	shader.set_shader_parameter("color", start_color)
+	god_rays_rect.visible = true
+	var on_tween := func(value: Color):
+		shader.set_shader_parameter("color", value)
+	tween.tween_method(on_tween, start_color, final_color, 0.5)
+
+
+func _shader_shine_fade_in() -> void:
+	var tween := create_tween()
+	var shader := shine_rect.material as ShaderMaterial
+	var final_alpha := 0.02
+	var start_alpha := 0.0
+	shader.set_shader_parameter("Alpha", start_alpha)
+	shine_rect.visible = true
+	var on_tween := func(value: float):
+		shader.set_shader_parameter("Alpha", value)
+	tween.tween_method(on_tween, start_alpha, final_alpha, 0.8)
 
 
 func _on_unfocus() -> void:
 	unhighlighted.emit()
+	_shader_godrays_fade_out()
+	_shader_shine_fade_out()
+
+
+func _shader_godrays_fade_out() -> void:
+	var tween := create_tween()
+	var shader := god_rays_rect.material as ShaderMaterial
+	var start_color := Color(0.961, 0.937, 1.0, 0.2)
+	var final_color := Color(0.961, 0.937, 1.0, 0.0)
+	shader.set_shader_parameter("color", start_color)
+	var on_tween := func(value: Color):
+		shader.set_shader_parameter("color", value)
+	tween.tween_method(on_tween, start_color, final_color, 0.5)
+	tween.tween_property(god_rays_rect, "visible", false, 0.0)
+
+
+func _shader_shine_fade_out() -> void:
+	var tween := create_tween()
+	var shader := shine_rect.material as ShaderMaterial
+	var start_alpha := 0.02
+	var final_alpha := 0.0
+	shader.set_shader_parameter("Alpha", start_alpha)
+	var on_tween := func(value: float):
+		shader.set_shader_parameter("Alpha", value)
+	tween.tween_method(on_tween, start_alpha, final_alpha, 0.1)
+	tween.tween_property(shine_rect, "visible", false, 0.0)
 
 
 func _gui_input(event: InputEvent) -> void:

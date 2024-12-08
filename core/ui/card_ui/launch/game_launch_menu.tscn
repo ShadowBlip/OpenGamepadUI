@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bcdk1lj6enq3l"]
+[gd_scene load_steps=22 format=3 uid="uid://bcdk1lj6enq3l"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_oae7b"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_4ja2v"]
 [ext_resource type="Texture2D" uid="uid://bec6fhiswf6ve" path="res://assets/ui/icons/gamepad-bold.svg" id="5_ewj68"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_ch3qu"]
+[ext_resource type="Shader" path="res://assets/shaders/god_rays.gdshader" id="10_l1dl8"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="14_3h1st"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="15_f3ktw"]
@@ -36,6 +37,22 @@ tracks/0/keys = {
 _data = {
 "fade_in": SubResource("Animation_ou6f5")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f0qty"]
+shader = ExtResource("10_l1dl8")
+shader_parameter/angle = 0.06
+shader_parameter/position = -0.1
+shader_parameter/spread = 0.674
+shader_parameter/cutoff = 0.1
+shader_parameter/falloff = 0.896
+shader_parameter/edge_fade = 0.15
+shader_parameter/speed = 6.995
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.184
+shader_parameter/color = Color(0.888, 0.885, 1, 0.173)
+shader_parameter/hdr = true
+shader_parameter/seed = 1.505
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7fb8y"]
 bg_color = Color(1, 0.47451, 0.776471, 1)
@@ -108,6 +125,15 @@ unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_yfglc")
 }
+
+[node name="GodRaysShader" type="ColorRect" parent="VBoxContainer/BannerTexture"]
+material = SubResource("ShaderMaterial_f0qty")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2
