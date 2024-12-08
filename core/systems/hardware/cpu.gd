@@ -99,8 +99,8 @@ func _get_property(prop_path: String) -> String:
 
 ## Provides info on the GPU vendor, model, and capabilities.
 func _get_lscpu_info() -> PackedStringArray:
-	var cmd := CommandSync.new("lscpu")
-	if cmd.execute() != OK:
+	var cmd := Command.create("lscpu", [])
+	if cmd.execute_blocking() != OK:
 		return []
 	return cmd.stdout.split("\n")
 
@@ -111,4 +111,3 @@ func _to_string() -> String:
 		+ ") Model: (" + str(model) \
 		+ ") Core count: (" + str(core_count) \
 		+ ")>"
-

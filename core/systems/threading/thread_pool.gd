@@ -25,6 +25,7 @@ var logger := Log.get_logger("ThreadPool", Log.LEVEL.INFO)
 
 ## A queued task to run in the thread pool
 class Task extends RefCounted:
+	var task_name: String
 	var method: Callable
 	var ret: Variant
 
@@ -75,10 +76,14 @@ func is_running() -> bool:
 ## method and awaits it to be called during the process loop. You should await 
 ## this method if your method returns something. 
 ## E.g. [code]var result = await thread_pool.exec(myfund.bind("myarg"))[/code]
-func exec(method: Callable) -> Variant:
+func exec(method: Callable, name: String = "") -> Variant:
 	if size == 0:
 		return method.call()
 	var task := Task.new()
+	if name.is_empty():
+		task.task_name = str(method)
+	else:
+		task.task_name = name
 	task.method = method
 	mutex.lock()
 	queue.append(task)
@@ -108,7 +113,7 @@ func _process(id: int) -> void:
 		var task := queue.pop_front() as Task
 		mutex.unlock()
 		
-		logger.debug("Processing task in thread " + str(id))
+		logger.debug("Processing task", task.task_name, "in thread " + str(id))
 		_async_call(task)
 
 

@@ -26,10 +26,12 @@ func _on_volume_changed(value: float) -> void:
 	level_indicator.value = value * 100
 	timer.start()
 	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
-	xwayland.set_notification(overlay_window_id, 1)
+	if xwayland:
+		xwayland.set_notification(overlay_window_id, 1)
 
 
 func _on_timeout() -> void:
 	visible = false
 	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
-	xwayland.set_notification(overlay_window_id, 0)
+	if xwayland:
+		xwayland.set_notification(overlay_window_id, 0)
