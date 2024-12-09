@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="12_2pwjc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bxm1k"]
+resource_local_to_scene = true
 shader = ExtResource("3_oe8pc")
 shader_parameter/blur_amount = 1.587
 shader_parameter/mix_amount = 0.402
@@ -38,13 +39,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_0vc46")
 
-[node name="BlurRect" type="TextureRect" parent="."]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2
+
+[node name="BlurRect" type="TextureRect" parent="BackBufferCopy"]
+unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.501961)
 material = SubResource("ShaderMaterial_bxm1k")
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 1080.0
+offset_bottom = 600.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture1D_nu0jx")

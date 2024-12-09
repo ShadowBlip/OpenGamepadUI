@@ -27,6 +27,8 @@ func _on_state_entered(_from: State) -> void:
 	for child in container.get_children():
 		if not child is CardButton:
 			continue
+		if child.name == "RefreshButton":
+			continue
 		container.remove_child(child)
 		child.queue_free()
 
