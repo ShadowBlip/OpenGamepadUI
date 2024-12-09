@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dsgrw1grwef4m"]
+[gd_scene load_steps=24 format=3 uid="uid://dsgrw1grwef4m"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/settings/general_settings_menu.gd" id="1_if7xt"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_b5gbi"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="9_sq2rc"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_06mt3"]
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="10_b386h"]
+[ext_resource type="PackedScene" uid="uid://bk5ld0h1jgd2t" path="res://core/ui/components/card_button_setting.tscn" id="12_3b8j5"]
 [ext_resource type="Theme" uid="uid://ddqvfbno2i1n4" path="res://assets/themes/card_ui-darksoul.tres" id="12_m1lrx"]
 [ext_resource type="Theme" uid="uid://de64j20kxm1k1" path="res://assets/themes/card_ui-water-vapor.tres" id="13_2j54j"]
 [ext_resource type="Theme" uid="uid://cw7auu2ayqnp8" path="res://assets/themes/card_ui-mountain.tres" id="14_wt0wj"]
@@ -93,20 +94,19 @@ text = "Automatic Updates"
 separator_visible = false
 description = "Automatically download and apply updates in the background when they are available"
 
-[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("7_qenel")]
+[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("12_3b8j5")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Check for Updates"
-uppercase = false
+text = "Check for updates"
+button_text = "Check for updates"
+disabled = false
 
-[node name="UpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("7_qenel")]
+[node name="UpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("12_3b8j5")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(158, 0)
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Install Update"
-uppercase = false
+text = "Install Updates"
+button_text = "Update"
+disabled = false
 
 [node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2

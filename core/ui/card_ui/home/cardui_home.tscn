@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://o70x5igrlq30"]
+[gd_scene load_steps=20 format=3 uid="uid://o70x5igrlq30"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/home/cardui_home.gd" id="1_a4a3j"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_d1wwx"]
@@ -9,12 +9,29 @@
 [ext_resource type="Resource" uid="uid://e7bbebwf7guj" path="res://assets/state/states/main_menu.tres" id="5_gbh30"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="10_mmfgs"]
 [ext_resource type="PackedScene" uid="uid://rosd00fxjrs8" path="res://core/ui/components/library_banner.tscn" id="11_16gcd"]
+[ext_resource type="Shader" path="res://assets/shaders/god_rays.gdshader" id="11_r5mwe"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="12_h5dxg"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="12_m30ge"]
 [ext_resource type="PackedScene" uid="uid://crsu0vpicq0vh" path="res://core/ui/components/library_deck.tscn" id="13_rxwf5"]
 [ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="14_8pw3l"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="14_wdgux"]
 [ext_resource type="Resource" uid="uid://boq501bigx8kl" path="res://assets/state/states/library.tres" id="16_6odlo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bjg8e"]
+shader = ExtResource("11_r5mwe")
+shader_parameter/angle = 0.06
+shader_parameter/position = -0.1
+shader_parameter/spread = 0.674
+shader_parameter/cutoff = 0.1
+shader_parameter/falloff = 0.896
+shader_parameter/edge_fade = 0.15
+shader_parameter/speed = 6.995
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.184
+shader_parameter/color = Color(0.888, 0.885, 1, 0.173)
+shader_parameter/hdr = true
+shader_parameter/seed = 1.505
 
 [sub_resource type="Animation" id="Animation_638a6"]
 resource_name = "fade_in"
@@ -87,6 +104,15 @@ stretch_mode = 6
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
+
+[node name="GodRaysShader" type="ColorRect" parent="VBoxContainer/BannerTexture"]
+material = SubResource("ShaderMaterial_bjg8e")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 layout_mode = 2

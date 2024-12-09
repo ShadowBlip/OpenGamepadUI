@@ -12,7 +12,7 @@ var logger := Log.get_logger("PowerMenu")
 @onready var shutdown_button := $%ShutdownButton
 @onready var exit_button := $%ExitButton
 @onready var cancel_button := $%CancelButton
-@onready var blur := $BlurRect
+@onready var blur := $%BlurRect
 
 
 # Called when the node enters the scene tree for the first time.
@@ -28,6 +28,16 @@ func _ready() -> void:
 	blur.material.set_shader_parameter("blur_amount", 1.587)
 	blur.material.set_shader_parameter("mix_amount", 0.402)
 	blur.material.set_shader_parameter("color_over", Color(0, 0, 0, 1))
+
+	var on_visible_changed := func():
+		set_process(visible)
+	visibility_changed.connect(set_process)
+
+
+func _process(_delta: float) -> void:
+	# Keep the blur rect in the correct position
+	blur.position = self.position
+	blur.size = self.size
 
 
 func _on_state_entered(_from: State) -> void:
