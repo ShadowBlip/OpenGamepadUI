@@ -80,7 +80,8 @@ func _apply_quirks(launch_item: LibraryLaunchItem) -> void:
 		
 	# If the desktop shortcut is for Steam, add the '-silent' argument so it
 	# doesn't launch into the Steam interface
-	var args := PackedStringArray(["-gamepadui", "-steamos3", "-steampal", "-steamdeck", "-silent"])
+	#var args := PackedStringArray(["-gamepadui", "-steamos3", "-steampal", "-steamdeck", "-silent"])
+	var args := PackedStringArray(["-silent"])
 	args.append_array(launch_item.args)
 	launch_item.args = args
 

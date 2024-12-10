@@ -27,15 +27,16 @@ func is_available() -> bool:
 # Applies additional blacklists depending on if we're launching a steam app
 func _apply_quirks(app: LibraryLaunchItem) -> PackedStringArray:
 	var args := PackedStringArray()
-	# Only block device access if this is a Steam app
-	if app.command != "steam":
-		return args
-	
-	# Block any hidraw devices
-	var devices := DirAccess.get_files_at("/dev")
-	for dev in devices:
-		if not dev.begins_with("hidraw"):
-			continue
-		var path := "/".join(["/dev", dev])
-		args.append_array(["--bind", "/dev/null", path])
 	return args
+#	# Only block device access if this is a Steam app
+#	if app.command != "steam":
+#		return args
+#	
+#	# Block any hidraw devices
+#	var devices := DirAccess.get_files_at("/dev")
+#	for dev in devices:
+#		if not dev.begins_with("hidraw"):
+#			continue
+#		var path := "/".join(["/dev", dev])
+#		args.append_array(["--bind", "/dev/null", path])
+#	return args

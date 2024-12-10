@@ -156,6 +156,7 @@ func update() -> void:
 			update_wayland_app()
 
 
+## Tries to discover if the launched app is an X11 or Wayland application
 func discover_app_type() -> APP_TYPE:
 	# Update all the windows
 	self.window_ids = get_all_window_ids()
@@ -231,6 +232,7 @@ func update_xwayland_app() -> void:
 		if id > 0 and window_id != id:
 			logger.trace("Setting window ID " + str(id) + " for " + launch_item.name)
 			window_id = id
+			has_valid_window = true
 	else:
 		has_valid_window = true
 
@@ -294,7 +296,8 @@ func get_window_title(win_id: int) -> String:
 	var xwayland := gamescope.get_xwayland_by_name(display)
 	if not xwayland:
 		return ""
-	return xwayland.get_window_name(win_id)
+	var title := xwayland.get_window_name(win_id)
+	return title
 
 
 ## Attempt to discover the window ID from the PID of the given application
@@ -322,6 +325,9 @@ func get_all_window_ids() -> PackedInt32Array:
 	# processes
 	var all_windows := xwayland.get_all_windows(xwayland.root_window_id)
 	for window_id in all_windows:
+		if xwayland.has_app_id(window_id) and xwayland.get_app_id(window_id) == self.app_id:
+			window_ids.append(window_id)
+			continue
 		var window_pids := xwayland.get_pids_for_window(window_id)
 		for window_pid in window_pids:
 			if window_pid in pids:
@@ -466,6 +472,11 @@ func needs_window_id() -> bool:
 	if window_id <= 0:
 		logger.trace(launch_item.name + " has a bad window ID: " + str(window_id))
 		return true
+	# If this is a Steam app and the current window id is a Steam window, don't
+	# consider this a valid window id. TODO: We might not need this since we also
+	# check this in _discover_window_id()
+	if is_steam_app() and is_steam_window(window_id):
+		return true
 	var focusable_windows := xwayland_primary.focusable_windows
 	if not window_id in focusable_windows:
 		logger.trace(str(window_id) + " is not in the list of focusable windows")
@@ -521,6 +532,11 @@ func _discover_window_id() -> int:
 	var focusable := xwayland_primary.focusable_windows
 	for window in possible_windows:
 		if window in focusable:
+			# If this is a steam app, don't consider any Steam windows as valid
+			# discovered window ids for this app.
+			if is_steam_app() and is_steam_window(window):
+				logger.debug("Window", window, "is a Steam window")
+				continue
 			return window
 
 	return -1
@@ -539,6 +555,25 @@ func is_steam_app() -> bool:
 				set_meta("steam_app_id", steam_app_id.to_int())
 			return true
 	set_meta("is_steam_app", false)
+	return false
+
+
+## Returns true if the given window id is detected as a Steam window
+func is_steam_window(window_id: int) -> bool:
+	var xwayland := gamescope.get_xwayland_by_name(display)
+	if not xwayland:
+		return false
+
+	var window_pids := xwayland.get_pids_for_window(window_id)
+	for window_pid in window_pids:
+		var pid_info := Reaper.get_pid_status(window_pid)
+		if not "Name" in pid_info:
+			continue
+		var process_name := pid_info["Name"] as String
+		if process_name in ["steam", "steamwebhelper"]:
+			return true
+		print(process_name)
+
 	return false
 
 
