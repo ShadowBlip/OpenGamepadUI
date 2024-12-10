@@ -5,6 +5,7 @@ var gamescope := load("res://core/systems/gamescope/gamescope.tres") as Gamescop
 var library_manager := load("res://core/global/library_manager.tres") as LibraryManager
 var settings_manager := load("res://core/global/settings_manager.tres") as SettingsManager
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
+var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -22,6 +23,7 @@ var power_state := preload("res://assets/state/states/power_menu.tres") as State
 var PID: int = OS.get_process_id()
 var _xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 var _xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+var _xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
 var overlay_window_id := 0
 
 @onready var panel := $%Panel as Panel
@@ -60,6 +62,28 @@ func _setup(window_id: int) -> void:
 	# Sets ourselves to the input focus
 	if _xwayland_primary.set_input_focus(window_id, 1) != OK:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+	# Override reserved app ids for any newly created windows
+	# Listen for window created/destroyed events
+	var on_window_created := func(window_id: int):
+		logger.debug("Window created:", window_id)
+		var try := 0
+		while try < 10:
+			if _xwayland_game.has_app_id(window_id):
+				break
+			try += 1
+			await get_tree().create_timer(0.2).timeout # wait a beat
+		var app_id := _xwayland_game.get_app_id(window_id)
+		if app_id == GamescopeInstance.OVERLAY_GAME_ID:
+			# Find the current running app and use that app id
+			var running := launch_manager.get_running()
+			running.reverse()
+			for app in running:
+				_xwayland_game.set_app_id(window_id, app.app_id)
+				return
+			logger.warn("Unable to find a running app to tie Steam to")
+			_xwayland_game.set_app_id(window_id, 7769)
+	_xwayland_game.window_created.connect(on_window_created)
 
 
 # Called when the node enters the scene tree for the first time.

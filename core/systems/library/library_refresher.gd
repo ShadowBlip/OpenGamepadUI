@@ -26,7 +26,6 @@ func _on_ready() -> void:
 
 ## Fires when the given signal is emitted.
 func _on_signal():
-	print("LOADING LIBRARY!")
 	library_manager.reload_library()
 
 

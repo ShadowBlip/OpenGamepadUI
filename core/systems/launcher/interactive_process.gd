@@ -48,7 +48,7 @@ func start() -> int:
 
 
 func _on_line_written(line: String):
-	logger.info("PTY:", line)
+	logger.trace("PTY:", line)
 	self.lines_mutex.lock()
 	self.lines_buffer.append(line)
 	self.lines_mutex.unlock()

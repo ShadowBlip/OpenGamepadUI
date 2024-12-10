@@ -115,6 +115,7 @@ func set_running_app(app: RunningApp):
 	# Connect to app signals to allow switching between app windows
 	var on_windows_changed := func(_from: PackedInt32Array, to: PackedInt32Array):
 		var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
+		var xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
 		var focusable_windows := xwayland.get_focusable_windows()
 		# Add a button to switch to a given window
 		for window_id in to:
@@ -123,9 +124,9 @@ func set_running_app(app: RunningApp):
 				continue
 			if not window_id in focusable_windows:
 				continue
-			var window_name := app.get_window_title(window_id)
+			var window_name := xwayland_game.get_window_name(window_id)
 			if window_name == "":
-				continue
+				window_name = "Window (" + str(window_id) + ")"
 			var button := button_scene.instantiate() as CardButton
 			button.text = window_name
 			button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
