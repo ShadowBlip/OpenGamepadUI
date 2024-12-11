@@ -110,13 +110,13 @@ func _ready() -> void:
 
 		# Update the slider values with the current values
 		gpu_freq_min_slider.visible = gpu_freq_enable.button_pressed
-		gpu_freq_min_slider.min_value = card.clock_limit_mhz_min
-		gpu_freq_min_slider.max_value = card.clock_limit_mhz_max
-		gpu_freq_min_slider.value = card.clock_value_mhz_min
+		gpu_freq_min_slider.min_value = round(card.clock_limit_mhz_min)
+		gpu_freq_min_slider.max_value = round(card.clock_limit_mhz_max)
+		gpu_freq_min_slider.value = round(card.clock_value_mhz_min)
 		gpu_freq_max_slider.visible = gpu_freq_enable.button_pressed
-		gpu_freq_max_slider.min_value = card.clock_limit_mhz_min
-		gpu_freq_max_slider.max_value = card.clock_limit_mhz_max
-		gpu_freq_max_slider.value = card.clock_value_mhz_max
+		gpu_freq_max_slider.min_value = round(card.clock_limit_mhz_min)
+		gpu_freq_max_slider.max_value = round(card.clock_limit_mhz_max)
+		gpu_freq_max_slider.value = round(card.clock_value_mhz_max)
 
 	gpu_freq_enable.pressed.connect(on_manual_freq)
 
@@ -245,19 +245,19 @@ func _setup_interface() -> void:
 		if card:
 			gpu_label.visible = true
 			tdp_slider.visible = true
-			tdp_slider.min_value = hardware_manager.gpu.tdp_min
-			tdp_slider.max_value = hardware_manager.gpu.tdp_max
+			tdp_slider.min_value = round(hardware_manager.gpu.tdp_min)
+			tdp_slider.max_value = round(hardware_manager.gpu.tdp_max)
 			tdp_boost_slider.visible = true
-			tdp_boost_slider.max_value = hardware_manager.gpu.max_boost
+			tdp_boost_slider.max_value = round(hardware_manager.gpu.max_boost)
 			gpu_freq_enable.visible = true
 			power_profile_dropdown.visible = true
 			if card.clock_limit_mhz_min > 0 and card.clock_limit_mhz_max > 0:
 				gpu_freq_min_slider.visible = card.manual_clock
-				gpu_freq_min_slider.min_value = card.clock_limit_mhz_min
-				gpu_freq_min_slider.max_value = card.clock_limit_mhz_max
+				gpu_freq_min_slider.min_value = round(card.clock_limit_mhz_min)
+				gpu_freq_min_slider.max_value = round(card.clock_limit_mhz_max)
 				gpu_freq_max_slider.visible = card.manual_clock
-				gpu_freq_max_slider.min_value = card.clock_limit_mhz_min
-				gpu_freq_max_slider.max_value = card.clock_limit_mhz_max
+				gpu_freq_max_slider.min_value = round(card.clock_limit_mhz_min)
+				gpu_freq_max_slider.max_value = round(card.clock_limit_mhz_max)
 			if card.thermal_throttle_limit_c > 0:
 				gpu_temp_slider.visible = true
 

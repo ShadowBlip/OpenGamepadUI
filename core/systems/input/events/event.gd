@@ -740,3 +740,266 @@ static func capability_from_keycode(scancode: int) -> String:
 			return "Keyboard:KeyF24"
 		_:
 			return ""
+
+
+## Convert the given key scancode into a target keyboard event string
+static func virtual_key_from_keycode(scancode: int) -> String:
+	match scancode:
+		KEY_ESCAPE:
+			return "KEY_ESC"
+		KEY_1:
+			return "KEY_1"
+		KEY_2:
+			return "KEY_2"
+		KEY_3:
+			return "KEY_3"
+		KEY_4:
+			return "KEY_4"
+		KEY_5:
+			return "KEY_5"
+		KEY_6:
+			return "KEY_6"
+		KEY_7:
+			return "KEY_7"
+		KEY_8:
+			return "KEY_8"
+		KEY_9:
+			return "KEY_9"
+		KEY_0:
+			return "KEY_0"
+		KEY_MINUS:
+			return "KEY_MINUS"
+		KEY_EQUAL:
+			return "KEY_EQUAL"
+		KEY_BACKSPACE:
+			return "KEY_BACKSPACE"
+		KEY_TAB:
+			return "KEY_TAB"
+		KEY_Q:
+			return "KEY_Q"
+		KEY_W:
+			return "KEY_W"
+		KEY_E:
+			return "KEY_E"
+		KEY_R:
+			return "KEY_R"
+		KEY_T:
+			return "KEY_T"
+		KEY_Y:
+			return "KEY_Y"
+		KEY_U:
+			return "KEY_U"
+		KEY_I:
+			return "KEY_I"
+		KEY_O:
+			return "KEY_O"
+		KEY_P:
+			return "KEY_P"
+		KEY_BRACELEFT:
+			return "KEY_LEFTBRACE"
+		KEY_BRACERIGHT:
+			return "KEY_RIGHTBRACE"
+		KEY_ENTER:
+			return "KEY_ENTER"
+		KEY_CTRL:
+			return "KEY_LEFTCTRL"
+		KEY_A:
+			return "KEY_A"
+		KEY_S:
+			return "KEY_S"
+		KEY_D:
+			return "KEY_D"
+		KEY_F:
+			return "KEY_F"
+		KEY_G:
+			return "KEY_G"
+		KEY_H:
+			return "KEY_H"
+		KEY_J:
+			return "KEY_J"
+		KEY_K:
+			return "KEY_K"
+		KEY_L:
+			return "KEY_L"
+		KEY_SEMICOLON:
+			return "KEY_SEMICOLON"
+		KEY_APOSTROPHE:
+			return "KEY_APOSTROPHE"
+		KEY_ASCIITILDE:
+			return "KEY_GRAVE"
+		KEY_SHIFT:
+			return "KEY_LEFTSHIFT"
+		KEY_BACKSLASH:
+			return "KEY_BACKSLASH"
+		KEY_Z:
+			return "KEY_Z"
+		KEY_X:
+			return "KEY_X"
+		KEY_C:
+			return "KEY_C"
+		KEY_V:
+			return "KEY_V"
+		KEY_B:
+			return "KEY_B"
+		KEY_N:
+			return "KEY_N"
+		KEY_M:
+			return "KEY_M"
+		KEY_COMMA:
+			return "KEY_COMMA"
+		KEY_PERIOD:
+			return "KEY_DOT"
+		KEY_SLASH:
+			return "KEY_SLASH"
+		KEY_SHIFT:
+			return "KEY_SHIFT"
+		KEY_ASTERISK:
+			return "KEY_ASTERISK"
+		KEY_ALT:
+			return "KEY_ALT"
+		KEY_SPACE:
+			return "KEY_SPACE"
+		KEY_CAPSLOCK:
+			return "KEY_CAPSLOCK"
+		KEY_F1:
+			return "KEY_F1"
+		KEY_F2:
+			return "KEY_F2"
+		KEY_F3:
+			return "KEY_F3"
+		KEY_F4:
+			return "KEY_F4"
+		KEY_F5:
+			return "KEY_F5"
+		KEY_F6:
+			return "KEY_F6"
+		KEY_F7:
+			return "KEY_F7"
+		KEY_F8:
+			return "KEY_F8"
+		KEY_F9:
+			return "KEY_F9"
+		KEY_F10:
+			return "KEY_F10"
+		KEY_NUMLOCK:
+			return "KEY_NUMLOCK"
+		KEY_SCROLLLOCK:
+			return "KEY_SCROLLLOCK"
+		KEY_KP_7:
+			return "KEY_KP7"
+		KEY_KP_8:
+			return "KEY_KP8"
+		KEY_KP_9:
+			return "KEY_KP9"
+		KEY_KP_SUBTRACT:
+			return "KEY_KPMINUS"
+		KEY_KP_4:
+			return "KEY_KP4"
+		KEY_KP_5:
+			return "KEY_KP5"
+		KEY_KP_6:
+			return "KEY_KP6"
+		KEY_KP_ADD:
+			return "KEY_KPPLUS"
+		KEY_KP_1:
+			return "KEY_KP1"
+		KEY_KP_2:
+			return "KEY_KP2"
+		KEY_KP_3:
+			return "KEY_KP3"
+		KEY_KP_0:
+			return "KEY_KP0"
+		KEY_KP_PERIOD:
+			return "KEY_KPDOT"
+		KEY_F11:
+			return "KEY_F11"
+		KEY_F12:
+			return "KEY_F12"
+		KEY_JIS_KANA:
+			return "KEY_KATAKANAHIRAGANA"
+		KEY_KP_ENTER:
+			return "KEY_KPENTER"
+		KEY_CTRL:
+			return "KEY_CTRL"
+		KEY_KP_DIVIDE:
+			return "KEY_KPSLASH"
+		KEY_SYSREQ:
+			return "KEY_SYSREQ"
+		KEY_ALT:
+			return "KEY_ALT"
+		KEY_HOME:
+			return "KEY_HOME"
+		KEY_UP:
+			return "KEY_UP"
+		KEY_PAGEUP:
+			return "KEY_PAGEUP"
+		KEY_LEFT:
+			return "KEY_LEFT"
+		KEY_RIGHT:
+			return "KEY_RIGHT"
+		KEY_END:
+			return "KEY_END"
+		KEY_DOWN:
+			return "KEY_DOWN"
+		KEY_PAGEDOWN:
+			return "KEY_PAGEDOWN"
+		KEY_INSERT:
+			return "KEY_INSERT"
+		KEY_DELETE:
+			return "KEY_DELETE"
+		KEY_VOLUMEMUTE:
+			return "KEY_VOLUMEMUTE"
+		KEY_VOLUMEDOWN:
+			return "KEY_VOLUMEDOWN"
+		KEY_VOLUMEUP:
+			return "KEY_VOLUMEUP"
+		KEY_PAUSE:
+			return "KEY_PAUSE"
+		KEY_YEN:
+			return "KEY_YEN"
+		KEY_META:
+			return "KEY_LEFTMETA"
+		KEY_STOP:
+			return "KEY_STOP"
+		KEY_HELP:
+			return "KEY_HELP"
+		KEY_BACK:
+			return "KEY_BACK"
+		KEY_FORWARD:
+			return "KEY_FORWARD"
+		KEY_MEDIANEXT:
+			return "KEY_MEDIANEXT"
+		KEY_MEDIAPLAY:
+			return "KEY_MEDIAPLAY"
+		KEY_MEDIAPREVIOUS:
+			return "KEY_MEDIAPREVIOUS"
+		KEY_MEDIASTOP:
+			return "KEY_MEDIASTOP"
+		KEY_REFRESH:
+			return "KEY_REFRESH"
+		KEY_F13:
+			return "KEY_F13"
+		KEY_F14:
+			return "KEY_F14"
+		KEY_F15:
+			return "KEY_F15"
+		KEY_F16:
+			return "KEY_F16"
+		KEY_F17:
+			return "KEY_F17"
+		KEY_F18:
+			return "KEY_F18"
+		KEY_F19:
+			return "KEY_F19"
+		KEY_F20:
+			return "KEY_F20"
+		KEY_F21:
+			return "KEY_F21"
+		KEY_F22:
+			return "KEY_F22"
+		KEY_F23:
+			return "KEY_F23"
+		KEY_F24:
+			return "KEY_F24"
+		_:
+			return ""

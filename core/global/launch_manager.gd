@@ -52,6 +52,7 @@ var _sandbox := Sandbox.get_sandbox()
 var _current_app: RunningApp
 var _pid_to_windows := {}
 var _running: Array[RunningApp] = []
+var _running_background: Array[RunningApp] = []
 var _apps_by_pid: Dictionary = {}
 var _apps_by_name: Dictionary = {}
 var _data_dir: String = ProjectSettings.get_setting("OpenGamepadUI/data/directory")
@@ -135,7 +136,7 @@ func _init() -> void:
 		var on_window_created := func(window_id: int):
 			logger.debug("Window created:", window_id)
 			self.check_running.call_deferred()
-		_xwayland_ogui.window_created.connect(on_window_created)
+		_xwayland_game.window_created.connect(on_window_created)
 
 	# Whenever the in-game state is entered, set the gamepad profile
 	var on_game_state_entered := func(_from: State):
@@ -191,9 +192,39 @@ func _save_persist_data():
 	file.flush()
 
 
-## Launches the given command on the target xwayland display. Returns a PID
-## of the launched process.
+## Launches the given application and switches to the in-game state. Returns a
+## [RunningApp] instance of the application.
 func launch(app: LibraryLaunchItem) -> RunningApp:
+	var running_app := _launch(app)
+
+	# Add the running app to our list and change to the IN_GAME state
+	_add_running(running_app)
+	state_machine.set_state([in_game_state])
+	_update_recent_apps(app)
+
+	return running_app
+
+
+## Launches the given app in the background. Returns the [RunningApp] instance.
+func launch_in_background(app: LibraryLaunchItem) -> RunningApp:
+	# Start the application
+	var running_app := _launch(app)
+
+	# Listen for app state changes
+	var on_app_state_changed := func(from: RunningApp.STATE, to: RunningApp.STATE):
+		if to != RunningApp.STATE.STOPPED:
+			return
+		logger.debug("Cleaning up pid {0}".format([running_app.pid]))
+		_running_background.erase(running_app)
+		logger.debug("Currently running background apps:", _running_background)
+	running_app.state_changed.connect(on_app_state_changed)
+	_running_background.append(running_app)
+	
+	return running_app
+
+
+## Launches the given app
+func _launch(app: LibraryLaunchItem) -> RunningApp:
 	var cmd: String = app.command
 	var args: PackedStringArray = app.args
 	var env: Dictionary = app.env.duplicate()
@@ -220,7 +251,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	if user_env and user_env is Dictionary and not (user_env as Dictionary).is_empty():
 		env = user_env
 	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
-	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, true) as bool
+	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, false) as bool
 
 	# Set the display environment if one was not set.
 	if not "DISPLAY" in env:
@@ -254,12 +285,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	# Launch the application process
 	var running_app := RunningApp.spawn(app, env, exec, command)
 	logger.info("Launched with PID: {0}".format([running_app.pid]))
-
-	# Add the running app to our list and change to the IN_GAME state
-	_add_running(running_app)
-	state_machine.set_state([in_game_state])
-	_update_recent_apps(app)
-
+	
 	return running_app
 
 
@@ -304,6 +330,11 @@ func _update_recent_apps(app: LibraryLaunchItem) -> void:
 ## Returns a list of currently running apps
 func get_running() -> Array[RunningApp]:
 	return _running.duplicate()
+
+
+## Returns a list of currently running background apps
+func get_running_background() -> Array[RunningApp]:
+	return _running_background.duplicate()
 
 
 ## Returns the running app from the given window id
@@ -462,6 +493,8 @@ func check_running() -> void:
 
 	# Update the state of all running apps
 	for app in _running:
+		app.update()
+	for app in _running_background:
 		app.update()
 
 
