@@ -58,5 +58,4 @@ autowrap_mode = 3
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2

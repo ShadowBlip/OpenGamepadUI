@@ -7,6 +7,8 @@ use crate::dbus::DBusVariant;
 use crate::get_dbus_system_blocking;
 
 use super::dbus_device::DBusDevice;
+use super::keyboard_device::KeyboardDevice;
+use super::mouse_device::MouseDevice;
 use super::INPUT_PLUMBER_BUS;
 
 #[derive(GodotClass)]
@@ -49,10 +51,6 @@ pub struct CompositeDevice {
     #[allow(dead_code)]
     #[var(get = get_source_device_paths)]
     source_device_paths: PackedStringArray,
-    /// Get the target device types for the composite device (e.g. "keyboard", "mouse", etc.)
-    #[allow(dead_code)]
-    #[var(get = get_target_devices, set = set_target_devices)]
-    target_devices: PackedStringArray,
 }
 
 #[godot_api]
@@ -75,7 +73,6 @@ impl CompositeDevice {
                 target_capabilities: Default::default(),
                 dbus_devices: Default::default(),
                 source_device_paths: Default::default(),
-                target_devices: Default::default(),
                 base,
             }
         })
@@ -229,23 +226,42 @@ impl CompositeDevice {
         PackedStringArray::from(values.as_slice())
     }
 
-    /// Get the target device types for the composite device (e.g. "keyboard", "mouse", etc.)
+    /// Get the target devices for the composite device
     #[func]
-    pub fn get_target_devices(&self) -> PackedStringArray {
+    pub fn get_target_devices(&self) -> Array<Variant> {
         let Some(proxy) = self.get_proxy() else {
-            return PackedStringArray::new();
+            return array![];
         };
-        let values: Vec<GString> = proxy
-            .target_devices()
-            .ok()
-            .unwrap_or_default()
-            .into_iter()
-            .map(GString::from)
-            .collect();
-        PackedStringArray::from(values.as_slice())
+        let values = proxy.target_devices().ok().unwrap_or_default();
+        let mut target_devices = array![];
+
+        // Build the Godot object based on the path
+        for path in values {
+            if path.contains("gamepad") {
+                // TODO
+                continue;
+            }
+            if path.contains("keyboard") {
+                let device = KeyboardDevice::new(path.as_str());
+                target_devices.push(&device.to_variant());
+                continue;
+            }
+            if path.contains("mouse") {
+                let device = MouseDevice::new(path.as_str());
+                target_devices.push(&device.to_variant());
+                continue;
+            }
+            if path.contains("dbus") {
+                let device = DBusDevice::new(path.as_str());
+                target_devices.push(&device.to_variant());
+                continue;
+            }
+        }
+
+        target_devices
     }
 
-    /// get the target device types for the composite device (e.g. "keyboard", "mouse", etc.)
+    /// set the target device types for the composite device (e.g. "keyboard", "mouse", etc.)
     #[func]
     pub fn set_target_devices(&self, devices: PackedStringArray) {
         let Some(proxy) = self.get_proxy() else {

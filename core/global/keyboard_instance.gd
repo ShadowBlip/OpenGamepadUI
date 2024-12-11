@@ -58,4 +58,3 @@ func set_context(ctx: KeyboardContext) -> void:
 	context = ctx
 	context_changed.emit(ctx)
 	ctx.entered.emit()
-

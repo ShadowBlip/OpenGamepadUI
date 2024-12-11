@@ -11,10 +11,13 @@ signal closed
 const key_scene := preload("res://core/ui/components/button.tscn")
 
 var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
+var inputplumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
+var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
 ## State machine to use to switch menu states in response to input events.
 var popup_state_machine := (
 	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 )
+var in_game_state := load("res://assets/state/states/in_game.tres") as State
 var osk_state := preload("res://assets/state/states/osk.tres") as State
 var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
@@ -28,6 +31,7 @@ enum MODE_SHIFT {
 @export var layout: KeyboardLayout
 @export var instance: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
 var _mode_shift: MODE_SHIFT = MODE_SHIFT.OFF
+var _last_input_focus: int
 var logger := Log.get_logger("OSK")
 
 @onready var rows_container := $%KeyboardRowsContainer
@@ -193,12 +197,33 @@ func open() -> void:
 		timer.timeout.connect(on_timeout, CONNECT_ONE_SHOT)
 		timer.start()
 
+	# If the keyboard is configured to send input to the game, set gamescope accordinly
+	if instance.context.type == instance.context.TYPE.X11:
+		var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+		var pid := OS.get_process_id()
+		var ogui_windows := xwayland.get_windows_for_pid(pid)
+		if not ogui_windows.is_empty():
+			var overlay_window_id := ogui_windows[0]
+			xwayland.set_input_focus(overlay_window_id, 2)
+
 	opened.emit()
 
 
 # Closes the OSK
 func close() -> void:
 	popup_state_machine.remove_state(osk_state)
+
+	# If the keyboard is configured to send input to the game, set gamescope accordinly
+	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
+	var pid := OS.get_process_id()
+	var ogui_windows := xwayland.get_windows_for_pid(pid)
+	if not ogui_windows.is_empty():
+		var overlay_window_id := ogui_windows[0]
+		if state_machine.current_state() == in_game_state:
+			xwayland.set_input_focus(overlay_window_id, 0)
+		else:
+			xwayland.set_input_focus(overlay_window_id, 1)
+
 	closed.emit()
 
 
@@ -279,8 +304,6 @@ func _on_key_pressed(key: KeyboardKeyConfig) -> void:
 
 # Handle sending key presses to an xwayland instance
 func _handle_x11(key: KeyboardKeyConfig) -> void:
-	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
-
 	# Check for shift or capslock inputs 
 	if key.input.keycode in [KEY_SHIFT, KEY_CAPSLOCK]:
 		_handle_native_action(key)
@@ -291,15 +314,32 @@ func _handle_x11(key: KeyboardKeyConfig) -> void:
 	if _mode_shift > MODE_SHIFT.OFF and key.mode_shift_input:
 		event = key.mode_shift_input
 
+	# Convert the keycode into an InputPlumber virtual keyboard event
+	var virtual_key := InputPlumberEvent.virtual_key_from_keycode(event.keycode)
+
+	# Find an InputPlumber keyboard to send the event
+	var virtual_keyboard: KeyboardDevice
+	for device in inputplumber.get_composite_devices():
+		var target_devices := device.get_target_devices()
+		for target_device in target_devices:
+			if target_device is KeyboardDevice:
+				virtual_keyboard = target_device
+				break
+
+	# Check to see if a keyboard was found
+	if not virtual_keyboard:
+		logger.error("Unable to find virtual InputPlumber keyboard to send input")
+		return
+
 	# Send a shift keypress if mode shifted
 	if _mode_shift > MODE_SHIFT.OFF:
-		xwayland.send_key(KEY_SHIFT, true) # TODO: Fix this
+		virtual_keyboard.send_key("KEY_LEFTSHIFT", true)
 
-	xwayland.send_key(event.keycode, true)
-	xwayland.send_key(event.keycode, false)
+	virtual_keyboard.send_key(virtual_key, true)
+	virtual_keyboard.send_key(virtual_key, false)
 
 	if _mode_shift > MODE_SHIFT.OFF:
-		xwayland.send_key(KEY_SHIFT, false)
+		virtual_keyboard.send_key("KEY_LEFTSHIFT", false)
 
 	# Reset the modeshift if this was a one shot
 	if _mode_shift == MODE_SHIFT.ONE_SHOT:

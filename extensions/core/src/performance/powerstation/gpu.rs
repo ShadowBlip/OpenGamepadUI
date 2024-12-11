@@ -31,7 +31,7 @@ impl Gpu {
                 cards: HashMap::new(),
             };
 
-            // Discover any CPU cores
+            // Discover any GPU cards
             let mut cards = HashMap::new();
             if let Some(gpu) = instance.get_proxy() {
                 if let Ok(card_paths) = gpu.enumerate_cards() {
@@ -92,12 +92,12 @@ impl Gpu {
 
     #[func]
     pub fn get_cards(&self) -> Array<Gd<GpuCard>> {
-        let mut cores = array![];
+        let mut cards = array![];
         for core in self.cards.values() {
-            cores.push(core);
+            cards.push(core);
         }
 
-        cores
+        cards
     }
 
     /// Dispatches signals

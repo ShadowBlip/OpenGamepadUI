@@ -198,6 +198,7 @@ func remove_library_launch_item(library_id: String, name: String) -> void:
 
 ## Loads the launch items from the given library
 func load_library(library_id: String) -> void:
+	logger.debug("Loading library from provider:", library_id)
 	var library := get_library_by_id(library_id)
 	var items: Array = await library.get_library_launch_items()
 	for i in items:
