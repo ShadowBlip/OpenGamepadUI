@@ -239,7 +239,6 @@ assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
 .PHONY: deploy
 deploy: dist-archive ## Build and deploy to a remote device
 	scp dist/opengamepadui.tar.gz $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH)
-	cd $(SSH_MOUNT_PATH) #&& tar xvfz opengamepadui.tar.gz
 	ssh -t $(SSH_USER)@$(SSH_HOST) tar xvfz "$(SSH_DATA_PATH)/opengamepadui.tar.gz"
 
 

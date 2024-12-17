@@ -164,7 +164,7 @@ func _setup_overlay_mode(args: PackedStringArray) -> void:
 		_start_underlay_process(args, log_path)
 
 	# Remove unneeded/conflicting elements from default menues
-	var remove_list: PackedStringArray = ["PerformanceCard", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
+	var remove_list: PackedStringArray = ["PerformanceCard", "KeyboardButton", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
 	_remove_children(remove_list, quick_bar_menu)
 	var settings_remove_list: PackedStringArray = ["LibraryButton", "NetworkButton", "BluetoothButton", "AudioButton"]
 	_remove_children(settings_remove_list, settings_menu)

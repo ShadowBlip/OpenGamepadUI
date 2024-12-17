@@ -52,14 +52,7 @@
 			},
 			"target_events": [
 				{
-					"gamepad": {
-						"button": "Guide"
-					}
-				},
-				{
-					"gamepad": {
-						"button": "North"
-					}
+					"dbus": "ui_osk"
 				}
 			]
 		},

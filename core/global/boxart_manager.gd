@@ -55,6 +55,9 @@ func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
 
 
 func _get_boxart_sync(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
+	if not item:
+		return null
+
 	if _providers.is_empty():
 		logger.error("No box art providers were found!")
 		return null

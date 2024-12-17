@@ -311,7 +311,7 @@ func _send_steam_chord(event: InputEvent) -> bool:
 	# Steam On-Screen Keyboard
 	elif event.is_action_pressed("ogui_osk_ov"):
 			logger.debug("Trigger Steam OSK")
-			chord.append("Gamepad:Button:East")
+			chord.append("Gamepad:Button:North")
 
 	# Steam Video-Capture
 	elif event.is_action_pressed("ogui_vc_ov"):

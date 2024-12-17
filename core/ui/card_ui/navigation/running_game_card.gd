@@ -102,6 +102,9 @@ func set_running_app(app: RunningApp):
 		return
 	running_app = app
 	var item := library_manager.get_app_by_name(app.launch_item.name)
+	if not item:
+		logger.warn("App", app.app_id, "has no library item.")
+		return
 	game_logo.visible = false
 	game_label.visible = false
 	var logo := await boxart_manager.get_boxart(item, BoxArtProvider.LAYOUT.LOGO) as Texture2D
