@@ -1,8 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://lfm3ps837gy5"]
+[gd_scene load_steps=13 format=3 uid="uid://lfm3ps837gy5"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="3_1whtm"]
-[ext_resource type="Shader" path="res://assets/shaders/simple_blur.gdshader" id="3_oe8pc"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="4_4rhfl"]
 [ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="5_kxixy"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="5_u1rly"]
@@ -12,19 +11,6 @@
 [ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="10_6ywv6"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="10_y3iyf"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="12_2pwjc"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bxm1k"]
-resource_local_to_scene = true
-shader = ExtResource("3_oe8pc")
-shader_parameter/blur_amount = 1.587
-shader_parameter/mix_amount = 0.402
-shader_parameter/color_over = null
-
-[sub_resource type="Gradient" id="Gradient_bc3c0"]
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_nu0jx"]
-gradient = SubResource("Gradient_bc3c0")
 
 [sub_resource type="Resource" id="Resource_fafkw"]
 script = ExtResource("10_6ywv6")
@@ -39,21 +25,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_0vc46")
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
-copy_mode = 2
-
-[node name="BlurRect" type="TextureRect" parent="BackBufferCopy"]
-unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.501961)
-material = SubResource("ShaderMaterial_bxm1k")
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 1080.0
-offset_bottom = 600.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("GradientTexture1D_nu0jx")
+color = Color(0, 0, 0, 0.686275)
 
 [node name="InputWatcher" parent="." instance=ExtResource("3_1whtm")]
 stop_propagation = true
