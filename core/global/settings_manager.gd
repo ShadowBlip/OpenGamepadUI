@@ -39,6 +39,8 @@ func get_value(section: String, key: String, default: Variant = null) -> Variant
 
 
 func get_library_value(item: LibraryItem, key: String, default: Variant = null) -> Variant:
+	if not item:
+		return null
 	var section := ".".join(["game", item.name.to_lower()])
 	return get_value(section, key, default)
 

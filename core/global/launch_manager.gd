@@ -554,6 +554,8 @@ func _get_name_from_steam_library() -> String:
 	var library_data := _parse_data_from_steam_file(steam_library_path + "/steamapps/libraryfolders.vdf")
 	for library in library_data:
 		logger.debug("Library: " + library + " : " + str(library_data[library]))
+		if not "apps" in library_data[library]:
+			continue
 		if library_data[library]["apps"].has(str(missing_app_id)):
 			var app_path : String = library_data[library]["path"] +"/steamapps/appmanifest_" + str(missing_app_id) + ".acf"
 			logger.debug("Found app ID in a steam library:" + app_path)
