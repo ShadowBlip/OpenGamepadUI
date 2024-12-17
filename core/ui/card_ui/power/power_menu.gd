@@ -23,10 +23,6 @@ func _ready() -> void:
 	exit_button.button_down.connect(_on_exit)
 	cancel_button.button_up.connect(_on_cancel)
 
-	var on_visible_changed := func():
-		set_process(visible)
-	visibility_changed.connect(set_process)
-
 
 func _on_state_entered(_from: State) -> void:
 	if focus_group:
