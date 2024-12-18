@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://hroo3ll4inrb"]
+[gd_scene load_steps=30 format=3 uid="uid://hroo3ll4inrb"]
 
 [ext_resource type="Script" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.gd" id="1_56jo7"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_6rvrx"]
@@ -29,7 +29,6 @@
 [ext_resource type="PackedScene" uid="uid://bjy50kdrebgre" path="res://core/ui/card_ui/quick_bar/notifications_card.tscn" id="19_pppbi"]
 [ext_resource type="PackedScene" uid="uid://dxaeufuk7ump2" path="res://core/ui/card_ui/quick_bar/quick_settings_card.tscn" id="20_17ks0"]
 [ext_resource type="PackedScene" uid="uid://dycb7m0oj13ly" path="res://core/ui/card_ui/quick_bar/performance_card.tscn" id="21_uw510"]
-[ext_resource type="PackedScene" uid="uid://v751ima8r8vg" path="res://core/ui/card_ui/quick_bar/power_tools_card.tscn" id="22_dtanu"]
 
 [node name="QuickBarMenu" type="Control" groups=["quick-bar"]]
 z_index = 20
@@ -235,7 +234,4 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="PerformanceCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("21_uw510")]
-layout_mode = 2
-
-[node name="PowerToolsCard" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Viewport" instance=ExtResource("22_dtanu")]
 layout_mode = 2

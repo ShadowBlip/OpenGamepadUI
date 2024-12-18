@@ -167,14 +167,17 @@ $(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
 	$(GODOT) --editor .
 
-.PHONY: clean
-clean: ## Remove build artifacts
-	rm -rf build
+.PHONY: purge 
+purge: clean ## Remove all build artifacts including engine extensions
 	rm -rf $(ROOTFS)
+	cd ./extensions && $(MAKE) clean
+
+.PHONY: clean
+clean: ## Remove Godot build artifacts
+	rm -rf build
 	rm -rf $(CACHE_DIR)
 	rm -rf dist
 	rm -rf $(IMPORT_DIR)
-	cd ./extensions && $(MAKE) clean
 
 .PHONY: run run-force
 run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope

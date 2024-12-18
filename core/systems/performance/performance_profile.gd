@@ -10,11 +10,12 @@ class_name PerformanceProfile
 @export var gpu_freq_max_current: float
 @export var gpu_freq_min_current: float
 @export var gpu_manual_enabled: bool
-@export var gpu_power_profile: int
+@export var gpu_power_profile: String
 @export var gpu_temp_current: float
 @export var tdp_boost_current: float
 @export var tdp_current: float
 @export var thermal_profile: int
+@export var advanced_mode: bool = false
 
 
 func _to_string() -> String:
@@ -25,8 +26,9 @@ func _to_string() -> String:
 		+ "gpu_freq_max_current: " + str(gpu_freq_max_current) +  ", " \
 		+ "gpu_freq_min_current: " + str(gpu_freq_min_current) +  ", " \
 		+ "gpu_manual_enabled: " + str(gpu_manual_enabled) +  ", " \
-		+ "gpu_power_profile: " + str(gpu_power_profile) +  ", " \
+		+ "gpu_power_profile: " + gpu_power_profile +  ", " \
 		+ "gpu_temp_current: " + str(gpu_temp_current) +  ", " \
 		+ "tdp_boost_current: " + str(tdp_boost_current) +  ", " \
 		+ "tdp_current: " + str(tdp_current) +  ", " \
-		+ "thermal_profile: " + str(thermal_profile) + ">"
+		+ "thermal_profile: " + str(thermal_profile) + ", " \
+		+ "advanced_mode:" + str(advanced_mode) + ">"
