@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://b2ruoxboq5k6e"]
-
-[ext_resource type="Script" path="res://core/systems/state/state.gd" id="1_3a3in"]
-
-[resource]
-script = ExtResource("1_3a3in")
-name = "powertools"
-data = null

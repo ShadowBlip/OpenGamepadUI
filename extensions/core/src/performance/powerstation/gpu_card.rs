@@ -107,6 +107,10 @@ pub struct GpuCard {
     boost: f64,
 
     #[allow(dead_code)]
+    #[var(get = get_power_profiles_available)]
+    power_profiles_available: PackedStringArray,
+
+    #[allow(dead_code)]
     #[var(get = get_power_profile, set = set_power_profile)]
     power_profile: GString,
 
@@ -142,28 +146,29 @@ impl GpuCard {
                 conn,
                 dbus_path: path.clone().into(),
                 rx,
-                connectors: HashMap::new(),
+                boost: Default::default(),
                 class: Default::default(),
                 class_id: Default::default(),
                 clock_limit_mhz_max: Default::default(),
                 clock_limit_mhz_min: Default::default(),
                 clock_value_mhz_max: Default::default(),
                 clock_value_mhz_min: Default::default(),
+                connectors: HashMap::new(),
                 device: Default::default(),
                 device_id: Default::default(),
                 manual_clock: Default::default(),
                 name: Default::default(),
                 path: Default::default(),
+                power_profile: Default::default(),
+                power_profiles_available: Default::default(),
                 revision_id: Default::default(),
                 subdevice: Default::default(),
                 subdevice_id: Default::default(),
                 subvendor_id: Default::default(),
-                vendor: Default::default(),
-                vendor_id: Default::default(),
-                boost: Default::default(),
-                power_profile: Default::default(),
                 tdp: Default::default(),
                 thermal_throttle_limit_c: Default::default(),
+                vendor: Default::default(),
+                vendor_id: Default::default(),
             };
 
             // Discover any connectors
@@ -292,6 +297,20 @@ impl GpuCard {
         proxy
             .set_thermal_throttle_limit_c(value)
             .unwrap_or_default()
+    }
+
+    #[func]
+    pub fn get_power_profiles_available(&self) -> PackedStringArray {
+        let Some(proxy) = self.get_tdp_proxy() else {
+            return Default::default();
+        };
+        let available = proxy.power_profiles_available().unwrap_or_default();
+        let mut result = PackedStringArray::new();
+        for profile in available.iter() {
+            let godot_profile = profile.to_godot();
+            result.push(&godot_profile);
+        }
+        result
     }
 
     #[func]

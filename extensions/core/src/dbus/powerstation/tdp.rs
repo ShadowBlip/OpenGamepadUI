@@ -34,6 +34,8 @@ trait TDP {
 
     /// PowerProfile property
     #[zbus(property)]
+    fn power_profiles_available(&self) -> zbus::Result<Vec<String>>;
+    #[zbus(property)]
     fn power_profile(&self) -> zbus::Result<String>;
     #[zbus(property)]
     fn set_power_profile(&self, value: &str) -> zbus::Result<()>;

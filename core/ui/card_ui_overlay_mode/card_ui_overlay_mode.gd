@@ -38,6 +38,27 @@ var underlay_window_id: int
 @onready var quick_bar_menu := $%QuickBarMenu
 @onready var settings_menu := $%SettingsMenu
 
+# Constants
+
+const remove_list: PackedStringArray = [
+	"KeyboardButton",
+	"NotifyButton",
+	"HelpButton",
+	"VolumeSlider",
+	"BrightnessSlider",
+	"PerGameToggle",
+	"MangoAppSlider",
+	"FramerateLimitSlider",
+	"RefreshRateSlider"
+	]
+
+const settings_remove_list: PackedStringArray = [
+	"LibraryButton",
+	"NetworkButton",
+	"BluetoothButton",
+	"AudioButton"
+	]
+
 # Logger
 var logger := Log.get_logger("Main", Log.LEVEL.INFO)
 
@@ -164,9 +185,8 @@ func _setup_overlay_mode(args: PackedStringArray) -> void:
 		_start_underlay_process(args, log_path)
 
 	# Remove unneeded/conflicting elements from default menues
-	var remove_list: PackedStringArray = ["PerformanceCard", "KeyboardButton", "NotifyButton", "HelpButton", "VolumeSlider", "BrightnessSlider", "PerGameToggle"]
+
 	_remove_children(remove_list, quick_bar_menu)
-	var settings_remove_list: PackedStringArray = ["LibraryButton", "NetworkButton", "BluetoothButton", "AudioButton"]
 	_remove_children(settings_remove_list, settings_menu)
 
 	# Setup inputplumber to receive guide presses.
