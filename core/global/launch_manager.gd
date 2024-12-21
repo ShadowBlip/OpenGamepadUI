@@ -29,6 +29,7 @@ class_name LaunchManager
 ##     launch_manager.stop(running_app)
 ##     [/codeblock]
 
+signal all_apps_stopped()
 signal app_launched(app: RunningApp)
 signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
@@ -468,6 +469,7 @@ func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: Ru
 		_xwayland_primary.remove_baselayer_window()
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
+		all_apps_stopped.emit()
 
 
 # Removes the given PID from our list of running apps

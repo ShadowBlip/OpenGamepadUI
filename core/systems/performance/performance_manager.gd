@@ -37,6 +37,7 @@ func _init() -> void:
 	# Listen for signals when the current app switches so we can update the profile
 	# accordingly.
 	_launch_manager.app_switched.connect(_on_app_switched)
+	_launch_manager.all_apps_stopped.connect(_on_all_apps_stopped)
 	
 	# Connect to battery state changes to switch between "docked" and "undocked"
 	# performance profiles.
@@ -278,6 +279,23 @@ func _on_battery_updated(battery: UPowerDevice) -> void:
 	var profile_path := get_profile_filename(profile_state, library_item)
 	profile_path = "/".join([USER_PROFILES, profile_path])
 	var profile := load_or_create_profile(profile_path, library_item)
+	current_profile = profile
+	profile_loaded.emit(profile)
+	apply_profile(profile)
+
+
+## Sets the default performance profile when all running apps have stopped
+func _on_all_apps_stopped() -> void:
+	logger.debug("Detected all apps stopped")
+
+	# Get the current profile state to see if we need to load the docked or
+	# undocked profile.
+	var profile_state := get_profile_state()
+
+	# Load the performance profile based on the running game
+	var profile_path := get_profile_filename(profile_state)
+	profile_path = "/".join([USER_PROFILES, profile_path])
+	var profile := load_or_create_profile(profile_path)
 	current_profile = profile
 	profile_loaded.emit(profile)
 	apply_profile(profile)
