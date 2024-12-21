@@ -25,6 +25,7 @@ var managed_states: Array[State] = [quick_bar_state, settings_state, gamepad_sta
 var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 var xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
 var overlay_window_id := 0
+var set_steam_overlay_focus := false
 
 # Process
 var PID: int = OS.get_process_id()
@@ -300,7 +301,8 @@ func _on_base_state_entered(_from: State) -> void:
 
 	# Manage overlay
 	xwayland_ogui.set_overlay(overlay_window_id, 0)
-	xwayland_ogui.set_overlay(underlay_window_id, 1)
+	if self.set_steam_overlay_focus:
+		xwayland_ogui.set_overlay(underlay_window_id, 1)
 
 
 ## Called when a the base state is exited.
@@ -315,8 +317,10 @@ func _on_base_state_exited(_to: State) -> void:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Manage overlay
+	self.set_steam_overlay_focus = xwayland_ogui.get_overlay(underlay_window_id) == 1
 	xwayland_ogui.set_overlay(overlay_window_id, 1)
-	xwayland_ogui.set_overlay(underlay_window_id, 0)
+	if self.set_steam_overlay_focus:
+		xwayland_ogui.set_overlay(underlay_window_id, 0)
 
 
 ## Verifies steam is still running by checking for the steam overlay, closes otherwise.
