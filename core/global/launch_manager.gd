@@ -61,7 +61,7 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
-var logger := Log.get_logger("LaunchManager", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
 
 
@@ -93,7 +93,7 @@ func _init() -> void:
 			_focused_app_id = to
 
 			# If OGUI was focused, set the global gamepad profile
-			if to in [gamescope.OVERLAY_GAME_ID, 0]:
+			if to in [gamescope.OVERLAY_GAME_ID, 0, 1]:
 				set_gamepad_profile("")
 				return
 
@@ -577,7 +577,7 @@ func _is_app_id_running(app_id) -> bool:
 
 # Identifies the running app from the given window_id. If none is found,
 # creates a new RunningApp instance.
-func _detect_running_app(_app_id: int) -> RunningApp:
+func _detect_running_app(app_id: int) -> RunningApp:
 	logger.debug("No known running app in focused window. Attempting to detect the running app.")
 	
 	# Get the currently focused window id
@@ -620,12 +620,12 @@ func _detect_running_app(_app_id: int) -> RunningApp:
 		return null
 
 	logger.debug("Found app name : " + app_name)
-	return _make_running_app_from_process(app_name, pid, window_id)
+	return _make_running_app_from_process(app_name, pid, window_id, app_id)
 
 
 # Creates a new RunningApp instance from a given name, PID, and window_id. Used
 # when an app launch is detcted that wasn't launched by an OGUI library.
-func _make_running_app_from_process(name: String, pid: int, window_id: int) -> RunningApp:
+func _make_running_app_from_process(name: String, pid: int, window_id: int, app_id: int) -> RunningApp:
 	logger.debug("Creating running app from process")
 
 	# Create a dummy LibraryLaunchItem to make our RunningApp.
@@ -646,6 +646,7 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int) -> R
 	if _xwayland_game:
 		display = _xwayland_game.name
 	var running_app: RunningApp = _make_running_app(launch_item, pid, display)
+	running_app.app_id = app_id
 	running_app.window_id = window_id
 	running_app.state = RunningApp.STATE.RUNNING
 	running_app.is_ogui_managed = false
