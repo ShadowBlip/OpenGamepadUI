@@ -6,6 +6,7 @@ var _performance_manager := load("res://core/systems/performance/performance_man
 var _power_station := load("res://core/systems/performance/power_station.tres") as PowerStationInstance
 var _profiles_available: PackedStringArray
 
+@onready var focus_group := $%FocusGroup as FocusGroup
 @onready var cpu_boost_button := $CPUBoostButton as Toggle
 @onready var cpu_cores_slider := $CPUCoresSlider as ValueSlider
 @onready var gpu_freq_enable := $GPUFreqButton as Toggle
@@ -238,8 +239,13 @@ func _setup_interface() -> void:
 	# Configure visibility for all components
 	wait_label.visible = false
 
-	var is_advanced := mode_toggle.button_pressed
-	
+	var is_advanced := false
+	if _current_profile:
+		is_advanced = _current_profile.advanced_mode
+	if mode_toggle.button_pressed != is_advanced:
+		mode_toggle.button_pressed = is_advanced
+		focus_group.current_focus = mode_toggle
+
 	# Configure CPU components
 	if _power_station.cpu:
 		var cpu := _power_station.cpu

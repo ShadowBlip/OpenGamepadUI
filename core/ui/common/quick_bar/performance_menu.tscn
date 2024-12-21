@@ -17,6 +17,7 @@ grow_horizontal = 2
 script = ExtResource("1_r31yj")
 
 [node name="FocusGroup" parent="." instance=ExtResource("2_my16i")]
+unique_name_in_owner = true
 focus_stack = ExtResource("3_hsr7n")
 
 [node name="ApplyTimer" type="Timer" parent="."]
