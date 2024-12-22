@@ -83,11 +83,6 @@ func _input(event: InputEvent) -> void:
 			return
 
 	var dbus_path := event.get_meta("dbus_path", "") as String
-	
-	# Don't process Godot events if InputPlumber is running
-	if input_plumber.is_running() and not InputManager.is_inputplumber_event(event):
-		logger.trace("Skipping Godot event while InputPlumber is running:", event)
-		return
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
 	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
