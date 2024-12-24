@@ -35,7 +35,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
 SYSEXT_VERSION_ID ?= 3.6.3
-SYSEXT_LIBIIO_VERSION ?= 0.26-1
+SYSEXT_LIBIIO_VERSION ?= 0.26-2
 SYSEXT_LIBSERIALPORT_VERSION ?= 0.1.2-1
 
 # Include any user defined settings
