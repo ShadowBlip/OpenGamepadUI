@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4d7d1n3gbok8"
-path="res://.godot/imported/ally_button_m1.svg-2209cf215426742e59419468852c7f76.ctex"
+uid="uid://cv3fxvf7gp6eo"
+path="res://.godot/imported/ayaneo_esc_button.svg-d262664ee239dfa89098127f928ad25f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/gamepad/rog-ally/ally_button_m1.svg"
-dest_files=["res://.godot/imported/ally_button_m1.svg-2209cf215426742e59419468852c7f76.ctex"]
+source_file="res://assets/images/gamepad/ayaneo-2021/ayaneo_esc_button.svg"
+dest_files=["res://.godot/imported/ayaneo_esc_button.svg-d262664ee239dfa89098127f928ad25f.ctex"]
 
 [params]
 

@@ -1,0 +1,76 @@
+[gd_resource type="Resource" script_class="InputIconMapping" load_steps=36 format=3 uid="uid://d0l3hnetd1dvt"]
+
+[ext_resource type="Texture2D" uid="uid://b1g6gko6yba0x" path="res://assets/images/gamepad/ayaneo-2021/diagram.svg" id="1_3qfjm"]
+[ext_resource type="Texture2D" uid="uid://di87v7xnlu4hd" path="res://assets/images/gamepad/xbox/xbox_dpad.svg" id="2_jboj0"]
+[ext_resource type="Texture2D" uid="uid://brqqse0hid6ki" path="res://assets/images/gamepad/xbox/xbox_dpad_down.svg" id="3_nsihk"]
+[ext_resource type="Texture2D" uid="uid://caqnkbu5b0u2q" path="res://assets/images/gamepad/xbox/xbox_dpad_left.svg" id="4_im6e6"]
+[ext_resource type="Texture2D" uid="uid://b5gektw3mgp1a" path="res://assets/images/gamepad/xbox/xbox_dpad_right.svg" id="5_efmvo"]
+[ext_resource type="Texture2D" uid="uid://cjwqn3wttist" path="res://assets/images/gamepad/xbox/xbox_dpad_up.svg" id="6_5oxfr"]
+[ext_resource type="Texture2D" uid="uid://dcucdnmw0q0ov" path="res://assets/images/gamepad/xbox/xbox_button_b.svg" id="7_vssv3"]
+[ext_resource type="Texture2D" uid="uid://k76qrt7x0s1s" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_home_button.svg" id="8_h5d8a"]
+[ext_resource type="Texture2D" uid="uid://dreauushxl8gy" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_kb_button.svg" id="9_pa0eo"]
+[ext_resource type="Texture2D" uid="uid://do8ip0e6vs5h5" path="res://assets/images/gamepad/generic/gyro.png" id="9_shhfc"]
+[ext_resource type="Texture2D" uid="uid://dtkhsxdekhwh5" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_lb_button.svg" id="9_wqu53"]
+[ext_resource type="Texture2D" uid="uid://dqx7njocf1aok" path="res://assets/images/gamepad/xbox/xbox_stick_l.svg" id="10_aqxi7"]
+[ext_resource type="Texture2D" uid="uid://ckqaven4xmk16" path="res://assets/images/gamepad/xbox/xbox_stick_l_press.svg" id="11_luyf3"]
+[ext_resource type="Texture2D" uid="uid://c1bfw2axbcg1q" path="res://assets/images/gamepad/xbox/xbox_stick_l_down.svg" id="12_uycnw"]
+[ext_resource type="Texture2D" uid="uid://c4iwtbyehtps2" path="res://assets/images/gamepad/xbox/xbox_stick_l_left.svg" id="13_pc1ai"]
+[ext_resource type="Texture2D" uid="uid://d4bfok8606fmv" path="res://assets/images/gamepad/xbox/xbox_stick_l_right.svg" id="14_d8q6v"]
+[ext_resource type="Texture2D" uid="uid://c7p0nhy4sh5wf" path="res://assets/images/gamepad/xbox/xbox_stick_l_up.svg" id="15_sw3j2"]
+[ext_resource type="Texture2D" uid="uid://ldqunqmfhe1k" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_lt_button.svg" id="16_7eiqv"]
+[ext_resource type="Texture2D" uid="uid://dmn1mk5yrkgb1" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_rb_button.svg" id="18_kr2d1"]
+[ext_resource type="Texture2D" uid="uid://0jg4cw548nty" path="res://assets/images/gamepad/xbox/xbox_button_y.svg" id="18_lu4ak"]
+[ext_resource type="Texture2D" uid="uid://bjq76f76quyry" path="res://assets/images/gamepad/xbox/xbox_stick_r.svg" id="19_1krml"]
+[ext_resource type="Texture2D" uid="uid://cqsxq30jn2l60" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_tm_button.svg" id="19_b4d78"]
+[ext_resource type="Texture2D" uid="uid://5q4tjwvf7b8a" path="res://assets/images/gamepad/xbox/xbox_stick_r_press.svg" id="20_evnn2"]
+[ext_resource type="Texture2D" uid="uid://cv3fxvf7gp6eo" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_esc_button.svg" id="20_nbvhp"]
+[ext_resource type="Texture2D" uid="uid://cu3ptt3kea56h" path="res://assets/images/gamepad/xbox/xbox_stick_r_down.svg" id="21_t1mjt"]
+[ext_resource type="Texture2D" uid="uid://s4x7rp50eub5" path="res://assets/images/gamepad/xbox/xbox_stick_r_left.svg" id="22_apdk5"]
+[ext_resource type="Texture2D" uid="uid://kfqb1dr0735v" path="res://assets/images/gamepad/xbox/xbox_stick_r_right.svg" id="23_t7yw8"]
+[ext_resource type="Texture2D" uid="uid://o0xrox1l5sae" path="res://assets/images/gamepad/xbox/xbox_stick_r_up.svg" id="24_i3a83"]
+[ext_resource type="Texture2D" uid="uid://dd80eosfhij2r" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_rt_button.svg" id="25_hldoa"]
+[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="26_b2hfu"]
+[ext_resource type="Texture2D" uid="uid://b5bwc8uicce4u" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_share_button.svg" id="27_3jpa4"]
+[ext_resource type="Texture2D" uid="uid://ba520a67lwoj4" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_win_button.svg" id="29_k0ri6"]
+[ext_resource type="Texture2D" uid="uid://cgrflee7ll75m" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_menu_button.svg" id="30_w35hb"]
+[ext_resource type="Texture2D" uid="uid://cl4d11t0kv11a" path="res://assets/images/gamepad/xbox/xbox_button_a.svg" id="32_b5n73"]
+[ext_resource type="Texture2D" uid="uid://cjnbox2d87ta7" path="res://assets/images/gamepad/xbox/xbox_button_x.svg" id="34_fhilq"]
+
+[resource]
+script = ExtResource("26_b2hfu")
+name = "Ayaneo 2021"
+device_names = PackedStringArray("AYANEO 2021")
+diagram = ExtResource("1_3qfjm")
+north = ExtResource("18_lu4ak")
+south = ExtResource("32_b5n73")
+east = ExtResource("7_vssv3")
+west = ExtResource("34_fhilq")
+guide = ExtResource("8_h5d8a")
+start = ExtResource("30_w35hb")
+select = ExtResource("27_3jpa4")
+screenshot = ExtResource("29_k0ri6")
+quickaccess = ExtResource("19_b4d78")
+quickaccess_2 = ExtResource("20_nbvhp")
+keyboard = ExtResource("9_pa0eo")
+dpad = ExtResource("2_jboj0")
+dpad_left = ExtResource("4_im6e6")
+dpad_right = ExtResource("5_efmvo")
+dpad_up = ExtResource("6_5oxfr")
+dpad_down = ExtResource("3_nsihk")
+left_shoulder = ExtResource("9_wqu53")
+left_trigger = ExtResource("16_7eiqv")
+right_shoulder = ExtResource("18_kr2d1")
+right_trigger = ExtResource("25_hldoa")
+left_stick = ExtResource("10_aqxi7")
+left_stick_left = ExtResource("13_pc1ai")
+left_stick_right = ExtResource("14_d8q6v")
+left_stick_up = ExtResource("15_sw3j2")
+left_stick_down = ExtResource("12_uycnw")
+left_stick_click = ExtResource("11_luyf3")
+right_stick = ExtResource("19_1krml")
+right_stick_left = ExtResource("22_apdk5")
+right_stick_right = ExtResource("23_t7yw8")
+right_stick_up = ExtResource("24_i3a83")
+right_stick_down = ExtResource("21_t1mjt")
+right_stick_click = ExtResource("20_evnn2")
+gyro = ExtResource("9_shhfc")

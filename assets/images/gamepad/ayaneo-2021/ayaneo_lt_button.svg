@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64mm"
+   height="64mm"
+   viewBox="0 0 64 64"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="ayaneo_lt_button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="true"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.5546627"
+     inkscape:cx="70.433284"
+     inkscape:cy="143.76109"
+     inkscape:window-width="2560"
+     inkscape:window-height="1374"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect9-1"
+       is_visible="true"
+       lpeversion="1.3"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false"
+       uniform="false" />
+    <inkscape:path-effect
+       effect="powerclip"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false"
+       message="" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path8-5"
+       clip-path="none"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0;fill-opacity:1;stroke-opacity:1"
+       d="M 1273.1624 326.35683 C 1273.6383 326.35683 1274.1146 326.33723 1274.668 326.29826 C 1275.775 326.2203 1277.9887 326.06437 1280.0623 325.64341 C 1282.1359 325.22245 1284.0688 324.53638 1285.5441 323.78413 C 1287.0194 323.03187 1288.037 322.21354 1288.7756 321.51 C 1289.5142 320.80647 1289.9738 320.21799 1290.3363 319.68595 C 1290.6988 319.1539 1290.9639 318.67845 1291.1783 318.27893 C 1291.3927 317.87942 1291.5566 317.55553 1291.7125 317.13262 C 1291.8684 316.70972 1292.0162 316.18768 1292.1789 315.46887 C 1292.3415 314.75005 1292.5188 313.83483 1292.7452 312.39325 C 1292.9716 310.95168 1293.2474 308.98391 1293.4005 307.55348 C 1293.5536 306.12304 1293.5842 305.22979 1293.5995 304.44968 C 1293.6149 303.66956 1293.615 303.00264 1293.615 302.33541 L 1273.1624 302.33541 L 1252.7098 302.33541 C 1252.7098 303.00264 1252.7099 303.66955 1252.7252 304.44968 C 1252.7406 305.22981 1252.7711 306.12303 1252.9243 307.55348 C 1253.0774 308.98392 1253.3531 310.95169 1253.5796 312.39325 C 1253.806 313.83482 1253.9832 314.75004 1254.1459 315.46887 C 1254.3086 316.18769 1254.4568 316.70971 1254.6127 317.13262 C 1254.7686 317.55554 1254.932 317.87941 1255.1464 318.27893 C 1255.3608 318.67846 1255.6259 319.15391 1255.9884 319.68595 C 1256.3509 320.21799 1256.811 320.80647 1257.5496 321.51 C 1258.2882 322.21354 1259.3053 323.03187 1260.7807 323.78413 C 1262.256 324.53638 1264.1893 325.22245 1266.2629 325.64341 C 1268.3365 326.06437 1270.5502 326.2203 1271.6572 326.29826 C 1272.2106 326.33723 1272.6864 326.35683 1273.1624 326.35683 z M 1279.6919 318.59028 L 1277.7331 318.59028 L 1277.7331 312.06077 L 1273.8155 312.06077 L 1273.8155 310.10196 L 1279.6919 310.10196 L 1279.6919 318.59028 z M 1273.8155 318.59028 L 1266.6333 318.59028 L 1266.6333 316.63147 L 1269.2448 316.63147 L 1269.2448 310.10196 L 1271.2036 310.10196 L 1271.2036 316.63147 L 1273.8155 316.63147 L 1273.8155 318.59028 z "
+       transform="matrix(-1.1734507,0,0,-1.1734507,1525.9934,400.86953)" />
+  </g>
+</svg>

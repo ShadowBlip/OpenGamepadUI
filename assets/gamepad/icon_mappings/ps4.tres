@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b1wo28cyd80ov" path="res://assets/images/gamepad/playstation/playstation_button_color_circle.svg" id="2_boi0e"]
 [ext_resource type="Texture2D" uid="uid://ua3iri55e4go" path="res://assets/images/gamepad/playstation/playstation_dpad.svg" id="2_ksv3d"]
 [ext_resource type="Texture2D" uid="uid://byblaf3dx4by6" path="res://assets/images/gamepad/playstation/playstation_dpad_down.svg" id="3_lbw7u"]
-[ext_resource type="Texture2D" uid="uid://b6qllts4hg3my" path="res://assets/images/gamepad/playstation/guide.svg" id="3_tihua"]
+[ext_resource type="Texture2D" uid="uid://ck2dvwiibyi00" path="res://assets/images/gamepad/playstation/guide.svg" id="3_tihua"]
 [ext_resource type="Texture2D" uid="uid://bmuqx6jxetdp1" path="res://assets/images/gamepad/playstation/playstation_dpad_left.svg" id="4_43xit"]
 [ext_resource type="Texture2D" uid="uid://2rjhdg632n1f" path="res://assets/images/gamepad/playstation/playstation_button_color_triangle.svg" id="4_t0rx5"]
 [ext_resource type="Texture2D" uid="uid://cxhc0rxkyqf2g" path="res://assets/images/gamepad/playstation/playstation_dpad_right.svg" id="5_bxvhl"]

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64mm"
+   height="64mm"
+   viewBox="0 0 64 64"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="ayaneo_menu_button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.6604907"
+     inkscape:cx="97.260406"
+     inkscape:cy="224.33128"
+     inkscape:window-width="2560"
+     inkscape:window-height="1374"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="powerclip"
+       id="path-effect14"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false"
+       message="" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path2-6-1-5"
+       clip-path="none"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.11736;stroke-opacity:1"
+       d="M 58.168023 24.135788 A 3.3405764 3.3405764 0 0 0 54.827455 27.476356 A 3.3405764 3.3405764 0 0 0 58.168023 30.816924 A 3.3405764 3.3405764 0 0 0 61.508591 27.476356 A 3.3405764 3.3405764 0 0 0 58.168023 24.135788 z M 56.609979 26.060012 L 59.725993 26.060012 L 59.725993 26.626521 L 56.609979 26.626521 L 56.609979 26.060012 z M 56.609979 27.193102 L 59.725993 27.193102 L 59.725993 27.75961 L 56.609979 27.75961 L 56.609979 27.193102 z M 56.609979 28.326118 L 59.725993 28.326118 L 59.725993 28.8927 L 56.609979 28.8927 L 56.609979 28.326118 z "
+       transform="matrix(7.0603676,0,0,7.0603676,-378.68751,-161.99306)" />
+  </g>
+</svg>

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://devahu3vo6pdj" path="res://assets/images/gamepad/playstation/PS5_Diagram_Simple.png" id="1_brns1"]
 [ext_resource type="Texture2D" uid="uid://do6nap60p4cs6" path="res://assets/images/gamepad/playstation/playstation5_touchpad_touch.svg" id="1_l1iq3"]
 [ext_resource type="Texture2D" uid="uid://b1wo28cyd80ov" path="res://assets/images/gamepad/playstation/playstation_button_color_circle.svg" id="2_6ey1f"]
-[ext_resource type="Texture2D" uid="uid://b6qllts4hg3my" path="res://assets/images/gamepad/playstation/guide.svg" id="3_3ltu8"]
+[ext_resource type="Texture2D" uid="uid://ck2dvwiibyi00" path="res://assets/images/gamepad/playstation/guide.svg" id="3_3ltu8"]
 [ext_resource type="Texture2D" uid="uid://2rjhdg632n1f" path="res://assets/images/gamepad/playstation/playstation_button_color_triangle.svg" id="3_c5wlt"]
 [ext_resource type="Texture2D" uid="uid://ua3iri55e4go" path="res://assets/images/gamepad/playstation/playstation_dpad.svg" id="3_yh60b"]
 [ext_resource type="Texture2D" uid="uid://byblaf3dx4by6" path="res://assets/images/gamepad/playstation/playstation_dpad_down.svg" id="4_wgvj5"]
