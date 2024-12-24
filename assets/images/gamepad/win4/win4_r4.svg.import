@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4d7d1n3gbok8"
-path="res://.godot/imported/ally_button_m1.svg-2209cf215426742e59419468852c7f76.ctex"
+uid="uid://cx2jkiw41meub"
+path="res://.godot/imported/win4_r4.svg-31f76ee3a2dac4966742d59abf7e8c92.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/gamepad/rog-ally/ally_button_m1.svg"
-dest_files=["res://.godot/imported/ally_button_m1.svg-2209cf215426742e59419468852c7f76.ctex"]
+source_file="res://assets/images/gamepad/win4/win4_r4.svg"
+dest_files=["res://.godot/imported/win4_r4.svg-31f76ee3a2dac4966742d59abf7e8c92.ctex"]
 
 [params]
 
@@ -32,6 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=0.264
+svg/scale=1.0
 editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

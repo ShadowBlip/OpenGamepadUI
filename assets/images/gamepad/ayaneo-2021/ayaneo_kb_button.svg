@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64mm"
+   height="64mm"
+   viewBox="0 0 64 64"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="ayaneo_kb_button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="3.3209814"
+     inkscape:cx="96.35706"
+     inkscape:cy="122.55414"
+     inkscape:window-width="1503"
+     inkscape:window-height="965"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="powerclip"
+       id="path-effect9"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false"
+       message="" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <path
+       id="path2-2"
+       clip-path="none"
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.11736;stroke-opacity:1"
+       d="M 112.93677 18.314952 A 3.3405764 3.3405764 0 0 0 109.5962 21.65552 A 3.3405764 3.3405764 0 0 0 112.93677 24.996089 A 3.3405764 3.3405764 0 0 0 116.27734 21.65552 A 3.3405764 3.3405764 0 0 0 112.93677 18.314952 z M 110.92018 20.522431 L 111.37338 20.522431 L 111.37338 21.428844 L 111.71329 21.428844 L 112.3931 20.522431 L 112.733 20.522431 L 112.733 20.862336 L 112.13817 21.655447 L 112.733 22.448559 L 112.733 22.788463 L 112.3931 22.788463 L 111.71329 21.88205 L 111.37338 21.88205 L 111.37338 22.788463 L 110.92018 22.788463 L 110.92018 20.522431 z M 114.27297 20.522431 C 114.45803 20.522431 114.61661 20.58659 114.74879 20.715 L 114.75508 20.720782 C 114.88725 20.852967 114.95336 21.013477 114.95336 21.202314 C 114.95336 21.376044 114.89474 21.527111 114.7777 21.65552 C 114.8948 21.780153 114.95336 21.93122 114.95336 22.108727 C 114.95336 22.293787 114.88726 22.452363 114.75508 22.58455 L 114.74879 22.590332 C 114.61661 22.722522 114.45803 22.78861 114.27297 22.78861 L 113.25325 22.78861 L 113.13995 22.675308 L 113.13995 20.635879 L 113.25325 20.522577 L 114.27297 20.522577 L 114.27297 20.522431 z M 113.59382 20.975637 L 113.59382 21.428844 L 114.29061 21.428844 C 114.33966 21.425071 114.38501 21.404247 114.4266 21.366484 L 114.4378 21.355212 C 114.47926 21.313663 114.50008 21.262664 114.50008 21.202241 C 114.50008 21.138032 114.47938 21.085181 114.4378 21.043633 L 114.43157 21.043633 C 114.38625 20.998312 114.33335 20.975637 114.27297 20.975637 L 113.59382 20.975637 z M 113.59382 21.88205 L 113.59382 22.335257 L 113.59447 22.335257 L 114.27436 22.335257 C 114.33481 22.335257 114.38567 22.314518 114.42726 22.27297 L 114.43845 22.261625 C 114.47992 22.220076 114.50074 22.169077 114.50074 22.108654 C 114.50074 22.044444 114.48004 21.991594 114.43845 21.950046 L 114.43223 21.950046 C 114.39071 21.908498 114.34352 21.885785 114.29061 21.88205 L 113.59382 21.88205 z "
+       transform="matrix(7.0603676,0,0,7.0603676,-765.37499,-120.89582)" />
+  </g>
+</svg>

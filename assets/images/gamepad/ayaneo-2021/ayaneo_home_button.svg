@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64mm"
+   height="64mm"
+   viewBox="0 0 64 64"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="ayaneo_home_button.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.6604907"
+     inkscape:cx="139.41662"
+     inkscape:cy="133.3943"
+     inkscape:window-width="2560"
+     inkscape:window-height="1374"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="powerclip"
+       id="path-effect16"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false"
+       message="" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-109.27291,-138.64166)">
+    <path
+       id="path2-6-1-9"
+       clip-path="none"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.11736;stroke-opacity:1"
+       d="M 49.161519 18.762929 A 3.3405764 3.3405764 0 0 0 45.82095 22.103497 A 3.3405764 3.3405764 0 0 0 49.161519 25.444066 A 3.3405764 3.3405764 0 0 0 52.502087 22.103497 A 3.3405764 3.3405764 0 0 0 49.161519 18.762929 z M 48.028429 20.687154 L 48.594937 20.687154 L 48.594937 21.820243 L 49.728027 21.820243 L 49.728027 20.687154 L 50.294608 20.687154 L 50.294608 23.519841 L 49.728027 23.519841 L 49.728027 22.386751 L 48.594937 22.386751 L 48.594937 23.519841 L 48.028429 23.519841 L 48.028429 20.687154 z "
+       transform="matrix(7.0603676,0,0,7.0603676,-205.82537,14.582957)" />
+  </g>
+</svg>
