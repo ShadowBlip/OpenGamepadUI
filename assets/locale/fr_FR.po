@@ -59,7 +59,7 @@ msgid "Open On-Screen Keyboard"
 msgstr "Ouvrir le clavier virtuel"
 
 msgid "Scroll container"
-msgstr "Scroll container"
+msgstr "Défiler le contenu"
 
 msgid "Switch to left tab"
 msgstr "Passer à l'onglet de gauche"
@@ -68,16 +68,16 @@ msgid "Switch to right tab"
 msgstr "Passer à l'onglet de droite"
 
 msgid "Backspace"
-msgstr "Retour arrière"
+msgstr "Effacer"
 
 msgid "Close keyboard"
 msgstr "Fermer le clavier"
 
 msgid "Toggle Shift"
-msgstr "Activer Maj"
+msgstr "Activer Majuscule"
 
 msgid "Enter"
-msgstr "Entrer"
+msgstr "Entrée"
 
 msgid "Steam Deck"
 msgstr "Steam Deck"
@@ -89,10 +89,10 @@ msgid "Unable to save gamepad profile"
 msgstr "Impossible de sauvegarder le profil de la manette"
 
 msgid "Failed to save gamepad profile"
-msgstr "Échec de la sauvegarde du profil manette"
+msgstr "Échec de la sauvegarde du profil de la manette"
 
 msgid "Gamepad profile saved"
-msgstr "Profil manette sauvegardé"
+msgstr "Profil de la manette sauvegardé"
 
 msgid "Play Now"
 msgstr "Jouer"
@@ -120,13 +120,13 @@ msgid "Launch"
 msgstr "Lancer"
 
 msgid "Boxart"
-msgstr "Jacquette"
+msgstr "Illustration"
 
 msgid "Launch Provider"
-msgstr ""
+msgstr "Lanceur"
 
 msgid "Library provider to launch this game with"
-msgstr ""
+msgstr "Source de bibliothèque pour lancer ce jeu"
 
 #, fuzzy
 msgid "Launch Settings"
@@ -142,13 +142,13 @@ msgid "Arguments"
 msgstr "Arguments"
 
 msgid "Command-line arguments to pass to the game"
-msgstr "Arguments de ligne de commande à transmettre au jeu"
+msgstr "Arguments en ligne de commande à transmettre au jeu"
 
 msgid "Launch Directory"
 msgstr "Répertoire de lancement"
 
 msgid "Directory to launch the game from"
-msgstr "Répertoire d'où lancer le jeu"
+msgstr "Répertoire depuis lequel lancer le jeu"
 
 msgid "Environment Variables"
 msgstr "Variables d'environnement"
@@ -158,17 +158,17 @@ msgstr "Variables d'environnement à utiliser lors du lancement du jeu"
 
 #, fuzzy
 msgid "Sandbox Settings"
-msgstr "Paramètres sandbox"
+msgstr "Paramètres de bac à sable"
 
 msgid "Use sandboxing"
-msgstr "Utiliser le sandboxing"
+msgstr "Utiliser un bac à sable"
 
 msgid "Launch the game in a sandbox"
-msgstr "Lancer le jeu dans une sandbox"
+msgstr "Lancer le jeu dans un bac à sable"
 
 # Boxart Settings Menu
 msgid "Boxart Provider"
-msgstr "Fournisseur jaquettes"
+msgstr "Fournisseur d'illustrations"
 
 msgid "Images"
 msgstr "Images"
@@ -199,19 +199,19 @@ msgid "Plugins"
 msgstr "Plugins"
 
 msgid "Plugin Store"
-msgstr ""
+msgstr "Boutique plugins"
 
 msgid "Processes"
 msgstr "Processus"
 
 msgid "Logging"
-msgstr "Connexion"
+msgstr "Journalisation"
 
 msgid "Controllers"
 msgstr "Contrôleurs"
 
 msgid "Windows"
-msgstr "Windows"
+msgstr "Fenêtres"
 
 # General Settings Menu
 msgid "Updates"
@@ -224,7 +224,7 @@ msgid ""
 "Automatically download and apply updates in the background when they are "
 "available"
 msgstr ""
-"Téléchargez et appliquez automatiquement les mises à jour en arrière-plan "
+"Télécharger et appliquer automatiquement les mises à jour en arrière-plan "
 "lorsqu'elles sont disponibles"
 
 msgid "Check for Updates"
@@ -241,7 +241,7 @@ msgid "Language"
 msgstr "Langue"
 
 msgid "System language"
-msgstr "Langue système"
+msgstr "Langue du système"
 
 msgid "Theme"
 msgstr "Thème"
@@ -259,10 +259,10 @@ msgid "Client Version"
 msgstr "Version du client"
 
 msgid "OS"
-msgstr "OS"
+msgstr "Système d'exploitation"
 
 msgid "Kernel Version"
-msgstr "Version du kernel"
+msgstr "Version du noyau"
 
 msgid "Vendor"
 msgstr "Fournisseur"
@@ -274,13 +274,13 @@ msgid "BIOS Version"
 msgstr "Version du BIOS"
 
 msgid "CPU Model"
-msgstr "Modèle de CPU"
+msgstr "Modèle du CPU"
 
 msgid "GPU Model"
-msgstr "Modèle de GPU"
+msgstr "Modèle du GPU"
 
 msgid "Driver Version"
-msgstr "Version du driver"
+msgstr "Version du pilote"
 
 # Display Menu
 msgid "Scale"
@@ -309,7 +309,7 @@ msgid "Enter the password for this network"
 msgstr "Entrez le mot de passe de ce réseau"
 
 msgid "Bluetooth service unavailable"
-msgstr "Service bluetooth indisponible"
+msgstr "Service Bluetooth indisponible"
 
 msgid "Enabled"
 msgstr "Activé"
@@ -339,17 +339,17 @@ msgstr "Aucun plugin trouvé"
 
 # Processes Menu
 msgid "Kill"
-msgstr "Tuer"
+msgstr "Terminer"
 
 # Log Menu
 msgid "Global Log Level"
-msgstr ""
+msgstr "Niveau de journalisation global"
 
 msgid "Set the log level for all systems"
-msgstr ""
+msgstr "Définir le niveau de journalisation pour tous les systèmes"
 
 msgid "Per-system Logging"
-msgstr ""
+msgstr "Journalisation par système"
 
 # General Controller Settings Menu
 msgid "General Controller Settings"
@@ -395,10 +395,10 @@ msgid "Clear"
 msgstr "Effacer"
 
 msgid "Left Click"
-msgstr "Click gauche"
+msgstr "Clic gauche"
 
 msgid "Right Click"
-msgstr "Click droit"
+msgstr "Clic droit"
 
 msgid "Mouse Motion"
 msgstr "Mouvement de souris"
@@ -410,10 +410,10 @@ msgid "Wheel Down"
 msgstr "Molete vers le bas"
 
 msgid "Middle Click"
-msgstr "Click du milieu"
+msgstr "Clic du milieu"
 
 msgid "Welcome"
-msgstr "Bienvenu"
+msgstr "Bienvenue"
 
 msgid "Select a language"
 msgstr "Choisissez une langue"
@@ -462,11 +462,11 @@ msgid "Quick Settings"
 msgstr "Paramètres rapides"
 
 msgid "Performance"
-msgstr "Performance"
+msgstr "Performances"
 
 #, fuzzy
 msgid "Power Tools"
-msgstr "Marche/arrêt"
+msgstr "Outils de gestion d'alimentation"
 
 msgid "Brightness"
 msgstr "Luminosité"
@@ -521,10 +521,10 @@ msgid "GPU Temp Limit"
 msgstr "Temp limit GPU"
 
 msgid "Power Profile"
-msgstr "Profil de puissance"
+msgstr "Profil puissance"
 
 msgid "Thermal Throttle Profile"
-msgstr "Profil d'accélérateur thermique"
+msgstr "Profil limitation thermique"
 
 # Power Menu
 msgid "Suspend"
