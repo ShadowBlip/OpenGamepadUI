@@ -179,7 +179,7 @@ func open() -> void:
 		break
 
 	# Try to scroll any scroll containers to the target node
-	var target = instance.context.target
+	var target := instance.context.target
 	if target:
 		# TODO: Find a better way to scroll to the focused element after grow
 		# effect finishes
@@ -211,18 +211,20 @@ func open() -> void:
 
 # Closes the OSK
 func close() -> void:
+	# Remove the OSK state
 	popup_state_machine.remove_state(osk_state)
 
 	# If the keyboard is configured to send input to the game, set gamescope accordinly
 	var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
-	var pid := OS.get_process_id()
-	var ogui_windows := xwayland.get_windows_for_pid(pid)
-	if not ogui_windows.is_empty():
-		var overlay_window_id := ogui_windows[0]
-		if state_machine.current_state() == in_game_state:
-			xwayland.set_input_focus(overlay_window_id, 0)
-		else:
-			xwayland.set_input_focus(overlay_window_id, 1)
+	if xwayland:
+		var pid := OS.get_process_id()
+		var ogui_windows := xwayland.get_windows_for_pid(pid)
+		if not ogui_windows.is_empty():
+			var overlay_window_id := ogui_windows[0]
+			if state_machine.current_state() == in_game_state:
+				xwayland.set_input_focus(overlay_window_id, 0)
+			else:
+				xwayland.set_input_focus(overlay_window_id, 1)
 
 	closed.emit()
 
@@ -393,6 +395,7 @@ func _handle_native(key: KeyboardKeyConfig) -> void:
 	if target is LineEdit:
 		var line_edit := instance.context.target as LineEdit
 		line_edit.insert_text_at_caret(character)
+		line_edit.text_changed.emit(line_edit.text) # insert_text doesn't fire this signal
 		return
 
 	logger.warn("Keyboard target is not a supported type. Can't send key input.")
@@ -404,6 +407,16 @@ func _handle_native_action(key: KeyboardKeyConfig) -> void:
 		return
 	var target = instance.context.target
 	match key.input.keycode:
+		KEY_LEFT:
+			if target != null and target is LineEdit:
+				var line_edit := target as LineEdit
+				if line_edit.caret_column > 0:
+					line_edit.caret_column -= 1
+		KEY_RIGHT:
+			if target != null and target is LineEdit:
+				var line_edit := target as LineEdit
+				if line_edit.caret_column < line_edit.text.length():
+					line_edit.caret_column += 1
 		KEY_SHIFT:
 			if _mode_shift > MODE_SHIFT.OFF:
 				set_mode_shift(MODE_SHIFT.OFF)
@@ -423,6 +436,7 @@ func _handle_native_action(key: KeyboardKeyConfig) -> void:
 			if target != null and target is LineEdit:
 				var line_edit := target as LineEdit
 				line_edit.delete_char_at_caret()
+				# Upon delete, the LineEdit grabs focus
 			return
 		KEY_ENTER:
 			instance.context.submitted.emit()

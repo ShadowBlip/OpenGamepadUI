@@ -19,6 +19,14 @@ var context: KeyboardContext
 # keyboard inputs should go, and how to handle submits.
 func open(ctx: KeyboardContext) -> void:
 	set_context(ctx)
+	if context and context.target:
+		# Show the caret
+		if context.target is LineEdit:
+			var line_edit := context.target as LineEdit
+			line_edit.caret_force_displayed = true
+		# Some nodes (like LineEdit), will grab focus when text is manipulated.
+		# Don't allow the node to grab focus
+		context.target.focus_mode = Control.FOCUS_NONE
 	keyboard_opened.emit()
 
 
@@ -27,6 +35,11 @@ func close() -> void:
 	# If the target is a control node, return focus back to it when the
 	# keyboard closes
 	if context and context.target:
+		# Hide the caret
+		if context.target is LineEdit:
+			var line_edit := context.target as LineEdit
+			line_edit.caret_force_displayed = false
+		context.target.focus_mode = Control.FOCUS_ALL
 		context.target.grab_focus.call_deferred()
 	set_context(null)
 	keyboard_closed.emit()
@@ -48,7 +61,6 @@ func set_context(ctx: KeyboardContext) -> void:
 		text_edit.set_caret_line(lines-1)
 		var current_line := text_edit.get_line(lines-1)
 		text_edit.set_caret_column(current_line.length())
-		#text_edit.clear()
 		
 	# Update our internal keyboard context
 	if context == ctx:

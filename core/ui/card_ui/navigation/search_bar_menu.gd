@@ -7,9 +7,9 @@ var default_size := Vector2(custom_minimum_size.x, custom_minimum_size.y)
 
 @export var animate_time := 0.2
 
-@onready var tabs_container := $%LibraryTabsContainer
-@onready var search_bar := $%SearchBar
-@onready var search_button := $%SearchButton
+@onready var tabs_container := $%LibraryTabsContainer as TabsHeader
+@onready var search_bar := $%SearchBar as SearchBar
+@onready var search_button := $%SearchButton as CardIconButton
 
 
 # Called when the node enters the scene tree for the first time.
