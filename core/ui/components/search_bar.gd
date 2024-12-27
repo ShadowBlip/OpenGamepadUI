@@ -1,10 +1,10 @@
-extends TextEdit
+extends LineEdit
 class_name SearchBar
 
 signal search_submitted(text: String)
 
 var state_machine := load("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var library_state := load("res://assets/state/states/library.tres")
+var library_state := load("res://assets/state/states/library.tres") as State
 
 var keyboard_context := KeyboardContext.new(KeyboardContext.TYPE.GODOT, self)
 @export var keyboard: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
@@ -16,7 +16,10 @@ func _ready() -> void:
 	text_changed.connect(_on_text_changed)
 
 
-func _on_text_changed() -> void:
+func _on_text_changed(new_text: String) -> void:
+	if state_machine.current_state() != library_state:
+		state_machine.push_state(library_state)
+		grab_focus.call_deferred()
 	search_submitted.emit(text)
 
 
