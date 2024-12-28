@@ -143,6 +143,9 @@ func _ready() -> void:
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
 	library_manager.reload_library()
 
+	# Enable InputPlumber management of all supported input devices
+	input_plumber.manage_all_devices = true
+
 	# Setup inputplumber to receive guide presses.
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
 	input_plumber.set_intercept_activation(PackedStringArray(["Gamepad:Button:Guide"]), "Gamepad:Button:Guide")

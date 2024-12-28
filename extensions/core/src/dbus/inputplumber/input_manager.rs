@@ -38,6 +38,12 @@ trait InputManager {
     /// StopTargetDevice method
     fn stop_target_device(&self, path: &str) -> zbus::Result<()>;
 
+    /// ManageAllDevices property
+    #[zbus(property)]
+    fn manage_all_devices(&self) -> zbus::Result<bool>;
+    #[zbus(property)]
+    fn set_manage_all_devices(&self, value: bool) -> zbus::Result<()>;
+
     /// InterceptMode property
     #[zbus(property)]
     fn intercept_mode(&self) -> zbus::Result<String>;

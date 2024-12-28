@@ -17,6 +17,7 @@ use godot::classes::{Engine, Resource};
 use zbus::fdo::ObjectManagerProxy;
 use zbus::names::BusName;
 
+use crate::dbus::inputplumber::input_manager::InputManagerProxyBlocking;
 use crate::dbus::RunError;
 use crate::{get_dbus_system, get_dbus_system_blocking, RUNTIME};
 
@@ -101,6 +102,10 @@ pub struct InputPlumberInstance {
     /// The current target event for intercept mode
     #[var(get = get_intercept_target, set = set_intercept_target)]
     intercept_target: GString,
+    /// Whether or not to automatically manage all supported input devices
+    #[allow(dead_code)]
+    #[var(get = get_manage_all_devices, set = set_manage_all_devices)]
+    manage_all_devices: bool,
 }
 
 #[godot_api]
@@ -127,6 +132,15 @@ impl InputPlumberInstance {
     /// Emitted when a CompositeDevice is removed
     #[signal]
     fn composite_device_removed(dbus_path: GString);
+
+    /// Return a proxy instance to the input manager
+    fn get_proxy(&self) -> Option<InputManagerProxyBlocking> {
+        if let Some(conn) = self.conn.as_ref() {
+            InputManagerProxyBlocking::builder(conn).build().ok()
+        } else {
+            None
+        }
+    }
 
     /// Returns true if the InputPlumber service is currently running
     #[func]
@@ -257,6 +271,24 @@ impl InputPlumberInstance {
         for (_, device) in self.composite_devices.iter_mut() {
             device.bind_mut().process();
         }
+    }
+
+    /// Gets whether or not InputPlumber should automatically manage all supported devices
+    #[func]
+    fn get_manage_all_devices(&self) -> bool {
+        let Some(proxy) = self.get_proxy() else {
+            return false;
+        };
+        proxy.manage_all_devices().unwrap_or_default()
+    }
+
+    /// Sets whether or not InputPlumber should automatically manage all supported devices
+    #[func]
+    fn set_manage_all_devices(&self, value: bool) {
+        let Some(proxy) = self.get_proxy() else {
+            return;
+        };
+        proxy.set_manage_all_devices(value).unwrap_or_default()
     }
 
     /// Gets the current intercept mode for all composite devices
@@ -408,6 +440,7 @@ impl IResource for InputPlumberInstance {
                 intercept_mode: Default::default(),
                 intercept_triggers: Default::default(),
                 intercept_target: Default::default(),
+                manage_all_devices: Default::default(),
             };
         }
 
@@ -428,6 +461,7 @@ impl IResource for InputPlumberInstance {
             intercept_mode: 0,
             intercept_triggers: PackedStringArray::from(&["Gamepad:Button:Guide".into()]),
             intercept_target: "Gamepad:Button:Guide".into(),
+            manage_all_devices: Default::default(),
         };
 
         // Do initial device discovery
