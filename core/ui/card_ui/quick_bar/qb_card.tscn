@@ -34,6 +34,12 @@ on_signal = "focus_entered"
 fade_out_signal = "nonchild_focused"
 on_signal = "focus_entered"
 
+[node name="HoverHighlightFadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_6u4la")]
+target = NodePath("../PanelContainer/HighlightTexture")
+on_signal = "mouse_entered"
+fade_out_signal = "mouse_exited"
+on_signal = "mouse_entered"
+
 [node name="GrowerEffect" parent="." node_paths=PackedStringArray("target", "content_container", "inside_panel", "separator") instance=ExtResource("4_1jyfj")]
 target = NodePath("..")
 content_container = NodePath("../MarginContainer/CardVBoxContainer/ContentContainer")
