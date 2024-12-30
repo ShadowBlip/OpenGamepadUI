@@ -23,6 +23,14 @@ signal nonchild_focused
 		else:
 			toggled_off.emit()
 		toggled.emit(is_toggled)
+		if not grower:
+			return
+		effect_in_progress = true
+		if is_toggled:
+			await grower.effect_finished
+		else:
+			await grower.shrink_finished
+		effect_in_progress = false
 
 @onready var header_container := $%HeaderContainer as VBoxContainer
 @onready var label := $%SectionLabel as Label
@@ -32,6 +40,7 @@ signal nonchild_focused
 @onready var smooth_scroll := $SmoothScrollEffect as SmoothScrollEffect
 @onready var grower := $GrowerEffect as GrowerEffect
 
+var effect_in_progress := false
 var focus_group: FocusGroup
 var logger := Log.get_logger("QBCard", Log.LEVEL.INFO)
 
@@ -47,7 +56,6 @@ func _ready() -> void:
 	var on_focus_exited := func():
 		self._on_unfocus.call_deferred()
 	focus_exited.connect(on_focus_exited)
-	focus_entered.connect(_on_focus)
 	button_up.connect(_on_button_up)
 	theme_changed.connect(_on_theme_changed)
 
@@ -139,14 +147,6 @@ func _find_child_focus_group(nodes: Array[Node]) -> FocusGroup:
 	return null
 
 
-func _on_focus() -> void:
-	# If the card gets focused, and its already expanded, that means we've
-	# the user has focused outside the card, and we should shrink to hide the
-	# content
-	if is_toggled:
-		_on_button_up()
-
-
 func _on_unfocus() -> void:
 	# Get the new focus owner
 	var focus_owner := get_viewport().gui_get_focus_owner()
@@ -186,38 +186,41 @@ func _on_focus_change(focused: Control) -> void:
 
 func _on_button_up() -> void:
 	is_toggled = !is_toggled
-	if is_toggled:
-		toggled_on.emit()
-	else:
-		toggled_off.emit()
-	
-	toggled.emit(is_toggled)
 
 
 func _gui_input(event: InputEvent) -> void:
-	var is_valid := [event is InputEventAction, event is InputEventKey]
+	var is_valid := [
+		event is InputEventAction and event.is_action("ui_accept"), 
+		event is InputEventKey and event.is_action("ui_accept"), 
+		event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT,
+	]
 	if not true in is_valid:
 		return
-	if event.is_action("ui_accept"):
-		if event.is_pressed():
-			button_down.emit()
-			pressed.emit()
-		else:
-			button_up.emit()
+	# Mouse input changes focus on button down, which can cause the
+	# card to toggle off on focus change before the "button_up" event.
+	# To get around this, ignore mouse events if the grow/shrink effect
+	# is in progress.
+	if event is InputEventMouseButton and effect_in_progress:
+		return
+	if event.is_pressed():
+		button_down.emit()
+		pressed.emit()
+	else:
+		button_up.emit()
 
 
 func _input(event: InputEvent) -> void:
 	if not is_toggled:
 		return
-	if not event.is_action("ogui_east"):
+	var is_valid := [
+		event.is_action("ogui_east"),
+		event.is_action("ogui_back"),
+		event.is_action("ui_cancel")
+	]
+	if not true in is_valid:
 		return
 	if not event.is_released():
 		return
-
-	# Only process input if a child node has focus
-	#var focus_owner := get_viewport().gui_get_focus_owner()
-	#if not self.is_ancestor_of(focus_owner):
-	#	return
 
 	# Handle back input
 	is_toggled = false

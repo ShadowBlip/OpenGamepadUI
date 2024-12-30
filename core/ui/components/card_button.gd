@@ -52,7 +52,7 @@ signal player_button_down(metaname: String, dbus_path: String)
 @export_file("*.ogg") var select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 @export_category("Mouse")
-@export var click_focuses := true
+@export var click_focuses := false
 
 var tween: Tween
 var focus_audio_stream = load(focus_audio)
@@ -126,6 +126,8 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	var dbus_path := event.get_meta("dbus_path", "") as String
 	if event is InputEventMouseButton and not click_focuses:
+		if (event as InputEventMouseButton).button_index != MOUSE_BUTTON_LEFT:
+			return
 		if event.is_pressed():
 			button_down.emit()
 			pressed.emit()

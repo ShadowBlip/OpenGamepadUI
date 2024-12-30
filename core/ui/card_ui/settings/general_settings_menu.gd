@@ -161,6 +161,7 @@ func _add_user_themes() -> void:
 		var button := card_button_scene.instantiate() as CardButton
 		button.text = theme_name
 		button.custom_minimum_size.x = 158
+		button.click_focuses = false
 		
 		# Add the theme setter behavior
 		var theme_setter := theme_setter_scene.instantiate() as ThemeSetter
