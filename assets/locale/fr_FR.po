@@ -1,3 +1,4 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-# Main Menu
+# Main Menu Messages
 msgid "Home"
 msgstr "Accueil"
 
@@ -34,6 +35,7 @@ msgstr "Paramètres"
 msgid "Power"
 msgstr "Marche/arrêt"
 
+# General messages
 msgid "Accept"
 msgstr "Confirmer"
 
@@ -48,6 +50,16 @@ msgstr "Quitter"
 
 msgid "Submit"
 msgstr "Envoyer"
+
+msgid "Quick Bar Menu"
+msgstr "Menu d'accès rapide"
+
+# Help Menu Messages
+msgid "Help"
+msgstr "Aide"
+
+msgid "Menu Shortcuts"
+msgstr "Raccourcis menu"
 
 msgid "Open Main Menu"
 msgstr "Ouvrir le menu principal"
@@ -66,6 +78,9 @@ msgstr "Passer à l'onglet de gauche"
 
 msgid "Switch to right tab"
 msgstr "Passer à l'onglet de droite"
+
+msgid "On-Screen Keyboard Shortcuts"
+msgstr "Ouvrir le clavier virtuel"
 
 msgid "Backspace"
 msgstr "Effacer"
@@ -128,7 +143,6 @@ msgstr "Lanceur"
 msgid "Library provider to launch this game with"
 msgstr "Source de bibliothèque pour lancer ce jeu"
 
-#, fuzzy
 msgid "Launch Settings"
 msgstr "Paramètres de lancement"
 
@@ -156,7 +170,6 @@ msgstr "Variables d'environnement"
 msgid "Environment variables to use when launching the game"
 msgstr "Variables d'environnement à utiliser lors du lancement du jeu"
 
-#, fuzzy
 msgid "Sandbox Settings"
 msgstr "Paramètres de bac à sable"
 
@@ -170,6 +183,9 @@ msgstr "Lancer le jeu dans un bac à sable"
 msgid "Boxart Provider"
 msgstr "Fournisseur d'illustrations"
 
+msgid "Provider to fetch artwork for this game"
+msgstr "Source depuis laquelle récupérer les illustrations pour ce jeu"
+
 msgid "Images"
 msgstr "Images"
 
@@ -181,6 +197,13 @@ msgstr "Logo"
 
 msgid "Grids"
 msgstr "Grilles"
+
+# Game library menu
+msgid "Hidden in library"
+msgstr "Caché dans la bibliothèque"
+
+msgid "Prevent this item from showing up in your library"
+msgstr "Empêcher cet item d'apparaître dans votre bibliothèque"
 
 # Settings Menu
 msgid "General"
@@ -197,6 +220,9 @@ msgstr "Bluetooth"
 
 msgid "Plugins"
 msgstr "Plugins"
+
+msgid "Disks"
+msgstr "Disques"
 
 msgid "Plugin Store"
 msgstr "Boutique plugins"
@@ -227,12 +253,14 @@ msgstr ""
 "Télécharger et appliquer automatiquement les mises à jour en arrière-plan "
 "lorsqu'elles sont disponibles"
 
-msgid "Check for Updates"
+msgid "Check for updates"
 msgstr "Rechercher des mises à jour"
 
-#, fuzzy
-msgid "Install Update"
+msgid "Install Updates"
 msgstr "Installer la mise à jour"
+
+msgid "Update"
+msgstr "Mise à jour"
 
 msgid "Appearance"
 msgstr "Apparence"
@@ -243,11 +271,20 @@ msgstr "Langue"
 msgid "System language"
 msgstr "Langue du système"
 
+msgid "English"
+msgstr "Anglais"
+
+msgid "Spanish"
+msgstr "Espagnol"
+
+msgid "French"
+msgstr "Français"
+
+msgid "Chinese"
+msgstr "Chinois"
+
 msgid "Theme"
 msgstr "Thème"
-
-msgid "Maximum Recent Apps"
-msgstr "Nombre maximal d'applications récentes"
 
 msgid "System Information"
 msgstr "Informations système"
@@ -282,13 +319,41 @@ msgstr "Modèle du GPU"
 msgid "Driver Version"
 msgstr "Version du pilote"
 
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr "Nombre maximal d'applications récentes"
+
+msgid "Refresh Library"
+msgstr "Actualiser la bibliothèque"
+
+msgid "Trigger reloading your library"
+msgstr "Déclencher rechargement bibliothèque"
+
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+msgid "Hidden Library Items"
+msgstr "Items cachés dans la bibliothèque"
+
 # Display Menu
 msgid "Scale"
 msgstr "Échelle"
 
+msgid "Overlay"
+msgstr "Overlay"
+
+msgid "Blur"
+msgstr "Flou"
+
+msgid "Blur background game when overlay is open"
+msgstr "Flouter le jeu en arrière-plan lorsque l'overlay est ouvert"
+
 # Network Menu
 msgid "Network dependencies not found"
 msgstr "Dépendances réseau introuvables"
+
+msgid "Enable Wireless"
+msgstr "Activer sans fil"
 
 msgid "Wireless Network"
 msgstr "Réseau sans fil"
@@ -308,6 +373,20 @@ msgstr "Mot de passe"
 msgid "Enter the password for this network"
 msgstr "Entrez le mot de passe de ce réseau"
 
+msgid "Connection Details"
+msgstr "Détails de connexion"
+
+msgid "IP Address"
+msgstr "Adresse IP"
+
+msgid "Subnet Prefix"
+msgstr "Préfixe de sous-réseau"
+
+# untranslated since I don't know what it is, better to keep it in english for now
+msgid "Gateway"
+msgstr ""
+
+# Bluetooth Menu
 msgid "Bluetooth service unavailable"
 msgstr "Service Bluetooth indisponible"
 
@@ -332,6 +411,15 @@ msgstr "Périphérique d'entrée"
 
 msgid "Microphone"
 msgstr "Microphone"
+
+msgid ""
+"No formattable drives available\n"
+"Verify your media device is plugged in and that it is not mounted to a "
+"protected mount point"
+msgstr ""
+"Aucun disque formatable trouvé\n"
+"Vérifiez que votre disque est branché et qu'il n'est pas monté sur un point "
+"de montage protégé"
 
 # Plugins Menu
 msgid "No plugins found"
@@ -363,7 +451,8 @@ msgid ""
 "gyro controls or all input. Requires restart."
 msgstr ""
 "Système de saisie alternatif pouvant provoquer une double saisie. Certains "
-"jeux utilisent SDL pour les contrôles gyro ou pour toutes les entrées. Nécessite un redémarrage"
+"jeux utilisent SDL pour les contrôles gyro ou pour toutes les entrées. "
+"Nécessite un redémarrage"
 
 # Gamepad Settings Menu
 msgid "Profile Name"
@@ -380,14 +469,12 @@ msgstr "Axes"
 msgid "Change Input"
 msgstr "Modifier l'entrée"
 
-#, fuzzy
 msgid "Keyboard"
 msgstr "Clavier"
 
 msgid "Mouse"
 msgstr "Souris"
 
-#, fuzzy
 msgid "Gamepad"
 msgstr "Manette"
 
@@ -412,6 +499,7 @@ msgstr "Molete vers le bas"
 msgid "Middle Click"
 msgstr "Clic du milieu"
 
+# First Boot Menu
 msgid "Welcome"
 msgstr "Bienvenue"
 
@@ -424,7 +512,6 @@ msgstr "Connectez-vous à votre réseau"
 msgid "Next"
 msgstr "Suivant"
 
-#, fuzzy
 msgid "Install plugins"
 msgstr "Installer des plugins"
 
@@ -444,9 +531,8 @@ msgstr "Commencer à jouer"
 msgid "What should you play?"
 msgstr "A quoi jouer ?"
 
-#, fuzzy
 msgid "Installed"
-msgstr "Installé"
+msgstr "Installés"
 
 msgid "All Games"
 msgstr "Tous les jeux"
@@ -457,14 +543,16 @@ msgstr "Favoris"
 msgid "Collections"
 msgstr "Collections"
 
-#, fuzzy
+# Quick Settings
 msgid "Quick Settings"
 msgstr "Paramètres rapides"
 
 msgid "Performance"
 msgstr "Performances"
 
-#, fuzzy
+msgid "Advanced Mode"
+msgstr "Mode avancé"
+
 msgid "Power Tools"
 msgstr "Outils de gestion d'alimentation"
 
@@ -488,7 +576,6 @@ msgstr "Taux de rafraîchissement"
 msgid "Waiting for PowerStation service..."
 msgstr "En attente du service PowerStation..."
 
-#, fuzzy
 msgid "CPU Settings"
 msgstr "Paramètres du CPU"
 
@@ -501,7 +588,6 @@ msgstr "SMT activé"
 msgid "CPU Cores"
 msgstr "Cœurs du CPU"
 
-#, fuzzy
 msgid "GPU Settings"
 msgstr "Paramètres du GPU"
 
