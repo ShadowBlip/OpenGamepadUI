@@ -51,7 +51,16 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
+msgid "Quick Bar Menu"
+msgstr ""
+
 # Help Menu Messages
+msgid "Help"
+msgstr ""
+
+msgid "Menu Shortcuts"
+msgstr ""
+
 msgid "Open Main Menu"
 msgstr ""
 
@@ -68,6 +77,9 @@ msgid "Switch to left tab"
 msgstr ""
 
 msgid "Switch to right tab"
+msgstr ""
+
+msgid "On-Screen Keyboard Shortcuts"
 msgstr ""
 
 msgid "Backspace"
@@ -171,6 +183,9 @@ msgstr ""
 msgid "Boxart Provider"
 msgstr ""
 
+msgid "Provider to fetch artwork for this game"
+msgstr ""
+
 msgid "Images"
 msgstr ""
 
@@ -181,6 +196,13 @@ msgid "Logo"
 msgstr ""
 
 msgid "Grids"
+msgstr ""
+
+# Game library menu
+msgid "Hidden in library"
+msgstr ""
+
+msgid "Prevent this item from showing up in your library"
 msgstr ""
 
 # Settings Menu
@@ -197,6 +219,9 @@ msgid "Bluetooth"
 msgstr ""
 
 msgid "Plugins"
+msgstr ""
+
+msgid "Disks"
 msgstr ""
 
 msgid "Plugin Store"
@@ -224,10 +249,13 @@ msgstr ""
 msgid "Automatically download and apply updates in the background when they are available"
 msgstr ""
 
-msgid "Check for Updates"
+msgid "Check for updates"
 msgstr ""
 
-msgid "Install Update"
+msgid "Install Updates"
+msgstr ""
+
+msgid "Update"
 msgstr ""
 
 msgid "Appearance"
@@ -239,10 +267,19 @@ msgstr ""
 msgid "System language"
 msgstr ""
 
-msgid "Theme"
+msgid "English"
 msgstr ""
 
-msgid "Maximum Recent Apps"
+msgid "Spanish"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "Chinese"
+msgstr ""
+
+msgid "Theme"
 msgstr ""
 
 msgid "System Information"
@@ -278,12 +315,40 @@ msgstr ""
 msgid "Driver Version"
 msgstr ""
 
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr ""
+
+msgid "Refresh Library"
+msgstr ""
+
+msgid "Trigger reloading your library"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Hidden Library Items"
+msgstr ""
+
 # Display Menu
 msgid "Scale"
 msgstr ""
 
+msgid "Overlay"
+msgstr ""
+
+msgid "Blur"
+msgstr ""
+
+msgid "Blur background game when overlay is open"
+msgstr ""
+
 # Network Menu
 msgid "Network dependencies not found"
+msgstr ""
+
+msgid "Enable Wireless"
 msgstr ""
 
 msgid "Wireless Network"
@@ -302,6 +367,18 @@ msgid "Password"
 msgstr ""
 
 msgid "Enter the password for this network"
+msgstr ""
+
+msgid "Connection Details"
+msgstr ""
+
+msgid "IP Address"
+msgstr ""
+
+msgid "Subnet Prefix"
+msgstr ""
+
+msgid "Gateway"
 msgstr ""
 
 # Bluetooth Menu
@@ -328,6 +405,10 @@ msgid "Input Device"
 msgstr ""
 
 msgid "Microphone"
+msgstr ""
+
+# Disk Menu
+msgid "No formattable drives available\nVerify your media device is plugged in and that it is not mounted to a protected mount point"
 msgstr ""
 
 # Plugins Menu
@@ -452,6 +533,9 @@ msgid "Quick Settings"
 msgstr ""
 
 msgid "Performance"
+msgstr ""
+
+msgid "Advanced Mode"
 msgstr ""
 
 msgid "Power Tools"
