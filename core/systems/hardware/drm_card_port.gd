@@ -129,4 +129,5 @@ func _to_string() -> String:
 		+ " Name: (" + str(name) \
 		+ ") Status: (" + str(status) \
 		+ ") Enabled: (" + str(enabled) \
+		+ ") Instance ID: (" + str(self.get_instance_id()) \
 		+ ")>"

@@ -72,26 +72,13 @@ func get_gpu_info() -> GPUInfo:
 	# for the currently active GPU. Vulkaninfo can provide data
 	# on all detected GPU devices.
 	gpu_info.vendor = RenderingServer.get_video_adapter_vendor()
-	match gpu_info.vendor:
-		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
-			gpu_info.vendor = "AMD"
-		"Intel", "GenuineIntel", "Intel Corporation":
-			gpu_info.vendor = "Intel"
-		"Nvidia":
-			gpu_info.vendor = "Trash" # :D
-			logger.info("Nvidia devices are not suppored.")
-			return null
-		_:
-			logger.warn("Device vendor string not recognized:", RenderingServer.get_video_adapter_vendor())
-			return null
-
 	gpu_info.model = RenderingServer.get_video_adapter_name()
 	gpu_info.driver = RenderingServer.get_video_adapter_api_version()
 
 	# Identify all installed GPU's
 	if cards.size() <= 0:
-		logger.error("GPU Data could not be derived.")
-		return null
+		logger.error("GPU Card subdata could not be derived.")
+		return gpu_info
 
 	var active_gpu_data := get_active_gpu_device()
 	if active_gpu_data.size() == 0:
@@ -192,11 +179,13 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 
 		if line.begins_with("\t") and not vendor_found:
 			continue
+
 		if line.begins_with(vendor_id):
 			vendor = line.lstrip(vendor_id).strip_edges()
 			logger.debug("Found vendor name:", vendor)
 			vendor_found = true
 			continue
+
 		if vendor_found and not line.begins_with("\t"):
 			if line.begins_with("#"):
 				continue
@@ -221,31 +210,17 @@ func get_gpu_card(card_dir: String) -> DRMCardInfo:
 			logger.debug("Found subdevice name:", subdevice)
 			break
 
-	# Sanitize the vendor strings so they are standard.
-	match vendor:
-		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
-			vendor = "AMD"
-		"Intel", "GenuineIntel", "Intel Corporation":
-			vendor = "Intel"
-		"Nvidia":
-			vendor = "Trash"
-			logger.warn("Nvidia devices are not suppored.")
-			# TODO: Handle this case
-			return null
-		_:
-			logger.warn("Device vendor string not recognized:", vendor)
-			# TODO: Handle this case
-			return null
-
 	# Create a new card instance and take over the caching path
 	var card_info: DRMCardInfo
 	match vendor:
-		"AMD":
+		"AMD", "AuthenticAMD", 'AuthenticAMD Advanced Micro Devices, Inc.', "Advanced Micro Devices, Inc. [AMD/ATI]":
 			card_info = DRMCardInfoAMD.new(card_dir)
-		"Intel":
+		"Intel", "GenuineIntel", "Intel Corporation":
 			card_info = DRMCardInfoIntel.new(card_dir)
 		_:
-			return null
+			logger.info("Device vendor string is not fully supported:", vendor, ". Using generic implementation.")
+			card_info = DRMCardInfo.new(card_dir)
+
 	card_info.take_over_path(res_path)
 	card_info.vendor = vendor
 	card_info.vendor_id = vendor_id
