@@ -18,6 +18,11 @@ func test_get_ports() -> void:
 	for card in cards:
 		var ports := card.get_ports()
 		for port in ports:
+			# Virtual ports will create a new instance each time, so skip their
+			# consideration for this test
+			if port.name.begins_with("Virtual"):
+				continue
+			gut.p(str(port))
 			var port_name := "-".join([card.name, port.name])
 			var other_port := card.get_port(port_name)
 			assert_eq(port, other_port, "should return the same port instance")
