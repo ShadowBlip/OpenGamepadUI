@@ -34,7 +34,11 @@ func _desktop_file_to_launch_item(file: String) -> LibraryLaunchItem:
 	launch_item.installed = true
 	launch_item.categories = []
 
+	logger.debug("Parsing desktop file:", file)
 	var f := FileAccess.open(file, FileAccess.READ)
+	if not f:
+		logger.warn("Unable to open desktop file for parsing:", file)
+		return null
 	var text := f.get_as_text()
 	var lines := text.split("\n")
 	for line in lines:
