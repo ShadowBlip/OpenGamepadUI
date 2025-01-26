@@ -55,11 +55,12 @@ layout_mode = 2
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_fdccl")]
 
-[node name="CardButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_ynn8u")]
+[node name="GamepadSettingsButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_ynn8u")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Gamepad Settings"
 
-[node name="StateUpdater" parent="MarginContainer/VBoxContainer/CardButton" instance=ExtResource("8_1egj0")]
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/GamepadSettingsButton" instance=ExtResource("8_1egj0")]
 state_machine = ExtResource("10_ij44t")
 state = ExtResource("10_uoc6p")
 on_signal = "player_button_up"
