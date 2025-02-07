@@ -8,7 +8,7 @@
   <a href="https://github.com/ShadowBlip/OpenGamepadUI/stargazers"><img src="https://img.shields.io/github/stars/ShadowBlip/OpenGamepadUI" /></a>
   <a href="https://github.com/ShadowBlip/OpenGamepadUI/commits/main"><img src="https://img.shields.io/github/last-commit/ShadowBlip/OpenGamepadUI.svg" /></a>
   <a href="https://github.com/ShadowBlip/OpenGamepadUI/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ShadowBlip/OpenGamepadUI" /></a>
-  <a href="https://discord.gg/fKsUbrt"><img src="https://img.shields.io/badge/discord-server-%235865F2" /></a>
+  <a href="https://discord.gg/Ea9ABXhtkv"><img alt="Discord" src="https://img.shields.io/discord/721211671124770837?label=discord" /></a>
   <br>
   <br>
   <img src="https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/media/screenshot01.png" alt="OpenGamepadUI screenshot" width="80%">
