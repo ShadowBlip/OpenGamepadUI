@@ -127,6 +127,7 @@ fi
   chown $SUDO_USER "${USER_DIR}/.config/systemd/user/systemd-sysext-updater.service"
   curl -L https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/rootfs/usr/share/opengamepadui/scripts/update_systemd_ext.sh -o "${USER_DIR}/.local/bin/update_systemd_ext.sh"
   chown $SUDO_USER "${USER_DIR}/.local/bin/update_systemd_ext.sh"
+  chmod +x "${USER_DIR}/.local/bin/update_systemd_ext.sh"
 
   echo "45"
   echo "# Installing OpenGamepadUI extension"
