@@ -30,7 +30,7 @@ build: $(RELEASE_TARGET) $(DEBUG_TARGET) ## Build release and debug binaries
 
 .PHONY: clean
 clean: ## Clean build artifacts
-	rm $(RELEASE_TARGET) $(DEBUG_TARGET)
+	rm -f $(RELEASE_TARGET) $(DEBUG_TARGET)
 	rm -rf target
 
 
