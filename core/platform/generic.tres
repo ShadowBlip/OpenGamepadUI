@@ -1,7 +1,10 @@
-[gd_resource type="Resource" script_class="PlatformProvider" load_steps=2 format=3 uid="uid://dks7wvgoco7dh"]
+[gd_resource type="Resource" script_class="PlatformProvider" load_steps=3 format=3 uid="uid://dks7wvgoco7dh"]
 
-[ext_resource type="Script" path="res://core/platform/platform_provider.gd" id="1_lnhf6"]
+[ext_resource type="Script" uid="uid://d2hpeuk284a5m" path="res://core/platform/platform_provider.gd" id="1_lnhf6"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_e15n5"]
 
 [resource]
 script = ExtResource("1_lnhf6")
 name = "Generic"
+startup_actions = Array[ExtResource("2_e15n5")]([])
+shutdown_actions = Array[ExtResource("2_e15n5")]([])

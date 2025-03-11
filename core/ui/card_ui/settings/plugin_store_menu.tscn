@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3 uid="uid://cf5bdr4sh2irb"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/settings/plugin_store_menu.gd" id="1_o3w0b"]
+[ext_resource type="Script" uid="uid://bb0n1e60mq75g" path="res://core/ui/card_ui/settings/plugin_store_menu.gd" id="1_o3w0b"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_stwp6"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="3_7o5pg"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_o8kc3"]
 [ext_resource type="Resource" uid="uid://u6fyqt1ogrie" path="res://assets/state/states/settings_plugin_store.tres" id="4_moq21"]
-[ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="5_5l7jt"]
+[ext_resource type="Script" uid="uid://dcyv3gppht5v7" path="res://core/systems/network/http_image_fetcher.gd" id="5_5l7jt"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_gh7kv"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="6_oyayo"]
-[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_u7s1j"]
+[ext_resource type="Script" uid="uid://ohebcttenf0j" path="res://core/systems/input/focus_group_setter.gd" id="7_u7s1j"]
 [ext_resource type="PackedScene" uid="uid://b0cyl6fdqxevn" path="res://core/systems/input/scroller_joystick.tscn" id="10_c2505"]
 
 [node name="PluginStoreMenu" type="ScrollContainer"]

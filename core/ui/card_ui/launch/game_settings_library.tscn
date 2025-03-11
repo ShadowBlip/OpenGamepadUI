@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://bvdasrjrvyp11"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings_library.gd" id="1_f1pex"]
+[ext_resource type="Script" uid="uid://c6o1uvqi7x5t" path="res://core/ui/card_ui/launch/game_settings_library.gd" id="1_f1pex"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="1_mk47q"]
 [ext_resource type="Resource" uid="uid://bnw36g1l7shcy" path="res://assets/state/states/game_settings_library.tres" id="2_j1lqu"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_tkmdj"]

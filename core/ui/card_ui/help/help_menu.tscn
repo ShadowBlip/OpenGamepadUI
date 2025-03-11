@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://dj1fooc3gh13l"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/help/help_menu.gd" id="1_7fti5"]
+[ext_resource type="Script" uid="uid://dvp8twt0jkvcq" path="res://core/ui/card_ui/help/help_menu.gd" id="1_7fti5"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_cxu4x"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_10mqr"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="3_hidel"]
@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="5_wfsen"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="7_15bya"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_dlovl"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="8_swg2f"]
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="8_swg2f"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="8_ut6gk"]
 
 [node name="HelpMenu" type="Control"]

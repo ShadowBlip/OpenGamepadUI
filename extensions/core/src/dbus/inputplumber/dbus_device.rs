@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/target/dbus0"
 )]
-trait DBusDevice {
+pub trait DBusDevice {
     /// InputEvent signal
     #[zbus(signal)]
     fn input_event(&self, event: &str, value: f64) -> zbus::Result<()>;

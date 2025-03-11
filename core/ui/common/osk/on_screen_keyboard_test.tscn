@@ -1,13 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://bkqeer0umb0tt"]
+[gd_scene load_steps=6 format=3 uid="uid://bkqeer0umb0tt"]
 
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="1_f6er3"]
-[ext_resource type="Script" path="res://core/ui/common/osk/on_screen_keyboard_test.gd" id="1_l7c3f"]
-[ext_resource type="Script" path="res://core/ui/common/osk/keyboard_layout.gd" id="4_5um32"]
+[ext_resource type="Script" uid="uid://rj671dk2ewur" path="res://core/ui/common/osk/on_screen_keyboard_test.gd" id="1_l7c3f"]
+[ext_resource type="Script" uid="uid://dtgj1cr6s6g3b" path="res://core/ui/common/osk/keyboard_row.gd" id="3_5s240"]
+[ext_resource type="Script" uid="uid://dg6tvcbberqgj" path="res://core/ui/common/osk/keyboard_layout.gd" id="4_5um32"]
 
 [sub_resource type="Resource" id="Resource_0ajxf"]
 script = ExtResource("4_5um32")
 name = "Default"
-rows = Array[Resource("res://core/ui/common/osk/keyboard_row.gd")]([])
+rows = Array[ExtResource("3_5s240")]([])
 
 [node name="KeyboardTest" type="Node"]
 script = ExtResource("1_l7c3f")

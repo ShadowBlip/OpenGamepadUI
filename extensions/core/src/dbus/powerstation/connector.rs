@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.PowerStation",
     default_path = "/org/shadowblip/Performance/GPU/card0/DP/1"
 )]
-trait Connector {
+pub trait Connector {
     /// DPMS property
     #[zbus(property, name = "DPMS")]
     fn dpms(&self) -> zbus::Result<bool>;

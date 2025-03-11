@@ -1,9 +1,10 @@
 [gd_resource type="Resource" script_class="SharedThread" load_steps=2 format=3 uid="uid://drfc178jo6ngu"]
 
-[ext_resource type="Script" path="res://core/systems/threading/shared_thread.gd" id="1_rbhla"]
+[ext_resource type="Script" uid="uid://bv1thxa1drkcw" path="res://core/systems/threading/shared_thread.gd" id="1_rbhla"]
 
 [resource]
 script = ExtResource("1_rbhla")
 name = "InputThread"
 target_tick_rate = 600
 niceness = -20
+watchdog_enabled = true

@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/target/mouse0"
 )]
-trait Mouse {
+pub trait Mouse {
     /// MoveCursor method
     fn move_cursor(&self, x: i32, y: i32) -> zbus::Result<()>;
 

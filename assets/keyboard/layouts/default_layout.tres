@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="KeyboardLayout" load_steps=178 format=3]
+[gd_resource type="Resource" script_class="KeyboardLayout" load_steps=178 format=3 uid="uid://dv326qod60suf"]
 
-[ext_resource type="Script" path="res://core/ui/common/osk/keyboard_key_config.gd" id="1_h6s00"]
-[ext_resource type="Script" path="res://core/ui/common/osk/keyboard_row.gd" id="2_yof6w"]
-[ext_resource type="Script" path="res://core/ui/common/osk/keyboard_layout.gd" id="3_f5dtc"]
+[ext_resource type="Script" uid="uid://dl3tdd7pmccg3" path="res://core/ui/common/osk/keyboard_key_config.gd" id="1_h6s00"]
+[ext_resource type="Script" uid="uid://dtgj1cr6s6g3b" path="res://core/ui/common/osk/keyboard_row.gd" id="2_yof6w"]
+[ext_resource type="Script" uid="uid://dg6tvcbberqgj" path="res://core/ui/common/osk/keyboard_layout.gd" id="3_f5dtc"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1o2u5"]
 device = -1

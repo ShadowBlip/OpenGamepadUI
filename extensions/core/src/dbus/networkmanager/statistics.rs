@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Device.Statistics",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait Statistics {
+pub trait Statistics {
     /// RefreshRateMs property
     #[zbus(property)]
     fn refresh_rate_ms(&self) -> zbus::Result<u32>;

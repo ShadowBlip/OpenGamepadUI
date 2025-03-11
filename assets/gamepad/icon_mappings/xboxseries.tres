@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="InputIconMapping" load_steps=32 format=3 uid="uid://bpu8kbwkjlcdf"]
 
-[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="1_b6rct"]
+[ext_resource type="Script" uid="uid://kct24fm8fodh" path="res://core/systems/input/input_icon_mapping.gd" id="1_b6rct"]
 [ext_resource type="Texture2D" uid="uid://ceyt88pt5sogo" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="1_ev5wy"]
 [ext_resource type="Texture2D" uid="uid://n4t36xrl15ux" path="res://assets/images/gamepad/xbox/xbox_dpad_round.svg" id="2_6ynjl"]
 [ext_resource type="Texture2D" uid="uid://bxovdah6vnpsn" path="res://assets/images/gamepad/xbox/xbox_dpad_round_down.svg" id="3_xm811"]

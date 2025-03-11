@@ -1,7 +1,10 @@
-[gd_resource type="Resource" script_class="PlatformChimeraOS" load_steps=2 format=3 uid="uid://cc8w6ne5v8ky0"]
+[gd_resource type="Resource" script_class="PlatformChimeraOS" load_steps=3 format=3 uid="uid://cc8w6ne5v8ky0"]
 
-[ext_resource type="Script" path="res://core/platform/os/chimeraos.gd" id="1_854c2"]
+[ext_resource type="Script" uid="uid://cr3vecou3cprd" path="res://core/platform/os/chimeraos.gd" id="1_854c2"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_pgcsu"]
 
 [resource]
 script = ExtResource("1_854c2")
 name = ""
+startup_actions = Array[ExtResource("2_pgcsu")]([])
+shutdown_actions = Array[ExtResource("2_pgcsu")]([])

@@ -1,7 +1,10 @@
-[gd_resource type="Resource" script_class="PlatformSteamOS" load_steps=2 format=3 uid="uid://dqn1kkcjpdi56"]
+[gd_resource type="Resource" script_class="PlatformSteamOS" load_steps=3 format=3 uid="uid://dqn1kkcjpdi56"]
 
-[ext_resource type="Script" path="res://core/platform/os/steamos.gd" id="1_6glao"]
+[ext_resource type="Script" uid="uid://b8s4ii8ty8toh" path="res://core/platform/os/steamos.gd" id="1_6glao"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_msuqt"]
 
 [resource]
 script = ExtResource("1_6glao")
 name = "SteamOS"
+startup_actions = Array[ExtResource("2_msuqt")]([])
+shutdown_actions = Array[ExtResource("2_msuqt")]([])

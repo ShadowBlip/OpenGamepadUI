@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.UDisks2.NVMe.Namespace",
     default_service = "org.freedesktop.UDisks2"
 )]
-trait Namespace {
+pub trait Namespace {
     /// FormatNamespace method
     fn format_namespace(
         &self,

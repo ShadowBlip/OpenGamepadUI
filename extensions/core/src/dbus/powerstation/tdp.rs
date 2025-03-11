@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.PowerStation",
     default_path = "/org/shadowblip/Performance/GPU/card0"
 )]
-trait TDP {
+pub trait TDP {
     /// Boost property
     #[zbus(property)]
     fn boost(&self) -> zbus::Result<f64>;

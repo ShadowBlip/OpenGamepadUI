@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b1kist0rarpcy"]
 
-[ext_resource type="Script" path="res://core/ui/common/game/game_loading.gd" id="1_1ucmh"]
+[ext_resource type="Script" uid="uid://b7rbyufflei7k" path="res://core/ui/common/game/game_loading.gd" id="1_1ucmh"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="1_jduoa"]
 
 [node name="GameLoading" type="Control"]

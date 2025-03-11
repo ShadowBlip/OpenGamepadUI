@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://b4uvvjgnbxj25"]
 
-[ext_resource type="Script" path="res://core/ui/common/settings/audio_settings_menu.gd" id="1_hjnkk"]
+[ext_resource type="Script" uid="uid://bfjerxwtpow2o" path="res://core/ui/common/settings/audio_settings_menu.gd" id="1_hjnkk"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="1_x5cm4"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_73ivm"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_n36nh"]
@@ -10,7 +10,7 @@
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_sfspm"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_06jyg"]
 [ext_resource type="Resource" uid="uid://bdvbnao6j0o18" path="res://assets/state/states/settings_audio.tres" id="6_v2pqc"]
-[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_l6bmd"]
+[ext_resource type="Script" uid="uid://ohebcttenf0j" path="res://core/systems/input/focus_group_setter.gd" id="7_l6bmd"]
 
 [node name="AudioSettingsMenu" type="MarginContainer"]
 anchors_preset = 15

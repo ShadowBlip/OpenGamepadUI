@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.NetworkManager",
     default_path = "/org/freedesktop/NetworkManager/AgentManager"
 )]
-trait AgentManager {
+pub trait AgentManager {
     /// Register method
     fn register(&self, identifier: &str) -> zbus::Result<()>;
 

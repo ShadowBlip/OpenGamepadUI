@@ -28,7 +28,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.UPower",
     default_path = "/org/freedesktop/UPower"
 )]
-trait UPower {
+pub trait UPower {
     /// EnumerateDevices method
     fn enumerate_devices(&self) -> zbus::Result<Vec<zbus::zvariant::OwnedObjectPath>>;
 

@@ -1,10 +1,12 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=8 format=3 uid="uid://dx0ykcjvufix"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=10 format=3 uid="uid://dx0ykcjvufix"]
 
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="1_f6nrl"]
-[ext_resource type="Texture2D" uid="uid://cvyo2q5qjpamv" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_juvkj"]
+[ext_resource type="Script" uid="uid://b3hu7ivsglxg4" path="res://core/platform/handheld/handheld_platform.gd" id="1_f6nrl"]
+[ext_resource type="Texture2D" uid="uid://b4w5tmfci1toh" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_juvkj"]
+[ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="2_bbl6m"]
 [ext_resource type="Texture2D" uid="uid://dd8meysn3x77u" path="res://assets/images/platform/steamdeck.png" id="2_tane6"]
-[ext_resource type="Script" path="res://core/platform/actions/start_inputplumber.gd" id="4_s8wpf"]
-[ext_resource type="Script" path="res://core/platform/actions/start_powerstation.gd" id="5_0hrnj"]
+[ext_resource type="Script" uid="uid://cwu1k8fvlc8mk" path="res://core/platform/actions/start_inputplumber.gd" id="4_s8wpf"]
+[ext_resource type="Script" uid="uid://b5vgrlm7vf8p6" path="res://core/platform/actions/start_powerstation.gd" id="5_0hrnj"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="5_qqav5"]
 
 [sub_resource type="Resource" id="Resource_6u3hp"]
 script = ExtResource("4_s8wpf")
@@ -16,7 +18,7 @@ script = ExtResource("5_0hrnj")
 script = ExtResource("1_f6nrl")
 image = ExtResource("2_tane6")
 diagram = ExtResource("1_juvkj")
-icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+icon_mappings = Array[ExtResource("2_bbl6m")]([])
 name = ""
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_6u3hp"), SubResource("Resource_us7cn")])
-shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+startup_actions = Array[ExtResource("5_qqav5")]([SubResource("Resource_6u3hp"), SubResource("Resource_us7cn")])
+shutdown_actions = Array[ExtResource("5_qqav5")]([])

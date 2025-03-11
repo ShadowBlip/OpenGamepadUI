@@ -24,4 +24,4 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Device.Loopback",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait Loopback {}
+pub trait Loopback {}

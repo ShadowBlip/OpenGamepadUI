@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="InputIconKeyboardMapping" load_steps=92 format=3 uid="uid://cuohv36v63cje"]
 
 [ext_resource type="Texture2D" uid="uid://baw7g0pvqxrrn" path="res://assets/images/keyboard/keyboard_a.svg" id="1_g6b5n"]
-[ext_resource type="Script" path="res://core/systems/input/input_icon_keyboard_mapping.gd" id="1_irquw"]
+[ext_resource type="Script" uid="uid://cmitqomdwd3yy" path="res://core/systems/input/input_icon_keyboard_mapping.gd" id="1_irquw"]
 [ext_resource type="Texture2D" uid="uid://w0kwtrj63hwa" path="res://assets/images/keyboard/keyboard_alt.svg" id="1_pdlb8"]
 [ext_resource type="Texture2D" uid="uid://bn0s36ygclor" path="res://assets/images/keyboard/keyboard_arrow_down.svg" id="2_o7paw"]
 [ext_resource type="Texture2D" uid="uid://dyrp7085ml0bo" path="res://assets/images/keyboard/keyboard_arrow_left.svg" id="3_7twfk"]

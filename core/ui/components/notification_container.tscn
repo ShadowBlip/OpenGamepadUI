@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://duhgqixnyaweh"]
 
-[ext_resource type="Script" path="res://core/ui/components/notification_container.gd" id="1_de1ex"]
+[ext_resource type="Script" uid="uid://cm1fa27gtbewi" path="res://core/ui/components/notification_container.gd" id="1_de1ex"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_rqtss"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_nmje1"]
 

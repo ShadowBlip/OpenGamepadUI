@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.NetworkManager",
     default_path = "/org/freedesktop/NetworkManager/DnsManager"
 )]
-trait DnsManager {
+pub trait DnsManager {
     /// Configuration property
     #[zbus(property)]
     fn configuration(

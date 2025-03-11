@@ -28,7 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://kfqb1dr0735v" path="res://assets/images/gamepad/xbox/xbox_stick_r_right.svg" id="27_bb87t"]
 [ext_resource type="Texture2D" uid="uid://c8fiv430upxks" path="res://assets/images/gamepad/playstation/playstation_trigger_r2_alternative.svg" id="28_ifxa8"]
 [ext_resource type="Texture2D" uid="uid://o0xrox1l5sae" path="res://assets/images/gamepad/xbox/xbox_stick_r_up.svg" id="28_xk2bh"]
-[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="31_yhp0l"]
+[ext_resource type="Script" uid="uid://kct24fm8fodh" path="res://core/systems/input/input_icon_mapping.gd" id="31_yhp0l"]
 [ext_resource type="Texture2D" uid="uid://b5bwc8uicce4u" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_share_button.svg" id="32_r40j7"]
 [ext_resource type="Texture2D" uid="uid://cl4d11t0kv11a" path="res://assets/images/gamepad/xbox/xbox_button_a.svg" id="33_wrwlp"]
 [ext_resource type="Texture2D" uid="uid://cgrflee7ll75m" path="res://assets/images/gamepad/ayaneo-2021/ayaneo_menu_button.svg" id="34_xmsqo"]

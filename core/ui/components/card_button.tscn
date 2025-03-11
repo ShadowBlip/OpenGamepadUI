@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c71ayw7pcw6u6"]
 
-[ext_resource type="Script" path="res://core/ui/components/card_button.gd" id="1_62nf7"]
+[ext_resource type="Script" uid="uid://dk2iagdv6g6dh" path="res://core/ui/components/card_button.gd" id="1_62nf7"]
 
 [node name="CardButton" type="PanelContainer"]
 clip_children = 2

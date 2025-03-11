@@ -147,15 +147,15 @@ import: $(IMPORT_DIR) ## Import project assets
 $(IMPORT_DIR): $(ALL_EXTENSIONS)
 	@echo "Importing project assets. This will take some time..."
 	command -v $(GODOT) > /dev/null 2>&1
-	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+	$(GODOT) --headless --import > /dev/null 2>&1 || echo "Finished"
 	touch $(IMPORT_DIR)
 
 .PHONY: force-import
 force-import: $(ALL_EXTENSIONS)
 	@echo "Force importing project assets. This will take some time..."
 	command -v $(GODOT) > /dev/null 2>&1
-	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
-	timeout --foreground 40 $(GODOT) --headless --editor . > /dev/null 2>&1 || echo "Finished"
+	$(GODOT) --headless --import > /dev/null 2>&1 || echo "Finished"
+	$(GODOT) --headless --import > /dev/null 2>&1 || echo "Finished"
 
 .PHONY: extensions
 extensions: $(ALL_EXTENSIONS) ## Build engine extensions
@@ -210,6 +210,13 @@ debug-overlay: $(IMPORT_DIR) ## Run the project in debug mode in gamescope with 
 docs: docs/api/classes/.generated ## Generate docs
 docs/api/classes/.generated: $(IMPORT_DIR) $(ALL_GDSCRIPT)
 	rm -rf docs/api/classes
+	mkdir -p docs/api/classes
+	$(GODOT) \
+		--editor \
+		--quit \
+		--doctool docs/api/classes \
+		--no-docbase \
+		--gdextension-docs
 	$(GODOT) \
 		--editor \
 		--path $(PWD) \

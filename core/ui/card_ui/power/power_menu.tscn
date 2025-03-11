@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://lfm3ps837gy5"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
-[ext_resource type="Shader" path="res://assets/shaders/simple_blur.gdshader" id="2_hkifr"]
+[ext_resource type="Script" uid="uid://cdp5711ctg61e" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
+[ext_resource type="Shader" uid="uid://ce5e0818nvi68" path="res://assets/shaders/simple_blur.gdshader" id="2_hkifr"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="3_1whtm"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="4_4rhfl"]
 [ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="5_kxixy"]
@@ -9,14 +9,14 @@
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="6_34b1q"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="8_xohsw"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_vlbso"]
-[ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="10_6ywv6"]
+[ext_resource type="Script" uid="uid://bmo7xxkowjsdx" path="res://core/systems/input/focus_stack.gd" id="10_6ywv6"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="10_y3iyf"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="12_2pwjc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_v0ws8"]
 shader = ExtResource("2_hkifr")
 shader_parameter/blur_amount = 1.578
-shader_parameter/mix_amount = null
+shader_parameter/mix_amount = 0.0
 shader_parameter/color_over = Color(0, 0, 0, 0)
 
 [sub_resource type="Resource" id="Resource_fafkw"]

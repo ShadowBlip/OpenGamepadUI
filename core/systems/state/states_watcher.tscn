@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bfiia7vnbfw3s"]
 
-[ext_resource type="Script" path="res://core/systems/state/states_watcher.gd" id="1_ob7ue"]
+[ext_resource type="Script" uid="uid://2up8epi5e74p" path="res://core/systems/state/states_watcher.gd" id="1_ob7ue"]
 
 [node name="StatesWatcher" type="Node"]
 script = ExtResource("1_ob7ue")

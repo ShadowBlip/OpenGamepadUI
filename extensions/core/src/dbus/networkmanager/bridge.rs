@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Device.Bridge",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait Bridge {
+pub trait Bridge {
     /// Carrier property
     #[zbus(property)]
     fn carrier(&self) -> zbus::Result<bool>;

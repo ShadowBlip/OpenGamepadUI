@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="StateMachine" load_steps=2 format=3 uid="uid://b5e8kjinft7rs"]
+[gd_resource type="Resource" script_class="StateMachine" load_steps=3 format=3 uid="uid://b5e8kjinft7rs"]
 
-[ext_resource type="Script" path="res://core/systems/state/state_machine.gd" id="1_iwio6"]
+[ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="1_gskvn"]
+[ext_resource type="Script" uid="uid://5gt4rsvv8fxf" path="res://core/systems/state/state_machine.gd" id="1_iwio6"]
 
 [resource]
 script = ExtResource("1_iwio6")
 logger_name = "NetworkOOBE"
 minimum_states = 0
+allowed_states = Array[ExtResource("1_gskvn")]([])

@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.UDisks2",
     default_path = "/org/freedesktop/UDisks2/block_devices/nvme0n1p2"
 )]
-trait Block {
+pub trait Block {
     /// AddConfigurationItem method
     fn add_configuration_item(
         &self,

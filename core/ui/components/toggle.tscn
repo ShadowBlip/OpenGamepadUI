@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d1qb7euwlu7bh"]
 
-[ext_resource type="Script" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
+[ext_resource type="Script" uid="uid://5vhtohjydvs6" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
 [ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_msehc"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_l7kb7"]
 

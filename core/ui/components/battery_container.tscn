@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dcrx6jkhn0o7u"]
 
-[ext_resource type="Script" path="res://core/ui/components/battery_container.gd" id="1_duqs8"]
+[ext_resource type="Script" uid="uid://b1g6lev3h1yr8" path="res://core/ui/components/battery_container.gd" id="1_duqs8"]
 [ext_resource type="Texture2D" uid="uid://ck3r7wbbb6lj7" path="res://assets/ui/icons/battery-empty.svg" id="1_forsh"]
 
 [node name="BatteryContainer" type="HBoxContainer"]

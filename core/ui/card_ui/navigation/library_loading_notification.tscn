@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bbcd5tclmp2ux"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/navigation/library_loading_notification.gd" id="1_fykso"]
+[ext_resource type="Script" uid="uid://c4mhow565n0ku" path="res://core/ui/card_ui/navigation/library_loading_notification.gd" id="1_fykso"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_31rsg"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="2_aupqp"]
 

@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://dy11p1f1avde"]
 
-[ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="1_42mcm"]
+[ext_resource type="Shader" uid="uid://gqn34srhjlgc" path="res://assets/shaders/outline.gdshader" id="1_42mcm"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_ekp4a"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_0ro1r"]
-[ext_resource type="Script" path="res://core/ui/components/poster.gd" id="2_op5nj"]
+[ext_resource type="Script" uid="uid://cuhdxi01iqtbc" path="res://core/ui/components/poster.gd" id="2_op5nj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0cnk5"]
 resource_local_to_scene = true

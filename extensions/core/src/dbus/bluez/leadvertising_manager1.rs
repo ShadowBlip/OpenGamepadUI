@@ -24,7 +24,7 @@ use zbus::proxy;
     default_service = "org.bluez",
     default_path = "/org/bluez/hci0"
 )]
-trait LEAdvertisingManager1 {
+pub trait LEAdvertisingManager1 {
     /// RegisterAdvertisement method
     fn register_advertisement(
         &self,

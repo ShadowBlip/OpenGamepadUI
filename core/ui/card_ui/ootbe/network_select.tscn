@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://b64v61ut4e1qv"]
 
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_isj2i"]
-[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/network_select.gd" id="1_lbpas"]
+[ext_resource type="Script" uid="uid://blta7tv37jo2a" path="res://core/ui/card_ui/ootbe/network_select.gd" id="1_lbpas"]
 [ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="2_0fb0p"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_rpwre"]
 [ext_resource type="Resource" uid="uid://rrsjc5oyp40f" path="res://assets/state/states/first_boot_network.tres" id="3_i5to7"]
@@ -18,7 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://d1rjdfxxrdccf" path="res://core/ui/components/text_input.tscn" id="11_hldpx"]
 [ext_resource type="Resource" uid="uid://b5e8kjinft7rs" path="res://assets/state/state_machines/first_boot_network_state_machine.tres" id="16_ckd3v"]
 [ext_resource type="Resource" uid="uid://bm3fu76wxxmnt" path="res://assets/state/states/first_boot_network_password.tres" id="17_mmuaj"]
-[ext_resource type="Script" path="res://core/systems/state/state_watcher.gd" id="17_umvp2"]
+[ext_resource type="Script" uid="uid://3xnmxp8tvamy" path="res://core/systems/state/state_watcher.gd" id="17_umvp2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfgwf"]
 bg_color = Color(0.156863, 0.164706, 0.211765, 1)

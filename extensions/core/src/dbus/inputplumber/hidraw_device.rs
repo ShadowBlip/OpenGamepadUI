@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/source/hidraw0"
 )]
-trait HIDRawDevice {
+pub trait HIDRawDevice {
     /// DevPath property
     #[zbus(property)]
     fn dev_path(&self) -> zbus::Result<String>;

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dbll03tbmw3ps"]
 
-[ext_resource type="Script" path="res://core/ui/components/card_mapping_button.gd" id="1_qi6wi"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="2_d8vnj"]
+[ext_resource type="Script" uid="uid://cpkfx3bftfpwx" path="res://core/ui/components/card_mapping_button.gd" id="1_qi6wi"]
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="2_d8vnj"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_o51i2"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="3_h1m7y"]
 [ext_resource type="Texture2D" uid="uid://da6kcs5mhssov" path="res://assets/ui/icons/arrow-right-bold.svg" id="4_gjhmn"]

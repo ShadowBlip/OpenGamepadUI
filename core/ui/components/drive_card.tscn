@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://caeaxm6st4a4u"]
 
-[ext_resource type="Script" path="res://core/ui/components/drive_card.gd" id="1_jlhco"]
+[ext_resource type="Script" uid="uid://bkmuftxrvxj13" path="res://core/ui/components/drive_card.gd" id="1_jlhco"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_kr6y1"]
 [ext_resource type="Texture2D" uid="uid://bidhj1jikg827" path="res://assets/icons/interface-hdd.svg" id="2_uf6p1"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_84mee"]
@@ -8,8 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_c72py"]
 [ext_resource type="PackedScene" uid="uid://bkdsn268g6hx7" path="res://core/ui/components/partition_card.tscn" id="4_wgas0"]
 [ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="4_y8uw0"]
-[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="5_7gf3k"]
-[ext_resource type="Script" path="res://core/systems/input/focus_setter.gd" id="6_gomk5"]
+[ext_resource type="Script" uid="uid://ouqt2xo8inp2" path="res://core/systems/input/input_watcher.gd" id="5_7gf3k"]
+[ext_resource type="Script" uid="uid://d07jo2oswnhwd" path="res://core/systems/input/focus_setter.gd" id="6_gomk5"]
 
 [sub_resource type="Gradient" id="Gradient_2e33l"]
 colors = PackedColorArray(0.741176, 0.576471, 0.976471, 1, 1, 0.47451, 0.776471, 1)

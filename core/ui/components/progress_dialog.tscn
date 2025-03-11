@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://ck8pudkat23b8"]
 
-[ext_resource type="Script" path="res://core/ui/components/progress_dialog.gd" id="1_a1tu2"]
+[ext_resource type="Script" uid="uid://xsqsh8rybfpq" path="res://core/ui/components/progress_dialog.gd" id="1_a1tu2"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_dfcfn"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="3_dexf2"]
 

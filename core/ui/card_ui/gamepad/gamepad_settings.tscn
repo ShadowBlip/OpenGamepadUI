@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://cwarv58ju0sow"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_settings.gd" id="1_o4hh5"]
+[ext_resource type="Script" uid="uid://dcpxjga43xfs3" path="res://core/ui/card_ui/gamepad/gamepad_settings.gd" id="1_o4hh5"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_3x6ad"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_ck60w"]
 [ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="3_wyv83"]
@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://b3o3wo40sfih1" path="res://core/ui/card_ui/gamepad/gamepad_mapper.tscn" id="16_1g7gi"]
 [ext_resource type="Resource" uid="uid://bj4m2lh2hfslr" path="res://core/ui/card_ui/gamepad/gamepad_settings_focus.tres" id="16_888le"]
 [ext_resource type="PackedScene" uid="uid://b2vibgdoiquxh" path="res://core/ui/components/card_mapping_button_group.tscn" id="17_wcyhn"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="18_lmo36"]
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="18_lmo36"]
 
 [node name="GamepadSettings" type="Control"]
 layout_mode = 3

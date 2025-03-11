@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dnq5j20fbcrwx"]
 
-[ext_resource type="Script" path="res://core/systems/power/power_saver.gd" id="1_qeyke"]
+[ext_resource type="Script" uid="uid://cxno51hdej302" path="res://core/systems/power/power_saver.gd" id="1_qeyke"]
 
 [node name="PowerSaver" type="Node"]
 script = ExtResource("1_qeyke")

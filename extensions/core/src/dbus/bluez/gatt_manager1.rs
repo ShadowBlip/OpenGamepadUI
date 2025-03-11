@@ -24,7 +24,7 @@ use zbus::proxy;
     default_service = "org.bluez",
     default_path = "/org/bluez/hci0"
 )]
-trait GattManager1 {
+pub trait GattManager1 {
     /// RegisterApplication method
     fn register_application(
         &self,

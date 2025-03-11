@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="InstallManager" load_steps=2 format=3 uid="uid://dgobw4q0h2gds"]
 
-[ext_resource type="Script" path="res://core/global/install_manager.gd" id="1_7d7qs"]
+[ext_resource type="Script" uid="uid://tes063vuds82" path="res://core/global/install_manager.gd" id="1_7d7qs"]
 
 [resource]
 script = ExtResource("1_7d7qs")

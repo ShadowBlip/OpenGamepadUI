@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.IP4Config",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait IP4Config {
+pub trait IP4Config {
     /// AddressData property
     #[zbus(property)]
     fn address_data(

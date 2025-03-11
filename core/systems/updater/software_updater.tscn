@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bnhxravpuheh2"]
 
-[ext_resource type="Script" path="res://core/systems/updater/software_updater.gd" id="1_84wmc"]
-[ext_resource type="Script" path="res://core/systems/network/github_client.gd" id="2_ee5fy"]
+[ext_resource type="Script" uid="uid://dlhj5fwxfj6l" path="res://core/systems/updater/software_updater.gd" id="1_84wmc"]
+[ext_resource type="Script" uid="uid://dwnh5u484d8gy" path="res://core/systems/network/github_client.gd" id="2_ee5fy"]
 
 [node name="SoftwareUpdater" type="Node"]
 script = ExtResource("1_84wmc")

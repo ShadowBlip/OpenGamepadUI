@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bugbaxcj7rtbq"]
 
 [ext_resource type="Texture2D" uid="uid://dux4lotlr2v3u" path="res://assets/images/tail-spin.svg" id="1_5lf7h"]
-[ext_resource type="Script" path="res://core/ui/components/loading01.gd" id="1_k5h0t"]
+[ext_resource type="Script" uid="uid://dcgrmt1kmblk5" path="res://core/ui/components/loading01.gd" id="1_k5h0t"]
 
 [sub_resource type="Animation" id="Animation_l5f6r"]
 length = 0.001
@@ -36,8 +36,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yn21n"]
 _data = {
-"RESET": SubResource("Animation_l5f6r"),
-"loading": SubResource("Animation_afykw")
+&"RESET": SubResource("Animation_l5f6r"),
+&"loading": SubResource("Animation_afykw")
 }
 
 [node name="Loading01" type="Control"]

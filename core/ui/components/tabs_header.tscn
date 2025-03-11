@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cgmb4kr2ec4ha"]
 
-[ext_resource type="Script" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="2_oxuw3"]
+[ext_resource type="Script" uid="uid://cnnkmn8jnjf2m" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="2_oxuw3"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_lb7pt"]
 content_margin_top = 20.0

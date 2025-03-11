@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://58qlqqbh58im"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
+[ext_resource type="Script" uid="uid://dlcsn1qwaj373" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_1eqgx"]
 [ext_resource type="PackedScene" uid="uid://orey8uxm7v6v" path="res://core/systems/state/visibility_manager.tscn" id="2_pga6u"]
 [ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="3_s80bx"]
@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://bvdasrjrvyp11" path="res://core/ui/card_ui/launch/game_settings_library.tscn" id="25_c26mp"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="27_06vpr"]
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_voua8"]
-[ext_resource type="Script" path="res://core/ui/components/transition_container.gd" id="34_j5cnx"]
+[ext_resource type="Script" uid="uid://5vbrx221i2hm" path="res://core/ui/components/transition_container.gd" id="34_j5cnx"]
 
 [node name="GameSettingsMenu" type="Control"]
 layout_mode = 3

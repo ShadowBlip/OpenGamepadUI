@@ -1,10 +1,12 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=2 format=3 uid="uid://br5338gp3uodr"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=4 format=3 uid="uid://br5338gp3uodr"]
 
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_7vdeb"]
+[ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="1_u6r74"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="3_ifw3p"]
+[ext_resource type="Script" uid="uid://b3hu7ivsglxg4" path="res://core/platform/handheld/handheld_platform.gd" id="4_7vdeb"]
 
 [resource]
 script = ExtResource("4_7vdeb")
-icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+icon_mappings = Array[ExtResource("1_u6r74")]([])
 name = ""
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
-shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+startup_actions = Array[ExtResource("3_ifw3p")]([])
+shutdown_actions = Array[ExtResource("3_ifw3p")]([])

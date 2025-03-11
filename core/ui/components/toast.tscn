@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://bjxpafq4ic16x"]
 
-[ext_resource type="Script" path="res://core/ui/components/toast.gd" id="1_7hhey"]
+[ext_resource type="Script" uid="uid://cfk1gx80kwa7i" path="res://core/ui/components/toast.gd" id="1_7hhey"]
 [ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_tllbf"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="4_bilxt"]
 
@@ -62,8 +62,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1d74t"]
 _data = {
-"hide": SubResource("Animation_j5gb0"),
-"show": SubResource("Animation_624hb")
+&"hide": SubResource("Animation_j5gb0"),
+&"show": SubResource("Animation_624hb")
 }
 
 [node name="Toast" type="Control" groups=["notification_toast"]]

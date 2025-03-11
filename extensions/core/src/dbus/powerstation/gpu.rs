@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.PowerStation",
     default_path = "/org/shadowblip/Performance/GPU"
 )]
-trait GPU {
+pub trait GPU {
     /// EnumerateCards method
     fn enumerate_cards(&self) -> zbus::Result<Vec<zbus::zvariant::OwnedObjectPath>>;
 }

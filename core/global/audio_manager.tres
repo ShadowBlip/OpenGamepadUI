@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AudioManager" load_steps=2 format=3 uid="uid://cjwjdtbs30pj5"]
 
-[ext_resource type="Script" path="res://core/global/audio_manager.gd" id="1_8n5p5"]
+[ext_resource type="Script" uid="uid://bni6v15ijwopa" path="res://core/global/audio_manager.gd" id="1_8n5p5"]
 
 [resource]
 script = ExtResource("1_8n5p5")

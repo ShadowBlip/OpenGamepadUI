@@ -1,9 +1,10 @@
 [gd_resource type="Resource" script_class="SharedThread" load_steps=2 format=3 uid="uid://dkm3uf37ne27s"]
 
-[ext_resource type="Script" path="res://core/systems/threading/shared_thread.gd" id="1_svd22"]
+[ext_resource type="Script" uid="uid://bv1thxa1drkcw" path="res://core/systems/threading/shared_thread.gd" id="1_svd22"]
 
 [resource]
 script = ExtResource("1_svd22")
 name = "UtilityThread"
 target_tick_rate = 10
 niceness = 0
+watchdog_enabled = true

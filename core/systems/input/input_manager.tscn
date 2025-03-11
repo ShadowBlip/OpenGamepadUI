@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://n83wlhmmsu3j"]
 
-[ext_resource type="Script" path="res://core/systems/input/input_manager.gd" id="1_3s67x"]
-[ext_resource type="Script" path="res://core/systems/input/input_plumber.gd" id="2_v1kl3"]
+[ext_resource type="Script" uid="uid://nrwy3eaxj60l" path="res://core/systems/input/input_manager.gd" id="1_3s67x"]
+[ext_resource type="Script" uid="uid://blpngehu3py28" path="res://core/systems/input/input_plumber.gd" id="2_v1kl3"]
 [ext_resource type="InputPlumberInstance" uid="uid://e2bevy4j4rx2" path="res://core/systems/input/input_plumber.tres" id="3_eclcy"]
 
 [node name="InputManager" type="Node"]

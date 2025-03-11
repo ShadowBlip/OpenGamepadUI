@@ -29,7 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://kfqb1dr0735v" path="res://assets/images/gamepad/xbox/xbox_stick_r_right.svg" id="23_p32gu"]
 [ext_resource type="Texture2D" uid="uid://o0xrox1l5sae" path="res://assets/images/gamepad/xbox/xbox_stick_r_up.svg" id="24_2bmwh"]
 [ext_resource type="Texture2D" uid="uid://brt5gm71iv3u4" path="res://assets/images/gamepad/xbox/xbox_rt.svg" id="25_1q8wd"]
-[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="26_3rfes"]
+[ext_resource type="Script" uid="uid://kct24fm8fodh" path="res://core/systems/input/input_icon_mapping.gd" id="26_3rfes"]
 [ext_resource type="Texture2D" uid="uid://cxvxwgt1vox0" path="res://assets/images/gamepad/xbox/xbox_button_color_a.svg" id="29_10lmq"]
 [ext_resource type="Texture2D" uid="uid://bcrthlw3xno0p" path="res://assets/images/gamepad/rog-ally/ally_button_view.svg" id="29_ecr88"]
 [ext_resource type="Texture2D" uid="uid://d4gi4bucbgyhv" path="res://assets/images/gamepad/rog-ally/ally_button_menu.svg" id="31_d6bvl"]

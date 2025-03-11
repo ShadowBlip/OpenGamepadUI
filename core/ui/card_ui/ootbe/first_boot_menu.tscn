@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://b30stcxjwk3od"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/ootbe/first_boot_menu.gd" id="1_37dam"]
+[ext_resource type="Script" uid="uid://cnkkdycxgokbw" path="res://core/ui/card_ui/ootbe/first_boot_menu.gd" id="1_37dam"]
 [ext_resource type="PackedScene" uid="uid://cwdf3dyj7grrk" path="res://core/ui/card_ui/ootbe/language_select.tscn" id="2_djjvb"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="2_ikevm"]
 [ext_resource type="Resource" uid="uid://bj8aa7rky3u36" path="res://assets/state/state_machines/first_boot_state_machine.tres" id="3_0m4gw"]
