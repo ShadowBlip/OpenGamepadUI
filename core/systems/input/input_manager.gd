@@ -61,15 +61,24 @@ static func is_inputplumber_event(event: InputEvent) -> bool:
 	return event.has_meta("dbus_path")
 
 
+## Returns true if the given action is currently pressed. If InputPlumber is
+## not running, then Godot's Input system will be used to check if the action
+## is pressed. Otherwise, the input manager will track the state of the action.
+func is_action_pressed(action: String) -> bool:
+	if not input_plumber.is_running():
+		return Input.is_action_pressed(action)
+	if not action in self.actions_pressed:
+		return false
+	return self.actions_pressed[action]
+
+
 ## Queue a release event for the given action
 func action_release(dbus_path: String, action: String, strength: float = 1.0) -> void:
-	Input.action_release(action)
 	_send_input(dbus_path, action, false, strength)
 
 
 ## Queue a pressed event for the given action
 func action_press(dbus_path: String, action: String, strength: float = 1.0) -> void:
-	Input.action_press(action)
 	_send_input(dbus_path, action, true, strength)
 
 
@@ -80,6 +89,7 @@ func _send_input(dbus_path: String, action: String, pressed: bool, strength: flo
 	input_action.pressed = pressed
 	input_action.strength = strength
 	input_action.set_meta("dbus_path", dbus_path)
+	self.actions_pressed[action] = pressed
 	logger.debug("Send input: " + str(input_action))
 	Input.parse_input_event(input_action)
 
@@ -107,18 +117,19 @@ func _input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 
 	# Consume double inputs for controllers with DPads that have TRIGGER_HAPPY events
-	const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
-	for action in possible_doubles:
-		if not event.is_action(action):
-			continue
-		var value := event.is_pressed()
-		var old_value := false
-		if action in actions_pressed:
-			old_value = actions_pressed[action]
-		if old_value == value:
-			get_viewport().set_input_as_handled()
-			return
-		actions_pressed[action] = value
+	if not input_plumber.is_running():
+		const possible_doubles := ["ui_left", "ui_right", "ui_up", "ui_down"]
+		for action in possible_doubles:
+			if not event.is_action(action):
+				continue
+			var value := event.is_pressed()
+			var old_value := false
+			if action in actions_pressed:
+				old_value = actions_pressed[action]
+			if old_value == value:
+				get_viewport().set_input_as_handled()
+				return
+			actions_pressed[action] = value
 
 	# Handle guide button inputs
 	if event.is_action("ogui_guide"):
@@ -166,7 +177,7 @@ func _input(event: InputEvent) -> void:
 			return
 
 	# Handle inputs when the guide button is being held
-	if Input.is_action_pressed("ogui_guide"):
+	if is_action_pressed("ogui_guide"):
 		# Prevent ALL input from propagating if guide is held!
 		get_viewport().set_input_as_handled()
 		logger.debug("Additional action while guide wad pressed.")
@@ -212,7 +223,7 @@ func _guide_input(event: InputEvent) -> void:
 
 	# If a guide action combo was pressed and we released the guide button,
 	# end the guide action and do nothing else.
-	if Input.is_action_pressed("ogui_guide_action"):
+	if is_action_pressed("ogui_guide_action"):
 		logger.debug("Guide released. Additional events used guide action, ignoring.")
 		action_release(dbus_path, "ogui_guide_action")
 		return
