@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://df5o1o2dsik84"]
 
-[ext_resource type="Script" path="res://core/ui/components/button.gd" id="1_0s08m"]
+[ext_resource type="Script" uid="uid://c24qa0chqiqa" path="res://core/ui/components/button.gd" id="1_0s08m"]
 [ext_resource type="Theme" uid="uid://bko0q7gp1hwjp" path="res://assets/themes/dracula.tres" id="1_kl3ff"]
 
 [node name="Button" type="Button"]

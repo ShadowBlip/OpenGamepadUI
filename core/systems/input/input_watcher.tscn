@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c6fg6uvng0ovi"]
 
-[ext_resource type="Script" path="res://core/systems/input/input_watcher.gd" id="1_7goow"]
+[ext_resource type="Script" uid="uid://ouqt2xo8inp2" path="res://core/systems/input/input_watcher.gd" id="1_7goow"]
 
 [node name="InputWatcher" type="Node"]
 editor_description = "Watch for input actions and fire signals"

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bkdsn268g6hx7"]
 
-[ext_resource type="Script" path="res://core/ui/components/partition_card.gd" id="1_phoww"]
+[ext_resource type="Script" uid="uid://bhitkg5qx8lcw" path="res://core/ui/components/partition_card.gd" id="1_phoww"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="2_u5faq"]
 
 [node name="PartitionCard" type="MarginContainer"]

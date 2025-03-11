@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://drbp6ec8646v3"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/settings/library_settings_menu.gd" id="1_0w1vu"]
+[ext_resource type="Script" uid="uid://4uyy07dx6rhw" path="res://core/ui/card_ui/settings/library_settings_menu.gd" id="1_0w1vu"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_obgkx"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_guba0"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_oc808"]
@@ -9,9 +9,9 @@
 [ext_resource type="Resource" uid="uid://blcfrofi5oawd" path="res://assets/state/states/settings_library.tres" id="3_ykj28"]
 [ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="4_cd7pj"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_sh522"]
-[ext_resource type="Script" path="res://core/systems/input/focus_group_setter.gd" id="7_5nxbl"]
+[ext_resource type="Script" uid="uid://ohebcttenf0j" path="res://core/systems/input/focus_group_setter.gd" id="7_5nxbl"]
 [ext_resource type="PackedScene" uid="uid://bk5ld0h1jgd2t" path="res://core/ui/components/card_button_setting.tscn" id="9_3ae07"]
-[ext_resource type="Script" path="res://core/systems/library/library_refresher.gd" id="10_xjg34"]
+[ext_resource type="Script" uid="uid://cdkerf1patjqp" path="res://core/systems/library/library_refresher.gd" id="10_xjg34"]
 
 [node name="LibrarySettingsMenu" type="ScrollContainer"]
 anchors_preset = 15

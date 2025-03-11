@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="TabContainerState" load_steps=2 format=3 uid="uid://cjda3nse6s3n1"]
 
-[ext_resource type="Script" path="res://core/systems/state/tab_container_state.gd" id="1_yv172"]
+[ext_resource type="Script" uid="uid://rv3g8irsiysn" path="res://core/systems/state/tab_container_state.gd" id="1_yv172"]
 
 [resource]
 script = ExtResource("1_yv172")

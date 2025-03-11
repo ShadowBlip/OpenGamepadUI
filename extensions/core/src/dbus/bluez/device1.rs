@@ -20,7 +20,7 @@
 //! [D-Bus standard interfaces]: https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces,
 use zbus::proxy;
 #[proxy(interface = "org.bluez.Device1", default_service = "org.bluez")]
-trait Device1 {
+pub trait Device1 {
     /// CancelPairing method
     fn cancel_pairing(&self) -> zbus::Result<()>;
 

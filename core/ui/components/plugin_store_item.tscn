@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://djoicd3vhbr1y"]
 
-[ext_resource type="Script" path="res://core/ui/components/plugin_store_item.gd" id="1_mwjyr"]
+[ext_resource type="Script" uid="uid://b0r4mdihdkm6l" path="res://core/ui/components/plugin_store_item.gd" id="1_mwjyr"]
 [ext_resource type="PackedScene" uid="uid://bsfyu747dqwcm" path="res://core/systems/input/focus_manager.tscn" id="2_cng0r"]
 [ext_resource type="PackedScene" uid="uid://df5o1o2dsik84" path="res://core/ui/components/button.tscn" id="2_nlpc7"]
 [ext_resource type="PackedScene" uid="uid://dtf4h350f4dj6" path="res://core/systems/input/focus_setter.tscn" id="2_obfvf"]

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="FocusStack" load_steps=2 format=3 uid="uid://bj4m2lh2hfslr"]
 
-[ext_resource type="Script" path="res://core/systems/input/focus_stack.gd" id="1_j8mm0"]
+[ext_resource type="Script" uid="uid://bmo7xxkowjsdx" path="res://core/systems/input/focus_stack.gd" id="1_j8mm0"]
 
 [resource]
 script = ExtResource("1_j8mm0")

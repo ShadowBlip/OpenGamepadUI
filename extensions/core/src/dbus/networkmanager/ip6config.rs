@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.IP6Config",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait IP6Config {
+pub trait IP6Config {
     /// AddressData property
     #[zbus(property)]
     fn address_data(

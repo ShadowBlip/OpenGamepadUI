@@ -1,6 +1,6 @@
 [gd_scene load_steps=22 format=3 uid="uid://bcdk1lj6enq3l"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
+[ext_resource type="Script" uid="uid://dw7ew4ukeejlm" path="res://core/ui/card_ui/launch/game_launch_menu.gd" id="1_u3ehs"]
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="2_oae7b"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_slsfk"]
 [ext_resource type="PackedScene" uid="uid://2tdbi1v6qb6h" path="res://core/ui/components/loading02.tscn" id="3_dp3a3"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_4ja2v"]
 [ext_resource type="Texture2D" uid="uid://bec6fhiswf6ve" path="res://assets/ui/icons/gamepad-bold.svg" id="5_ewj68"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_ch3qu"]
-[ext_resource type="Shader" path="res://assets/shaders/god_rays.gdshader" id="10_l1dl8"]
+[ext_resource type="Shader" uid="uid://dmrh6bodc1vy7" path="res://assets/shaders/god_rays.gdshader" id="10_l1dl8"]
 [ext_resource type="Texture2D" uid="uid://d2ipfga47yjju" path="res://assets/images/empty-grid-logo.png" id="12_01uv6"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="14_3h1st"]
 [ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="15_f3ktw"]
@@ -35,7 +35,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yfglc"]
 _data = {
-"fade_in": SubResource("Animation_ou6f5")
+&"fade_in": SubResource("Animation_ou6f5")
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f0qty"]

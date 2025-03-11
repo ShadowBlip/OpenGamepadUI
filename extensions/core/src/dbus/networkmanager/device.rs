@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Device",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait Device {
+pub trait Device {
     /// Delete method
     fn delete(&self) -> zbus::Result<()>;
 

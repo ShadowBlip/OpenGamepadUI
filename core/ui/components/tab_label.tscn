@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6c6f3vdwx43s"]
 
-[ext_resource type="Script" path="res://core/ui/components/tab_label.gd" id="1_2u45l"]
+[ext_resource type="Script" uid="uid://c17am0rna1ov5" path="res://core/ui/components/tab_label.gd" id="1_2u45l"]
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="1_r42nk"]
 
 [node name="TabLabel" type="VBoxContainer"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cu4l0d1joc37w"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
+[ext_resource type="Script" uid="uid://3pru7gphjcck" path="res://core/ui/card_ui/navigation/in-game_notification.gd" id="1_w3dkg"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="2_ftn07"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="2_gymt1"]
 [ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="2_ljdx2"]

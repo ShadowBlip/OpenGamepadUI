@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.PowerStation",
     default_path = "/org/shadowblip/Performance/CPU/Core0"
 )]
-trait Core {
+pub trait Core {
     /// CoreId property
     #[zbus(property)]
     fn core_id(&self) -> zbus::Result<u32>;

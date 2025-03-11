@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cgix472s3mrdw"]
 
-[ext_resource type="Script" path="res://core/systems/network/http_image_fetcher.gd" id="1_iwphm"]
+[ext_resource type="Script" uid="uid://dcyv3gppht5v7" path="res://core/systems/network/http_image_fetcher.gd" id="1_iwphm"]
 
 [node name="HTTPImageFetcher" type="Node"]
 script = ExtResource("1_iwphm")

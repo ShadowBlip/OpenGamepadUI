@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://hbgypx7p3gyw"]
 
-[ext_resource type="Script" path="res://core/systems/effects/grower_effect.gd" id="1_v0gq0"]
+[ext_resource type="Script" uid="uid://dxwh54l3epl62" path="res://core/systems/effects/grower_effect.gd" id="1_v0gq0"]
 
 [node name="GrowerEffect" type="Node"]
 editor_description = "Grows/shrinks the given target's custom minimum size to the size of the specified content container when a given signal fires."

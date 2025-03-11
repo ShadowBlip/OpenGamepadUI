@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://bkhrcemal7uxo"]
 
-[ext_resource type="Script" path="res://core/ui/components/card.gd" id="1_aiin0"]
+[ext_resource type="Script" uid="uid://b4hydv7h311py" path="res://core/ui/components/card.gd" id="1_aiin0"]
 [ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="2_2hlyj"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_701dj"]
 [ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_gyi80"]
-[ext_resource type="Shader" path="res://assets/shaders/highlight_shine.gdshader" id="5_0n631"]
-[ext_resource type="Shader" path="res://assets/shaders/god_rays.gdshader" id="7_8n7dp"]
+[ext_resource type="Shader" uid="uid://dw8by7ras0c8n" path="res://assets/shaders/highlight_shine.gdshader" id="5_0n631"]
+[ext_resource type="Shader" uid="uid://dmrh6bodc1vy7" path="res://assets/shaders/god_rays.gdshader" id="7_8n7dp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygsnb"]
 corner_radius_top_left = 26

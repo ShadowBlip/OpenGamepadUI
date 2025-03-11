@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/target/keyboard0"
 )]
-trait Keyboard {
+pub trait Keyboard {
     /// SendKey method
     fn send_key(&self, key: &str, value: bool) -> zbus::Result<()>;
 

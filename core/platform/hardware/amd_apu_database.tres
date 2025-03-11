@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="APUDatabase" load_steps=97 format=3 uid="uid://hm5433bg4nrm"]
 
-[ext_resource type="Script" path="res://core/platform/hardware/apu_entry.gd" id="1_a4rxd"]
-[ext_resource type="Script" path="res://core/platform/hardware/apu_database.gd" id="2_pbguw"]
+[ext_resource type="Script" uid="uid://bmxym6uwly0j1" path="res://core/platform/hardware/apu_entry.gd" id="1_a4rxd"]
+[ext_resource type="Script" uid="uid://dpvll2refhyxn" path="res://core/platform/hardware/apu_database.gd" id="2_pbguw"]
 
 [sub_resource type="Resource" id="Resource_wio8w"]
 script = ExtResource("1_a4rxd")

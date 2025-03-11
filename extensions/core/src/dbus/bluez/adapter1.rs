@@ -24,7 +24,7 @@ use zbus::proxy;
     default_service = "org.bluez",
     default_path = "/org/bluez/hci0"
 )]
-trait Adapter1 {
+pub trait Adapter1 {
     /// GetDiscoveryFilters method
     fn get_discovery_filters(&self) -> zbus::Result<Vec<String>>;
 

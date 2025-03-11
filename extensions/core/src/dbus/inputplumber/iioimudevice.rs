@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/source/iio_device0"
 )]
-trait IIOIMUDevice {
+pub trait IIOIMUDevice {
     /// AccelSampleRate property
     #[zbus(property)]
     fn accel_sample_rate(&self) -> zbus::Result<f64>;

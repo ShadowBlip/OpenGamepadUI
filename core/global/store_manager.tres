@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StoreManager" load_steps=2 format=3 uid="uid://cvj402jb06vhi"]
 
-[ext_resource type="Script" path="res://core/global/store_manager.gd" id="1_mkv5l"]
+[ext_resource type="Script" uid="uid://b8d7fq54f0dtb" path="res://core/global/store_manager.gd" id="1_mkv5l"]
 
 [resource]
 script = ExtResource("1_mkv5l")

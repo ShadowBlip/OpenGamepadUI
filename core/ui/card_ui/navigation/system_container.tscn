@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://4t4jt26o2fbr"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/navigation/system_container.gd" id="1_8dom0"]
+[ext_resource type="Script" uid="uid://c44tgdydonf85" path="res://core/ui/card_ui/navigation/system_container.gd" id="1_8dom0"]
 [ext_resource type="Texture2D" uid="uid://dfqj87oi7gygp" path="res://assets/ui/icons/wifi-none.svg" id="1_wabyh"]
 [ext_resource type="PackedScene" uid="uid://dcrx6jkhn0o7u" path="res://core/ui/components/battery_container.tscn" id="3_5cu4e"]
 

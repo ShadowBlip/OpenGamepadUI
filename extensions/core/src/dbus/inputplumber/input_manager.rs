@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/Manager"
 )]
-trait InputManager {
+pub trait InputManager {
     /// AttachTargetDevice method
     fn attach_target_device(&self, target_path: &str, composite_path: &str) -> zbus::Result<()>;
 

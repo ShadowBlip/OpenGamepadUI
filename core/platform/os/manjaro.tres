@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="PlatformChimeraOS" load_steps=2 format=3 uid="uid://cjh075h8mbdob"]
+[gd_resource type="Resource" script_class="PlatformManjaro" load_steps=3 format=3 uid="uid://cjh075h8mbdob"]
 
-[ext_resource type="Script" path="res://core/platform/os/manjaro.gd" id="1_v2018"]
+[ext_resource type="Script" uid="uid://cf76dunmbcgtr" path="res://core/platform/os/manjaro.gd" id="1_v2018"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_o2n4v"]
 
 [resource]
 script = ExtResource("1_v2018")
 name = ""
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
-shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+startup_actions = Array[ExtResource("2_o2n4v")]([])
+shutdown_actions = Array[ExtResource("2_o2n4v")]([])

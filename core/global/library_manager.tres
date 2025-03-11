@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="LibraryManager" load_steps=2 format=3 uid="uid://c2e478htbuyok"]
 
-[ext_resource type="Script" path="res://core/global/library_manager.gd" id="1_fns25"]
+[ext_resource type="Script" uid="uid://3p1debsongk0" path="res://core/global/library_manager.gd" id="1_fns25"]
 
 [resource]
 script = ExtResource("1_fns25")

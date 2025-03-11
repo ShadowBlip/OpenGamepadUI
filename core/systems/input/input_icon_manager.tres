@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="InputIconManager" load_steps=2 format=3 uid="uid://b5rtqkknqyiir"]
 
-[ext_resource type="Script" path="res://core/systems/input/input_icon_manager.gd" id="1_nn8m2"]
+[ext_resource type="Script" uid="uid://c38ku8jet6qu0" path="res://core/systems/input/input_icon_manager.gd" id="1_nn8m2"]
 
 [resource]
 script = ExtResource("1_nn8m2")

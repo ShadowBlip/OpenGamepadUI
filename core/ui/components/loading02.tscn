@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://2tdbi1v6qb6h"]
 
-[ext_resource type="Script" path="res://core/ui/components/loading02.gd" id="1_1u2cn"]
+[ext_resource type="Script" uid="uid://c7imo5ejjd2jp" path="res://core/ui/components/loading02.gd" id="1_1u2cn"]
 [ext_resource type="Texture2D" uid="uid://cj3dhphkwa66j" path="res://assets/animations/loading/loading.png" id="1_jaecb"]
 
 [sub_resource type="Animation" id="Animation_6ux80"]
@@ -21,7 +21,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2450u"]
 _data = {
-"play": SubResource("Animation_6ux80")
+&"play": SubResource("Animation_6ux80")
 }
 
 [node name="Loading02" type="Control"]

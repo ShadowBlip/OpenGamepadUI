@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.AccessPoint",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait AccessPoint {
+pub trait AccessPoint {
     /// Bandwidth property
     #[zbus(property)]
     fn bandwidth(&self) -> zbus::Result<u32>;

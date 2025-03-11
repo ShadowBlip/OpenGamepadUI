@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://o1an7w7uf2mq"]
 
-[ext_resource type="Script" path="res://core/ui/common/quick_bar/notifications_menu.gd" id="1_iomxi"]
+[ext_resource type="Script" uid="uid://6wajwysfffbd" path="res://core/ui/common/quick_bar/notifications_menu.gd" id="1_iomxi"]
 [ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_ak5ln"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_6rngx"]
-[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/qb/quick_bar_menu_focus.tres" id="3_vli0v"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_vli0v"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
 line_spacing = 0.0

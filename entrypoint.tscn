@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://co57jgowsk74d"]
 
-[ext_resource type="Script" path="res://entrypoint.gd" id="1_ji0ck"]
+[ext_resource type="Script" uid="uid://23mur2fnh1rj" path="res://entrypoint.gd" id="1_ji0ck"]
 
 [node name="entrypoint" type="Control"]
 layout_mode = 3

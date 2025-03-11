@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="PlatformNixOS" load_steps=3 format=3 uid="uid://byxeetkb11b3e"]
 
-[ext_resource type="Script" path="res://core/platform/os/nixos.gd" id="1_h88kc"]
-[ext_resource type="Script" path="res://core/platform/actions/platform_action.gd" id="2_tc12v"]
+[ext_resource type="Script" uid="uid://dkjki8ostcble" path="res://core/platform/os/nixos.gd" id="1_h88kc"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_tc12v"]
 
 [resource]
 script = ExtResource("1_h88kc")

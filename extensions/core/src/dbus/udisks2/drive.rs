@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.UDisks2.Drive",
     default_service = "org.freedesktop.UDisks2"
 )]
-trait Drive {
+pub trait Drive {
     /// Eject method
     fn eject(
         &self,

@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.UPower",
     default_path = "/org/freedesktop/UPower/devices/DisplayDevice"
 )]
-trait Device {
+pub trait Device {
     /// GetHistory method
     fn get_history(
         &self,

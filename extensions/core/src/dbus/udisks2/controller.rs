@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.UDisks2.NVMe.Controller",
     default_service = "org.freedesktop.UDisks2"
 )]
-trait Controller {
+pub trait Controller {
     /// SanitizeStart method
     fn sanitize_start(
         &self,

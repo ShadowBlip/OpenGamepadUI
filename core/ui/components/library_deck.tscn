@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://crsu0vpicq0vh"]
 
-[ext_resource type="Script" path="res://core/ui/components/library_deck.gd" id="1_sh5i6"]
+[ext_resource type="Script" uid="uid://b231tbclti4y4" path="res://core/ui/components/library_deck.gd" id="1_sh5i6"]
 [ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_hx7j7"]
 [ext_resource type="PackedScene" uid="uid://bui0u88oe8jr" path="res://core/systems/effects/raise_effect.tscn" id="3_v27hf"]
 [ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="4_ivhmt"]

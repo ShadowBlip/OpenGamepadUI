@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://doft5r1y37j1"]
 
-[ext_resource type="Script" path="res://core/ui/components/volume_indicator.gd" id="1_3cet3"]
+[ext_resource type="Script" uid="uid://dw5cirexvua53" path="res://core/ui/components/volume_indicator.gd" id="1_3cet3"]
 [ext_resource type="PackedScene" uid="uid://rr8qu8dhnyrf" path="res://core/ui/components/level_indicator.tscn" id="1_laa5m"]
 [ext_resource type="Texture2D" uid="uid://qrqhsfq6xani" path="res://assets/ui/icons/volume-off.svg" id="3_007l1"]
 

@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=10 format=3 uid="uid://dbvnshrvwlsck"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=11 format=3 uid="uid://dbvnshrvwlsck"]
 
-[ext_resource type="Texture2D" uid="uid://hmebqgl4qfmc" path="res://assets/images/gamepad/oxp/oxp-mini-a07.png" id="1_fqeaf"]
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="3_qiq0o"]
-[ext_resource type="Texture2D" uid="uid://ddj7iydr5c04r" path="res://assets/images/gamepad/oxp/a.png" id="4_0l6ld"]
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_hsh11"]
-[ext_resource type="Texture2D" uid="uid://b3ofivkj5cwdd" path="res://assets/images/gamepad/oxp/b.png" id="5_3mkdn"]
-[ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="5_tlsi8"]
+[ext_resource type="Texture2D" uid="uid://d224crt7h1b8l" path="res://assets/images/gamepad/oxp/oxp-mini-a07.png" id="1_fqeaf"]
+[ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="3_qiq0o"]
+[ext_resource type="Texture2D" uid="uid://vmqhe01e4iit" path="res://assets/images/gamepad/oxp/a.png" id="4_0l6ld"]
+[ext_resource type="Script" uid="uid://b3hu7ivsglxg4" path="res://core/platform/handheld/handheld_platform.gd" id="4_hsh11"]
+[ext_resource type="Texture2D" uid="uid://c8cjp8mh52xh2" path="res://assets/images/gamepad/oxp/b.png" id="5_3mkdn"]
+[ext_resource type="Script" uid="uid://du44m6d225f5w" path="res://core/platform/actions/turbo_takeover.gd" id="5_tlsi8"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="6_6lln8"]
 
 [sub_resource type="Resource" id="Resource_53wen"]
 script = ExtResource("3_qiq0o")
@@ -25,5 +26,5 @@ script = ExtResource("4_hsh11")
 diagram = ExtResource("1_fqeaf")
 icon_mappings = Array[ExtResource("3_qiq0o")]([SubResource("Resource_53wen"), SubResource("Resource_2yirf")])
 name = "OneXPlayer Gen 3"
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_dj8xs")])
-shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+startup_actions = Array[ExtResource("6_6lln8")]([SubResource("Resource_dj8xs")])
+shutdown_actions = Array[ExtResource("6_6lln8")]([])

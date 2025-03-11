@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="LibraryRefreshState" load_steps=2 format=3 uid="uid://80ykr0bs6o2"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/library/library_refresh_state.gd" id="1_vs5xc"]
+[ext_resource type="Script" uid="uid://cb7cuxge3xqij" path="res://core/ui/card_ui/library/library_refresh_state.gd" id="1_vs5xc"]
 
 [resource]
 script = ExtResource("1_vs5xc")

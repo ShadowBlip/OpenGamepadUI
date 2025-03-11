@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://uam46dtvo2yh"]
 
-[ext_resource type="Script" path="res://core/systems/plugin/plugin_manager.gd" id="1_8jm6j"]
+[ext_resource type="Script" uid="uid://dqvxw0ya1wdx" path="res://core/systems/plugin/plugin_manager.gd" id="1_8jm6j"]
 
 [node name="PluginManager" type="Node"]
 script = ExtResource("1_8jm6j")

@@ -24,7 +24,7 @@ use zbus::proxy;
     default_service = "org.bluez",
     default_path = "/org/bluez/hci0"
 )]
-trait NetworkServer1 {
+pub trait NetworkServer1 {
     /// Register method
     fn register(&self, uuid: &str, bridge: &str) -> zbus::Result<()>;
 

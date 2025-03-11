@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.UDisks2",
     default_path = "/org/freedesktop/UDisks2/Manager"
 )]
-trait NVMe {
+pub trait NVMe {
     /// Connect method
     fn connect(
         &self,

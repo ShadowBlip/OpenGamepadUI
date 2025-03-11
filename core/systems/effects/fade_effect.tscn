@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bw8113ocotx2r"]
 
-[ext_resource type="Script" path="res://core/systems/effects/fade_effect.gd" id="1_cihd1"]
+[ext_resource type="Script" uid="uid://ckygs70mlg202" path="res://core/systems/effects/fade_effect.gd" id="1_cihd1"]
 
 [node name="FadeEffect" type="Node"]
 editor_description = "Fades the opacity in/out the given target Control node when the given signal fires."

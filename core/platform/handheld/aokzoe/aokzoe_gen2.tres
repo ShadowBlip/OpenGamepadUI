@@ -1,14 +1,16 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=4 format=3 uid="uid://bx3yg8yhl0tm4"]
+[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=6 format=3 uid="uid://bx3yg8yhl0tm4"]
 
-[ext_resource type="Script" path="res://core/platform/handheld/handheld_platform.gd" id="4_apaed"]
-[ext_resource type="Script" path="res://core/platform/actions/turbo_takeover.gd" id="5_ej5m6"]
+[ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="1_7bf8k"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="3_y313f"]
+[ext_resource type="Script" uid="uid://b3hu7ivsglxg4" path="res://core/platform/handheld/handheld_platform.gd" id="4_apaed"]
+[ext_resource type="Script" uid="uid://du44m6d225f5w" path="res://core/platform/actions/turbo_takeover.gd" id="5_ej5m6"]
 
 [sub_resource type="Resource" id="Resource_dj8xs"]
 script = ExtResource("5_ej5m6")
 
 [resource]
 script = ExtResource("4_apaed")
-icon_mappings = Array[Resource("res://core/platform/handheld/handheld_icon_mapping.gd")]([])
+icon_mappings = Array[ExtResource("1_7bf8k")]([])
 name = ""
-startup_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([SubResource("Resource_dj8xs")])
-shutdown_actions = Array[Resource("res://core/platform/actions/platform_action.gd")]([])
+startup_actions = Array[ExtResource("3_y313f")]([SubResource("Resource_dj8xs")])
+shutdown_actions = Array[ExtResource("3_y313f")]([])

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://b2vibgdoiquxh"]
 
-[ext_resource type="Script" path="res://core/ui/components/card_mapping_button_group.gd" id="1_tdk78"]
+[ext_resource type="Script" uid="uid://csj3ull7olf4r" path="res://core/ui/components/card_mapping_button_group.gd" id="1_tdk78"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_354ht"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="2_h5pbi"]
 [ext_resource type="Resource" uid="uid://bj4m2lh2hfslr" path="res://core/ui/card_ui/gamepad/gamepad_settings_focus.tres" id="3_2hry8"]

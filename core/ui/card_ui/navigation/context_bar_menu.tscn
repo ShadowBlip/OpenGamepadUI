@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cd2p3lu01aric"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
+[ext_resource type="Script" uid="uid://0kpg7lbvh1kt" path="res://core/ui/card_ui/navigation/context_bar_menu.gd" id="1_wt5if"]
 [ext_resource type="PackedScene" uid="uid://dcrx6jkhn0o7u" path="res://core/ui/components/battery_container.tscn" id="5_ts3bb"]
-[ext_resource type="Script" path="res://core/ui/components/input_icon.gd" id="8_l6mey"]
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="8_l6mey"]
 
 [node name="ContextBar" type="PanelContainer"]
 z_index = 20

@@ -20,7 +20,7 @@
 //! [D-Bus standard interfaces]: https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces,
 use zbus::proxy;
 #[proxy(interface = "org.bluez.MediaControl1", default_service = "org.bluez")]
-trait MediaControl1 {
+pub trait MediaControl1 {
     /// FastForward method
     fn fast_forward(&self) -> zbus::Result<()>;
 

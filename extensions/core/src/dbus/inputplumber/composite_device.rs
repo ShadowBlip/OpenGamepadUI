@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/CompositeDevice0"
 )]
-trait CompositeDevice {
+pub trait CompositeDevice {
     /// LoadProfileFromYaml method
     fn load_profile_from_yaml(&self, profile: &str) -> zbus::Result<()>;
 

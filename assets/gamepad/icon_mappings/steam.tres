@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="InputIconMapping" load_steps=25 format=3 uid="uid://bgm0ymdturbr6"]
 
 [ext_resource type="Texture2D" uid="uid://cst2i5us0vdjy" path="res://assets/images/gamepad/steam/controller_steam.svg" id="1_6gggn"]
-[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="1_vsxmp"]
+[ext_resource type="Script" uid="uid://kct24fm8fodh" path="res://core/systems/input/input_icon_mapping.gd" id="1_vsxmp"]
 [ext_resource type="Texture2D" uid="uid://dr4giue83b7ly" path="res://assets/images/gamepad/steam/steam_dpad.svg" id="2_dr285"]
 [ext_resource type="Texture2D" uid="uid://hjxtuq87i2s8" path="res://assets/images/gamepad/steam/steam_dpad_down.svg" id="3_614i2"]
 [ext_resource type="Texture2D" uid="uid://dlt00cmdhrufc" path="res://assets/images/gamepad/steam/steam_dpad_left.svg" id="4_joten"]

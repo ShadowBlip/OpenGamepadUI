@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://rosd00fxjrs8"]
 
 [ext_resource type="Texture2D" uid="uid://d1mksukdkqorr" path="res://assets/images/placeholder-grid-banner.png" id="1_5oyqx"]
-[ext_resource type="Script" path="res://core/ui/components/library_banner.gd" id="1_yhxxp"]
+[ext_resource type="Script" uid="uid://bi1873b3iiatp" path="res://core/ui/components/library_banner.gd" id="1_yhxxp"]
 
 [sub_resource type="Gradient" id="Gradient_yij5a"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)

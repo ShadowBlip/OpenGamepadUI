@@ -26,7 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://kfqb1dr0735v" path="res://assets/images/gamepad/xbox/xbox_stick_r_right.svg" id="23_lsal5"]
 [ext_resource type="Texture2D" uid="uid://o0xrox1l5sae" path="res://assets/images/gamepad/xbox/xbox_stick_r_up.svg" id="24_5n5ek"]
 [ext_resource type="Texture2D" uid="uid://brt5gm71iv3u4" path="res://assets/images/gamepad/xbox/xbox_rt.svg" id="25_pdf5n"]
-[ext_resource type="Script" path="res://core/systems/input/input_icon_mapping.gd" id="26_iuti6"]
+[ext_resource type="Script" uid="uid://kct24fm8fodh" path="res://core/systems/input/input_icon_mapping.gd" id="26_iuti6"]
 [ext_resource type="Texture2D" uid="uid://cws272by4n8r7" path="res://assets/images/gamepad/xbox/xbox_button_view.svg" id="27_7206a"]
 [ext_resource type="Texture2D" uid="uid://vmqhe01e4iit" path="res://assets/images/gamepad/oxp/a.png" id="28_1faky"]
 [ext_resource type="Texture2D" uid="uid://ckk2my0j71i3r" path="res://assets/images/gamepad/xbox/xbox_button_menu.svg" id="29_vuglh"]

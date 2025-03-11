@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.NetworkManager",
     default_path = "/org/freedesktop/NetworkManager/Settings"
 )]
-trait Settings {
+pub trait Settings {
     /// AddConnection method
     fn add_connection(
         &self,

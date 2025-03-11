@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bui0u88oe8jr"]
 
-[ext_resource type="Script" path="res://core/systems/effects/raise_effect.gd" id="1_2rdse"]
+[ext_resource type="Script" uid="uid://bnhsqx7n32ys5" path="res://core/systems/effects/raise_effect.gd" id="1_2rdse"]
 
 [node name="RaiseEffect" type="Node"]
 editor_description = "Animates the target Control node when a given signal fires. The node is \"raised\" off the ground and lowered when the lowered signal fires. An optional shadow can be given to increase the size of the shadow when raised."

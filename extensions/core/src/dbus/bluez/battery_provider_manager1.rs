@@ -24,7 +24,7 @@ use zbus::proxy;
     default_service = "org.bluez",
     default_path = "/org/bluez/hci0"
 )]
-trait BatteryProviderManager1 {
+pub trait BatteryProviderManager1 {
     /// RegisterBatteryProvider method
     fn register_battery_provider(
         &self,

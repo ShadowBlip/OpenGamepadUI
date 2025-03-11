@@ -19,8 +19,7 @@ class_name BoxArtManager
 ##     var boxart := BoxArtManager.get_boxart(library_item, BoxArtProvider.LAYOUT.LOGO)
 ##     [/codeblock]
 
-const SettingsManager := preload("res://core/global/settings_manager.tres")
-const io_thread = preload("res://core/systems/threading/io_thread.tres")
+const settings_manager := preload("res://core/global/settings_manager.tres")
 
 ## Fields required to be set by [BoxArtProvider] implementations
 const REQUIRED_FIELDS: Array = ["provider_id"]
@@ -45,13 +44,9 @@ var _providers: Dictionary = {}
 var _providers_by_priority: Array = []
 
 
-func _init() -> void:
-	io_thread.start()
-
-
 ## Returns the boxart of the given kind for the given library item. 
 func get_boxart(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
-	return await io_thread.exec(_get_boxart_sync.bind(item, kind))
+	return await _get_boxart_sync(item, kind)
 
 
 func _get_boxart_sync(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture2D:
@@ -63,7 +58,7 @@ func _get_boxart_sync(item: LibraryItem, kind: BoxArtProvider.LAYOUT) -> Texture
 		return null
 
 	# Check to see if the given library item has a provider set
-	var provider_id := SettingsManager.get_library_value(item, "boxart_provider", "") as String
+	var provider_id := settings_manager.get_library_value(item, "boxart_provider", "") as String
 	if provider_id != "" and provider_id in _providers:
 		var provider: BoxArtProvider = _providers[provider_id]
 		var texture: Texture2D = await provider.get_boxart(item, kind)

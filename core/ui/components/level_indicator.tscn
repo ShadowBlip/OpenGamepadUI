@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://rr8qu8dhnyrf"]
 
-[ext_resource type="Script" path="res://core/ui/components/level_indicator.gd" id="1_0v5ad"]
+[ext_resource type="Script" uid="uid://b3padtanwy03b" path="res://core/ui/components/level_indicator.gd" id="1_0v5ad"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="2_02hda"]
 
 [node name="LevelIndicator" type="Control"]

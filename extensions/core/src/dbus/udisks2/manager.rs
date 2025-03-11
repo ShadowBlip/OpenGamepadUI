@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.freedesktop.UDisks2",
     default_path = "/org/freedesktop/UDisks2/Manager"
 )]
-trait Manager {
+pub trait Manager {
     /// CanCheck method
     fn can_check(&self, type_: &str) -> zbus::Result<(bool, String)>;
 

@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Device.WifiP2P",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait WifiP2P {
+pub trait WifiP2P {
     /// StartFind method
     fn start_find(
         &self,

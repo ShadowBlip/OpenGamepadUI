@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.UDisks2.PartitionTable",
     default_service = "org.freedesktop.UDisks2"
 )]
-trait PartitionTable {
+pub trait PartitionTable {
     /// CreatePartition method
     fn create_partition(
         &self,

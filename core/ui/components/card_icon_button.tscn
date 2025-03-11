@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cr83fmlociwko"]
 
-[ext_resource type="Script" path="res://core/ui/components/card_icon_button.gd" id="1_u71p0"]
+[ext_resource type="Script" uid="uid://bna7lqdynnom1" path="res://core/ui/components/card_icon_button.gd" id="1_u71p0"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="2_k5pua"]
 
 [node name="CardIconButton" type="MarginContainer"]

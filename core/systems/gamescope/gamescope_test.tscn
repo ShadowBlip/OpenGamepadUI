@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://83606lflpyo5"]
 
-[ext_resource type="Script" path="res://core/systems/gamescope/gamescope_test.gd" id="1_e433b"]
-[ext_resource type="Script" path="res://core/systems/gamescope/gamescope.gd" id="1_ukgov"]
+[ext_resource type="Script" uid="uid://d0nykhc8vcam5" path="res://core/systems/gamescope/gamescope_test.gd" id="1_e433b"]
+[ext_resource type="Script" uid="uid://yhfpudolgixq" path="res://core/systems/gamescope/gamescope.gd" id="1_ukgov"]
 [ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="2_fbm81"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="4_j1wlf"]
 

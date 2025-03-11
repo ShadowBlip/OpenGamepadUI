@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DisplayManager" load_steps=2 format=3 uid="uid://bbobmlofl3xne"]
 
-[ext_resource type="Script" path="res://core/global/display_manager.gd" id="1_t4713"]
+[ext_resource type="Script" uid="uid://dytgtf0e2g6pv" path="res://core/global/display_manager.gd" id="1_t4713"]
 
 [resource]
 script = ExtResource("1_t4713")

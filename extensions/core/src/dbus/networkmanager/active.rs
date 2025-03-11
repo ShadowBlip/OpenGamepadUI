@@ -24,7 +24,7 @@ use zbus::proxy;
     interface = "org.freedesktop.NetworkManager.Connection.Active",
     default_service = "org.freedesktop.NetworkManager"
 )]
-trait Active {
+pub trait Active {
     /// StateChanged signal
     //#[zbus(signal)]
     //fn state_changed(&self, state: u32, reason: u32) -> zbus::Result<()>;

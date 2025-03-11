@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ccwn4n40imfg8"]
 
-[ext_resource type="Script" path="res://core/ui/components/containers/overlay_container.gd" id="1_ud6vc"]
+[ext_resource type="Script" uid="uid://dpqcv8ft4fu04" path="res://core/ui/components/containers/overlay_container.gd" id="1_ud6vc"]
 
 [node name="OverlayContainer" type="Container" groups=["overlay"]]
 z_index = 20

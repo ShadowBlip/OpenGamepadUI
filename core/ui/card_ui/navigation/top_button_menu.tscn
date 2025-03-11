@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://by0i08fw1fwty"]
+[gd_scene load_steps=14 format=3 uid="uid://by0i08fw1fwty"]
 
 [ext_resource type="PackedScene" uid="uid://bfiia7vnbfw3s" path="res://core/systems/state/states_watcher.tscn" id="1_onljq"]
 [ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="1_te2kv"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="2_1q5o3"]
+[ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="2_5vvqh"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="2_a2ifc"]
 [ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="4_g6or7"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_m8oxr"]
@@ -21,7 +22,7 @@ size_flags_vertical = 0
 theme_type_variation = &"ButtonMenu"
 
 [node name="StatesWatcher" parent="." instance=ExtResource("1_onljq")]
-states = Array[Resource("res://core/systems/state/state.gd")]([ExtResource("2_a2ifc"), ExtResource("4_g6or7")])
+states = Array[ExtResource("2_5vvqh")]([ExtResource("2_a2ifc"), ExtResource("4_g6or7")])
 
 [node name="FadeEffect" parent="StatesWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_m8oxr")]
 target = NodePath("../..")

@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.InputPlumber",
     default_path = "/org/shadowblip/InputPlumber/devices/target/gamepad0"
 )]
-trait Gamepad {
+pub trait Gamepad {
     /// Name property
     #[zbus(property)]
     fn name(&self) -> zbus::Result<String>;

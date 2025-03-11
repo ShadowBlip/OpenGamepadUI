@@ -25,7 +25,7 @@ use zbus::proxy;
     default_service = "org.shadowblip.PowerStation",
     default_path = "/org/shadowblip/Performance/CPU"
 )]
-trait CPU {
+pub trait CPU {
     /// EnumerateCores method
     fn enumerate_cores(&self) -> zbus::Result<Vec<zbus::zvariant::OwnedObjectPath>>;
 

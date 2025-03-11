@@ -1,6 +1,6 @@
 [gd_scene load_steps=23 format=3 uid="uid://b3o3wo40sfih1"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
+[ext_resource type="Script" uid="uid://ha32m8jpqtwh" path="res://core/ui/card_ui/gamepad/gamepad_mapper.gd" id="1_alala"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_4osef"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_o3mis"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_2kcao"]
@@ -19,7 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://ceyt88pt5sogo" path="res://assets/images/gamepad/xbox/XboxOne_Diagram.png" id="13_hvmil"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="16_bkk3w"]
 [ext_resource type="Texture2D" uid="uid://05mc8os4g5ax" path="res://assets/images/mouse/diagram.svg" id="18_lkxxd"]
-[ext_resource type="Script" path="res://core/global/keyboard_instance.gd" id="18_u0i73"]
+[ext_resource type="Script" uid="uid://cb6mntchgaj5" path="res://core/global/keyboard_instance.gd" id="18_u0i73"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t62r6"]
 

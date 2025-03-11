@@ -1,6 +1,6 @@
 [gd_scene load_steps=30 format=3 uid="uid://hroo3ll4inrb"]
 
-[ext_resource type="Script" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.gd" id="1_56jo7"]
+[ext_resource type="Script" uid="uid://3sik128fffg7" path="res://core/ui/card_ui/quick_bar/quick_bar_menu.gd" id="1_56jo7"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_6rvrx"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_kmwe3"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_cxjne"]
@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://p3lsljjgjnv7" path="res://assets/ui/icons/keyboard-rounded.svg" id="13_625jj"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="14_didkb"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="14_gr3i0"]
-[ext_resource type="Script" path="res://core/systems/input/keyboard_opener.gd" id="14_vjul7"]
+[ext_resource type="Script" uid="uid://c538myb3wjkad" path="res://core/systems/input/keyboard_opener.gd" id="14_vjul7"]
 [ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="15_0l0p5"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="15_ip4q6"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="16_5eydp"]
