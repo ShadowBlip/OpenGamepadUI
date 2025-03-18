@@ -3,12 +3,12 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 PREFIX=$(dirname -- "${SCRIPT_DIR}")
 
 OGUI_BIN=${OGUI_BIN:-"${PREFIX}/share/opengamepadui/opengamepad-ui.x86_64"}
-GAMESCOPE_CMD=${GAMESCOPE_CMD:-gamescope -w 1920 -h 1080 -f --xwayland-count 2}
+GAMESCOPE_CMD=${GAMESCOPE_CMD:-gamescope -e -w 1920 -h 1080 -f --xwayland-count 2}
 
-# Launch normally if gamescope is not running
+# Launch normally if gamescope is already running
 if ls /run/user/${UID}/gamescope* >/dev/null 2>&1; then
-	echo "Executing: ${OGUI_BIN} $@"
-	exec ${OGUI_BIN} "$@"
+  echo "Executing: ${OGUI_BIN}" "$@"
+  exec ${OGUI_BIN} "$@"
 fi
-echo "Executing: ${GAMESCOPE_CMD} -- ${OGUI_BIN} $@"
-exec ${GAMESCOPE_CMD} -- ${OGUI_BIN} "$@"
+echo "Executing: ${GAMESCOPE_CMD} -- ${OGUI_BIN}" "$@"
+exec ${GAMESCOPE_CMD} -- "${OGUI_BIN}" "$@"
