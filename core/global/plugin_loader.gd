@@ -15,7 +15,8 @@ class_name PluginLoader
 ## load Godot scripts and scenes from a zip file. The PluginLoader looks for zip 
 ## files in user://plugins, and parses the plugin.json file contained within 
 ## them. If the plugin metadata is valid, the loader loads the zip as a resource 
-## pack.
+## pack. Additionally, it now supports loading plugins from res://plugins as 
+## directories containing a plugin.json file.
 
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
 const PLUGIN_API_VERSION = "1.1.0"
@@ -42,18 +43,18 @@ var logger := Log.get_logger("PluginLoader", Log.LEVEL.INFO)
 var plugins := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["quick_bar", "steam"], ...}
 ## Dictionary of instantiated plugins.
 var plugin_nodes := {}
-## Dictionary of available plugins in the defualt plugin store. Similair data
-## struture to the plugins dict with some additonal fields.
+## Dictionary of available plugins in the default plugin store. Similar data
+## structure to the plugins dict with some additional fields.
 var plugin_store_items := {} # {plugin_id: {plugin.name: "name", plugin.id: "id", store.tags: ["quick_bar", "steam"], ...}
 ## List of plugin_ids that are installed where a newer version of the plugin is
 ## available in the plugin store.
 var plugins_upgradable := []
 var plugin_filters : Array[Callable] = []
 
-enum update_type{
+enum update_type {
 	NEW,
 	UPDATE,
-	}
+}
 
 ## Initializes the plugin loader. Loaded plugins will be added to the given 
 ## manager node.
@@ -375,71 +376,108 @@ func initialize_plugin(plugin_id) -> int:
 	return OK
 
 
-# Looks in the user plugins directory for plugin json files and loads them.
+# Looks in both user plugins directory (user://plugins) and resource plugins directory (res://plugins) 
+# for plugin zip files or directories with plugin.json and loads them.
 func _load_plugins() -> void:
-	var dir = DirAccess.open(PLUGINS_DIR)
-	if not dir:
-		logger.debug("Unable to open plugin directory!")
-		return
-
-	# Iterate through all plugins
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
-	while file_name != "":
-		# Skip any non-plugins
-		if not file_name.ends_with(".zip"):
-			file_name = dir.get_next()
+	var plugin_dirs := [
+		PLUGINS_DIR,         # user://plugins
+		LOADED_PLUGINS_DIR   # res://plugins
+	]
+	
+	for plugin_dir_path in plugin_dirs:
+		var dir = DirAccess.open(plugin_dir_path)
+		if not dir:
+			logger.debug("Unable to open plugin directory: " + plugin_dir_path)
 			continue
 
-		# Read the plugin metadata
-		logger.debug("Found plugin: " + file_name)
-		var meta = _load_plugin_meta("/".join([PLUGINS_DIR, file_name]))
-		if meta == null:
-			logger.warn("%s failed to load" % file_name)
-			file_name = dir.get_next()
-			continue
+		# Iterate through all items in the directory (files and subdirectories)
+		dir.list_dir_begin()
+		var item_name = dir.get_next()
+		while item_name != "":
+			var full_path = "/".join([plugin_dir_path, item_name])
+			# Check for .zip files
+			if item_name.ends_with(".zip"):
+				logger.debug("Found plugin archive: " + full_path)
+				var meta = _load_plugin_meta(full_path)
+				if meta == null:
+					logger.warn("%s failed to load" % full_path)
+					item_name = dir.get_next()
+					continue
 
-		# Validate the plugin metadata
-		if not _is_valid_plugin_meta(meta):
-			logger.warn("%s has invalid plugin JSON" % file_name)
-			file_name = dir.get_next()
-			continue
+				if not _is_valid_plugin_meta(meta):
+					logger.warn("%s has invalid plugin JSON" % full_path)
+					item_name = dir.get_next()
+					continue
 
-		# Ensure the plugin is compatible
-		if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
-			logger.warn("%s is not compatible with this plugin API verion" % file_name)
-			file_name = dir.get_next()
-			continue
+				if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
+					logger.warn("%s is not compatible with this plugin API version" % full_path)
+					item_name = dir.get_next()
+					continue
 
-		# Check if the plugin is already loaded
-		if is_loaded(meta["plugin.id"]):
+				if is_loaded(meta["plugin.id"]):
+					var existing = get_plugin_meta(meta["plugin.id"])
+					if not SemanticVersion.is_greater(meta["plugin.version"], existing["plugin.version"]):
+						item_name = dir.get_next()
+						continue
+					unload_plugin(meta["plugin.id"])
 
-			# Check if we need to upgrade
-			var existing = get_plugin_meta(meta["plugin.id"])
-			if not SemanticVersion.is_greater(meta["plugin.version"], existing["plugin.version"]):
-				file_name = dir.get_next()
-				continue
+				if plugin_dir_path == PLUGINS_DIR and not is_extracted(meta):
+					var extracted_dir := "/".join([PLUGINS_DIR, meta["plugin.id"]])
+					if DirAccess.dir_exists_absolute(extracted_dir):
+						OS.move_to_trash(ProjectSettings.globalize_path(extracted_dir))
+					extract_plugin(meta["plugin.id"], full_path)
 
-			# Uninitialize and unload old version
-			unload_plugin(meta["plugin.id"])
+				if not ProjectSettings.load_resource_pack(full_path):
+					logger.warn("%s failed to load as a resource pack" % full_path)
+					item_name = dir.get_next()
+					continue
 
-		# Extract the plugin to allow accessing plugin assets outside Godot
-		if not is_extracted(meta):
-			var extracted_dir := "/".join([PLUGINS_DIR, meta["plugin.id"]])
-			if DirAccess.dir_exists_absolute(extracted_dir):
-				OS.move_to_trash(ProjectSettings.globalize_path(extracted_dir))
-			extract_plugin(meta["plugin.id"], "/".join([PLUGINS_DIR, file_name]))
+				plugins[meta["plugin.id"]] = meta
+				plugin_loaded.emit(meta["plugin.id"])
+				logger.info("Loaded plugin: " + meta["plugin.id"] + " from " + plugin_dir_path)
 
-		# Load the plugin, this will also replace the existing instance of the resource.
-		# for an updated plugin.
-		if not ProjectSettings.load_resource_pack("/".join([PLUGINS_DIR, file_name])):
-			logger.warn("%s failed to load" % file_name)
+			# Check for directories with plugin.json
+			elif dir.current_is_dir():
+				var plugin_json_path = "/".join([full_path, "plugin.json"])
+				if FileAccess.file_exists(plugin_json_path):
+					logger.debug("Found plugin directory: " + full_path)
+					var meta = _load_plugin_meta_from_dir(plugin_json_path)
+					if meta == null:
+						logger.warn("%s failed to load metadata" % full_path)
+						item_name = dir.get_next()
+						continue
 
-		# Register the plugin
-		var plugin_name: String = meta["plugin.id"]
-		plugins[plugin_name] = meta
-		plugin_loaded.emit(plugin_name)
-		file_name = dir.get_next()
+					if not _is_valid_plugin_meta(meta):
+						logger.warn("%s has invalid plugin JSON" % full_path)
+						item_name = dir.get_next()
+						continue
+
+					if not _is_compatible_version(meta["plugin.min-api-version"], PLUGIN_API_VERSION):
+						logger.warn("%s is not compatible with this plugin API version" % full_path)
+						item_name = dir.get_next()
+						continue
+
+					if is_loaded(meta["plugin.id"]):
+						var existing = get_plugin_meta(meta["plugin.id"])
+						if not SemanticVersion.is_greater(meta["plugin.version"], existing["plugin.version"]):
+							item_name = dir.get_next()
+							continue
+						unload_plugin(meta["plugin.id"])
+
+					# For directories, load scripts/scenes directly (no resource pack needed)
+					var entrypoint = meta.get("entrypoint", "")
+					if entrypoint and entrypoint != "":
+						var script_path = "/".join([full_path, entrypoint])
+						if ResourceLoader.exists(script_path):
+							plugins[meta["plugin.id"]] = meta
+							plugin_loaded.emit(meta["plugin.id"])
+							logger.info("Loaded plugin: " + meta["plugin.id"] + " from directory " + plugin_dir_path)
+						else:
+							logger.warn("Entrypoint %s not found for plugin %s" % [script_path, meta["plugin.id"]])
+					else:
+						logger.warn("No entrypoint defined for plugin in %s" % full_path)
+
+			item_name = dir.get_next()
 
 
 # Initializes the loaded plugins
@@ -448,7 +486,7 @@ func _init_plugins(filters: Array[Callable] = []) -> void:
 	var plugin_ids: Array[String] = []
 	if filters.size() == 0:
 		plugin_ids.assign(all_plugins.keys())
-	logger.debug("Filters to appy: " + str(filters.size()))
+	logger.debug("Filters to apply: " + str(filters.size()))
 	for filter in filters:
 		logger.debug("Applying filter " + str(filter))
 		var ids_to_append: Array[String] = filter.call(all_plugins)
@@ -460,10 +498,9 @@ func _init_plugins(filters: Array[Callable] = []) -> void:
 			initialize_plugin(name)
 
 
-# Loads plugin metadata and returns it as a parsed dictionary. Returns null
+# Loads plugin metadata from a zip file and returns it as a parsed dictionary. Returns null
 # if there was an error parsing.
 func _load_plugin_meta(path: String) -> Variant:
-
 	# Open the archive
 	var reader: ZIPReader = ZIPReader.new()
 	var error := reader.open(path)
@@ -495,6 +532,20 @@ func _load_plugin_meta(path: String) -> Variant:
 	return meta
 
 
+# Loads plugin metadata from a directory's plugin.json file and returns it as a parsed dictionary. Returns null
+# if there was an error parsing.
+func _load_plugin_meta_from_dir(plugin_json_path: String) -> Variant:
+	var file = FileAccess.open(plugin_json_path, FileAccess.READ)
+	if not file:
+		logger.error("Failed to open %s" % plugin_json_path)
+		return null
+	
+	var data = file.get_as_text()
+	file.close()
+	var meta = JSON.parse_string(data)
+	return meta if meta != null else null
+
+
 # Ensures the given plugin metadata has all required fields
 func _is_valid_plugin_meta(meta: Dictionary) -> bool:
 	for field in REQUIRED_META:
@@ -510,7 +561,7 @@ func _is_compatible_version(version: String, target: String) -> bool:
 	return SemanticVersion.is_feature_compatible(version, target)
 
 
-# Refreshes the pluign store database and reports if an updated plugin is available
+# Refreshes the plugin store database and reports if an updated plugin is available
 func on_update_timeout() -> void:
 	var new_store_items: Variant = await get_plugin_store_items()
 
