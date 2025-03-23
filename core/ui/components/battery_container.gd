@@ -37,7 +37,7 @@ func _on_update_device(item: UPowerDevice):
 	var capacity := item.percentage
 	var state := item.state
 	battery_icon.texture = get_capacity_texture(capacity, state)
-	battery_label.text = str(capacity)+"%"
+	battery_label.text = str(int(capacity))+"%"
 	if capacity > 5:
 		battery_icon.modulate = Color(1, 1, 1)
 	else:
