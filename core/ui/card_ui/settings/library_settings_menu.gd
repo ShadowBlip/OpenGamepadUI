@@ -7,6 +7,7 @@ var settings_state := load("res://assets/state/states/settings.tres") as State
 var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
 var button_scene := load("res://core/ui/components/card_button.tscn") as PackedScene
 
+@onready var local_library_toggle := $%LocalLibraryToggle as Toggle
 @onready var max_recent_slider := $%MaxRecentAppsSlider
 @onready var no_hidden_label := $%NoHiddenLabel
 @onready var container := $%VBoxContainer
@@ -20,6 +21,13 @@ func _ready() -> void:
 	# Configure home menu
 	var max_recent := settings_manager.get_value("general.home", "max_home_items", 10) as int
 	max_recent_slider.value = max_recent
+
+	# Configure desktop library
+	await get_tree().process_frame
+	var enable_local_library := settings_manager.get_value("general", "enable_local_library", true) as bool
+	local_library_toggle.button_pressed = enable_local_library
+	local_library_toggle.toggled.connect(_on_local_library_toggled)
+	_on_local_library_toggled(enable_local_library)
 
 
 func _on_state_entered(_from: State) -> void:
@@ -58,3 +66,30 @@ func _on_state_entered(_from: State) -> void:
 
 func _on_state_exited(_to: State) -> void:
 	pass
+
+
+func _on_local_library_toggled(enabled: bool) -> void:
+	if enabled:
+		_enable_local_library()
+		return
+	_disable_local_library()
+
+
+func _enable_local_library() -> void:
+	var library := library_manager.get_library_by_id("desktop")
+	if library:
+		return
+	library = load("res://core/systems/library/library_desktop.tscn").instantiate()
+
+	var main := get_tree().get_first_node_in_group("main")
+	if not main:
+		return
+	main.add_child(library)
+
+
+func _disable_local_library() -> void:
+	var library := library_manager.get_library_by_id("desktop")
+	if not library:
+		return
+	library_manager.unregister_library(library)
+	library.queue_free()

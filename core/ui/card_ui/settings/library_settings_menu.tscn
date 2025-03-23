@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://drbp6ec8646v3"]
+[gd_scene load_steps=14 format=3 uid="uid://drbp6ec8646v3"]
 
 [ext_resource type="Script" uid="uid://4uyy07dx6rhw" path="res://core/ui/card_ui/settings/library_settings_menu.gd" id="1_0w1vu"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_obgkx"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="5_sh522"]
 [ext_resource type="Script" uid="uid://ohebcttenf0j" path="res://core/systems/input/focus_group_setter.gd" id="7_5nxbl"]
 [ext_resource type="PackedScene" uid="uid://bk5ld0h1jgd2t" path="res://core/ui/components/card_button_setting.tscn" id="9_3ae07"]
+[ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="10_xbbsv"]
 [ext_resource type="Script" uid="uid://cdkerf1patjqp" path="res://core/systems/library/library_refresher.gd" id="10_xjg34"]
 
 [node name="LibrarySettingsMenu" type="ScrollContainer"]
@@ -58,6 +59,14 @@ current_focus = NodePath("../MaxRecentAppsSlider")
 [node name="GeneralLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_x5lfl")]
 layout_mode = 2
 text = "General"
+
+[node name="LocalLibraryToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("10_xbbsv")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enable Desktop Library"
+separator_visible = false
+description = "Show locally installed games in your library"
+button_pressed = true
 
 [node name="RefreshLibraryButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("9_3ae07")]
 layout_mode = 2
