@@ -55,7 +55,7 @@ vertical = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a60ci"]
 
-[node name="SettingsMenu" type="Control"]
+[node name="SettingsMenu" type="Control" groups=["menu", "settings_menu"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
