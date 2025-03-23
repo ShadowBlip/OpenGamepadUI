@@ -24,7 +24,7 @@
 [ext_resource type="Theme" uid="uid://de64j20kxm1k1" path="res://assets/themes/card_ui-water-vapor.tres" id="13_2j54j"]
 [ext_resource type="Theme" uid="uid://cw7auu2ayqnp8" path="res://assets/themes/card_ui-mountain.tres" id="14_wt0wj"]
 
-[node name="GeneralSettings" type="ScrollContainer"]
+[node name="GeneralSettings" type="ScrollContainer" groups=["menu", "settings_general_menu"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

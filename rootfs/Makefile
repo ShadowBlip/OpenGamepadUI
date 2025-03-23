@@ -40,6 +40,8 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/share/polkit-1/actions/org.shadowblip.manage_input.policy
 	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.setcap.policy \
 		$(PREFIX)/share/polkit-1/actions/org.shadowblip.setcap.policy
+	install -Dm644 usr/share/polkit-1/actions/org.shadowblip.nixos_updater.policy \
+		$(PREFIX)/share/polkit-1/actions/org.shadowblip.nixos_updater.policy
 	install -Dm644 usr/lib/systemd/user/systemd-sysext-updater.service \
 		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	install -Dm644 usr/lib/systemd/user/ogui-overlay-mode.service \

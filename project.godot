@@ -52,6 +52,11 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 import/blender/enabled=false
 
+[global_group]
+
+menu=""
+main=""
+
 [input]
 
 ui_accept={
