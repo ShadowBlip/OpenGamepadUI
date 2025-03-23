@@ -20,7 +20,7 @@ signal value_changed(value: float)
 	set(v):
 		value = v
 		if label_value:
-			label_value.text = str(v)
+			label_value.text = _get_value_str()
 		if slider:
 			slider.value = v
 		value_changed.emit(v)
@@ -54,6 +54,11 @@ signal value_changed(value: float)
 			slider.editable = v
 		notify_property_list_changed()
 
+@export var show_decimal: bool = false:
+	set(v):
+		show_decimal = v
+		notify_property_list_changed()
+
 @export var tick_count := 0
 @export var separator_visible: bool = false
 
@@ -68,7 +73,7 @@ signal value_changed(value: float)
 func _ready() -> void:
 	focus_entered.connect(_grab_focus)
 	label.text = text
-	label_value.text = str(slider.value)
+	label_value.text = _get_value_str()
 	hsep.visible = separator_visible
 	slider.value_changed.connect(_on_value_changed)
 	slider.value = value
@@ -92,7 +97,7 @@ func _ready() -> void:
 		drag_started.emit()
 	slider.drag_ended.connect(on_drag_started)
 	var on_changed := func():
-		label_value.text = str(slider.value)
+		label_value.text = _get_value_str()
 		changed.emit()
 	slider.changed.connect(on_changed)
 
@@ -116,6 +121,14 @@ func _on_value_changed(v: float) -> void:
 # Override focus grabbing to grab the slider
 func _grab_focus() -> void:
 	slider.grab_focus()
+
+
+# Get the current value as a string
+func _get_value_str() -> String:
+	if show_decimal:
+		return str(slider.value)
+	else:
+		return str(int(slider.value))
 
 
 # Override certain properties and pass them to child objects
