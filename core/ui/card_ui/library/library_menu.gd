@@ -17,6 +17,7 @@ var refresh_requested := false
 var refresh_in_progress := false
 var _library := {}
 var _current_selection := {}
+var _tabs := {}
 var logger := Log.get_logger("LibraryMenu", Log.LEVEL.INFO)
 
 @export var tabs_state: TabContainerState
@@ -40,7 +41,17 @@ func _ready() -> void:
 	library_state.refreshed.connect(on_refresh)
 	
 	# Listen for tab container changes
-	tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
+	if tabs_state:
+		var tab_nodes := tab_container.get_children()
+		var tab_headers := tabs_state.tabs_text.duplicate()
+		var num_tabs := mini(len(tab_nodes), tab_headers.size())
+		for idx in range(num_tabs):
+			var key := tab_headers[idx]
+			var value := tab_nodes[idx]
+			_tabs[key] = value
+		tabs_state.tab_changed.connect(_on_tab_container_tab_changed)
+		tabs_state.tab_added.connect(_on_tab_added)
+		tabs_state.tab_removed.connect(_on_tab_removed)
 	
 	# Listen for library changes
 	var on_library_changed := func(item: LibraryItem):
@@ -273,6 +284,8 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 	
 	# Get the child container to grab focus
 	var container: ScrollContainer = tab_container.get_child(tab)
+	if container.get_child_count() == 0:
+		return
 	var grid: HFlowContainer = container.get_child(1).get_child(0)
 	
 	# If we had a previous selection, grab focus on that.
@@ -295,3 +308,16 @@ func _on_tab_container_tab_changed(tab: int) -> void:
 		if child.visible:
 			child.grab_focus.call_deferred()
 			break
+
+
+func _on_tab_added(tab_text: String, node: ScrollContainer) -> void:
+	_tabs[tab_text] = node
+	tab_container.add_child(node)
+
+
+func _on_tab_removed(tab_text: String) -> void:
+	if not tab_text in _tabs:
+		return
+	var node := _tabs[tab_text] as Node
+	_tabs.erase(tab_text)
+	node.queue_free()
