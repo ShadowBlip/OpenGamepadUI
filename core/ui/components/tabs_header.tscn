@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cgmb4kr2ec4ha"]
+[gd_scene load_steps=5 format=3 uid="uid://cgmb4kr2ec4ha"]
 
 [ext_resource type="Script" uid="uid://cnnkmn8jnjf2m" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
 [ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="2_oxuw3"]
+[ext_resource type="Script" uid="uid://b6useuxusuw4w" path="res://core/ui/components/containers/enhanced_scroll_container.gd" id="3_2l5lr"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_lb7pt"]
 content_margin_top = 20.0
@@ -26,7 +27,20 @@ layout_mode = 2
 script = ExtResource("2_oxuw3")
 path = "ogui_tab_left"
 
-[node name="TabLabelContainer" type="HBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="EnhancedScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+vertical_scroll_mode = 0
+script = ExtResource("3_2l5lr")
+maximum_size = Vector2i(550, 0)
+metadata/_custom_type_script = "uid://b6useuxusuw4w"
+
+[node name="TabLabelContainer" type="HBoxContainer" parent="MarginContainer/EnhancedScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 30

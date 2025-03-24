@@ -12,6 +12,7 @@ var current_tab: TabLabel
 @onready var l_sep := $%LSeparator
 @onready var r_sep := $%RSeparator
 @onready var container := $%TabLabelContainer
+@onready var scroll_container := $%EnhancedScrollContainer as EnhancedScrollContainer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -38,6 +39,8 @@ func _ready() -> void:
 
 	# Listen for tab changes
 	tabs_state.tab_changed.connect(_on_tab_changed)
+	tabs_state.tab_added.connect(_on_tab_added)
+	tabs_state.tab_removed.connect(_on_tab_removed)
 
 
 func _on_tab_changed(tab: int) -> void:
@@ -45,6 +48,29 @@ func _on_tab_changed(tab: int) -> void:
 		tab_label.selected = false
 	current_tab = container.get_child(tab)
 	current_tab.selected = true
+	if not current_tab:
+		return
+	var target_position := current_tab.position.x - (current_tab.size.x / 2)
+	if target_position < 0:
+		target_position = 0
+	var tween := get_tree().create_tween()
+	tween.tween_property(scroll_container, "scroll_horizontal", target_position, 0.2)
+
+
+func _on_tab_added(tab_text: String, _node: ScrollContainer) -> void:
+	var tab := tab_label_scene.instantiate()
+	tab.text = tab_text
+	container.add_child(tab)
+
+
+func _on_tab_removed(tab_text: String) -> void:
+	for child in container.get_children():
+		if child.get("text") == null:
+			continue
+		if child.text != tab_text:
+			continue
+		child.queue_free()
+		break
 
 
 func _input(event: InputEvent) -> void:
