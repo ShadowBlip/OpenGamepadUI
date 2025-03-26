@@ -4,6 +4,7 @@ class_name HTTPAPIClient
 @export var base_url := ""
 @export var headers := PackedStringArray()
 @export var cache_folder := "HTTPAPIClient"
+@export var verify_tls := true
 var logger := Log.get_logger("HTTPAPIClient")
 
 
@@ -33,6 +34,8 @@ func request(
 
 	# Make the request
 	var http := HTTPRequest.new()
+	if not verify_tls:
+		http.set_tls_options(TLSOptions.client_unsafe())
 	http.timeout = 30.0
 	add_child.call_deferred(http)
 	await http.ready
@@ -83,4 +86,3 @@ class Response:
 		res.header = result[2]
 		res.body = Marshalls.base64_to_raw(result[3])
 		return res
-
