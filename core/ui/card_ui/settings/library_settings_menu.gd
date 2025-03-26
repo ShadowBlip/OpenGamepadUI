@@ -12,7 +12,6 @@ var button_scene := load("res://core/ui/components/card_button.tscn") as PackedS
 @onready var no_hidden_label := $%NoHiddenLabel
 @onready var container := $%VBoxContainer
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	settings_state.state_entered.connect(_on_state_entered)
@@ -28,7 +27,6 @@ func _ready() -> void:
 	local_library_toggle.button_pressed = enable_local_library
 	local_library_toggle.toggled.connect(_on_local_library_toggled)
 	_on_local_library_toggled(enable_local_library)
-
 
 func _on_state_entered(_from: State) -> void:
 	# Clear old buttons
@@ -63,17 +61,19 @@ func _on_state_entered(_from: State) -> void:
 		
 		container.add_child(button)
 
-
 func _on_state_exited(_to: State) -> void:
 	pass
 
-
 func _on_local_library_toggled(enabled: bool) -> void:
+	# Save the toggle state to settings
+	settings_manager.set_value("general", "enable_local_library", enabled)
+	settings_manager.save()
+	
+	# Apply the toggle action
 	if enabled:
 		_enable_local_library()
-		return
-	_disable_local_library()
-
+	else:
+		_disable_local_library()
 
 func _enable_local_library() -> void:
 	var library := library_manager.get_library_by_id("desktop")
@@ -85,7 +85,6 @@ func _enable_local_library() -> void:
 	if not main:
 		return
 	main.add_child(library)
-
 
 func _disable_local_library() -> void:
 	var library := library_manager.get_library_by_id("desktop")
