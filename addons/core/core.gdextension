@@ -18,3 +18,4 @@ ResourceProcessor = "res://addons/core/assets/icons/clarity--process-on-vm-line.
 ResourceRegistry = "res://addons/core/assets/icons/carbon--cloud-registry.svg"
 UPowerInstance = "res://assets/editor-icons/material-symbols--battery-profile-sharp.svg"
 Vdf = "res://addons/core/assets/icons/material-symbols-light--valve.svg"
+FifoReader = "res://assets/editor-icons/fluent--pipeline-20-filled.svg"

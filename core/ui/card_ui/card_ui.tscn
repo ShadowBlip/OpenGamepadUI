@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://fhriwlhm0lcj"]
+[gd_scene load_steps=48 format=3 uid="uid://fhriwlhm0lcj"]
 
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="1_34t85"]
 [ext_resource type="Script" uid="uid://dcv2u3sn10dg5" path="res://core/ui/card_ui/card_ui.gd" id="1_f8851"]
@@ -31,6 +31,7 @@
 [ext_resource type="PackedScene" uid="uid://dj1fooc3gh13l" path="res://core/ui/card_ui/help/help_menu.tscn" id="15_m1wp2"]
 [ext_resource type="ResourceRegistry" uid="uid://bsr58xihnpn1j" path="res://core/systems/resource/resource_registry.tres" id="15_ne50o"]
 [ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="16_bcudw"]
+[ext_resource type="Script" uid="uid://ompm0veql0ng" path="res://core/systems/ipc/pipe_manager.gd" id="17_s6ods"]
 [ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="18_462u5"]
 [ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="18_g4maw"]
 [ext_resource type="PackedScene" uid="uid://bbcd5tclmp2ux" path="res://core/ui/card_ui/navigation/library_loading_notification.tscn" id="20_7tnsn"]
@@ -125,6 +126,10 @@ instance = ExtResource("15_k47ua")
 
 [node name="ResourceProcessor" type="ResourceProcessor" parent="."]
 registry = ExtResource("15_ne50o")
+
+[node name="PipeManager" type="Node" parent="."]
+script = ExtResource("17_s6ods")
+metadata/_custom_type_script = "uid://ompm0veql0ng"
 
 [node name="PowerTimer" type="Timer" parent="."]
 unique_name_in_owner = true

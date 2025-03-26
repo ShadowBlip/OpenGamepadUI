@@ -12,7 +12,7 @@ godot = { version = "0.2.4", features = [
   "experimental-threads",
   "register-docs",
 ] }
-nix = { version = "0.29.0", features = ["term", "process"] }
+nix = { version = "0.29.0", features = ["term", "process", "fs"] }
 once_cell = "1.21.0"
 tokio = { version = "1.44.0", features = ["full"] }
 zbus = "5.5.0"
