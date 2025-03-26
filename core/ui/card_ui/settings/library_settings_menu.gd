@@ -69,6 +69,7 @@ func _on_state_exited(_to: State) -> void:
 
 
 func _on_local_library_toggled(enabled: bool) -> void:
+	settings_manager.set_value("general", "enable_local_library", enabled)
 	if enabled:
 		_enable_local_library()
 		return
@@ -91,5 +92,4 @@ func _disable_local_library() -> void:
 	var library := library_manager.get_library_by_id("desktop")
 	if not library:
 		return
-	library_manager.unregister_library(library)
 	library.queue_free()
