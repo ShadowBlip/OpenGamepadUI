@@ -5,8 +5,9 @@ var home := OS.get_environment("HOME")
 var desktop_folders := settings_manager.get_value(
 			"library.desktop",
 			"folders",
-			["/".join([home, ".local/share/applications"]), "/usr/share/applications"]
+			["/".join([home, ".local/share/applications"]), "/usr/share/applications", "/run/current-system/sw/share/applications"]
 		) as Array
+var blacklist := settings_manager.get_value("library.desktop", "blacklist", ["steam steam://open/friends"]) as Array
 
 
 func _ready() -> void:
@@ -18,7 +19,7 @@ func get_library_launch_items() -> Array:
 	for folder in desktop_folders:
 		logger.debug("Searching for .desktop files in: " + folder)
 		if not DirAccess.dir_exists_absolute(folder):
-			logger.warn("Folder does not exist: " + folder)
+			logger.debug("Folder does not exist: " + folder)
 			continue
 		var files := DirAccess.get_files_at(folder)
 		for file in files:
@@ -68,6 +69,14 @@ func _desktop_file_to_launch_item(file: String) -> LibraryLaunchItem:
 
 	# Apply any launch quirks if applicable
 	_apply_quirks(launch_item)
+
+	# Check to see if the command exists in the blacklist
+	for item in blacklist:
+		var cmd := launch_item.command + " ".join(launch_item.args)
+		if item != cmd:
+			continue
+		logger.debug("Desktop item '" + file + "' is blacklisted. Skipping.")
+		return null
 
 	return launch_item
 
