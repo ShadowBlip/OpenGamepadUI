@@ -72,6 +72,13 @@ layout_mode = 2
 title = "Environment Variables"
 description = "Environment variables to use when launching the game"
 
+[node name="InheritEnvironmentToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("7_5wp75")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Inherit Parent Environment"
+separator_visible = false
+description = "Whether or not environment variables should be inherited from the current session"
+
 [node name="SandboxSettingsLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_m05uu")]
 layout_mode = 2
 text = "Sandbox Settings"
