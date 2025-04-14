@@ -579,17 +579,8 @@ func is_steam_window(window_id: int) -> bool:
 
 ## Finds the steam process so it can be killed when a game closes
 func find_steam() -> int:
-	var child_pids := get_child_pids()
-	for child_pid in child_pids:
-		var pid_info := Reaper.get_pid_status(child_pid)
-		if not "Name" in pid_info:
-			continue
-		var process_name := pid_info["Name"] as String
-		if process_name == "steam":
-			logger.trace("Found steam PID: " + str(child_pid))
-			return child_pid
-
-	return -1
+	var steam_pid := OS.get_environment("HOME") + "/.steam/steam.pid"
+	return FileAccess.open(steam_pid, FileAccess.READ).get_as_text().to_int()
 
 
 func _to_string() -> String:
