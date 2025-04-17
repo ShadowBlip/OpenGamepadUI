@@ -579,18 +579,18 @@ func is_steam_window(window_id: int) -> bool:
 
 ## Finds the steam process so it can be killed when a game closes
 func find_steam() -> int:
-	var steam_pid := OS.get_environment("HOME") + "/.steam/steam.pid"
-	if not FileAccess.file_exists(steam_pid):
+	var steam_pid_path := OS.get_environment("HOME") + "/.steam/steam.pid"
+	if not FileAccess.file_exists(steam_pid_path):
 		return -1
 
-	var pid := FileAccess.open(steam_pid, FileAccess.READ).get_as_text()
-	if not DirAccess.dir_exists_absolute("/proc/" + pid + "/fd"):
+	var steam_pid := FileAccess.open(steam_pid_path, FileAccess.READ).get_as_text()
+	if not DirAccess.dir_exists_absolute("/proc/" + steam_pid + "/fd"):
 		return -1
 
-	for fd in DirAccess.get_files_at("/proc/" + pid + "/fd"):
+	for fd in DirAccess.get_files_at("/proc/" + steam_pid + "/fd"):
 		if FileAccess.open(fd, FileAccess.READ).get_path_absolute() != steam_pid:
 			continue
-		return pid.to_int()
+		return steam_pid.to_int()
 
 	return -1
 
