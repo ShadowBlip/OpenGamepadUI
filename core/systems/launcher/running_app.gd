@@ -587,8 +587,9 @@ func find_steam() -> int:
 	if not DirAccess.dir_exists_absolute("/proc/" + steam_pid + "/fd"):
 		return -1
 
+	var steam_pipe := OS.get_environment("HOME") + "/.steam/steam.pipe"
 	for fd in DirAccess.get_files_at("/proc/" + steam_pid + "/fd"):
-		if FileAccess.open(fd, FileAccess.READ).get_path_absolute() != steam_pid:
+		if FileAccess.open(fd, FileAccess.READ).get_path_absolute() != steam_pipe:
 			continue
 		return steam_pid.to_int()
 
