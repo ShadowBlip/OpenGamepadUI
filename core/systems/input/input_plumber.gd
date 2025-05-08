@@ -87,7 +87,7 @@ static func load_target_modified_profile(device: CompositeDevice, path: String, 
 		var mapped_capabilities := profile.to_json()
 		logger.debug("Mapped Capabilities (before):", mapped_capabilities)
 		match profile_modifier:
-				"deck":
+				"deck-uhid":
 					logger.debug("Steam Deck Profile")
 					if c_pad_cap not in mapped_capabilities:
 						logger.debug("Map", c_pad_cap)

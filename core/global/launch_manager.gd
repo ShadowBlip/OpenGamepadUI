@@ -416,7 +416,7 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 		if not target_gamepad.is_empty():
 			var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
 			match target_gamepad:
-				"xb360", "xbox-series", "xbox-elite", "gamepad":
+				"xb360", "xbox-series", "xbox-elite", "gamepad", "hori-steam":
 					target_devices.append("touchpad")
 				_:
 					logger.debug(target_gamepad, "needs no additional target devices.")

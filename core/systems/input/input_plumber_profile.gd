@@ -12,6 +12,7 @@ enum TargetDevice {
 	Keyboard,
 	DualSense,
 	DualSenseEdge,
+	Horipad,
 	SteamDeck,
 	XBox360,
 	XBoxSeries,
@@ -70,8 +71,10 @@ static func from_dict(dict: Dictionary) -> InputPlumberProfile:
 					target_device = TargetDevice.DualSense
 				"ds5-edge":
 					target_device = TargetDevice.DualSenseEdge
-				"deck":
+				"deck-uhid":
 					target_device = TargetDevice.SteamDeck
+				"hori-steam":
+					target_device = TargetDevice.Horipad
 				"xb360":
 					target_device = TargetDevice.XBox360
 				"xbox-series":
@@ -112,8 +115,10 @@ static func get_target_device_string(target_device: TargetDevice) -> String:
 			target_device_str = "ds5"
 		TargetDevice.DualSenseEdge:
 			target_device_str = "ds5-edge"
+		TargetDevice.Horipad:
+			target_device_str = "hori-steam"
 		TargetDevice.SteamDeck:
-			target_device_str = "deck"
+			target_device_str = "deck-uhid"
 		TargetDevice.XBox360:
 			target_device_str = "xb360"
 		TargetDevice.XBoxSeries:
@@ -135,8 +140,10 @@ static func get_target_device(target_device_str: String) -> TargetDevice:
 			target_device = TargetDevice.DualSense
 		"ds5-edge":
 			target_device = TargetDevice.DualSenseEdge
-		"deck":
+		"deck-uhid":
 			target_device = TargetDevice.SteamDeck
+		"hori-steam":
+			target_device = TargetDevice.Horipad
 		"xb360":
 			target_device = TargetDevice.XBox360
 		"xbox-elite":
@@ -228,4 +235,3 @@ func to_dict() -> Dictionary:
 func to_json() -> String:
 	var dict := self.to_dict()
 	return JSON.stringify(dict)
-
