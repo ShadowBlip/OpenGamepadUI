@@ -22,8 +22,8 @@ var gamepad: CompositeDevice
 var profile: InputPlumberProfile
 var profile_gamepad: String
 var library_item: LibraryItem
-var gamepad_types := ["Xbox 360", "XBox One Elite", "DualSense Edge", "Steam Deck (experimental)"]
-var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5", "Steam Deck"] #From res://assets/gamepad/icon_mappings
+var gamepad_types := ["Xbox 360", "XBox One Elite", "DualSense Edge", "Steam Deck", "Horipad Steam Controller"]
+var gamepad_types_icons := ["XBox 360", "Xbox One", "PS5", "Steam Deck", "Steam Deck"] #From res://assets/gamepad/icon_mappings
 var gamepad_type_selected := 0
 var mapping_elements: Dictionary = {}
 var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
@@ -554,7 +554,9 @@ func get_selected_target_gamepad() -> InputPlumberProfile.TargetDevice:
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
 		"DualSense Edge":
 			return InputPlumberProfile.TargetDevice.DualSenseEdge
-		"Steam Deck (experimental)":
+		"Horipad Steam Controller":
+			return InputPlumberProfile.TargetDevice.Horipad
+		"Steam Deck":
 			return InputPlumberProfile.TargetDevice.SteamDeck
 	logger.error(selected_gamepad + " not found. Using XBox360")
 	return InputPlumberProfile.TargetDevice.XBox360
@@ -573,8 +575,10 @@ func get_target_gamepad_text(gamepad_type: InputPlumberProfile.TargetDevice) -> 
 			return "DualSense"
 		InputPlumberProfile.TargetDevice.DualSenseEdge:
 			return "DualSense Edge"
+		InputPlumberProfile.TargetDevice.Horipad:
+			return "Horipad Steam Controller"
 		InputPlumberProfile.TargetDevice.SteamDeck:
-			return "Steam Deck (experimental)"
+			return "Steam Deck"
 		InputPlumberProfile.TargetDevice.XBox360:
 			return "XBox 360"
 		InputPlumberProfile.TargetDevice.XBoxSeries:
@@ -610,7 +614,7 @@ func _set_gamepad_profile(gamepad: CompositeDevice, profile_path: String = "") -
 	if not self.profile_gamepad.is_empty():
 		var target_devices := PackedStringArray([self.profile_gamepad, "keyboard", "mouse"])
 		match self.profile_gamepad:
-			"xb360", "xbox-series", "xbox-elite", "gamepad":
+			"xb360", "xbox-series", "xbox-elite", "gamepad", "hori-steam":
 				target_devices.append("touchpad")
 			_:
 				logger.debug(self.profile_gamepad, "needs no additional target devices.")
