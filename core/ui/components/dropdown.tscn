@@ -36,3 +36,4 @@ layout_mode = 2
 fit_to_longest_item = false
 item_count = 1
 popup/item_0/text = "None"
+popup/item_0/id = 0

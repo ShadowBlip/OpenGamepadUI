@@ -8,6 +8,8 @@ var notification_manager := load("res://core/global/notification_manager.tres") 
 var sections_label_scene := load("res://core/ui/components/section_label.tscn") as PackedScene
 var button_scene := load("res://core/ui/components/card_button_setting.tscn") as PackedScene
 var toggle_scene := load("res://core/ui/components/toggle.tscn") as PackedScene
+var dropdown_scene := load("res://core/ui/components/dropdown.tscn") as PackedScene
+var general_settings_state := load("res://assets/state/states/settings_general.tres") as State
 
 var update_available := false
 var update_installed := false
@@ -160,7 +162,115 @@ func _add_updater(root: Node) -> void:
 	# Configure update button
 	update_button.button_up.connect(_on_update.bind(update_button, check_update_button))
 
-	# TODO: Add branch selector
+	# Get the currently selected branch
+	var current_branch := _get_current_branch()
+	if current_branch.is_empty():
+		logger.warn("Unable to detect current branch")
+		return
+
+	# Add branch selector
+	var branches_dropdown := dropdown_scene.instantiate() as Dropdown
+	container.add_child(branches_dropdown)
+	container.move_child(branches_dropdown, 4)
+	branches_dropdown.title = "Branch"
+	branches_dropdown.description = "Channel used for updates"
+	branches_dropdown.clear()
+	branches_dropdown.add_item(current_branch)
+	branches_dropdown.select(0)
+
+	# Set the current branch when an item is selected
+	var on_item_selected := func(idx: int):
+		var branch := branches_dropdown.option_button.get_item_text(idx)
+		_set_branch(branch)
+	branches_dropdown.item_selected.connect(on_item_selected)
+
+	# Query for available branches whenever the menu state is entered
+	var on_state_entered := func(_from: State):
+		_populate_branches(branches_dropdown)
+	general_settings_state.state_entered.connect(on_state_entered)
+
+
+# Set the current branch to the given branch
+func _set_branch(branch: String) -> int:
+	if branch.is_empty():
+		return ERR_DOES_NOT_EXIST
+	var current_branch := _get_current_branch()
+	if branch == current_branch:
+		return OK
+
+	var cmd := Command.create(UPDATER_CMD, ["set-branch", branch])
+	var result := cmd.execute()
+	if result != OK:
+		logger.warn("Unable to set branch")
+		return result
+	var exit_code := await cmd.finished as int
+	if exit_code != OK:
+		logger.warn("Failed to set branch:", cmd.stdout, cmd.stderr)
+		return exit_code
+
+	return OK
+
+# Populate the given dropdown with the current branches
+func _populate_branches(dropdown: Dropdown) -> void:
+	# Get the currently selected branch
+	var current_branch := _get_current_branch()
+	if current_branch.is_empty():
+		logger.warn("Unable to detect current branch")
+		return
+
+	# Fetch the available branches
+	var cmd := Command.create(UPDATER_CMD, ["list-branches"])
+	if cmd.execute() != OK:
+		logger.warn("Unable to check for branches")
+		return
+	if await cmd.finished != OK:
+		logger.warn("Failed to check for branches:", cmd.stdout, cmd.stderr)
+		return
+	var lines := cmd.stdout.split("\n", false)
+
+	# Populate the dropdown
+	var selected := dropdown.selected
+	dropdown.clear()
+	dropdown.add_item(current_branch)
+	for line in lines:
+		if line == current_branch:
+			continue
+		dropdown.add_item(line)
+
+
+# Gets the currently selected OS branch
+func _get_current_branch() -> String:
+	var config := FileAccess.open("/etc/nixos/flake.nix", FileAccess.READ)
+	if not config:
+		logger.warn("Unable to open config `/etc/nixos/flake.nix` to discover branch")
+		return ""
+	var data := config.get_as_text()
+	var lines := data.split("\n")
+
+	var input_line := ""
+	for line in lines:
+		if not line.contains("shadowblip.url"):
+			continue
+		input_line = line
+		break
+
+	if input_line.is_empty():
+		logger.warn("Unable to find input URL in `/etc/nixos/flake.nix` to discover branch")
+		return ""
+
+	#    shadowblip.url = "gitlab:shadowapex/os-flake?ref=main";
+	var parts := input_line.split('"', false)
+	if parts.size() < 2:
+		logger.warn("Unable to parse branch line to discover branch")
+		return ""
+
+	var url := parts[1]
+	if not "ref" in url:
+		logger.warn("Unable to find '?ref=<branch>' pattern in config to discover branch")
+		return ""
+	var branch := url.split("=", false)[-1]
+
+	return branch
 
 
 # Invoked whenever the updater timer times out
