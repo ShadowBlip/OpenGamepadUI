@@ -12,16 +12,22 @@ use super::resource_registry::ResourceRegistry;
 pub struct ResourceProcessor {
     base: Base<Node>,
     #[export]
-    registry: Gd<ResourceRegistry>,
+    registry: Option<Gd<ResourceRegistry>>,
     initialized: bool,
 }
 
 #[godot_api]
 impl INode for ResourceProcessor {
     fn process(&mut self, delta: f64) {
+        if self.registry.is_none() {
+            return;
+        }
         if !self.initialized {
             // Add any child nodes from the registry
-            let children = self.registry.bind().get_children();
+            let children = {
+                let registry = self.registry.as_mut().unwrap();
+                registry.bind().get_children()
+            };
             for child in children.iter_shared() {
                 self.base_mut().add_child(&child);
             }
@@ -29,14 +35,21 @@ impl INode for ResourceProcessor {
             // Add any future children that get added to the registry
             let ptr = self.to_gd();
             let method = Callable::from_object_method(&ptr, "add_child");
-            self.registry.connect("child_added", &method);
+            {
+                let registry = self.registry.as_mut().unwrap();
+                registry.connect("child_added", &method);
+            }
 
             // Remove any children that get removed from the registry
             let method = Callable::from_object_method(&ptr, "remove_child");
-            self.registry.connect("child_removed", &method);
+            {
+                let registry = self.registry.as_mut().unwrap();
+                registry.connect("child_removed", &method);
+            }
 
             self.initialized = true;
         }
-        self.registry.bind_mut().process(delta);
+        let registry = self.registry.as_mut().unwrap();
+        registry.bind_mut().process(delta);
     }
 }
