@@ -35,7 +35,7 @@ SSH_DATA_PATH ?= /home/$(SSH_USER)/Projects
 # systemd-sysext variables 
 SYSEXT_ID ?= steamos
 SYSEXT_VERSION_ID ?= 3.6.3
-SYSEXT_LIBIIO_VERSION ?= 0.26-2
+SYSEXT_LIBIIO_VERSION ?= 0.26-3
 SYSEXT_LIBSERIALPORT_VERSION ?= 0.1.2-1
 
 # Include any user defined settings
@@ -387,12 +387,12 @@ $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz:
 
 $(CACHE_DIR)/powerstation.tar.gz:
 	export PS_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/PowerStation/releases/latest | jq -r '.name') && \
-		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation.tar.gz
+		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation-x86_64.tar.gz
 
 
 $(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
 	export IP_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/InputPlumber/releases/latest | jq -r '.name') && \
-		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber.tar.gz
+		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber-x86_64.tar.gz
 
 
 LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libiio-$(SYSEXT_LIBIIO_VERSION)-x86_64.pkg.tar.zst
