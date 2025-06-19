@@ -190,6 +190,9 @@ func _setup_overlay_mode(args: PackedStringArray) -> void:
 	_remove_children(remove_list, quick_bar_menu)
 	_remove_children(settings_remove_list, settings_menu)
 
+	# Enable InputPlumber management of all supported input devices
+	input_plumber.manage_all_devices = true
+
 	# Setup inputplumber to receive guide presses.
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
 	input_plumber.set_intercept_activation(PackedStringArray(["Gamepad:Button:Guide", "Gamepad:Button:East"]), "Gamepad:Button:QuickAccess2")
