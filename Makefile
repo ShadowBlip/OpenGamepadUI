@@ -270,6 +270,28 @@ deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) systemd-sysext status
 
 
+.PHONY: deploy-nix
+deploy-nix: dist-nix ## Build and deploy the nix package to a remote device
+	nix copy $$(cat ./dist/opengamepadui.nix) --to ssh://$(SSH_USER)@$(SSH_HOST)
+	@echo "Copied OpenGamepadUI package: $$(cat ./dist/opengamepadui.nix)"
+	@echo "Modifying config to use package"
+	@DEPLOY_SCRIPT=$$(mktemp); set -e; \
+		echo "set -ex" >> $$DEPLOY_SCRIPT; \
+		echo "echo 'Removing old package references'" >> $$DEPLOY_SCRIPT; \
+	  echo "sed -i '/.*programs.opengamepadui.package.*/d' /etc/nixos/configuration.nix" >> $$DEPLOY_SCRIPT; \
+		echo "echo 'Setting opengamepadui package in /etc/nixos/configuration.nix'" >> $$DEPLOY_SCRIPT; \
+		echo "sed -i 's|^}|  programs.opengamepadui.package = $$(cat ./dist/opengamepadui.nix);\n}|g' /etc/nixos/configuration.nix" >> $$DEPLOY_SCRIPT; \
+		echo "echo 'Applying new configuration'" >> $$DEPLOY_SCRIPT; \
+		echo "nixos-rebuild switch --impure" >> $$DEPLOY_SCRIPT; \
+		echo "echo 'Applying new configuration'" >> $$DEPLOY_SCRIPT; \
+		echo "rm $$DEPLOY_SCRIPT" >> $$DEPLOY_SCRIPT; \
+		echo "Copying deployment script to target device"; \
+		scp $$DEPLOY_SCRIPT $(SSH_USER)@$(SSH_HOST):$$DEPLOY_SCRIPT; \
+		echo "Executing deployment script"; \
+		ssh -t $(SSH_USER)@$(SSH_HOST) sudo bash $$DEPLOY_SCRIPT; \
+		rm $$DEPLOY_SCRIPT
+
+
 .PHONY: enable-debug
 enable-debug: ## Set OpenGamepadUI command to use remote debug on target device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .config/environment.d
@@ -334,6 +356,18 @@ dist/update.zip: build/metadata.json
 	cd build && zip -5 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
 	mkdir -p dist
 	cp $(CACHE_DIR)/update.zip $@
+
+
+.PHONY: dist-nix
+dist-nix: dist/opengamepadui.nix ## Create a nix package
+dist/opengamepadui.nix: $(IMPORT_DIR) $(PROJECT_FILES)
+	@echo "Building nix package"
+	mkdir -p dist
+	nix build --impure \
+		--expr 'with import (builtins.getFlake "gitlab:shadowapex/os-flake?ref=main").inputs.nixpkgs {}; callPackage ./package/nix/package.nix {}'
+	echo $$(file result | cut -d' ' -f5) > $@
+	@rm result
+	@echo "Built OpenGamepadUI package: $$(cat ./dist/opengamepadui.nix)"
 
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
