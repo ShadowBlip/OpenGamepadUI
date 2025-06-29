@@ -33,10 +33,13 @@ signal all_apps_stopped()
 signal app_launched(app: RunningApp)
 signal app_stopped(app: RunningApp)
 signal app_switched(from: RunningApp, to: RunningApp)
+signal app_lifecycle_progressed(progress: float, type: AppLifecycleHook.TYPE)
+signal app_lifecycle_notified(text: String, type: AppLifecycleHook.TYPE)
 signal recent_apps_changed()
 
 const settings_manager := preload("res://core/global/settings_manager.tres")
 const notification_manager := preload("res://core/global/notification_manager.tres")
+const library_manager := preload("res://core/global/library_manager.tres")
 
 var gamescope := preload("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
 var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
@@ -196,12 +199,25 @@ func _save_persist_data():
 ## Launches the given application and switches to the in-game state. Returns a
 ## [RunningApp] instance of the application.
 func launch(app: LibraryLaunchItem) -> RunningApp:
+	# Create a running app from the launch item
 	var running_app := _launch(app)
 
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
 	_update_recent_apps(app)
+
+	# Execute any pre-launch hooks and start the app
+	await _execute_hooks(app, AppLifecycleHook.TYPE.PRE_LAUNCH)
+	running_app.start()
+
+	# Call any hooks at different points in the app's lifecycle
+	var on_app_state_changed := func(_from: RunningApp.STATE, to: RunningApp.STATE):
+		if to == RunningApp.STATE.RUNNING:
+			_execute_hooks(app, AppLifecycleHook.TYPE.LAUNCH)
+		elif to == RunningApp.STATE.STOPPED:
+			_execute_hooks(app, AppLifecycleHook.TYPE.EXIT)
+	running_app.state_changed.connect(on_app_state_changed)
 
 	return running_app
 
@@ -210,6 +226,7 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 func launch_in_background(app: LibraryLaunchItem) -> RunningApp:
 	# Start the application
 	var running_app := _launch(app)
+	running_app.start()
 
 	# Listen for app state changes
 	var on_app_state_changed := func(from: RunningApp.STATE, to: RunningApp.STATE):
@@ -222,6 +239,37 @@ func launch_in_background(app: LibraryLaunchItem) -> RunningApp:
 	_running_background.append(running_app)
 	
 	return running_app
+
+
+## Executes application lifecycle hooks for the given app
+func _execute_hooks(app: LibraryLaunchItem, type: AppLifecycleHook.TYPE) -> void:
+	var library := library_manager.get_library_by_id(app._provider_id)
+	if not library:
+		logger.warn("Unable to find library for app:", app)
+		return
+	var hooks := library.get_app_lifecycle_hooks()
+
+	# Filter based on hook type
+	var hooks_to_run: Array[AppLifecycleHook] = []
+	for item in hooks:
+		if item.get_type() != type:
+			continue
+		hooks_to_run.push_back(item)
+
+	# Emit signals if the hook has progress
+	var on_hook_progress := func(progress: float):
+		self.app_lifecycle_progressed.emit(progress, type)
+	var on_hook_notify := func(text: String):
+		self.app_lifecycle_notified.emit(text, type)
+
+	# Run each hook and emit signals on hook progress
+	for hook in hooks_to_run:
+		logger.info("Executing lifecycle hook:", hook)
+		hook.progressed.connect(on_hook_progress)
+		hook.notified.connect(on_hook_notify)
+		await hook.execute(app)
+		hook.notified.disconnect(on_hook_notify)
+		hook.progressed.disconnect(on_hook_progress)
 
 
 ## Launches the given app
@@ -283,9 +331,8 @@ func _launch(app: LibraryLaunchItem) -> RunningApp:
 	command.append_array(args)
 	logger.info("Launching game with command: {0} {1}".format([exec, str(command)]))
 
-	# Launch the application process
-	var running_app := RunningApp.spawn(app, env, exec, command)
-	logger.info("Launched with PID: {0}".format([running_app.pid]))
+	# Create the running app instance, but do not start it yet.
+	var running_app := RunningApp.create(app, env, exec, command)
 	
 	return running_app
 
@@ -489,9 +536,10 @@ func check_running() -> void:
 	var root_id := _xwayland_game.root_window_id
 	if root_id < 0:
 		return
+	var all_windows := _xwayland_game.get_all_windows(root_id)
 
 	# Update our view of running processes and what windows they have
-	_update_pids(root_id)
+	_update_pids(all_windows)
 
 	# Update the state of all running apps
 	for app in _running:
@@ -502,11 +550,10 @@ func check_running() -> void:
 
 # Updates our mapping of PIDs to Windows. This gives us a good view of what
 # processes are running, and what windows they have.
-func _update_pids(root_id: int):
+func _update_pids(all_windows: PackedInt64Array):
 	if not _xwayland_game:
 		return
 	var pids := {}
-	var all_windows := _xwayland_game.get_all_windows(root_id)
 	for window in all_windows:
 		var window_pids := _xwayland_game.get_pids_for_window(window)
 		for window_pid in window_pids:
@@ -661,7 +708,7 @@ func _make_running_app_from_process(name: String, pid: int, window_id: int, app_
 # Creates a new RunningApp instance from a given LibraryLaunchItem, PID, and
 # xwayland instance. 
 func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String) -> RunningApp:
-	var running_app: RunningApp = RunningApp.new(launch_item, pid, display)
+	var running_app: RunningApp = RunningApp.new(launch_item, display)
 	running_app.launch_item = launch_item
 	running_app.pid = pid
 	running_app.display = display
