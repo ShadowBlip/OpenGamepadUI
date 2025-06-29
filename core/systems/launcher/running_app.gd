@@ -61,6 +61,7 @@ var state: STATE = STATE.STARTED:
 		state = v
 		if old_state != state:
 			state_changed.emit(old_state, state)
+var state_steam: STATE = STATE.MISSING_WINDOW
 ## Whether or not the running app is suspended
 var is_suspended := false:
 	set(v):
@@ -115,30 +116,44 @@ var is_ogui_managed: bool = true
 var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
-func _init(item: LibraryLaunchItem, process_id: int, dsp: String) -> void:
+func _init(item: LibraryLaunchItem, dsp: String) -> void:
 	launch_item = item
-	pid = process_id
 	display = dsp
 
 
-## Run the given command and return it as a [RunningApp]
-static func spawn(app: LibraryLaunchItem, env: Dictionary, cmd: String, args: PackedStringArray) -> RunningApp:
+## Create a [RunningApp] with the given command without starting it.
+static func create(app: LibraryLaunchItem, env: Dictionary, cmd: String, args: PackedStringArray) -> RunningApp:
 	# Generate an app id for the running application based on its name
 	var app_id := app.get_app_id()
-
-	# Launch the application process
-	var pid := Reaper.create_process(cmd, args, app_id)
 	var display := env["DISPLAY"] as String
 	var command := PackedStringArray([cmd])
 	command.append_array(args)
 
 	# Create a running app instance
-	var running_app := RunningApp.new(app, pid, display)
+	var running_app := RunningApp.new(app, display)
 	running_app.command = command
 	running_app.environment = env
 	running_app.app_id = app_id
 
 	return running_app
+
+
+## Run the given command and return it as a [RunningApp]
+static func spawn(app: LibraryLaunchItem, env: Dictionary, cmd: String, args: PackedStringArray) -> RunningApp:
+	var running_app := RunningApp.create(app, env, cmd, args)
+	running_app.start()
+
+	return running_app
+
+
+## Start the running app
+func start() -> void:
+	var args: Array[String] = []
+	args.assign(self.command)
+	var cmd := args.pop_front() as String
+	var process_id := Reaper.create_process(cmd, args, self.app_id)
+	self.pid = process_id
+	logger.info("Launched with PID: {0}".format([self.pid]))
 
 
 # TODO: Only call this on window creation/deletion
@@ -244,16 +259,6 @@ func update_xwayland_app() -> void:
 	if not running:
 		not_running_count += 1
 
-	# Update the running app's state
-	if not_running_count > 3:
-		state = STATE.STOPPED
-		app_killed.emit()
-	elif state == STATE.STARTED and has_valid_window:
-		state = STATE.RUNNING
-		grab_focus()
-	elif state == STATE.RUNNING and not has_valid_window:
-		state = STATE.MISSING_WINDOW
-
 	var state_str := {
 		STATE.STARTED: "started", 
 		STATE.RUNNING: "running", 
@@ -261,12 +266,48 @@ func update_xwayland_app() -> void:
 		STATE.STOPPING: "stopping", 
 		STATE.STOPPED: "stopped"
 	}
+
+	# Update the running app's state
+	if not_running_count > 3:
+		state = STATE.STOPPED
+		app_killed.emit()
+	elif state == STATE.STARTED and has_valid_window:
+		state = STATE.RUNNING
+		if is_steam_app():
+			state_steam = STATE.STARTED
+		grab_focus()
+	elif state == STATE.RUNNING and not has_valid_window:
+		state = STATE.MISSING_WINDOW
+
+	# If this is a Steam app, we also need to wait until Steam starts the game
+	if is_steam_app() and state_steam == STATE.STARTED:
+		for window in self.window_ids:
+			if self.is_steam_window(window):
+				continue
+			logger.debug("Steam game appears to be running")
+			state_steam = STATE.RUNNING
+			self.window_id = window
+			grab_focus()
+			break
+		logger.trace(launch_item.name + " current steam state: " + state_str[state_steam])
+
+	# If the Steam game started, but now only Steam windows remain, indicate
+	# that Steam should stop.
+	if is_steam_app() and state_steam == STATE.RUNNING:
+		var only_steam_running := true
+		for window in self.window_ids:
+			if not self.is_steam_window(window):
+				only_steam_running = false
+				break
+		if only_steam_running:
+			state_steam = STATE.STOPPING
+
 	logger.trace(launch_item.name + " current state: " + state_str[state])
 
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
 	# so we can kill Steam gracefully
-	if is_steam_app() and state == STATE.MISSING_WINDOW and is_ogui_managed:
+	if is_steam_app() and state_steam == STATE.STOPPING and is_ogui_managed:
 		logger.trace(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
 		# Don't try closing Steam immediately. Wait a few more ticks before attempting
 		# to close Steam.
@@ -277,6 +318,8 @@ func update_xwayland_app() -> void:
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
+		else:
+			state_steam = STATE.STOPPED
 
 
 ## Pauses/Resumes the running app by running 'kill -STOP' or 'kill -CONT'
@@ -404,6 +447,7 @@ func grab_focus() -> void:
 	if not xwayland_primary:
 		return
 	xwayland_primary.baselayer_app = self.app_id
+	xwayland_primary.baselayer_window = self.window_id
 	focused = true
 
 
@@ -442,9 +486,8 @@ func kill(sig: Reaper.SIG = Reaper.SIG.TERM) -> void:
 ## Iterates through all windows related to the app and sets the app ID property
 ## so they will appear as focusable windows to Gamescope
 func _ensure_app_id() -> void:
-	# If this is a Steam app, there's no need to set the app ID; Steam will do
-	# it for us.
-	if is_steam_app() or not is_ogui_managed:
+	# Don't mess with app IDs if this was not spawned by ogui
+	if not is_ogui_managed:
 		return
 
 	# Get the xwayland instance this app is running on
@@ -458,8 +501,21 @@ func _ensure_app_id() -> void:
 	# Try setting the app ID on each possible Window. If they are valid windows,
 	# gamescope will make these windows available as focusable windows.
 	for window in possible_windows:
-		if xwayland.has_app_id(window):
+		var window_app_id := xwayland.get_app_id(window)
+		if window_app_id != gamescope.OVERLAY_GAME_ID and window_app_id >= 0:
 			continue
+
+		# If the window is using the OVERLAY_GAME_ID (769), set it to something different
+		# so it does not fight with OGUI for focus.
+		if window_app_id == gamescope.OVERLAY_GAME_ID:
+			var new_app_id := self.app_id
+			if is_steam_app() and has_meta("steam_app_id"):
+				new_app_id = get_meta("steam_app_id")
+			if new_app_id != self.app_id:
+				self.app_id = new_app_id
+			if self.app_id == gamescope.OVERLAY_GAME_ID:
+				self.app_id += 1
+
 		xwayland.set_app_id(window, self.app_id)
 
 
@@ -472,11 +528,7 @@ func needs_window_id() -> bool:
 	if window_id <= 0:
 		logger.trace(launch_item.name + " has a bad window ID: " + str(window_id))
 		return true
-	# If this is a Steam app and the current window id is a Steam window, don't
-	# consider this a valid window id. TODO: We might not need this since we also
-	# check this in _discover_window_id()
-	if is_steam_app() and is_steam_window(window_id):
-		return true
+
 	var focusable_windows := xwayland_primary.focusable_windows
 	if not window_id in focusable_windows:
 		logger.trace(str(window_id) + " is not in the list of focusable windows")
@@ -532,11 +584,6 @@ func _discover_window_id() -> int:
 	var focusable := xwayland_primary.focusable_windows
 	for window in possible_windows:
 		if window in focusable:
-			# If this is a steam app, don't consider any Steam windows as valid
-			# discovered window ids for this app.
-			if is_steam_app() and is_steam_window(window):
-				logger.debug("Window", window, "is a Steam window")
-				continue
 			return window
 
 	return -1
@@ -564,6 +611,11 @@ func is_steam_window(window_id: int) -> bool:
 	if not xwayland:
 		return false
 
+	var window_name := xwayland.get_window_name(window_id)
+	var steam_window_names := ["Steam Big Picture Mode", "Steam", "steamwebhelper"]
+	if window_name in steam_window_names:
+		return true
+
 	var window_pids := xwayland.get_pids_for_window(window_id)
 	for window_pid in window_pids:
 		var pid_info := Reaper.get_pid_status(window_pid)
@@ -572,7 +624,7 @@ func is_steam_window(window_id: int) -> bool:
 		var process_name := pid_info["Name"] as String
 		if process_name in ["steam", "steamwebhelper"]:
 			return true
-		print(process_name)
+		logger.debug(process_name)
 
 	return false
 
