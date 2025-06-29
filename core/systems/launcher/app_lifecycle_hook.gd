@@ -8,6 +8,11 @@ class_name AppLifecycleHook
 ## the ability to execute actions when apps are about to start, have started,
 ## or have exited.
 
+## Emit this signal if you want to indicate progression of the hook.
+signal progressed(percent: float)
+## Emit this signal whenever you want custom text to be displayed
+signal notified(text: String)
+
 ## The type of hook determines where in the application's lifecycle this hook
 ## should be executed.
 enum TYPE {
@@ -26,6 +31,11 @@ func _init(hook_type: TYPE) -> void:
 	_hook_type = hook_type
 
 
+## Name of the lifecycle hook
+func get_name() -> String:
+	return ""
+
+
 ## Executes whenever an app from this library reaches the stage in its lifecycle
 ## designated by the hook type. E.g. a `PRE_LAUNCH` hook will have this method
 ## called whenever an app is about to launch.
@@ -37,3 +47,19 @@ func execute(item: LibraryLaunchItem) -> void:
 ## the hook should be executed.
 func get_type() -> TYPE:
 	return _hook_type
+
+
+func _to_string() -> String:
+	var kind: String
+	match self.get_type():
+		TYPE.PRE_LAUNCH:
+			kind = "PreLaunch"
+		TYPE.LAUNCH:
+			kind = "Launch"
+		TYPE.EXIT:
+			kind = "Exit"
+	var name := self.get_name()
+	if name.is_empty():
+		name = "Anonymous"
+
+	return "<AppLifecycleHook.{0}-{1}>".format([kind, name])
