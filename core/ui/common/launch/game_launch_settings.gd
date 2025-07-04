@@ -20,6 +20,7 @@ var provider_id: String
 @onready var cwd_input := $%CWDTextInput
 @onready var env_input := $%EnvTextInput
 @onready var sandbox_toggle := $%UseSandboxToggle as Toggle
+@onready var inherit_env_toggle := $%InheritEnvironmentToggle as Toggle
 
 
 # Called when the node enters the scene tree for the first time.
@@ -31,6 +32,7 @@ func _ready() -> void:
 	cwd_input.focus_exited.connect(_on_input_update.bind(cwd_input, "cwd"))
 	env_input.focus_exited.connect(_on_input_update.bind(env_input, "env", UPDATE.DICT))
 	sandbox_toggle.toggled.connect(_on_toggle_update.bind(sandbox_toggle, "use_sandboxing"))
+	inherit_env_toggle.toggled.connect(_on_toggle_update.bind(inherit_env_toggle, "inherit_parent_environment"))
 
 
 func _on_game_settings_entered(_from: State) -> void:
@@ -98,6 +100,8 @@ func _on_provider_selected(idx: int) -> void:
 		sandbox_toggle.button_pressed = use_sandboxing
 	else:
 		sandbox_toggle.button_pressed = true
+	var inherit_env := settings_manager.get_value(settings_section, ".".join(["inherit_parent_environment", provider_id]), true) as bool
+	inherit_env_toggle.button_pressed = inherit_env
 
 
 # Converts the given dictionary into a string representation. E.g. foo=bar
