@@ -12,3 +12,7 @@ one_shot = true
 [node name="SuspendTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 one_shot = true
+
+[node name="GamescopeCheckTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+autostart = true

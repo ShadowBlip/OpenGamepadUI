@@ -232,6 +232,25 @@ impl GamescopeXWayland {
         }
     }
 
+    /// Returns the value of the Gamescope input counter. This is useful to detect
+    /// whether or not Gamescope has been receiving mouse or keyboard inputs.
+    #[func]
+    pub fn get_input_counter(&self) -> u32 {
+        let Ok(root_id) = self.xwayland.get_root_window_id() else {
+            return 0;
+        };
+        let result = self
+            .xwayland
+            .get_one_xprop(root_id, GamescopeAtom::InputCounter);
+        match result {
+            Ok(counter) => counter.unwrap_or_default(),
+            Err(e) => {
+                log::trace!("No input counter found: {e}");
+                0
+            }
+        }
+    }
+
     /// Returns the list of currently watched windows.
     #[func]
     pub fn get_watched_windows(&self) -> PackedInt64Array {
