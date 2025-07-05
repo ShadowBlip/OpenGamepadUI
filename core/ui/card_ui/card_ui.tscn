@@ -114,8 +114,6 @@ instance = ExtResource("11_nk5v7")
 [node name="Launcher" type="Node" parent="."]
 script = ExtResource("14_fs00k")
 
-[node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
-
 [node name="PowerStation" type="Node" parent="."]
 script = ExtResource("13_tag7s")
 instance = ExtResource("14_a5vk3")
@@ -372,5 +370,7 @@ stream = ExtResource("21_s3peg")
 autoplay = true
 
 [node name="InputManager" parent="." instance=ExtResource("1_34t85")]
+
+[node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
 
 [editable path="AlwaysVisibleContent/OnScreenKeyboard"]
