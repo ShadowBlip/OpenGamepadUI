@@ -1,6 +1,6 @@
 # Build and publish a release of OpenGamepadUI using semantic-release whenever
 # changes are merged into main.
-name: "Release"
+name: "🎉 Release"
 
 on:
   push:
@@ -18,6 +18,7 @@ env:
 # Jobs to run
 jobs:
   release:
+    name: 🎉 Publish to GitHub
     runs-on: ubuntu-latest
 
     steps:
@@ -46,6 +47,46 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make release
 
+      # In ".releaserc.yaml" a step is defined to write the release version to
+      # ".version.txt" upon successful release. This step checks to see if that
+      # exists to determine if the other jobs need to run.
+      - id: status
+        name: Set release status
+        shell: bash
+        run: |
+          if [ -f .version.txt ]; then
+            echo "was_released=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "was_released=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Upload the package build for the AUR publish step
+      - name: Upload PKGBUILD
+        uses: actions/upload-artifact@v4
+        if: steps.status.outputs.was_released == 'yes'
+        with:
+          name: PKGBUILD
+          path: ./package/archlinux/PKGBUILD
+          if-no-files-found: error
+      - name: Upload Release Version
+        uses: actions/upload-artifact@v4
+        if: steps.status.outputs.was_released == 'yes'
+        with:
+          name: version.txt
+          path: .version.txt
+          if-no-files-found: error
+          include-hidden-files: true
+
+    outputs:
+      should_publish: ${{ steps.status.outputs.was_released }}
+
+  publish-docs:
+    name: 📔 Publish documentation
+    needs: release
+    if: needs.release.outputs.should_publish == 'yes'
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Trigger documentation generation
         run: |
           curl -L -X POST \
@@ -54,3 +95,46 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/ShadowBlip/OpenGamepadUI/dispatches \
             --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+
+  publish-to-aur:
+    name: 🐧 Publish to AUR
+    needs: release
+    if: needs.release.outputs.should_publish == 'yes'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download PKGBUILD
+        uses: actions/download-artifact@v4
+        with:
+          name: PKGBUILD
+
+      - name: Download Release Version
+        uses: actions/download-artifact@v4
+        with:
+          name: version.txt
+
+      - name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v3
+        with:
+          host: aur.archlinux.org
+          private-key: ${{ secrets.AUR_SSH_KEY }}
+
+      - name: Checkout AUR bin
+        run: git clone ssh://aur@aur.archlinux.org/opengamepadui-bin.git
+
+      - name: Copy PKGBUILD to bin repo
+        run: cp ./PKGBUILD opengamepadui-bin/
+
+      - name: Build bin package
+        working-directory: opengamepadui-bin
+        run: make in-docker
+
+      - name: Commit and publish bin package
+        shell: bash
+        working-directory: opengamepadui-bin
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "shadowblip+github-actions[bot]@users.noreply.github.com"
+          git add .SRCINFO PKGBUILD
+          git commit -m "Update to $(grep '^pkgver=' PKGBUILD | cut -d'=' -f2)"
+          git push origin master
