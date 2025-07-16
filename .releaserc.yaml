@@ -23,27 +23,27 @@ plugins:
             - core/global/version.tres
           from: "core = .*"
           to: 'core = "${nextRelease.version}"'
-          #results:
-          #  - file: core/global/version.tres
-          #    hasChanged: true
-          #    numMatches: 1
-          #    numReplacements: 1
-          #countMatches: true
         - files:
             - package/rpm/opengamepadui.spec
           from: "Version:        .*"
           to: "Version:        ${nextRelease.version}"
+        - files:
+            - package/archlinux/PKGBUILD
+          from: "^pkgver=v.*$"
+          to: "pkgver=v${nextRelease.version}"
+
+  # Execute commands to build the project
+  - - "@semantic-release/exec"
+    - shell: true
+      prepareCmd: "make in-docker IMAGE_TAG=4.4.1 TARGET='force-import dist update-pkgbuild-hash'"
+      publishCmd: "echo '${nextRelease.version}' > .version.txt"
 
   # Commit the following changes to git after other plugins have run
   - - "@semantic-release/git"
     - assets:
         - core/global/version.tres
         - package/rpm/opengamepadui.spec
-
-  # Execute commands to build the project
-  - - "@semantic-release/exec"
-    - shell: true
-      prepareCmd: "make in-docker IMAGE_TAG=4.4.1 TARGET='force-import dist'"
+        - package/archlinux/PKGBUILD
 
   # Publish artifacts as a GitHub release
   - - "@semantic-release/github"
