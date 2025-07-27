@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PlatformBazzite" load_steps=3 format=3 uid="uid://b31wnwiw1qui4"]
+
+[ext_resource type="Script" uid="uid://b0vn3jn36wcrh" path="res://core/platform/os/bazzite.gd" id="1_a1d0f"]
+[ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="2_7ctbn"]
+
+[resource]
+script = ExtResource("1_a1d0f")
+name = ""
+startup_actions = Array[ExtResource("2_7ctbn")]([])
+shutdown_actions = Array[ExtResource("2_7ctbn")]([])
