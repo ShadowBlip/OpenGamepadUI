@@ -45,6 +45,7 @@ enum PLATFORM {
 	MANJARO,
 	ARCH_LIKE,
 	NIXOS,
+	BAZZITE,
 }
 
 var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
@@ -130,6 +131,8 @@ func _init() -> void:
 		os = load("res://core/platform/os/manjaro.tres")
 	if PLATFORM.NIXOS in flags:
 		os = load("res://core/platform/os/nixos.tres")
+	if PLATFORM.BAZZITE in flags:
+		os = load("res://core/platform/os/bazzite.tres")
 
 	if os:
 		for action in os.startup_actions:
@@ -291,6 +294,8 @@ func _read_os() -> Array[PLATFORM]:
 		flags.append(PLATFORM.ARCH_LIKE)
 	if os_info.id == "nixos":
 		flags.append(PLATFORM.NIXOS)
+	if os_info.id == "bazzite":
+		flags.append(PLATFORM.BAZZITE)
 
 	return flags
 
