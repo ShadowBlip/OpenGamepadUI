@@ -15,7 +15,10 @@ EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
-ALL_EXTENSIONS := ./addons/core/bin/libopengamepadui-core.linux.template_$(BUILD_TYPE).x86_64.so
+ALL_EXTENSIONS_LINUX := ./addons/core/bin/libopengamepadui-core.linux.template_$(BUILD_TYPE).x86_64.so
+ALL_EXTENSIONS_MAC_ARM := ./addons/core/bin/libopengamepadui-core.macos.template_$(BUILD_TYPE).arm64.dylib
+ALL_EXTENSIONS_MAC_X86 := ./addons/core/bin/libopengamepadui-core.macos.template_$(BUILD_TYPE).x86_64.dylib
+ALL_EXTENSIONS := $(ALL_EXTENSIONS_LINUX) $(ALL_EXTENSIONS_MAC)
 ALL_EXTENSION_FILES := $(shell find ./extensions/ -regex  '.*\(\.rs|\.toml\|\.lock\)$$')
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
@@ -114,6 +117,13 @@ build/opengamepad-ui.x86_64: $(IMPORT_DIR) $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	mkdir -p build
 	$(GODOT) -v --headless --export-$(BUILD_TYPE) "Linux/X11"
 
+.PHONY: build-mac
+build-mac: build/OpenGamepadUI.dmg ## Build and export the project for mac
+build/OpenGamepadUI.dmg: $(IMPORT_DIR) $(PROJECT_FILES) $(EXPORT_TEMPLATE)
+	@echo "Building OpenGamepadUI v$(OGUI_VERSION) for MacOS"
+	mkdir -p build
+	$(GODOT) -v --headless --export-$(BUILD_TYPE) "Mac OSX"
+
 .PHONY: metadata
 metadata: build/metadata.json ## Build update metadata
 build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadui.key
@@ -158,10 +168,19 @@ force-import: $(ALL_EXTENSIONS)
 	$(GODOT) --headless --import > /dev/null 2>&1 || echo "Finished"
 
 .PHONY: extensions
-extensions: $(ALL_EXTENSIONS) ## Build engine extensions
-$(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
-	@echo "Building engine extensions..."
+extensions: $(ALL_EXTENSIONS_LINUX) ## Build engine extensions
+$(ALL_EXTENSIONS_LINUX) &: $(ALL_EXTENSION_FILES)
+	@echo "Building linux engine extensions..."
 	cd ./extensions && $(MAKE) build
+
+.PHONY: extensions-mac
+extensions-mac: $(ALL_EXTENSIONS_MAC_ARM) $(ALL_EXTENSIONS_MAC_X86) ## Build mac engine extensions
+$(ALL_EXTENSIONS_MAC_ARM) &: $(ALL_EXTENSION_FILES)
+	@echo "Building mac engine extensions..."
+	cd ./extensions && $(MAKE) build-mac
+$(ALL_EXTENSIONS_MAC_X86) &: $(ALL_EXTENSION_FILES)
+	@echo "Building mac engine extensions..."
+	cd ./extensions && $(MAKE) build-mac
 
 .PHONY: edit
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
@@ -461,6 +480,18 @@ release: ## Publish a release with semantic release
 # E.g. make in-docker TARGET=build
 .PHONY: in-docker
 in-docker:
+	@# Run the given make target inside Docker
+	docker run --rm \
+		-v $(PWD):/src \
+		--workdir /src \
+		-e HOME=/home/build \
+		-e PWD=/src \
+		--user $(shell id -u):$(shell id -g) \
+		$(IMAGE_NAME):$(IMAGE_TAG) \
+		make GODOT=/usr/sbin/godot $(TARGET)
+
+.PHONY: in-docker-mac
+in-docker-mac:
 	@# Run the given make target inside Docker
 	docker run --rm \
 		-v $(PWD):/src \

@@ -19,7 +19,7 @@ env:
 jobs:
   release:
     name: 🎉 Publish to GitHub
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -46,6 +46,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make release
+
+      - name: Build for Mac
+        run: |
+          make extensions-mac
+          make build-mac
 
       # In ".releaserc.yaml" a step is defined to write the release version to
       # ".version.txt" upon successful release. This step checks to see if that
