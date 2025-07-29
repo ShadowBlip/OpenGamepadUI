@@ -72,7 +72,7 @@ impl Vdf {
         };
 
         // Convert the vdf data into a Godot Dictionary
-        let mut dict = dict! {};
+        let mut dict = vdict! {};
         let key = vdf.key.to_string();
         let value = match vdf.value {
             Value::Str(value) => value.to_string().to_variant(),
@@ -89,7 +89,7 @@ impl Vdf {
     /// Returns an empty [Dictionary] if parse failed.
     #[func]
     pub fn parse_string(vdf_string: GString) -> Dictionary {
-        let mut dict = dict! {};
+        let mut dict = vdict! {};
         let data = vdf_string.to_string();
 
         // Try to parse the data
@@ -113,7 +113,7 @@ impl Vdf {
 
     /// Convert the given VDF object into a Godot Dictionary
     fn obj_to_dict(obj: Obj) -> Dictionary {
-        let mut dict = dict! {};
+        let mut dict = vdict! {};
 
         for vdf in obj.into_vdfs() {
             let key = vdf.key.to_string();
@@ -150,7 +150,7 @@ impl Vdf {
 
     /// Convert the given array into a VDF-friendly dictionary
     fn array_to_dict(value: &Array<Variant>) -> Dictionary {
-        let mut dict = dict! {};
+        let mut dict = vdict! {};
         for (i, value) in value.iter_shared().enumerate() {
             dict.set(i.to_string(), value);
         }
