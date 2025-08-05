@@ -16,7 +16,7 @@ provides=('opengamepadui')
 conflicts=('opengamepadui-git')
 source=(opengamepadui-v$pkgver.tar.gz::https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v$pkgver/opengamepadui.tar.gz)
 
-sha256sums=('18de3a83d65b79e334a02f2d08d96dedc470ddc5f8c312833b03ea5346832d2b')
+sha256sums=('81ba6650a52889a6bd9cc79e1239b9f5372c3fbc377aa67cff0c9eb9a9434064')
 
 package() {
   options=('!strip')
