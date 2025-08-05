@@ -29,8 +29,8 @@ plugins:
           to: "Version:        ${nextRelease.version}"
         - files:
             - package/archlinux/PKGBUILD
-          from: "^pkgver=v.*$"
-          to: "pkgver=v${nextRelease.version}"
+          from: "^pkgver=.*$"
+          to: "pkgver=${nextRelease.version}"
 
   # Execute commands to build the project
   - - "@semantic-release/exec"
