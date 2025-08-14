@@ -78,14 +78,14 @@ static func reap(pid: int, sig: SIG = SIG.TERM) -> void:
 		
 		# Kill PGID
 		var cmd := "kill"
-		var args := [sig_arg, "--", "-{0}".format([p])]
+		var args: Array[String] = [sig_arg, "--", "-{0}".format([p])]
 		logger.info(cmd + " " + " ".join(args))
-		OS.execute(cmd, args)
+		Command.create(cmd, args).execute()
 		
 		# Kill PIDs
 		args = [sig_arg, "--", "{0}".format([p])]
 		logger.info(cmd + " " + " ".join(args))
-		OS.execute(cmd, args)
+		Command.create(cmd, args).execute()
 
 	var verb := "Reaped"
 	if sig == SIG.STOP:
@@ -173,6 +173,51 @@ static func get_pid_status(pid: int) -> Dictionary:
 		status[key] = value
 	
 	return status
+
+
+## Returns the parsed environment for the given PID. Returns an empty dictionary
+## if the PID is not found or we do not have permission to read the environment.
+static func get_pid_environment(pid: int) -> Dictionary[String, String]:
+	var env: Dictionary[String, String] = {}
+
+	# Open the environment file for the given process
+	var env_path := "/".join(["/proc", str(pid), "environ"])
+	var env_file := FileAccess.open(env_path, FileAccess.READ)
+	if not env_file:
+		return env
+
+	# Read from the environment until no data is left
+	var env_data := PackedByteArray()
+	while not env_file.eof_reached():
+		env_data.append_array(env_file.get_buffer(8128))
+
+	# The environment data is a null-terminated list of strings. Loop
+	# over the bytes to find slices between the null bytes and decode each
+	# found slice as a string.
+	var current_position := 0
+	while true:
+		var next_position := env_data.find(0, current_position)
+		if next_position < 0:
+			break
+		var entry := env_data.slice(current_position, next_position)
+		var string := entry.get_string_from_utf8()
+		var key_value := string.split("=", true, 1)
+		if key_value.size() > 1:
+			env[key_value[0]] = key_value[1]
+		current_position = next_position + 1
+	
+	return env
+
+
+## Returns a list of all currently running processes
+static func get_pids() -> PackedInt64Array:
+	var pids := PackedInt64Array()
+	for proc in DirAccess.get_directories_at("/proc"):
+		if not (proc as String).is_valid_int():
+			continue
+		var process_id := proc.to_int()
+		pids.push_back(process_id)
+	return pids
 
 
 # Recursively finds all descendant processes and returns it as an array of PIDs
