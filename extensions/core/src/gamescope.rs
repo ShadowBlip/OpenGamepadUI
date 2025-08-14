@@ -37,6 +37,10 @@ impl GamescopeInstance {
     #[constant]
     const OVERLAY_GAME_ID: u32 = 769;
 
+    /// Steam sets this unknown value as a baselayer app id
+    #[constant]
+    const EXTRA_UNKNOWN_GAME_ID: u32 = 413091;
+
     /// Return the Gamescope XWayland of the given type.
     #[func]
     pub fn get_xwayland(&self, kind: u32) -> Option<Gd<GamescopeXWayland>> {

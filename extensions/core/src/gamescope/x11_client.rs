@@ -24,6 +24,23 @@ enum Signal {
     PropertyChanged { property: String },
 }
 
+/// Structure for X11 window geometry
+struct WindowGeometry {
+    depth: u8,
+    _sequence: u16,
+    _length: u32,
+    root: u32,
+    x: i16,
+    y: i16,
+    width: u16,
+    height: u16,
+    _border_width: u16,
+}
+
+/// A single Gamescope XWayland instance. In typical setups there are two
+/// XWayland instances: one for the overlay and one for the running game.
+/// The first XWayland instance is the "primary" instance which has extra
+/// information about what window is in focus, etc.
 #[derive(GodotClass)]
 #[class(no_init, base=Resource)]
 pub struct GamescopeXWayland {
@@ -84,6 +101,9 @@ pub struct GamescopeXWayland {
     /// Current manually focused app
     #[var(get = get_baselayer_app, set = set_baselayer_app)]
     baselayer_app: u32,
+    /// Current manually focused app
+    #[var(get = get_baselayer_apps, set = set_baselayer_apps)]
+    baselayer_apps: PackedInt64Array,
 }
 
 #[godot_api]
@@ -134,7 +154,7 @@ impl GamescopeXWayland {
         // Create an XWayland client instance for this display
         let mut xwayland = XWayland::new(name.clone().into());
         if let Err(e) = xwayland.connect() {
-            log::error!("Failed to connect to XWayland display '{name}': {e:?}");
+            log::debug!("Failed to connect to XWayland display '{name}': {e:?}");
         }
         let is_primary = xwayland.is_primary_instance().unwrap_or_default();
         let root_window_id = xwayland.get_root_window_id().unwrap_or_default();
@@ -148,13 +168,13 @@ impl GamescopeXWayland {
                     for event in property_rx.into_iter() {
                         let signal = Signal::PropertyChanged { property: event };
                         if let Err(e) = signals_tx.send(signal) {
-                            log::error!("Error sending property changed signal: {e:?}");
+                            log::debug!("Error sending property changed signal: {e:?}");
                             break;
                         }
                     }
                 });
             } else {
-                log::error!("Failed to listen for XWayland property changes");
+                log::debug!("Failed to listen for XWayland property changes");
             }
         }
 
@@ -168,13 +188,13 @@ impl GamescopeXWayland {
                         WindowLifecycleEvent::Destroyed => Signal::WindowDestroyed { window_id },
                     };
                     if let Err(e) = signals_tx.send(signal) {
-                        log::error!("Error sending window signal: {e:?}");
+                        log::debug!("Error sending window signal: {e:?}");
                         break;
                     }
                 }
             });
         } else {
-            log::error!("Failed to listen for XWayland windows created/destroyed");
+            log::debug!("Failed to listen for XWayland windows created/destroyed");
         }
 
         // Setup the initial state
@@ -203,6 +223,7 @@ impl GamescopeXWayland {
                 allow_tearing: Default::default(),
                 baselayer_window: Default::default(),
                 baselayer_app: Default::default(),
+                baselayer_apps: Default::default(),
             }
         })
     }
@@ -272,7 +293,7 @@ impl GamescopeXWayland {
         let (_, rx) = match self.xwayland.listen_for_window_property_changes(window_id) {
             Ok(result) => result,
             Err(e) => {
-                log::error!("Failed to watch window properties for window '{window_id}': {e:?}");
+                log::debug!("Failed to watch window properties for window '{window_id}': {e:?}");
                 return -1;
             }
         };
@@ -290,7 +311,7 @@ impl GamescopeXWayland {
                         Err(e) => match e {
                             TryRecvError::Empty => break 'inner,
                             TryRecvError::Disconnected => {
-                                log::error!("Backend thread is not running!");
+                                log::debug!("Backend thread is not running!");
                                 return;
                             }
                         },
@@ -300,7 +321,7 @@ impl GamescopeXWayland {
                         property: event,
                     };
                     if let Err(e) = signals_tx.send(signal) {
-                        log::error!("Failed to send property change signal: {e:?}");
+                        log::debug!("Failed to send property change signal: {e:?}");
                         break 'outer;
                     }
                 }
@@ -332,7 +353,7 @@ impl GamescopeXWayland {
 
         // Cancel the listener task
         let Some(task) = self.window_watch_handles.get(&(window_id as u32)) else {
-            log::error!("Task wasn't found but was being watched: {window_id}");
+            log::debug!("Task wasn't found but was being watched: {window_id}");
             return -1;
         };
 
@@ -347,7 +368,7 @@ impl GamescopeXWayland {
         let pids = match self.xwayland.get_pids_for_window(window_id) {
             Ok(pids) => pids,
             Err(e) => {
-                log::error!("Failed to get pids for window '{window_id}': {e:?}");
+                log::debug!("Failed to get pids for window '{window_id}': {e:?}");
                 return PackedInt64Array::new();
             }
         };
@@ -362,7 +383,7 @@ impl GamescopeXWayland {
         let windows = match self.xwayland.get_windows_for_pid(pid) {
             Ok(windows) => windows,
             Err(e) => {
-                log::error!("Failed to get windows for pid '{pid}': {e:?}");
+                log::debug!("Failed to get windows for pid '{pid}': {e:?}");
                 return PackedInt64Array::new();
             }
         };
@@ -377,12 +398,85 @@ impl GamescopeXWayland {
         let name = match self.xwayland.get_window_name(window_id) {
             Ok(name) => name,
             Err(e) => {
-                log::error!("Failed to get window name for window '{window_id}': {e:?}");
+                log::debug!("Failed to get window name for window '{window_id}': {e:?}");
                 return "".into();
             }
         };
 
         name.unwrap_or_default().into()
+    }
+
+    /// Returns the window x and y position for the given window. Returns (-1, -1)
+    /// if the window geometry is not found.
+    #[func]
+    pub fn get_window_position(&self, window_id: u32) -> Vector2i {
+        let Some(geometry) = self.get_geometry_for_window(window_id) else {
+            return Vector2i::new(-1, -1);
+        };
+        Vector2i::new(geometry.x as i32, geometry.y as i32)
+    }
+
+    /// Returns the window width and height for the given window. Returns (-1, -1)
+    /// if the window geometry is not found.
+    #[func]
+    pub fn get_window_size(&self, window_id: u32) -> Vector2i {
+        let Some(geometry) = self.get_geometry_for_window(window_id) else {
+            return Vector2i::new(-1, -1);
+        };
+        Vector2i::new(geometry.width as i32, geometry.height as i32)
+    }
+
+    /// Returns the window sizes for the given list of window ids. Returns (-1, -1)
+    /// if the geometry for a window is not found.
+    #[func]
+    pub fn get_window_sizes(&self, window_ids: PackedInt64Array) -> Array<Vector2i> {
+        let mut array = Array::new();
+        for window_id in window_ids.as_slice() {
+            if *window_id <= 0 {
+                array.push(Vector2i::new(-1, -1));
+                continue;
+            }
+            let size = self.get_window_size(*window_id as u32);
+            array.push(size);
+        }
+
+        array
+    }
+
+    /// Returns the window depth. Returns -1 if the window geometry is not found.
+    #[func]
+    pub fn get_window_depth(&self, window_id: u32) -> i32 {
+        let Some(geometry) = self.get_geometry_for_window(window_id) else {
+            return -1;
+        };
+        geometry.depth as i32
+    }
+
+    /// Returns the window root. Returns 0 if the window is not found.
+    #[func]
+    pub fn get_window_root(&self, window_id: u32) -> u32 {
+        let Some(geometry) = self.get_geometry_for_window(window_id) else {
+            return 0;
+        };
+        geometry.root
+    }
+
+    /// Returns the x11 window geometry for the given window
+    fn get_geometry_for_window(&self, window_id: u32) -> Option<WindowGeometry> {
+        let reply = self.xwayland.get_geometry_for_window(window_id).ok()?;
+        let geometry = WindowGeometry {
+            depth: reply.depth,
+            _sequence: reply.sequence,
+            _length: reply.length,
+            root: reply.root,
+            x: reply.x,
+            y: reply.y,
+            width: reply.width,
+            height: reply.height,
+            _border_width: reply.border_width,
+        };
+
+        Some(geometry)
     }
 
     /// Returns the window ids of the children of the given window
@@ -391,7 +485,7 @@ impl GamescopeXWayland {
         let windows = match self.xwayland.get_window_children(window_id) {
             Ok(windows) => windows,
             Err(e) => {
-                log::error!("Failed to get window children for window '{window_id}': {e:?}");
+                log::debug!("Failed to get window children for window '{window_id}': {e:?}");
                 return PackedInt64Array::new();
             }
         };
@@ -406,7 +500,7 @@ impl GamescopeXWayland {
         let windows = match self.xwayland.get_all_windows(window_id) {
             Ok(windows) => windows,
             Err(e) => {
-                log::error!("Failed to get all window children for window '{window_id}': {e:?}");
+                log::debug!("Failed to get all window children for window '{window_id}': {e:?}");
                 return PackedInt64Array::new();
             }
         };
@@ -422,7 +516,7 @@ impl GamescopeXWayland {
         match self.xwayland.get_app_id(window_id) {
             Ok(app_id) => app_id.unwrap_or_default(),
             Err(e) => {
-                log::error!("Failed to get app id for window '{window_id}': {e:?}");
+                log::debug!("Failed to get app id for window '{window_id}': {e:?}");
                 0
             }
         }
@@ -432,7 +526,7 @@ impl GamescopeXWayland {
     #[func]
     fn set_app_id(&self, window_id: u32, app_id: u32) -> i32 {
         if let Err(e) = self.xwayland.set_app_id(window_id, app_id) {
-            log::error!("Failed to set app id {app_id} on window '{window_id}': {e:?}");
+            log::debug!("Failed to set app id {app_id} on window '{window_id}': {e:?}");
             return -1;
         }
         0
@@ -445,7 +539,7 @@ impl GamescopeXWayland {
             .xwayland
             .remove_xprop(window_id, GamescopeAtom::SteamGame)
         {
-            log::error!("Failed to remove app id from window '{window_id}': {e:?}");
+            log::debug!("Failed to remove app id from window '{window_id}': {e:?}");
             return -1;
         }
         0
@@ -457,7 +551,7 @@ impl GamescopeXWayland {
         match self.xwayland.has_app_id(window_id) {
             Ok(v) => v,
             Err(e) => {
-                log::error!("Failed to check window '{window_id}' for app id: {e:?}");
+                log::debug!("Failed to check window '{window_id}' for app id: {e:?}");
                 false
             }
         }
@@ -472,7 +566,7 @@ impl GamescopeXWayland {
         {
             Ok(v) => v,
             Err(e) => {
-                log::error!(
+                log::debug!(
                     "Failed to check window '{window_id}' has STEAM_NOTIFICATION property: {e:?}"
                 );
                 false
@@ -489,7 +583,7 @@ impl GamescopeXWayland {
         {
             Ok(v) => v,
             Err(e) => {
-                log::error!(
+                log::debug!(
                     "Failed to check window '{window_id}' has STEAM_INPUT_FOCUS property: {e:?}"
                 );
                 false
@@ -506,7 +600,7 @@ impl GamescopeXWayland {
         {
             Ok(v) => v,
             Err(e) => {
-                log::error!(
+                log::debug!(
                     "Failed to check window '{window_id}' has STEAM_OVERLAY property: {e:?}"
                 );
                 false
@@ -514,19 +608,19 @@ impl GamescopeXWayland {
         }
     }
 
-    /// --- XWayland Primary ---
+    // --- XWayland Primary ---
 
     /// Return a list of focusable apps
     #[func]
     fn get_focusable_apps(&mut self) -> PackedInt64Array {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focusable_apps() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focusable apps: {e:?}");
+                log::debug!("Failed to get focusable apps: {e:?}");
                 return Default::default();
             }
         };
@@ -542,13 +636,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_focusable_windows(&mut self) -> PackedInt64Array {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focusable_windows() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focusable windows: {e:?}");
+                log::debug!("Failed to get focusable windows: {e:?}");
                 return Default::default();
             }
         };
@@ -564,13 +658,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_focusable_window_names(&mut self) -> PackedStringArray {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focusable_window_names() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focusable windows: {e:?}");
+                log::debug!("Failed to get focusable windows: {e:?}");
                 return Default::default();
             }
         };
@@ -583,13 +677,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_focused_window(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focused_window() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focused window: {e:?}");
+                log::debug!("Failed to get focused window: {e:?}");
                 return Default::default();
             }
         };
@@ -602,13 +696,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_focused_app(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focused_app() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focused app: {e:?}");
+                log::debug!("Failed to get focused app: {e:?}");
                 return Default::default();
             }
         };
@@ -621,13 +715,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_focused_app_gfx(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_focused_app_gfx() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get focused app gfx: {e:?}");
+                log::debug!("Failed to get focused app gfx: {e:?}");
                 return Default::default();
             }
         };
@@ -640,14 +734,14 @@ impl GamescopeXWayland {
     #[func]
     fn get_overlay_focused(&mut self) -> bool {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
 
         let focused = match self.xwayland.is_overlay_focused() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get overlay focused: {e:?}");
+                log::debug!("Failed to get overlay focused: {e:?}");
                 Default::default()
             }
         };
@@ -659,13 +753,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_fps_limit(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_fps_limit() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get fps limit: {e:?}");
+                log::debug!("Failed to get fps limit: {e:?}");
                 return Default::default();
             }
         };
@@ -678,11 +772,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_fps_limit(&mut self, fps: u32) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return;
         }
         if let Err(e) = self.xwayland.set_fps_limit(fps) {
-            log::error!("Failed to set FPS limit to {fps}: {e:?}");
+            log::debug!("Failed to set FPS limit to {fps}: {e:?}");
         }
         self.fps_limit = fps;
     }
@@ -691,13 +785,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_blur_mode(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_blur_mode() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get blur mode: {e:?}");
+                log::debug!("Failed to get blur mode: {e:?}");
                 return Default::default();
             }
         };
@@ -718,7 +812,7 @@ impl GamescopeXWayland {
     #[func]
     fn set_blur_mode(&mut self, mode: u32) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let blur_mode = match mode {
@@ -728,7 +822,7 @@ impl GamescopeXWayland {
             _ => BlurMode::Off,
         };
         if let Err(e) = self.xwayland.set_blur_mode(blur_mode) {
-            log::error!("Failed to set blur mode to: {mode}: {e:?}");
+            log::debug!("Failed to set blur mode to: {mode}: {e:?}");
         }
         self.blur_mode = mode;
     }
@@ -737,7 +831,7 @@ impl GamescopeXWayland {
     #[func]
     fn get_blur_radius(&self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         self.blur_radius
@@ -747,11 +841,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_blur_radius(&mut self, radius: u32) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return;
         }
         if let Err(e) = self.xwayland.set_blur_radius(radius) {
-            log::error!("Failed to set blur radius to: {radius}: {e:?}");
+            log::debug!("Failed to set blur radius to: {radius}: {e:?}");
         }
         self.blur_radius = radius;
     }
@@ -760,7 +854,7 @@ impl GamescopeXWayland {
     #[func]
     fn get_allow_tearing(&self) -> bool {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         self.allow_tearing
@@ -770,11 +864,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_allow_tearing(&mut self, allow: bool) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return;
         }
         if let Err(e) = self.xwayland.set_allow_tearing(allow) {
-            log::error!("Failed to set allow tearing to: {allow}: {e:?}");
+            log::debug!("Failed to set allow tearing to: {allow}: {e:?}");
         }
         self.allow_tearing = allow;
     }
@@ -783,13 +877,13 @@ impl GamescopeXWayland {
     #[func]
     fn is_focusable_app(&self, window_id: u32) -> bool {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         match self.xwayland.is_focusable_app(window_id) {
             Ok(is_focusable) => is_focusable,
             Err(e) => {
-                log::error!("Failed to check if window '{window_id}' is focusable app: {e:?}");
+                log::debug!("Failed to check if window '{window_id}' is focusable app: {e:?}");
                 Default::default()
             }
         }
@@ -801,11 +895,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_main_app(&self, window_id: u32) -> i32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         if let Err(e) = self.xwayland.set_main_app(window_id) {
-            log::error!("Failed to set window '{window_id}' as main app: {e:?}");
+            log::debug!("Failed to set window '{window_id}' as main app: {e:?}");
             return -1;
         }
         0
@@ -816,11 +910,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_input_focus(&self, window_id: u32, value: u32) -> i32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         if let Err(e) = self.xwayland.set_input_focus(window_id, value) {
-            log::error!("Failed to set input focus on '{window_id}' to '{value}': {e:?}");
+            log::debug!("Failed to set input focus on '{window_id}' to '{value}': {e:?}");
             return -1;
         }
         0
@@ -830,13 +924,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_overlay(&self, window_id: u32) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         match self.xwayland.get_overlay(window_id) {
             Ok(value) => value.unwrap_or_default(),
             Err(e) => {
-                log::error!("Failed to get overlay status for window '{window_id}': {e:?}");
+                log::debug!("Failed to get overlay status for window '{window_id}': {e:?}");
                 0
             }
         }
@@ -846,11 +940,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_overlay(&self, window_id: u32, value: u32) -> i32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         if let Err(e) = self.xwayland.set_overlay(window_id, value) {
-            log::error!("Failed to set overlay on '{window_id}' to '{value}': {e:?}");
+            log::debug!("Failed to set overlay on '{window_id}' to '{value}': {e:?}");
             return -1;
         }
         0
@@ -861,11 +955,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_notification(&self, window_id: u32, value: u32) -> i32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         if let Err(e) = self.xwayland.set_notification(window_id, value) {
-            log::error!("Failed to set notification on '{window_id}' to '{value}': {e:?}");
+            log::debug!("Failed to set notification on '{window_id}' to '{value}': {e:?}");
             return -1;
         }
         0
@@ -875,11 +969,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_external_overlay(&self, window_id: u32, value: u32) -> i32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         if let Err(e) = self.xwayland.set_external_overlay(window_id, value) {
-            log::error!("Failed to set external overlay on '{window_id}' to '{value}': {e:?}");
+            log::debug!("Failed to set external overlay on '{window_id}' to '{value}': {e:?}");
             return -1;
         }
         0
@@ -889,13 +983,13 @@ impl GamescopeXWayland {
     #[func]
     fn get_baselayer_window(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_baselayer_window() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get baselayer window: {e:?}");
+                log::debug!("Failed to get baselayer window: {e:?}");
                 return Default::default();
             }
         };
@@ -908,11 +1002,11 @@ impl GamescopeXWayland {
     #[func]
     fn set_baselayer_window(&mut self, window_id: u32) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return;
         }
         if let Err(e) = self.xwayland.set_baselayer_window(window_id) {
-            log::error!("Failed to set baselayer window to {window_id}: {e:?}");
+            log::debug!("Failed to set baselayer window to {window_id}: {e:?}");
         }
         self.baselayer_window = window_id;
     }
@@ -921,7 +1015,7 @@ impl GamescopeXWayland {
     #[func]
     fn remove_baselayer_window(&mut self) {
         if let Err(e) = self.xwayland.remove_baselayer_window() {
-            log::error!("Failed to remove baselayer window: {e:?}");
+            log::debug!("Failed to remove baselayer window: {e:?}");
         }
         self.baselayer_window = 0;
     }
@@ -930,48 +1024,84 @@ impl GamescopeXWayland {
     #[func]
     fn get_baselayer_app(&mut self) -> u32 {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return Default::default();
         }
         let value = match self.xwayland.get_baselayer_app_id() {
             Ok(value) => value,
             Err(e) => {
-                log::error!("Failed to get baselayer app id: {e:?}");
+                log::debug!("Failed to get baselayer app id: {e:?}");
                 return Default::default();
             }
         };
 
-        self.baselayer_window = value.unwrap_or_default();
-        self.baselayer_window
+        self.baselayer_app = value.unwrap_or_default();
+        self.baselayer_app
     }
 
     /// Focuses the app with the given app id
     #[func]
     fn set_baselayer_app(&mut self, app_id: u32) {
         if !self.is_primary {
-            log::error!("XWayland instance is not primary!");
+            log::debug!("XWayland instance is not primary!");
             return;
         }
         if let Err(e) = self.xwayland.set_baselayer_app_id(app_id) {
-            log::error!("Failed to set baselayer app id to {app_id}: {e:?}");
+            log::debug!("Failed to set baselayer app id to {app_id}: {e:?}");
         }
-        self.baselayer_window = app_id;
+        self.baselayer_app = app_id;
     }
 
     /// Removes the baselayer property to un-focus apps
     #[func]
     fn remove_baselayer_app(&mut self) {
         if let Err(e) = self.xwayland.remove_baselayer_app_id() {
-            log::error!("Failed to remove baselayer app: {e:?}");
+            log::debug!("Failed to remove baselayer app: {e:?}");
         }
         self.baselayer_window = 0;
+    }
+
+    /// Returns the app id(s) of the currently manually focused app
+    #[func]
+    fn get_baselayer_apps(&mut self) -> PackedInt64Array {
+        if !self.is_primary {
+            log::debug!("XWayland instance is not primary!");
+            return Default::default();
+        }
+        let value = match self.xwayland.get_baselayer_app_ids() {
+            Ok(value) => value,
+            Err(e) => {
+                log::debug!("Failed to get baselayer app ids: {e:?}");
+                return Default::default();
+            }
+        };
+        let Some(app_ids) = value else {
+            return Default::default();
+        };
+        let app_ids: Vec<i64> = app_ids.into_iter().map(|v| v as i64).collect();
+        self.baselayer_apps = app_ids.into();
+        self.baselayer_apps.clone()
+    }
+
+    /// Focuses the app with the given app id(s)
+    #[func]
+    fn set_baselayer_apps(&mut self, app_ids: PackedInt64Array) {
+        if !self.is_primary {
+            log::debug!("XWayland instance is not primary!");
+            return;
+        }
+        let ids = app_ids.to_vec().iter().map(|v| *v as u32).collect();
+        if let Err(e) = self.xwayland.set_baselayer_app_ids(ids) {
+            log::debug!("Failed to set baselayer app ids to {app_ids:?}: {e:?}");
+        }
+        self.baselayer_apps = app_ids;
     }
 
     /// Request a screenshot from Gamescope
     #[func]
     fn request_screenshot(&self) {
         if let Err(e) = self.xwayland.request_screenshot() {
-            log::error!("Failed to request screenshot: {e:?}");
+            log::debug!("Failed to request screenshot: {e:?}");
         }
     }
 
@@ -984,7 +1114,7 @@ impl GamescopeXWayland {
                 Err(e) => match e {
                     TryRecvError::Empty => break,
                     TryRecvError::Disconnected => {
-                        log::error!("Backend thread is not running!");
+                        log::debug!("Backend thread is not running!");
                         return;
                     }
                 },

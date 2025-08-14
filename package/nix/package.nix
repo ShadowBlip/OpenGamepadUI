@@ -25,7 +25,7 @@ stdenv.mkDerivation (finalAttrs: {
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) src;
     sourceRoot = "OpenGamepadUI/${finalAttrs.cargoRoot}";
-    hash = "sha256-vgaa7Pe0lksiGEpQbn2he5CzhVWoHUSPuXqCwSkoDco=";
+    hash = "sha256-xewyt1KuQ96FNYBKlC9VT7KEDDTUasavTsl+/5WXnU4=";
   };
   cargoRoot = "extensions";
 
