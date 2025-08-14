@@ -128,11 +128,27 @@ func _init() -> void:
 			self.check_running.call_deferred()
 			# If focusable apps has changed and the currently focused app no longer exists,
 			# remove the manual focus
-			var baselayer_app := _xwayland_primary.baselayer_app
-			to.append(_xwayland_primary.focused_app)
-			if baselayer_app > 0 and not baselayer_app in to:
-				_xwayland_primary.remove_baselayer_app()
+			const keep_app_ids := [GamescopeInstance.EXTRA_UNKNOWN_GAME_ID, GamescopeInstance.OVERLAY_GAME_ID]
+			var baselayer_apps := _xwayland_primary.baselayer_apps
+			var new_baselayer_apps := PackedInt64Array()
+			for app_id in baselayer_apps:
+				if app_id in keep_app_ids:
+					new_baselayer_apps.push_back(app_id)
+					continue
+				if app_id in to:
+					new_baselayer_apps.push_back(app_id)
+			if new_baselayer_apps != baselayer_apps:
+				_xwayland_primary.baselayer_apps = new_baselayer_apps
 		_xwayland_primary.focusable_apps_updated.connect(on_focusable_apps_changed)
+
+		# Listen for when focusable windows change
+		var on_focusable_windows_changed := func(_from: PackedInt64Array, to: PackedInt64Array):
+			# If focusable windows has changed and the currently focused window no longer exists,
+			# remove the manual focus
+			var baselayer_window := _xwayland_primary.baselayer_window
+			if baselayer_window > 0 and not baselayer_window in to:
+				_xwayland_primary.remove_baselayer_window()
+		_xwayland_primary.focusable_windows_updated.connect(on_focusable_windows_changed)
 
 	# Listen for signals from the secondary Gamescope XWayland
 	if _xwayland_game:
@@ -218,6 +234,29 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 		elif to == RunningApp.STATE.STOPPED:
 			_execute_hooks(app, AppLifecycleHook.TYPE.EXIT)
 	running_app.state_changed.connect(on_app_state_changed)
+
+	# Focus any new windows that get created
+	var switch_to_new_window := func(old_windows: PackedInt64Array, new_windows: PackedInt64Array):
+		for window in new_windows:
+			if window in old_windows:
+				continue
+			running_app.switch_window(window)
+			break
+	running_app.window_ids_changed.connect(switch_to_new_window)
+
+	# Remove/restore focus if any windows get removed
+	var remove_focus := func(old_windows: PackedInt64Array, new_windows: PackedInt64Array):
+		if not _xwayland_primary:
+			return
+		var focused_window := _xwayland_primary.baselayer_window
+		if not focused_window in old_windows:
+			return
+		if new_windows.is_empty():
+			_xwayland_primary.remove_baselayer_window()
+			return
+		var new_window := new_windows[0]
+		running_app.switch_window(new_window)
+	running_app.window_ids_changed.connect(remove_focus)
 
 	return running_app
 
@@ -513,6 +552,7 @@ func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: Ru
 	logger.debug("Currently running apps:", _running)
 	if state_machine.has_state(in_game_state) and _running.size() == 0:
 		logger.info("No more apps are running. Removing in-game state.")
+		_current_app = null
 		_xwayland_primary.remove_baselayer_window()
 		state_machine.remove_state(in_game_state)
 		state_machine.remove_state(in_game_menu_state)
@@ -522,6 +562,8 @@ func _on_app_state_changed(from: RunningApp.STATE, to: RunningApp.STATE, app: Ru
 # Removes the given PID from our list of running apps
 func _remove_running(app: RunningApp):
 	logger.info("Removing app", app, "from running apps.")
+	if app == _current_app:
+		_current_app = null
 	_running.erase(app)
 	_apps_by_name.erase(app.launch_item.name)
 	_apps_by_pid.erase(app.pid)
@@ -532,20 +574,75 @@ func _remove_running(app: RunningApp):
 func check_running() -> void:
 	# Find the root window
 	if not _xwayland_game:
+		logger.warn("No XWayland instance exists to check for running apps")
 		return
 	var root_id := _xwayland_game.root_window_id
 	if root_id < 0:
 		return
+
+	# Get all windows and their geometry
 	var all_windows := _xwayland_game.get_all_windows(root_id)
+	var all_window_sizes := _xwayland_game.get_window_sizes(all_windows)
+	logger.trace("Found windows:", all_windows)
+	logger.trace("Found window sizes:", all_window_sizes)
+
+	# Only consider valid windows of a certain size
+	var all_valid_windows := PackedInt64Array()
+	var i := 0
+	for window in all_windows:
+		var size := all_window_sizes[i]
+		if size.x > 20 and size.y > 20:
+			all_valid_windows.push_back(window)
+		i += 1
+	logger.trace("Found valid windows:", all_valid_windows)
+
+	# Get a list of all running processes
+	var all_pids := Reaper.get_pids()
+
+	# All OGUI processes should have an OGUI_ID environment variable set. Look
+	# at every running process and sort them by OGUI_ID.
+	var ogui_id_to_pids: Dictionary[String, PackedInt64Array] = {}
+	for pid in all_pids:
+		var env := Reaper.get_pid_environment(pid)
+		if not env.is_empty():
+			logger.trace("Found environment for pid", pid, ":", env)
+		if not "OGUI_ID" in env:
+			continue
+		var id := env["OGUI_ID"] as String
+		if not id in ogui_id_to_pids:
+			ogui_id_to_pids[id] = PackedInt64Array()
+		ogui_id_to_pids[id].push_back(pid)
+	if !ogui_id_to_pids.is_empty():
+		logger.debug("Running processes:", ogui_id_to_pids)
 
 	# Update our view of running processes and what windows they have
-	_update_pids(all_windows)
+	_update_pids(all_valid_windows)
 
 	# Update the state of all running apps
 	for app in _running:
-		app.update()
+		var app_pids := PackedInt64Array()
+		if app.ogui_id in ogui_id_to_pids:
+			app_pids = ogui_id_to_pids[app.ogui_id]
+		app.update(all_valid_windows, app_pids)
 	for app in _running_background:
-		app.update()
+		var app_pids := PackedInt64Array()
+		if app.ogui_id in ogui_id_to_pids:
+			app_pids = ogui_id_to_pids[app.ogui_id]
+		app.update(all_valid_windows, app_pids)
+
+	# Look for orphan windows
+	var windows_with_app := PackedInt64Array()
+	var orphan_windows := PackedInt64Array()
+	for app in _running:
+		windows_with_app.append_array(app.window_ids.duplicate())
+	for app in _running_background:
+		windows_with_app.append_array(app.window_ids.duplicate())
+	for window in all_valid_windows:
+		if window in windows_with_app:
+			continue
+		orphan_windows.push_back(window)
+	if not orphan_windows.is_empty():
+		logger.warn("Found orphan windows:", orphan_windows)
 
 
 # Updates our mapping of PIDs to Windows. This gives us a good view of what
@@ -717,8 +814,9 @@ func _make_running_app(launch_item: LibraryLaunchItem, pid: int, display: String
 
 # Returns the parent app if the focused app is a child of a currently running app.
 func _get_app_from_running_pid_groups(pid: int) -> RunningApp:
+	var pids_with_ogui_id := PackedInt64Array()
 	for app in _running:
-		if pid in app.get_child_pids():
+		if pid in app.get_child_pids(pids_with_ogui_id):
 			return app
 	return null
 

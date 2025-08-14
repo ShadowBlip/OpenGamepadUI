@@ -116,7 +116,7 @@ func set_running_app(app: RunningApp):
 		game_label.text = item.name
 	
 	# Connect to app signals to allow switching between app windows
-	var on_windows_changed := func(_from: PackedInt32Array, to: PackedInt32Array):
+	var on_windows_changed := func(_from: PackedInt64Array, to: PackedInt64Array):
 		var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 		var xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
 		var focusable_windows := xwayland.get_focusable_windows()

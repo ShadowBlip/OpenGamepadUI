@@ -64,8 +64,8 @@ func _setup(window_id: int) -> void:
 		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# As of Gamescope v3.16.3+, the baselayer atom needs to be set at the start
-	_xwayland_primary.baselayer_window = window_id
-	_xwayland_primary.baselayer_app = GamescopeInstance.OVERLAY_GAME_ID
+	_xwayland_primary.baselayer_window = 0
+	_xwayland_primary.baselayer_apps = PackedInt64Array([GamescopeInstance.EXTRA_UNKNOWN_GAME_ID, GamescopeInstance.OVERLAY_GAME_ID])
 
 	# Override reserved app ids for any newly created windows
 	# Listen for window created/destroyed events
