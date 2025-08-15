@@ -98,6 +98,16 @@ func _input(event: InputEvent) -> void:
 			return
 		actions_pressed[action] = value
 
+	# If no focus exists and a direction is pressed, try to find a new focus
+	if event.is_action("ui_left") or event.is_action("ui_right") or event.is_action("ui_up") or event.is_action("ui_down"):
+		if not get_viewport().gui_get_focus_owner():
+			logger.debug("Focus lost. Finding something to focus.")
+			var new_focus := _find_focus()
+			if new_focus:
+				logger.debug("Found something to focus:", new_focus)
+				new_focus.grab_focus.call_deferred()
+				return
+
 	# Handle guide button inputs
 	if event.is_action("ogui_guide_ov"):
 		_guide_input(event)
@@ -248,6 +258,16 @@ func _input(event: InputEvent) -> void:
 		logger.debug("East released on its own.")
 		action_release(dbus_path, "ogui_tab_left")
 		get_viewport().set_input_as_handled()
+
+
+## Find a node to grab focus on if no focus exists
+func _find_focus() -> Node:
+	var main := get_tree().get_first_node_in_group("main")
+	if not main:
+		logger.debug("Unable to find main node to find focus. Is there a node in the 'main' node group?")
+		return null
+
+	return FocusGroup.find_focusable([main])
 
 
 ## Handle guide button events and determine whether this is a guide action

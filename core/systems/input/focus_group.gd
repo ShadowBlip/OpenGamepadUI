@@ -55,7 +55,7 @@ func _ready():
 	
 	# Try to find a focus node if one was not specified
 	if not current_focus or not current_focus.is_visible_in_tree():
-		current_focus = _find_focusable(parent.get_children(), parent)
+		current_focus = find_focusable(parent.get_children(), parent)
 
 
 ## Recalculate the focus neighbors of the container's children
@@ -118,7 +118,7 @@ func grab_focus() -> void:
 	if not is_focused():
 		focus_stack.push(self)
 	if not current_focus:
-		current_focus = _find_focusable(parent.get_children(), parent)
+		current_focus = find_focusable(parent.get_children(), parent)
 		logger.trace("Found focus node: " + str(current_focus))
 	if current_focus:
 		logger.info(parent.name + " grabbing focus on node: " + current_focus.name)
@@ -225,7 +225,8 @@ func _find_child_focus_group(nodes: Array[Node], root: Node = null) -> FocusGrou
 
 
 # Recursively searches the given node children for a focusable node.
-func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
+static func find_focusable(nodes: Array[Node], root: Node = null) -> Node:
+	var logger := Log.get_logger("FocusGroup", Log.LEVEL.INFO)
 	if nodes.size() == 0:
 		logger.trace("Node has no children to check.")
 		return null
@@ -236,7 +237,7 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 		# If the node is not a Control, try to find a child control node
 		if not node is Control:
 			logger.trace("Node not control. Checking children.")
-			focusable = _find_focusable(node.get_children(), root)
+			focusable = find_focusable(node.get_children(), root)
 			if focusable:
 				return focusable
 			logger.trace("Node: " + node.name + " has no more children to check.")
@@ -254,7 +255,7 @@ func _find_focusable(nodes: Array[Node], root: Node = null) -> Node:
 			return node
 		# Otherwise try and recursively find a child that can be focused
 		logger.trace("Node: " + node.name + " is not focusable. Checking its children.")
-		focusable = _find_focusable(node.get_children(), root)
+		focusable = find_focusable(node.get_children(), root)
 		if focusable:
 			return focusable
 	logger.trace("Node has no focusable children.")
