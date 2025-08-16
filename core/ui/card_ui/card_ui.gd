@@ -163,7 +163,7 @@ func _ready() -> void:
 	input_plumber.composite_device_added.connect(on_device_changed)
 
 	# Set the theme if one was set
-	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
+	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-darksoul.tres") as String
 	logger.debug("Setting theme to: " + theme_path)
 	var loaded_theme = load(theme_path)
 	if loaded_theme != null:

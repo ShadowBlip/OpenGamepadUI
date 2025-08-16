@@ -118,7 +118,7 @@ func _ready() -> void:
 	_setup_overlay_mode(launch_args)
 
 	# Set the theme if one was set
-	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-dracula.tres") as String
+	var theme_path := settings_manager.get_value("general", "theme", "res://assets/themes/card_ui-darksoul.tres") as String
 	if theme_path.is_empty():
 		logger.error("Failed to load theme from settings manager.")
 		return
