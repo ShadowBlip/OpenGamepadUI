@@ -22,7 +22,9 @@ var logger := Log.get_logger("GeneralSettings")
 @onready var platform_container := $%PlatformContainer
 @onready var platform_image := $%PlatformImage
 @onready var platform_name := $%PlatformNameLabel
-@onready var client_version_text := $%ClientVersionText
+@onready var client_version_text := $%ClientVersionText as SelectableText
+@onready var engine_version_text := $%EngineVersionText as SelectableText
+@onready var plugin_version_text := $%PluginApiVersionText as SelectableText
 @onready var os_text := $%OSText as SelectableText
 @onready var product_text := $%ProductText as SelectableText
 @onready var vendor_text := $%VendorText as SelectableText
@@ -38,6 +40,9 @@ var logger := Log.get_logger("GeneralSettings")
 func _ready() -> void:
 	# Set system info text
 	client_version_text.text = "v{0}".format([str(Version.core)])
+	var engine_version_info := Engine.get_version_info()
+	engine_version_text.text = engine_version_info["string"]
+	plugin_version_text.text = PluginLoader.PLUGIN_API_VERSION
 	os_text.text = platform.os_info.pretty_name
 	product_text.text = hardware_manager.get_product_name()
 	vendor_text.text = hardware_manager.get_vendor_name()

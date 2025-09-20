@@ -34,7 +34,7 @@ var _mode_shift: MODE_SHIFT = MODE_SHIFT.OFF
 var _last_input_focus: int
 var logger := Log.get_logger("OSK")
 
-@onready var rows_container := $%KeyboardRowsContainer
+@onready var rows_container := $%KeyboardRowsContainer as VBoxContainer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -75,7 +75,7 @@ func populate_keyboard() -> void:
 				continue
 
 			# Create a button instance for this key
-			var button := key_scene.instantiate()
+			var button := key_scene.instantiate() as Button
 			button.size_flags_stretch_ratio = key.stretch_ratio
 
 			# Get the text to display for this key
@@ -86,17 +86,17 @@ func populate_keyboard() -> void:
 			if key.input:
 				var is_shortcut_key := false
 				if key.input.keycode == KEY_BACKSPACE:
-					var textures := input_icons.parse_path("joypad/x", "", 1)
+					var textures := input_icons.parse_path("joypad/x", "", InputIconManager.InputType.GAMEPAD)
 					if textures.size() > 0:
 						button.icon = textures[0]
 					is_shortcut_key = true
 				if key.input.keycode == KEY_SHIFT:
-					var textures := input_icons.parse_path("joypad/lt", "", 1)
+					var textures := input_icons.parse_path("joypad/lt", "", InputIconManager.InputType.GAMEPAD)
 					if textures.size() > 0:
 						button.icon = textures[0]
 					is_shortcut_key = true
 				if key.input.keycode == KEY_ENTER:
-					var textures := input_icons.parse_path("joypad/rt", "", 1)
+					var textures := input_icons.parse_path("joypad/rt", "", InputIconManager.InputType.GAMEPAD)
 					if textures.size() > 0:
 						button.icon = textures[0]
 					is_shortcut_key = true
@@ -126,18 +126,18 @@ func populate_keyboard() -> void:
 			var button := button_rows[y][x] as Button
 
 			# LEFT
-			button.focus_neighbor_left = row[x-1].get_path()
+			button.focus_neighbor_left = (row[x-1] as Button).get_path()
 
 			# UP
 			var row_above := button_rows[y-1]
 			var top := _nearest_neighbor(x, row.size(), row_above.size())
-			button.focus_neighbor_top = row_above[top].get_path()
+			button.focus_neighbor_top = (row_above[top] as Button).get_path()
 
 			# RIGHT
 			var right := x+1
 			if right >= button_rows[y].size():
 				right = 0
-			button.focus_neighbor_right = row[right].get_path()
+			button.focus_neighbor_right = (row[right] as Button).get_path()
 
 			# BOTTOM
 			var bottom_y := y+1
@@ -145,7 +145,7 @@ func populate_keyboard() -> void:
 				bottom_y = 0
 			var row_below := button_rows[bottom_y]
 			var bottom := _nearest_neighbor(x, row.size(), row_below.size())
-			button.focus_neighbor_bottom = row_below[bottom].get_path()
+			button.focus_neighbor_bottom = (row_below[bottom] as Button).get_path()
 
 			button.focus_next = button.focus_neighbor_right
 			button.focus_previous = button.focus_neighbor_left
@@ -163,7 +163,7 @@ func populate_keyboard() -> void:
 # Returns index in 'b' array: 4
 func _nearest_neighbor(idx: int, from_size: int, to_size: int) -> int:
 	var factor := float(to_size) / float(from_size)
-	return int(round(idx * factor))
+	return int(roundf(idx * factor))
 
 
 # Opens the OSK with the given context. The keyboard context determines where

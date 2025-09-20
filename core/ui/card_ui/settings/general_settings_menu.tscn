@@ -219,6 +219,20 @@ title = "Client Version"
 description = ""
 text = "v0.0.0"
 
+[node name="EngineVersionText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Engine Version"
+description = ""
+text = "v0.0.0"
+
+[node name="PluginApiVersionText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Plugin API Version"
+description = ""
+text = "v0.0.0"
+
 [node name="OSText" parent="MarginContainer/VBoxContainer/VBoxContainer3" instance=ExtResource("9_sq2rc")]
 unique_name_in_owner = true
 layout_mode = 2

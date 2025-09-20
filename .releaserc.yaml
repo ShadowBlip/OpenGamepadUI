@@ -35,7 +35,7 @@ plugins:
   # Execute commands to build the project
   - - "@semantic-release/exec"
     - shell: true
-      prepareCmd: "make in-docker IMAGE_TAG=4.4.1 TARGET='force-import dist update-pkgbuild-hash'"
+      prepareCmd: "make in-docker IMAGE_TAG=4.5 TARGET='force-import dist update-pkgbuild-hash'"
       publishCmd: "echo '${nextRelease.version}' > .version.txt"
 
   # Commit the following changes to git after other plugins have run

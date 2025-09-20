@@ -15,7 +15,7 @@ signal init_partition(device: PartitionDevice)
 @onready var init_button: CardButton = $%InstantiateButton
 @onready var mounts_container: HBoxContainer = $%MountLabelsContainer
 
-var logger: Logger
+var logger: CustomLogger
 var log_level:= Log.LEVEL.INFO
 
 

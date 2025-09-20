@@ -10,10 +10,7 @@ keycode = 4194305
 
 [sub_resource type="Resource" id="Resource_2jyhs"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_chrla")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_igx80"]
 device = -1
@@ -21,10 +18,7 @@ keycode = 4194332
 
 [sub_resource type="Resource" id="Resource_sa2by"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_igx80")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_q2eg2"]
 device = -1
@@ -32,10 +26,7 @@ keycode = 4194333
 
 [sub_resource type="Resource" id="Resource_v2ee6"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_q2eg2")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_j4yao"]
 device = -1
@@ -43,10 +34,7 @@ keycode = 4194334
 
 [sub_resource type="Resource" id="Resource_yspw3"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_j4yao")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_wvjif"]
 device = -1
@@ -54,10 +42,7 @@ keycode = 4194335
 
 [sub_resource type="Resource" id="Resource_k1sl2"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_wvjif")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_vub0t"]
 device = -1
@@ -65,10 +50,7 @@ keycode = 4194336
 
 [sub_resource type="Resource" id="Resource_k0m1k"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_vub0t")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_6x2p4"]
 device = -1
@@ -76,10 +58,7 @@ keycode = 4194337
 
 [sub_resource type="Resource" id="Resource_hsisb"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_6x2p4")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_q3np2"]
 device = -1
@@ -87,10 +66,7 @@ keycode = 4194338
 
 [sub_resource type="Resource" id="Resource_k2rhh"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_q3np2")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_7fd65"]
 device = -1
@@ -98,10 +74,7 @@ keycode = 4194339
 
 [sub_resource type="Resource" id="Resource_k45dq"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_7fd65")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_hikub"]
 device = -1
@@ -109,10 +82,7 @@ keycode = 4194340
 
 [sub_resource type="Resource" id="Resource_441rj"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_hikub")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_m6ivy"]
 device = -1
@@ -120,10 +90,7 @@ keycode = 4194341
 
 [sub_resource type="Resource" id="Resource_hy1na"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_m6ivy")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_gk3sj"]
 device = -1
@@ -131,10 +98,7 @@ keycode = 4194342
 
 [sub_resource type="Resource" id="Resource_ahmvj"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_gk3sj")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_bc37v"]
 device = -1
@@ -142,20 +106,14 @@ keycode = 4194343
 
 [sub_resource type="Resource" id="Resource_mnw0w"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_bc37v")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_5wy2k"]
 keycode = 4194314
 
 [sub_resource type="Resource" id="Resource_4fbbk"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_5wy2k")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_qj0hw"]
 device = -1
@@ -167,11 +125,8 @@ keycode = 4194311
 
 [sub_resource type="Resource" id="Resource_qx6pn"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_qj0hw")
 mode_shift_input = SubResource("InputEventKey_ep5yq")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_26xsv"]
 script = ExtResource("1_ynee8")
@@ -190,11 +145,8 @@ unicode = 126
 
 [sub_resource type="Resource" id="Resource_t4vmo"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_1o2u5")
 mode_shift_input = SubResource("InputEventKey_5t6xo")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_50884"]
 device = -1
@@ -209,11 +161,8 @@ unicode = 33
 
 [sub_resource type="Resource" id="Resource_wbw1r"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_50884")
 mode_shift_input = SubResource("InputEventKey_2qxgs")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_li0ya"]
 device = -1
@@ -228,11 +177,8 @@ unicode = 64
 
 [sub_resource type="Resource" id="Resource_1sjxk"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_li0ya")
 mode_shift_input = SubResource("InputEventKey_qvn4y")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_k80sq"]
 device = -1
@@ -247,11 +193,8 @@ unicode = 35
 
 [sub_resource type="Resource" id="Resource_k6vqk"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_k80sq")
 mode_shift_input = SubResource("InputEventKey_0q3od")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_oft8y"]
 device = -1
@@ -266,11 +209,8 @@ unicode = 36
 
 [sub_resource type="Resource" id="Resource_8docp"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_oft8y")
 mode_shift_input = SubResource("InputEventKey_7n731")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_4qcrv"]
 device = -1
@@ -285,11 +225,8 @@ unicode = 37
 
 [sub_resource type="Resource" id="Resource_7eqsd"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_4qcrv")
 mode_shift_input = SubResource("InputEventKey_6omvp")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_qdt3l"]
 device = -1
@@ -304,11 +241,8 @@ unicode = 94
 
 [sub_resource type="Resource" id="Resource_b5xo3"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_qdt3l")
 mode_shift_input = SubResource("InputEventKey_wpto5")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_f67xy"]
 device = -1
@@ -323,11 +257,8 @@ unicode = 38
 
 [sub_resource type="Resource" id="Resource_t7jrj"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_f67xy")
 mode_shift_input = SubResource("InputEventKey_6mxdb")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_y8cpd"]
 device = -1
@@ -342,11 +273,8 @@ unicode = 42
 
 [sub_resource type="Resource" id="Resource_a1hlb"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_y8cpd")
 mode_shift_input = SubResource("InputEventKey_utjyg")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_805lk"]
 device = -1
@@ -361,11 +289,8 @@ unicode = 40
 
 [sub_resource type="Resource" id="Resource_y0n7r"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_805lk")
 mode_shift_input = SubResource("InputEventKey_nf0ji")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_g5f8q"]
 device = -1
@@ -380,11 +305,8 @@ unicode = 41
 
 [sub_resource type="Resource" id="Resource_88pg8"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_g5f8q")
 mode_shift_input = SubResource("InputEventKey_anldr")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_e8xrn"]
 device = -1
@@ -399,11 +321,8 @@ unicode = 95
 
 [sub_resource type="Resource" id="Resource_g2b03"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_e8xrn")
 mode_shift_input = SubResource("InputEventKey_g0xof")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_c0jcf"]
 device = -1
@@ -418,11 +337,8 @@ unicode = 43
 
 [sub_resource type="Resource" id="Resource_1mgme"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_c0jcf")
 mode_shift_input = SubResource("InputEventKey_8qd0b")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_ycana"]
 device = -1
@@ -430,10 +346,8 @@ keycode = 4194308
 
 [sub_resource type="Resource" id="Resource_plh2w"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_ycana")
 stretch_ratio = 2.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_e7ata"]
 device = -1
@@ -441,10 +355,7 @@ keycode = 4194317
 
 [sub_resource type="Resource" id="Resource_a2rv3"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_e7ata")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_261on"]
 script = ExtResource("1_ynee8")
@@ -456,10 +367,8 @@ keycode = 4194306
 
 [sub_resource type="Resource" id="Resource_yt740"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_qkp1u")
 stretch_ratio = 1.5
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_cu6u2"]
 device = -1
@@ -474,11 +383,8 @@ unicode = 81
 
 [sub_resource type="Resource" id="Resource_a0q6r"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_cu6u2")
 mode_shift_input = SubResource("InputEventKey_uwx63")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_2ggld"]
 device = -1
@@ -493,11 +399,8 @@ unicode = 87
 
 [sub_resource type="Resource" id="Resource_035td"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_2ggld")
 mode_shift_input = SubResource("InputEventKey_vqyel")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_fiee8"]
 device = -1
@@ -512,11 +415,8 @@ unicode = 69
 
 [sub_resource type="Resource" id="Resource_pb3oc"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_fiee8")
 mode_shift_input = SubResource("InputEventKey_ruyre")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_rvm62"]
 device = -1
@@ -531,11 +431,8 @@ unicode = 82
 
 [sub_resource type="Resource" id="Resource_1f7ue"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_rvm62")
 mode_shift_input = SubResource("InputEventKey_reshg")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_lg2yv"]
 device = -1
@@ -550,11 +447,8 @@ unicode = 84
 
 [sub_resource type="Resource" id="Resource_r2y76"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_lg2yv")
 mode_shift_input = SubResource("InputEventKey_xx305")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_1t47d"]
 device = -1
@@ -569,11 +463,8 @@ unicode = 89
 
 [sub_resource type="Resource" id="Resource_yw2bi"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_1t47d")
 mode_shift_input = SubResource("InputEventKey_njurq")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_1ytfc"]
 device = -1
@@ -588,11 +479,8 @@ unicode = 85
 
 [sub_resource type="Resource" id="Resource_r68pu"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_1ytfc")
 mode_shift_input = SubResource("InputEventKey_ptg0b")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_d0p1e"]
 device = -1
@@ -607,11 +495,8 @@ unicode = 73
 
 [sub_resource type="Resource" id="Resource_yaqmc"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_d0p1e")
 mode_shift_input = SubResource("InputEventKey_yum4u")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_ahp1p"]
 device = -1
@@ -626,11 +511,8 @@ unicode = 79
 
 [sub_resource type="Resource" id="Resource_3unbc"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_ahp1p")
 mode_shift_input = SubResource("InputEventKey_dia4x")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_365a8"]
 device = -1
@@ -645,11 +527,8 @@ unicode = 80
 
 [sub_resource type="Resource" id="Resource_rxbs6"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_365a8")
 mode_shift_input = SubResource("InputEventKey_h5h2w")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_quijs"]
 device = -1
@@ -664,11 +543,8 @@ unicode = 123
 
 [sub_resource type="Resource" id="Resource_xv8qp"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_quijs")
 mode_shift_input = SubResource("InputEventKey_up1kh")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_k4vky"]
 device = -1
@@ -683,11 +559,8 @@ unicode = 125
 
 [sub_resource type="Resource" id="Resource_04w8m"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_k4vky")
 mode_shift_input = SubResource("InputEventKey_mgtor")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_nng5p"]
 device = -1
@@ -702,11 +575,8 @@ unicode = 124
 
 [sub_resource type="Resource" id="Resource_vj6e0"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_nng5p")
 mode_shift_input = SubResource("InputEventKey_2kw7u")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_2y5ni"]
 device = -1
@@ -714,10 +584,7 @@ keycode = 4194323
 
 [sub_resource type="Resource" id="Resource_rk304"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_2y5ni")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_ufoa7"]
 script = ExtResource("1_ynee8")
@@ -729,10 +596,7 @@ keycode = 4194329
 
 [sub_resource type="Resource" id="Resource_h50je"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_nlqr8")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_dygq7"]
 device = -1
@@ -747,11 +611,8 @@ unicode = 65
 
 [sub_resource type="Resource" id="Resource_aa05x"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_dygq7")
 mode_shift_input = SubResource("InputEventKey_bcwa3")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_diia8"]
 device = -1
@@ -766,11 +627,8 @@ unicode = 83
 
 [sub_resource type="Resource" id="Resource_0a8ty"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_diia8")
 mode_shift_input = SubResource("InputEventKey_ctux8")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_lors7"]
 device = -1
@@ -785,11 +643,8 @@ unicode = 68
 
 [sub_resource type="Resource" id="Resource_n3jcv"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_lors7")
 mode_shift_input = SubResource("InputEventKey_8cps0")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_5yqmh"]
 device = -1
@@ -804,11 +659,8 @@ unicode = 70
 
 [sub_resource type="Resource" id="Resource_eir2n"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_5yqmh")
 mode_shift_input = SubResource("InputEventKey_txmp4")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_25you"]
 device = -1
@@ -823,11 +675,8 @@ unicode = 71
 
 [sub_resource type="Resource" id="Resource_6v2fg"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_25you")
 mode_shift_input = SubResource("InputEventKey_c3j26")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_ns10a"]
 device = -1
@@ -842,11 +691,8 @@ unicode = 72
 
 [sub_resource type="Resource" id="Resource_v06hx"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_ns10a")
 mode_shift_input = SubResource("InputEventKey_claq7")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_y255p"]
 device = -1
@@ -861,11 +707,8 @@ unicode = 74
 
 [sub_resource type="Resource" id="Resource_ut3vq"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_y255p")
 mode_shift_input = SubResource("InputEventKey_1hxa8")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_4137n"]
 device = -1
@@ -880,11 +723,8 @@ unicode = 75
 
 [sub_resource type="Resource" id="Resource_y13ws"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_4137n")
 mode_shift_input = SubResource("InputEventKey_wjncp")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_kp668"]
 device = -1
@@ -899,11 +739,8 @@ unicode = 76
 
 [sub_resource type="Resource" id="Resource_efxjg"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_kp668")
 mode_shift_input = SubResource("InputEventKey_rstc6")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_8avyu"]
 device = -1
@@ -918,11 +755,8 @@ unicode = 58
 
 [sub_resource type="Resource" id="Resource_2t403"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_8avyu")
 mode_shift_input = SubResource("InputEventKey_28b3b")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_udaco"]
 device = -1
@@ -937,11 +771,8 @@ unicode = 34
 
 [sub_resource type="Resource" id="Resource_nbiex"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_udaco")
 mode_shift_input = SubResource("InputEventKey_m54to")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_418lc"]
 device = -1
@@ -949,10 +780,8 @@ keycode = 4194309
 
 [sub_resource type="Resource" id="Resource_2dti2"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_418lc")
 stretch_ratio = 2.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_yd5tn"]
 device = -1
@@ -960,10 +789,7 @@ keycode = 4194324
 
 [sub_resource type="Resource" id="Resource_pg35m"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_yd5tn")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_g78mf"]
 script = ExtResource("1_ynee8")
@@ -975,10 +801,7 @@ keycode = 4194325
 
 [sub_resource type="Resource" id="Resource_wtw65"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_q6p70")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_xh213"]
 device = -1
@@ -993,11 +816,8 @@ unicode = 90
 
 [sub_resource type="Resource" id="Resource_l3w0e"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_xh213")
 mode_shift_input = SubResource("InputEventKey_5lbj5")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_mun60"]
 device = -1
@@ -1012,11 +832,8 @@ unicode = 88
 
 [sub_resource type="Resource" id="Resource_dils7"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_mun60")
 mode_shift_input = SubResource("InputEventKey_aqia5")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_i3yqg"]
 device = -1
@@ -1031,11 +848,8 @@ unicode = 67
 
 [sub_resource type="Resource" id="Resource_1r3ss"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_i3yqg")
 mode_shift_input = SubResource("InputEventKey_84ypj")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_16rru"]
 device = -1
@@ -1050,11 +864,8 @@ unicode = 86
 
 [sub_resource type="Resource" id="Resource_j63iv"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_16rru")
 mode_shift_input = SubResource("InputEventKey_38e1x")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_tptto"]
 device = -1
@@ -1069,11 +880,8 @@ unicode = 66
 
 [sub_resource type="Resource" id="Resource_6vyup"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_tptto")
 mode_shift_input = SubResource("InputEventKey_w7654")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_bgq8k"]
 device = -1
@@ -1088,11 +896,8 @@ unicode = 78
 
 [sub_resource type="Resource" id="Resource_dntiq"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_bgq8k")
 mode_shift_input = SubResource("InputEventKey_pcew1")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_6g28a"]
 device = -1
@@ -1107,11 +912,8 @@ unicode = 77
 
 [sub_resource type="Resource" id="Resource_qmu5r"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_6g28a")
 mode_shift_input = SubResource("InputEventKey_gm4ng")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_msl4q"]
 device = -1
@@ -1126,11 +928,8 @@ unicode = 60
 
 [sub_resource type="Resource" id="Resource_6x5lo"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_msl4q")
 mode_shift_input = SubResource("InputEventKey_13mfv")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_7ea01"]
 device = -1
@@ -1145,11 +944,8 @@ unicode = 62
 
 [sub_resource type="Resource" id="Resource_2f7tt"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_7ea01")
 mode_shift_input = SubResource("InputEventKey_mjaas")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_guejv"]
 device = -1
@@ -1164,11 +960,8 @@ unicode = 63
 
 [sub_resource type="Resource" id="Resource_sjwi1"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_guejv")
 mode_shift_input = SubResource("InputEventKey_02r5h")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_pyvdl"]
 device = -1
@@ -1176,10 +969,7 @@ keycode = 4194325
 
 [sub_resource type="Resource" id="Resource_ui2gc"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_pyvdl")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_dc7dm"]
 device = -1
@@ -1187,10 +977,7 @@ keycode = 4194320
 
 [sub_resource type="Resource" id="Resource_0rnd1"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_dc7dm")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_3ymlm"]
 device = -1
@@ -1198,10 +985,7 @@ keycode = 4194318
 
 [sub_resource type="Resource" id="Resource_gbjtj"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_3ymlm")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_42dwg"]
 script = ExtResource("1_ynee8")
@@ -1213,20 +997,14 @@ keycode = 4194326
 
 [sub_resource type="Resource" id="Resource_lv8mc"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_8oqql")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_h8idm"]
 keycode = 4194327
 
 [sub_resource type="Resource" id="Resource_88ens"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_h8idm")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_7d5f6"]
 device = -1
@@ -1234,10 +1012,7 @@ keycode = 4194328
 
 [sub_resource type="Resource" id="Resource_luh5q"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_7d5f6")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_qms4d"]
 device = -1
@@ -1246,10 +1021,8 @@ unicode = 32
 
 [sub_resource type="Resource" id="Resource_siwvh"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_qms4d")
 stretch_ratio = 8.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_5gxm2"]
 device = -1
@@ -1257,10 +1030,7 @@ keycode = 4194328
 
 [sub_resource type="Resource" id="Resource_ptpig"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_5gxm2")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_o6xhi"]
 device = -1
@@ -1268,10 +1038,7 @@ keycode = 4194326
 
 [sub_resource type="Resource" id="Resource_7084f"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_o6xhi")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_tm4mk"]
 device = -1
@@ -1279,10 +1046,7 @@ keycode = 4194319
 
 [sub_resource type="Resource" id="Resource_hpvmn"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_tm4mk")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_y50w5"]
 device = -1
@@ -1290,10 +1054,7 @@ keycode = 4194322
 
 [sub_resource type="Resource" id="Resource_vajqn"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_y50w5")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="InputEventKey" id="InputEventKey_ub85h"]
 device = -1
@@ -1301,10 +1062,7 @@ keycode = 4194321
 
 [sub_resource type="Resource" id="Resource_v2b8g"]
 script = ExtResource("1_rfxpq")
-type = 0
 input = SubResource("InputEventKey_ub85h")
-stretch_ratio = 1.0
-action = 0
 
 [sub_resource type="Resource" id="Resource_6wgcu"]
 script = ExtResource("1_ynee8")
