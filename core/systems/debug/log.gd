@@ -18,16 +18,16 @@ enum LEVEL {
 }
 
 ## Returns a named logger for logging
-static func get_logger(name: String, level: LEVEL = LEVEL.INFO) -> Logger:
+static func get_logger(name: String, level: LEVEL = LEVEL.INFO) -> CustomLogger:
 	if Engine.is_editor_hint():
 		return
 	# Try to load the logger if it already exists
 	var res_path := "logger://" + name
-	var logger: Logger
+	var logger: CustomLogger
 	if ResourceLoader.exists(res_path):
 		logger = load(res_path)
 	else:
-		logger = Logger.new(name, level)
+		logger = CustomLogger.new(name, level)
 		logger.take_over_path("logger://" + name)
 
 		# Register the logger with LogManager
