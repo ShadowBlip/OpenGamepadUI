@@ -1,5 +1,5 @@
 extends Resource
-class_name Logger
+class_name CustomLogger
 
 ## Named logger that can log text with a prefix and a name
 
