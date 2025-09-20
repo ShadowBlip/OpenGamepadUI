@@ -32,7 +32,7 @@ signal init_partition(device: PartitionDevice)
 @onready var partitions_focus_group: FocusGroup = $%PartitionsFocusGroup
 @onready var highlight := $%HighlightTexture as TextureRect
 
-var logger: Logger
+var logger: CustomLogger
 var log_level:= Log.LEVEL.INFO
 
 

@@ -1,4 +1,5 @@
 @icon("res://assets/icons/box.svg")
+@abstract
 extends Node
 class_name Plugin
 

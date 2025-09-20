@@ -1,4 +1,5 @@
 @icon("res://assets/editor-icons/library.svg")
+@abstract
 extends Node
 class_name Library
 

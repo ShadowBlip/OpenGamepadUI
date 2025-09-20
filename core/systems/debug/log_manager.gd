@@ -2,7 +2,7 @@ extends Resource
 class_name LogManager
 
 
-signal logger_registered(logger: Logger)
+signal logger_registered(logger: CustomLogger)
 signal logger_unregistered
 signal loggers_changed
 
@@ -13,7 +13,7 @@ var mutex := Mutex.new()
 
 
 ## Register the given logger with the LogManager
-func register(logger: Logger) -> void:
+func register(logger: CustomLogger) -> void:
 	if logger.get_name() == "":
 		return
 	mutex.lock()
@@ -61,13 +61,13 @@ func set_log_level(name: String, level: Log.LEVEL) -> void:
 	for l in loggers:
 		if not l:
 			continue
-		var logger := l as Logger
+		var logger := l as CustomLogger
 		logger.set_level(level)
 
 
 ## Looks up the given environment variable and sets the log level on the given
 ## logger if the variable exists.
-func set_log_level_from_env(logger: Logger, env_var: String) -> void:
+func set_log_level_from_env(logger: CustomLogger, env_var: String) -> void:
 	var env_level := OS.get_environment(env_var)
 	if env_level == "":
 		return
