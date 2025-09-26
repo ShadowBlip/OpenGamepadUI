@@ -338,6 +338,8 @@ func _launch(app: LibraryLaunchItem) -> RunningApp:
 	var user_env = settings_manager.get_value(section, env_key, {})
 	if user_env and user_env is Dictionary and not (user_env as Dictionary).is_empty():
 		env = user_env
+	var inherit_environment_key := ".".join(["inherit_parent_environment", app._provider_id])
+	var inherit_environment := settings_manager.get_value(section, inherit_environment_key, true) as bool
 	var sandboxing_key := ".".join(["use_sandboxing", app._provider_id])
 	var use_sandboxing := settings_manager.get_value(section, sandboxing_key, false) as bool
 
@@ -350,6 +352,15 @@ func _launch(app: LibraryLaunchItem) -> RunningApp:
 
 	# Set the OGUI ID environment variable
 	env["OGUI_ID"] = app.name
+
+	# Set certain environment variables when not inheriting the parent environment
+	if not inherit_environment:
+		if not "HOME" in env:
+			env["HOME"] = OS.get_environment("HOME")
+		if not "XDG_SESSION_TYPE" in env:
+			env["XDG_SESSION_TYPE"] = "x11"
+		if not "XDG_RUNTIME_DIR" in env:
+			env["XDG_RUNTIME_DIR"] = OS.get_environment("XDG_RUNTIME_DIR")
 
 	# Build any environment variables to include in the command
 	var env_vars := PackedStringArray()
@@ -364,6 +375,8 @@ func _launch(app: LibraryLaunchItem) -> RunningApp:
 	# Build the launch command to run
 	var exec := "env"
 	var command := ["-C", cwd]
+	if not inherit_environment:
+		command.push_front("-i")
 	command.append_array(env_vars)
 	command.append_array(sandbox)
 	command.append(cmd)
