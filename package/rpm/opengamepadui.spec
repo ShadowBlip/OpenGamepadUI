@@ -1,5 +1,5 @@
 Name:           opengamepadui
-Version:        0.41.0
+Version:        0.42.0
 Release:        1
 Summary:        A free and open source game launcher and overlay written using the Godot Game Engine 4 designed with a gamepad native experience in mind
 License:        GPL-3.0-only
