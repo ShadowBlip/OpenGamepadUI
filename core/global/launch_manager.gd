@@ -126,19 +126,6 @@ func _init() -> void:
 				return
 			logger.debug("Focusable apps changed from", from, "to", to)
 			self.check_running.call_deferred()
-			# If focusable apps has changed and the currently focused app no longer exists,
-			# remove the manual focus
-			const keep_app_ids := [GamescopeInstance.EXTRA_UNKNOWN_GAME_ID, GamescopeInstance.OVERLAY_GAME_ID]
-			var baselayer_apps := _xwayland_primary.baselayer_apps
-			var new_baselayer_apps := PackedInt64Array()
-			for app_id in baselayer_apps:
-				if app_id in keep_app_ids:
-					new_baselayer_apps.push_back(app_id)
-					continue
-				if app_id in to:
-					new_baselayer_apps.push_back(app_id)
-			if new_baselayer_apps != baselayer_apps:
-				_xwayland_primary.baselayer_apps = new_baselayer_apps
 		_xwayland_primary.focusable_apps_updated.connect(on_focusable_apps_changed)
 
 		# Listen for when focusable windows change
@@ -169,7 +156,7 @@ func _init() -> void:
 
 		if _xwayland_ogui:
 			logger.debug("Enabling STEAM_OVERLAY atom")
-			_xwayland_ogui.set_overlay(_ogui_window_id, 0)
+			_xwayland_ogui.set_overlay(_ogui_window_id, 1)
 
 	var on_game_state_exited := func(_to: State):
 		# Set the gamepad profile to the global profile
@@ -233,11 +220,10 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 	# Add the running app to our list and change to the IN_GAME state
 	_add_running(running_app)
 	state_machine.set_state([in_game_state])
-	_update_recent_apps(app)
+	update_recent_apps(app)
 
 	# Execute any pre-launch hooks and start the app
 	await _execute_hooks(app, AppLifecycleHook.TYPE.PRE_LAUNCH)
-	running_app.start()
 
 	# Call any hooks at different points in the app's lifecycle
 	var on_app_state_changed := func(_from: RunningApp.STATE, to: RunningApp.STATE):
@@ -263,12 +249,16 @@ func launch(app: LibraryLaunchItem) -> RunningApp:
 		var focused_window := _xwayland_primary.baselayer_window
 		if not focused_window in old_windows:
 			return
-		if new_windows.is_empty():
+		if not focused_window in new_windows:
 			_xwayland_primary.remove_baselayer_window()
 			return
+		# TODO: Use the most recently created window instead of just the first in the list
 		var new_window := new_windows[0]
 		running_app.switch_window(new_window)
 	running_app.window_ids_changed.connect(remove_focus)
+
+	# Run the application
+	running_app.start()
 
 	return running_app
 
@@ -425,7 +415,7 @@ func get_recent_apps() -> Array:
 
 
 # Updates our list of recently launched apps
-func _update_recent_apps(app: LibraryLaunchItem) -> void:
+func update_recent_apps(app: LibraryLaunchItem) -> void:
 	if not "recent" in _persist_data:
 		_persist_data["recent"] = []
 	var recent: Array = _persist_data["recent"]
@@ -658,24 +648,22 @@ func check_running() -> void:
 	_update_pids(all_valid_windows)
 
 	# Update the state of all running apps
-	for app in _running:
-		var app_pids := PackedInt64Array()
-		if app.ogui_id in ogui_id_to_pids:
-			app_pids = ogui_id_to_pids[app.ogui_id]
-		app.update(all_valid_windows, app_pids)
-	for app in _running_background:
-		var app_pids := PackedInt64Array()
-		if app.ogui_id in ogui_id_to_pids:
-			app_pids = ogui_id_to_pids[app.ogui_id]
-		app.update(all_valid_windows, app_pids)
-
-	# Look for orphan windows
 	var windows_with_app := PackedInt64Array()
 	var orphan_windows := PackedInt64Array()
 	for app in _running:
+		var app_pids := PackedInt64Array()
+		if app.ogui_id in ogui_id_to_pids:
+			app_pids = ogui_id_to_pids[app.ogui_id]
+		app.update(all_valid_windows, app_pids)
 		windows_with_app.append_array(app.window_ids.duplicate())
 	for app in _running_background:
+		var app_pids := PackedInt64Array()
+		if app.ogui_id in ogui_id_to_pids:
+			app_pids = ogui_id_to_pids[app.ogui_id]
+		app.update(all_valid_windows, app_pids)
 		windows_with_app.append_array(app.window_ids.duplicate())
+
+	# Look for orphan windows
 	for window in all_valid_windows:
 		if window in windows_with_app:
 			continue

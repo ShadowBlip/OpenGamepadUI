@@ -37,6 +37,13 @@ enum STATE {
 	STOPPING, ## App is being killed gracefully
 	STOPPED, ## App is no longer running
 }
+const STATE_STR := {
+	STATE.STARTED: "started", 
+	STATE.RUNNING: "running", 
+	STATE.MISSING_WINDOW: "no window",
+	STATE.STOPPING: "stopping", 
+	STATE.STOPPED: "stopped"
+}
 
 enum APP_TYPE {
 	UNKNOWN,
@@ -61,7 +68,8 @@ var state: STATE = STATE.STARTED:
 		state = v
 		if old_state != state:
 			state_changed.emit(old_state, state)
-var state_steam: STATE = STATE.MISSING_WINDOW
+var state_steam: STATE = STATE.STARTED
+var steam_missing_window_timestamp: int
 ## Whether or not the running app is suspended
 var is_suspended := false:
 	set(v):
@@ -71,11 +79,6 @@ var is_suspended := false:
 			suspended.emit(is_suspended)
 ## Time in milliseconds when the app started
 var start_time := Time.get_ticks_msec()
-## The currently detected window ID of the application
-var window_id: int:
-	set(v):
-		window_id = v
-		window_id_changed.emit()
 ## A list of all detected window IDs related to the application
 var window_ids: PackedInt64Array = PackedInt64Array():
 	set(v):
@@ -84,6 +87,8 @@ var window_ids: PackedInt64Array = PackedInt64Array():
 		window_ids.sort()
 		if old_windows != window_ids:
 			window_ids_changed.emit(old_windows, window_ids)
+## The window id of the last focused window
+var last_focused_window_id: int
 ## The identifier that is set as the OGUI_ID environment variable
 var ogui_id: String
 ## The current app ID of the application
@@ -110,13 +115,10 @@ var created_window := false
 var num_created_windows := 0
 ## Number of times this app has failed its "is_running" check
 var not_running_count := 0
-## When a steam-launched app has no window, count a few tries before trying
-## to close Steam
-var steam_close_tries := 0
 ## Flag for if OGUI should manage this app. Set to false if app is launched
 ## outside OGUI and we just want to track it.
 var is_ogui_managed: bool = true
-var logger := Log.get_logger("RunningApp", Log.LEVEL.DEBUG)
+var logger := Log.get_logger("RunningApp", Log.LEVEL.INFO)
 
 
 func _init(item: LibraryLaunchItem, dsp: String) -> void:
@@ -166,26 +168,26 @@ func start() -> void:
 ## Updates the state of the running app and fires signals using the given
 ## list of window ids from XWayland and list of process ids that match
 ## the OGUI_ID of this application.
-func update(all_windows: PackedInt64Array, pids_with_ogui_id: PackedInt64Array) -> void:
+func update(all_windows: PackedInt64Array, app_pids: PackedInt64Array) -> void:
 	# Updating the app state differs depending on whether it is running as an
 	# X11 app or a Wayland app. When an app is first started, the app type is
 	# unknown and detection will occur until we find out the type of app it is.
 	match self.app_type:
 		APP_TYPE.UNKNOWN:
-			self.app_type = discover_app_type(all_windows, pids_with_ogui_id)
+			self.app_type = discover_app_type(all_windows, app_pids)
 			if self.app_type != APP_TYPE.UNKNOWN:
 				app_type_detected.emit()
-				self.update(all_windows, pids_with_ogui_id)
+				self.update(all_windows, app_pids)
 		APP_TYPE.X11:
-			update_xwayland_app(all_windows, pids_with_ogui_id)
+			update_xwayland_app(all_windows, app_pids)
 		APP_TYPE.WAYLAND:
-			update_wayland_app(pids_with_ogui_id)
+			update_wayland_app(app_pids)
 
 
 ## Tries to discover if the launched app is an X11 or Wayland application
-func discover_app_type(all_windows: PackedInt64Array, pids_with_ogui_id: PackedInt64Array) -> APP_TYPE:
+func discover_app_type(all_windows: PackedInt64Array, app_pids: PackedInt64Array) -> APP_TYPE:
 	# Update all the windows
-	self.window_ids = self.get_all_window_ids(all_windows, pids_with_ogui_id)
+	self.window_ids = self.get_all_window_ids(all_windows, app_pids)
 
 	# Check to see if running app's app_id exists in focusable_apps
 	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
@@ -202,7 +204,7 @@ func discover_app_type(all_windows: PackedInt64Array, pids_with_ogui_id: PackedI
 	return APP_TYPE.UNKNOWN
 
 
-func update_wayland_app(pids_with_ogui_id: PackedInt64Array) -> void:
+func update_wayland_app(app_pids: PackedInt64Array) -> void:
 	# Check if the app, or any of its children, are still running
 	var running := is_running()
 	if not running:
@@ -214,7 +216,6 @@ func update_wayland_app(pids_with_ogui_id: PackedInt64Array) -> void:
 		app_killed.emit()
 	elif state == STATE.STARTED:
 		state = STATE.RUNNING
-		#grab_focus() # How can we grab wayland window focus?
 
 	# Update the focus state of the app
 	focused = is_focused()
@@ -232,36 +233,19 @@ func update_wayland_app(pids_with_ogui_id: PackedInt64Array) -> void:
 	# so we can kill Steam gracefully
 	if is_steam_app() and state == STATE.STOPPED and is_ogui_managed:
 		logger.trace(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
-		# Don't try closing Steam immediately. Wait a few more ticks before attempting
-		# to close Steam.
-		if steam_close_tries < 4:
-			steam_close_tries += 1
-			return
-		var steam_pid := find_steam(pids_with_ogui_id)
+		var steam_pid := find_steam(app_pids)
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			var cmd := Command.create("kill", ["-15", str(steam_pid)])
 			cmd.execute()
 
 
-func update_xwayland_app(all_windows: PackedInt64Array, pids_with_ogui_id: PackedInt64Array) -> void:
+func update_xwayland_app(all_windows: PackedInt64Array, app_pids: PackedInt64Array) -> void:
 	# Update all windows related to the app's PID
-	self.window_ids = self.get_all_window_ids(all_windows, pids_with_ogui_id)
+	self.window_ids = self.get_all_window_ids(all_windows, app_pids)
 
 	# Ensure that all windows related to the app have an app ID set
 	_ensure_app_id()
-
-	# Ensure that the running app has a corresponding window ID
-	var has_valid_window := false
-	if needs_window_id():
-		logger.trace("App needs a valid window id")
-		var id := _discover_window_id()
-		if id > 0 and window_id != id:
-			logger.trace("Setting window ID " + str(id) + " for " + launch_item.name)
-			window_id = id
-			has_valid_window = true
-	else:
-		has_valid_window = true
 
 	# Update the focus state of the app
 	focused = is_focused()
@@ -271,62 +255,64 @@ func update_xwayland_app(all_windows: PackedInt64Array, pids_with_ogui_id: Packe
 	if not running:
 		not_running_count += 1
 
-	var state_str := {
-		STATE.STARTED: "started", 
-		STATE.RUNNING: "running", 
-		STATE.MISSING_WINDOW: "no window",
-		STATE.STOPPING: "stopping", 
-		STATE.STOPPED: "stopped"
-	}
-
 	# Update the running app's state
 	if not_running_count > 3:
 		state = STATE.STOPPED
 		app_killed.emit()
-	elif state == STATE.STARTED and has_valid_window:
+	elif state in [STATE.STARTED, STATE.MISSING_WINDOW] and self.window_ids.size() > 0:
 		state = STATE.RUNNING
-		if is_steam_app():
-			state_steam = STATE.STARTED
-		grab_focus()
-	elif state == STATE.RUNNING and not has_valid_window:
+	elif state in [STATE.RUNNING, STATE.STARTED] and self.window_ids.is_empty():
 		state = STATE.MISSING_WINDOW
 
+	# Update steam state if this is a steam app
+	update_steam_xwayland_app(app_pids)
+
+
+func update_steam_xwayland_app(app_pids: PackedInt64Array) -> void:
+	if not is_steam_app():
+		return
+
 	# If this is a Steam app, we also need to wait until Steam starts the game
-	if is_steam_app() and state_steam == STATE.STARTED:
+	if state_steam == STATE.STARTED:
 		for window in self.window_ids:
 			if self.is_steam_window(window):
 				continue
 			logger.debug("Steam game appears to be running")
 			state_steam = STATE.RUNNING
-			self.window_id = window
-			grab_focus()
 			break
-		logger.trace(launch_item.name + " current steam state: " + state_str[state_steam])
+		logger.trace(launch_item.name + " current steam state: " + STATE_STR[state_steam])
+		return
 
 	# If the Steam game started, but now only Steam windows remain, indicate
 	# that Steam should stop.
-	if is_steam_app() and state_steam == STATE.RUNNING:
+	if state_steam in [STATE.RUNNING, STATE.MISSING_WINDOW]:
 		var only_steam_running := true
 		for window in self.window_ids:
 			if not self.is_steam_window(window):
 				only_steam_running = false
+				if state_steam == STATE.MISSING_WINDOW:
+					state_steam = STATE.RUNNING
 				break
-		if only_steam_running:
-			state_steam = STATE.STOPPING
+		if only_steam_running and state_steam == STATE.RUNNING:
+			state_steam = STATE.MISSING_WINDOW
+			steam_missing_window_timestamp = Time.get_ticks_msec()
+			return
 
-	logger.trace(launch_item.name + " current state: " + state_str[state])
+		# Handle cases where the game window has been missing
+		if only_steam_running and state_steam == STATE.MISSING_WINDOW:
+			var time_elapsed := Time.get_ticks_msec() - steam_missing_window_timestamp
+			if time_elapsed > 4000:
+				logger.debug("Steam game missing window for 5 seconds. Assuming game closed.")
+				state_steam = STATE.STOPPING
+
+	logger.trace(launch_item.name + " current state: " + STATE_STR[state])
 
 	# TODO: Check all windows for STEAM_GAME prop
 	# If this was launched by Steam, try and detect if the game closed 
 	# so we can kill Steam gracefully
-	if is_steam_app() and state_steam == STATE.STOPPING and is_ogui_managed:
+	if state_steam == STATE.STOPPING and is_ogui_managed:
 		logger.trace(launch_item.name + " is a Steam game and has no valid window ID. It may have closed.")
-		# Don't try closing Steam immediately. Wait a few more ticks before attempting
-		# to close Steam.
-		if steam_close_tries < 4:
-			steam_close_tries += 1
-			return
-		var steam_pid := find_steam(pids_with_ogui_id)
+		var steam_pid := find_steam(app_pids)
 		if steam_pid > 0:
 			logger.info("Trying to stop steam with pid: " + str(steam_pid))
 			OS.execute("kill", ["-15", str(steam_pid)])
@@ -368,13 +354,11 @@ func get_window_id_from_pid() -> int:
 
 ## Attempt to discover all window IDs from the PID of the given application and
 ## the PIDs of all processes in the same process group.
-func get_all_window_ids(all_windows: PackedInt64Array, pids_with_ogui_id: PackedInt64Array) -> PackedInt64Array:
+func get_all_window_ids(all_windows: PackedInt64Array, app_pids: PackedInt64Array) -> PackedInt64Array:
 	var app_name := launch_item.name
 	var window_ids := PackedInt64Array()
-	var pids := get_child_pids(pids_with_ogui_id)
 	var xwayland := gamescope.get_xwayland_by_name(display)
-	pids.append(pid)
-	logger.trace(app_name + " found related PIDs: " + str(pids))
+	logger.trace(app_name + " found related PIDs: " + str(app_pids))
 
 	# Loop through all windows and check if the window belongs to one of our
 	# processes
@@ -384,7 +368,7 @@ func get_all_window_ids(all_windows: PackedInt64Array, pids_with_ogui_id: Packed
 			continue
 		var window_pids := xwayland.get_pids_for_window(window_id)
 		for window_pid in window_pids:
-			if window_pid in pids:
+			if window_pid in app_pids:
 				#logger.trace("Found window for pid", window_pid, ":", window_id)
 				window_ids.append(window_id)
 
@@ -400,50 +384,8 @@ func is_running() -> bool:
 	return OS.is_process_running(pid)
 
 
-## Return a list of child PIDs. When launching apps with [Reaper], PR_SET_CHILD_SUBREAPER
-## is set to prevent processes from re-parenting themselves to other processes.
-func get_child_pids(pids_with_ogui_id: PackedInt64Array) -> PackedInt64Array:
-	var pids := pids_with_ogui_id.duplicate()
-
-	# Find any child processes that are not in the list of PIDs
-	var child_pids := Reaper.pstree(pid)
-	for child_pid in child_pids:
-		if child_pid in pids:
-			continue
-		pids.append(child_pid)
-
-	# Get all PIDs that share the running app's process ID group
-	var pids_in_group := PackedInt64Array()
-	for process_id in Reaper.get_pids():
-		if process_id in pids_in_group or process_id in pids:
-			continue
-		var pgid := Reaper.get_pid_group(process_id)
-		if pgid == pid:
-			pids_in_group.append(process_id)
-
-	# Get all the children of THOSE pids as well
-	for process_id in pids_in_group:
-		var subchildren := Reaper.pstree(process_id)
-		if not process_id in pids:
-			pids.append(process_id)
-		for subpid in subchildren:
-			if subpid in pids:
-				continue
-			pids.append(subpid)
-
-	# Recursively return all child PIDs of the process
-	return pids
-
-
-## Returns whether or not the app can be switched to/focused
-func can_focus() -> bool:
-	return self.app_id > 0
-
-
 ## Return true if the currently running app is focused
 func is_focused() -> bool:
-	if not can_focus():
-		return false
 	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 	if not xwayland_primary:
 		return false
@@ -453,10 +395,11 @@ func is_focused() -> bool:
 
 ## Focuses to the app's window
 func grab_focus() -> void:
-	if not can_focus():
-		return
 	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 	if not xwayland_primary:
+		return
+	if self.window_ids.is_empty():
+		logger.warn("No windows to grab focus on")
 		return
 
 	# Set the baselayer app id
@@ -478,8 +421,11 @@ func grab_focus() -> void:
 		xwayland_primary.baselayer_apps = new_focused_apps
 
 	# Set the baselayer window id
-	xwayland_primary.baselayer_window = self.window_id
-	focused = true
+	var focus_window := self.last_focused_window_id
+	if not focus_window in self.window_ids:
+		focus_window = self.window_ids[0]
+	xwayland_primary.baselayer_window = focus_window
+	self.focused = true
 
 
 ## Switches the app window to the given window ID. Returns an error if unable
@@ -489,20 +435,15 @@ func switch_window(win_id: int, focus: bool = true) -> int:
 
 	# Error if the window does not belong to the running app
 	# TODO: Look into how window switching can work with Wayland windows
-	if not win_id in window_ids:
+	if not win_id in self.window_ids:
 		logger.debug("Failed to switch window: window id does not exist")
 		return ERR_DOES_NOT_EXIST
 
-	# Get the primary XWayland instance
-	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
-	if not xwayland_primary:
-		logger.debug("Failed to switch window: unable to find primary XWayland")
-		return ERR_UNAVAILABLE
-
 	# Update the window ID and optionally grab focus
-	window_id = win_id
+	self.last_focused_window_id = win_id
 	if focus:
 		grab_focus()
+
 	return OK
 
 
@@ -518,105 +459,30 @@ func kill(sig: Reaper.SIG = Reaper.SIG.TERM) -> void:
 func _ensure_app_id() -> void:
 	# Don't mess with app IDs if this was not spawned by ogui
 	if not is_ogui_managed:
+		logger.trace("App is not managed by OGUI. Skipping ensuring app id.")
 		return
 
 	# Get the xwayland instance this app is running on
 	var xwayland := gamescope.get_xwayland_by_name(display)
 	if not xwayland:
+		logger.error("Unable to identify xwayland instance for running app.")
 		return
 
 	# Get all windows associated with the running app
-	var possible_windows := window_ids.duplicate()
+	var possible_windows := self.window_ids.duplicate()
+
+	# Ensure the app id doesn't collide with the overlay
+	if self.app_id == gamescope.OVERLAY_GAME_ID:
+		self.app_id = gamescope.OVERLAY_GAME_ID + 1
 
 	# Try setting the app ID on each possible Window. If they are valid windows,
 	# gamescope will make these windows available as focusable windows.
 	for window in possible_windows:
 		var window_app_id := xwayland.get_app_id(window)
-		if window_app_id != gamescope.OVERLAY_GAME_ID and window_app_id >= 0:
+		if window_app_id == self.app_id:
 			continue
 
-		# If the window is using the OVERLAY_GAME_ID (769), set it to something different
-		# so it does not fight with OGUI for focus.
-		if window_app_id == gamescope.OVERLAY_GAME_ID:
-			var new_app_id := self.app_id
-			if is_steam_app() and has_meta("steam_app_id"):
-				new_app_id = get_meta("steam_app_id")
-			if new_app_id != self.app_id:
-				self.app_id = new_app_id
-			if self.app_id == gamescope.OVERLAY_GAME_ID:
-				self.app_id += 1
-
 		xwayland.set_app_id(window, self.app_id)
-
-
-## Returns whether or not the window id of the running app needs to be discovered
-func needs_window_id() -> bool:
-	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
-	if not xwayland_primary:
-		return false
-
-	if window_id <= 0:
-		logger.trace(launch_item.name + " has a bad window ID: " + str(window_id))
-		return true
-
-	var focusable_windows := xwayland_primary.focusable_windows
-	if not window_id in focusable_windows:
-		logger.trace(str(window_id) + " is not in the list of focusable windows")
-		return true
-
-	var xwayland := gamescope.get_xwayland_by_name(display)
-	if not xwayland:
-		return false
-
-	# Check if the current window ID exists in the list of open windows
-	var root_window := xwayland.root_window_id
-	var all_windows := xwayland.get_all_windows(root_window)
-	if not window_id in all_windows:
-		logger.trace(str(window_id) + " is not in the list of all windows")
-		return true
-
-	# If this is a Steam app, the only acceptable window will have its STEAM_GAME
-	# property set.
-	if is_steam_app():
-		var steam_app_id := get_meta("steam_app_id") as int
-		if not xwayland.has_app_id(window_id):
-			logger.trace(str(window_id) + " does not have an app ID already set by Steam")
-			return true
-		if xwayland.get_app_id(window_id) != steam_app_id:
-			logger.trace(str(window_id) + " has an app ID but it does not match " + str(steam_app_id))
-			return true
-
-	# Track that a window has been successfully detected at least once.
-	if not created_window:
-		created_window = true
-	num_created_windows += 1
-
-	return false
-
-
-## Tries to discover the window ID of the running app
-func _discover_window_id() -> int:
-	# If there's a window directly associated with the PID, return that
-	var win_id := get_window_id_from_pid()
-	if win_id > 0:
-		logger.trace("Found window ID for {0} from PID: {1}".format([launch_item.name, window_id]))
-		return win_id
-
-	# Get all windows associated with the running app
-	var possible_windows := window_ids.duplicate()
-
-	# Get the primary XWayland instance
-	var xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
-	if not xwayland_primary:
-		return -1
-
-	# Look for the app window in the list of focusable windows
-	var focusable := xwayland_primary.focusable_windows
-	for window in possible_windows:
-		if window in focusable:
-			return window
-
-	return -1
 
 
 ## Returns true if the running app was launched through Steam
@@ -625,12 +491,14 @@ func is_steam_app() -> bool:
 		return get_meta("is_steam_app")
 	var args := launch_item.args
 	for arg in args:
-		if arg.contains("steam://rungameid/"):
-			set_meta("is_steam_app", true)
-			var steam_app_id := arg.split("/")[-1]
-			if steam_app_id.is_valid_int():
-				set_meta("steam_app_id", steam_app_id.to_int())
+		if not arg.contains("steam://rungameid/"):
+			continue
+		set_meta("is_steam_app", true)
+		var steam_app_id := arg.split("/")[-1]
+		if steam_app_id.is_valid_int():
+			set_meta("steam_app_id", steam_app_id.to_int())
 			return true
+		return false
 	set_meta("is_steam_app", false)
 	return false
 
@@ -642,7 +510,7 @@ func is_steam_window(window_id: int) -> bool:
 		return false
 
 	var window_name := xwayland.get_window_name(window_id)
-	var steam_window_names := ["Steam Big Picture Mode", "Steam", "steamwebhelper"]
+	var steam_window_names := ["Steam Big Picture Mode", "Steam", "steam", "steamwebhelper"]
 	if window_name in steam_window_names:
 		return true
 
@@ -659,9 +527,9 @@ func is_steam_window(window_id: int) -> bool:
 
 
 ## Finds the steam process so it can be killed when a game closes
-func find_steam(pids_with_ogui_id: PackedInt64Array) -> int:
-	var child_pids := get_child_pids(pids_with_ogui_id)
-	for child_pid in child_pids:
+func find_steam(app_pids: PackedInt64Array) -> int:
+	var pids := app_pids.duplicate()
+	for child_pid in pids:
 		var pid_info := Reaper.get_pid_status(child_pid)
 		if not "Name" in pid_info:
 			continue
