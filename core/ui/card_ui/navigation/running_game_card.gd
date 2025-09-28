@@ -41,6 +41,7 @@ var gamepad_state := load("res://assets/state/states/gamepad_settings.tres") as 
 @onready var focus_group := $%FocusGroup as FocusGroup
 @onready var gamepad_button := $%GamepadButton
 
+var _xwayland: GamescopeXWayland
 var tween: Tween
 var running_app: RunningApp
 var window_buttons := {}
@@ -114,43 +115,57 @@ func set_running_app(app: RunningApp):
 	else:
 		game_label.visible = true
 		game_label.text = item.name
-	
-	# Connect to app signals to allow switching between app windows
-	var on_windows_changed := func(_from: PackedInt64Array, to: PackedInt64Array):
-		var xwayland := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
-		var xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
-		var focusable_windows := xwayland.get_focusable_windows()
-		# Add a button to switch to a given window
-		for window_id in to:
-			# A button already exists for this window
-			if window_id in window_buttons:
-				continue
-			if not window_id in focusable_windows:
-				continue
-			var window_name := xwayland_game.get_window_name(window_id)
-			if window_name == "":
-				window_name = "Window (" + str(window_id) + ")"
-			var button := button_scene.instantiate() as CardButton
-			button.text = window_name
-			button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			window_buttons[window_id] = button
-			content_container.add_child(button)
-			content_container.move_child(button, 1)
-			
-			# Switch app window when the button is pressed
-			var on_pressed := func():
-				app.switch_window(window_id)
-			button.button_up.connect(on_pressed)
-		
-		# Remove buttons for windows that don't exist anymore
-		for window_id in window_buttons.keys():
-			if window_id in to:
-				continue
-			var button := window_buttons[window_id] as Control
-			button.queue_free()
-			window_buttons.erase(window_id)
+	_xwayland = gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 
-	app.window_ids_changed.connect(on_windows_changed)
+	# Connect to app signals to allow switching between app windows
+	_on_windows_changed(PackedInt64Array(), app.window_ids)
+	app.window_ids_changed.connect(_on_windows_changed)
+
+	# Listen for focusable window changes
+	_xwayland.focusable_windows_updated.connect(_on_focusable_windows_changed)
+
+
+func _on_windows_changed(_from: PackedInt64Array, to: PackedInt64Array) -> void:
+	logger.trace("App windows change to:", to)
+	var xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
+	var focusable_windows := _xwayland.get_focusable_windows()
+	# Add a button to switch to a given window
+	for window_id in to:
+		var window_name := xwayland_game.get_window_name(window_id)
+		if window_name == "":
+			window_name = "Window (" + str(window_id) + ")"
+		# A button already exists for this window
+		if window_id in window_buttons:
+			logger.trace("Window button already exists:", window_id)
+			window_buttons[window_id].text = window_name
+			continue
+		if not window_id in focusable_windows:
+			logger.trace("Window is not focusable. Skipping:", window_id)
+			continue
+		logger.trace("Creating button for window id", window_id, ":", window_name)
+		var button := button_scene.instantiate() as CardButton
+		button.text = window_name
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		window_buttons[window_id] = button
+		content_container.add_child(button)
+		content_container.move_child(button, 1)
+		
+		# Switch app window when the button is pressed
+		var on_pressed := func():
+			running_app.switch_window(window_id)
+		button.button_up.connect(on_pressed)
+	
+	# Remove buttons for windows that don't exist anymore
+	for window_id in window_buttons.keys():
+		if window_id in to:
+			continue
+		var button := window_buttons[window_id] as Control
+		button.queue_free()
+		window_buttons.erase(window_id)
+
+
+func _on_focusable_windows_changed(_from: PackedInt64Array, _to: PackedInt64Array):
+	_on_windows_changed.call_deferred(PackedInt64Array(), running_app.window_ids)
 
 
 func _on_focus() -> void:
@@ -223,3 +238,8 @@ func _on_gampad_button_pressed() -> void:
 	if running_app and running_app.launch_item:
 		library_item = LibraryItem.new_from_launch_item(running_app.launch_item)
 	gamepad_state.set_meta("item", library_item)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_xwayland.focusable_windows_updated.disconnect(_on_focusable_windows_changed)

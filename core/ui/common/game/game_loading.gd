@@ -1,5 +1,7 @@
 extends Control
 
+signal load_started
+
 var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 var state_machine := (
 	preload("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
@@ -9,6 +11,7 @@ var popup_state := preload("res://assets/state/states/popup.tres") as State
 var in_game_state := preload("res://assets/state/states/in_game.tres") as State
 var game_launching := false
 
+@onready var fade_effect := $FadeEffect as FadeEffect
 @onready var label := %RichTextLabel as RichTextLabel
 @onready var progress_bar := %ProgressBar as ProgressBar
 
@@ -37,7 +40,8 @@ func _on_app_launched(app: RunningApp):
 
 func _on_window_created() -> void:
 	game_launching = false
-	visible = false
+	await get_tree().create_timer(0.5).timeout
+	fade_effect.fade_out()
 
 
 ## Executed if a pre-launch app lifecycle hook is running and wants to display
