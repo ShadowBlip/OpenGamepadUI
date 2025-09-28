@@ -62,6 +62,7 @@ func fade_out() -> void:
 	tween.tween_property(target, "visible", false, 0)
 	var on_finished := func():
 		fade_out_finished.emit()
+		target.modulate = Color(1, 1, 1, 1)
 	tween.tween_callback(on_finished)
 
 
