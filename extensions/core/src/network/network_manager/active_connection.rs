@@ -22,9 +22,8 @@ enum Signal {
 pub struct NetworkActiveConnection {
     base: Base<Resource>,
 
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<ActiveProxyBlocking<'static>>,
     rx: Receiver<Signal>,
-    path: String,
 
     /// The DBus path of the [NetworkActiveConnection]
     #[allow(dead_code)]
@@ -79,29 +78,27 @@ impl NetworkActiveConnection {
                 }
             });
 
+            // Return a proxy instance to the network device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                ActiveProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 rx,
-                path: path.clone().into(),
                 dbus_path: path,
                 devices: Default::default(),
                 state: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the network device
-    fn get_proxy(&self) -> Option<ActiveProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            ActiveProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [NetworkActiveConnection] with the given DBus path. If an instance
@@ -138,7 +135,7 @@ impl NetworkActiveConnection {
     /// Array of devices which are part of this active connection
     #[func]
     pub fn get_devices(&self) -> Array<Gd<NetworkDevice>> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let paths = proxy.devices().unwrap_or_default();
@@ -155,7 +152,7 @@ impl NetworkActiveConnection {
     /// The state of this active connection.
     #[func]
     pub fn get_state(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.state().unwrap_or_default()

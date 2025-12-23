@@ -24,7 +24,7 @@ enum Signal {
 pub struct CpuCore {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<CoreProxyBlocking<'static>>,
     rx: Receiver<Signal>,
 
     #[allow(dead_code)]
@@ -55,10 +55,20 @@ impl CpuCore {
                 }
             });
 
+            // Return a proxy instance to the composite device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                CoreProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 rx,
                 core_id: Default::default(),
@@ -66,18 +76,6 @@ impl CpuCore {
                 online: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<CoreProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            CoreProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance
@@ -114,7 +112,7 @@ impl CpuCore {
     /// Return the core id of the CPU core
     #[func]
     pub fn get_core_id(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.core_id().unwrap_or_default()
@@ -123,7 +121,7 @@ impl CpuCore {
     /// Return the core number of the CPU core
     #[func]
     pub fn get_number(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.number().unwrap_or_default()
@@ -132,7 +130,7 @@ impl CpuCore {
     /// Return whether or not the CPU core is online
     #[func]
     pub fn get_online(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.online().unwrap_or_default()
@@ -141,7 +139,7 @@ impl CpuCore {
     /// Set the online status of the core to the given value
     #[func]
     pub fn set_online(&self, online: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_online(online).unwrap_or_default()

@@ -30,7 +30,8 @@ enum Signal {
 pub struct GpuCard {
     base: Base<Resource>,
     dbus_path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<CardProxyBlocking<'static>>,
+    tdp_proxy: Option<TDPProxyBlocking<'static>>,
     rx: Receiver<Signal>,
     connectors: HashMap<String, Gd<GpuConnector>>,
 
@@ -140,10 +141,33 @@ impl GpuCard {
                 }
             });
 
+            // Return a proxy instance to the GPU card interface
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let dbus_path: String = path.clone().into();
+                CardProxyBlocking::builder(conn)
+                    .path(dbus_path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
+            // Return a proxy instance to the TDP interface
+            let tdp_proxy = if let Some(conn) = conn.as_ref() {
+                let dbus_path: String = path.clone().into();
+                TDPProxyBlocking::builder(conn)
+                    .path(dbus_path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             let mut instance = Self {
                 base,
-                conn,
+                proxy,
+                tdp_proxy,
                 dbus_path: path.clone().into(),
                 rx,
                 boost: Default::default(),
@@ -173,7 +197,7 @@ impl GpuCard {
 
             // Discover any connectors
             let mut connectors = HashMap::new();
-            if let Some(card) = instance.get_proxy() {
+            if let Some(card) = instance.proxy.as_ref() {
                 if let Ok(connector_paths) = card.enumerate_connectors() {
                     for conn_path in connector_paths {
                         let connector = GpuConnector::new(conn_path.as_str());
@@ -185,30 +209,6 @@ impl GpuCard {
 
             instance
         })
-    }
-
-    /// Return a proxy instance to the GPU card interface
-    fn get_proxy(&self) -> Option<CardProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            CardProxyBlocking::builder(conn)
-                .path(self.dbus_path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
-    }
-
-    /// Return a proxy instance to the TDP interface
-    fn get_tdp_proxy(&self) -> Option<TDPProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            TDPProxyBlocking::builder(conn)
-                .path(self.dbus_path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance
@@ -253,7 +253,7 @@ impl GpuCard {
     #[func]
     pub fn get_connectors(&self) -> Array<Gd<GpuConnector>> {
         let mut connectors = array![];
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return connectors;
         };
         let paths = proxy.enumerate_connectors().unwrap_or_default();
@@ -267,7 +267,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.name().unwrap_or_default().into()
@@ -275,7 +275,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.path().unwrap_or_default().into()
@@ -283,7 +283,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_thermal_throttle_limit_c(&self) -> f64 {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.thermal_throttle_limit_c().unwrap_or_default()
@@ -291,7 +291,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_thermal_throttle_limit_c(&self, value: f64) {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy
@@ -301,7 +301,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_power_profiles_available(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         let available = proxy.power_profiles_available().unwrap_or_default();
@@ -315,7 +315,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_power_profile(&self) -> GString {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.power_profile().unwrap_or_default().into()
@@ -323,7 +323,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_power_profile(&self, value: GString) {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         let value = value.to_string();
@@ -332,7 +332,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_boost(&self) -> f64 {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.boost().unwrap_or_default()
@@ -340,7 +340,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_boost(&self, value: f64) {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_boost(value).unwrap_or_default()
@@ -348,7 +348,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_manual_clock(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.manual_clock().unwrap_or_default()
@@ -356,7 +356,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_manual_clock(&self, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_manual_clock(value).unwrap_or_default()
@@ -364,7 +364,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_clock_value_mhz_min(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.clock_value_mhz_min().unwrap_or_default()
@@ -372,7 +372,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_clock_value_mhz_min(&self, value: f64) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_clock_value_mhz_min(value).unwrap_or_default()
@@ -380,7 +380,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_clock_value_mhz_max(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.clock_value_mhz_max().unwrap_or_default()
@@ -388,7 +388,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_clock_value_mhz_max(&self, value: f64) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_clock_value_mhz_max(value).unwrap_or_default()
@@ -396,7 +396,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_device_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.device_id().unwrap_or_default().into()
@@ -404,7 +404,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_subdevice_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.subdevice_id().unwrap_or_default().into()
@@ -412,7 +412,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_subvendor_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.subvendor_id().unwrap_or_default().into()
@@ -420,7 +420,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_vendor(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.vendor().unwrap_or_default().into()
@@ -428,7 +428,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_vendor_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.vendor_id().unwrap_or_default().into()
@@ -436,7 +436,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_tdp(&self) -> f64 {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.tdp().unwrap_or_default()
@@ -444,7 +444,7 @@ impl GpuCard {
 
     #[func]
     pub fn set_tdp(&self, value: f64) {
-        let Some(proxy) = self.get_tdp_proxy() else {
+        let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_tdp(value).unwrap_or_default()
@@ -452,7 +452,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_subdevice(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.subdevice().unwrap_or_default().into()
@@ -460,7 +460,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_revision_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.revision_id().unwrap_or_default().into()
@@ -468,7 +468,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_device(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.device().unwrap_or_default().into()
@@ -476,7 +476,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_clock_limit_mhz_min(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.clock_limit_mhz_min().unwrap_or_default()
@@ -484,7 +484,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_clock_limit_mhz_max(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.clock_limit_mhz_max().unwrap_or_default()
@@ -492,7 +492,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_class_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.class_id().unwrap_or_default().into()
@@ -500,7 +500,7 @@ impl GpuCard {
 
     #[func]
     pub fn get_class(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.class().unwrap_or_default().into()

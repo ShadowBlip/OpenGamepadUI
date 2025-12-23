@@ -11,7 +11,7 @@ use super::UDISKS2_BUS;
 #[class(no_init, base=Resource)]
 pub struct DriveDevice {
     base: Base<Resource>,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<DriveProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -45,26 +45,24 @@ impl DriveDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                DriveProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 dbus_path: path,
             }
         })
-    }
-
-    /// Return a proxy instance to the device
-    fn get_proxy(&self) -> Option<DriveProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            let path: String = self.dbus_path.clone().into();
-            DriveProxyBlocking::builder(conn)
-                .path(path)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DriveDevice] with the given DBus path. If an instance
@@ -95,7 +93,7 @@ impl DriveDevice {
     /// Returns the drive devices interface type
     #[func]
     pub fn interface_type(&self) -> u16 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return DriveDevice::INTERFACE_TYPE_UNKNOWN;
         };
         let Ok(connection) = proxy.connection_bus() else {

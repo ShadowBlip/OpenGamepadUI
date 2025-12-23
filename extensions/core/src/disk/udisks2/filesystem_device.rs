@@ -11,7 +11,7 @@ use super::UDISKS2_BUS;
 #[class(no_init, base=Resource)]
 pub struct FilesystemDevice {
     base: Base<Resource>,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<FilesystemProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -32,26 +32,24 @@ impl FilesystemDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                FilesystemProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 dbus_path: path,
             }
         })
-    }
-
-    /// Return a proxy instance to the device
-    fn get_proxy(&self) -> Option<FilesystemProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            let path: String = self.dbus_path.clone().into();
-            FilesystemProxyBlocking::builder(conn)
-                .path(path)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [FilesystemDevice] with the given DBus path. If an instance
@@ -82,7 +80,7 @@ impl FilesystemDevice {
     /// Get all the mount points for this [FilesystemDevice]
     #[func]
     pub fn get_mounts(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let mut mount_points = PackedStringArray::new();

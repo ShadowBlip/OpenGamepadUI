@@ -17,6 +17,7 @@ use super::UDISKS2_BUS;
 pub struct BlockDevice {
     base: Base<Resource>,
     conn: Option<zbus::blocking::Connection>,
+    proxy: Option<BlockProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -41,31 +42,30 @@ impl BlockDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                BlockProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
                 conn,
+                proxy,
                 dbus_path: path,
                 readable_size: Default::default(),
             }
         })
     }
 
-    /// Return a proxy instance to the device
-    fn get_proxy(&self) -> Option<BlockProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            let path: String = self.dbus_path.clone().into();
-            BlockProxyBlocking::builder(conn)
-                .path(path)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
-    }
-
     /// Return a proxy instance to the partition table dbus interface
-    fn get_partition_table_proxy(&self) -> Option<PartitionTableProxyBlocking> {
+    fn get_partition_table_proxy(&self) -> Option<PartitionTableProxyBlocking<'_>> {
         if let Some(conn) = self.conn.as_ref() {
             let path: String = self.dbus_path.clone().into();
             PartitionTableProxyBlocking::builder(conn)
@@ -123,7 +123,7 @@ impl BlockDevice {
     /// Return the parent DriveDevice for this BlockDevice
     #[func]
     pub fn get_drive(&self) -> Option<Gd<DriveDevice>> {
-        let proxy = self.get_proxy()?;
+        let proxy = self.proxy.as_ref()?;
         let drive = proxy.drive().ok()?;
         Some(DriveDevice::new(drive.as_str()))
     }
@@ -137,7 +137,7 @@ impl BlockDevice {
     /// Return the size type of the [BlockDevice] as a human readable String
     #[func]
     pub fn get_readable_size(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let size_bytes = proxy.size().unwrap_or(0);

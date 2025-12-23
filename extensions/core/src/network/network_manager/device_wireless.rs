@@ -25,9 +25,8 @@ enum Signal {
 pub struct NetworkDeviceWireless {
     base: Base<Resource>,
 
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<WirelessProxyBlocking<'static>>,
     rx: Receiver<Signal>,
-    path: String,
 
     /// The DBus path of the [NetworkDeviceWireless]
     #[allow(dead_code)]
@@ -77,12 +76,21 @@ impl NetworkDeviceWireless {
                 }
             });
 
+            // Return a proxy instance to the network device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                WirelessProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 rx,
-                path: path.clone().into(),
                 dbus_path: path,
                 hardware_address: Default::default(),
                 access_points: Default::default(),
@@ -90,18 +98,6 @@ impl NetworkDeviceWireless {
                 bitrate: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the network device
-    fn get_proxy(&self) -> Option<WirelessProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            WirelessProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [NetworkDeviceWireless] with the given DBus path. If an instance
@@ -138,7 +134,7 @@ impl NetworkDeviceWireless {
     /// The bit rate currently used by the wireless device, in kilobits/second (Kb/s).
     #[func]
     pub fn get_bitrate(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.bitrate().unwrap_or_default()
@@ -147,7 +143,7 @@ impl NetworkDeviceWireless {
     /// List of access point visible to this wireless device.
     #[func]
     pub fn get_access_points(&self) -> Array<Gd<NetworkAccessPoint>> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let mut resource_loader = ResourceLoader::singleton();
@@ -169,7 +165,7 @@ impl NetworkDeviceWireless {
     /// The access point currently used by the wireless device. Null if no active access point.
     #[func]
     pub fn get_active_access_point(&self) -> Option<Gd<NetworkAccessPoint>> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let ap = proxy.active_access_point().unwrap_or_default();
@@ -192,7 +188,7 @@ impl NetworkDeviceWireless {
     /// Request the device to scan
     #[func]
     pub fn request_scan(&self) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         proxy.request_scan(HashMap::new()).unwrap_or_default()
@@ -201,7 +197,7 @@ impl NetworkDeviceWireless {
     /// The active hardware address of the device.
     #[func]
     pub fn get_hardware_address(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.hw_address().unwrap_or_default().into()

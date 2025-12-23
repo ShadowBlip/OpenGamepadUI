@@ -24,9 +24,8 @@ enum Signal {
 pub struct NetworkDevice {
     base: Base<Resource>,
 
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<DeviceProxyBlocking<'static>>,
     rx: Receiver<Signal>,
-    path: String,
 
     /// The DBus path of the [NetworkDevice]
     #[allow(dead_code)]
@@ -181,12 +180,21 @@ impl NetworkDevice {
                 }
             });
 
+            // Get a proxy instance to the network device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                DeviceProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 rx,
-                path: path.clone().into(), // Convert GString -> String.
                 dbus_path: path,
                 device_type: Default::default(),
                 state: Default::default(),
@@ -195,18 +203,6 @@ impl NetworkDevice {
                 interface: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the network device
-    fn get_proxy(&self) -> Option<DeviceProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            DeviceProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [NetworkDevice] with the given DBus path. If an instance
@@ -243,7 +239,7 @@ impl NetworkDevice {
     /// The general type of the network device; ie Ethernet, WiFi, etc.
     #[func]
     pub fn get_device_type(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return NetworkDevice::NM_DEVICE_TYPE_UNKNOWN;
         };
         proxy
@@ -254,7 +250,7 @@ impl NetworkDevice {
     /// Current state of the device
     #[func]
     pub fn get_state(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return NetworkDevice::NM_DEVICE_STATE_UNKNOWN;
         };
         proxy
@@ -265,7 +261,7 @@ impl NetworkDevice {
     /// The name of the device's control (and often data) interface. Note that non UTF-8 characters are backslash escaped, so the resulting name may be longer then 15 characters. Use g_strcompress() to revert the escaping.
     #[func]
     pub fn get_interface(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.interface().unwrap_or_default().into()
@@ -274,7 +270,7 @@ impl NetworkDevice {
     /// The [NetworkIpv4Config] describing the configuration of the device. Null if device has no IP.
     #[func]
     pub fn get_ip4_config(&self) -> Option<Gd<NetworkIpv4Config>> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let path = proxy.ip4_config().unwrap_or_default();

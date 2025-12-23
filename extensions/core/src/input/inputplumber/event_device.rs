@@ -9,7 +9,7 @@ use super::INPUT_PLUMBER_BUS;
 pub struct EventDevice {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<EventDeviceProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -39,10 +39,20 @@ impl EventDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Return a proxy instance to the event device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                EventDeviceProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 dbus_path: path,
                 name: Default::default(),
@@ -52,18 +62,6 @@ impl EventDevice {
                 unique_id: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<EventDeviceProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            EventDeviceProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance
@@ -99,7 +97,7 @@ impl EventDevice {
     /// Get the name of the [EventDevice]
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.name().unwrap_or_default().into()
@@ -107,7 +105,7 @@ impl EventDevice {
 
     #[func]
     pub fn get_device_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.device_path().unwrap_or_default().into()
@@ -115,7 +113,7 @@ impl EventDevice {
 
     #[func]
     pub fn get_phys_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.phys_path().unwrap_or_default().into()
@@ -123,7 +121,7 @@ impl EventDevice {
 
     #[func]
     pub fn get_sysfs_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.sysfs_path().unwrap_or_default().into()
@@ -131,7 +129,7 @@ impl EventDevice {
 
     #[func]
     pub fn get_unique_id(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.unique_id().unwrap_or_default().into()
