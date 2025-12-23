@@ -1,0 +1,623 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# Main Menu Messages
+msgid "Home"
+msgstr "Início"
+
+msgid "Library"
+msgstr "Biblioteca"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Power"
+msgstr "Energia"
+
+# General messages
+msgid "Accept"
+msgstr "Aceitar"
+
+msgid "Back"
+msgstr "Voltar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Exit"
+msgstr "Sair"
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "Quick Bar Menu"
+msgstr "Barra de Menu Rápido"
+
+# Help Menu Messages
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Menu Shortcuts"
+msgstr "Atalhos de Menu"
+
+msgid "Open Main Menu"
+msgstr "Abrir Menu Principal"
+
+msgid "Open Quick Access Menu"
+msgstr "Abrir Menu de Acesso Rápido"
+
+msgid "Open On-Screen Keyboard"
+msgstr "Abrir Teclado Virtual"
+
+msgid "Scroll container"
+msgstr "Rolar contêiner"
+
+msgid "Switch to left tab"
+msgstr "Trocar para aba esquerda"
+
+msgid "Switch to right tab"
+msgstr "Trocar para aba direita"
+
+msgid "On-Screen Keyboard Shortcuts"
+msgstr "Atalhos do Teclado Virtual"
+
+msgid "Backspace"
+msgstr "Backspace"
+
+msgid "Close keyboard"
+msgstr "Fechar teclado"
+
+msgid "Toggle Shift"
+msgstr "Habilitar Shift"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Steam Deck"
+msgstr "Steam Deck"
+
+msgid "Global"
+msgstr "Global"
+
+msgid "Unable to save gamepad profile"
+msgstr "Não foi possível salvar o perfil de controle"
+
+msgid "Failed to save gamepad profile"
+msgstr "Falha ao salvar perfil de controle"
+
+msgid "Gamepad profile saved"
+msgstr "Perfil de controle salvo"
+
+msgid "Play Now"
+msgstr "Jogar Agora"
+
+msgid "Install"
+msgstr "Instalar"
+
+msgid "Resume"
+msgstr "Resumir"
+
+msgid "Queued"
+msgstr "Na Fila"
+
+msgid "Installing"
+msgstr "Instalando"
+
+msgid "Quick Access Menu"
+msgstr "Menu de Acesso Rápido"
+
+msgid "Game Name"
+msgstr "Nome do Jogo"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "Execução"
+
+msgid "Boxart"
+msgstr "Arte de Caixa"
+
+msgid "Launch Provider"
+msgstr "Fornecedor de Execução"
+
+msgid "Library provider to launch this game with"
+msgstr "Fornecedor de biblioteca para executar esse jogo"
+
+msgid "Launch Settings"
+msgstr "Configurações de Execução"
+
+msgid "Command"
+msgstr "Comando"
+
+msgid "Command to use to launch the game"
+msgstr "Comando a usar para executar o jogo"
+
+msgid "Arguments"
+msgstr "Argumentos"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "Argumentos da linha de comando para passar ao jogo"
+
+msgid "Launch Directory"
+msgstr "Diretório de Execução"
+
+msgid "Directory to launch the game from"
+msgstr "Diretório pelo qual executar o jogo"
+
+msgid "Environment Variables"
+msgstr "Variáveis de Ambiente"
+
+msgid "Environment variables to use when launching the game"
+msgstr "Variáveis de ambiente para usar ao executar o jogo"
+
+msgid "Sandbox Settings"
+msgstr "Configurações de Sandbox"
+
+msgid "Use sandboxing"
+msgstr "Usar sandboxing"
+
+msgid "Launch the game in a sandbox"
+msgstr "Executar jogo em uma sandbox"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Fornecedor de Arte de Caixa"
+
+msgid "Provider to fetch artwork for this game"
+msgstr "Fornecedor para buscar artes para esse jogo"
+
+msgid "Images"
+msgstr "Imagens"
+
+msgid "Banner"
+msgstr "Banner"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Grids"
+msgstr "Grades"
+
+# Game library menu
+msgid "Hidden in library"
+msgstr "Oculto na biblioteca"
+
+msgid "Prevent this item from showing up in your library"
+msgstr "Impedir este item de aparecer na sua biblioteca"
+
+# Settings Menu
+msgid "General"
+msgstr "Geral"
+
+msgid "Display"
+msgstr "Display"
+
+msgid "Network"
+msgstr "Rede"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Disks"
+msgstr "Discos"
+
+msgid "Plugin Store"
+msgstr "Loja de Plugins"
+
+msgid "Processes"
+msgstr "Processos"
+
+msgid "Logging"
+msgstr "Logging"
+
+msgid "Controllers"
+msgstr "Controles"
+
+msgid "Windows"
+msgstr "Janelas"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "Atualizações"
+
+msgid "Automatic Updates"
+msgstr "Atualizações Automáticas"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr ""
+"Baixar e aplicar atualizações automaticamente em segundo plano quando "
+"disponíveis"
+
+msgid "Check for updates"
+msgstr "Verificar atualizações"
+
+msgid "Install Updates"
+msgstr "Instalar Atualizações"
+
+msgid "Update"
+msgstr "Atualizar"
+
+msgid "Appearance"
+msgstr "Aparência"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "System language"
+msgstr "Idioma do Sistema"
+
+msgid "English"
+msgstr "Inglês"
+
+msgid "Spanish"
+msgstr "Espanhol"
+
+msgid "French"
+msgstr "Francês"
+
+msgid "Chinese"
+msgstr "Chinês"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "System Information"
+msgstr "Informação do Sistema"
+
+msgid "Platform"
+msgstr "Plataforma"
+
+msgid "Client Version"
+msgstr "Versão do Cliente"
+
+msgid "OS"
+msgstr "SO"
+
+msgid "Kernel Version"
+msgstr "Versão do Kernel"
+
+msgid "Vendor"
+msgstr "Fornecedor"
+
+msgid "Product"
+msgstr "Produto"
+
+msgid "BIOS Version"
+msgstr "Versão da BIOS"
+
+msgid "CPU Model"
+msgstr "Modelo da CPU"
+
+msgid "GPU Model"
+msgstr "Modelo da GPU"
+
+msgid "Driver Version"
+msgstr "Versão do Driver"
+
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr "Apps Recentes Máximos"
+
+msgid "Refresh Library"
+msgstr "Atualizar Biblioteca"
+
+msgid "Trigger reloading your library"
+msgstr "Recarregar sua biblioteca"
+
+msgid "Refresh"
+msgstr "Atualizar"
+
+msgid "Hidden Library Items"
+msgstr "Itens da Biblioteca Ocultos"
+
+# Display Menu
+msgid "Scale"
+msgstr "Escala"
+
+msgid "Overlay"
+msgstr "Sobreposição"
+
+msgid "Blur"
+msgstr "Desfoque"
+
+msgid "Blur background game when overlay is open"
+msgstr "Desfocar jogo de fundo quando a sobreposição estiver aberta"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "Dependências de rede não encontradas"
+
+msgid "Enable Wireless"
+msgstr "Habilitar Sem Fio"
+
+msgid "Wireless Network"
+msgstr "Rede sem fio"
+
+msgid "Visible Networks"
+msgstr "Redes visíveis"
+
+msgid "Refresh Networks"
+msgstr "Atualizar Redes"
+
+msgid "Wired Network"
+msgstr "Rede Com Fio"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Enter the password for this network"
+msgstr "Insira a senha para essa rede"
+
+msgid "Connection Details"
+msgstr "Detalhes da Conexão"
+
+msgid "IP Address"
+msgstr "Endereço IP"
+
+msgid "Subnet Prefix"
+msgstr "Prefixo de Sub-rede"
+
+msgid "Gateway"
+msgstr "Gateway"
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr "Serviço Bluetooth indisponível"
+
+msgid "Enabled"
+msgstr "Habilitado"
+
+msgid "Enable Discovery"
+msgstr "Habilitar Descoberta"
+
+# Audio Menu
+msgid "Audio"
+msgstr "Áudio"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Output Device"
+msgstr "Dispositivo de Saída"
+
+msgid "Input Device"
+msgstr "Dispositivo de Entrada"
+
+msgid "Microphone"
+msgstr "Microfone"
+
+# Disk Menu
+msgid ""
+"No formattable drives available\n"
+"Verify your media device is plugged in and that it is not mounted to a "
+"protected mount point"
+msgstr ""
+"Sem discos formatáveis disponíveis\n"
+"Verifique se seu dispositivo de mídia está conectado e se não está "
+"montado em um ponto de montagem protegido"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "Nenhum plugin encontrado"
+
+# Processes Menu
+msgid "Kill"
+msgstr "Matar"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "Nível de Log Global"
+
+msgid "Set the log level for all systems"
+msgstr "Configurar nível de log para todos os sistemas"
+
+msgid "Per-system Logging"
+msgstr "Logging por Sistema"
+
+# General Controller Settings Menu
+msgid "General Controller Settings"
+msgstr "Configurações Gerais de Controle"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "SDL HIDAPI Habilitado"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr ""
+"Alternar o sistema de entrada pode causar entrada dupla. Alguns jogos usam "
+"SDL para controles de giroscópio ou toda entrada. Requer reinicialização"
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "Nome do Perfil"
+
+msgid "Buttons"
+msgstr "Botões"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "Eixos"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "Trocar Entrada"
+
+msgid "Keyboard"
+msgstr "Teclado"
+
+msgid "Mouse"
+msgstr "Mouse"
+
+msgid "Gamepad"
+msgstr "Gamepad"
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Left Click"
+msgstr "Clique Esquerdo"
+
+msgid "Right Click"
+msgstr "Clique Direito"
+
+msgid "Mouse Motion"
+msgstr "Movimento do Mouse"
+
+msgid "Wheel Up"
+msgstr "Roda para Cima"
+
+msgid "Wheel Down"
+msgstr "Roda para Baixo"
+
+msgid "Middle Click"
+msgstr "Clique do Meio"
+
+# First Boot Menu
+msgid "Welcome"
+msgstr "Bem-vindo"
+
+msgid "Select a language"
+msgstr "Selecione um idioma"
+
+msgid "Connect to your network"
+msgstr "Conectar à sua rede"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "Install plugins"
+msgstr "Instalar plugins"
+
+msgid "Configure your plugins"
+msgstr "Configure seus plugins"
+
+msgid "Finished"
+msgstr "Concluído"
+
+msgid "You're ready to go"
+msgstr "Tudo pronto"
+
+msgid "Start playing"
+msgstr "Começar a jogar"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "O que você deve jogar?"
+
+msgid "Installed"
+msgstr "Instalado"
+
+msgid "All Games"
+msgstr "Todos os Jogos"
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Collections"
+msgstr "Coleções"
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr "Configurações Rápidas"
+
+msgid "Performance"
+msgstr "Desempenho"
+
+msgid "Advanced Mode"
+msgstr "Modo Avançado"
+
+msgid "Power Tools"
+msgstr "Configurações de Energia"
+
+msgid "Brightness"
+msgstr "Brilho"
+
+msgid "Saturation"
+msgstr "Saturação"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "Sobreposição de Desempenho"
+
+msgid "FPS Limit"
+msgstr "Limite de FPS"
+
+msgid "Refresh Rate"
+msgstr "Taxa de Atualização"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "Aguardando pelo serviço PowerStation..."
+
+msgid "CPU Settings"
+msgstr "Configurações de CPU"
+
+msgid "CPU Boost"
+msgstr ""
+
+msgid "SMT Enabled"
+msgstr "SMT Habilitado"
+
+msgid "CPU Cores"
+msgstr "Núcleos de CPU"
+
+msgid "GPU Settings"
+msgstr "Configurações de GPU"
+
+msgid "TDP Boost"
+msgstr ""
+
+msgid "Manual Freq"
+msgstr "Freq Manual"
+
+msgid "Min Freq"
+msgstr "Freq Mín"
+
+msgid "Max Freq"
+msgstr "Freq Máx"
+
+msgid "GPU Temp Limit"
+msgstr ""
+
+msgid "Power Profile"
+msgstr "Perfil de Energia"
+
+msgid "Thermal Throttle Profile"
+msgstr ""
+
+# Power Menu
+msgid "Suspend"
+msgstr "Suspender"
+
+msgid "Reboot"
+msgstr "Reiniciar"
+
+msgid "Shutdown"
+msgstr "Desligar"

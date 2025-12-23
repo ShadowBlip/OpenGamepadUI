@@ -1,6 +1,6 @@
 # https://weblate.org/en/
 
-ALL_LOCALES := en_US.po es_MX.po fr_FR.po zh_CH.po
+ALL_LOCALES := en_US.po es_MX.po fr_FR.po pt_BR.po zh_CH.po
 
 # Update all locales from the 'messages.pot' template
 .PHONY: all
