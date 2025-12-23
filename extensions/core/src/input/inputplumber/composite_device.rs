@@ -16,7 +16,7 @@ use super::INPUT_PLUMBER_BUS;
 pub struct CompositeDevice {
     base: Base<Resource>,
 
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<CompositeDeviceProxyBlocking<'static>>,
     path: String,
 
     /// The DBus path of the [CompositeDevice]
@@ -61,10 +61,21 @@ impl CompositeDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Create the proxy for the device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path = String::from(path.clone());
+                CompositeDeviceProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
-                conn,
                 path: path.clone().into(), // Convert GString -> String.
+                proxy,
                 dbus_path: path,
                 name: Default::default(),
                 profile_name: Default::default(),
@@ -76,18 +87,6 @@ impl CompositeDevice {
                 base,
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<CompositeDeviceProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            CompositeDeviceProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [CompositeDevice] with the given DBus path. If an instance
@@ -117,8 +116,8 @@ impl CompositeDevice {
 
     /// Get the name of the [CompositeDevice]
     #[func]
-    pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+    pub fn get_name(&mut self) -> GString {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.name().ok().unwrap_or_default().into()
@@ -126,7 +125,7 @@ impl CompositeDevice {
 
     #[func]
     pub fn get_profile_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.profile_name().ok().unwrap_or_default().into()
@@ -135,7 +134,7 @@ impl CompositeDevice {
     /// Get the intercept mode of the composite device
     #[func]
     pub fn get_intercept_mode(&self) -> i32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return -1;
         };
         proxy.intercept_mode().ok().unwrap_or_default() as i32
@@ -144,7 +143,7 @@ impl CompositeDevice {
     /// Set the intercept mode of the composite device
     #[func]
     pub fn set_intercept_mode(&self, mode: i32) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let mode = mode as u32;
@@ -154,7 +153,7 @@ impl CompositeDevice {
     /// Get capabilities from all source devices
     #[func]
     pub fn get_capabilities(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return PackedStringArray::new();
         };
         let caps: Vec<GString> = proxy
@@ -170,7 +169,7 @@ impl CompositeDevice {
     /// Get capabilities from all target devices
     #[func]
     pub fn get_target_capabilities(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return PackedStringArray::new();
         };
         let caps: Vec<GString> = proxy
@@ -197,7 +196,7 @@ impl CompositeDevice {
 
     #[func]
     pub fn get_dbus_devices_paths(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return PackedStringArray::new();
         };
         let values: Vec<GString> = proxy
@@ -213,7 +212,7 @@ impl CompositeDevice {
     /// Get the source device paths of the composite device (e.g. /dev/input/event0)
     #[func]
     pub fn get_source_device_paths(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return PackedStringArray::new();
         };
         let values: Vec<GString> = proxy
@@ -229,7 +228,7 @@ impl CompositeDevice {
     /// Get the target devices for the composite device
     #[func]
     pub fn get_target_devices(&self) -> Array<Variant> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return array![];
         };
         let values = proxy.target_devices().ok().unwrap_or_default();
@@ -264,7 +263,7 @@ impl CompositeDevice {
     /// set the target device types for the composite device (e.g. "keyboard", "mouse", etc.)
     #[func]
     pub fn set_target_devices(&self, devices: PackedStringArray) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let device_types: Vec<String> = devices.to_vec().into_iter().map(|v| v.into()).collect();
@@ -281,7 +280,7 @@ impl CompositeDevice {
     /// Load the device profile from the given path
     #[func]
     pub fn load_profile_path(&self, path: GString) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let path = String::from(path);
@@ -298,7 +297,7 @@ impl CompositeDevice {
     /// logic.
     #[func]
     pub fn send_event(&self, action: GString, value: Variant) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let Some(value) = value.as_zvariant() else {
@@ -311,7 +310,7 @@ impl CompositeDevice {
     /// Write the given set of events as a button chord
     #[func]
     pub fn send_button_chord(&self, actions: PackedStringArray) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let values: Vec<String> = actions.to_vec().into_iter().map(|v| v.into()).collect();
@@ -323,7 +322,7 @@ impl CompositeDevice {
     /// "PASS" mode.
     #[func]
     pub fn set_intercept_activation(&self, triggers: PackedStringArray, target_event: GString) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let values: Vec<String> = triggers.to_vec().into_iter().map(|v| v.into()).collect();

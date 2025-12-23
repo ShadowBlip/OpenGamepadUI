@@ -12,9 +12,7 @@ use super::NETWORK_MANAGER_BUS;
 #[class(no_init, base=Resource)]
 pub struct NetworkIpv4Config {
     base: Base<Resource>,
-
-    conn: Option<zbus::blocking::Connection>,
-    path: String,
+    proxy: Option<IP4ConfigProxyBlocking<'static>>,
 
     /// The DBus path of the [NetworkIpv4Config]
     #[allow(dead_code)]
@@ -38,28 +36,26 @@ impl NetworkIpv4Config {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the network device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                IP4ConfigProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
-                path: path.clone().into(),
+                proxy,
                 dbus_path: path,
                 addresses: Default::default(),
                 gateway: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the network device
-    fn get_proxy(&self) -> Option<IP4ConfigProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            IP4ConfigProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [NetworkIpv4Config] with the given DBus path. If an instance
@@ -96,7 +92,7 @@ impl NetworkIpv4Config {
     /// The gateway in use.
     #[func]
     pub fn get_gateway(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.gateway().unwrap_or_default().to_godot()
@@ -105,7 +101,7 @@ impl NetworkIpv4Config {
     /// Array of IP address data objects. All addresses will include "address" (an IP address string), and "prefix" (a uint). Some addresses may include additional attributes.
     #[func]
     pub fn get_addresses(&self) -> Array<Dictionary> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let mut value = array![];

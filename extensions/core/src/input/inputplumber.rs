@@ -87,6 +87,7 @@ pub struct InputPlumberInstance {
     base: Base<Resource>,
     rx: Receiver<Signal>,
     conn: Option<zbus::blocking::Connection>,
+    proxy: Option<InputManagerProxyBlocking<'static>>,
     /// Map of DBus path to composite device resource. E.g.
     /// {"/org/shadowblip/InputPlumber/CompositeDevice0": <CompositeDevice>}
     composite_devices: HashMap<String, Gd<CompositeDevice>>,
@@ -133,15 +134,6 @@ impl InputPlumberInstance {
     #[signal]
     fn composite_device_removed(dbus_path: GString);
 
-    /// Return a proxy instance to the input manager
-    fn get_proxy(&self) -> Option<InputManagerProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            InputManagerProxyBlocking::builder(conn).build().ok()
-        } else {
-            None
-        }
-    }
-
     /// Returns true if the InputPlumber service is currently running
     #[func]
     fn is_running(&self) -> bool {
@@ -167,7 +159,17 @@ impl InputPlumberInstance {
 
     /// Return all current composite devices
     #[func]
-    fn get_composite_devices(&mut self) -> Array<Gd<CompositeDevice>> {
+    fn get_composite_devices(&self) -> Array<Gd<CompositeDevice>> {
+        let mut devices = Vec::with_capacity(self.composite_devices.len());
+        for device in self.composite_devices.values() {
+            let dev = device.clone();
+            devices.push(dev);
+        }
+        devices.to_godot()
+    }
+
+    /// Discover all current composite devices
+    fn discover_composite_devices(&mut self) -> Array<Gd<CompositeDevice>> {
         let mut devices = array![];
         let objects = match self.get_managed_objects() {
             Ok(paths) => paths,
@@ -200,6 +202,16 @@ impl InputPlumberInstance {
     /// Return all current dbus devices
     #[func]
     fn get_dbus_devices(&mut self) -> Array<Gd<DBusDevice>> {
+        let mut devices = Vec::with_capacity(self.dbus_devices.len());
+        for device in self.dbus_devices.values() {
+            let dev = device.clone();
+            devices.push(dev);
+        }
+        devices.to_godot()
+    }
+
+    /// Discover all current dbus devices
+    fn discover_dbus_devices(&mut self) -> Array<Gd<DBusDevice>> {
         let mut devices = array![];
         let objects = match self.get_managed_objects() {
             Ok(paths) => paths,
@@ -221,7 +233,9 @@ impl InputPlumberInstance {
     }
 
     /// Get managed objects
+    /// NOTE: This may be expensive!
     fn get_managed_objects(&self) -> Result<Vec<String>, zbus::fdo::Error> {
+        log::warn!("Fetching all managed objects, this may be expensive");
         let Some(conn) = self.conn.as_ref() else {
             return Err(zbus::fdo::Error::Disconnected(
                 "No DBus connection found".into(),
@@ -276,7 +290,7 @@ impl InputPlumberInstance {
     /// Gets whether or not InputPlumber should automatically manage all supported devices
     #[func]
     fn get_manage_all_devices(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return false;
         };
         proxy.manage_all_devices().unwrap_or_default()
@@ -285,7 +299,7 @@ impl InputPlumberInstance {
     /// Sets whether or not InputPlumber should automatically manage all supported devices
     #[func]
     fn set_manage_all_devices(&self, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         proxy.set_manage_all_devices(value).unwrap_or_default()
@@ -435,6 +449,7 @@ impl IResource for InputPlumberInstance {
                 base,
                 rx,
                 conn,
+                proxy: None,
                 composite_devices: Default::default(),
                 dbus_devices: Default::default(),
                 intercept_mode: Default::default(),
@@ -451,11 +466,19 @@ impl IResource for InputPlumberInstance {
             }
         });
 
+        // Get a proxy instance to the input manager
+        let proxy = if let Some(conn) = conn.as_ref() {
+            InputManagerProxyBlocking::builder(conn).build().ok()
+        } else {
+            None
+        };
+
         // Create a new InputPlumber instance
         let mut instance = Self {
             base,
             rx,
             conn,
+            proxy,
             composite_devices: HashMap::new(),
             dbus_devices: HashMap::new(),
             intercept_mode: 0,
@@ -465,12 +488,12 @@ impl IResource for InputPlumberInstance {
         };
 
         // Do initial device discovery
-        let devices = instance.get_composite_devices();
+        let devices = instance.discover_composite_devices();
         for device in devices.iter_shared() {
             let path = device.bind().get_dbus_path();
             instance.composite_devices.insert(path.into(), device);
         }
-        let dbus_devices = instance.get_dbus_devices();
+        let dbus_devices = instance.discover_dbus_devices();
         for dbus_device in dbus_devices.iter_shared() {
             let path = dbus_device.bind().get_dbus_path();
             instance

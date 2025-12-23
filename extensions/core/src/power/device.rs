@@ -24,7 +24,7 @@ enum Signal {
 pub struct UPowerDevice {
     base: Base<Resource>,
     rx: Receiver<Signal>,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<DeviceProxyBlocking<'static>>,
     #[var]
     dbus_path: GString,
     #[allow(dead_code)]
@@ -255,11 +255,22 @@ impl UPowerDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get proxy reference
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                DeviceProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
                 rx,
-                conn,
+                proxy,
                 dbus_path: path,
                 battery_level: Default::default(),
                 charge_cycles: Default::default(),
@@ -294,19 +305,6 @@ impl UPowerDevice {
         })
     }
 
-    /// Return a proxy instance to the device
-    fn get_proxy(&self) -> Option<DeviceProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            let path: String = self.dbus_path.clone().into();
-            DeviceProxyBlocking::builder(conn)
-                .path(path)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
-    }
-
     /// Get or create a [UPowerDevice] with the given DBus path. If an instance
     /// already exists with the given path, then it will be loaded from the resource
     /// cache.
@@ -334,7 +332,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_battery_level(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.battery_level().ok().unwrap_or_default()
@@ -342,7 +340,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_charge_cycles(&self) -> i32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.charge_cycles().ok().unwrap_or_default()
@@ -350,7 +348,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_energy(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.energy().ok().unwrap_or_default()
@@ -358,7 +356,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_energy_empty(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.energy_empty().ok().unwrap_or_default()
@@ -366,7 +364,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_energy_full(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.energy_full().ok().unwrap_or_default()
@@ -374,7 +372,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_energy_full_design(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.energy_full_design().ok().unwrap_or_default()
@@ -382,7 +380,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_energy_rate(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.energy_rate().ok().unwrap_or_default()
@@ -390,7 +388,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_has_history(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.has_history().ok().unwrap_or_default()
@@ -398,7 +396,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_has_statistics(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.has_statistics().ok().unwrap_or_default()
@@ -406,7 +404,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_icon_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.icon_name().ok().unwrap_or_default().into()
@@ -414,7 +412,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_is_present(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.is_present().ok().unwrap_or_default()
@@ -422,7 +420,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_is_rechargeable(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.is_rechargeable().ok().unwrap_or_default()
@@ -430,7 +428,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_luminosity(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.luminosity().ok().unwrap_or_default()
@@ -438,7 +436,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_model(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.model().ok().unwrap_or_default().into()
@@ -446,7 +444,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_native_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.native_path().ok().unwrap_or_default().into()
@@ -454,7 +452,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_online(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.online().ok().unwrap_or_default()
@@ -462,7 +460,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_percentage(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.percentage().ok().unwrap_or_default()
@@ -470,7 +468,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_power_supply(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.power_supply().ok().unwrap_or_default()
@@ -478,7 +476,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_serial(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.serial().ok().unwrap_or_default().into()
@@ -486,7 +484,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_state(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.state().ok().unwrap_or_default()
@@ -494,7 +492,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_technology(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.technology().ok().unwrap_or_default()
@@ -502,7 +500,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_temperature(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.temperature().ok().unwrap_or_default()
@@ -510,7 +508,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_time_to_empty(&self) -> i64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.time_to_empty().ok().unwrap_or_default()
@@ -518,7 +516,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_time_to_full(&self) -> i64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.time_to_full().ok().unwrap_or_default()
@@ -526,7 +524,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_type(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.type_().ok().unwrap_or_default()
@@ -534,7 +532,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_update_time(&self) -> i64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.update_time().ok().unwrap_or_default() as i64
@@ -542,7 +540,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_vendor(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.vendor().ok().unwrap_or_default().into()
@@ -550,7 +548,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_voltage(&self) -> f64 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.voltage().ok().unwrap_or_default()
@@ -558,7 +556,7 @@ impl UPowerDevice {
 
     #[func]
     pub fn get_warning_level(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.warning_level().ok().unwrap_or_default()

@@ -32,6 +32,7 @@ pub struct UPowerInstance {
     base: Base<Resource>,
     rx: Receiver<Signal>,
     conn: Option<zbus::blocking::Connection>,
+    proxy: Option<UPowerProxyBlocking<'static>>,
     devices: HashMap<String, Gd<UPowerDevice>>,
     #[allow(dead_code)]
     #[var(get = get_on_battery)]
@@ -65,7 +66,7 @@ impl UPowerInstance {
     /// Returns whether or not the device is running on battery power
     #[func]
     pub fn get_on_battery(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return false;
         };
         proxy.on_battery().ok().unwrap_or_default()
@@ -118,18 +119,6 @@ impl UPowerInstance {
             }
         }
     }
-
-    /// Return a proxy instance to the UPower object
-    fn get_proxy(&self) -> Option<UPowerProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            UPowerProxyBlocking::builder(conn)
-                .path(UPOWER_PATH)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
-    }
 }
 
 #[godot_api]
@@ -149,10 +138,21 @@ impl IResource for UPowerInstance {
                 base,
                 rx,
                 conn,
+                proxy: None,
                 devices: Default::default(),
                 on_battery: Default::default(),
             };
         }
+
+        // Create the proxy for the device
+        let proxy = if let Some(conn) = conn.as_ref() {
+            UPowerProxyBlocking::builder(conn)
+                .path(UPOWER_PATH)
+                .ok()
+                .and_then(|builder| builder.build().ok())
+        } else {
+            None
+        };
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -166,6 +166,7 @@ impl IResource for UPowerInstance {
             base,
             rx,
             conn,
+            proxy,
             devices: HashMap::new(),
             on_battery: false,
         }

@@ -9,7 +9,7 @@ use super::INPUT_PLUMBER_BUS;
 pub struct KeyboardDevice {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<KeyboardProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -27,27 +27,26 @@ impl KeyboardDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the composite device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                KeyboardProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 dbus_path: path,
                 name: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<KeyboardProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            KeyboardProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [KeyboardDevice] with the given DBus path. If an instance
@@ -83,7 +82,7 @@ impl KeyboardDevice {
     /// Get the name of the [KeyboardDevice]
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.name().unwrap_or_default().into()
@@ -91,7 +90,7 @@ impl KeyboardDevice {
 
     #[func]
     pub fn send_key(&self, key: GString, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         let key_code: String = key.into();

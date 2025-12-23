@@ -24,7 +24,7 @@ enum Signal {
 pub struct GpuConnector {
     base: Base<Resource>,
     dbus_path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<ConnectorProxyBlocking<'static>>,
     rx: Receiver<Signal>,
 
     #[allow(dead_code)]
@@ -67,10 +67,20 @@ impl GpuConnector {
                 }
             });
 
+            // Get a proxy instance to the connector
+            let proxy = if let Some(conn) = conn.as_ref() {
+                ConnectorProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 dbus_path: path.clone().into(),
                 rx,
                 dpms: Default::default(),
@@ -82,18 +92,6 @@ impl GpuConnector {
                 status: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<ConnectorProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            ConnectorProxyBlocking::builder(conn)
-                .path(self.dbus_path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance
@@ -129,7 +127,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_dpms(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.dpms().unwrap_or_default()
@@ -137,7 +135,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_enabled(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.enabled().unwrap_or_default()
@@ -145,7 +143,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_id(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.id().unwrap_or_default()
@@ -153,7 +151,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_modes(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let modes = proxy.modes().unwrap_or_default();
@@ -163,7 +161,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.name().unwrap_or_default().into()
@@ -171,7 +169,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_path(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.path().unwrap_or_default().into()
@@ -179,7 +177,7 @@ impl GpuConnector {
 
     #[func]
     pub fn get_status(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.status().unwrap_or_default().into()

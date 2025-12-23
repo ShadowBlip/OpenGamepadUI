@@ -102,6 +102,7 @@ pub struct NetworkManagerInstance {
     base: Base<Resource>,
     rx: Receiver<Signal>,
     conn: Option<zbus::blocking::Connection>,
+    proxy: Option<NetworkManagerProxyBlocking<'static>>,
     active_connections: HashMap<String, Gd<NetworkActiveConnection>>,
     access_points: HashMap<String, Gd<NetworkAccessPoint>>,
     devices: HashMap<String, Gd<NetworkDevice>>,
@@ -189,15 +190,6 @@ impl NetworkManagerInstance {
     #[signal]
     fn primary_connection_changed(connection: Option<Gd<NetworkActiveConnection>>);
 
-    /// Return a proxy instance to the NetworkManager
-    fn get_proxy(&self) -> Option<NetworkManagerProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            NetworkManagerProxyBlocking::builder(conn).build().ok()
-        } else {
-            None
-        }
-    }
-
     /// Returns true if the NetworkManager service is currently running
     #[func]
     pub fn is_running(&self) -> bool {
@@ -215,7 +207,7 @@ impl NetworkManagerInstance {
     /// The network connectivity state.
     #[func]
     pub fn get_connectivity(&self) -> i32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN;
         };
         let value = proxy
@@ -228,7 +220,7 @@ impl NetworkManagerInstance {
     /// The network connectivity state
     #[func]
     pub fn get_state(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return NetworkManagerInstance::NM_STATE_UNKNOWN;
         };
         proxy.state().unwrap_or_default()
@@ -237,7 +229,7 @@ impl NetworkManagerInstance {
     /// Indicates if wireless is currently enabled or not
     #[func]
     pub fn get_wireless_enabled(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.wireless_enabled().unwrap_or_default()
@@ -246,7 +238,7 @@ impl NetworkManagerInstance {
     /// Set whether wireless networking should be enabled
     #[func]
     pub fn set_wireless_enabled(&self, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_wireless_enabled(value).unwrap_or_default()
@@ -255,7 +247,7 @@ impl NetworkManagerInstance {
     /// The primary active connection being used to access the network
     #[func]
     pub fn get_primary_connection(&self) -> Option<Gd<NetworkActiveConnection>> {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let path = proxy.primary_connection().unwrap_or_default();
@@ -459,6 +451,7 @@ impl IResource for NetworkManagerInstance {
                 base,
                 rx,
                 conn,
+                proxy: None,
                 connectivity: NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN,
                 active_connections: Default::default(),
                 access_points: Default::default(),
@@ -470,6 +463,13 @@ impl IResource for NetworkManagerInstance {
                 primary_connection: Default::default(),
             };
         }
+
+        // Get a proxy instance to the NetworkManager
+        let proxy = if let Some(conn) = conn.as_ref() {
+            NetworkManagerProxyBlocking::builder(conn).build().ok()
+        } else {
+            None
+        };
 
         // Spawn a task using the shared tokio runtime to listen for signals
         RUNTIME.spawn(async move {
@@ -483,6 +483,7 @@ impl IResource for NetworkManagerInstance {
             base,
             rx,
             conn,
+            proxy,
             connectivity: NetworkManagerInstance::NM_CONNECTIVITY_UNKNOWN,
             active_connections: Default::default(),
             access_points: Default::default(),

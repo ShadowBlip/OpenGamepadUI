@@ -11,7 +11,7 @@ use super::{gpu_card::GpuCard, POWERSTATION_BUS};
 pub struct Gpu {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<GPUProxyBlocking<'static>>,
     cards: HashMap<String, Gd<GpuCard>>,
 }
 
@@ -23,17 +23,28 @@ impl Gpu {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the GPU
+            let proxy = if let Some(conn) = conn.as_ref() {
+                let path: String = path.clone().into();
+                GPUProxyBlocking::builder(conn)
+                    .path(path)
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             let mut instance = Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 cards: HashMap::new(),
             };
 
             // Discover any GPU cards
             let mut cards = HashMap::new();
-            if let Some(gpu) = instance.get_proxy() {
+            if let Some(gpu) = instance.proxy.as_ref() {
                 if let Ok(card_paths) = gpu.enumerate_cards() {
                     for card_path in card_paths {
                         let core = GpuCard::new(card_path.as_str());
@@ -45,18 +56,6 @@ impl Gpu {
 
             instance
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<GPUProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            GPUProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance

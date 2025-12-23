@@ -28,9 +28,10 @@ enum Signal {
 pub struct NetworkAccessPoint {
     base: Base<Resource>,
 
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<AccessPointProxyBlocking<'static>>,
+    settings_proxy: Option<SettingsProxyBlocking<'static>>,
+    manager_proxy: Option<NetworkManagerProxyBlocking<'static>>,
     rx: Receiver<Signal>,
-    path: String,
 
     /// The DBus path of the [NetworkAccessPoint]
     #[allow(dead_code)]
@@ -151,12 +152,37 @@ impl NetworkAccessPoint {
                 }
             });
 
+            // Get a proxy instance to the network device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                AccessPointProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
+            // Get a proxy instance to the settings interface
+            let settings_proxy = if let Some(conn) = conn.as_ref() {
+                SettingsProxyBlocking::builder(conn).build().ok()
+            } else {
+                None
+            };
+
+            // Get a proxy instance to the network manager interface
+            let manager_proxy = if let Some(conn) = conn.as_ref() {
+                NetworkManagerProxyBlocking::builder(conn).build().ok()
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
+                settings_proxy,
+                manager_proxy,
                 rx,
-                path: path.clone().into(),
                 dbus_path: path,
                 ssid: Default::default(),
                 strength: Default::default(),
@@ -169,36 +195,6 @@ impl NetworkAccessPoint {
                 last_seen: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the network device
-    fn get_proxy(&self) -> Option<AccessPointProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            AccessPointProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
-    }
-
-    /// Return a proxy instance to the settings interface
-    fn get_settings_proxy(&self) -> Option<SettingsProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            SettingsProxyBlocking::builder(conn).build().ok()
-        } else {
-            None
-        }
-    }
-
-    /// Return a proxy instance to the network manager interface
-    fn get_manager_proxy(&self) -> Option<NetworkManagerProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            NetworkManagerProxyBlocking::builder(conn).build().ok()
-        } else {
-            None
-        }
     }
 
     /// Get or create a [NetworkAccessPoint] with the given DBus path. If an instance
@@ -239,11 +235,11 @@ impl NetworkAccessPoint {
         device: Gd<NetworkDevice>,
         password: GString,
     ) -> Option<Gd<NetworkActiveConnection>> {
-        let Some(settings) = self.get_settings_proxy() else {
+        let Some(settings) = self.settings_proxy.as_ref() else {
             log::warn!("Unable to connect; settings not found");
             return None;
         };
-        let Some(network_manager) = self.get_manager_proxy() else {
+        let Some(network_manager) = self.manager_proxy.as_ref() else {
             log::warn!("Unable to connect; network manager not found");
             return None;
         };
@@ -323,7 +319,7 @@ impl NetworkAccessPoint {
     /// The Service Set Identifier identifying the access point.
     #[func]
     pub fn get_ssid(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let value = proxy.ssid().unwrap_or_default();
@@ -333,7 +329,7 @@ impl NetworkAccessPoint {
     /// The current signal quality of the access point, in percent.
     #[func]
     pub fn get_strength(&self) -> u8 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.strength().unwrap_or_default()
@@ -342,7 +338,7 @@ impl NetworkAccessPoint {
     /// Flags describing the capabilities of the access point.
     #[func]
     pub fn get_flags(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.flags().unwrap_or_default()
@@ -351,7 +347,7 @@ impl NetworkAccessPoint {
     /// Flags describing the access point's capabilities according to WPA (Wifi Protected Access).
     #[func]
     pub fn get_wpa_flags(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.wpa_flags().unwrap_or_default()
@@ -360,7 +356,7 @@ impl NetworkAccessPoint {
     /// The radio channel frequency in use by the access point, in MHz.
     #[func]
     pub fn get_frequency(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.frequency().unwrap_or_default()
@@ -369,7 +365,7 @@ impl NetworkAccessPoint {
     /// The hardware address (BSSID) of the access point.
     #[func]
     pub fn get_hardware_address(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.hw_address().unwrap_or_default().into()
@@ -378,7 +374,7 @@ impl NetworkAccessPoint {
     /// Describes the operating mode of the access point.
     #[func]
     pub fn get_mode(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.mode().unwrap_or_default()
@@ -387,7 +383,7 @@ impl NetworkAccessPoint {
     /// The maximum bitrate this access point is capable of, in kilobits/second (Kb/s).
     #[func]
     pub fn get_max_bitrate(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.max_bitrate().unwrap_or_default()
@@ -396,7 +392,7 @@ impl NetworkAccessPoint {
     /// The timestamp (in CLOCK_BOOTTIME seconds) for the last time the access point was found in scan results. A value of -1 means the access point has never been found in scan results.
     #[func]
     pub fn get_last_seen(&self) -> i32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.last_seen().unwrap_or_default()

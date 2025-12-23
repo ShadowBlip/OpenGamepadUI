@@ -24,7 +24,7 @@ enum Signal {
 pub struct BluetoothDevice {
     base: Base<Resource>,
     rx: Receiver<Signal>,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<Device1ProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -120,11 +120,21 @@ impl BluetoothDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                Device1ProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
                 rx,
-                conn,
+                proxy,
                 dbus_path: path,
                 adapter: Default::default(),
                 address: Default::default(),
@@ -148,19 +158,6 @@ impl BluetoothDevice {
                 wake_allowed: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the device
-    fn get_proxy(&self) -> Option<Device1ProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            let path: String = self.dbus_path.clone().into();
-            Device1ProxyBlocking::builder(conn)
-                .path(path)
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [BluetoothDevice] with the given DBus path. If an instance
@@ -196,7 +193,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn cancel_pairing(&self) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.cancel_pairing().unwrap_or_default()
@@ -204,7 +201,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn connect_to(&self) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.connect().unwrap_or_default()
@@ -212,7 +209,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn connect_to_profile(&self, uuid: GString) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let uuid = uuid.to_string();
@@ -221,7 +218,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn disconnect_from(&self) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.disconnect().unwrap_or_default()
@@ -229,7 +226,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn disconnect_from_profile(&self, uuid: GString) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let uuid = uuid.to_string();
@@ -238,7 +235,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn pair(&self) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.pair().unwrap_or_default()
@@ -246,7 +243,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_wake_allowed(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.wake_allowed().unwrap_or_default()
@@ -254,7 +251,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn set_wake_allowed(&self, allowed: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_wake_allowed(allowed).unwrap_or_default()
@@ -262,7 +259,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_uuids(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let values: Vec<GString> = proxy
@@ -276,7 +273,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_tx_power(&self) -> i16 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.tx_power().unwrap_or_default()
@@ -284,7 +281,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_trusted(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.trusted().unwrap_or_default()
@@ -292,7 +289,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn set_trusted(&self, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_trusted(value).unwrap_or_default()
@@ -300,7 +297,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_services_resolved(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.services_resolved().unwrap_or_default()
@@ -308,7 +305,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_rssi(&self) -> i16 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.rssi().unwrap_or_default()
@@ -316,7 +313,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_paired(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.paired().unwrap_or_default()
@@ -324,7 +321,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.name().unwrap_or_default().into()
@@ -332,7 +329,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_modalias(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.modalias().unwrap_or_default().into()
@@ -340,7 +337,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_legacy_pairing(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.legacy_pairing().unwrap_or_default()
@@ -348,7 +345,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_icon(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.icon().unwrap_or_default().into()
@@ -356,7 +353,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_connected(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.connected().unwrap_or_default()
@@ -364,7 +361,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_class(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.class().unwrap_or_default()
@@ -372,7 +369,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_bonded(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.bonded().unwrap_or_default()
@@ -380,7 +377,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_blocked(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.blocked().unwrap_or_default()
@@ -388,7 +385,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn set_blocked(&self, value: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_blocked(value).unwrap_or_default()
@@ -396,7 +393,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_appearance(&self) -> u16 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.appearance().unwrap_or_default()
@@ -404,7 +401,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_alias(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.alias().unwrap_or_default().into()
@@ -412,7 +409,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn set_alias(&self, value: GString) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy
@@ -422,7 +419,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_address_type(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.address_type().unwrap_or_default().into()
@@ -430,7 +427,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_address(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.address().unwrap_or_default().into()
@@ -438,7 +435,7 @@ impl BluetoothDevice {
 
     #[func]
     pub fn get_adapter(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.adapter().unwrap_or_default().to_string().into()

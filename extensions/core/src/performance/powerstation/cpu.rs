@@ -27,7 +27,7 @@ enum Signal {
 pub struct Cpu {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<CPUProxyBlocking<'static>>,
     rx: Receiver<Signal>,
     cores: HashMap<String, Gd<CpuCore>>,
 
@@ -65,10 +65,20 @@ impl Cpu {
                 }
             });
 
+            // Get a proxy instance to the composite device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                CPUProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             let mut instance = Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 cores: HashMap::new(),
                 rx,
@@ -81,7 +91,7 @@ impl Cpu {
 
             // Discover any CPU cores
             let mut cores = HashMap::new();
-            if let Some(cpu) = instance.get_proxy() {
+            if let Some(cpu) = instance.proxy.as_ref() {
                 if let Ok(core_paths) = cpu.enumerate_cores() {
                     for core_path in core_paths {
                         let core = CpuCore::new(core_path.as_str());
@@ -93,18 +103,6 @@ impl Cpu {
 
             instance
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<CPUProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            CPUProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [DBusDevice] with the given DBus path. If an instance
@@ -152,7 +150,7 @@ impl Cpu {
     /// Returns whether or not the CPU has the given feature flag
     #[func]
     pub fn has_feature(&self, flag: GString) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy
@@ -163,7 +161,7 @@ impl Cpu {
     /// Returns whether or not boost is enabled
     #[func]
     pub fn get_boost_enabled(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.boost_enabled().unwrap_or_default()
@@ -172,7 +170,7 @@ impl Cpu {
     /// Sets boost to the given value
     #[func]
     pub fn set_boost_enabled(&self, enabled: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_boost_enabled(enabled).ok();
@@ -181,7 +179,7 @@ impl Cpu {
     /// Returns the total number of detected CPU cores
     #[func]
     pub fn get_cores_count(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.cores_count().unwrap_or_default()
@@ -190,7 +188,7 @@ impl Cpu {
     /// Returns the number of enabled CPU cores
     #[func]
     pub fn get_cores_enabled(&self) -> u32 {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.cores_enabled().unwrap_or_default()
@@ -199,7 +197,7 @@ impl Cpu {
     /// Set the number of enabled CPU cores. Cannot be less than 1.
     #[func]
     pub fn set_cores_enabled(&self, enabled_count: u32) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_cores_enabled(enabled_count).unwrap_or_default()
@@ -208,7 +206,7 @@ impl Cpu {
     /// Returns a list of supported CPU feature flags
     #[func]
     pub fn get_features(&self) -> PackedStringArray {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let features = proxy.features().unwrap_or_default();
@@ -219,7 +217,7 @@ impl Cpu {
     /// Returns whether or not SMT is enabled
     #[func]
     pub fn get_smt_enabled(&self) -> bool {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.smt_enabled().unwrap_or_default()
@@ -228,7 +226,7 @@ impl Cpu {
     /// Set SMT to the given value
     #[func]
     pub fn set_smt_enabled(&self, enabled: bool) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         proxy.set_smt_enabled(enabled).ok();

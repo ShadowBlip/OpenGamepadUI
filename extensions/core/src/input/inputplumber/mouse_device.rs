@@ -9,7 +9,7 @@ use super::INPUT_PLUMBER_BUS;
 pub struct MouseDevice {
     base: Base<Resource>,
     path: String,
-    conn: Option<zbus::blocking::Connection>,
+    proxy: Option<MouseProxyBlocking<'static>>,
 
     #[allow(dead_code)]
     #[var(get = get_dbus_path)]
@@ -27,27 +27,25 @@ impl MouseDevice {
             // Create a connection to DBus
             let conn = get_dbus_system_blocking().ok();
 
+            // Get a proxy instance to the composite device
+            let proxy = if let Some(conn) = conn.as_ref() {
+                MouseProxyBlocking::builder(conn)
+                    .path(path.to_string())
+                    .ok()
+                    .and_then(|builder| builder.build().ok())
+            } else {
+                None
+            };
+
             // Accept a base of type Base<Resource> and directly forward it.
             Self {
                 base,
-                conn,
+                proxy,
                 path: path.clone().into(),
                 dbus_path: path,
                 name: Default::default(),
             }
         })
-    }
-
-    /// Return a proxy instance to the composite device
-    fn get_proxy(&self) -> Option<MouseProxyBlocking> {
-        if let Some(conn) = self.conn.as_ref() {
-            MouseProxyBlocking::builder(conn)
-                .path(self.path.clone())
-                .ok()
-                .and_then(|builder| builder.build().ok())
-        } else {
-            None
-        }
     }
 
     /// Get or create a [KeyboardDevice] with the given DBus path. If an instance
@@ -83,7 +81,7 @@ impl MouseDevice {
     /// Get the name of the [KeyboardDevice]
     #[func]
     pub fn get_name(&self) -> GString {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
         proxy.name().unwrap_or_default().into()
@@ -91,7 +89,7 @@ impl MouseDevice {
 
     #[func]
     pub fn move_cursor(&self, x: i64, y: i64) {
-        let Some(proxy) = self.get_proxy() else {
+        let Some(proxy) = self.proxy.as_ref() else {
             return;
         };
         proxy.move_cursor(x as i32, y as i32).ok();
