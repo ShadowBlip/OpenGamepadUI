@@ -168,6 +168,7 @@ func _on_install() -> void:
 	# Do nothing if we're already installing
 	if InstallManager.is_queued_or_installing(launch_item):
 		return
+	LaunchManager.update_recent_apps(launch_item)
 
 	# Get the library provider for this launch item
 	var provider := LibraryManager.get_library_by_id(launch_item._provider_id)
