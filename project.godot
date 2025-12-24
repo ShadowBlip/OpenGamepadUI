@@ -20,7 +20,8 @@ config/name="Open Gamepad UI"
 run/main_scene="res://entrypoint.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="opengamepadui"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
+run/flush_stdout_on_print=true
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/show_image=false
@@ -28,6 +29,7 @@ config/icon="res://icon.svg"
 
 [debug]
 
+file_logging/enable_file_logging=true
 gdscript/warnings/unsafe_property_access=1
 gdscript/warnings/unsafe_method_access=1
 gdscript/warnings/unsafe_call_argument=1

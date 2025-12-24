@@ -40,7 +40,7 @@ func get_text(mode_shifted: bool = false) -> String:
 
 	var display: String
 	display = String.chr(event.unicode)
-	if display == "":
+	if event.unicode == 0 or display == "":
 		display = event.as_text()
 
 	return display

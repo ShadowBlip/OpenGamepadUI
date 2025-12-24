@@ -18,7 +18,7 @@ class_name PluginLoader
 ## pack.
 
 const PLUGIN_STORE_URL = "https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI-plugins/main/plugins.json"
-const PLUGIN_API_VERSION = "1.2.0"
+const PLUGIN_API_VERSION = "2.0.0"
 const PLUGINS_DIR = "user://plugins"
 const LOADED_PLUGINS_DIR = "res://plugins"
 const REQUIRED_META = ["plugin.name", "plugin.version", "plugin.min-api-version", "entrypoint"]

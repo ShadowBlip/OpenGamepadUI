@@ -1,4 +1,5 @@
 @icon("res://assets/editor-icons/twotone-image-search.svg")
+@abstract
 extends Node
 class_name BoxArtProvider
 
