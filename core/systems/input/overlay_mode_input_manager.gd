@@ -1,5 +1,5 @@
 @icon("res://assets/editor-icons/material-symbols-joystick.svg")
-extends Node
+extends InputManager
 class_name OverlayInputManager
 
 ## Manages global input while ion overlay mode
@@ -11,33 +11,11 @@ class_name OverlayInputManager
 ## To include this functionality, add this as a node to the root node in the
 ## scene tree.
 
-## The audio manager to use to adjust the audio when audio input events happen.
-var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
-## InputPlumber receives and sends DBus input events.
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
-## LaunchManager provides context on the currently running app so we can switch profiles
-var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-## The Global State Machine
-var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-## State machine to use to switch menu states in response to input events.
-var popup_state_machine := (
-	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
-)
 var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
-var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
-var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var base_state = preload("res://assets/state/states/in_game.tres") as State
-
-var actions_pressed := {}
-
-## Will show logger events with the prefix InputManager(Overlay Mode)
-var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
 	input_plumber.started.connect(_init_inputplumber)
 	_init_inputplumber()
@@ -46,6 +24,14 @@ func _ready() -> void:
 func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
+
+
+func _get_default_profile_path() -> String:
+	return "res://assets/gamepad/profiles/default_overlay.json"
+
+
+func get_default_global_profile_path() -> String:
+	return "user://data/gamepad/profiles/global_default_overlay.json"
 
 
 ## Queue a release event for the given action

@@ -259,7 +259,7 @@ func _on_focus_updated(card: Control, tab: int) -> void:
 	_current_selection[tab] = card
 	
 	# Don't scroll to the card if mouse or touch is being used
-	var input_manager := get_tree().get_first_node_in_group("InputManager")
+	var input_manager := get_tree().get_first_node_in_group("input_manager")
 	if input_manager:
 		if (input_manager as InputManager).current_touches > 0:
 			return

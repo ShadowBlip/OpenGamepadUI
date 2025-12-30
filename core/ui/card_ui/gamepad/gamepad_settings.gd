@@ -40,6 +40,7 @@ var logger := Log.get_logger("GamepadSettings", Log.LEVEL.INFO)
 @onready var delete_button := $%DeleteButton as CardIconButton
 @onready var profile_label := $%ProfileNameLabel as Label
 @onready var gamepad_type_dropdown := %GamepadTypeDropdown as Dropdown
+@onready var input_manager := get_tree().get_first_node_in_group("input_manager") as InputManager
 
 
 # Called when the node enters the scene tree for the first time.
@@ -149,7 +150,7 @@ func _on_state_entered(_from: State) -> void:
 	var profile_path: String
 	if not self.library_item:
 		self.profile_label.text = "Global"
-		profile_path = settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
+		profile_path = settings_manager.get_value("input", "gamepad_profile", input_manager.get_default_global_profile_path()) as String
 	else:
 		self.profile_label.text = self.library_item.name
 		profile_path = settings_manager.get_library_value(self.library_item, "gamepad_profile", "") as String
@@ -685,7 +686,7 @@ func _save_profile() -> void:
 func _load_profile(profile_path: String = "") -> InputPlumberProfile:
 	var loaded: InputPlumberProfile
 	if profile_path == "" or not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
-		loaded = InputPlumberProfile.load(InputPlumber.DEFAULT_GLOBAL_PROFILE)
+		loaded = InputPlumberProfile.load(input_manager.get_default_global_profile_path())
 		if not loaded:
 			loaded = InputPlumberProfile.new()
 		if library_item:

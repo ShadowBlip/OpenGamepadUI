@@ -1,0 +1,80 @@
+{
+	"version": 1,
+	"kind": "DeviceProfile",
+	"name": "OpenGamepadUI Default",
+	"mapping": [
+		{
+			"name": "LeftTop",
+			"source_event": {
+				"gamepad": {
+					"button": "LeftTop"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "North"
+					}
+				}
+			]
+		},
+		{
+			"name": "RightTop",
+			"source_event": {
+				"gamepad": {
+					"button": "RightTop"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "East"
+					}
+				}
+			]
+		},
+		{
+			"name": "Keyboard",
+			"source_event": {
+				"gamepad": {
+					"button": "Keyboard"
+				}
+			},
+			"target_events": [
+				{
+					"dbus": "ui_osk"
+				}
+			]
+		},
+		{
+			"name": "QuickAccess2",
+			"source_event": {
+				"gamepad": {
+					"button": "QuickAccess2"
+				}
+			},
+			"target_events": [
+				{
+					"gamepad": {
+						"button": "Guide"
+					}
+				},
+				{
+					"gamepad": {
+						"button": "East"
+					}
+				}
+			]
+		},
+	]
+}

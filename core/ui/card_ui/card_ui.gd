@@ -33,6 +33,7 @@ var overlay_window_id := 0
 @onready var fade_texture := $%FadeTexture as TextureRect
 @onready var power_timer := $%PowerTimer as Timer
 @onready var settings_menu := $%SettingsMenu as Control
+@onready var input_manager := get_tree().get_first_node_in_group("input_manager") as InputManager
 
 var logger = Log.get_logger("Main", Log.LEVEL.INFO)
 
