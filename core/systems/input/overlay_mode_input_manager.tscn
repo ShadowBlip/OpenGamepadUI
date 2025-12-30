@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cwuxmp5lmsvgt" path="res://core/systems/input/overlay_mode_input_manager.gd" id="1_fvwoc"]
 [ext_resource type="Script" uid="uid://blpngehu3py28" path="res://core/systems/input/input_plumber.gd" id="2_vf8uv"]
 
-[node name="InputManager" type="Node"]
+[node name="InputManager" type="Node" groups=["input_manager"]]
 script = ExtResource("1_fvwoc")
 
 [node name="InputPlumber" type="Node" parent="."]

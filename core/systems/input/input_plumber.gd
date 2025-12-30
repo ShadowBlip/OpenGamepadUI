@@ -7,28 +7,10 @@ class_name InputPlumber
 ## The InputPlumberManager class is responsible for handling dbus messages to and
 ## from the InputPlumber input manager daemon.
 
-const DEFAULT_PROFILE := "res://assets/gamepad/profiles/default.json"
-const DEFAULT_GLOBAL_PROFILE := "user://data/gamepad/profiles/global_default.json"
-const PROFILES_DIR := "user://data/gamepad/profiles"
-
 @export var instance: InputPlumberInstance = load("res://core/systems/input/input_plumber.tres")
 
 # Keep a reference to dbus devices so they are not cleaned up automatically
 var _dbus_devices := {}
-
-
-func _init() -> void:
-	# Ensure the default global profile exists in the user directory.
-	if not FileAccess.file_exists(DEFAULT_GLOBAL_PROFILE):
-		var file := FileAccess.open(DEFAULT_PROFILE, FileAccess.READ)
-		var content := file.get_as_text()
-		file.close()
-		if DirAccess.make_dir_recursive_absolute(PROFILES_DIR) != OK:
-			var logger := Log.get_logger("InputPlumber", Log.LEVEL.DEBUG)
-			logger.error("Failed to create gamepad profiles directory")
-		var new_file := FileAccess.open(DEFAULT_GLOBAL_PROFILE, FileAccess.WRITE)
-		new_file.store_string(content)
-		new_file.close()
 
 
 func _ready() -> void:

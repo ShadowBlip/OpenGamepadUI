@@ -66,7 +66,7 @@ var _ogui_window_id := 0
 var should_manage_overlay := true
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
-
+var _input_manager: InputManager
 
 # Connect to Gamescope signals
 func _init() -> void:
@@ -210,6 +210,15 @@ func _save_persist_data():
 	var file: FileAccess = FileAccess.open(_persist_path, FileAccess.WRITE_READ)
 	file.store_string(JSON.stringify(_persist_data))
 	file.flush()
+
+
+# Get access to nodes from the scene tree and other goodies
+func setup(input_manager: InputManager):
+	if not input_manager:
+		logger.error("No input manager found.")
+		return
+
+	_input_manager = input_manager
 
 
 ## Launches the given application and switches to the in-game state. Returns a
@@ -490,11 +499,20 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 
 	# If no profile was specified, unset the gamepad profiles
 	if path == "":
+		# Get the input manager default path
+		var default_path = ""
+		if _input_manager:
+			default_path =  _input_manager.get_default_global_profile_path()
+
 		# Try check to see if there is a global gamepad setting
-		path = settings_manager.get_value("input", "gamepad_profile", InputPlumber.DEFAULT_GLOBAL_PROFILE) as String
-		# Verify we loaded a valid profile, or fallback.
+		path = settings_manager.get_value("input", "gamepad_profile", default_path) as String
+
+		# Verify can load a valid profile, or fallback.
 		if not path.ends_with(".json") or not FileAccess.file_exists(path):
-			path = InputPlumber.DEFAULT_GLOBAL_PROFILE
+			if default_path == "":
+				logger.warn("Unable to set default gamepad profile path from input manager.")
+				return
+			path = default_path
 
 	logger.info("Loading gamepad profile: " + path)
 	if not FileAccess.file_exists(path):
