@@ -185,7 +185,6 @@ func _init() -> void:
 
 	in_game_state.state_entered.connect(on_game_state_entered)
 	in_game_state.state_exited.connect(on_game_state_exited)
-	set_gamepad_profile("")
 
 
 # Loads persistent data like recent games launched, etc.
@@ -217,8 +216,12 @@ func setup(input_manager: InputManager):
 	if not input_manager:
 		logger.error("No input manager found.")
 		return
+	if not is_instance_valid(input_manager):
+		logger.error("Input Manager instance is not valid")
+		return
 
 	_input_manager = input_manager
+	set_gamepad_profile("")
 
 
 ## Launches the given application and switches to the in-game state. Returns a
@@ -491,43 +494,48 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 
 ## Sets the gamepad profile for the running app with the given profile
-func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
-	# Discover the currently set gamepad to properly add additional capabilities based on that gamepad
-	var profile_modifier := target_gamepad
-	if target_gamepad.is_empty():
-		profile_modifier = settings_manager.get_value("input", "gamepad_profile_target", "gamepad") as String
+func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> void:
+	# Discover the currently set target for each gamepad to properly add additional
+	# capabilities based on that target
+	for device: CompositeDevice in input_plumber.get_composite_devices():
+		if target_gamepad.is_empty():
+			# First, find the currently set gamepad on the composite device
+			var targets = device.get_target_devices()
+			for target in targets:
+				var target_dbus_path: String = target.get("dbus_path")
+				if not target_dbus_path.contains("target/gamepad"):
+					continue
+				target_gamepad = target.get("device_type")
+				break
+			if not target_gamepad.is_empty():
+				break
+			# Then, if overriden by settings, use that instead
+			#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
+			target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", target_gamepad) as String
 
-	# If no profile was specified, unset the gamepad profiles
-	if path == "":
-		# Get the input manager default path
-		var default_path = ""
-		if _input_manager:
-			default_path =  _input_manager.get_default_global_profile_path()
+		# If no profile was specified, unset the gamepad profiles
+		if profile_path == "":
+			# Get the input manager default path
+			if is_instance_valid(_input_manager):
+				profile_path = _input_manager.get_default_global_profile_path()
 
-		# Try check to see if there is a global gamepad setting
-		path = settings_manager.get_value("input", "gamepad_profile", default_path) as String
+			# Try check to see if there is a global gamepad setting
+			#TODO: This is a global setting, refactor settings to permit individual gamepads to have different profiles
+			profile_path = settings_manager.get_value("input", "gamepad_profile", profile_path) as String
 
-		# Verify can load a valid profile, or fallback.
-		if not path.ends_with(".json") or not FileAccess.file_exists(path):
-			if default_path == "":
-				logger.warn("Unable to set default gamepad profile path from input manager.")
+			# Verify can load a valid profile, or fallback.
+			if not profile_path.ends_with(".json") or not FileAccess.file_exists(profile_path):
+					logger.warn("Profile path is not valid: \"" + profile_path + "\"")
+					return
+
+			# Load the profile to get its name
+			logger.info("Loading gamepad profile: " + profile_path)
+			var profile := InputPlumberProfile.load(profile_path)
+			if not profile:
+				logger.warn("Failed to load gamepad profile: " + profile_path)
 				return
-			path = default_path
 
-	logger.info("Loading gamepad profile: " + path)
-	if not FileAccess.file_exists(path):
-		logger.warn("Gamepad profile not found: " + path)
-		return
-
-	# Load the profile to get its name
-	var profile := InputPlumberProfile.load(path)
-	if not profile:
-		logger.warn("Failed to load gamepad profile: " + path)
-		return
-
-	# TODO: Save profiles for individual controllers?
-	for gamepad in input_plumber.get_composite_devices():
-		InputPlumber.load_target_modified_profile(gamepad, path, profile_modifier)
+		InputPlumber.load_target_modified_profile(device, profile_path, target_gamepad)
 
 		# Set the target gamepad if one was specified
 		if not target_gamepad.is_empty():
@@ -538,7 +546,7 @@ func set_gamepad_profile(path: String, target_gamepad: String = "") -> void:
 				_:
 					logger.debug(target_gamepad, "needs no additional target devices.")
 			logger.info("Setting target devices to: ", target_devices)
-			gamepad.set_target_devices(target_devices)
+			device.set_target_devices(target_devices)
 
 	#var notify := Notification.new("Using gamepad profile: " + profile.name)
 	#notification_manager.show(notify)

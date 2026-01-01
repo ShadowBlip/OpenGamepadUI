@@ -369,8 +369,8 @@ grow_vertical = 2
 stream = ExtResource("21_s3peg")
 autoplay = true
 
-[node name="InputManager" parent="." instance=ExtResource("1_34t85")]
-
 [node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
+
+[node name="InputManager" parent="." instance=ExtResource("1_34t85")]
 
 [editable path="AlwaysVisibleContent/OnScreenKeyboard"]

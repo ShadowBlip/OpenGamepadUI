@@ -56,7 +56,6 @@ func _init() -> void:
 	var content := file.get_as_text()
 	file.close()
 	if DirAccess.make_dir_recursive_absolute(PROFILES_DIR) != OK:
-		var logger := Log.get_logger("InputPlumber", Log.LEVEL.DEBUG)
 		logger.error("Failed to create gamepad profiles directory")
 	var new_file := FileAccess.open(default_global_profile, FileAccess.WRITE)
 	new_file.store_string(content)
@@ -74,12 +73,13 @@ func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
 
+
 func _get_default_profile_path() -> String:
 	return "res://assets/gamepad/profiles/default.json"
 
+
 func get_default_global_profile_path() -> String:
 	return "user://data/gamepad/profiles/global_default.json"
-	
 
 
 ## Returns true if the given event is an InputPlumber event

@@ -1,6 +1,7 @@
 pub mod composite_device;
 pub mod dbus_device;
 pub mod event_device;
+pub mod gamepad_device;
 pub mod keyboard_device;
 pub mod mouse_device;
 
