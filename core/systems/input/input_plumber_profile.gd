@@ -140,6 +140,8 @@ static func get_target_device(target_device_str: String) -> TargetDevice:
 			target_device = TargetDevice.DualSense
 		"ds5-edge":
 			target_device = TargetDevice.DualSenseEdge
+		"deck":
+			target_device = TargetDevice.SteamDeck
 		"deck-uhid":
 			target_device = TargetDevice.SteamDeck
 		"hori-steam":

@@ -5,6 +5,7 @@ use godot::classes::{ProjectSettings, Resource, ResourceLoader};
 use crate::dbus::inputplumber::composite_device::CompositeDeviceProxyBlocking;
 use crate::dbus::DBusVariant;
 use crate::get_dbus_system_blocking;
+use crate::input::inputplumber::gamepad_device::GamepadDevice;
 
 use super::dbus_device::DBusDevice;
 use super::keyboard_device::KeyboardDevice;
@@ -237,7 +238,8 @@ impl CompositeDevice {
         // Build the Godot object based on the path
         for path in values {
             if path.contains("gamepad") {
-                // TODO
+                let device = GamepadDevice::new(path.as_str());
+                target_devices.push(&device.to_variant());
                 continue;
             }
             if path.contains("keyboard") {
