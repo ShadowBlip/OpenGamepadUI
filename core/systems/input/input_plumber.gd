@@ -54,6 +54,7 @@ static func load_target_modified_profile(device: CompositeDevice, path: String, 
 	if path == "" or not path.ends_with(".json") or not FileAccess.file_exists(path):
 		logger.error("Profile path:", path," is not a valid profile path.")
 		return
+
 	if profile_modifier.is_empty():
 		device.load_profile_path(path)
 		return
@@ -65,41 +66,40 @@ static func load_target_modified_profile(device: CompositeDevice, path: String, 
 	var r_pad_cap = "Touchpad:RightPad:Motion"
 	var mouse_cap = "Mouse:Motion"
 
-	if !profile_modifier.is_empty():
-		var mapped_capabilities := profile.to_json()
-		logger.debug("Mapped Capabilities (before):", mapped_capabilities)
-		match profile_modifier:
-				"deck-uhid":
-					logger.debug("Steam Deck Profile")
-					if c_pad_cap not in mapped_capabilities:
-						logger.debug("Map", c_pad_cap)
-						var c_pad_map := InputPlumberMapping.from_source_capability(c_pad_cap)
-						var r_pad_event := InputPlumberEvent.from_capability(r_pad_cap)
-						c_pad_map.target_events = [r_pad_event]
-						profile.mapping.append(c_pad_map)
+	var mapped_capabilities := profile.to_json()
+	logger.debug("Mapped Capabilities (before):", mapped_capabilities)
+	match profile_modifier:
+			"deck-uhid", "deck":
+				logger.info("Modified current profile with additional Steam Deck capabilities.")
+				if c_pad_cap not in mapped_capabilities:
+					logger.debug("Map", c_pad_cap)
+					var c_pad_map := InputPlumberMapping.from_source_capability(c_pad_cap)
+					var r_pad_event := InputPlumberEvent.from_capability(r_pad_cap)
+					c_pad_map.target_events = [r_pad_event]
+					profile.mapping.append(c_pad_map)
 
-				"ds5", "ds5-edge":
-					logger.debug("Dualsense Profile")
-					if l_pad_cap not in mapped_capabilities:
-						logger.debug("Map", l_pad_cap)
-						var l_pad_map := InputPlumberMapping.from_source_capability(l_pad_cap)
-						var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
-						l_pad_map.target_events = [c_pad_event]
-						profile.mapping.append(l_pad_map)
-					if r_pad_cap not in mapped_capabilities:
-						logger.debug("Map", r_pad_cap)
-						var r_pad_map := InputPlumberMapping.from_source_capability(r_pad_cap)
-						var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
-						r_pad_map.target_events = [c_pad_event]
-						profile.mapping.append(r_pad_map)
+			"ds5", "ds5-edge":
+				logger.info("Modified current profile with additional Dualsense capabilities.")
+				if l_pad_cap not in mapped_capabilities:
+					logger.debug("Map", l_pad_cap)
+					var l_pad_map := InputPlumberMapping.from_source_capability(l_pad_cap)
+					var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
+					l_pad_map.target_events = [c_pad_event]
+					profile.mapping.append(l_pad_map)
+				if r_pad_cap not in mapped_capabilities:
+					logger.debug("Map", r_pad_cap)
+					var r_pad_map := InputPlumberMapping.from_source_capability(r_pad_cap)
+					var c_pad_event := InputPlumberEvent.from_capability(c_pad_cap)
+					r_pad_map.target_events = [c_pad_event]
+					profile.mapping.append(r_pad_map)
 
-				_:
-					logger.debug("Target device needs no modifications:", profile_modifier)
+			_:
+				logger.debug("Target device needs no modifications:", profile_modifier)
 
-		mapped_capabilities = profile.to_json()
-		logger.debug("Mapped Capabilities (after):", mapped_capabilities)
+	mapped_capabilities = profile.to_json()
+	logger.debug("Mapped Capabilities (after):", mapped_capabilities)
+	path = path.rstrip(".json") + "_" + profile_modifier + ".json"
 
-	path = path.rstrip(".json") + profile_modifier + ".json"
 	if profile.save(path) != OK:
 		logger.error("Failed to save", profile.name, "to", path)
 		return
