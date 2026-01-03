@@ -94,6 +94,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_f8851")
 
+[node name="InputManager" parent="." instance=ExtResource("1_34t85")]
+
 [node name="InputIconProcessor" type="Node" parent="."]
 script = ExtResource("3_y116l")
 
@@ -368,8 +370,6 @@ grow_horizontal = 2
 grow_vertical = 2
 stream = ExtResource("21_s3peg")
 autoplay = true
-
-[node name="InputManager" parent="." instance=ExtResource("1_34t85")]
 
 [node name="PowerSaver" parent="." instance=ExtResource("8_hyc1j")]
 

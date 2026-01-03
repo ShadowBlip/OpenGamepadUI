@@ -56,6 +56,7 @@ import/blender/enabled=false
 
 menu=""
 main=""
+input_manager="The session input manager"
 
 [input]
 

@@ -1,5 +1,5 @@
 @icon("res://assets/editor-icons/material-symbols-joystick.svg")
-extends Node
+extends InputManager
 class_name OverlayInputManager
 
 ## Manages global input while ion overlay mode
@@ -11,33 +11,11 @@ class_name OverlayInputManager
 ## To include this functionality, add this as a node to the root node in the
 ## scene tree.
 
-## The audio manager to use to adjust the audio when audio input events happen.
-var audio_manager := load("res://core/global/audio_manager.tres") as AudioManager
-## InputPlumber receives and sends DBus input events.
-var input_plumber := load("res://core/systems/input/input_plumber.tres") as InputPlumberInstance
-## LaunchManager provides context on the currently running app so we can switch profiles
-var launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
-## The Global State Machine
-var state_machine := load("res://assets/state/state_machines/global_state_machine.tres") as StateMachine
-## State machine to use to switch menu states in response to input events.
-var popup_state_machine := (
-	preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
-)
 var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
-var in_game_menu_state := preload("res://assets/state/states/in_game_menu.tres") as State
-var main_menu_state := preload("res://assets/state/states/main_menu.tres") as State
-var quick_bar_state := preload("res://assets/state/states/quick_bar_menu.tres") as State
 var base_state = preload("res://assets/state/states/in_game.tres") as State
-
-var actions_pressed := {}
-
-## Will show logger events with the prefix InputManager(Overlay Mode)
-var logger := Log.get_logger("InputManager(Overlay Mode)", Log.LEVEL.INFO)
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
 	input_plumber.started.connect(_init_inputplumber)
 	_init_inputplumber()
@@ -46,6 +24,14 @@ func _ready() -> void:
 func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
+
+
+func _get_default_profile_path() -> String:
+	return "res://assets/gamepad/profiles/default_overlay.json"
+
+
+func get_default_global_profile_path() -> String:
+	return "user://data/gamepad/profiles/global_default_overlay.json"
 
 
 ## Queue a release event for the given action
@@ -114,8 +100,8 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 
-	# Steam chord events
-	if _send_steam_chord(event):
+	# Passthrough underlay supported capability events
+	if _send_capability(event):
 		get_viewport().set_input_as_handled()
 		return
 
@@ -293,7 +279,8 @@ func _guide_input(event: InputEvent) -> void:
 	# Emit the main menu action if this was not a guide action
 	logger.debug("Guide released. Additional events did not use guide action. Sending Guide.")
 	_close_focused_window()
-	_return_chord(["Gamepad:Button:Guide"])
+	logger.debug("Return event chord to InputPlumber: Gamepad:Button:Guide")
+	_send_chord(["Gamepad:Button:Guide"])
 
 
 ## Handle quick bar menu events to open the quick bar menu
@@ -311,56 +298,46 @@ func _quick_bar_input(event: InputEvent) -> void:
 		popup_state_machine.push_state(quick_bar_state)
 
 
-## Handle Steam chord events. Returns true if this was a Steam chord.
-func _send_steam_chord(event: InputEvent) -> bool:
-	var chord: PackedStringArray = ["Gamepad:Button:Guide"]
-	# Block up events from doing weird things. InputPlumber will handle up events.
+## Send a capability back to InputPlumber events. Returns true if the capability is supported.
+func _send_capability(event: InputEvent) -> bool:
+	var capability: String
+
+	# Ignore up events, chords will unpress themselves
 	if not event.is_pressed():
 		return false
 
-	# Steam Quick Bar
-	if event.is_action_pressed("ogui_qam_ov"):
+	if event.is_action("ogui_qam_ov"):
 		logger.debug("Trigger Steam QAM")
-		chord.append("Gamepad:Button:South")
+		capability = "Gamepad:Button:QuickAccess"
+		_close_focused_window()
+	elif event.is_action("ogui_osk_ov"):
+		logger.debug("Trigger Steam OSK")
+		capability = "Gamepad:Button:Keyboard"
+		_close_focused_window()
+	elif event.is_action("ogui_sc_ov"):
+		logger.debug("Trigger Steam Screenshot")
+		capability = "Gamepad:Button:Screenshot"
 
-	# Steam On-Screen Keyboard
-	elif event.is_action_pressed("ogui_osk_ov"):
-			logger.debug("Trigger Steam OSK")
-			chord.append("Gamepad:Button:North")
-
-	# Steam Video-Capture
-	elif event.is_action_pressed("ogui_vc_ov"):
-			logger.debug("Trigger Steam VC")
-			chord.append("Gamepad:Button:West")
-
-	# Steam Screenshot
-	elif event.is_action_pressed("ogui_sc_ov"):
-			logger.debug("Trigger Steam Screenshot")
-			chord.append("Gamepad:Button:RightBumper")
-
-	# Not a steam chord
-	else:
+	# Ignore empty events
+	if capability.is_empty():
 		return false
 
-	_close_focused_window()
-	_return_chord(chord)
+	_send_chord([capability])
 	return true
 
 
-func _return_chord(actions: PackedStringArray) -> void:
-	# TODO: Figure out a way to get the device who sent the event through
-	# Input.parse_input_event so we don't do this terrible loop. This is awful.
-	logger.debug("Return events to InputPlumber: " + str(actions))
+## Send an event chord back to InputPlumber, bypassing translation.
+func _send_chord(capabilities: PackedStringArray) -> void:
+	logger.debug("Return events to InputPlumber: " + str(capabilities))
 	for device in input_plumber.get_composite_devices():
 		device.intercept_mode = InputPlumberInstance.INTERCEPT_MODE_PASS
-		device.send_button_chord(actions)
+		device.send_button_chord(capabilities)
 
 
 func _audio_input(event: InputEvent) -> void:
 	# Only act on press events
 	if not event.is_pressed():
 		return
-
 	if event.is_action("ogui_volume_mute"):
 		logger.debug("Mute!")
 		audio_manager.call_deferred("toggle_mute")

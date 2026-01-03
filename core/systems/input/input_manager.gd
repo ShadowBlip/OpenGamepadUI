@@ -42,10 +42,29 @@ var current_touches := 0
 ## Will show logger events with the prefix InputManager
 var logger := Log.get_logger("InputManager", Log.LEVEL.INFO)
 
+const PROFILES_DIR := "user://data/gamepad/profiles"
+
+
+func _init() -> void:
+	# Ensure the default global profile exists in the user directory.
+	var default_global_profile := get_default_global_profile_path()
+	var default_profile := _get_default_profile_path()
+	if FileAccess.file_exists(default_global_profile):
+		return
+
+	var file := FileAccess.open(default_profile, FileAccess.READ)
+	var content := file.get_as_text()
+	file.close()
+	if DirAccess.make_dir_recursive_absolute(PROFILES_DIR) != OK:
+		var logger := Log.get_logger("InputPlumber", Log.LEVEL.DEBUG)
+		logger.error("Failed to create gamepad profiles directory")
+	var new_file := FileAccess.open(default_global_profile, FileAccess.WRITE)
+	new_file.store_string(content)
+	new_file.close()
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	add_to_group("InputManager")
 	input_plumber.composite_device_added.connect(_watch_dbus_device)
 	input_plumber.started.connect(_init_inputplumber)
 	_init_inputplumber()
@@ -54,6 +73,13 @@ func _ready() -> void:
 func _init_inputplumber() -> void:
 	for device in input_plumber.get_composite_devices():
 		_watch_dbus_device(device)
+
+func _get_default_profile_path() -> String:
+	return "res://assets/gamepad/profiles/default.json"
+
+func get_default_global_profile_path() -> String:
+	return "user://data/gamepad/profiles/global_default.json"
+	
 
 
 ## Returns true if the given event is an InputPlumber event
