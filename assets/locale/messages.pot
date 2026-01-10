@@ -279,6 +279,9 @@ msgstr ""
 msgid "Chinese"
 msgstr ""
 
+msgid "Portuguese"
+msgstr ""
+
 msgid "Theme"
 msgstr ""
 
