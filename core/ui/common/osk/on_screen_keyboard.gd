@@ -32,7 +32,7 @@ enum MODE_SHIFT {
 @export var instance: KeyboardInstance = preload("res://core/global/keyboard_instance.tres")
 var _mode_shift: MODE_SHIFT = MODE_SHIFT.OFF
 var _last_input_focus: int
-var logger := Log.get_logger("OSK")
+var logger := Log.get_logger("OSK", Log.LEVEL.INFO)
 
 @onready var rows_container := $%KeyboardRowsContainer as VBoxContainer
 
@@ -369,6 +369,7 @@ func _handle_native(key: KeyboardKeyConfig) -> void:
 		logger.warn("Keyboard target not set, nowhere to send key input.")
 		return
 	var target = instance.context.target
+	logger.debug("Found target:", target)
 
 	# Get the input event based on mode shift
 	var event := key.input
@@ -377,12 +378,13 @@ func _handle_native(key: KeyboardKeyConfig) -> void:
 
 	# Get the character to send to the target
 	var character := String.chr(event.unicode)
+	logger.debug("Found character to send:", character)
 	if _mode_shift == MODE_SHIFT.ONE_SHOT:
 		set_mode_shift(MODE_SHIFT.OFF)
 	
 	# If no character was found for the key, then it is a special character
 	# like shift, alt, etc.
-	if character == "":
+	if event.unicode == 0 or character == "":
 		_handle_native_action(key)
 		return
 
