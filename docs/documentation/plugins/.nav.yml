@@ -1,0 +1,5 @@
+nav:
+  - ./introduction.md
+  - ./getting_started.md
+  - ./submitting.md
+  - ./tutorials

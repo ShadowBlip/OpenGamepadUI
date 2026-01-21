@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: OpenGamepadUI
+site_url: https://opengamepadui.github.io
+
+theme:
+  name: material
+  font:
+    text: Roboto
+    code: Roboto Mono
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: red
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.footer
+    - navigation.path
+    - navigation.tabs
+    - navigation.top
+    - toc.follow
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  # https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+  - pymdownx.details
+  - tables
+
+extra:
+  social:
+    - icon: simple/github
+      link: https://github.com/ShadowBlip/OpenGamepadUI
+    - icon: simple/discord
+      link: https://discord.gg/Ea9ABXhtkv
+
+plugins:
+  - search
+  - awesome-nav
+
+copyright: Copyright &copy; 2022-present William Edwards, Derek Clark, and the OpenGamepadUI community (CC BY 3.0)
