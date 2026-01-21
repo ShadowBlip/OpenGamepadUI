@@ -207,25 +207,38 @@ debug-overlay: $(IMPORT_DIR) ## Run the project in debug mode in gamescope with 
 		--position 320,140 res://entrypoint.tscn --overlay-mode -- steam -gamepadui -steamos3 -steampal -steamdeck
 
 .PHONY: docs
-docs: docs/api/classes/.generated ## Generate docs
+docs: docs/api/classes/.generated ## Generate class reference docs
 docs/api/classes/.generated: $(IMPORT_DIR) $(ALL_GDSCRIPT)
-	rm -rf docs/api/classes
-	mkdir -p docs/api/classes
+	rm -rf $(CACHE_DIR)/docs/api/classes
+	mkdir -p $(CACHE_DIR)/docs/api/classes
+	@echo "Generating GDExtension class references"
 	$(GODOT) \
 		--editor \
 		--quit \
-		--doctool docs/api/classes \
+		--doctool $(CACHE_DIR)/docs/api/classes \
 		--no-docbase \
 		--gdextension-docs
+	mv $(CACHE_DIR)/docs/api/classes/doc_classes/*.xml $(CACHE_DIR)/docs/api/classes
+	rmdir $(CACHE_DIR)/docs/api/classes/doc_classes
+	@echo "Generating GDScript class references"
 	$(GODOT) \
 		--editor \
 		--path $(PWD) \
 		--quit \
-		--doctool docs/api/classes \
+		--doctool $(CACHE_DIR)/docs/api/classes \
 		--no-docbase \
-		--gdscript-docs core
-	rm -rf docs/api/classes/core--*
-	$(MAKE) -C docs/api rst
+		--gdscript-docs .
+	@echo "Removing non-class documentation"
+	rm $(CACHE_DIR)/docs/api/classes/entrypoint.gd.xml
+	rm -rf $(CACHE_DIR)/docs/api/classes/core--*
+	rm -rf $(CACHE_DIR)/docs/api/classes/addons--*
+	rm -rf $(CACHE_DIR)/docs/api/classes/plugins--*
+	$(MAKE) docgen
+
+docgen:
+	rm -f ./docs/class-reference/*.md
+	cd ./extensions && \
+		cargo run --bin docgen -- ../$(CACHE_DIR)/docs/api/classes ../docs/class-reference
 
 .PHONY: inspect
 inspect: $(IMPORT_DIR) ## Launch Gamescope inspector

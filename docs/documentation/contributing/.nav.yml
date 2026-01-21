@@ -1,0 +1,10 @@
+nav:
+  - ./before_you_start.md
+  - ./release_policy.md
+  - ./best_practices.md
+  - ./building_from_source.md
+  - ./code_style_guidelines.md
+  - ./core_systems_and_architecture.md
+  - ./writing_decoupled_code.md
+  - ./creating_a_menu.md
+  - ./deploying.md

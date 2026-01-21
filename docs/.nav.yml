@@ -1,0 +1,4 @@
+nav:
+  - Home: ./index.md
+  - ./documentation
+  - ./class-reference
