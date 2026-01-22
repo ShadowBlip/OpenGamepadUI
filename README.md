@@ -43,11 +43,11 @@ you to remap gamepad input to mouse and keyboard inputs.
 
 You can [read documentation](https://opengamepadui.readthedocs.io/) about how to use and develop for the project here:
 
-- [Install Guide](https://opengamepadui.readthedocs.io/en/latest/getting_started/installation/index.html)
-- [User Guide](https://opengamepadui.readthedocs.io/en/latest/getting_started/usage.html)
-- [Developer Guide](https://opengamepadui.readthedocs.io/en/latest/contributing/development/index.html)
-- [Plugin Guide](https://opengamepadui.readthedocs.io/en/latest/plugins/introduction.html)
+- [Install Guide](https://opengamepadui.readthedocs.io/en/latest/documentation/getting-started/installation/)
+- [User Guide](https://opengamepadui.readthedocs.io/en/latest/documentation/getting-started/usage/)
+- [Developer Guide](https://opengamepadui.readthedocs.io/en/latest/documentation/contributing/building_from_source/)
+- [Plugin Guide](https://opengamepadui.readthedocs.io/en/latest/documentation/plugins/introduction/)
 
 ## License
 
-OpenGamepadUI is licensed under THE GNU GPLv3+. See LICENSE for details.
+OpenGamepadUI is licensed under THE GNU GPLv3+. See [LICENSE](./LICENSE) for details.
