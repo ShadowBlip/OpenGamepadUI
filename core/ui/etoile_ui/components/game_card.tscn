@@ -1,0 +1,71 @@
+[gd_scene load_steps=7 format=3 uid="uid://bv6wbkv8i1ary"]
+
+[ext_resource type="PackedScene" uid="uid://bkhrcemal7uxo" path="res://core/ui/components/card.tscn" id="1_6tx83"]
+[ext_resource type="Shader" uid="uid://dw8by7ras0c8n" path="res://assets/shaders/highlight_shine.gdshader" id="2_i6on3"]
+[ext_resource type="Shader" uid="uid://dmrh6bodc1vy7" path="res://assets/shaders/god_rays.gdshader" id="3_14db6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yfw66"]
+resource_local_to_scene = true
+shader = ExtResource("2_i6on3")
+shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Width = 0.075
+shader_parameter/Brightness = 0.81
+shader_parameter/Rotation_deg = 35.0
+shader_parameter/Distortion = 1.67
+shader_parameter/Speed = 0.31
+shader_parameter/Position = 0.0
+shader_parameter/Position_Min = 0.25
+shader_parameter/Position_Max = 0.5
+shader_parameter/Alpha = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pobwp"]
+resource_local_to_scene = true
+shader = ExtResource("3_14db6")
+shader_parameter/angle = 0.0
+shader_parameter/position = 0.0
+shader_parameter/spread = 1.0
+shader_parameter/cutoff = -1.0
+shader_parameter/falloff = 1.0
+shader_parameter/edge_fade = 0.904
+shader_parameter/speed = 20.0
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.3
+shader_parameter/color = Color(0.960784, 0.937255, 1, 0.117647)
+shader_parameter/hdr = false
+shader_parameter/seed = 5.96
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8rfnv"]
+resource_local_to_scene = true
+bg_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+shadow_color = Color(0, 0, 0, 0.486275)
+shadow_size = 20
+shadow_offset = Vector2(0, 5)
+
+[node name="GameCard" instance=ExtResource("1_6tx83")]
+custom_minimum_size = Vector2(200, 200)
+offset_bottom = 200.0
+
+[node name="PanelContainer" parent="." index="3"]
+offset_top = 1.0
+offset_bottom = 201.0
+
+[node name="TextureRect" parent="PanelContainer" index="0"]
+custom_minimum_size = Vector2(200, 200)
+stretch_mode = 0
+
+[node name="ShineShader" parent="PanelContainer" index="1"]
+material = SubResource("ShaderMaterial_yfw66")
+
+[node name="GodRaysShader" parent="PanelContainer" index="2"]
+material = SubResource("ShaderMaterial_pobwp")
+
+[node name="MarginContainer" parent="." index="4"]
+custom_minimum_size = Vector2(200, 200)
+
+[node name="Shadow" parent="MarginContainer" index="0"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_8rfnv")

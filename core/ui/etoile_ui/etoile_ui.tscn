@@ -1,0 +1,283 @@
+[gd_scene load_steps=39 format=3 uid="uid://drs3b6nijk5uq"]
+
+[ext_resource type="Script" uid="uid://dbad1aoty3n0n" path="res://core/systems/input/input_icon_processor.gd" id="1_gx5g1"]
+[ext_resource type="Script" uid="uid://3drf8xp6swaa" path="res://core/ui/etoile_ui/etoile_ui.gd" id="1_qmhmk"]
+[ext_resource type="Script" uid="uid://yhfpudolgixq" path="res://core/systems/gamescope/gamescope.gd" id="2_44qct"]
+[ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="3_fsrla"]
+[ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="4_5wgdm"]
+[ext_resource type="PackedScene" uid="uid://ch6qw6obetalo" path="res://core/systems/library/library_desktop.tscn" id="5_wlsgd"]
+[ext_resource type="PackedScene" uid="uid://uam46dtvo2yh" path="res://core/systems/plugin/plugin_manager.tscn" id="6_kj4c4"]
+[ext_resource type="Script" uid="uid://cbjiip4mn0xuh" path="res://core/systems/power/power_manager.gd" id="7_mndwy"]
+[ext_resource type="UPowerInstance" uid="uid://pgiv8yxro3n8" path="res://core/systems/power/power_manager.tres" id="8_qessb"]
+[ext_resource type="Script" uid="uid://d1el4od5x5et0" path="res://core/systems/launcher/launcher.gd" id="9_div7i"]
+[ext_resource type="Script" uid="uid://b2kun21dodmfw" path="res://core/systems/performance/power_station.gd" id="10_sqbwv"]
+[ext_resource type="PowerStationInstance" uid="uid://c2mmrnh3rcs58" path="res://core/systems/performance/power_station.tres" id="11_s56r7"]
+[ext_resource type="Script" uid="uid://c8sid1jrpjqlx" path="res://core/systems/network/network_manager.gd" id="12_6pv5o"]
+[ext_resource type="NetworkManagerInstance" uid="uid://cmwavccnjwpr0" path="res://core/systems/network/network_manager.tres" id="13_qmhmk"]
+[ext_resource type="ResourceRegistry" uid="uid://bsr58xihnpn1j" path="res://core/systems/resource/resource_registry.tres" id="14_8sw3x"]
+[ext_resource type="Script" uid="uid://ompm0veql0ng" path="res://core/systems/ipc/pipe_manager.gd" id="15_130qf"]
+[ext_resource type="PackedScene" uid="uid://lo32disyoypu" path="res://core/ui/etoile_ui/home/home.tscn" id="16_44qct"]
+[ext_resource type="PackedScene" uid="uid://b5l4udy1v8ua3" path="res://core/ui/etoile_ui/launch/game_details.tscn" id="17_6pv5o"]
+[ext_resource type="PackedScene" uid="uid://b1kist0rarpcy" path="res://core/ui/common/game/game_loading.tscn" id="17_cumyy"]
+[ext_resource type="PackedScene" uid="uid://ccwn4n40imfg8" path="res://core/ui/components/containers/overlay_container.tscn" id="17_s56r7"]
+[ext_resource type="Texture2D" uid="uid://chuihqnx022ys" path="res://assets/images/starfield.svg" id="18_1wv80"]
+[ext_resource type="PackedScene" uid="uid://lfm3ps837gy5" path="res://core/ui/card_ui/power/power_menu.tscn" id="18_6pv5o"]
+[ext_resource type="PackedScene" uid="uid://rosd00fxjrs8" path="res://core/ui/components/library_banner.tscn" id="18_q2s5f"]
+[ext_resource type="Shader" uid="uid://dmrh6bodc1vy7" path="res://assets/shaders/god_rays.gdshader" id="19_3ygo4"]
+[ext_resource type="PackedScene" uid="uid://doft5r1y37j1" path="res://core/ui/components/volume_indicator.tscn" id="19_qmhmk"]
+[ext_resource type="PackedScene" uid="uid://cu4l0d1joc37w" path="res://core/ui/card_ui/navigation/in-game_notification.tscn" id="20_8sw3x"]
+[ext_resource type="PackedScene" uid="uid://eqqk1uve143x" path="res://core/ui/components/dialog.tscn" id="21_130qf"]
+[ext_resource type="PackedScene" uid="uid://vf4sij64f82b" path="res://core/ui/common/osk/on_screen_keyboard.tscn" id="22_mh67p"]
+[ext_resource type="PackedScene" uid="uid://bbcd5tclmp2ux" path="res://core/ui/card_ui/navigation/library_loading_notification.tscn" id="23_1wv80"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="23_q2s5f"]
+[ext_resource type="PackedScene" uid="uid://ekhjpmat02f8" path="res://core/systems/effects/slide_effect.tscn" id="24_3ygo4"]
+[ext_resource type="PackedScene" uid="uid://b7uwwwrbvdu4g" path="res://core/ui/etoile_ui/navigation/status_bar.tscn" id="25_6xvrb"]
+[ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="25_cumyy"]
+[ext_resource type="PackedScene" uid="uid://cdhh45htxfxnt" path="res://core/ui/etoile_ui/navigation/context_bar.tscn" id="25_k08on"]
+[ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="31_3ygo4"]
+[ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="32_cumyy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k08on"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cumyy"]
+shader = ExtResource("19_3ygo4")
+shader_parameter/angle = 0.06
+shader_parameter/position = -0.1
+shader_parameter/spread = 0.674
+shader_parameter/cutoff = 0.1
+shader_parameter/falloff = 0.896
+shader_parameter/edge_fade = 0.15
+shader_parameter/speed = 6.995
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.184
+shader_parameter/color = Color(0.888, 0.885, 1, 0.173)
+shader_parameter/hdr = true
+shader_parameter/seed = 1.505
+
+[node name="EtoileUI" type="Control" groups=["main"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qmhmk")
+
+[node name="InputIconProcessor" type="Node" parent="."]
+script = ExtResource("1_gx5g1")
+
+[node name="Gamescope" type="Node" parent="."]
+script = ExtResource("2_44qct")
+instance = ExtResource("3_fsrla")
+
+[node name="BoxArtLocal" parent="." instance=ExtResource("4_5wgdm")]
+
+[node name="DesktopLibrary" parent="." instance=ExtResource("5_wlsgd")]
+
+[node name="PluginManager" parent="." instance=ExtResource("6_kj4c4")]
+
+[node name="PowerManager" type="Node" parent="."]
+script = ExtResource("7_mndwy")
+instance = ExtResource("8_qessb")
+
+[node name="Launcher" type="Node" parent="."]
+script = ExtResource("9_div7i")
+
+[node name="PowerStation" type="Node" parent="."]
+script = ExtResource("10_sqbwv")
+instance = ExtResource("11_s56r7")
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("12_6pv5o")
+instance = ExtResource("13_qmhmk")
+
+[node name="ResourceProcessor" type="ResourceProcessor" parent="."]
+registry = ExtResource("14_8sw3x")
+
+[node name="PipeManager" type="Node" parent="."]
+script = ExtResource("15_130qf")
+metadata/_custom_type_script = "uid://ompm0veql0ng"
+
+[node name="PowerTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 1.5
+one_shot = true
+
+[node name="GameLoading" parent="." instance=ExtResource("17_cumyy")]
+visible = false
+layout_mode = 1
+
+[node name="Panel" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"LightPanel"
+theme_override_styles/panel = SubResource("StyleBoxFlat_k08on")
+
+[node name="BannerTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.49803922)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.1
+texture = ExtResource("18_1wv80")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="LibraryBanner" parent="BannerTexture" instance=ExtResource("18_q2s5f")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="GodRaysShader" type="ColorRect" parent="BannerTexture"]
+material = SubResource("ShaderMaterial_cumyy")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuContent" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="TopMarginSpacer" type="Control" parent="MenuContent/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Home" parent="MenuContent/VBoxContainer" instance=ExtResource("16_44qct")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GameDetails" parent="MenuContent/VBoxContainer" instance=ExtResource("17_6pv5o")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_stretch_ratio = 0.0
+
+[node name="BottomMargin" type="MarginContainer" parent="MenuContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/BottomMargin"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="LibraryLoadingNotification" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("23_1wv80")]
+layout_mode = 2
+
+[node name="ContextBar" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("25_k08on")]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="TopMargin" type="MarginContainer" parent="MenuContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/TopMargin"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="StatusBar" parent="MenuContent/TopMargin/VBoxContainer" instance=ExtResource("25_6xvrb")]
+layout_mode = 2
+
+[node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
+editor_description = "Anything in this container will always be visible, even during in-game states.
+"
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="OverlayContainer" parent="AlwaysVisibleContent" instance=ExtResource("17_s56r7")]
+layout_mode = 2
+
+[node name="PowerMenu" parent="AlwaysVisibleContent" instance=ExtResource("18_6pv5o")]
+visible = false
+layout_mode = 2
+
+[node name="VolumeIndicator" parent="AlwaysVisibleContent" instance=ExtResource("19_qmhmk")]
+layout_mode = 2
+
+[node name="TopMargin" type="MarginContainer" parent="AlwaysVisibleContent"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 30
+
+[node name="InGameNotification" parent="AlwaysVisibleContent/TopMargin" instance=ExtResource("20_8sw3x")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="Dialog" parent="AlwaysVisibleContent" instance=ExtResource("21_130qf")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="OnScreenKeyboard" parent="AlwaysVisibleContent" instance=ExtResource("22_mh67p")]
+visible = false
+layout_mode = 2
+
+[node name="FadeEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("23_q2s5f")]
+target = NodePath("..")
+fade_speed = 0.2
+on_signal = "opened"
+fade_out_signal = "closed"
+on_signal = "opened"
+
+[node name="SlideEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("24_3ygo4")]
+target = NodePath("../MarginContainer/PanelContainer")
+slide_speed = 0.15
+margin = 60
+direction = "down"
+on_signal = "opened"
+slide_out_signal = "closed"
+on_signal = "opened"
+
+[node name="SpacerGrowerEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" instance=ExtResource("25_cumyy")]
+on_signal = "opened"
+shrink_signal = "closed"
+on_signal = "opened"
+
+[node name="PowerSaver" parent="." instance=ExtResource("31_3ygo4")]
+
+[node name="InputManager" parent="." instance=ExtResource("32_cumyy")]
+
+[editable path="AlwaysVisibleContent/OnScreenKeyboard"]

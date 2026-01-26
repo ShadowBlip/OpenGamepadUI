@@ -1,0 +1,205 @@
+[gd_scene load_steps=13 format=3 uid="uid://c8pvsi1u00sol"]
+
+[ext_resource type="Script" uid="uid://djwjhfgjrcstn" path="res://core/ui/etoile_ui/components/game_tile.gd" id="1_eakx5"]
+[ext_resource type="PackedScene" uid="uid://c5sfkhrfbao71" path="res://core/systems/effects/play_audio_effect.tscn" id="2_njc4j"]
+[ext_resource type="LabelSettings" uid="uid://b1jl2mkmbimnx" path="res://assets/label/section_label.tres" id="4_njc4j"]
+[ext_resource type="Texture2D" uid="uid://blc0qyvt1qhci" path="res://assets/images/placeholder-grid-portrait.png" id="4_wn75x"]
+[ext_resource type="Shader" uid="uid://dw8by7ras0c8n" path="res://assets/shaders/highlight_shine.gdshader" id="5_ripyo"]
+[ext_resource type="Shader" uid="uid://dmrh6bodc1vy7" path="res://assets/shaders/god_rays.gdshader" id="6_b0i0x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_njc4j"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_306if"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_blend = true
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+anti_aliasing_size = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cu3r7"]
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ap7s"]
+bg_color = Color(1, 0.47451, 0.776471, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h5v0h"]
+resource_local_to_scene = true
+shader = ExtResource("5_ripyo")
+shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Width = 0.075
+shader_parameter/Brightness = 0.81
+shader_parameter/Rotation_deg = 35.0
+shader_parameter/Distortion = 1.67
+shader_parameter/Speed = 0.31
+shader_parameter/Position = 0.0
+shader_parameter/Position_Min = 0.25
+shader_parameter/Position_Max = 0.5
+shader_parameter/Alpha = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8kxiv"]
+resource_local_to_scene = true
+shader = ExtResource("6_b0i0x")
+shader_parameter/angle = 0.0
+shader_parameter/position = 0.0
+shader_parameter/spread = 1.0
+shader_parameter/cutoff = -1.0
+shader_parameter/falloff = 1.0
+shader_parameter/edge_fade = 0.904
+shader_parameter/speed = 20.0
+shader_parameter/ray1_density = 8.0
+shader_parameter/ray2_density = 30.0
+shader_parameter/ray2_intensity = 0.3
+shader_parameter/color = Color(0.960784, 0.937255, 1, 0.117647)
+shader_parameter/hdr = false
+shader_parameter/seed = 5.96
+
+[node name="GameTile" type="MarginContainer"]
+offset_right = 208.0
+offset_bottom = 208.0
+focus_mode = 2
+script = ExtResource("1_eakx5")
+
+[node name="PlayFocusAudioEffect" parent="." instance=ExtResource("2_njc4j")]
+on_signal = "focus_entered"
+
+[node name="PlaySelectedAudioEffect" parent="." instance=ExtResource("2_njc4j")]
+audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
+on_signal = "pressed"
+
+[node name="OutlineContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="OutlinePanel" type="Panel" parent="OutlineContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_njc4j")
+
+[node name="GlowPanel" type="Panel" parent="OutlineContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_306if")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+clip_children = 1
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_cu3r7")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("4_wn75x")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="NameMargin" type="MarginContainer" parent="MarginContainer/PanelContainer/TextureRect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -26.5
+offset_right = 25.0
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/PanelContainer/TextureRect/NameMargin"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "Game Name"
+label_settings = ExtResource("4_njc4j")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/PanelContainer/TextureRect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/fill = SubResource("StyleBoxFlat_2ap7s")
+value = 50.0
+rounded = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LogoTextureRect" type="TextureRect" parent="MarginContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ShineShader" type="ColorRect" parent="MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_h5v0h")
+layout_mode = 2
+mouse_filter = 2
+
+[node name="GodRaysShader" type="ColorRect" parent="MarginContainer/PanelContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_8kxiv")
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TapTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true

@@ -187,5 +187,5 @@ layout_mode = 2
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_srvn2")
+&"": SubResource("AnimationLibrary_srvn2")
 }

@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=3 uid="uid://g6n83wt60uww"]
+
+[ext_resource type="Script" uid="uid://c1n71g7m7yi8c" path="res://core/ui/etoile_ui/components/carousel_test.gd" id="1_mst72"]
+[ext_resource type="Script" uid="uid://dnstdemqvqcji" path="res://core/ui/etoile_ui/components/carousel.gd" id="1_sdtql"]
+[ext_resource type="PackedScene" uid="uid://c8pvsi1u00sol" path="res://core/ui/etoile_ui/components/game_tile.tscn" id="3_w5uit"]
+
+[node name="CarouselTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mst72")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="CarouselContainer" type="Container" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("1_sdtql")
+text = "Empty Title"
+spacing = 30
+metadata/_custom_type_script = "uid://dnstdemqvqcji"
+
+[node name="GameTile10" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile11" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile12" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile13" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile14" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile15" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile16" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="GameTile17" parent="MarginContainer/CarouselContainer" instance=ExtResource("3_w5uit")]
+modulate = Color(1, 1, 1, 0.06944445)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/CarouselContainer"]
+layout_mode = 2

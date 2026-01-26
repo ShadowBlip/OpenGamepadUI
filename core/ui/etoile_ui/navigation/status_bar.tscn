@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7uwwwrbvdu4g"]
+
+[ext_resource type="PackedScene" uid="uid://dcrx6jkhn0o7u" path="res://core/ui/components/battery_container.tscn" id="1_accj2"]
+[ext_resource type="Script" uid="uid://cf85qv0dtmpee" path="res://core/ui/etoile_ui/navigation/status_bar.gd" id="1_ql0kp"]
+[ext_resource type="LabelSettings" uid="uid://b1jl2mkmbimnx" path="res://assets/label/section_label.tres" id="2_vnx3e"]
+[ext_resource type="PackedScene" uid="uid://cmrmkiugq0sgo" path="res://core/ui/etoile_ui/components/network_icon.tscn" id="3_3f1rh"]
+
+[node name="StatusBar" type="MarginContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 34.0
+grow_horizontal = 2
+script = ExtResource("1_ql0kp")
+
+[node name="WorkspacesContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+alignment = 1
+
+[node name="MenuNameLabel" type="Label" parent="WorkspacesContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Games"
+label_settings = ExtResource("2_vnx3e")
+
+[node name="TimeContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="TimeLabel" type="Label" parent="TimeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "12:00AM"
+label_settings = ExtResource("2_vnx3e")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="NetworkIcon" parent="IconContainer" instance=ExtResource("3_3f1rh")]
+layout_mode = 2
+
+[node name="BatteryContainer" parent="IconContainer" instance=ExtResource("1_accj2")]
+unique_name_in_owner = true
+layout_mode = 2
