@@ -1,0 +1,83 @@
+[gd_scene load_steps=8 format=3 uid="uid://b5l4udy1v8ua3"]
+
+[ext_resource type="Script" uid="uid://druyqash5wm0a" path="res://core/ui/etoile_ui/launch/game_details.gd" id="1_qddhj"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_suqfk"]
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_2qjlv"]
+[ext_resource type="Script" uid="uid://ouqt2xo8inp2" path="res://core/systems/input/input_watcher.gd" id="3_tvip3"]
+[ext_resource type="Script" uid="uid://yn3ulqw1kr2t" path="res://core/systems/state/state_updater.gd" id="4_on6i0"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="5_2qjlv"]
+[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="7_f2a1y"]
+
+[node name="GameDetails" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_qddhj")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 366.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+alignment = 2
+
+[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("1_suqfk")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CardButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+layout_mode = 2
+text = "Play"
+
+[node name="CardButton2" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+layout_mode = 2
+text = "Manage"
+
+[node name="CardButton3" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+layout_mode = 2
+text = "Links"
+
+[node name="CardButton4" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+layout_mode = 2
+text = "Uninstall"
+
+[node name="InputWatcher" type="Node" parent="."]
+script = ExtResource("3_tvip3")
+stop_propagation = true
+action = "ui_up"
+metadata/_custom_type_script = "uid://ouqt2xo8inp2"
+
+[node name="StateUpdater" type="Node" parent="InputWatcher"]
+script = ExtResource("4_on6i0")
+state_machine = ExtResource("5_2qjlv")
+state = ExtResource("7_f2a1y")
+action = 3
+on_signal = "input_released"
+metadata/_custom_type_script = "uid://yn3ulqw1kr2t"

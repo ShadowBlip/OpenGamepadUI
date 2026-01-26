@@ -10,5 +10,4 @@
 [resource]
 script = ExtResource("1_dw1uo")
 logger_name = "GlobalStateMachine"
-minimum_states = 1
 allowed_states = Array[ExtResource("1_ssupu")]([ExtResource("1_dtppc"), ExtResource("2_pg6ge"), ExtResource("3_4n6bo"), ExtResource("4_j3a4g")])

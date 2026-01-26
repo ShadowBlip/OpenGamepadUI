@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdhh45htxfxnt"]
+
+[ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="1_ifgqm"]
+
+[node name="ContextBar" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="InputIcon" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+script = ExtResource("1_ifgqm")
+text = "Quick Bar Menu"
+path = "ogui_qb"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="AcceptIcon" type="HBoxContainer" parent="HBoxContainer2"]
+layout_mode = 2
+script = ExtResource("1_ifgqm")
+text = "Accept"
+path = "ui_accept"
+
+[node name="BackIcon" type="HBoxContainer" parent="HBoxContainer2"]
+layout_mode = 2
+script = ExtResource("1_ifgqm")
+text = "Back"
+path = "ogui_east"
