@@ -23,6 +23,8 @@ enum LAYOUT {
 	GRID_LANDSCAPE, ## Game art in landscape aspect ratio
 	BANNER, ## Game art banner displayed in the game launcher menu
 	LOGO, ## Game art logo
+	GRID_SQUARE, ## Game art square tile
+	ICON, ## Square icon
 }
 
 var BoxArtManager := load("res://core/global/boxart_manager.tres") as BoxArtManager
