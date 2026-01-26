@@ -202,7 +202,8 @@ func _on_device_added(device: BluetoothDevice) -> void:
 	var item := root.create_child()
 	item.set_metadata(0, device)
 	_on_device_updated(item)
-	device.updated.connect(_on_device_updated.bind(item))
+	if not device.updated.is_connected(_on_device_updated.bind(item)):
+		device.updated.connect(_on_device_updated.bind(item))
 
 	# Add the item
 	tree_items[dbus_path] = item

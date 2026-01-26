@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://58qlqqbh58im"]
+[gd_scene format=3 uid="uid://58qlqqbh58im"]
 
 [ext_resource type="Script" uid="uid://dlcsn1qwaj373" path="res://core/ui/card_ui/launch/game_settings.gd" id="1_vrr6s"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_1eqgx"]
@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://bo077a5mwi7xl" path="res://core/ui/components/transition_fade_in.tscn" id="29_voua8"]
 [ext_resource type="Script" uid="uid://5vbrx221i2hm" path="res://core/ui/components/transition_container.gd" id="34_j5cnx"]
 
-[node name="GameSettingsMenu" type="Control"]
+[node name="GameSettingsMenu" type="Control" unique_id=1783107922]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,25 +33,25 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vrr6s")
 
-[node name="InputWatcher" parent="." instance=ExtResource("2_1eqgx")]
+[node name="InputWatcher" parent="." unique_id=1253672787 instance=ExtResource("2_1eqgx")]
 stop_propagation = true
 action = "ogui_east"
 
-[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("15_lmmqq")]
+[node name="StateUpdater" parent="InputWatcher" unique_id=1643016462 instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("4_5bv80")
 action = 2
 on_signal = "input_released"
 
-[node name="StateWatcher" parent="." instance=ExtResource("5_0v30m")]
+[node name="StateWatcher" parent="." unique_id=1200165712 instance=ExtResource("5_0v30m")]
 state = ExtResource("3_s80bx")
 
-[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("7_5qmye")]
+[node name="FadeEffect" parent="StateWatcher" unique_id=2059529857 node_paths=PackedStringArray("target") instance=ExtResource("7_5qmye")]
 target = NodePath("../..")
 on_signal = "state_entered"
 fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=601485217]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -63,33 +63,33 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=506859448]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="MenuContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+[node name="MenuContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=2043441828]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer" unique_id=1845308065]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="VersionContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
+[node name="VersionContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer" unique_id=1097816782]
 layout_mode = 2
 theme_type_variation = &"SettingsMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer" unique_id=1253844301]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer/MarginContainer" unique_id=1876077992]
 layout_mode = 2
 
-[node name="GameNameLabel" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer/MarginContainer/HBoxContainer" instance=ExtResource("11_u6frn")]
+[node name="GameNameLabel" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/VersionContainer/MarginContainer/HBoxContainer" unique_id=2136834988 instance=ExtResource("11_u6frn")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -98,22 +98,22 @@ horizontal_alignment = 1
 autowrap_mode = 3
 uppercase = true
 
-[node name="ButtonContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer"]
+[node name="ButtonContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer" unique_id=114948766]
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"SettingsMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer" unique_id=1729955098]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer" unique_id=1544564401]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer" unique_id=597014430]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 5
@@ -121,127 +121,127 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="ButtonsContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer"]
+[node name="ButtonsContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer" unique_id=292344913]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("12_86g2h")]
+[node name="FocusGroup" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" unique_id=189520279 node_paths=PackedStringArray("current_focus") instance=ExtResource("12_86g2h")]
 unique_name_in_owner = true
 current_focus = NodePath("../LaunchButton")
 focus_stack = ExtResource("12_e0uun")
 
-[node name="LaunchButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
+[node name="LaunchButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" unique_id=1585990563 instance=ExtResource("19_1erbu")]
 layout_mode = 2
 text = "Launch"
 
-[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LaunchButton" instance=ExtResource("15_lmmqq")]
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LaunchButton" unique_id=249626868 instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("20_cokg3")
 state = ExtResource("21_tdepl")
 action = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LaunchButton" node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LaunchButton" unique_id=1168274991 node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
-[node name="BoxartButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
+[node name="BoxartButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" unique_id=1407072 instance=ExtResource("19_1erbu")]
 layout_mode = 2
 text = "Boxart"
 
-[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/BoxartButton" instance=ExtResource("15_lmmqq")]
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/BoxartButton" unique_id=2078063805 instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("20_cokg3")
 state = ExtResource("25_3xebk")
 action = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/BoxartButton" node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/BoxartButton" unique_id=442759564 node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
-[node name="LibraryButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" instance=ExtResource("19_1erbu")]
+[node name="LibraryButton" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer" unique_id=857678607 instance=ExtResource("19_1erbu")]
 layout_mode = 2
 text = "Library"
 
-[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" instance=ExtResource("15_lmmqq")]
+[node name="StateUpdater" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" unique_id=2036560525 instance=ExtResource("15_lmmqq")]
 state_machine = ExtResource("20_cokg3")
 state = ExtResource("24_um3vy")
 action = 3
 on_signal = "focus_entered"
 
-[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
+[node name="FocusGroupSetter" parent="MarginContainer/HBoxContainer/MenuContainer/VBoxContainer/ButtonContainer/MarginContainer/ScrollContainer/MarginContainer/ButtonsContainer/LibraryButton" unique_id=1177771120 node_paths=PackedStringArray("target") instance=ExtResource("18_qwki4")]
 target = NodePath("../../../../../../../../../ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LibrarySettings/MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "pressed"
 
-[node name="ContentContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+[node name="ContentContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=1248971628]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.75
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/ContentContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/ContentContainer" unique_id=477078787]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="TitleContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
+[node name="TitleContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer" unique_id=1626409989]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"SettingsMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer" unique_id=1432099587]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer/MarginContainer" unique_id=1437489251]
 layout_mode = 2
 
-[node name="SectionLabel" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer" instance=ExtResource("27_06vpr")]
+[node name="SectionLabel" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/TitleContainer/MarginContainer/HBoxContainer" unique_id=1909099767 instance=ExtResource("27_06vpr")]
 unique_name_in_owner = true
 layout_mode = 2
 uppercase = true
 
-[node name="ContentContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer"]
+[node name="ContentContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer" unique_id=896143660]
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"SettingsMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer" unique_id=411885156]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="LaunchSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("19_06mfy")]
+[node name="LaunchSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" unique_id=62306361 instance=ExtResource("19_06mfy")]
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings" instance=ExtResource("2_pga6u")]
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings" unique_id=846108569 instance=ExtResource("2_pga6u")]
 state_machine = ExtResource("20_cokg3")
 state = ExtResource("21_tdepl")
 
-[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings" unique_id=1511998625]
 script = ExtResource("34_j5cnx")
 
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings/TransitionContainer" instance=ExtResource("29_voua8")]
+[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/LaunchSettings/TransitionContainer" unique_id=1279061554 instance=ExtResource("29_voua8")]
 
-[node name="BoxArtSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("24_4afdc")]
+[node name="BoxArtSettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" unique_id=1254828018 instance=ExtResource("24_4afdc")]
 visible = false
 layout_mode = 2
 
-[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings" instance=ExtResource("2_pga6u")]
+[node name="VisibilityManager" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings" unique_id=1418996418 instance=ExtResource("2_pga6u")]
 state_machine = ExtResource("20_cokg3")
 state = ExtResource("25_3xebk")
 
-[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings"]
+[node name="TransitionContainer" type="Node" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings" unique_id=998214610]
 script = ExtResource("34_j5cnx")
 
-[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings/TransitionContainer" instance=ExtResource("29_voua8")]
+[node name="TransitionFadeIn" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer/BoxArtSettings/TransitionContainer" unique_id=1812164454 instance=ExtResource("29_voua8")]
 
-[node name="LibrarySettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" instance=ExtResource("25_c26mp")]
+[node name="LibrarySettings" parent="MarginContainer/HBoxContainer/ContentContainer/VBoxContainer/ContentContainer/MarginContainer" unique_id=235021104 instance=ExtResource("25_c26mp")]
 visible = false
 layout_mode = 2
 

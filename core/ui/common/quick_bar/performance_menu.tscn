@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d0u3rsa5qpj57" path="res://core/ui/components/subsection_label.tscn" id="5_hil7p"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="6_ycrnf"]
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="7_j02ci"]
+[ext_resource type="Texture2D" uid="uid://xlmr7ldbum6s" path="res://assets/ui/icons/material-symbols--developer-board-outline-rounded.svg" id="8_dbtoy"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="8_j2331"]
 
 [node name="Performance" type="VBoxContainer" unique_id=132711214]
@@ -101,6 +102,7 @@ text = "CPU Cores"
 value = 1.0
 max_value = 1.0
 min_value = 1.0
+icon_texture = ExtResource("8_dbtoy")
 
 [node name="GPUSectionLabel" parent="." unique_id=1365545015 instance=ExtResource("6_ycrnf")]
 visible = false
