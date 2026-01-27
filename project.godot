@@ -293,7 +293,7 @@ pointing/emulate_touch_from_mouse=true
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://assets/locale/en_US.po", "res://assets/locale/es_MX.po", "res://assets/locale/fr_FR.po", "res://assets/locale/zh_CH.po", "res://assets/locale/pt_BR.po")
+locale/translations=PackedStringArray("res://assets/locale/en_US.po", "res://assets/locale/es_MX.po", "res://assets/locale/fr_FR.po", "res://assets/locale/zh_CH.po", "res://assets/locale/pt_BR.po", "res://assets/locale/ru_RU.po")
 locale/fallback="en_US"
 
 [network]
