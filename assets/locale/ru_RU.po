@@ -1,0 +1,646 @@
+#
+# Jill Fiore <contact@lumaeris.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: unnamed project\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-01-27 19:54+0700\n"
+"Last-Translator: Jill Fiore <contact@lumaeris.com>\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 49.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit"
+
+# Main Menu Messages
+msgid "Home"
+msgstr "Главная"
+
+msgid "Library"
+msgstr "Библиотека"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Power"
+msgstr "Выключение"
+
+# General messages
+msgid "Accept"
+msgstr "Выбрать"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Exit"
+msgstr "Выйти"
+
+msgid "Submit"
+msgstr "Отправить"
+
+msgid "Quick Bar Menu"
+msgstr "Меню быстрых настроек"
+
+# Help Menu Messages
+msgid "Help"
+msgstr "Помощь"
+
+msgid "Menu Shortcuts"
+msgstr "Сочетания клавиш меню"
+
+msgid "Open Main Menu"
+msgstr "Открыть главное меню"
+
+msgid "Open Quick Bar Menu"
+msgstr "Открыть меню быстрых настроек"
+
+msgid "Open On-Screen Keyboard"
+msgstr "Открыть экранную клавиатуру"
+
+msgid "Scroll container"
+msgstr "Прокрутка контейнера"
+
+msgid "Switch to left tab"
+msgstr "Переключить в левую вкладку"
+
+msgid "Switch to right tab"
+msgstr "Переключить в правую вкладку"
+
+msgid "On-Screen Keyboard Shortcuts"
+msgstr "Сочетания клавиш экранной клавиатуры"
+
+msgid "Backspace"
+msgstr "Backspace"
+
+msgid "Close keyboard"
+msgstr "Закрыть клавиатуру"
+
+msgid "Toggle Shift"
+msgstr "Включить Shift"
+
+msgid "Enter"
+msgstr "Enter"
+
+msgid "Steam Deck"
+msgstr "Steam Deck"
+
+msgid "Global"
+msgstr "Глобальное"
+
+msgid "Unable to save gamepad profile"
+msgstr "Невозможно сохранить профиль геймпада"
+
+msgid "Failed to save gamepad profile"
+msgstr "Ошибка при сохранении профиля геймпада"
+
+msgid "Gamepad profile saved"
+msgstr "Профиль геймпада сохранён"
+
+msgid "Play Now"
+msgstr "Играть сейчас"
+
+msgid "Install"
+msgstr "Установить"
+
+msgid "Resume"
+msgstr "Возобновить"
+
+msgid "Queued"
+msgstr "В очереди"
+
+msgid "Installing"
+msgstr "Установка"
+
+msgid "Quick Access Menu"
+msgstr "Меню быстрых действий"
+
+msgid "Game Name"
+msgstr "Название игры"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "Запуск"
+
+msgid "Boxart"
+msgstr "Обложка"
+
+msgid "Launch Provider"
+msgstr "Провайдер запуска"
+
+msgid "Library provider to launch this game with"
+msgstr "Провайдер библиотеки для запуска данной игры"
+
+msgid "Launch Settings"
+msgstr "Настройки запуска"
+
+msgid "Command"
+msgstr "Команда"
+
+msgid "Command to use to launch the game"
+msgstr "Команда используемая для запуска игры"
+
+msgid "Arguments"
+msgstr "Аргументы"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "Консольные аргументы для проброса в игру"
+
+msgid "Launch Directory"
+msgstr "Директория запуска"
+
+msgid "Directory to launch the game from"
+msgstr "Директория с которой запускается игра"
+
+msgid "Environment Variables"
+msgstr "Переменные окружения"
+
+msgid "Environment variables to use when launching the game"
+msgstr "Переменные окружения используемые при запуске игры"
+
+msgid "Sandbox Settings"
+msgstr "Настройки песочницы"
+
+msgid "Use sandboxing"
+msgstr "Использовать песочницу"
+
+msgid "Launch the game in a sandbox"
+msgstr "Запустить игру в песочнице"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Провайдер обложек"
+
+msgid "Provider to fetch artwork for this game"
+msgstr "Провайдер предоставляющий обложку к данной игре"
+
+msgid "Images"
+msgstr "Изображения"
+
+msgid "Banner"
+msgstr "Баннер"
+
+msgid "Logo"
+msgstr "Лого"
+
+msgid "Grids"
+msgstr "Сетки"
+
+# Game library menu
+msgid "Hidden in library"
+msgstr "Скрыто в библиотеке"
+
+msgid "Prevent this item from showing up in your library"
+msgstr "Предотвратить отображение данного элемента в вашей библиотеке"
+
+# Settings Menu
+msgid "General"
+msgstr "Общее"
+
+msgid "Display"
+msgstr "Дисплей"
+
+msgid "Network"
+msgstr "Сеть"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+msgid "Plugins"
+msgstr "Плагины"
+
+msgid "Disks"
+msgstr "Диски"
+
+msgid "Plugin Store"
+msgstr "Магазин плагинов"
+
+msgid "Processes"
+msgstr "Процессы"
+
+msgid "Logging"
+msgstr "Журнал"
+
+msgid "Controllers"
+msgstr "Контроллеры"
+
+msgid "Windows"
+msgstr "Окна"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "Обновление"
+
+msgid "Automatic Updates"
+msgstr "Автоматические обновления"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr ""
+"Автоматически скачивать и применять обновления на фоне когда они становятся "
+"доступны"
+
+msgid "Check for updates"
+msgstr "Проверить на обновления"
+
+msgid "Install Updates"
+msgstr "Установить обновление"
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Appearance"
+msgstr "Внешний вид"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "System language"
+msgstr "Системный язык"
+
+msgid "English"
+msgstr "Английский"
+
+msgid "Spanish"
+msgstr "Испанский"
+
+msgid "French"
+msgstr "Французский"
+
+msgid "Chinese"
+msgstr "Китайский"
+
+msgid "Portuguese"
+msgstr "Португальский"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "Theme"
+msgstr "Тема"
+
+msgid "System Information"
+msgstr "Системная информация"
+
+msgid "Platform"
+msgstr "Платформа"
+
+msgid "Client Version"
+msgstr "Версия клиента"
+
+msgid "Engine Version"
+msgstr "Версия движка"
+
+msgid "Plugin API Version"
+msgstr "Версия API плагинов"
+
+msgid "OS"
+msgstr "ОС"
+
+msgid "Kernel Version"
+msgstr "Версия ядра"
+
+msgid "Vendor"
+msgstr "Производитель"
+
+msgid "Product"
+msgstr "Продукт"
+
+msgid "BIOS Version"
+msgstr "Версия BIOS"
+
+msgid "CPU Model"
+msgstr "Модель ЦПУ"
+
+msgid "GPU Model"
+msgstr "Модель ГПУ"
+
+msgid "Driver Version"
+msgstr "Версия драйвера"
+
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr "Максимальное количество недавних приложений"
+
+msgid "Refresh Library"
+msgstr "Обновить библиотеку"
+
+msgid "Trigger reloading your library"
+msgstr "Выполнить обновлений вашей библиотеки"
+
+msgid "Refresh"
+msgstr "Обновить"
+
+msgid "Hidden Library Items"
+msgstr "Скрытые элементы библиотеки"
+
+msgid "No hidden library items"
+msgstr "Нет скрытых элементов библиотеки"
+
+# Display Menu
+msgid "Scale"
+msgstr "Масштаб"
+
+msgid "Overlay"
+msgstr "Оверлей"
+
+msgid "Blur"
+msgstr "Размытие"
+
+msgid "Blur background game when overlay is open"
+msgstr "Размыть игру на фоне когда открыт оверлей"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "Не найдены сетевые зависимости"
+
+msgid "Enable Wireless"
+msgstr "Включить беспроводное"
+
+msgid "Wireless Network"
+msgstr "Беспроводная сеть"
+
+msgid "Visible Networks"
+msgstr "Видимые сети"
+
+msgid "Refresh Networks"
+msgstr "Обновить сети"
+
+msgid "Wired Network"
+msgstr "Проводная сеть"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Enter the password for this network"
+msgstr "Введите пароль к данной сети"
+
+msgid "Connection Details"
+msgstr "Детали подключения"
+
+msgid "IP Address"
+msgstr "IP адрес"
+
+msgid "Subnet Prefix"
+msgstr "Префикс подсети"
+
+msgid "Gateway"
+msgstr "Шлюз"
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr "Сервис Bluetooth недоступен"
+
+msgid "Enabled"
+msgstr "Включено"
+
+msgid "Enable Discovery"
+msgstr "Включить обнаружение"
+
+# Audio Menu
+msgid "Audio"
+msgstr "Аудио"
+
+msgid "Volume"
+msgstr "Громкость"
+
+msgid "Output Device"
+msgstr "Устройство вывода"
+
+msgid "Input Device"
+msgstr "Устройство ввода"
+
+msgid "Microphone"
+msgstr "Микрофон"
+
+# Disk Menu
+msgid ""
+"No formattable drives available\n"
+"Verify your media device is plugged in and that it is not mounted to a "
+"protected mount point"
+msgstr ""
+"Нет доступных форматируемых дисков\n"
+"Подтвердите, что ваше устройство подключено и оно не примонтировано к "
+"защищённой точке монтирования"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "Плагины не найдены"
+
+# Processes Menu
+msgid "Kill"
+msgstr "Завершить"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "Глобальный уровень введения журнала"
+
+msgid "Set the log level for all systems"
+msgstr "Определить уровень введение журнала ко всем системам"
+
+msgid "Per-system Logging"
+msgstr "Ведение журнала по системам"
+
+msgid "Gamepad Settings"
+msgstr "Настройки геймпада"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "Включено SDL HIDAPI"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr ""
+"Альтернативная система ввода которая может выполнить двойной ввод. В "
+"некоторых играх SDL используется для управления гироскопом или для всех "
+"входов. Требуется перезагрузка."
+
+# Bluetooth Menu
+msgid "InputPlumber service not available"
+msgstr "Сервис InputPlumber недоступен"
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "Имя профиля"
+
+msgid "Buttons"
+msgstr "Кнопки"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "Оси"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "Изменить ввод"
+
+msgid "Keyboard"
+msgstr "Клавиатура"
+
+msgid "Mouse"
+msgstr "Мышь"
+
+msgid "Gamepad"
+msgstr "Геймпад"
+
+msgid "Clear"
+msgstr "Очистить"
+
+msgid "Left Click"
+msgstr "Левое нажатие"
+
+msgid "Right Click"
+msgstr "Правое нажатие"
+
+msgid "Mouse Motion"
+msgstr "Движение мыши"
+
+msgid "Wheel Up"
+msgstr "Колесо вверх"
+
+msgid "Wheel Down"
+msgstr "Колесо вниз"
+
+msgid "Middle Click"
+msgstr "Среднее нажатие"
+
+# First Boot Menu
+msgid "Welcome"
+msgstr "Добро пожаловать"
+
+msgid "Select a language"
+msgstr "Выберите язык"
+
+msgid "Connect to your network"
+msgstr "Подключитесь к вашей сети"
+
+msgid "Next"
+msgstr "Далее"
+
+msgid "Install plugins"
+msgstr "Установите плагины"
+
+msgid "Configure your plugins"
+msgstr "Настройте ваши плагины"
+
+msgid "Finished"
+msgstr "Завершено"
+
+msgid "You're ready to go"
+msgstr "Вы готовы начать использование"
+
+msgid "Start playing"
+msgstr "Начать играть"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "Во что хотите играть?"
+
+msgid "Installed"
+msgstr "Установлено"
+
+msgid "All Games"
+msgstr "Все игры"
+
+msgid "Favorites"
+msgstr "Избранные"
+
+msgid "Collections"
+msgstr "Коллекции"
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr "Быстрые настройки"
+
+msgid "Performance"
+msgstr "Производительность"
+
+msgid "Advanced Mode"
+msgstr "Продвинутый режим"
+
+msgid "Power Tools"
+msgstr "Настройки мощности"
+
+msgid "Brightness"
+msgstr "Яркость"
+
+msgid "Saturation"
+msgstr "Резкость"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "Оверлей производительности"
+
+msgid "FPS Limit"
+msgstr "Ограничение FPS"
+
+msgid "Refresh Rate"
+msgstr "Частота обновления"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "Ожидаем сервис PowerStation..."
+
+msgid "CPU Settings"
+msgstr "Настройки ЦПУ"
+
+msgid "CPU Boost"
+msgstr "Ускорение ЦПУ"
+
+msgid "SMT Enabled"
+msgstr "Включить SMT"
+
+msgid "CPU Cores"
+msgstr "Ядра ЦПУ"
+
+msgid "GPU Settings"
+msgstr "Настройки ГПУ"
+
+msgid "TDP Boost"
+msgstr "Ускорение TDP"
+
+msgid "Manual Freq"
+msgstr "Ручная частота"
+
+msgid "Min Freq"
+msgstr "Мин. частота"
+
+msgid "Max Freq"
+msgstr "Макс. частота"
+
+msgid "GPU Temp Limit"
+msgstr "Предел темп. ГПУ"
+
+msgid "Power Profile"
+msgstr "Профиль мощности"
+
+msgid "Thermal Throttle Profile"
+msgstr "Профиль термического дросселя"
+
+# Power Menu
+msgid "Suspend"
+msgstr "Спящий режим"
+
+msgid "Reboot"
+msgstr "Перезагрузить"
+
+msgid "Shutdown"
+msgstr "Выключить"

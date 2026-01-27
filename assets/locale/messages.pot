@@ -282,6 +282,9 @@ msgstr ""
 msgid "Portuguese"
 msgstr ""
 
+msgid "Russian"
+msgstr ""
+
 msgid "Theme"
 msgstr ""
 
