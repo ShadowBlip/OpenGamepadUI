@@ -64,7 +64,7 @@ msgstr ""
 msgid "Open Main Menu"
 msgstr ""
 
-msgid "Open Quick Access Menu"
+msgid "Open Quick Bar Menu"
 msgstr ""
 
 msgid "Open On-Screen Keyboard"
@@ -294,6 +294,12 @@ msgstr ""
 msgid "Client Version"
 msgstr ""
 
+msgid "Engine Version"
+msgstr ""
+
+msgid "Plugin API Version"
+msgstr ""
+
 msgid "OS"
 msgstr ""
 
@@ -332,6 +338,9 @@ msgid "Refresh"
 msgstr ""
 
 msgid "Hidden Library Items"
+msgstr ""
+
+msgid "No hidden library items"
 msgstr ""
 
 # Display Menu
@@ -433,13 +442,16 @@ msgid "Per-system Logging"
 msgstr ""
 
 # General Controller Settings Menu
-msgid "General Controller Settings"
+msgid "Gamepad Settings"
 msgstr ""
 
 msgid "SDL HIDAPI Enabled"
 msgstr ""
 
 msgid "Alternate input system that can cause double input. Some games use SDL for gyro controls or all input. Requires restart."
+msgstr ""
+
+msgid "InputPlumber service not available"
 msgstr ""
 
 # Gamepad Settings Menu
