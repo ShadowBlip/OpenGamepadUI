@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://drs3b6nijk5uq"]
+[gd_scene load_steps=40 format=3 uid="uid://drs3b6nijk5uq"]
 
 [ext_resource type="Script" uid="uid://dbad1aoty3n0n" path="res://core/systems/input/input_icon_processor.gd" id="1_gx5g1"]
 [ext_resource type="Script" uid="uid://3drf8xp6swaa" path="res://core/ui/etoile_ui/etoile_ui.gd" id="1_qmhmk"]
@@ -34,6 +34,7 @@
 [ext_resource type="PackedScene" uid="uid://b7uwwwrbvdu4g" path="res://core/ui/etoile_ui/navigation/status_bar.tscn" id="25_6xvrb"]
 [ext_resource type="PackedScene" uid="uid://hbgypx7p3gyw" path="res://core/systems/effects/grower_effect.tscn" id="25_cumyy"]
 [ext_resource type="PackedScene" uid="uid://cdhh45htxfxnt" path="res://core/ui/etoile_ui/navigation/context_bar.tscn" id="25_k08on"]
+[ext_resource type="PackedScene" uid="uid://djwhelsduv5cm" path="res://core/ui/etoile_ui/quick_bar/quick_bar_menu.tscn" id="26_6xvrb"]
 [ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="31_3ygo4"]
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="32_cumyy"]
 
@@ -105,10 +106,6 @@ unique_name_in_owner = true
 wait_time = 1.5
 one_shot = true
 
-[node name="GameLoading" parent="." instance=ExtResource("17_cumyy")]
-visible = false
-layout_mode = 1
-
 [node name="Panel" type="Panel" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -149,7 +146,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="GameLoading" parent="." instance=ExtResource("17_cumyy")]
+visible = false
+layout_mode = 1
+
 [node name="MenuContent" type="MarginContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -208,6 +210,27 @@ size_flags_vertical = 0
 
 [node name="StatusBar" parent="MenuContent/TopMargin/VBoxContainer" instance=ExtResource("25_6xvrb")]
 layout_mode = 2
+
+[node name="MenuContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+
+[node name="QuickBarMenu" parent="MenuContainer/MarginContainer" instance=ExtResource("26_6xvrb")]
+visible = false
+custom_minimum_size = Vector2(434, 500)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
 editor_description = "Anything in this container will always be visible, even during in-game states.

@@ -1,12 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5l4udy1v8ua3"]
+[gd_scene load_steps=5 format=3 uid="uid://b5l4udy1v8ua3"]
 
 [ext_resource type="Script" uid="uid://druyqash5wm0a" path="res://core/ui/etoile_ui/launch/game_details.gd" id="1_qddhj"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_suqfk"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_2qjlv"]
-[ext_resource type="Script" uid="uid://ouqt2xo8inp2" path="res://core/systems/input/input_watcher.gd" id="3_tvip3"]
-[ext_resource type="Script" uid="uid://yn3ulqw1kr2t" path="res://core/systems/state/state_updater.gd" id="4_on6i0"]
-[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="5_2qjlv"]
-[ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="7_f2a1y"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_8uro1"]
 
 [node name="GameDetails" type="Control"]
 layout_mode = 3
@@ -34,14 +31,22 @@ size_flags_vertical = 8
 theme_override_constants/separation = 30
 alignment = 2
 
-[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+[node name="LogoContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer/LogoContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 8
 texture = ExtResource("1_suqfk")
 expand_mode = 1
 stretch_mode = 4
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/LogoContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Description" type="Label" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -52,32 +57,25 @@ autowrap_mode = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CardButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_8uro1")]
+current_focus = NodePath("../LaunchButton")
+
+[node name="LaunchButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Play"
 
-[node name="CardButton2" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="ManageButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Manage"
 
-[node name="CardButton3" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="LinksButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Links"
 
-[node name="CardButton4" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="UninstallButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Uninstall"
-
-[node name="InputWatcher" type="Node" parent="."]
-script = ExtResource("3_tvip3")
-stop_propagation = true
-action = "ui_up"
-metadata/_custom_type_script = "uid://ouqt2xo8inp2"
-
-[node name="StateUpdater" type="Node" parent="InputWatcher"]
-script = ExtResource("4_on6i0")
-state_machine = ExtResource("5_2qjlv")
-state = ExtResource("7_f2a1y")
-action = 3
-on_signal = "input_released"
-metadata/_custom_type_script = "uid://yn3ulqw1kr2t"

@@ -1,14 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://lo32disyoypu"]
+[gd_scene load_steps=8 format=3 uid="uid://lo32disyoypu"]
 
 [ext_resource type="Script" uid="uid://cyy6rp03jd65n" path="res://core/ui/etoile_ui/home/home.gd" id="1_el760"]
 [ext_resource type="Script" uid="uid://3xnmxp8tvamy" path="res://core/systems/state/state_watcher.gd" id="2_w07hl"]
 [ext_resource type="Resource" uid="uid://oaavalv0wcoa" path="res://assets/state/states/home.tres" id="3_3d0ep"]
-[ext_resource type="Script" uid="uid://ouqt2xo8inp2" path="res://core/systems/input/input_watcher.gd" id="4_3d0ep"]
 [ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="4_olk2v"]
-[ext_resource type="Script" uid="uid://yn3ulqw1kr2t" path="res://core/systems/state/state_updater.gd" id="5_4b353"]
-[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="6_4b353"]
 [ext_resource type="LabelSettings" uid="uid://b1jl2mkmbimnx" path="res://assets/label/section_label.tres" id="6_8p0du"]
-[ext_resource type="Resource" uid="uid://dav2b3n384cso" path="res://assets/state/states/game_launcher.tres" id="7_8p0du"]
 [ext_resource type="Script" uid="uid://dnstdemqvqcji" path="res://core/ui/etoile_ui/components/carousel.gd" id="9_03p2x"]
 [ext_resource type="PackedScene" uid="uid://c8pvsi1u00sol" path="res://core/ui/etoile_ui/components/game_tile.tscn" id="10_o3mca"]
 
@@ -101,31 +97,3 @@ metadata/_custom_type_script = "uid://boeu2ttk342x8"
 [node name="Label" type="Label" parent="Control/VBoxContainer/DetailsContainer/HBoxContainer"]
 layout_mode = 2
 text = "More Details"
-
-[node name="InputWatcher" type="Node" parent="."]
-script = ExtResource("4_3d0ep")
-stop_propagation = true
-action = "ui_down"
-metadata/_custom_type_script = "uid://ouqt2xo8inp2"
-
-[node name="StateUpdater" type="Node" parent="InputWatcher"]
-script = ExtResource("5_4b353")
-state_machine = ExtResource("6_4b353")
-state = ExtResource("7_8p0du")
-action = 3
-on_signal = "input_released"
-metadata/_custom_type_script = "uid://yn3ulqw1kr2t"
-
-[node name="InputWatcher2" type="Node" parent="."]
-script = ExtResource("4_3d0ep")
-stop_propagation = true
-action = "ui_up"
-metadata/_custom_type_script = "uid://ouqt2xo8inp2"
-
-[node name="StateUpdater" type="Node" parent="InputWatcher2"]
-script = ExtResource("5_4b353")
-state_machine = ExtResource("6_4b353")
-state = ExtResource("3_3d0ep")
-action = 3
-on_signal = "input_released"
-metadata/_custom_type_script = "uid://yn3ulqw1kr2t"
