@@ -21,8 +21,13 @@ func _ready() -> void:
 		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
 
+	# Launch the full card UI
+	if "--card-ui" in args:
+		_change_to_scene("res://core/ui/card_ui/card_ui.tscn")
+		return
+
 	# Launch the main interface
-	_change_to_scene("res://core/ui/card_ui/card_ui.tscn")
+	_change_to_scene("res://core/ui/etoile_ui/etoile_ui.tscn")
 
 
 # Change to the given scene
@@ -44,7 +49,8 @@ func _show_help() -> void:
 	print("  help             Display this help message")
 	print("")
 	print("Flags:")
-	print("  --vapor-ui       Load Vapor UI")
+	print("  --card-ui        Load Card UI")
+	print("  --etoile-ui      Load Etoile UI")
 	print("  --only-qam       Launch in overlay mode (Deprecated)")
 	print("  --overlay-mode   Launch in overlay mode")
 	print("")

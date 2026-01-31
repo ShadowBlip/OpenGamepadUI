@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdhh45htxfxnt"]
+[gd_scene load_steps=3 format=3 uid="uid://cdhh45htxfxnt"]
 
 [ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="1_ifgqm"]
+[ext_resource type="Script" uid="uid://u7irxsllnduw" path="res://core/ui/etoile_ui/navigation/context_bar.gd" id="1_tyqjr"]
 
 [node name="ContextBar" type="MarginContainer"]
 anchors_preset = 15
@@ -8,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_tyqjr")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -24,13 +26,30 @@ layout_mode = 2
 size_flags_horizontal = 8
 
 [node name="AcceptIcon" type="HBoxContainer" parent="HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("1_ifgqm")
 text = "Accept"
 path = "ui_accept"
 
+[node name="DetailsIcon" type="HBoxContainer" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("1_ifgqm")
+text = "Details"
+path = "ogui_north"
+
 [node name="BackIcon" type="HBoxContainer" parent="HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("1_ifgqm")
 text = "Back"
 path = "ogui_east"
+
+[node name="OptionsIcon" type="HBoxContainer" parent="HBoxContainer2"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("1_ifgqm")
+text = "Options"
+path = "ogui_options"

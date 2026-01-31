@@ -150,6 +150,9 @@ func _on_child_selected() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	var focused_node := get_viewport().gui_get_focus_owner()
+	if not focused_node or focused_node.get_parent() != self:
+		return
 	if event.is_action_released("ui_right"):
 		# If the user is at the end of the list, pop the first element and
 		# push it to the end
@@ -161,6 +164,7 @@ func _input(event: InputEvent) -> void:
 			_on_child_selected()
 		else:
 			self.selected_child += 1
+		get_viewport().set_input_as_handled()
 	elif event.is_action_released("ui_left"):
 		# If the user is at the beginning of the list, pop the last element
 		# and push it to the front
@@ -172,3 +176,4 @@ func _input(event: InputEvent) -> void:
 			_on_child_selected()
 		else:
 			self.selected_child -= 1
+		get_viewport().set_input_as_handled()

@@ -46,7 +46,7 @@ func _ready() -> void:
 	library_deck.focus_entered.connect(_scroll_to.bind(library_deck))
 	
 	# Listen for library changes
-	.library_item_added.connect(_on_library_item_changed)
+	LibraryManager.library_item_added.connect(_on_library_item_changed)
 	LibraryManager.library_item_removed.connect(_on_library_item_changed)
 	
 	# Listen for recent app changes and queued installs

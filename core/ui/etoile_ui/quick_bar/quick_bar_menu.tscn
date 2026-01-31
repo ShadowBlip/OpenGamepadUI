@@ -1,0 +1,192 @@
+[gd_scene load_steps=24 format=3 uid="uid://djwhelsduv5cm"]
+
+[ext_resource type="Script" uid="uid://bf2icpo61p57r" path="res://core/ui/etoile_ui/quick_bar/quick_bar_menu.gd" id="1_bf2t0"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_7nyoc"]
+[ext_resource type="PackedScene" uid="uid://c7mcv58e8gto4" path="res://core/ui/etoile_ui/components/glass_panel.tscn" id="2_nejlc"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5qs52"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_eeplw"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_imsdn"]
+[ext_resource type="PackedScene" uid="uid://cr83fmlociwko" path="res://core/ui/components/card_icon_button.tscn" id="4_nvv2u"]
+[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="5_0b7mq"]
+[ext_resource type="Texture2D" uid="uid://p3lsljjgjnv7" path="res://assets/ui/icons/keyboard-rounded.svg" id="6_edu7p"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="6_eeplw"]
+[ext_resource type="Script" uid="uid://c538myb3wjkad" path="res://core/systems/input/keyboard_opener.gd" id="7_aq7ju"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="8_g8ygh"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_7nyoc"]
+[ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="10_eeplw"]
+[ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_imsdn"]
+[ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="12_ya0sn"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="13_rpfsb"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="14_junm3"]
+[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="15_u5bqy"]
+[ext_resource type="Resource" uid="uid://cv3vduo0ojk1u" path="res://assets/state/states/menu.tres" id="16_hh80k"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="17_tyc72"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_0b7mq"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="19_edu7p"]
+
+[node name="QuickBarMenu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bf2t0")
+
+[node name="StateWatcher" parent="." instance=ExtResource("2_7nyoc")]
+state = ExtResource("3_eeplw")
+
+[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_imsdn")]
+target = NodePath("../..")
+fade_speed = 0.15
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="InputWatcher" parent="." instance=ExtResource("6_eeplw")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+action = 2
+on_signal = "input_released"
+
+[node name="GlassPanel" parent="." instance=ExtResource("2_nejlc")]
+layout_mode = 2
+shape_type = "Rectangle"
+corner_radius_top_left = 20.0
+corner_radius_top_right = 20.0
+corner_radius_bottom_left = 20.0
+corner_radius_bottom_right = 20.0
+circle_radius = 100.0
+outline_enabled = false
+outline_width = 2.0
+outline_color = Color(1, 1, 1, 0.8)
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_offset = Vector2(10, 10)
+edge_softness = 1.0
+shape_color = Color(0, 0, 0, 1)
+color_gradient_x = 0.0
+color_gradient_y = 0.0
+color_multiplier = 0.9
+glass_opacity = 0.4
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/ButtonContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("3_5qs52")]
+current_focus = NodePath("../NotifyButton")
+focus_neighbor_bottom = NodePath("")
+
+[node name="NotifyButton" parent="MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("4_nvv2u")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("5_0b7mq")
+
+[node name="KeyboardButton" parent="MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("4_nvv2u")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("6_edu7p")
+
+[node name="KeyboardOpener" type="Node" parent="MarginContainer/VBoxContainer/ButtonContainer/KeyboardButton"]
+script = ExtResource("7_aq7ju")
+on_signal = "button_up"
+
+[node name="HelpButton" parent="MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("4_nvv2u")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("8_g8ygh")
+
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ButtonContainer/HelpButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+state = ExtResource("11_imsdn")
+on_signal = "button_up"
+
+[node name="GamepadButton" parent="MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("4_nvv2u")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("12_ya0sn")
+
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ButtonContainer/GamepadButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("13_rpfsb")
+state = ExtResource("14_junm3")
+on_signal = "player_button_up"
+
+[node name="StateUpdater2" parent="MarginContainer/VBoxContainer/ButtonContainer/GamepadButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("15_u5bqy")
+state = ExtResource("16_hh80k")
+on_signal = "button_up"
+
+[node name="ClearOverlay" parent="MarginContainer/VBoxContainer/ButtonContainer/GamepadButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+action = 6
+on_signal = "button_up"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsButton" parent="MarginContainer/VBoxContainer/ButtonContainer" instance=ExtResource("4_nvv2u")]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+
+[node name="StateUpdater" parent="MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("13_rpfsb")
+state = ExtResource("17_tyc72")
+on_signal = "button_up"
+
+[node name="StateUpdater2" parent="MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("15_u5bqy")
+state = ExtResource("16_hh80k")
+on_signal = "button_up"
+
+[node name="ClearOverlay" parent="MarginContainer/VBoxContainer/ButtonContainer/SettingsButton" instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+action = 6
+on_signal = "button_up"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="QuickVBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/QuickVBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_5qs52")]
+unique_name_in_owner = true
+current_focus = NodePath("../VolumeSlider")
+focus_stack = ExtResource("18_0b7mq")
+
+[node name="VolumeSlider" parent="MarginContainer/VBoxContainer/QuickVBoxContainer" instance=ExtResource("19_edu7p")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Volume"
+
+[node name="BrightnessSlider" parent="MarginContainer/VBoxContainer/QuickVBoxContainer" instance=ExtResource("19_edu7p")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Brightness"
+step = 3.0
+
+[node name="SaturationSlider" parent="MarginContainer/VBoxContainer/QuickVBoxContainer" instance=ExtResource("19_edu7p")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Saturation"
+value = 100.0
+max_value = 400.0
+step = 5.0
