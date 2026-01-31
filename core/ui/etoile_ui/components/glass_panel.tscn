@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7mcv58e8gto4"]
+
+[ext_resource type="Script" uid="uid://87kwwf6b27by" path="res://core/ui/etoile_ui/components/glass_panel.gd" id="1_1hxmj"]
+[ext_resource type="Shader" uid="uid://c0e8ae3ilo5e2" path="res://assets/shaders/frosted_glass.gdshader" id="2_j86fq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j86fq"]
+shader = ExtResource("2_j86fq")
+shader_parameter/shape_type = 1
+shader_parameter/rect_size = Vector2(1280, 800)
+shader_parameter/corner_radius_top_left = 20.0
+shader_parameter/corner_radius_top_right = 20.0
+shader_parameter/corner_radius_bottom_left = 20.0
+shader_parameter/corner_radius_bottom_right = 20.0
+shader_parameter/circle_radius = 100.0
+shader_parameter/outline_enabled = false
+shader_parameter/outline_width = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 0.8)
+shader_parameter/shadow_enabled = true
+shader_parameter/shadow_color = Color(0, 0, 0, 0.5019608)
+shader_parameter/shadow_offset = Vector2(10, 10)
+shader_parameter/shadow_blur = 15.0
+shader_parameter/edge_softness = 1.0
+shader_parameter/shape_color = Color(0, 0, 0, 1)
+shader_parameter/color_gradient_y = 0.0
+shader_parameter/color_gradient_x = 9.49999998667295e-08
+shader_parameter/color_multiplier = 0.9
+shader_parameter/enable_screen_blur = true
+shader_parameter/blur_amount = 3.0
+shader_parameter/blur_samples = 4
+shader_parameter/glass_opacity = 0.2
+shader_parameter/node_size = Vector2(1280, 800)
+
+[node name="GlassPanel" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1hxmj")
+shape_type = null
+corner_radius_top_left = null
+corner_radius_top_right = null
+corner_radius_bottom_left = null
+corner_radius_bottom_right = null
+circle_radius = null
+outline_enabled = null
+outline_width = null
+outline_color = null
+shadow_enabled = null
+shadow_color = null
+shadow_offset = null
+edge_softness = null
+shape_color = null
+color_gradient_x = null
+color_gradient_y = null
+color_multiplier = null
+
+[node name="CanvasGroup" type="CanvasGroup" parent="."]
+unique_name_in_owner = true
+
+[node name="GlassRect" type="ColorRect" parent="CanvasGroup"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_j86fq")
+custom_minimum_size = Vector2(434, 200)
+offset_right = 1280.0
+offset_bottom = 800.0
