@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cemxrvvjgm4g"]
+[gd_scene format=3 uid="uid://cemxrvvjgm4g"]
 
 [ext_resource type="Script" uid="uid://ddjagemlv4ghd" path="res://core/ui/components/slider.gd" id="1_khsna"]
+[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="2_0hayk"]
 [ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_otvhp"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_q0iwk"]
 
-[node name="Slider" type="VBoxContainer"]
+[node name="Slider" type="VBoxContainer" unique_id=440064129]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,35 +15,58 @@ size_flags_horizontal = 3
 focus_mode = 2
 script = ExtResource("1_khsna")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1946830489]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer"]
+[node name="Icon" type="TextureRect" parent="HBoxContainer" unique_id=2135982660]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_0hayk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=1091202880]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
 label_settings = ExtResource("2_otvhp")
 
-[node name="LabelValue" type="Label" parent="HBoxContainer"]
+[node name="LabelValue" type="Label" parent="HBoxContainer" unique_id=409117999]
 unique_name_in_owner = true
 layout_mode = 2
 text = "0"
 label_settings = ExtResource("2_otvhp")
 horizontal_alignment = 2
 
-[node name="DescriptionLabel" type="Label" parent="."]
+[node name="DescriptionLabel" type="Label" parent="." unique_id=950894359]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Description"
 label_settings = ExtResource("3_q0iwk")
 
-[node name="HSlider" type="HSlider" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=927959516]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SliderIcon" type="TextureRect" parent="HBoxContainer2" unique_id=650112807]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_0hayk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer2" unique_id=757877655]
 unique_name_in_owner = true
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="." unique_id=679032607]
 visible = false
 layout_mode = 2

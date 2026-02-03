@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://drs3b6nijk5uq"]
+[gd_scene format=3 uid="uid://drs3b6nijk5uq"]
 
 [ext_resource type="Script" uid="uid://dbad1aoty3n0n" path="res://core/systems/input/input_icon_processor.gd" id="1_gx5g1"]
 [ext_resource type="Script" uid="uid://3drf8xp6swaa" path="res://core/ui/etoile_ui/etoile_ui.gd" id="1_qmhmk"]
@@ -57,7 +57,7 @@ shader_parameter/color = Color(0.888, 0.885, 1, 0.173)
 shader_parameter/hdr = true
 shader_parameter/seed = 1.505
 
-[node name="EtoileUI" type="Control" groups=["main"]]
+[node name="EtoileUI" type="Control" unique_id=293046182 groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -66,47 +66,47 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qmhmk")
 
-[node name="InputIconProcessor" type="Node" parent="."]
+[node name="InputIconProcessor" type="Node" parent="." unique_id=133203829]
 script = ExtResource("1_gx5g1")
 
-[node name="Gamescope" type="Node" parent="."]
+[node name="Gamescope" type="Node" parent="." unique_id=331773454]
 script = ExtResource("2_44qct")
 instance = ExtResource("3_fsrla")
 
-[node name="BoxArtLocal" parent="." instance=ExtResource("4_5wgdm")]
+[node name="BoxArtLocal" parent="." unique_id=728192973 instance=ExtResource("4_5wgdm")]
 
-[node name="DesktopLibrary" parent="." instance=ExtResource("5_wlsgd")]
+[node name="DesktopLibrary" parent="." unique_id=273422834 instance=ExtResource("5_wlsgd")]
 
-[node name="PluginManager" parent="." instance=ExtResource("6_kj4c4")]
+[node name="PluginManager" parent="." unique_id=1337807622 instance=ExtResource("6_kj4c4")]
 
-[node name="PowerManager" type="Node" parent="."]
+[node name="PowerManager" type="Node" parent="." unique_id=376901165]
 script = ExtResource("7_mndwy")
 instance = ExtResource("8_qessb")
 
-[node name="Launcher" type="Node" parent="."]
+[node name="Launcher" type="Node" parent="." unique_id=197769698]
 script = ExtResource("9_div7i")
 
-[node name="PowerStation" type="Node" parent="."]
+[node name="PowerStation" type="Node" parent="." unique_id=1609184252]
 script = ExtResource("10_sqbwv")
 instance = ExtResource("11_s56r7")
 
-[node name="NetworkManager" type="Node" parent="."]
+[node name="NetworkManager" type="Node" parent="." unique_id=1114541985]
 script = ExtResource("12_6pv5o")
 instance = ExtResource("13_qmhmk")
 
-[node name="ResourceProcessor" type="ResourceProcessor" parent="."]
+[node name="ResourceProcessor" type="ResourceProcessor" parent="." unique_id=1656845806]
 registry = ExtResource("14_8sw3x")
 
-[node name="PipeManager" type="Node" parent="."]
+[node name="PipeManager" type="Node" parent="." unique_id=149021728]
 script = ExtResource("15_130qf")
 metadata/_custom_type_script = "uid://ompm0veql0ng"
 
-[node name="PowerTimer" type="Timer" parent="."]
+[node name="PowerTimer" type="Timer" parent="." unique_id=1873967818]
 unique_name_in_owner = true
 wait_time = 1.5
 one_shot = true
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=269054140]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -117,7 +117,7 @@ grow_vertical = 2
 theme_type_variation = &"LightPanel"
 theme_override_styles/panel = SubResource("StyleBoxFlat_k08on")
 
-[node name="BannerTexture" type="TextureRect" parent="."]
+[node name="BannerTexture" type="TextureRect" parent="." unique_id=995560088]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.49803922)
 layout_mode = 1
@@ -132,12 +132,12 @@ texture = ExtResource("18_1wv80")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="LibraryBanner" parent="BannerTexture" instance=ExtResource("18_q2s5f")]
+[node name="LibraryBanner" parent="BannerTexture" unique_id=1333957306 instance=ExtResource("18_q2s5f")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="GodRaysShader" type="ColorRect" parent="BannerTexture"]
+[node name="GodRaysShader" type="ColorRect" parent="BannerTexture" unique_id=297556648]
 material = SubResource("ShaderMaterial_cumyy")
 layout_mode = 1
 anchors_preset = 15
@@ -146,11 +146,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GameLoading" parent="." instance=ExtResource("17_cumyy")]
+[node name="GameLoading" parent="." unique_id=978843536 instance=ExtResource("17_cumyy")]
 visible = false
 layout_mode = 1
 
-[node name="MenuContent" type="MarginContainer" parent="."]
+[node name="MenuContent" type="MarginContainer" parent="." unique_id=1807362236]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -159,44 +159,44 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent" unique_id=1224323819]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="TopMarginSpacer" type="Control" parent="MenuContent/VBoxContainer"]
+[node name="TopMarginSpacer" type="Control" parent="MenuContent/VBoxContainer" unique_id=208984787]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Home" parent="MenuContent/VBoxContainer" instance=ExtResource("16_44qct")]
+[node name="Home" parent="MenuContent/VBoxContainer" unique_id=182065460 instance=ExtResource("16_44qct")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GameDetails" parent="MenuContent/VBoxContainer" instance=ExtResource("17_6pv5o")]
+[node name="GameDetails" parent="MenuContent/VBoxContainer" unique_id=223569532 instance=ExtResource("17_6pv5o")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 
-[node name="BottomMargin" type="MarginContainer" parent="MenuContent"]
+[node name="BottomMargin" type="MarginContainer" parent="MenuContent" unique_id=398431728]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/BottomMargin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/BottomMargin" unique_id=534960923]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="LibraryLoadingNotification" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("23_1wv80")]
+[node name="LibraryLoadingNotification" parent="MenuContent/BottomMargin/VBoxContainer" unique_id=869689725 instance=ExtResource("23_1wv80")]
 layout_mode = 2
 
-[node name="ContextBar" parent="MenuContent/BottomMargin/VBoxContainer" instance=ExtResource("25_k08on")]
+[node name="ContextBar" parent="MenuContent/BottomMargin/VBoxContainer" unique_id=269524939 instance=ExtResource("25_k08on")]
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="TopMargin" type="MarginContainer" parent="MenuContent"]
+[node name="TopMargin" type="MarginContainer" parent="MenuContent" unique_id=1554864697]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 30
@@ -204,14 +204,14 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/TopMargin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContent/TopMargin" unique_id=1172636582]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="StatusBar" parent="MenuContent/TopMargin/VBoxContainer" instance=ExtResource("25_6xvrb")]
+[node name="StatusBar" parent="MenuContent/TopMargin/VBoxContainer" unique_id=1365181316 instance=ExtResource("25_6xvrb")]
 layout_mode = 2
 
-[node name="MenuContainer" type="MarginContainer" parent="."]
+[node name="MenuContainer" type="MarginContainer" parent="." unique_id=736550273]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -219,20 +219,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MenuContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MenuContainer" unique_id=648733195]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_constants/margin_top = 80
 theme_override_constants/margin_right = 40
 
-[node name="QuickBarMenu" parent="MenuContainer/MarginContainer" instance=ExtResource("26_6xvrb")]
+[node name="QuickBarMenu" parent="MenuContainer/MarginContainer" unique_id=1126842285 instance=ExtResource("26_6xvrb")]
 visible = false
 custom_minimum_size = Vector2(434, 500)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="AlwaysVisibleContent" type="MarginContainer" parent="."]
+[node name="AlwaysVisibleContent" type="MarginContainer" parent="." unique_id=695588287]
 editor_description = "Anything in this container will always be visible, even during in-game states.
 "
 z_index = 20
@@ -244,48 +244,48 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="OverlayContainer" parent="AlwaysVisibleContent" instance=ExtResource("17_s56r7")]
+[node name="OverlayContainer" parent="AlwaysVisibleContent" unique_id=1382084774 instance=ExtResource("17_s56r7")]
 layout_mode = 2
 
-[node name="PowerMenu" parent="AlwaysVisibleContent" instance=ExtResource("18_6pv5o")]
+[node name="PowerMenu" parent="AlwaysVisibleContent" unique_id=1559092800 instance=ExtResource("18_6pv5o")]
 visible = false
 layout_mode = 2
 
-[node name="VolumeIndicator" parent="AlwaysVisibleContent" instance=ExtResource("19_qmhmk")]
+[node name="VolumeIndicator" parent="AlwaysVisibleContent" unique_id=1082324374 instance=ExtResource("19_qmhmk")]
 layout_mode = 2
 
-[node name="TopMargin" type="MarginContainer" parent="AlwaysVisibleContent"]
+[node name="TopMargin" type="MarginContainer" parent="AlwaysVisibleContent" unique_id=1524137883]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 30
 
-[node name="InGameNotification" parent="AlwaysVisibleContent/TopMargin" instance=ExtResource("20_8sw3x")]
+[node name="InGameNotification" parent="AlwaysVisibleContent/TopMargin" unique_id=1268549374 instance=ExtResource("20_8sw3x")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="Dialog" parent="AlwaysVisibleContent" instance=ExtResource("21_130qf")]
+[node name="Dialog" parent="AlwaysVisibleContent" unique_id=1807519512 instance=ExtResource("21_130qf")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="OnScreenKeyboard" parent="AlwaysVisibleContent" instance=ExtResource("22_mh67p")]
+[node name="OnScreenKeyboard" parent="AlwaysVisibleContent" unique_id=882285584 instance=ExtResource("22_mh67p")]
 visible = false
 layout_mode = 2
 
-[node name="FadeEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("23_q2s5f")]
+[node name="FadeEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" unique_id=2038199356 node_paths=PackedStringArray("target") instance=ExtResource("23_q2s5f")]
 target = NodePath("..")
 fade_speed = 0.2
 on_signal = "opened"
 fade_out_signal = "closed"
 on_signal = "opened"
 
-[node name="SlideEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" node_paths=PackedStringArray("target") instance=ExtResource("24_3ygo4")]
+[node name="SlideEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" unique_id=703642664 node_paths=PackedStringArray("target") instance=ExtResource("24_3ygo4")]
 target = NodePath("../MarginContainer/PanelContainer")
 slide_speed = 0.15
 margin = 60
@@ -294,13 +294,13 @@ on_signal = "opened"
 slide_out_signal = "closed"
 on_signal = "opened"
 
-[node name="SpacerGrowerEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" instance=ExtResource("25_cumyy")]
+[node name="SpacerGrowerEffect" parent="AlwaysVisibleContent/OnScreenKeyboard" unique_id=283353661 instance=ExtResource("25_cumyy")]
 on_signal = "opened"
 shrink_signal = "closed"
 on_signal = "opened"
 
-[node name="PowerSaver" parent="." instance=ExtResource("31_3ygo4")]
+[node name="PowerSaver" parent="." unique_id=1353382911 instance=ExtResource("31_3ygo4")]
 
-[node name="InputManager" parent="." instance=ExtResource("32_cumyy")]
+[node name="InputManager" parent="." unique_id=1030765624 instance=ExtResource("32_cumyy")]
 
 [editable path="AlwaysVisibleContent/OnScreenKeyboard"]

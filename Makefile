@@ -165,7 +165,7 @@ $(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
 
 .PHONY: edit
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
-	$(GODOT) --editor .
+	$(GODOT) --display-driver x11 --editor .
 
 .PHONY: purge 
 purge: clean ## Remove all build artifacts including engine extensions
@@ -196,7 +196,7 @@ $(EXPORT_TEMPLATE):
 
 .PHONY: debug 
 debug: $(IMPORT_DIR) ## Run the project in debug mode in gamescope
-	$(GAMESCOPE) -e --xwayland-count 2 --expose-wayland -- \
+	$(GAMESCOPE) -e --xwayland-count 2 --expose-wayland -f -- \
 		$(GODOT) --path $(PWD) --remote-debug tcp://127.0.0.1:6007 \
 		--position 320,140 res://entrypoint.tscn
 
