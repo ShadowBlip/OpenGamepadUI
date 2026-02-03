@@ -105,6 +105,22 @@ func recalculate_focus() -> void:
 	if parent is VBoxContainer:
 		_vbox_set_focus_tree(control_children)
 		return
+
+	if parent is GridContainer:
+		var grid_container := parent as GridContainer
+		var children_per_row := grid_container.columns
+		# Build a 2d array of the children
+		var grid: Array[Array] = [[]]
+		var y := 0
+		for child in control_children:
+			var row := grid[y]
+			if row.size() >= children_per_row:
+				y += 1
+				grid.append([])
+				row = grid[y]
+			row.append(child)		
+		_grid_set_focus_tree(grid)
+		return
 	
 	# For all others, try to recursively search for focusable children and
 	# treat it like a VBoxContainer
