@@ -111,6 +111,7 @@ horizontal_alignment = 1
 [node name="SuspendButton" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1768653434]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 script = ExtResource("12_cid3o")
 text = "Suspend"
 metadata/_custom_type_script = "uid://ogqbbfs88xnr"
@@ -118,6 +119,7 @@ metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 [node name="RebootButton" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1328398716]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 script = ExtResource("12_cid3o")
 text = "Reboot"
 metadata/_custom_type_script = "uid://ogqbbfs88xnr"
@@ -125,6 +127,7 @@ metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 [node name="ShutdownButton" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1924877005]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 script = ExtResource("12_cid3o")
 text = "Shutdown"
 metadata/_custom_type_script = "uid://ogqbbfs88xnr"
@@ -135,6 +138,7 @@ layout_mode = 2
 [node name="ExitButton" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=286049570]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 script = ExtResource("12_cid3o")
 text = "Exit"
 metadata/_custom_type_script = "uid://ogqbbfs88xnr"
@@ -145,6 +149,7 @@ layout_mode = 2
 [node name="CancelButton" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1960525316]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
 script = ExtResource("12_cid3o")
 text = "Cancel"
 metadata/_custom_type_script = "uid://ogqbbfs88xnr"

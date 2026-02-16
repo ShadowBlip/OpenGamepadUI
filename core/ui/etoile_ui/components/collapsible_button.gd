@@ -42,9 +42,9 @@ signal player_button_down(metaname: String, dbus_path: String)
 @export var expandable: bool:
 	set(v):
 		expandable = v
-		if not expand_label:
+		if not expand_icon:
 			return
-		expand_label.visible = expandable and not split_panel
+		expand_icon.visible = expandable and not split_panel
 		spacer.visible = expandable and not split_panel
 @export var color: Color:
 	set(v):
@@ -67,11 +67,11 @@ var select_audio_stream := load(select_audio) as AudioStream
 
 @onready var icon := %Icon as TextureRect
 @onready var label := %Label as Label
-@onready var expand_label := %ExpandLabel as Label
+@onready var expand_icon := %ExpandIcon as TextureRect
 @onready var spacer := %Spacer as Control
 @onready var panel_container := %PrimaryPanelContainer as PanelContainer
 @onready var split_panel_container := %SplitPanelContainer as PanelContainer
-@onready var split_expand_label := %SplitExpandLabel as Label
+@onready var split_expand_icon := %SplitExpandIcon as TextureRect
 
 
 func _ready() -> void:

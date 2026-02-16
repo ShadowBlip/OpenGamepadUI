@@ -1,4 +1,5 @@
 @icon("res://assets/editor-icons/radix-icons--component-1.svg")
+@tool
 extends Resource
 class_name ComponentsMap
 
@@ -9,6 +10,7 @@ enum Type {
 
 @export_category("Components")
 @export var button: PackedScene
+@export var slider: PackedScene
 
 
 ## Build a UI component of the given type

@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1qb7euwlu7bh"]
+[gd_scene format=3 uid="uid://d1qb7euwlu7bh"]
 
 [ext_resource type="Script" uid="uid://5vhtohjydvs6" path="res://core/ui/components/toggle.gd" id="1_pn5mg"]
 [ext_resource type="LabelSettings" uid="uid://bdx3xgfcaqhse" path="res://assets/label/title_label.tres" id="2_msehc"]
 [ext_resource type="LabelSettings" uid="uid://bv56n31s84bfn" path="res://assets/label/subheading_label.tres" id="3_l7kb7"]
 
-[node name="Toggle" type="VBoxContainer"]
+[node name="Toggle" type="VBoxContainer" unique_id=486761597]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 31.0
@@ -15,40 +15,40 @@ mouse_filter = 0
 script = ExtResource("1_pn5mg")
 separator_visible = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=389362838]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=985440214]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer" unique_id=488141993]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer" unique_id=1253190351]
 layout_mode = 2
 
-[node name="ToggleContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ToggleContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=445244490]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer" unique_id=663262071]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Setting"
 label_settings = ExtResource("2_msehc")
 
-[node name="CheckButton" type="CheckButton" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer"]
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/ToggleContainer" unique_id=1399393342]
 unique_name_in_owner = true
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="DescriptionLabel" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1423894066]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(100, 0)
@@ -56,6 +56,6 @@ layout_mode = 2
 label_settings = ExtResource("3_l7kb7")
 autowrap_mode = 3
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1799536094]
 unique_name_in_owner = true
 layout_mode = 2

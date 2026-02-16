@@ -1,4 +1,4 @@
-extends Control
+extends UserInterface
 
 var platform := preload("res://core/global/platform.tres") as Platform
 var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance
@@ -23,7 +23,6 @@ var _tween: Tween
 var _xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 var _xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
 var _xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
-var components_map := load("res://core/ui/etoile_ui/etoile_components.tres") as ComponentsMap
 var overlay_window_id := 0
 var logger := Log.get_logger("Home", Log.LEVEL.INFO)
 

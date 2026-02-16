@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbad1aoty3n0n" path="res://core/systems/input/input_icon_processor.gd" id="1_gx5g1"]
 [ext_resource type="Script" uid="uid://3drf8xp6swaa" path="res://core/ui/etoile_ui/etoile_ui.gd" id="1_qmhmk"]
+[ext_resource type="Resource" uid="uid://b4sii01haxco6" path="res://core/ui/etoile_ui/etoile_components.tres" id="2_4ytgp"]
 [ext_resource type="Script" uid="uid://yhfpudolgixq" path="res://core/systems/gamescope/gamescope.gd" id="2_44qct"]
 [ext_resource type="GamescopeInstance" uid="uid://chd0nc6gbfnw0" path="res://core/systems/gamescope/gamescope.tres" id="3_fsrla"]
 [ext_resource type="PackedScene" uid="uid://dlegwm7jqfe2i" path="res://core/systems/boxart/boxart_local.tscn" id="4_5wgdm"]
@@ -36,6 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://d2jiecrd5sw4s" path="res://core/ui/card_ui/settings/settings_menu.tscn" id="26_5pa50"]
 [ext_resource type="PackedScene" uid="uid://djwhelsduv5cm" path="res://core/ui/etoile_ui/quick_bar/quick_bar_menu.tscn" id="26_6xvrb"]
 [ext_resource type="PackedScene" uid="uid://dj1fooc3gh13l" path="res://core/ui/card_ui/help/help_menu.tscn" id="27_y47hw"]
+[ext_resource type="PackedScene" uid="uid://hvgh6cfm18jx" path="res://core/ui/etoile_ui/settings/settings_menu.tscn" id="28_5rvtu"]
 [ext_resource type="PackedScene" uid="uid://d0wg7axkc5inq" path="res://core/ui/common/power/power_menu.tscn" id="30_y47hw"]
 [ext_resource type="PackedScene" uid="uid://dnq5j20fbcrwx" path="res://core/systems/power/power_saver.tscn" id="31_3ygo4"]
 [ext_resource type="PackedScene" uid="uid://n83wlhmmsu3j" path="res://core/systems/input/input_manager.tscn" id="32_cumyy"]
@@ -67,6 +69,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qmhmk")
+components_map = ExtResource("2_4ytgp")
 
 [node name="InputIconProcessor" type="Node" parent="." unique_id=133203829]
 script = ExtResource("1_gx5g1")
@@ -216,6 +219,16 @@ layout_mode = 2
 [node name="SettingsMenu" parent="MenuContent" unique_id=1081605582 instance=ExtResource("26_5pa50")]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
+
+[node name="SettingsMenuMargin" type="MarginContainer" parent="MenuContent" unique_id=1940228840]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 90
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 90
+
+[node name="SettingsMenu" parent="MenuContent/SettingsMenuMargin" unique_id=1747485030 instance=ExtResource("28_5rvtu")]
 layout_mode = 2
 
 [node name="HelpMenu" parent="MenuContent" unique_id=1535343742 instance=ExtResource("27_y47hw")]

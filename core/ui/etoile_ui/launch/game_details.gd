@@ -11,10 +11,10 @@ var state_machine := preload("res://assets/state/state_machines/menu_state_machi
 var state := preload("res://assets/state/states/game_launcher.tres") as State
 
 @onready var logo := %Logo as TextureRect
-@onready var launch_button := %LaunchButton as CardButton
-@onready var manage_button := %ManageButton as CardButton
-@onready var links_button := %LinksButton as CardButton
-@onready var uninstall_button := %UninstallButton as CardButton
+@onready var launch_button := %LaunchButton as ComponentButton
+@onready var manage_button := %ManageButton as ComponentButton
+@onready var links_button := %LinksButton as ComponentButton
+@onready var uninstall_button := %UninstallButton as ComponentButton
 @onready var description_label := %Description as Label
 
 
