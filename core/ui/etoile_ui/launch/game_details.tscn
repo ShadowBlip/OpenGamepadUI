@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://druyqash5wm0a" path="res://core/ui/etoile_ui/launch/game_details.gd" id="1_qddhj"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_suqfk"]
-[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_2qjlv"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_8uro1"]
+[ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="4_on6i0"]
 
 [node name="GameDetails" type="Control" unique_id=91513726]
 layout_mode = 3
@@ -59,24 +59,36 @@ autowrap_mode = 3
 layout_mode = 2
 
 [node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1424842000 node_paths=PackedStringArray("current_focus") instance=ExtResource("3_8uro1")]
-current_focus = NodePath("../LaunchButton")
+current_focus = NodePath("")
 
-[node name="LaunchButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1781280068 instance=ExtResource("3_2qjlv")]
+[node name="LaunchButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=796458150]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
 text = "Play"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 
-[node name="ManageButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1678523648 instance=ExtResource("3_2qjlv")]
+[node name="ManageButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=508423808]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
 text = "Manage"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 
-[node name="LinksButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=799202324 instance=ExtResource("3_2qjlv")]
+[node name="LinksButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=665443050]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
 text = "Links"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 
-[node name="UninstallButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1998989479 instance=ExtResource("3_2qjlv")]
+[node name="UninstallButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=837855716]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
 text = "Uninstall"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"

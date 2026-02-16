@@ -6,28 +6,29 @@
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5qs52"]
 [ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_eeplw"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_imsdn"]
-[ext_resource type="Texture2D" uid="uid://bjscvn2us6tal" path="res://assets/ui/icons/bell.svg" id="5_0b7mq"]
-[ext_resource type="Texture2D" uid="uid://p3lsljjgjnv7" path="res://assets/ui/icons/keyboard-rounded.svg" id="6_edu7p"]
 [ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="6_eeplw"]
 [ext_resource type="Script" uid="uid://c538myb3wjkad" path="res://core/systems/input/keyboard_opener.gd" id="7_aq7ju"]
 [ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="8_g8ygh"]
 [ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_7nyoc"]
 [ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="10_eeplw"]
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_imsdn"]
-[ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="11_junm3"]
-[ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="12_ya0sn"]
+[ext_resource type="Texture2D" uid="uid://bdjnwtumim20t" path="res://assets/ui/icons/material-symbols--settings-outline-rounded.svg" id="11_tyc72"]
+[ext_resource type="Texture2D" uid="uid://ciwqk2qmmp2cf" path="res://assets/ui/icons/material-symbols--keyboard-outline-rounded.svg" id="13_tyc72"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="17_tyc72"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_0b7mq"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="19_edu7p"]
 [ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="20_rpfsb"]
+[ext_resource type="Texture2D" uid="uid://dmcbtniaek0of" path="res://assets/ui/icons/material-symbols--exit-to-app-rounded.svg" id="20_tyc72"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="21_ghcyy"]
+[ext_resource type="Texture2D" uid="uid://bjtfbt8wnillp" path="res://assets/ui/icons/material-symbols--notifications-outline-rounded.svg" id="21_tyc72"]
 [ext_resource type="PackedScene" uid="uid://btrem65c8687w" path="res://core/ui/etoile_ui/components/collapsible_button.tscn" id="23_ya0sn"]
 [ext_resource type="Texture2D" uid="uid://b2hgvhe7nrk75" path="res://assets/ui/icons/volume-high.svg" id="24_eeplw"]
-[ext_resource type="Texture2D" uid="uid://pcp6qqaphccy" path="res://assets/ui/icons/status-cancelled.svg" id="24_rpfsb"]
 [ext_resource type="Texture2D" uid="uid://cc8mwt4n18yhc" path="res://assets/ui/icons/status-active.svg" id="25_imsdn"]
+[ext_resource type="Texture2D" uid="uid://bmp372vmsk41d" path="res://assets/ui/icons/material-symbols--bluetooth.svg" id="26_tyc72"]
 [ext_resource type="Texture2D" uid="uid://dty1fb5nkj3ni" path="res://assets/ui/icons/wifi-high.svg" id="26_ya0sn"]
-[ext_resource type="Texture2D" uid="uid://btq2ih8opi8i7" path="res://assets/ui/icons/performance-fill.svg" id="28_junm3"]
-[ext_resource type="Texture2D" uid="uid://bfkjkvs3n12cu" path="res://assets/ui/icons/page-template.svg" id="29_hh80k"]
+[ext_resource type="Texture2D" uid="uid://iuraatp10cjd" path="res://assets/ui/icons/material-symbols--speed-outline-rounded.svg" id="27_tyc72"]
+[ext_resource type="Texture2D" uid="uid://bbqtqi6j68uwf" path="res://assets/ui/icons/material-symbols--picture-in-picture-outline-rounded.svg" id="28_tyc72"]
+[ext_resource type="Texture2D" uid="uid://dx6rnad4lmct0" path="res://assets/ui/icons/material-symbols--gamepad-outline-rounded.svg" id="29_tyc72"]
 [ext_resource type="Texture2D" uid="uid://dnroys1ee756c" path="res://assets/ui/icons/arrow-up-bold.svg" id="31_tyc72"]
 [ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/quick_bar/performance_menu.tscn" id="32_lrbss"]
 
@@ -106,7 +107,7 @@ focus_neighbor_bottom = NodePath("../../QuickVBoxContainer/VBoxContainer/FocusGr
 
 [node name="SettingsButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1913875459 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-icon_texture = ExtResource("11_junm3")
+icon_texture = ExtResource("11_tyc72")
 color = Color(0, 0, 0, 0.5)
 
 [node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=2032943857 instance=ExtResource("9_7nyoc")]
@@ -116,7 +117,7 @@ on_signal = "button_up"
 
 [node name="KeyboardButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1774688916 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-icon_texture = ExtResource("6_edu7p")
+icon_texture = ExtResource("13_tyc72")
 
 [node name="KeyboardOpener" type="Node" parent="MainContainer/VBoxContainer/ButtonContainer/KeyboardButton" unique_id=2061925767]
 script = ExtResource("7_aq7ju")
@@ -166,15 +167,16 @@ focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 
 [node name="ExitGameButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1015749496 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-icon_texture = ExtResource("24_rpfsb")
+icon_texture = ExtResource("20_tyc72")
 text = "Exit Game"
 color = Color(0.8, 0, 0, 0.5019608)
 
 [node name="NotificationsButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1977129288 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
-icon_texture = ExtResource("5_0b7mq")
+icon_texture = ExtResource("21_tyc72")
 text = "Notifications"
 expandable = true
 color = Color(0, 0, 0, 0.5)
@@ -195,6 +197,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Volume"
 show_label = false
+icon_texture = ExtResource("24_eeplw")
 slider_icon_texture = ExtResource("24_eeplw")
 
 [node name="PanelContainer2" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1453662974]
@@ -214,6 +217,7 @@ layout_mode = 2
 text = "Brightness"
 show_label = false
 step = 3.0
+icon_texture = ExtResource("25_imsdn")
 slider_icon_texture = ExtResource("25_imsdn")
 
 [node name="GridContainer" type="GridContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer" unique_id=1511935686]
@@ -239,7 +243,7 @@ color = Color(0, 0, 0, 0.5)
 [node name="BluetoothButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=2145148437 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-icon_texture = ExtResource("25_imsdn")
+icon_texture = ExtResource("26_tyc72")
 text = "Bluetooth"
 split_panel = true
 expandable = true
@@ -249,14 +253,14 @@ color = Color(0, 0, 0, 0.5)
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-icon_texture = ExtResource("28_junm3")
+icon_texture = ExtResource("27_tyc72")
 text = "Performance"
 color = Color(0, 0, 0, 0.5)
 
 [node name="OverlayButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=638110440 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-icon_texture = ExtResource("29_hh80k")
+icon_texture = ExtResource("28_tyc72")
 text = "Overlay"
 split_panel = true
 expandable = true
@@ -265,7 +269,7 @@ color = Color(0, 0, 0, 0.5)
 [node name="ControllersButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=1125671800 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-icon_texture = ExtResource("12_ya0sn")
+icon_texture = ExtResource("29_tyc72")
 text = "Controllers"
 split_panel = true
 expandable = true
@@ -319,7 +323,7 @@ theme_override_constants/margin_right = 24
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance" index="0" node_paths=PackedStringArray("focus_neighbor_top")]
+[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance" index="0" unique_id=1260578661 node_paths=PackedStringArray("focus_neighbor_top")]
 focus_neighbor_top = NodePath("../../../../MarginContainer/HBoxContainer/FocusGroup")
 
 [editable path="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance"]

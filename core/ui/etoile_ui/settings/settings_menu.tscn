@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://hvgh6cfm18jx"]
+
+[ext_resource type="Script" uid="uid://boll57a03c0ic" path="res://core/ui/etoile_ui/settings/settings_menu.gd" id="1_w0mdm"]
+[ext_resource type="Script" uid="uid://b6useuxusuw4w" path="res://core/ui/components/containers/enhanced_scroll_container.gd" id="2_wgjuq"]
+[ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="3_t1amb"]
+[ext_resource type="Texture2D" uid="uid://bdjnwtumim20t" path="res://assets/ui/icons/material-symbols--settings-outline-rounded.svg" id="4_g3a85"]
+[ext_resource type="Texture2D" uid="uid://dty1fb5nkj3ni" path="res://assets/ui/icons/wifi-high.svg" id="5_g3a85"]
+[ext_resource type="Texture2D" uid="uid://bmp372vmsk41d" path="res://assets/ui/icons/material-symbols--bluetooth.svg" id="6_3ov0g"]
+[ext_resource type="Texture2D" uid="uid://b8i7dvjfeylpv" path="res://assets/ui/icons/material-symbols--desktop-windows-outline-rounded.svg" id="7_wavho"]
+
+[node name="SettingsMenu" type="MarginContainer" unique_id=1747485030]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w0mdm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1126929786]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="SideMarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1200462709]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="HBoxContainer/SideMarginContainer" unique_id=344497246]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/SideMarginContainer" unique_id=2036987887]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="EnhancedScrollContainer" type="ScrollContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer" unique_id=1643880278]
+layout_mode = 2
+script = ExtResource("2_wgjuq")
+metadata/_custom_type_script = "uid://b6useuxusuw4w"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer" unique_id=1011182433]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer" unique_id=652224125]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=408402739]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="SystemButton" type="MarginContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=332441200]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("3_t1amb")
+text = "System"
+icon_texture = ExtResource("4_g3a85")
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=2044839762]
+layout_mode = 2
+
+[node name="NetworkButton" type="MarginContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=628118391]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("3_t1amb")
+text = "Network"
+icon_texture = ExtResource("5_g3a85")
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="BluetoothButton" type="MarginContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=538164236]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("3_t1amb")
+text = "Bluetooth"
+icon_texture = ExtResource("6_3ov0g")
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=1021480209]
+layout_mode = 2
+
+[node name="DisplayButton" type="MarginContainer" parent="HBoxContainer/SideMarginContainer/MarginContainer/EnhancedScrollContainer/MarginContainer/VBoxContainer" unique_id=1032396099]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("3_t1amb")
+text = "Display"
+icon_texture = ExtResource("7_wavho")
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="ContentMarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1794249661]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Panel" type="Panel" parent="HBoxContainer/ContentMarginContainer" unique_id=1747644658]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ContentMarginContainer" unique_id=628692243]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="EnhancedScrollContainer" type="ScrollContainer" parent="HBoxContainer/ContentMarginContainer/MarginContainer" unique_id=1850793714]
+layout_mode = 2
+script = ExtResource("2_wgjuq")
+metadata/_custom_type_script = "uid://b6useuxusuw4w"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ContentMarginContainer/MarginContainer/EnhancedScrollContainer" unique_id=18168744]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

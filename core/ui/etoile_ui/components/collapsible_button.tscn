@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://btrem65c8687w"]
 
 [ext_resource type="Script" uid="uid://be50jkycjisyd" path="res://core/ui/etoile_ui/components/collapsible_button.gd" id="1_2pvnu"]
+[ext_resource type="Texture2D" uid="uid://dj7wg0qnevawx" path="res://assets/ui/icons/material-symbols--chevron-right-rounded.svg" id="2_2ggfo"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pvnu"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4eh4g"]
 bg_color = Color(0, 0, 0, 0.5)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
@@ -30,7 +31,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_2pvnu")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4eh4g")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PrimaryPanelContainer" unique_id=1292746312]
 layout_mode = 2
@@ -61,11 +62,14 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ExpandLabel" type="Label" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=1158670069]
+[node name="ExpandIcon" type="TextureRect" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=153943390]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
-text = ">"
+texture = ExtResource("2_2ggfo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SplitPanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1552412160]
 unique_name_in_owner = true
@@ -80,10 +84,13 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 4
 
-[node name="SplitExpandLabel" type="Label" parent="HBoxContainer/SplitPanelContainer/MarginContainer" unique_id=37560970]
+[node name="SplitExpandIcon" type="TextureRect" parent="HBoxContainer/SplitPanelContainer/MarginContainer" unique_id=169981073]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
-text = ">"
+texture = ExtResource("2_2ggfo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1745103198]
 unique_name_in_owner = true

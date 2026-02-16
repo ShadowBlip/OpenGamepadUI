@@ -29,7 +29,10 @@ signal player_button_down(metaname: String, dbus_path: String)
 
 func _ready() -> void:
 	var components := get_component_map()
-	assert(components != null, "Unable to detect user interface to build component")
+	if Engine.is_editor_hint():
+		components = load("res://core/ui/etoile_ui/etoile_components.tres")
+	else:
+		assert(components != null, "Unable to detect user interface to build component")
 	implementation = components.build(ComponentsMap.Type.Button)
 	_connect_implementation_signal("pressed", _on_pressed)
 	_connect_implementation_signal("button_up", _on_button_up)

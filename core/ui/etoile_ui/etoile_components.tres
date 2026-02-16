@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="UserInterface" format=3 uid="uid://b4sii01haxco6"]
+[gd_resource type="Resource" script_class="ComponentsMap" format=3 uid="uid://b4sii01haxco6"]
 
 [ext_resource type="PackedScene" uid="uid://btrem65c8687w" path="res://core/ui/etoile_ui/components/collapsible_button.tscn" id="1_25no1"]
 [ext_resource type="Script" uid="uid://rbk4rsah3pud" path="res://core/ui/base/components_map.gd" id="1_77n3c"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="3_04xva"]
 
 [resource]
 script = ExtResource("1_77n3c")
 button = ExtResource("1_25no1")
+slider = ExtResource("3_04xva")
 metadata/_custom_type_script = "uid://rbk4rsah3pud"
