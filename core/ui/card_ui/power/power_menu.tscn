@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://lfm3ps837gy5"]
+[gd_scene format=3 uid="uid://lfm3ps837gy5"]
 
 [ext_resource type="Script" uid="uid://cdp5711ctg61e" path="res://core/ui/card_ui/power/power_menu.gd" id="2_0vc46"]
 [ext_resource type="Shader" uid="uid://ce5e0818nvi68" path="res://assets/shaders/simple_blur.gdshader" id="2_hkifr"]
@@ -22,7 +22,7 @@ shader_parameter/color_over = Color(0, 0, 0, 0)
 [sub_resource type="Resource" id="Resource_fafkw"]
 script = ExtResource("10_6ywv6")
 
-[node name="PowerMenu" type="Control" groups=["power_menu"]]
+[node name="PowerMenu" type="Control" unique_id=1824508021 groups=["power_menu"]]
 z_index = 20
 layout_mode = 3
 anchors_preset = 15
@@ -32,10 +32,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_0vc46")
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=660223367]
 copy_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=712586513]
 material = SubResource("ShaderMaterial_v0ws8")
 layout_mode = 1
 anchors_preset = 15
@@ -45,7 +45,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=2047072239]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,25 +54,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.666667)
 
-[node name="InputWatcher" parent="." instance=ExtResource("3_1whtm")]
+[node name="InputWatcher" parent="." unique_id=1464874353 instance=ExtResource("3_1whtm")]
 stop_propagation = true
 action = "ogui_east"
 
-[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("4_4rhfl")]
+[node name="StateUpdater" parent="InputWatcher" unique_id=1773199426 instance=ExtResource("4_4rhfl")]
 state_machine = ExtResource("5_kxixy")
 action = 2
 on_signal = "input_released"
 
-[node name="StateWatcher" parent="." instance=ExtResource("6_34b1q")]
+[node name="StateWatcher" parent="." unique_id=1664472281 instance=ExtResource("6_34b1q")]
 state = ExtResource("5_u1rly")
 
-[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("8_xohsw")]
+[node name="FadeEffect" parent="StateWatcher" unique_id=1086466367 node_paths=PackedStringArray("target") instance=ExtResource("8_xohsw")]
 target = NodePath("../..")
 on_signal = "state_entered"
 fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1376297494]
 custom_minimum_size = Vector2(200, 150)
 layout_mode = 1
 anchors_preset = 8
@@ -88,58 +88,53 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"PowerMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=729023065]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=53160114]
 layout_mode = 2
 alignment = 1
 
-[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_vlbso")]
+[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1032088283 instance=ExtResource("9_vlbso")]
 unique_name_in_owner = true
 focus_stack = SubResource("Resource_fafkw")
 
-[node name="SectionLabel" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("10_y3iyf")]
+[node name="SectionLabel" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=913851179 instance=ExtResource("10_y3iyf")]
 layout_mode = 2
 text = "Power"
 horizontal_alignment = 1
 
-[node name="SuspendButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
+[node name="SuspendButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1834925006 instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Suspend"
-click_focuses = false
 
-[node name="RebootButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
+[node name="RebootButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=948698921 instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reboot"
-click_focuses = false
 
-[node name="ShutdownButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
+[node name="ShutdownButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2009375519 instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Shutdown"
-click_focuses = false
 
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1371326918]
 layout_mode = 2
 
-[node name="ExitButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
+[node name="ExitButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1883281400 instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
-click_focuses = false
 
-[node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1088747106]
 layout_mode = 2
 
-[node name="CancelButton" parent="PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("12_2pwjc")]
+[node name="CancelButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1853018388 instance=ExtResource("12_2pwjc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Cancel"
-click_focuses = false

@@ -1,3 +1,4 @@
+@icon("res://assets/editor-icons/button.svg")
 @tool
 extends MarginContainer
 class_name CollapsibleButton

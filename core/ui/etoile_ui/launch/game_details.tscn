@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://b5l4udy1v8ua3"]
+[gd_scene format=3 uid="uid://b5l4udy1v8ua3"]
 
 [ext_resource type="Script" uid="uid://druyqash5wm0a" path="res://core/ui/etoile_ui/launch/game_details.gd" id="1_qddhj"]
 [ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_suqfk"]
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="3_2qjlv"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_8uro1"]
 
-[node name="GameDetails" type="Control"]
+[node name="GameDetails" type="Control" unique_id=91513726]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,7 +16,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_qddhj")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=635141094]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -25,16 +25,16 @@ grow_horizontal = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_right = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=806158956]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 30
 alignment = 2
 
-[node name="LogoContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="LogoContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=412753625]
 layout_mode = 2
 
-[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer/LogoContainer"]
+[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer/LogoContainer" unique_id=811295811]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
@@ -44,38 +44,39 @@ texture = ExtResource("1_suqfk")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/LogoContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/LogoContainer" unique_id=451632056]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Description" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=806698345]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 autowrap_mode = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1103534997]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_8uro1")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1424842000 node_paths=PackedStringArray("current_focus") instance=ExtResource("3_8uro1")]
 current_focus = NodePath("../LaunchButton")
 
-[node name="LaunchButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="LaunchButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1781280068 instance=ExtResource("3_2qjlv")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Play"
 
-[node name="ManageButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="ManageButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1678523648 instance=ExtResource("3_2qjlv")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Manage"
 
-[node name="LinksButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="LinksButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=799202324 instance=ExtResource("3_2qjlv")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Links"
 
-[node name="UninstallButton" parent="MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_2qjlv")]
+[node name="UninstallButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1998989479 instance=ExtResource("3_2qjlv")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Uninstall"

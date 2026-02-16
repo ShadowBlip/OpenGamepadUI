@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ComponentsMap" format=3 uid="uid://dl25ybpnt5v11"]
+
+[ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="1_15ui8"]
+[ext_resource type="Script" uid="uid://rbk4rsah3pud" path="res://core/ui/base/components_map.gd" id="1_k2qbg"]
+
+[resource]
+script = ExtResource("1_k2qbg")
+button = ExtResource("1_15ui8")
+metadata/_custom_type_script = "uid://rbk4rsah3pud"

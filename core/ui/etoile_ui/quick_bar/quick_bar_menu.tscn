@@ -16,13 +16,11 @@
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_imsdn"]
 [ext_resource type="Texture2D" uid="uid://rqiqx2ceehnb" path="res://assets/ui/icons/gear-fill.svg" id="11_junm3"]
 [ext_resource type="Texture2D" uid="uid://c8pq5h4uim4pj" path="res://assets/ui/icons/game-controller.svg" id="12_ya0sn"]
-[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="13_rpfsb"]
-[ext_resource type="Resource" uid="uid://cr544el0cqjlm" path="res://assets/state/state_machines/global_state_machine.tres" id="15_u5bqy"]
-[ext_resource type="Resource" uid="uid://cv3vduo0ojk1u" path="res://assets/state/states/menu.tres" id="16_hh80k"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="17_tyc72"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_0b7mq"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="19_edu7p"]
 [ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="20_rpfsb"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="21_ghcyy"]
 [ext_resource type="PackedScene" uid="uid://btrem65c8687w" path="res://core/ui/etoile_ui/components/collapsible_button.tscn" id="23_ya0sn"]
 [ext_resource type="Texture2D" uid="uid://b2hgvhe7nrk75" path="res://assets/ui/icons/volume-high.svg" id="24_eeplw"]
 [ext_resource type="Texture2D" uid="uid://pcp6qqaphccy" path="res://assets/ui/icons/status-cancelled.svg" id="24_rpfsb"]
@@ -103,39 +101,22 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="FocusGroup" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1355389031 node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("3_5qs52")]
+back_action = ""
 focus_neighbor_bottom = NodePath("../../QuickVBoxContainer/VBoxContainer/FocusGroup")
 
 [node name="SettingsButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1913875459 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("11_junm3")
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
-[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=1426081070 instance=ExtResource("9_7nyoc")]
-state_machine = ExtResource("13_rpfsb")
-state = ExtResource("17_tyc72")
-on_signal = "button_up"
-
-[node name="StateUpdater2" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=1755522410 instance=ExtResource("9_7nyoc")]
-state_machine = ExtResource("15_u5bqy")
-state = ExtResource("16_hh80k")
-on_signal = "button_up"
-
-[node name="ClearOverlay" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=1812374094 instance=ExtResource("9_7nyoc")]
+[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=2032943857 instance=ExtResource("9_7nyoc")]
 state_machine = ExtResource("10_eeplw")
-action = 6
+state = ExtResource("17_tyc72")
 on_signal = "button_up"
 
 [node name="KeyboardButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1774688916 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("6_edu7p")
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="KeyboardOpener" type="Node" parent="MainContainer/VBoxContainer/ButtonContainer/KeyboardButton" unique_id=2061925767]
 script = ExtResource("7_aq7ju")
@@ -143,11 +124,7 @@ on_signal = "button_up"
 
 [node name="HelpButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1191674271 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("8_g8ygh")
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/HelpButton" unique_id=925844422 instance=ExtResource("9_7nyoc")]
 state_machine = ExtResource("10_eeplw")
@@ -160,12 +137,13 @@ size_flags_horizontal = 3
 
 [node name="PowerButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1133527970 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("20_rpfsb")
 color = Color(0.8001019, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
+
+[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/PowerButton" unique_id=1864328193 instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+state = ExtResource("21_ghcyy")
+on_signal = "button_up"
 
 [node name="Spacer" type="Control" parent="MainContainer/VBoxContainer" unique_id=2796884]
 custom_minimum_size = Vector2(0, 20)
@@ -181,6 +159,7 @@ layout_mode = 2
 unique_name_in_owner = true
 current_focus = NodePath("../PanelContainer/MarginContainer/VolumeSlider")
 focus_stack = ExtResource("18_0b7mq")
+back_action = ""
 wrap_focus = false
 focus_neighbor_bottom = NodePath("../../GridContainer/FocusGroup")
 focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
@@ -188,25 +167,17 @@ focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
 [node name="ExitGameButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1015749496 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("24_rpfsb")
 text = "Exit Game"
 color = Color(0.8, 0, 0, 0.5019608)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="NotificationsButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1977129288 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("5_0b7mq")
 text = "Notifications"
 expandable = true
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="PanelContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=140792188]
 layout_mode = 2
@@ -249,76 +220,56 @@ slider_icon_texture = ExtResource("25_imsdn")
 layout_mode = 2
 columns = 2
 
-[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=34181148 node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=34181148 node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
 current_focus = NodePath("../../VBoxContainer/PanelContainer/MarginContainer/VolumeSlider")
 focus_stack = ExtResource("18_0b7mq")
+back_action = ""
 wrap_focus = false
-focus_neighbor_bottom = NodePath("")
 focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
 
 [node name="WifiButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=124915966 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("26_ya0sn")
 text = "Wi-Fi"
 split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="BluetoothButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=2145148437 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("25_imsdn")
 text = "Bluetooth"
 split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="PerformanceButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=695134273 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("28_junm3")
 text = "Performance"
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="OverlayButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=638110440 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("29_hh80k")
 text = "Overlay"
 split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="ControllersButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=1125671800 instance=ExtResource("23_ya0sn")]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("12_ya0sn")
 text = "Controllers"
 split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="SubMenuContainer" type="MarginContainer" parent="." unique_id=2044422490]
 unique_name_in_owner = true
@@ -343,12 +294,8 @@ layout_mode = 2
 [node name="BackButton" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=910146816 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = false
-click_focuses = false
 icon_texture = ExtResource("31_tyc72")
 color = Color(0, 0, 0, 0.5)
-focus_audio = "res://assets/audio/interface/536764__egomassive__toss.ogg"
-select_audio = "res://assets/audio/interface/96127__bmaczero__contact1.ogg"
 
 [node name="MenuLabel" type="Label" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1926166771]
 layout_mode = 2

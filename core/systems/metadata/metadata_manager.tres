@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MetadataManager" format=3 uid="uid://bc4phadw02hgp"]
+
+[ext_resource type="Script" uid="uid://cp11hjo3owdbo" path="res://core/systems/metadata/metadata_manager.gd" id="1_pm2fd"]
+
+[resource]
+script = ExtResource("1_pm2fd")
+metadata/_custom_type_script = "uid://cp11hjo3owdbo"

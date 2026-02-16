@@ -36,6 +36,7 @@ var underlay_process: int
 var underlay_window_id: int
 
 # UI References
+var components_map := load("res://core/ui/card_ui/card_ui_components.tres") as ComponentsMap
 @onready var quick_bar_menu := $%QuickBarMenu
 @onready var settings_menu := $%SettingsMenu
 
