@@ -1,6 +1,7 @@
 extends Control
 
 var boxart_manager := preload("res://core/global/boxart_manager.tres") as BoxArtManager
+var metadata_manager := preload("res://core/systems/metadata/metadata_manager.tres") as MetadataManager
 var launch_manager := preload("res://core/global/launch_manager.tres") as LaunchManager
 var install_manager := preload("res://core/global/install_manager.tres") as InstallManager
 var settings_manager := preload("res://core/global/settings_manager.tres") as SettingsManager
@@ -13,7 +14,8 @@ var state := preload("res://assets/state/states/game_launcher.tres") as State
 @onready var launch_button := %LaunchButton as CardButton
 @onready var manage_button := %ManageButton as CardButton
 @onready var links_button := %LinksButton as CardButton
-@onready var uinstall_button := %UninstallButton as CardButton
+@onready var uninstall_button := %UninstallButton as CardButton
+@onready var description_label := %Description as Label
 
 
 func _ready() -> void:
@@ -58,6 +60,8 @@ func _on_state_refreshed() -> void:
 	var library_item := state.get_meta("library_item") as LibraryItem
 	var texture := await boxart_manager.get_boxart_or_placeholder(library_item, BoxArtProvider.LAYOUT.LOGO)
 	logo.texture = texture
+	var summary := await metadata_manager.get_summary(library_item)
+	description_label.text = summary
 	var launch_item := _get_launch_item(library_item)
 	_update_launch_button(launch_item)
 

@@ -24,6 +24,7 @@ var PID: int = OS.get_process_id()
 var _xwayland_primary := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_PRIMARY)
 var _xwayland_ogui := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_OGUI)
 var _xwayland_game := gamescope.get_xwayland(gamescope.XWAYLAND_TYPE_GAME)
+var components_map := load("res://core/ui/card_ui/card_ui_components.tres") as ComponentsMap
 var overlay_window_id := 0
 
 @onready var panel := $%Panel as Panel

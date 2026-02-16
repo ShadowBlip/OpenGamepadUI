@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://lo32disyoypu"]
+[gd_scene format=3 uid="uid://lo32disyoypu"]
 
 [ext_resource type="Script" uid="uid://cyy6rp03jd65n" path="res://core/ui/etoile_ui/home/home.gd" id="1_el760"]
 [ext_resource type="Script" uid="uid://3xnmxp8tvamy" path="res://core/systems/state/state_watcher.gd" id="2_w07hl"]
@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://dnstdemqvqcji" path="res://core/ui/etoile_ui/components/carousel.gd" id="9_03p2x"]
 [ext_resource type="PackedScene" uid="uid://c8pvsi1u00sol" path="res://core/ui/etoile_ui/components/game_tile.tscn" id="10_o3mca"]
 
-[node name="Home" type="Control"]
+[node name="Home" type="Control" unique_id=1510548768]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,12 +19,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_el760")
 
-[node name="StateWatcher" type="Node" parent="."]
+[node name="StateWatcher" type="Node" parent="." unique_id=1880982139]
 script = ExtResource("2_w07hl")
 state = ExtResource("3_3d0ep")
 metadata/_custom_type_script = "uid://3xnmxp8tvamy"
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=589891841]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,7 +32,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=1747353238]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,30 +41,30 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="CollectionsContainer" type="MarginContainer" parent="Control/VBoxContainer"]
+[node name="CollectionsContainer" type="MarginContainer" parent="Control/VBoxContainer" unique_id=1528396398]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/CollectionsContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/CollectionsContainer" unique_id=1966168950]
 layout_mode = 2
 
-[node name="InputIcon" type="HBoxContainer" parent="Control/VBoxContainer/CollectionsContainer/HBoxContainer"]
+[node name="InputIcon" type="HBoxContainer" parent="Control/VBoxContainer/CollectionsContainer/HBoxContainer" unique_id=306286979]
 layout_mode = 2
 script = ExtResource("4_olk2v")
 path = "ui_up"
 metadata/_custom_type_script = "uid://boeu2ttk342x8"
 
-[node name="Label" type="Label" parent="Control/VBoxContainer/CollectionsContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Control/VBoxContainer/CollectionsContainer/HBoxContainer" unique_id=1641804779]
 layout_mode = 2
 text = "Collections"
 
-[node name="CarouselMarginContainer" type="MarginContainer" parent="Control/VBoxContainer"]
+[node name="CarouselMarginContainer" type="MarginContainer" parent="Control/VBoxContainer" unique_id=1301663203]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
-[node name="CarouselContainer" type="Container" parent="Control/VBoxContainer/CarouselMarginContainer"]
+[node name="CarouselContainer" type="Container" parent="Control/VBoxContainer/CarouselMarginContainer" unique_id=436709997]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 234)
 layout_mode = 2
@@ -73,27 +73,27 @@ text_settings = ExtResource("6_8p0du")
 duration = 0.1
 metadata/_custom_type_script = "uid://dnstdemqvqcji"
 
-[node name="LibraryTile" parent="Control/VBoxContainer/CarouselMarginContainer/CarouselContainer" instance=ExtResource("10_o3mca")]
+[node name="LibraryTile" parent="Control/VBoxContainer/CarouselMarginContainer/CarouselContainer" unique_id=1852366416 instance=ExtResource("10_o3mca")]
 unique_name_in_owner = true
 layout_mode = 2
 is_library_tile = true
 show_label = true
 text = "Library"
 
-[node name="DetailsContainer" type="MarginContainer" parent="Control/VBoxContainer"]
+[node name="DetailsContainer" type="MarginContainer" parent="Control/VBoxContainer" unique_id=219220333]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/DetailsContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/DetailsContainer" unique_id=1023029768]
 layout_mode = 2
 
-[node name="InputIcon" type="HBoxContainer" parent="Control/VBoxContainer/DetailsContainer/HBoxContainer"]
+[node name="InputIcon" type="HBoxContainer" parent="Control/VBoxContainer/DetailsContainer/HBoxContainer" unique_id=1629357606]
 layout_mode = 2
 script = ExtResource("4_olk2v")
 path = "ui_down"
 metadata/_custom_type_script = "uid://boeu2ttk342x8"
 
-[node name="Label" type="Label" parent="Control/VBoxContainer/DetailsContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Control/VBoxContainer/DetailsContainer/HBoxContainer" unique_id=599672810]
 layout_mode = 2
 text = "More Details"
