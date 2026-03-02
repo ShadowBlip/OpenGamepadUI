@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgmb4kr2ec4ha"]
+[gd_scene format=3 uid="uid://cgmb4kr2ec4ha"]
 
 [ext_resource type="Script" uid="uid://cnnkmn8jnjf2m" path="res://core/ui/components/tabs_header.gd" id="1_su51c"]
 [ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="2_oxuw3"]
@@ -12,27 +12,27 @@ grow_begin = -10.0
 grow_end = -10.0
 vertical = true
 
-[node name="TabsHeader" type="HBoxContainer"]
+[node name="TabsHeader" type="HBoxContainer" unique_id=845875191]
 theme_override_constants/separation = 5
 script = ExtResource("1_su51c")
 
-[node name="LSeparator" type="VSeparator" parent="."]
+[node name="LSeparator" type="VSeparator" parent="." unique_id=616519094]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_lb7pt")
 
-[node name="InputIconLB" type="HBoxContainer" parent="."]
+[node name="InputIconLB" type="HBoxContainer" parent="." unique_id=2000719285]
 layout_mode = 2
 script = ExtResource("2_oxuw3")
 path = "ogui_tab_left"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1339779112]
 layout_mode = 2
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="EnhancedScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="EnhancedScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=278475943]
 unique_name_in_owner = true
 layout_mode = 2
 vertical_scroll_mode = 0
@@ -40,17 +40,17 @@ script = ExtResource("3_2l5lr")
 maximum_size = Vector2i(550, 0)
 metadata/_custom_type_script = "uid://b6useuxusuw4w"
 
-[node name="TabLabelContainer" type="HBoxContainer" parent="MarginContainer/EnhancedScrollContainer"]
+[node name="TabLabelContainer" type="HBoxContainer" parent="MarginContainer/EnhancedScrollContainer" unique_id=973735724]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="InputIconRB" type="HBoxContainer" parent="."]
+[node name="InputIconRB" type="HBoxContainer" parent="." unique_id=800551421]
 layout_mode = 2
 script = ExtResource("2_oxuw3")
 path = "ogui_tab_right"
 
-[node name="RSeparator" type="VSeparator" parent="."]
+[node name="RSeparator" type="VSeparator" parent="." unique_id=1151323915]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

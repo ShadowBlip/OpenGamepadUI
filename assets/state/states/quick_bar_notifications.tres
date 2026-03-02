@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://bkvuiq0ehx3ll"]
+[gd_resource type="Resource" script_class="State" format=3 uid="uid://bkvuiq0ehx3ll"]
 
 [ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="1_fy785"]
 
 [resource]
 script = ExtResource("1_fy785")
 name = "notifications"
-data = null

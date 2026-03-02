@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://de64j20kxm1k1"]
+[gd_resource type="Theme" format=3 uid="uid://de64j20kxm1k1"]
 
 [ext_resource type="StyleBox" uid="uid://cimp1bsjesl4e" path="res://assets/styles/water_vapor/item_bordered.tres" id="2_a8u0i"]
 [ext_resource type="StyleBox" uid="uid://dpa38ev6toy85" path="res://assets/styles/water_vapor/background.tres" id="2_okolx"]

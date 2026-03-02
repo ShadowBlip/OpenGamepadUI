@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=11 format=3 uid="uid://dbvnshrvwlsck"]
+[gd_resource type="Resource" script_class="HandheldPlatform" format=3 uid="uid://dbvnshrvwlsck"]
 
 [ext_resource type="Texture2D" uid="uid://d224crt7h1b8l" path="res://assets/images/gamepad/oxp/oxp-mini-a07.png" id="1_fqeaf"]
 [ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="3_qiq0o"]
@@ -27,4 +27,3 @@ diagram = ExtResource("1_fqeaf")
 icon_mappings = Array[ExtResource("3_qiq0o")]([SubResource("Resource_53wen"), SubResource("Resource_2yirf")])
 name = "OneXPlayer Gen 3"
 startup_actions = Array[ExtResource("6_6lln8")]([SubResource("Resource_dj8xs")])
-shutdown_actions = Array[ExtResource("6_6lln8")]([])

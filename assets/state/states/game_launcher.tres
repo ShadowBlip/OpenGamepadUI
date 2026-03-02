@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://dav2b3n384cso"]
+[gd_resource type="Resource" script_class="State" format=3 uid="uid://dav2b3n384cso"]
 
 [ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="1_qa3rc"]
 
 [resource]
 script = ExtResource("1_qa3rc")
 name = "game_launcher"
-data = null

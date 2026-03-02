@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://b63kagdhj03ut"]
+[gd_scene format=3 uid="uid://b63kagdhj03ut"]
 
 [ext_resource type="Script" uid="uid://x73fslu084tv" path="res://core/ui/components/wifi_network_tree.gd" id="1_nsuu5"]
 
-[node name="WifiNetworkTree" type="Tree"]
+[node name="WifiNetworkTree" type="Tree" unique_id=193580710]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

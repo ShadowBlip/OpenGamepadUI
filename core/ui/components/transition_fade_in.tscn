@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bo077a5mwi7xl"]
+[gd_scene format=3 uid="uid://bo077a5mwi7xl"]
 
 [ext_resource type="Animation" uid="uid://d1xc15s278mhe" path="res://assets/animations/transitions/fade_in.tres" id="1_r2152"]
 [ext_resource type="Animation" uid="uid://cyb8166vcpqu3" path="res://assets/animations/transitions/fade_out.tres" id="2_spmow"]
@@ -10,11 +10,9 @@ _data = {
 &"fade_out": ExtResource("2_spmow")
 }
 
-[node name="TransitionFadeIn" type="AnimationPlayer"]
+[node name="TransitionFadeIn" type="AnimationPlayer" unique_id=678519021]
 root_node = NodePath("")
-libraries = {
-"": SubResource("AnimationLibrary_xdjc1")
-}
+libraries/ = SubResource("AnimationLibrary_xdjc1")
 script = ExtResource("3_rret6")
 enter_animation = "fade_in"
 exit_animation = "fade_out"

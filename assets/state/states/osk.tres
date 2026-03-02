@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://dja3m1mevv6xw"]
+[gd_resource type="Resource" script_class="State" format=3 uid="uid://dja3m1mevv6xw"]
 
 [ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="1_afd5c"]
 
 [resource]
 script = ExtResource("1_afd5c")
 name = "osk"
-data = null

@@ -14,13 +14,17 @@ plugin/directory="user://plugins"
 data/directory="user://data"
 cache/directory="user://cache"
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Open Gamepad UI"
 run/main_scene="res://entrypoint.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="opengamepadui"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 run/flush_stdout_on_print=true
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 0)

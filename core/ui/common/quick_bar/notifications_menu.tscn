@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://o1an7w7uf2mq"]
+[gd_scene format=3 uid="uid://o1an7w7uf2mq"]
 
 [ext_resource type="Script" uid="uid://6wajwysfffbd" path="res://core/ui/common/quick_bar/notifications_menu.gd" id="1_iomxi"]
 [ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="2_ak5ln"]
@@ -8,7 +8,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_5o5uh"]
 line_spacing = 0.0
 
-[node name="NotificationsMenu" type="Control"]
+[node name="NotificationsMenu" type="Control" unique_id=1566479665]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,7 +19,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_iomxi")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=828574120]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,20 +27,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1093576771]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer/ScrollContainer" unique_id=1204253576]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FocusGroup" parent="VBoxContainer/ScrollContainer/HFlowContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("3_6rngx")]
+[node name="FocusGroup" parent="VBoxContainer/ScrollContainer/HFlowContainer" unique_id=606659122 node_paths=PackedStringArray("current_focus") instance=ExtResource("3_6rngx")]
 current_focus = NodePath("../NotificationContainer")
 focus_stack = ExtResource("3_vli0v")
 
-[node name="NoNotifications" parent="VBoxContainer/ScrollContainer/HFlowContainer" instance=ExtResource("2_ak5ln")]
+[node name="NoNotifications" parent="VBoxContainer/ScrollContainer/HFlowContainer" unique_id=1579456235 instance=ExtResource("2_ak5ln")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -48,7 +48,7 @@ icon_size = Vector2(24, 24)
 text = "No recent notifications"
 label_settings = SubResource("LabelSettings_5o5uh")
 
-[node name="NotificationContainer" parent="VBoxContainer/ScrollContainer/HFlowContainer" instance=ExtResource("2_ak5ln")]
+[node name="NotificationContainer" parent="VBoxContainer/ScrollContainer/HFlowContainer" unique_id=499998970 instance=ExtResource("2_ak5ln")]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 icon_size = Vector2(24, 24)
