@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=10 format=3 uid="uid://dx0ykcjvufix"]
+[gd_resource type="Resource" script_class="HandheldPlatform" format=3 uid="uid://dx0ykcjvufix"]
 
 [ext_resource type="Script" uid="uid://b3hu7ivsglxg4" path="res://core/platform/handheld/handheld_platform.gd" id="1_f6nrl"]
 [ext_resource type="Texture2D" uid="uid://b4w5tmfci1toh" path="res://assets/images/gamepad/steamdeck/diagram.png" id="1_juvkj"]
@@ -18,7 +18,4 @@ script = ExtResource("5_0hrnj")
 script = ExtResource("1_f6nrl")
 image = ExtResource("2_tane6")
 diagram = ExtResource("1_juvkj")
-icon_mappings = Array[ExtResource("2_bbl6m")]([])
-name = ""
 startup_actions = Array[ExtResource("5_qqav5")]([SubResource("Resource_6u3hp"), SubResource("Resource_us7cn")])
-shutdown_actions = Array[ExtResource("5_qqav5")]([])

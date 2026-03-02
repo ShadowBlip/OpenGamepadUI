@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://bko0q7gp1hwjp"]
+[gd_resource type="Theme" format=3 uid="uid://bko0q7gp1hwjp"]
 
 [ext_resource type="StyleBox" uid="uid://knpybvvprjjp" path="res://assets/styles/dracula/background.tres" id="1_vsinb"]
 [ext_resource type="StyleBox" uid="uid://c1kq6hxb4m0dj" path="res://assets/styles/dracula/current.tres" id="1_vv7ku"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cpss2bhdwm8t7"]
+[gd_scene format=3 uid="uid://cpss2bhdwm8t7"]
 
 [ext_resource type="Script" uid="uid://bxvy1em0lxict" path="res://core/ui/common/settings/network_settings_menu.gd" id="1_2qdps"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_8jmkq"]
@@ -17,7 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="13_p7bew"]
 [ext_resource type="PackedScene" uid="uid://cmjjyqx1pl23d" path="res://core/ui/components/text.tscn" id="13_wnqd6"]
 
-[node name="NetworkSettings" type="ScrollContainer"]
+[node name="NetworkSettings" type="ScrollContainer" unique_id=445953626]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -27,131 +27,131 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_2qdps")
 
-[node name="InputWatcher" parent="." instance=ExtResource("2_yj01k")]
+[node name="InputWatcher" parent="." unique_id=985727808 instance=ExtResource("2_yj01k")]
 stop_propagation = true
 action = "ogui_east"
 
-[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_hbsyi")]
+[node name="StateUpdater" parent="InputWatcher" unique_id=958346643 instance=ExtResource("3_hbsyi")]
 state_machine = ExtResource("4_tf04q")
 action = 2
 on_signal = "input_released"
 
-[node name="StateWatcher" parent="." instance=ExtResource("5_jobhc")]
+[node name="StateWatcher" parent="." unique_id=533462836 instance=ExtResource("5_jobhc")]
 state = ExtResource("6_ke40f")
 
-[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" unique_id=2107213199 node_paths=PackedStringArray("target")]
 script = ExtResource("7_gnxgo")
 target = NodePath("../../MarginContainer/VBoxContainer/FocusGroup")
 on_signal = "state_entered"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=180049300]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_right = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1004613634]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_8jmkq")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer" unique_id=870648831 instance=ExtResource("2_8jmkq")]
 
-[node name="NoNetworkLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_t7br0")]
+[node name="NoNetworkLabel" parent="MarginContainer/VBoxContainer" unique_id=165039353 instance=ExtResource("4_t7br0")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Networking not available"
 horizontal_alignment = 1
 
-[node name="WirelessDisplayLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
+[node name="WirelessDisplayLabel" parent="MarginContainer/VBoxContainer" unique_id=961169131 instance=ExtResource("3_ddyy1")]
 layout_mode = 2
 text = "Wireless Network"
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=780254460]
 layout_mode = 2
 
-[node name="WirelessEnableToggle" parent="MarginContainer/VBoxContainer" instance=ExtResource("11_y8h23")]
+[node name="WirelessEnableToggle" parent="MarginContainer/VBoxContainer" unique_id=1826176268 instance=ExtResource("11_y8h23")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enable Wireless"
 separator_visible = false
 button_pressed = true
 
-[node name="WifiLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_t7br0")]
+[node name="WifiLabel" parent="MarginContainer/VBoxContainer" unique_id=713233878 instance=ExtResource("4_t7br0")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Visible Networks"
 
-[node name="WifiNetworkTree" type="Tree" parent="MarginContainer/VBoxContainer"]
+[node name="WifiNetworkTree" type="Tree" parent="MarginContainer/VBoxContainer" unique_id=1728446539]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 script = ExtResource("12_flshi")
 
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer" unique_id=1644014429]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="WiredLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
+[node name="WiredLabel" parent="MarginContainer/VBoxContainer" unique_id=37516319 instance=ExtResource("3_ddyy1")]
 visible = false
 layout_mode = 2
 text = "Wired Network"
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=5550544]
 visible = false
 layout_mode = 2
 
-[node name="DetailsDisplayLabel" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_ddyy1")]
+[node name="DetailsDisplayLabel" parent="MarginContainer/VBoxContainer" unique_id=314613157 instance=ExtResource("3_ddyy1")]
 layout_mode = 2
 text = "Connection Details"
 
-[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=1829509790]
 layout_mode = 2
 
-[node name="IPAddressText" parent="MarginContainer/VBoxContainer" instance=ExtResource("13_wnqd6")]
+[node name="IPAddressText" parent="MarginContainer/VBoxContainer" unique_id=1200645943 instance=ExtResource("13_wnqd6")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "IP Address"
 description = ""
 text = "0.0.0.0"
 
-[node name="SubnetText" parent="MarginContainer/VBoxContainer" instance=ExtResource("13_wnqd6")]
+[node name="SubnetText" parent="MarginContainer/VBoxContainer" unique_id=310414276 instance=ExtResource("13_wnqd6")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Subnet Prefix"
 description = ""
 text = "0"
 
-[node name="GatewayText" parent="MarginContainer/VBoxContainer" instance=ExtResource("13_wnqd6")]
+[node name="GatewayText" parent="MarginContainer/VBoxContainer" unique_id=128900796 instance=ExtResource("13_wnqd6")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Gateway"
 description = ""
 text = "0.0.0.0"
 
-[node name="PopupContainer" type="CenterContainer" parent="MarginContainer"]
+[node name="PopupContainer" type="CenterContainer" parent="MarginContainer" unique_id=621546853]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/PopupContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/PopupContainer" unique_id=1996232907]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PopupContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PopupContainer/PanelContainer" unique_id=777638907]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer" unique_id=744612948]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="WifiPasswordTextInput" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("7_qx5i7")]
+[node name="WifiPasswordTextInput" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1860397989 instance=ExtResource("7_qx5i7")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -159,9 +159,9 @@ title = "Password"
 description = "Enter the password for this network"
 secret = true
 
-[node name="WifiPasswordButton" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource("13_p7bew")]
+[node name="WifiPasswordButton" parent="MarginContainer/PopupContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1729707467 instance=ExtResource("13_p7bew")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Submit"
 
-[node name="ScrollerJoystick" parent="." instance=ExtResource("9_v6vet")]
+[node name="ScrollerJoystick" parent="." unique_id=417063279 instance=ExtResource("9_v6vet")]

@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="State" load_steps=2 format=3 uid="uid://1hipypfrfavt"]
+[gd_resource type="Resource" script_class="State" format=3 uid="uid://1hipypfrfavt"]
 
 [ext_resource type="Script" uid="uid://dxut26n2hvlp6" path="res://core/systems/state/state.gd" id="1_2dli7"]
 
 [resource]
 script = ExtResource("1_2dli7")
 name = "quick_settings"
-data = null

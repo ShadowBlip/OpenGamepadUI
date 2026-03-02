@@ -104,7 +104,7 @@ static func get_config() -> PackedStringArray:
 		return PackedStringArray()
 
 	var file := FileAccess.open(config_path, FileAccess.READ)
-	var data := file.get_as_text(true)
+	var data := file.get_as_text()
 	return data.split("\n", false)
 
 

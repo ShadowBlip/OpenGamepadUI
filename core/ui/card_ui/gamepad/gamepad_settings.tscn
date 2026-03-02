@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cwarv58ju0sow"]
+[gd_scene format=3 uid="uid://cwarv58ju0sow"]
 
 [ext_resource type="Script" uid="uid://dcpxjga43xfs3" path="res://core/ui/card_ui/gamepad/gamepad_settings.gd" id="1_o4hh5"]
 [ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_3x6ad"]
@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://b2vibgdoiquxh" path="res://core/ui/components/card_mapping_button_group.tscn" id="17_wcyhn"]
 [ext_resource type="Script" uid="uid://boeu2ttk342x8" path="res://core/ui/components/input_icon.gd" id="18_lmo36"]
 
-[node name="GamepadSettings" type="Control"]
+[node name="GamepadSettings" type="Control" unique_id=2089050966]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,30 +34,30 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_o4hh5")
 
-[node name="InputWatcher" parent="." instance=ExtResource("2_ck60w")]
+[node name="InputWatcher" parent="." unique_id=314413761 instance=ExtResource("2_ck60w")]
 stop_propagation = true
 process_input_mode = 1
 action = "ogui_east"
 
-[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_yygaq")]
+[node name="StateUpdater" parent="InputWatcher" unique_id=862878861 instance=ExtResource("3_yygaq")]
 state_machine = ExtResource("4_wxnal")
 action = 2
 on_signal = "input_released"
 
-[node name="StateWatcher" parent="." instance=ExtResource("2_3x6ad")]
+[node name="StateWatcher" parent="." unique_id=688283138 instance=ExtResource("2_3x6ad")]
 state = ExtResource("3_wyv83")
 
-[node name="FadeEffect" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
+[node name="FadeEffect" parent="StateWatcher" unique_id=218980388 node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
 target = NodePath("../..")
 on_signal = "state_entered"
 fade_out_signal = "state_exited"
 on_signal = "state_entered"
 
-[node name="FocusGroupSetter" parent="StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
+[node name="FocusGroupSetter" parent="StateWatcher" unique_id=1491021338 node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
 target = NodePath("../../MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/MainFocusGroup")
 on_signal = "state_entered"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1991670452]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,12 +69,12 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="InGamePanel" type="PanelContainer" parent="MarginContainer"]
+[node name="InGamePanel" type="PanelContainer" parent="MarginContainer" unique_id=1420176501]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.698039)
 layout_mode = 2
 
-[node name="MainContainer" type="MarginContainer" parent="."]
+[node name="MainContainer" type="MarginContainer" parent="." unique_id=2037191144]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -87,91 +87,91 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 25
 theme_override_constants/margin_bottom = 25
 
-[node name="TopLevelContainer" type="VBoxContainer" parent="MainContainer"]
+[node name="TopLevelContainer" type="VBoxContainer" parent="MainContainer" unique_id=1703921350]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="StateWatcher" parent="MainContainer/TopLevelContainer" instance=ExtResource("2_3x6ad")]
+[node name="StateWatcher" parent="MainContainer/TopLevelContainer" unique_id=1787834942 instance=ExtResource("2_3x6ad")]
 state = ExtResource("6_oe11l")
 
-[node name="FadeEffect" parent="MainContainer/TopLevelContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
+[node name="FadeEffect" parent="MainContainer/TopLevelContainer/StateWatcher" unique_id=383830203 node_paths=PackedStringArray("target") instance=ExtResource("4_8f1hr")]
 target = NodePath("../..")
 on_signal = "state_exited"
 fade_out_signal = "state_entered"
 on_signal = "state_exited"
 
-[node name="FocusGroupSetter" parent="MainContainer/TopLevelContainer/StateWatcher" node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
+[node name="FocusGroupSetter" parent="MainContainer/TopLevelContainer/StateWatcher" unique_id=1318553668 node_paths=PackedStringArray("target") instance=ExtResource("5_7qogg")]
 target = NodePath("../../HBoxContainer/VBoxContainer/HBoxContainer/ButtonFocusGroup")
 on_signal = "state_exited"
 
-[node name="ProfileNameLabel" parent="MainContainer/TopLevelContainer" instance=ExtResource("14_b37ub")]
+[node name="ProfileNameLabel" parent="MainContainer/TopLevelContainer" unique_id=1122502566 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Profile Name"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/TopLevelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/TopLevelContainer" unique_id=56478931]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer" unique_id=858658985]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MainFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
+[node name="MainFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" unique_id=568997356 node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
 focus_neighbor_bottom = NodePath("../ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer/MappingFocusGroup")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" unique_id=902579964]
 layout_mode = 2
 
-[node name="ButtonFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
+[node name="ButtonFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=537400967 node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("7_fyh3u")]
 current_focus = NodePath("../SaveButton")
 focus_neighbor_bottom = NodePath("../../MainFocusGroup")
 
-[node name="SaveButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
+[node name="SaveButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=420848787 instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 texture = ExtResource("10_y71gk")
 
-[node name="DeleteButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
+[node name="DeleteButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=462707975 instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 texture = ExtResource("12_64hbv")
 
-[node name="TemplateButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_lxfig")]
+[node name="TemplateButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=651986308 instance=ExtResource("6_lxfig")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 texture = ExtResource("13_4xnt2")
 
-[node name="GamepadTypeDropdown" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" instance=ExtResource("13_h4n8t")]
+[node name="GamepadTypeDropdown" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" unique_id=1827084532 instance=ExtResource("13_h4n8t")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Target Gamepad Type"
 description = ""
 
-[node name="GamepadLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" instance=ExtResource("15_qntu1")]
+[node name="GamepadLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" unique_id=1229510007 instance=ExtResource("15_qntu1")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Gamepad"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer" unique_id=152244917]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1953866579]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_type_variation = &"SettingsMenu"
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer" unique_id=30372255]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -180,58 +180,58 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ButtonMappingContainer" type="VBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer"]
+[node name="ButtonMappingContainer" type="VBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer" unique_id=1042885562]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MappingFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("7_fyh3u")]
+[node name="MappingFocusGroup" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=1423930263 node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("7_fyh3u")]
 unique_name_in_owner = true
 focus_stack = ExtResource("16_888le")
 focus_neighbor_bottom = NodePath(".")
 focus_neighbor_top = NodePath("../../../../../MainFocusGroup")
 
-[node name="ButtonsLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="ButtonsLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=1114165952 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Buttons"
 
-[node name="CardMappingButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("11_unkgl")]
+[node name="CardMappingButton" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=1485505439 instance=ExtResource("11_unkgl")]
 layout_mode = 2
 
-[node name="AxesLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="AxesLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=739176706 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Axes"
 
-[node name="CardMappingContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("17_wcyhn")]
+[node name="CardMappingContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=782769785 instance=ExtResource("17_wcyhn")]
 layout_mode = 2
 
-[node name="TriggersLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="TriggersLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=1657733413 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Triggers"
 
-[node name="GyroLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="GyroLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=557780435 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Gyro"
 
-[node name="AccelerometerLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="AccelerometerLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=1487595538 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Accelerometer"
 
-[node name="TouchpadsLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" instance=ExtResource("14_b37ub")]
+[node name="TouchpadsLabel" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer/PanelContainer/MarginContainer/ButtonMappingContainer" unique_id=608096197 instance=ExtResource("14_b37ub")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "Touch Pads"
 
-[node name="ScrollerJoystick" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer" instance=ExtResource("14_vtep2")]
+[node name="ScrollerJoystick" parent="MainContainer/TopLevelContainer/HBoxContainer/VBoxContainer/ScrollContainer" unique_id=189025213 instance=ExtResource("14_vtep2")]
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/TopLevelContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/TopLevelContainer/HBoxContainer" unique_id=789871320]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
@@ -240,7 +240,7 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="InputIcon" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/MarginContainer"]
+[node name="InputIcon" type="HBoxContainer" parent="MainContainer/TopLevelContainer/HBoxContainer/MarginContainer" unique_id=562274054]
 layout_mode = 2
 size_flags_stretch_ratio = 2.0
 script = ExtResource("18_lmo36")
@@ -248,12 +248,12 @@ path = "joypad/diagram"
 force_type = 2
 max_width = -1
 
-[node name="GamepadMapper" parent="MainContainer" instance=ExtResource("16_1g7gi")]
+[node name="GamepadMapper" parent="MainContainer" unique_id=2145283127 instance=ExtResource("16_1g7gi")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="ServiceNotAvailableContainer" type="CenterContainer" parent="."]
+[node name="ServiceNotAvailableContainer" type="CenterContainer" parent="." unique_id=949281873]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -263,7 +263,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="ServiceNotAvailableContainer"]
+[node name="Label" type="Label" parent="ServiceNotAvailableContainer" unique_id=209899587]
 layout_mode = 2
 theme_override_font_sizes/font_size = 34
 text = "InputPlumber service not available"

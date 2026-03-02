@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dv3dt0j3jketh"]
+[gd_scene format=3 uid="uid://dv3dt0j3jketh"]
 
 [ext_resource type="Script" uid="uid://bcblbfjqnsf3" path="res://core/ui/common/quick_bar/performance_menu.gd" id="1_r31yj"]
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="1_yptsc"]
@@ -9,49 +9,49 @@
 [ext_resource type="PackedScene" uid="uid://d1qb7euwlu7bh" path="res://core/ui/components/toggle.tscn" id="7_j02ci"]
 [ext_resource type="PackedScene" uid="uid://xei5afwefxud" path="res://core/ui/components/dropdown.tscn" id="8_j2331"]
 
-[node name="Performance" type="VBoxContainer"]
+[node name="Performance" type="VBoxContainer" unique_id=132711214]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 28.0
 grow_horizontal = 2
 script = ExtResource("1_r31yj")
 
-[node name="FocusGroup" parent="." instance=ExtResource("2_my16i")]
+[node name="FocusGroup" parent="." unique_id=549046002 instance=ExtResource("2_my16i")]
 unique_name_in_owner = true
 focus_stack = ExtResource("3_hsr7n")
 
-[node name="ApplyTimer" type="Timer" parent="."]
+[node name="ApplyTimer" type="Timer" parent="." unique_id=885800784]
 wait_time = 1.5
 one_shot = true
 
-[node name="ServiceTimer" type="Timer" parent="."]
+[node name="ServiceTimer" type="Timer" parent="." unique_id=1942365367]
 wait_time = 5.0
 autostart = true
 
-[node name="MangoAppSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="MangoAppSlider" parent="." unique_id=2079703403 instance=ExtResource("1_yptsc")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Performance Overlay"
 max_value = 4.0
 tick_count = 5
 
-[node name="FramerateLimitSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="FramerateLimitSlider" parent="." unique_id=176242482 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 text = "FPS Limit"
 
-[node name="RefreshRateSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="RefreshRateSlider" parent="." unique_id=1557152496 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 text = "Refresh Rate"
 
-[node name="ModeToggle" parent="." instance=ExtResource("7_j02ci")]
+[node name="ModeToggle" parent="." unique_id=1950806605 instance=ExtResource("7_j02ci")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Advanced Mode"
 button_pressed = true
 
-[node name="WaitLabel" parent="." instance=ExtResource("5_hil7p")]
+[node name="WaitLabel" parent="." unique_id=1924904772 instance=ExtResource("5_hil7p")]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Waiting for PowerStation service..."
@@ -59,12 +59,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="CPUSectionLabel" parent="." instance=ExtResource("6_ycrnf")]
+[node name="CPUSectionLabel" parent="." unique_id=1442372306 instance=ExtResource("6_ycrnf")]
 visible = false
 layout_mode = 2
 text = "CPU Settings"
 
-[node name="CPUBoostButton" parent="." instance=ExtResource("7_j02ci")]
+[node name="CPUBoostButton" parent="." unique_id=1064319092 instance=ExtResource("7_j02ci")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUTempSlider")
@@ -76,7 +76,7 @@ focus_previous = NodePath("../GPUTempSlider")
 text = "CPU Boost"
 separator_visible = false
 
-[node name="SMTButton" parent="." instance=ExtResource("7_j02ci")]
+[node name="SMTButton" parent="." unique_id=1625734391 instance=ExtResource("7_j02ci")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../CPUBoostButton")
@@ -88,7 +88,7 @@ focus_previous = NodePath("../CPUBoostButton")
 text = "SMT Enabled"
 separator_visible = false
 
-[node name="CPUCoresSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="CPUCoresSlider" parent="." unique_id=314023434 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../SMTButton")
@@ -102,12 +102,12 @@ value = 1.0
 max_value = 1.0
 min_value = 1.0
 
-[node name="GPUSectionLabel" parent="." instance=ExtResource("6_ycrnf")]
+[node name="GPUSectionLabel" parent="." unique_id=1365545015 instance=ExtResource("6_ycrnf")]
 visible = false
 layout_mode = 2
 text = "GPU Settings"
 
-[node name="TDPSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="TDPSlider" parent="." unique_id=2117647436 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../CPUCoresSlider")
@@ -119,7 +119,7 @@ focus_previous = NodePath("../CPUCoresSlider")
 text = "TDP"
 max_value = 0.0
 
-[node name="TDPBoostSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="TDPBoostSlider" parent="." unique_id=512678413 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../TDPSlider")
@@ -128,7 +128,7 @@ focus_previous = NodePath("../TDPSlider")
 text = "TDP Boost"
 max_value = 0.0
 
-[node name="GPUFreqButton" parent="." instance=ExtResource("7_j02ci")]
+[node name="GPUFreqButton" parent="." unique_id=1108012507 instance=ExtResource("7_j02ci")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../TDPBoostSlider")
@@ -140,7 +140,7 @@ focus_previous = NodePath("../TDPBoostSlider")
 text = "Manual Freq"
 separator_visible = false
 
-[node name="GPUFreqMinSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="GPUFreqMinSlider" parent="." unique_id=250916693 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_right = NodePath("../GPUFreqMaxSlider")
@@ -150,7 +150,7 @@ text = "Min Freq"
 max_value = 0.0
 step = 100.0
 
-[node name="GPUFreqMaxSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="GPUFreqMaxSlider" parent="." unique_id=1706191912 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUFreqMinSlider")
@@ -163,7 +163,7 @@ text = "Max Freq"
 max_value = 0.0
 step = 100.0
 
-[node name="GPUTempSlider" parent="." instance=ExtResource("1_yptsc")]
+[node name="GPUTempSlider" parent="." unique_id=1512528674 instance=ExtResource("1_yptsc")]
 visible = false
 layout_mode = 2
 focus_neighbor_left = NodePath("../GPUFreqMaxSlider")
@@ -177,7 +177,7 @@ value = 70.0
 max_value = 105.0
 min_value = 70.0
 
-[node name="PowerProfileDropdown" parent="." instance=ExtResource("8_j2331")]
+[node name="PowerProfileDropdown" parent="." unique_id=428999822 instance=ExtResource("8_j2331")]
 visible = false
 layout_mode = 2
 title = "Power Profile"

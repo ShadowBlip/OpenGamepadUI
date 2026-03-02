@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HandheldPlatform" load_steps=6 format=3 uid="uid://clntr5nyofitv"]
+[gd_resource type="Resource" script_class="HandheldPlatform" format=3 uid="uid://clntr5nyofitv"]
 
 [ext_resource type="Script" uid="uid://bnia3oou15yrh" path="res://core/platform/handheld/handheld_icon_mapping.gd" id="1_p8pxe"]
 [ext_resource type="Script" uid="uid://7cj1ct3adwrg" path="res://core/platform/actions/platform_action.gd" id="3_3ons6"]
@@ -10,7 +10,4 @@ script = ExtResource("5_0qie6")
 
 [resource]
 script = ExtResource("4_qgr5y")
-icon_mappings = Array[ExtResource("1_p8pxe")]([])
-name = ""
 startup_actions = Array[ExtResource("3_3ons6")]([SubResource("Resource_dj8xs")])
-shutdown_actions = Array[ExtResource("3_3ons6")]([])

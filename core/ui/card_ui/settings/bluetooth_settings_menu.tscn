@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://6ygxdkvh1hib"]
+[gd_scene format=3 uid="uid://6ygxdkvh1hib"]
 
 [ext_resource type="Script" uid="uid://ba3wii1afvcge" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.gd" id="1_7sjpd"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="2_36ef6"]
@@ -12,7 +12,7 @@
 [ext_resource type="Resource" uid="uid://5r7ehi4t5mri" path="res://assets/state/states/settings_bluetooth.tres" id="6_2ogat"]
 [ext_resource type="Script" uid="uid://ohebcttenf0j" path="res://core/systems/input/focus_group_setter.gd" id="7_klxjh"]
 
-[node name="BluetoothSettingsMenu" type="Control"]
+[node name="BluetoothSettingsMenu" type="Control" unique_id=329312281]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,28 +21,28 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7sjpd")
 
-[node name="BluetoothManager" type="Node" parent="."]
+[node name="BluetoothManager" type="Node" parent="." unique_id=489639221]
 script = ExtResource("2_yoi1n")
 instance = ExtResource("3_aju5k")
 
-[node name="InputWatcher" parent="." instance=ExtResource("2_p7et2")]
+[node name="InputWatcher" parent="." unique_id=1361010219 instance=ExtResource("2_p7et2")]
 stop_propagation = true
 action = "ogui_east"
 
-[node name="StateUpdater" parent="InputWatcher" instance=ExtResource("3_2trn0")]
+[node name="StateUpdater" parent="InputWatcher" unique_id=2109950411 instance=ExtResource("3_2trn0")]
 state_machine = ExtResource("4_l428g")
 action = 2
 on_signal = "input_released"
 
-[node name="StateWatcher" parent="." instance=ExtResource("5_ivwga")]
+[node name="StateWatcher" parent="." unique_id=554128008 instance=ExtResource("5_ivwga")]
 state = ExtResource("6_2ogat")
 
-[node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
+[node name="FocusGroupSetter" type="Node" parent="StateWatcher" unique_id=822604165 node_paths=PackedStringArray("target")]
 script = ExtResource("7_klxjh")
 target = NodePath("../../MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer/FocusGroup")
 on_signal = "state_entered"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2089351015]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,10 +54,10 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=712808305]
 layout_mode = 2
 
-[node name="UnavailableContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer"]
+[node name="UnavailableContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer" unique_id=859986640]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -68,14 +68,14 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/ScrollContainer/UnavailableContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/ScrollContainer/UnavailableContainer" unique_id=230245232]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/UnavailableContainer/CenterContainer"]
+[node name="Label" type="Label" parent="MarginContainer/ScrollContainer/UnavailableContainer/CenterContainer" unique_id=1847972492]
 layout_mode = 2
 text = "Bluetooth service unavailable"
 
-[node name="AvailableContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer"]
+[node name="AvailableContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer" unique_id=310382909]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -85,25 +85,25 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/AvailableContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer/AvailableContainer" unique_id=1646703908]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" node_paths=PackedStringArray("current_focus") instance=ExtResource("2_36ef6")]
+[node name="FocusGroup" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" unique_id=998269144 node_paths=PackedStringArray("current_focus") instance=ExtResource("2_36ef6")]
 current_focus = NodePath("../EnableToggle")
 
-[node name="EnableToggle" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
+[node name="EnableToggle" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" unique_id=258282597 instance=ExtResource("4_isnhb")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enabled"
 separator_visible = false
 
-[node name="DiscoverToggle" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" instance=ExtResource("4_isnhb")]
+[node name="DiscoverToggle" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" unique_id=86351936 instance=ExtResource("4_isnhb")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Enable Discovery"
 separator_visible = false
 
-[node name="Tree" type="Tree" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer"]
+[node name="Tree" type="Tree" parent="MarginContainer/ScrollContainer/AvailableContainer/VBoxContainer" unique_id=1388638218]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

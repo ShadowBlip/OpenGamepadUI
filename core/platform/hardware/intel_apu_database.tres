@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="APUDatabase" load_steps=8 format=3 uid="uid://bgmsf64bjnhxg"]
+[gd_resource type="Resource" script_class="APUDatabase" format=3 uid="uid://bgmsf64bjnhxg"]
 
 [ext_resource type="Script" uid="uid://bmxym6uwly0j1" path="res://core/platform/hardware/apu_entry.gd" id="1_7rewb"]
 [ext_resource type="Script" uid="uid://dpvll2refhyxn" path="res://core/platform/hardware/apu_database.gd" id="2_k20lo"]
@@ -41,4 +41,3 @@ max_boost = 2.0
 [resource]
 script = ExtResource("2_k20lo")
 apu_list = Array[ExtResource("1_7rewb")]([SubResource("Resource_7mppk"), SubResource("Resource_bceey"), SubResource("Resource_xo814"), SubResource("Resource_fq6fk"), SubResource("Resource_046e8")])
-database_name = ""
