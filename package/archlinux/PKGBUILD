@@ -1,7 +1,7 @@
 # Maintainer: Derek J. Clark <derekjohn.clark@gmail.com>
 pkgname=opengamepadui-bin
 _pkgbase=opengamepadui
-pkgver=0.44.2
+pkgver=0.44.3
 pkgrel=1
 pkgdesc="Open source game launcher"
 arch=('x86_64')
@@ -16,7 +16,7 @@ provides=('opengamepadui')
 conflicts=('opengamepadui-git')
 source=(opengamepadui-v$pkgver.tar.gz::https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v$pkgver/opengamepadui.tar.gz)
 
-sha256sums=('e9a9394465d290bd2c7da507f51dc26394417c1589ca7d11e89a0694a7acb015')
+sha256sums=('b301b501c0e42d92ff13d5bee78df30f3adf064e287255ca5d80fb0d5c960037')
 
 package() {
   options=('!strip')
