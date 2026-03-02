@@ -71,7 +71,9 @@ signal value_changed(value: float)
 		if not icon:
 			return
 		icon.texture = v
+		slider_icon.texture = v
 		icon.visible = icon_texture != null
+		slider_icon.visible = not show_label and icon_texture != null
 
 @export var slider_icon_texture: Texture2D:
 	set(v):

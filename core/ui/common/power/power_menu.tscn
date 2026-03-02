@@ -9,7 +9,6 @@
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="7_6wm3v"]
 [ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="8_x0r6i"]
 [ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="9_ycyo3"]
-[ext_resource type="Script" uid="uid://bmo7xxkowjsdx" path="res://core/systems/input/focus_stack.gd" id="10_k3awt"]
 [ext_resource type="PackedScene" uid="uid://dithv38oqgy58" path="res://core/ui/components/section_label.tscn" id="11_tk01c"]
 [ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="12_cid3o"]
 
@@ -18,9 +17,6 @@ shader = ExtResource("2_cid3o")
 shader_parameter/blur_amount = 1.578
 shader_parameter/mix_amount = 0.0
 shader_parameter/color_over = Color(0, 0, 0, 0)
-
-[sub_resource type="Resource" id="Resource_fafkw"]
-script = ExtResource("10_k3awt")
 
 [node name="PowerMenu" type="Control" unique_id=1824508021 groups=["power_menu"]]
 z_index = 20
@@ -99,9 +95,9 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 alignment = 1
 
-[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1032088283 instance=ExtResource("9_ycyo3")]
+[node name="FocusGroup" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1032088283 node_paths=PackedStringArray("current_focus") instance=ExtResource("9_ycyo3")]
 unique_name_in_owner = true
-focus_stack = SubResource("Resource_fafkw")
+current_focus = NodePath("../SuspendButton")
 
 [node name="SectionLabel" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=913851179 instance=ExtResource("11_tk01c")]
 layout_mode = 2

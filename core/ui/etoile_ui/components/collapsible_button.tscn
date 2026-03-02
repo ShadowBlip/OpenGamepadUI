@@ -31,6 +31,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_4eh4g")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PrimaryPanelContainer" unique_id=1292746312]
@@ -61,6 +62,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 
 [node name="ExpandIcon" type="TextureRect" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=153943390]
 unique_name_in_owner = true
@@ -75,6 +77,7 @@ stretch_mode = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_2ggfo")
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/SplitPanelContainer" unique_id=1969255740]

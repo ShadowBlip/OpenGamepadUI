@@ -58,8 +58,7 @@ autowrap_mode = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1103534997]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1424842000 node_paths=PackedStringArray("current_focus") instance=ExtResource("3_8uro1")]
-current_focus = NodePath("")
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1424842000 instance=ExtResource("3_8uro1")]
 
 [node name="LaunchButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=796458150]
 unique_name_in_owner = true
@@ -79,6 +78,7 @@ metadata/_custom_type_script = "uid://ogqbbfs88xnr"
 
 [node name="LinksButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=665443050]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 focus_mode = 2
 script = ExtResource("4_on6i0")

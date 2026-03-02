@@ -1,12 +1,22 @@
 [gd_scene format=3 uid="uid://hvgh6cfm18jx"]
 
 [ext_resource type="Script" uid="uid://boll57a03c0ic" path="res://core/ui/etoile_ui/settings/settings_menu.gd" id="1_w0mdm"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="2_cefgi"]
 [ext_resource type="Script" uid="uid://b6useuxusuw4w" path="res://core/ui/components/containers/enhanced_scroll_container.gd" id="2_wgjuq"]
 [ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="3_t1amb"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="3_xjq4q"]
+[ext_resource type="Resource" uid="uid://bcr6c0281lb5b" path="res://assets/state/state_machines/menu_state_machine.tres" id="4_4r7yb"]
 [ext_resource type="Texture2D" uid="uid://bdjnwtumim20t" path="res://assets/ui/icons/material-symbols--settings-outline-rounded.svg" id="4_g3a85"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="5_7m03e"]
 [ext_resource type="Texture2D" uid="uid://dty1fb5nkj3ni" path="res://assets/ui/icons/wifi-high.svg" id="5_g3a85"]
 [ext_resource type="Texture2D" uid="uid://bmp372vmsk41d" path="res://assets/ui/icons/material-symbols--bluetooth.svg" id="6_3ov0g"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="6_i4c1g"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="7_k7suh"]
 [ext_resource type="Texture2D" uid="uid://b8i7dvjfeylpv" path="res://assets/ui/icons/material-symbols--desktop-windows-outline-rounded.svg" id="7_wavho"]
+[ext_resource type="PackedScene" uid="uid://uljtdvmuol3l" path="res://core/systems/input/focus_group_setter.tscn" id="8_0dy05"]
+[ext_resource type="Script" uid="uid://yn3ulqw1kr2t" path="res://core/systems/state/state_updater.gd" id="9_joyxo"]
+[ext_resource type="Resource" uid="uid://iqrotrmq62i6" path="res://assets/state/state_machines/settings_state_machine.tres" id="10_55ud7"]
+[ext_resource type="Script" uid="uid://c801uoopgvud5" path="res://core/systems/state/state_machine_watcher.gd" id="11_1fwku"]
 
 [node name="SettingsMenu" type="MarginContainer" unique_id=1747485030]
 anchors_preset = 15
@@ -15,6 +25,43 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w0mdm")
+
+[node name="InputWatcher" parent="." unique_id=830536949 instance=ExtResource("2_cefgi")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" unique_id=162154636 instance=ExtResource("3_xjq4q")]
+state_machine = ExtResource("4_4r7yb")
+action = 2
+on_signal = "input_released"
+
+[node name="StateWatcher" parent="." unique_id=760096209 instance=ExtResource("5_7m03e")]
+state = ExtResource("6_i4c1g")
+
+[node name="FadeEffect" parent="StateWatcher" unique_id=278651893 node_paths=PackedStringArray("target") instance=ExtResource("7_k7suh")]
+target = NodePath("../..")
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="FocusGroupSetter" parent="StateWatcher" unique_id=1545096030 instance=ExtResource("8_0dy05")]
+on_signal = "state_entered"
+
+[node name="RefreshFocusGroupSetter" parent="StateWatcher" unique_id=888165680 instance=ExtResource("8_0dy05")]
+on_signal = "state_refreshed"
+
+[node name="StateUpdater" type="Node" parent="StateWatcher" unique_id=1590883668]
+script = ExtResource("9_joyxo")
+state_machine = ExtResource("10_55ud7")
+action = 6
+on_signal = "state_removed"
+
+[node name="StateMachineWatcher" type="Node" parent="." unique_id=1990334576]
+script = ExtResource("11_1fwku")
+state_machine = ExtResource("10_55ud7")
+
+[node name="FocusGroupSetter" parent="StateMachineWatcher" unique_id=236229167 instance=ExtResource("8_0dy05")]
+on_signal = "emptied"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1126929786]
 layout_mode = 2

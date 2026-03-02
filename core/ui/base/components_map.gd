@@ -6,6 +6,7 @@ class_name ComponentsMap
 
 enum Type {
 	Button,
+	Slider,
 }
 
 @export_category("Components")
@@ -18,6 +19,8 @@ func build(component_type: Type) -> Control:
 	match component_type:
 		Type.Button:
 			return button.instantiate()
+		Type.Slider:
+			return slider.instantiate()
 	return null
 
 

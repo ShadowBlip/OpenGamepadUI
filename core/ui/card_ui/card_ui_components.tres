@@ -2,8 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://c71ayw7pcw6u6" path="res://core/ui/components/card_button.tscn" id="1_15ui8"]
 [ext_resource type="Script" uid="uid://rbk4rsah3pud" path="res://core/ui/base/components_map.gd" id="1_k2qbg"]
+[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="3_m08la"]
 
 [resource]
 script = ExtResource("1_k2qbg")
 button = ExtResource("1_15ui8")
+slider = ExtResource("3_m08la")
 metadata/_custom_type_script = "uid://rbk4rsah3pud"

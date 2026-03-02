@@ -16,21 +16,22 @@
 [ext_resource type="Texture2D" uid="uid://ciwqk2qmmp2cf" path="res://assets/ui/icons/material-symbols--keyboard-outline-rounded.svg" id="13_tyc72"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="17_tyc72"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_0b7mq"]
-[ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="19_edu7p"]
 [ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="20_rpfsb"]
 [ext_resource type="Texture2D" uid="uid://dmcbtniaek0of" path="res://assets/ui/icons/material-symbols--exit-to-app-rounded.svg" id="20_tyc72"]
 [ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="21_ghcyy"]
 [ext_resource type="Texture2D" uid="uid://bjtfbt8wnillp" path="res://assets/ui/icons/material-symbols--notifications-outline-rounded.svg" id="21_tyc72"]
+[ext_resource type="Script" uid="uid://bldssymap3bh2" path="res://core/ui/base/component_slider.gd" id="22_lrbss"]
 [ext_resource type="PackedScene" uid="uid://btrem65c8687w" path="res://core/ui/etoile_ui/components/collapsible_button.tscn" id="23_ya0sn"]
-[ext_resource type="Texture2D" uid="uid://b2hgvhe7nrk75" path="res://assets/ui/icons/volume-high.svg" id="24_eeplw"]
-[ext_resource type="Texture2D" uid="uid://cc8mwt4n18yhc" path="res://assets/ui/icons/status-active.svg" id="25_imsdn"]
 [ext_resource type="Texture2D" uid="uid://bmp372vmsk41d" path="res://assets/ui/icons/material-symbols--bluetooth.svg" id="26_tyc72"]
 [ext_resource type="Texture2D" uid="uid://dty1fb5nkj3ni" path="res://assets/ui/icons/wifi-high.svg" id="26_ya0sn"]
 [ext_resource type="Texture2D" uid="uid://iuraatp10cjd" path="res://assets/ui/icons/material-symbols--speed-outline-rounded.svg" id="27_tyc72"]
 [ext_resource type="Texture2D" uid="uid://bbqtqi6j68uwf" path="res://assets/ui/icons/material-symbols--picture-in-picture-outline-rounded.svg" id="28_tyc72"]
 [ext_resource type="Texture2D" uid="uid://dx6rnad4lmct0" path="res://assets/ui/icons/material-symbols--gamepad-outline-rounded.svg" id="29_tyc72"]
-[ext_resource type="Texture2D" uid="uid://dnroys1ee756c" path="res://assets/ui/icons/arrow-up-bold.svg" id="31_tyc72"]
+[ext_resource type="Texture2D" uid="uid://dj7wg0qnevawx" path="res://assets/ui/icons/material-symbols--chevron-right-rounded.svg" id="30_ghcyy"]
+[ext_resource type="PackedScene" uid="uid://cpss2bhdwm8t7" path="res://core/ui/common/settings/network_settings_menu.tscn" id="32_ghcyy"]
+[ext_resource type="PackedScene" uid="uid://bn1j2yde6jp73" path="res://core/ui/common/notification/notification_menu.tscn" id="32_j86gm"]
 [ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/quick_bar/performance_menu.tscn" id="32_lrbss"]
+[ext_resource type="PackedScene" uid="uid://6ygxdkvh1hib" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.tscn" id="33_ghcyy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpfsb"]
 bg_color = Color(0, 0, 0, 0.5)
@@ -38,6 +39,12 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ghcyy"]
+load_path = "res://.godot/imported/volume-high.svg-65e6e6c3f52ba0fd57f3db189e15ee74.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_j86gm"]
+load_path = "res://.godot/imported/status-active.svg-750c0b790b84fd0e45c3ac19af5465ff.ctex"
 
 [node name="QuickBarMenu" type="MarginContainer" unique_id=144390319]
 anchors_preset = 15
@@ -67,6 +74,7 @@ action = 2
 on_signal = "input_released"
 
 [node name="GlassPanel" parent="." unique_id=2005112249 instance=ExtResource("2_nejlc")]
+unique_name_in_owner = true
 layout_mode = 2
 shape_type = "Rectangle"
 corner_radius_top_left = 20.0
@@ -124,6 +132,7 @@ script = ExtResource("7_aq7ju")
 on_signal = "button_up"
 
 [node name="HelpButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1191674271 instance=ExtResource("23_ya0sn")]
+visible = false
 layout_mode = 2
 icon_texture = ExtResource("8_g8ygh")
 
@@ -156,9 +165,8 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer" unique_id=2090268693]
 layout_mode = 2
 
-[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1416614521 node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1416614521 node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
 unique_name_in_owner = true
-current_focus = NodePath("../PanelContainer/MarginContainer/VolumeSlider")
 focus_stack = ExtResource("18_0b7mq")
 back_action = ""
 wrap_focus = false
@@ -181,71 +189,93 @@ text = "Notifications"
 expandable = true
 color = Color(0, 0, 0, 0.5)
 
-[node name="PanelContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=140792188]
+[node name="VolumeContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=140792188]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_rpfsb")
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/PanelContainer" unique_id=1357008629]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer" unique_id=1357008629]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VolumeSlider" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/PanelContainer/MarginContainer" unique_id=1169681082 instance=ExtResource("19_edu7p")]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer" unique_id=1354865390]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer/HBoxContainer" unique_id=1259434566]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_ghcyy")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="VolumeSlider" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer/HBoxContainer" unique_id=576088553]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Volume"
-show_label = false
-icon_texture = ExtResource("24_eeplw")
-slider_icon_texture = ExtResource("24_eeplw")
-
-[node name="PanelContainer2" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1453662974]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_rpfsb")
-
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/PanelContainer2" unique_id=315476820]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="BrightnessSlider" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/PanelContainer2/MarginContainer" unique_id=1198154837 instance=ExtResource("19_edu7p")]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Brightness"
-show_label = false
+size_flags_horizontal = 3
+focus_mode = 2
+script = ExtResource("22_lrbss")
 step = 3.0
-icon_texture = ExtResource("25_imsdn")
-slider_icon_texture = ExtResource("25_imsdn")
+show_label = false
+metadata/_custom_type_script = "uid://bldssymap3bh2"
+
+[node name="BrightnessContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1453662974]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rpfsb")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer" unique_id=315476820]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer" unique_id=168137224]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer/HBoxContainer" unique_id=2125542627]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_j86gm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BrightnessSlider" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer/HBoxContainer" unique_id=1671685859]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+script = ExtResource("22_lrbss")
+step = 3.0
+show_label = false
+metadata/_custom_type_script = "uid://bldssymap3bh2"
 
 [node name="GridContainer" type="GridContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer" unique_id=1511935686]
 layout_mode = 2
 columns = 2
 
-[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=34181148 node_paths=PackedStringArray("current_focus", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
-current_focus = NodePath("../../VBoxContainer/PanelContainer/MarginContainer/VolumeSlider")
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=34181148 node_paths=PackedStringArray("focus_neighbor_top") instance=ExtResource("3_5qs52")]
 focus_stack = ExtResource("18_0b7mq")
 back_action = ""
 wrap_focus = false
 focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
 
-[node name="WifiButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=124915966 instance=ExtResource("23_ya0sn")]
+[node name="NetworkButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=124915966 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 icon_texture = ExtResource("26_ya0sn")
-text = "Wi-Fi"
-split_panel = true
+text = "Network"
 expandable = true
 color = Color(0, 0, 0, 0.5)
 
 [node name="BluetoothButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=2145148437 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 icon_texture = ExtResource("26_tyc72")
 text = "Bluetooth"
-split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
 
@@ -255,23 +285,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 icon_texture = ExtResource("27_tyc72")
 text = "Performance"
+expandable = true
 color = Color(0, 0, 0, 0.5)
 
 [node name="OverlayButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=638110440 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 icon_texture = ExtResource("28_tyc72")
 text = "Overlay"
-split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
 
 [node name="ControllersButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=1125671800 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 icon_texture = ExtResource("29_tyc72")
 text = "Controllers"
-split_panel = true
 expandable = true
 color = Color(0, 0, 0, 0.5)
 
@@ -298,10 +329,11 @@ layout_mode = 2
 [node name="BackButton" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=910146816 instance=ExtResource("23_ya0sn")]
 unique_name_in_owner = true
 layout_mode = 2
-icon_texture = ExtResource("31_tyc72")
+icon_texture = ExtResource("30_ghcyy")
 color = Color(0, 0, 0, 0.5)
 
 [node name="MenuLabel" type="Label" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1926166771]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Performance Settings"
 
@@ -321,9 +353,25 @@ theme_override_constants/margin_right = 24
 
 [node name="Performance" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=984999276 instance=ExtResource("32_lrbss")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
-[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance" index="0" unique_id=1260578661 node_paths=PackedStringArray("focus_neighbor_top")]
+[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance" index="0" unique_id=549046002 node_paths=PackedStringArray("focus_neighbor_top")]
 focus_neighbor_top = NodePath("../../../../MarginContainer/HBoxContainer/FocusGroup")
+
+[node name="NetworkSettings" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=2050539442 instance=ExtResource("32_ghcyy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BluetoothSettingsMenu" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=1368248529 instance=ExtResource("33_ghcyy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="NotificationMenu" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=353444083 instance=ExtResource("32_j86gm")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [editable path="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance"]
