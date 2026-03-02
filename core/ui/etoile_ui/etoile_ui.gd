@@ -228,7 +228,6 @@ func _on_game_state_exited(to: State) -> void:
 			var should_blur := settings_manager.get_value("display", "enable_overlay_blur", false) as bool
 			if should_blur and _xwayland_primary.get_focused_app_gfx() != gamescope.OVERLAY_GAME_ID:
 				_set_blur(GamescopeXWayland.BLUR_MODE_ALWAYS)
-
 	else:
 		_on_game_state_removed()
 
@@ -246,6 +245,7 @@ func _on_game_state_removed() -> void:
 
 	# Un-hide the background panel
 	panel.visible = true
+	banner.visible = true
 
 	# Reset the state stack if no menu state exists
 	if not state_machine.has_state(menu_state):

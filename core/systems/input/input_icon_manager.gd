@@ -360,7 +360,7 @@ func _get_matching_event(path: String, input_type: InputType) -> Array[InputEven
 	var matching_events: Array[InputEvent] = []
 	if _custom_input_actions.has(path):
 		events = _custom_input_actions[path]
-	else:
+	elif path != "":
 		events = InputMap.action_get_events(path)
 		# Check if any of the events have key modifiers
 		var mod_events: Array[InputEvent] = []
@@ -430,6 +430,8 @@ func _parse_input_actions():
 
 
 func _is_path_action(path: String) -> bool:
+	if path == "":
+		return false
 	return _custom_input_actions.has(path) or InputMap.has_action(path)
 
 

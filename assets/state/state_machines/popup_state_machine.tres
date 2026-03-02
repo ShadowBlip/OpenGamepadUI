@@ -8,9 +8,11 @@
 [ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="5_5ytlq"]
 [ext_resource type="Script" uid="uid://5gt4rsvv8fxf" path="res://core/systems/state/state_machine.gd" id="6_82te1"]
 [ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="7_361fe"]
+[ext_resource type="Resource" uid="uid://cx8u1y5j7vyss" path="res://assets/state/states/gamepad_settings.tres" id="8_os1u0"]
+[ext_resource type="Resource" uid="uid://3vw3bk76d88w" path="res://assets/state/states/game_settings.tres" id="9_xh7p7"]
 
 [resource]
 script = ExtResource("6_82te1")
 logger_name = "PopupStateMachine"
 minimum_states = 0
-allowed_states = Array[ExtResource("1_7s405")]([ExtResource("1_7fvmm"), ExtResource("2_detpa"), ExtResource("3_0mhn6"), ExtResource("4_qu5fi"), ExtResource("5_5ytlq"), ExtResource("7_361fe")])
+allowed_states = Array[ExtResource("1_7s405")]([ExtResource("1_7fvmm"), ExtResource("2_detpa"), ExtResource("3_0mhn6"), ExtResource("4_qu5fi"), ExtResource("5_5ytlq"), ExtResource("7_361fe"), ExtResource("8_os1u0"), ExtResource("9_xh7p7")])

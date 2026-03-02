@@ -3,7 +3,7 @@
 extends HBoxContainer
 class_name InputIcon
 
-var input_icons := load("res://core/systems/input/input_icon_manager.tres") as InputIconManager
+var input_icons := preload("res://core/systems/input/input_icon_manager.tres") as InputIconManager
 
 var label := Label.new()
 var textures: Array[Texture] = []

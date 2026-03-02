@@ -8,7 +8,11 @@ var settings_manager := preload("res://core/global/settings_manager.tres") as Se
 
 var tween: Tween
 var state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
+var popup_state_machine := preload("res://assets/state/state_machines/popup_state_machine.tres") as StateMachine
 var state := preload("res://assets/state/states/game_launcher.tres") as State
+var game_settings_state := preload("res://assets/state/states/game_settings.tres") as State
+var in_game_state := preload("res://assets/state/states/in_game.tres") as State
+
 
 @onready var logo := %Logo as TextureRect
 @onready var launch_button := %LaunchButton as ComponentButton
@@ -22,6 +26,8 @@ func _ready() -> void:
 	state.state_entered.connect(_on_state_entered)
 	state.state_exited.connect(_on_state_exited)
 	state.refreshed.connect(_on_state_refreshed)
+	launch_button.button_up.connect(_on_launch_pressed)
+	manage_button.button_up.connect(_on_manage_pressed)
 
 
 # Show the game details on state entered
@@ -62,8 +68,7 @@ func _on_state_refreshed() -> void:
 	logo.texture = texture
 	var summary := await metadata_manager.get_summary(library_item)
 	description_label.text = summary
-	var launch_item := _get_launch_item(library_item)
-	_update_launch_button(launch_item)
+	_update_menu_with_library_item(library_item)
 
 
 # Lookup the current launch provider for the library item
@@ -79,10 +84,12 @@ func _get_launch_item(library_item: LibraryItem) -> LibraryLaunchItem:
 	return launch_item
 
 
-# Update the launch button based on the state
-func _update_launch_button(launch_item: LibraryLaunchItem) -> void:
+# Update the launch button and other elements based on the state
+func _update_menu_with_library_item(library_item: LibraryItem) -> void:
+	var launch_item := _get_launch_item(library_item)
 	if not launch_item:
 		return
+	uninstall_button.visible = launch_item.installed
 	if launch_item.installed:
 		launch_button.text = tr("Play Now")
 	else:
@@ -93,6 +100,37 @@ func _update_launch_button(launch_item: LibraryLaunchItem) -> void:
 		launch_button.text = tr("Queued")
 	if install_manager.is_installing(launch_item):
 		launch_button.text = tr("Installing")
+
+
+func _on_launch_pressed() -> void:
+	if not state.has_meta("library_item"):
+		return
+	var library_item := state.get_meta("library_item") as LibraryItem
+	var launch_item := _get_launch_item(library_item)
+	if launch_item.installed:
+		_launch_game(launch_item)
+		return
+
+
+func _on_manage_pressed() -> void:
+	var library_item := state.get_meta("library_item") as LibraryItem
+	game_settings_state.set_meta("item", library_item)
+	popup_state_machine.push_state(game_settings_state)
+
+
+func _launch_game(launch_item: LibraryLaunchItem) -> void:
+	# Resume if the game is running already
+	if launch_manager.is_running(launch_item.name):
+		state_machine.set_state([in_game_state])
+		return
+
+	# If the app isn't installed, install it.
+	if not launch_item.installed:
+		#_on_install()
+		return
+
+	# Launch the game using launch manager
+	launch_manager.launch(launch_item)
 
 
 func _input(event: InputEvent) -> void:

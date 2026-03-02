@@ -73,15 +73,19 @@ func recalculate_focus() -> void:
 
 	var control_children: Array[Control] = []
 	for child in parent.get_children():
-		if not child is Control:
+		var current := child
+		if not current is Control:
 			continue
-		if not child.is_inside_tree():
+		if not current.is_inside_tree():
 			continue
-		if child.focus_mode != Control.FOCUS_ALL:
-			continue
-		control_children.append(child)
-		if not child.focus_entered.is_connected(_on_child_focused):
-			child.focus_entered.connect(_on_child_focused.bind(child))
+		if (current as Control).focus_mode != Control.FOCUS_ALL:
+			var focusable_grandchild := find_focusable([current])
+			if not focusable_grandchild:
+				continue
+			current = focusable_grandchild
+		control_children.append(current)
+		if not current.focus_entered.is_connected(_on_child_focused):
+			current.focus_entered.connect(_on_child_focused.bind(current))
 
 	if control_children.size() == 0:
 		logger.trace("No control children. Nothing to do.")

@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bn1j2yde6jp73"]
+
+[ext_resource type="Script" uid="uid://dig2vjy2f8h4h" path="res://core/ui/common/notification/notification_menu.gd" id="1_sa8rh"]
+[ext_resource type="Script" uid="uid://b6useuxusuw4w" path="res://core/ui/components/containers/enhanced_scroll_container.gd" id="2_ldsxl"]
+[ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="2_x5xd2"]
+[ext_resource type="PackedScene" uid="uid://duhgqixnyaweh" path="res://core/ui/components/notification_container.tscn" id="4_dm4gl"]
+
+[node name="NotificationMenu" type="MarginContainer" unique_id=353444083]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sa8rh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2031039034]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=69052300]
+layout_mode = 2
+
+[node name="ComponentButton" type="MarginContainer" parent="VBoxContainer/HBoxContainer" unique_id=1453163742]
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("2_x5xd2")
+text = "Clear"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="EnhancedScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1155866024]
+layout_mode = 2
+script = ExtResource("2_ldsxl")
+metadata/_custom_type_script = "uid://b6useuxusuw4w"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/EnhancedScrollContainer" unique_id=1673222298]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContentContainer" type="VBoxContainer" parent="VBoxContainer/EnhancedScrollContainer/MarginContainer" unique_id=1098724161]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NotificationContainer" parent="VBoxContainer/EnhancedScrollContainer/MarginContainer/ContentContainer" unique_id=603816229 instance=ExtResource("4_dm4gl")]
+layout_mode = 2
+
+[node name="NoNotificationsContainer" type="CenterContainer" parent="." unique_id=1295360671]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="NoNotificationsContainer" unique_id=926808382]
+layout_mode = 2
+text = "No notifications"

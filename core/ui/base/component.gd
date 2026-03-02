@@ -15,6 +15,7 @@ var implementation: Control
 
 func _init() -> void:
 	focus_mode = Control.FOCUS_ALL
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	var on_ready := func() -> void:
 		if not implementation:
 			return
@@ -24,6 +25,10 @@ func _init() -> void:
 
 
 func _on_focus_entered() -> void:
+	implementation.focus_neighbor_bottom = focus_neighbor_bottom
+	implementation.focus_neighbor_left = focus_neighbor_left
+	implementation.focus_neighbor_right = focus_neighbor_right
+	implementation.focus_neighbor_top = focus_neighbor_top
 	implementation.grab_focus()
 
 

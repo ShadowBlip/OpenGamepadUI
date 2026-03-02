@@ -40,6 +40,10 @@ signal value_changed(value: float)
 	set(v):
 		editable = v
 		_set_implementation_property("editable", v)
+@export var show_label: bool = true:
+	set(v):
+		show_label = v
+		_set_implementation_property("show_label", v)
 @export var show_decimal: bool = false:
 	set(v):
 		show_decimal = v
@@ -60,7 +64,7 @@ func _ready() -> void:
 		components = load("res://core/ui/etoile_ui/etoile_components.tres")
 	else:
 		assert(components != null, "Unable to detect user interface to build component")
-	implementation = components.build(ComponentsMap.Type.Button)
+	implementation = components.build(ComponentsMap.Type.Slider)
 	_connect_implementation_signal("drag_ended", _on_drag_ended)
 	_connect_implementation_signal("drag_started", _on_drag_started)
 	_connect_implementation_signal("changed", _on_changed)
@@ -73,6 +77,7 @@ func _ready() -> void:
 	min_value = min_value
 	step = step
 	editable = editable
+	show_label = show_label
 	show_decimal = show_decimal
 	icon_texture = icon_texture
 	tick_count = tick_count
