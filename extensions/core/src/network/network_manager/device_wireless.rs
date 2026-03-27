@@ -114,12 +114,12 @@ impl NetworkDeviceWireless {
                 let device: Gd<NetworkDeviceWireless> = res.cast();
                 device
             } else {
-                let mut device = NetworkDeviceWireless::from_path(path.to_string().into());
+                let mut device = NetworkDeviceWireless::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = NetworkDeviceWireless::from_path(path.to_string().into());
+            let mut device = NetworkDeviceWireless::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -200,7 +200,7 @@ impl NetworkDeviceWireless {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.hw_address().unwrap_or_default().into()
+        proxy.hw_address().unwrap_or_default().as_str().into()
     }
 
     /// Process signals and emit them as Godot signals.

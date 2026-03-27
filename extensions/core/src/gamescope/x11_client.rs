@@ -242,12 +242,12 @@ impl GamescopeXWayland {
                 let device: Gd<GamescopeXWayland> = res.cast();
                 device
             } else {
-                let mut device = GamescopeXWayland::from_name(name.to_string().into());
+                let mut device = GamescopeXWayland::from_name(name.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = GamescopeXWayland::from_name(name.to_string().into());
+            let mut device = GamescopeXWayland::from_name(name.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -403,7 +403,7 @@ impl GamescopeXWayland {
             }
         };
 
-        name.unwrap_or_default().into()
+        name.unwrap_or_default().as_str().into()
     }
 
     /// Returns the window x and y position for the given window. Returns (-1, -1)
@@ -668,7 +668,10 @@ impl GamescopeXWayland {
                 return Default::default();
             }
         };
-        let value: Vec<GString> = value.into_iter().map(GString::from).collect();
+        let value: Vec<GString> = value
+            .into_iter()
+            .map(|v| GString::from(v.as_str()))
+            .collect();
         self.focusable_window_names = value.into();
         self.focusable_window_names.clone()
     }
@@ -1214,7 +1217,7 @@ impl GamescopeXWayland {
 #[godot_api]
 impl IResource for GamescopeXWayland {
     fn to_string(&self) -> GString {
-        format!("<GamescopeXWayland#{}>", self.name).into()
+        format!("<GamescopeXWayland#{}>", self.name).as_str().into()
     }
 }
 

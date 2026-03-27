@@ -211,12 +211,12 @@ impl NetworkAccessPoint {
                 let device: Gd<NetworkAccessPoint> = res.cast();
                 device
             } else {
-                let mut device = NetworkAccessPoint::from_path(path.to_string().into());
+                let mut device = NetworkAccessPoint::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = NetworkAccessPoint::from_path(path.to_string().into());
+            let mut device = NetworkAccessPoint::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -323,7 +323,10 @@ impl NetworkAccessPoint {
             return Default::default();
         };
         let value = proxy.ssid().unwrap_or_default();
-        String::from_utf8_lossy(value.as_slice()).to_string().into()
+        String::from_utf8_lossy(value.as_slice())
+            .to_string()
+            .as_str()
+            .into()
     }
 
     /// The current signal quality of the access point, in percent.
@@ -368,7 +371,7 @@ impl NetworkAccessPoint {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.hw_address().unwrap_or_default().into()
+        proxy.hw_address().unwrap_or_default().as_str().into()
     }
 
     /// Describes the operating mode of the access point.

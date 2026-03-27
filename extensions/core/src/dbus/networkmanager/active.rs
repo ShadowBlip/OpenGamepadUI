@@ -25,10 +25,6 @@ use zbus::proxy;
     default_service = "org.freedesktop.NetworkManager"
 )]
 pub trait Active {
-    /// StateChanged signal
-    //#[zbus(signal)]
-    //fn state_changed(&self, state: u32, reason: u32) -> zbus::Result<()>;
-
     /// Connection property
     #[zbus(property)]
     fn connection(&self) -> zbus::Result<zbus::zvariant::OwnedObjectPath>;

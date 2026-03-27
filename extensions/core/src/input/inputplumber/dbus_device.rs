@@ -93,12 +93,12 @@ impl DBusDevice {
                 let device: Gd<DBusDevice> = res.cast();
                 device
             } else {
-                let mut device = DBusDevice::from_path(path.to_string().into());
+                let mut device = DBusDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = DBusDevice::from_path(path.to_string().into());
+            let mut device = DBusDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -106,7 +106,7 @@ impl DBusDevice {
 
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.path.clone().into()
+        self.path.as_str().into()
     }
 
     /// Dispatches signals

@@ -178,12 +178,12 @@ impl BluetoothAdapter {
                 let device: Gd<BluetoothAdapter> = res.cast();
                 device
             } else {
-                let mut device = BluetoothAdapter::from_path(path.to_string().into());
+                let mut device = BluetoothAdapter::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = BluetoothAdapter::from_path(path.to_string().into());
+            let mut device = BluetoothAdapter::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -200,7 +200,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.address().unwrap_or_default().into()
+        proxy.address().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -208,7 +208,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.address_type().unwrap_or_default().into()
+        proxy.address_type().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -216,7 +216,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.alias().unwrap_or_default().into()
+        proxy.alias().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -304,7 +304,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.modalias().unwrap_or_default().into()
+        proxy.modalias().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -312,7 +312,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -352,7 +352,7 @@ impl BluetoothAdapter {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.power_state().unwrap_or_default().into()
+        proxy.power_state().unwrap_or_default().as_str().into()
     }
 
     #[func]

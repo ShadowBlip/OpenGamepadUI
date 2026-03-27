@@ -174,12 +174,12 @@ impl BluetoothDevice {
                 let device: Gd<BluetoothDevice> = res.cast();
                 device
             } else {
-                let mut device = BluetoothDevice::from_path(path.to_string().into());
+                let mut device = BluetoothDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = BluetoothDevice::from_path(path.to_string().into());
+            let mut device = BluetoothDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -324,7 +324,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -332,7 +332,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.modalias().unwrap_or_default().into()
+        proxy.modalias().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -348,7 +348,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.icon().unwrap_or_default().into()
+        proxy.icon().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -404,7 +404,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.alias().unwrap_or_default().into()
+        proxy.alias().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -422,7 +422,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.address_type().unwrap_or_default().into()
+        proxy.address_type().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -430,7 +430,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.address().unwrap_or_default().into()
+        proxy.address().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -438,7 +438,7 @@ impl BluetoothDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.adapter().unwrap_or_default().to_string().into()
+        proxy.adapter().unwrap_or_default().as_str().into()
     }
 
     /// Dispatches signals

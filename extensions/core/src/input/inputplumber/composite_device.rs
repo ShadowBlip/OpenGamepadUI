@@ -104,12 +104,12 @@ impl CompositeDevice {
                 let device: Gd<CompositeDevice> = res.cast();
                 device
             } else {
-                let mut device = CompositeDevice::from_path(path.to_string().into());
+                let mut device = CompositeDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = CompositeDevice::from_path(path.to_string().into());
+            let mut device = CompositeDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -121,7 +121,7 @@ impl CompositeDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
-        proxy.name().ok().unwrap_or_default().into()
+        proxy.name().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -129,7 +129,12 @@ impl CompositeDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return "".into();
         };
-        proxy.profile_name().ok().unwrap_or_default().into()
+        proxy
+            .profile_name()
+            .ok()
+            .unwrap_or_default()
+            .as_str()
+            .into()
     }
 
     /// Get the intercept mode of the composite device
@@ -162,7 +167,7 @@ impl CompositeDevice {
             .ok()
             .unwrap_or_default()
             .into_iter()
-            .map(GString::from)
+            .map(|v| GString::from(v.as_str()))
             .collect();
         PackedStringArray::from(caps.as_slice())
     }
@@ -178,7 +183,7 @@ impl CompositeDevice {
             .ok()
             .unwrap_or_default()
             .into_iter()
-            .map(GString::from)
+            .map(|v| GString::from(v.as_str()))
             .collect();
         PackedStringArray::from(caps.as_slice())
     }
@@ -205,7 +210,7 @@ impl CompositeDevice {
             .ok()
             .unwrap_or_default()
             .into_iter()
-            .map(GString::from)
+            .map(|v| GString::from(v.as_str()))
             .collect();
         PackedStringArray::from(values.as_slice())
     }
@@ -221,7 +226,7 @@ impl CompositeDevice {
             .ok()
             .unwrap_or_default()
             .into_iter()
-            .map(GString::from)
+            .map(|v| GString::from(v.as_str()))
             .collect();
         PackedStringArray::from(values.as_slice())
     }
@@ -276,7 +281,7 @@ impl CompositeDevice {
     /// Returns the DBus path to the [CompositeDevice]
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.path.clone().into()
+        self.path.as_str().into()
     }
 
     /// Load the device profile from the given path

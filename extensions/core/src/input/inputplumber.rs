@@ -416,7 +416,7 @@ impl InputPlumberInstance {
                 self.composite_devices.remove(&path);
                 self.base_mut().emit_signal(
                     "composite_device_removed",
-                    &[GString::from(path).to_variant()],
+                    &[GString::from(path.as_str()).to_variant()],
                 );
             }
             ObjectType::SourceEventDevice => (),

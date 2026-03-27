@@ -108,12 +108,12 @@ impl GpuConnector {
                 let device: Gd<GpuConnector> = res.cast();
                 device
             } else {
-                let mut device = GpuConnector::from_path(path.to_string().into());
+                let mut device = GpuConnector::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = GpuConnector::from_path(path.to_string().into());
+            let mut device = GpuConnector::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -122,7 +122,7 @@ impl GpuConnector {
     /// Return the DBus path to the GPU connector instance
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.dbus_path.clone().into()
+        self.dbus_path.as_str().into()
     }
 
     #[func]
@@ -164,7 +164,7 @@ impl GpuConnector {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -172,7 +172,7 @@ impl GpuConnector {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.path().unwrap_or_default().into()
+        proxy.path().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -180,7 +180,7 @@ impl GpuConnector {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.status().unwrap_or_default().into()
+        proxy.status().unwrap_or_default().as_str().into()
     }
 
     /// Dispatches signals

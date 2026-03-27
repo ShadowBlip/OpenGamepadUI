@@ -69,7 +69,7 @@ impl<'a> GodotVariant for zvariant::Value<'a> {
                 Some(arr.to_variant())
             }
             zvariant::Value::Dict(value) => {
-                let mut dict = Dictionary::new();
+                let mut dict = VarDictionary::new();
                 for (key, val) in value.iter() {
                     let Some(key) = key.as_godot_variant() else {
                         continue;
@@ -90,12 +90,12 @@ impl<'a> GodotVariant for zvariant::Value<'a> {
 
 /// Interface for converting Godot types -> DBus types
 pub trait DBusVariant {
-    fn as_zvariant(&self) -> Option<zvariant::Value>;
+    fn as_zvariant(&'_ self) -> Option<zvariant::Value<'_>>;
 }
 
 impl DBusVariant for Variant {
     /// Convert the Godot variant type into a DBus variant type
-    fn as_zvariant(&self) -> Option<zvariant::Value> {
+    fn as_zvariant(&'_ self) -> Option<zvariant::Value<'_>> {
         match self.get_type() {
             VariantType::NIL => {
                 let value = zvariant::Optional::<&str>::null_value();

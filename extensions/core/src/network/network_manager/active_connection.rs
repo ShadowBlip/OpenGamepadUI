@@ -115,12 +115,12 @@ impl NetworkActiveConnection {
                 let device: Gd<NetworkActiveConnection> = res.cast();
                 device
             } else {
-                let mut device = NetworkActiveConnection::from_path(path.to_string().into());
+                let mut device = NetworkActiveConnection::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = NetworkActiveConnection::from_path(path.to_string().into());
+            let mut device = NetworkActiveConnection::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
