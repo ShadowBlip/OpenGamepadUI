@@ -2,9 +2,11 @@ PREFIX ?= addons
 EXT_NAME := $(shell grep 'name =' core/Cargo.toml | head -n 1 | cut -d'"' -f2)
 LIB_NAME := $(shell grep 'name =' core/Cargo.toml | head -n 1 | cut -d'"' -f2 | sed 's/-/_/g')
 ALL_RS := $(shell find ./ -name '*.rs')
+TARGET_ARCH ?= $(shell rustc -vV | sed -n 's/host: //p')
+ARCH := $(shell echo "$(TARGET_ARCH)" | cut -d'-' -f1)
 ADDON_PATH := ../addons/core
-RELEASE_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_release.x86_64.so
-DEBUG_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_debug.x86_64.so
+RELEASE_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_release.$(ARCH).so
+DEBUG_TARGET := $(ADDON_PATH)/bin/lib$(EXT_NAME).linux.template_debug.$(ARCH).so
 
 ##@ General
 
@@ -30,21 +32,21 @@ build: $(RELEASE_TARGET) $(DEBUG_TARGET) ## Build release and debug binaries
 
 .PHONY: clean
 clean: ## Clean build artifacts
-	rm -f $(RELEASE_TARGET) $(DEBUG_TARGET)
+	rm -rf $(ADDON_PATH)/bin
 	rm -rf target
 
 
 .PHONY: release
 release: $(RELEASE_TARGET) ## Build release binary
 $(RELEASE_TARGET): $(ALL_RS)
-	cargo build --release
+	cargo build --release --target $(TARGET_ARCH)
 	mkdir -p $(@D)
-	cp target/release/lib$(LIB_NAME).so $@
+	cp target/$(TARGET_ARCH)/release/lib$(LIB_NAME).so $@
 
 
 .PHONY: debug
 debug: $(DEBUG_TARGET) ## Build binary with debug symbols
 $(DEBUG_TARGET): $(ALL_RS)
-	cargo build
+	cargo build --target $(TARGET_ARCH)
 	mkdir -p $(@D)
-	cp target/debug/lib$(LIB_NAME).so $@
+	cp target/$(TARGET_ARCH)/debug/lib$(LIB_NAME).so $@

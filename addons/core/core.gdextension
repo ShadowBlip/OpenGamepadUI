@@ -6,6 +6,8 @@ reloadable = false
 [libraries]
 linux.debug.x86_64 = "res://addons/core/bin/libopengamepadui-core.linux.template_debug.x86_64.so"
 linux.release.x86_64 = "res://addons/core/bin/libopengamepadui-core.linux.template_release.x86_64.so"
+linux.debug.arm64 = "res://addons/core/bin/libopengamepadui-core.linux.template_debug.aarch64.so"
+linux.release.arm64 = "res://addons/core/bin/libopengamepadui-core.linux.template_release.aarch64.so"
 
 [icons]
 BluezInstance = "res://assets/editor-icons/bluetooth.svg"

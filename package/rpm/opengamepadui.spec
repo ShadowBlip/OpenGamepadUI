@@ -5,7 +5,7 @@ Summary:        A free and open source game launcher and overlay written using t
 License:        GPL-3.0-only
 URL:            https://github.com/ShadowBlip/OpenGamepadUI
 
-Source:         https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v%{version}/opengamepadui.tar.gz
+Source:         https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v%{version}/opengamepadui-%{_arch}.tar.gz
 
 Requires:       gamescope
 
@@ -23,14 +23,14 @@ A free and open source game launcher and overlay written using the Godot Game En
 %autosetup -p1 -n opengamepadui
 
 %install
-make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix}
+make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix} ARCH=%{_arch}
 
 %files
 /usr/bin/opengamepadui
 /usr/share/opengamepadui/*.so
 /usr/share/opengamepadui/reaper
 /usr/share/opengamepadui/scripts/*
-/usr/share/opengamepadui/opengamepad-ui.x86_64
+/usr/share/opengamepadui/opengamepad-ui.%{_arch}
 /usr/share/opengamepadui/opengamepad-ui.pck
 /usr/share/applications/opengamepadui.desktop
 /usr/share/icons/hicolor/scalable/apps/opengamepadui.svg
