@@ -225,12 +225,12 @@ impl GpuCard {
                 let device: Gd<GpuCard> = res.cast();
                 device
             } else {
-                let mut device = GpuCard::from_path(path.to_string().into());
+                let mut device = GpuCard::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = GpuCard::from_path(path.to_string().into());
+            let mut device = GpuCard::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -239,7 +239,7 @@ impl GpuCard {
     /// Return the DBus path to the GPU connector instance
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.dbus_path.clone().into()
+        self.dbus_path.as_str().into()
     }
 
     /// Returns true if the card supports tdp
@@ -270,7 +270,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -278,7 +278,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.path().unwrap_or_default().into()
+        proxy.path().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -318,7 +318,7 @@ impl GpuCard {
         let Some(proxy) = self.tdp_proxy.as_ref() else {
             return Default::default();
         };
-        proxy.power_profile().unwrap_or_default().into()
+        proxy.power_profile().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -399,7 +399,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.device_id().unwrap_or_default().into()
+        proxy.device_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -407,7 +407,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.subdevice_id().unwrap_or_default().into()
+        proxy.subdevice_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -415,7 +415,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.subvendor_id().unwrap_or_default().into()
+        proxy.subvendor_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -423,7 +423,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.vendor().unwrap_or_default().into()
+        proxy.vendor().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -431,7 +431,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.vendor_id().unwrap_or_default().into()
+        proxy.vendor_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -455,7 +455,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.subdevice().unwrap_or_default().into()
+        proxy.subdevice().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -463,7 +463,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.revision_id().unwrap_or_default().into()
+        proxy.revision_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -471,7 +471,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.device().unwrap_or_default().into()
+        proxy.device().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -495,7 +495,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.class_id().unwrap_or_default().into()
+        proxy.class_id().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -503,7 +503,7 @@ impl GpuCard {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.class().unwrap_or_default().into()
+        proxy.class().unwrap_or_default().as_str().into()
     }
 
     /// Dispatches signals

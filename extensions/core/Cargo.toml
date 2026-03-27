@@ -7,18 +7,18 @@ edition = "2021"
 crate-type = ["cdylib"] # Compile this crate to a dynamic C library.
 
 [dependencies]
-futures-util = "0.3.31"
-godot = { version = "0.3.4", features = [
+futures-util = "0.3.32"
+godot = { version = "0.4.5", features = [
   "experimental-threads",
   "register-docs",
 ] }
-nix = { version = "0.30.1", features = ["term", "process", "fs"] }
-once_cell = "1.21.3"
-tokio = { version = "1.47.0", features = ["full"] }
-zbus = "5.9.0"
-zvariant = "5.6.0"
+nix = { version = "0.31.2", features = ["term", "process", "fs"] }
+once_cell = "1.21.4"
+tokio = { version = "1.50.0", features = ["full"] }
+zbus = "5.14.0"
+zvariant = "5.10.0"
 gamescope-x11-client = { git = "https://github.com/ShadowBlip/gamescope-x11-client", branch = "main" }
-inotify = "0.11.0"
-byte-unit = "5.1.6"
-log = "0.4.27"
-keyvalues-parser = "0.2.0"
+inotify = "0.11.1"
+byte-unit = "5.2.0"
+log = "0.4.29"
+keyvalues-parser = "0.2.3"

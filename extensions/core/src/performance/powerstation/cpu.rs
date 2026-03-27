@@ -119,12 +119,12 @@ impl Cpu {
                 let device: Gd<Cpu> = res.cast();
                 device
             } else {
-                let mut device = Cpu::from_path(path.to_string().into());
+                let mut device = Cpu::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = Cpu::from_path(path.to_string().into());
+            let mut device = Cpu::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -133,7 +133,7 @@ impl Cpu {
     /// Return the DBus path to the CPU instance
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.path.clone().into()
+        self.path.as_str().into()
     }
 
     /// Return all the CPU cores for the CPU

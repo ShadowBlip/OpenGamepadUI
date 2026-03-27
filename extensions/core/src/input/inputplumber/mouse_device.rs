@@ -82,12 +82,12 @@ impl MouseDevice {
                 let device: Gd<MouseDevice> = res.cast();
                 device
             } else {
-                let mut device = MouseDevice::from_path(path.to_string().into());
+                let mut device = MouseDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = MouseDevice::from_path(path.to_string().into());
+            let mut device = MouseDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -95,7 +95,7 @@ impl MouseDevice {
 
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.path.clone().into()
+        self.path.as_str().into()
     }
 
     /// Get the name of the [MouseDevice]
@@ -104,7 +104,7 @@ impl MouseDevice {
         let Some(proxy) = self.mouse_proxy.as_ref() else {
             return "".into();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -121,6 +121,6 @@ impl MouseDevice {
         let Some(proxy) = self.target_proxy.as_ref() else {
             return "".into();
         };
-        proxy.device_type().unwrap_or_default().into()
+        proxy.device_type().unwrap_or_default().as_str().into()
     }
 }

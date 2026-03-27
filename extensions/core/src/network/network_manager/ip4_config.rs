@@ -21,7 +21,7 @@ pub struct NetworkIpv4Config {
     /// Array of IP address data objects. All addresses will include "address" (an IP address string), and "prefix" (a uint). Some addresses may include additional attributes.
     #[allow(dead_code)]
     #[var(get = get_addresses)]
-    addresses: Array<Dictionary>,
+    addresses: Array<VarDictionary>,
     /// The gateway in use.
     #[allow(dead_code)]
     #[var(get = get_gateway)]
@@ -72,12 +72,12 @@ impl NetworkIpv4Config {
                 let device: Gd<NetworkIpv4Config> = res.cast();
                 device
             } else {
-                let mut device = NetworkIpv4Config::from_path(path.to_string().into());
+                let mut device = NetworkIpv4Config::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = NetworkIpv4Config::from_path(path.to_string().into());
+            let mut device = NetworkIpv4Config::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -100,14 +100,14 @@ impl NetworkIpv4Config {
 
     /// Array of IP address data objects. All addresses will include "address" (an IP address string), and "prefix" (a uint). Some addresses may include additional attributes.
     #[func]
-    pub fn get_addresses(&self) -> Array<Dictionary> {
+    pub fn get_addresses(&self) -> Array<VarDictionary> {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
         let mut value = array![];
         let data = proxy.address_data().unwrap_or_default();
         for entry in data {
-            let mut dict = Dictionary::new();
+            let mut dict = VarDictionary::new();
             for (key, value) in entry.iter() {
                 let Some(value) = value.as_godot_variant() else {
                     continue;

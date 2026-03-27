@@ -61,7 +61,7 @@ impl PartitionDevice {
         })
     }
     /// Return a proxy instance to the block device dbus interface
-    fn get_block_proxy(&self) -> Option<BlockProxyBlocking> {
+    fn get_block_proxy(&'_ self) -> Option<BlockProxyBlocking<'_>> {
         if let Some(conn) = self.conn.as_ref() {
             let path: String = self.dbus_path.clone().into();
             BlockProxyBlocking::builder(conn)
@@ -74,7 +74,7 @@ impl PartitionDevice {
     }
 
     /// Return a proxy instance to the partition dbus interface
-    fn get_partition_proxy(&self) -> Option<PartitionProxyBlocking> {
+    fn get_partition_proxy(&'_ self) -> Option<PartitionProxyBlocking<'_>> {
         if let Some(conn) = self.conn.as_ref() {
             let path: String = self.dbus_path.clone().into();
             PartitionProxyBlocking::builder(conn)
@@ -87,7 +87,7 @@ impl PartitionDevice {
     }
 
     /// Return a proxy instance to the filesystem dbus interface
-    fn get_filesystem_proxy(&self) -> Option<FilesystemProxyBlocking> {
+    fn get_filesystem_proxy(&'_ self) -> Option<FilesystemProxyBlocking<'_>> {
         if let Some(conn) = self.conn.as_ref() {
             let path: String = self.dbus_path.clone().into();
             FilesystemProxyBlocking::builder(conn)
@@ -113,12 +113,12 @@ impl PartitionDevice {
                 let device: Gd<PartitionDevice> = res.cast();
                 device
             } else {
-                let mut device = PartitionDevice::from_path(path.to_string().into());
+                let mut device = PartitionDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = PartitionDevice::from_path(path.to_string().into());
+            let mut device = PartitionDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }

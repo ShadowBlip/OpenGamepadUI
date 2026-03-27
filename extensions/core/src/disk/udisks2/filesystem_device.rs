@@ -66,12 +66,12 @@ impl FilesystemDevice {
                 let device: Gd<FilesystemDevice> = res.cast();
                 device
             } else {
-                let mut device = FilesystemDevice::from_path(path.to_string().into());
+                let mut device = FilesystemDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = FilesystemDevice::from_path(path.to_string().into());
+            let mut device = FilesystemDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }

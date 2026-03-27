@@ -319,12 +319,12 @@ impl UPowerDevice {
                 let device: Gd<UPowerDevice> = res.cast();
                 device
             } else {
-                let mut device = UPowerDevice::from_path(path.to_string().into());
+                let mut device = UPowerDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = UPowerDevice::from_path(path.to_string().into());
+            let mut device = UPowerDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -407,7 +407,7 @@ impl UPowerDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.icon_name().ok().unwrap_or_default().into()
+        proxy.icon_name().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -439,7 +439,7 @@ impl UPowerDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.model().ok().unwrap_or_default().into()
+        proxy.model().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -447,7 +447,7 @@ impl UPowerDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.native_path().ok().unwrap_or_default().into()
+        proxy.native_path().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -479,7 +479,7 @@ impl UPowerDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.serial().ok().unwrap_or_default().into()
+        proxy.serial().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]
@@ -543,7 +543,7 @@ impl UPowerDevice {
         let Some(proxy) = self.proxy.as_ref() else {
             return Default::default();
         };
-        proxy.vendor().ok().unwrap_or_default().into()
+        proxy.vendor().ok().unwrap_or_default().as_str().into()
     }
 
     #[func]

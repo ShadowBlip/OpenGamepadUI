@@ -83,12 +83,12 @@ impl GamepadDevice {
                 let device: Gd<GamepadDevice> = res.cast();
                 device
             } else {
-                let mut device = GamepadDevice::from_path(path.to_string().into());
+                let mut device = GamepadDevice::from_path(path.into());
                 device.take_over_path(res_path.as_str());
                 device
             }
         } else {
-            let mut device = GamepadDevice::from_path(path.to_string().into());
+            let mut device = GamepadDevice::from_path(path.into());
             device.take_over_path(res_path.as_str());
             device
         }
@@ -96,7 +96,7 @@ impl GamepadDevice {
 
     #[func]
     pub fn get_dbus_path(&self) -> GString {
-        self.path.clone().into()
+        self.path.as_str().into()
     }
 
     /// Get the name of the [GamepadDevice]
@@ -105,7 +105,7 @@ impl GamepadDevice {
         let Some(proxy) = self.gamepad_proxy.as_ref() else {
             return "".into();
         };
-        proxy.name().unwrap_or_default().into()
+        proxy.name().unwrap_or_default().as_str().into()
     }
 
     /// Get the type of the [GamepadDevice]
@@ -114,6 +114,6 @@ impl GamepadDevice {
         let Some(proxy) = self.target_proxy.as_ref() else {
             return "".into();
         };
-        proxy.device_type().unwrap_or_default().into()
+        proxy.device_type().unwrap_or_default().as_str().into()
     }
 }

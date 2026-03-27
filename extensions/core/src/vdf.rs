@@ -5,18 +5,18 @@ use keyvalues_parser::{Obj, Value, Vdf as VdfParser};
 
 /// Helper class for creating and parsing VDF data.
 ///
-/// The [Vdf] class enables the [Dictionary] data type to be converted to and from a VDF string. This is useful for (de)serializing data that use Valve's data format.
+/// The [Vdf] class enables the [VarDictionary] data type to be converted to and from a VDF string. This is useful for (de)serializing data that use Valve's data format.
 ///
-/// [method stringify] is used to convert a [Dictionary] into a VDF string.
+/// [method stringify] is used to convert a [VarDictionary] into a VDF string.
 ///
-/// [method parse] is used to convert any existing VDF data into a [Dictionary] that can be used within Godot.
+/// [method parse] is used to convert any existing VDF data into a [VarDictionary] that can be used within Godot.
 #[derive(GodotClass)]
 #[class(init, base=RefCounted)]
 pub struct Vdf {
     base: Base<RefCounted>,
-    /// Contains the parsed VDF data in [Dictionary] form.
+    /// Contains the parsed VDF data in [VarDictionary] form.
     #[var]
-    data: Dictionary,
+    data: VarDictionary,
     error_msg: Option<String>,
 }
 
@@ -28,13 +28,13 @@ impl Vdf {
         let Some(msg) = self.error_msg.clone() else {
             return GString::new();
         };
-        msg.into()
+        msg.as_str().into()
     }
 
     /// Converts a dictionary to VDF text and returns the result.
-    /// The VDF format only allows a single top-level key, so others will be ignored if the given [Dictionary] contains more than one top-level key.
+    /// The VDF format only allows a single top-level key, so others will be ignored if the given [VarDictionary] contains more than one top-level key.
     #[func]
-    pub fn stringify(data: Dictionary) -> GString {
+    pub fn stringify(data: VarDictionary) -> GString {
         // Get the first entry in the dictionary. Other top-level entries are ignored.
         let Some((key, value)) = data.iter_shared().next() else {
             return GString::new();
@@ -53,7 +53,7 @@ impl Vdf {
 
         let vdf = VdfParser::new(key, value);
 
-        vdf.to_string().into()
+        vdf.to_string().as_str().into()
     }
 
     /// Attempts to parse the `vdf_text` provided.
@@ -71,7 +71,7 @@ impl Vdf {
             }
         };
 
-        // Convert the vdf data into a Godot Dictionary
+        // Convert the vdf data into a Godot VarDictionary
         let mut dict = vdict! {};
         let key = vdf.key.to_string();
         let value = match vdf.value {
@@ -86,9 +86,9 @@ impl Vdf {
     }
 
     /// Attempts to parse the `vdf_string` provided and returns the parsed data.
-    /// Returns an empty [Dictionary] if parse failed.
+    /// Returns an empty [VarDictionary] if parse failed.
     #[func]
-    pub fn parse_string(vdf_string: GString) -> Dictionary {
+    pub fn parse_string(vdf_string: GString) -> VarDictionary {
         let mut dict = vdict! {};
         let data = vdf_string.to_string();
 
@@ -100,7 +100,7 @@ impl Vdf {
             }
         };
 
-        // Convert the vdf data into a Godot Dictionary
+        // Convert the vdf data into a Godot VarDictionary
         let key = vdf.key.to_string();
         let value = match vdf.value {
             Value::Str(value) => value.to_string().to_variant(),
@@ -111,8 +111,8 @@ impl Vdf {
         dict
     }
 
-    /// Convert the given VDF object into a Godot Dictionary
-    fn obj_to_dict(obj: Obj) -> Dictionary {
+    /// Convert the given VDF object into a Godot VarDictionary
+    fn obj_to_dict(obj: Obj) -> VarDictionary {
         let mut dict = vdict! {};
 
         for vdf in obj.into_vdfs() {
@@ -128,8 +128,8 @@ impl Vdf {
         dict
     }
 
-    /// Convert the given Godot Dictionary into a VDF object
-    fn dict_to_obj<'a>(dict: &'a Dictionary, obj: &'a mut Obj) {
+    /// Convert the given Godot VarDictionary into a VDF object
+    fn dict_to_obj<'a>(dict: &'a VarDictionary, obj: &'a mut Obj) {
         for (key, value) in dict.iter_shared() {
             // Convert the key and value variants into VDF keys and values
             let Some(key) = key.as_vdf() else {
@@ -149,7 +149,7 @@ impl Vdf {
     }
 
     /// Convert the given array into a VDF-friendly dictionary
-    fn array_to_dict(value: &Array<Variant>) -> Dictionary {
+    fn array_to_dict(value: &Array<Variant>) -> VarDictionary {
         let mut dict = vdict! {};
         for (i, value) in value.iter_shared().enumerate() {
             dict.set(i.to_string(), value);
@@ -183,11 +183,11 @@ impl Vdf {
 
 /// Trait for converting Godot variant values into Vdf values
 pub trait VdfVariant {
-    fn as_vdf(&self) -> Option<Value>;
+    fn as_vdf(&'_ self) -> Option<Value<'_>>;
 }
 
 impl VdfVariant for Variant {
-    fn as_vdf(&self) -> Option<Value> {
+    fn as_vdf(&'_ self) -> Option<Value<'_>> {
         match self.get_type() {
             VariantType::NIL => None,
             VariantType::BOOL => {
@@ -234,7 +234,7 @@ impl VdfVariant for Variant {
             VariantType::CALLABLE => None,
             VariantType::SIGNAL => None,
             VariantType::DICTIONARY => {
-                let value: Dictionary = self.to();
+                let value: VarDictionary = self.to();
                 let mut obj = Obj::new();
                 Vdf::dict_to_obj(&value, &mut obj);
                 Some(Value::Obj(obj))
