@@ -4,7 +4,7 @@ _pkgbase=opengamepadui
 pkgver=0.45.0
 pkgrel=1
 pkgdesc="Open source game launcher"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/ShadowBlip/OpenGamepadUI"
 license=('GPL')
 depends=('glibc' 'gcc-libs' 'libx11' 'libxres' 'libxcb' 'libxext' 'libxau'
@@ -14,13 +14,15 @@ depends=('glibc' 'gcc-libs' 'libx11' 'libxres' 'libxcb' 'libxext' 'libxau'
 optdepends=('firejail' 'bubblewrap' 'wireplumber' 'networkmanager' 'bluez' 'dbus' 'powerstation')
 provides=('opengamepadui')
 conflicts=('opengamepadui-git')
-source=(opengamepadui-v$pkgver.tar.gz::https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v$pkgver/opengamepadui.tar.gz)
+source_x86_64=(opengamepadui-v${pkgver}.tar.gz::https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v${pkgver}/opengamepadui-x86_64.tar.gz)
+source_aarch64=(opengamepadui-v${pkgver}.tar.gz::https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v${pkgver}/opengamepadui-aarch64.tar.gz)
 
-sha256sums=('bb12b6f04be8d2f1763923f8e1ff1ff3718e3a6f751fbfb209507319d8cdbf57')
+sha256sums_x86_64=('bb12b6f04be8d2f1763923f8e1ff1ff3718e3a6f751fbfb209507319d8cdbf57')
+sha256sums_aarch64=('87620d63b6428bf05a9ad7e1578711b21522853a80352988c976f943a6657370')
 
 package() {
   options=('!strip')
   cd "$srcdir/${_pkgbase}"
 
-  make install PREFIX="${pkgdir}/usr"
+  make install PREFIX="${pkgdir}/usr" ARCH=${CARCH}
 }

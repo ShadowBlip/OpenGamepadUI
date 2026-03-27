@@ -35,7 +35,10 @@ plugins:
   # Execute commands to build the project
   - - "@semantic-release/exec"
     - shell: true
-      prepareCmd: "make in-docker IMAGE_TAG=4.6.1 TARGET='force-import docs dist update-pkgbuild-hash'"
+      prepareCmd: |
+        make in-docker IMAGE_TAG=4.6.1 TARGET='force-import docs'
+        make in-docker IMAGE_TAG=4.6.1 TARGET='dist update-pkgbuild-hash'
+        make in-docker IMAGE_TAG=4.6.1 TARGET='dist update-pkgbuild-hash' TARGET_ARCH="aarch64"
       publishCmd: "echo '${nextRelease.version}' > .version.txt"
 
   # Commit the following changes to git after other plugins have run
@@ -52,10 +55,10 @@ plugins:
     - assets:
         - path: dist/opengamepadui-*.rpm
         - path: dist/opengamepadui-*.rpm.sha256.txt
-        - path: dist/opengamepadui.raw
-        - path: dist/opengamepadui.raw.sha256.txt
-        - path: dist/opengamepadui.tar.gz
-        - path: dist/opengamepadui.tar.gz.sha256.txt
-        - path: dist/update.zip
-        - path: dist/update.zip.sha256.txt
+        - path: dist/opengamepadui*.raw
+        - path: dist/opengamepadui*.raw.sha256.txt
+        - path: dist/opengamepadui*.tar.gz
+        - path: dist/opengamepadui*.tar.gz.sha256.txt
+        - path: dist/update*.zip
+        - path: dist/update*.zip.sha256.txt
         - path: docs/install/opengamepadui_deck_installer.desktop

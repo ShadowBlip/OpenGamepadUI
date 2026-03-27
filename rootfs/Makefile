@@ -1,5 +1,6 @@
 PREFIX ?= $(HOME)/.local
 INSTALL_PREFIX ?= $(PREFIX)
+ARCH ?= $(shell uname -m)
 
 ##@ General
 
@@ -24,13 +25,13 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 	mkdir -p $(PREFIX)/share/opengamepadui
 	install -Dm644 usr/share/opengamepadui/*.so \
 		$(PREFIX)/share/opengamepadui/
-	install -Dm755 usr/share/opengamepadui/opengamepad-ui.x86_64 \
-		$(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
+	install -Dm755 usr/share/opengamepadui/opengamepad-ui.$(ARCH) \
+		$(PREFIX)/share/opengamepadui/opengamepad-ui.$(ARCH)
 	install -Dm644 usr/share/opengamepadui/opengamepad-ui.pck \
 		$(PREFIX)/share/opengamepadui/opengamepad-ui.pck
 	install -Dm755 usr/share/opengamepadui/reaper \
 		$(PREFIX)/share/opengamepadui/reaper
-	setcap 'cap_sys_nice=eip' $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64 || true
+	setcap 'cap_sys_nice=eip' $(PREFIX)/share/opengamepadui/opengamepad-ui.$(ARCH) || true
 	mkdir -p $(PREFIX)/share/opengamepadui/scripts
 	install -Dm755 usr/share/opengamepadui/scripts/manage_input \
 		$(PREFIX)/share/opengamepadui/scripts/manage_input
@@ -53,7 +54,7 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/share/applications/opengamepadui.desktop
 	rm -rf $(PREFIX)/icons/hicolor/scalable/apps/opengamepadui.svg
 	rm -rf $(PREFIX)/bin/opengamepadui
-	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.x86_64
+	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.$(ARCH)
 	rm -rf $(PREFIX)/share/opengamepadui/opengamepad-ui.pck
 	rm -rf $(PREFIX)/share/opengamepadui/reaper
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
