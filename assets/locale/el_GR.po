@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.1\n"
-"Language: el\n"
+"Language: el_GR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # LANGUAGE translation for OpenGamepadUI
@@ -367,7 +367,7 @@ msgstr "Θόλωση του φόντου του παιχνιδιού όταν η
 
 # Network Menu
 msgid "Network dependencies not found"
-msgstr "Aπαιτούμενες εξαρτήσεις δικτύου δεν βρέθηκαν"
+msgstr "Απαιτούμενες εξαρτήσεις δικτύου δεν βρέθηκαν"
 
 msgid "Enable Wireless"
 msgstr "Ενεργοποίηση Ασύρματου Δικτύου"
