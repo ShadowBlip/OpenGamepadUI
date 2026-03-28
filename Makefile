@@ -441,11 +441,11 @@ dist/opengamepadui-$(TARGET_ARCH).raw: dist/opengamepadui-$(TARGET_ARCH).tar.gz 
 
 
 $(CACHE_DIR)/gamescope-session.tar.gz:
-	wget -O $@ https://github.com/ChimeraOS/gamescope-session/archive/refs/heads/main.tar.gz
+	wget -O $@ https://github.com/OpenGamingCollective/gamescope-session/archive/refs/heads/main.tar.gz
 
 
 $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz:
-	wget -O $@ https://github.com/ShadowBlip/gamescope-session-opengamepadui/archive/refs/heads/main.tar.gz
+	wget -O $@ https://github.com/OpenGamingCollective/gamescope-session-opengamepadui/archive/refs/heads/main.tar.gz
 
 
 $(CACHE_DIR)/powerstation-$(TARGET_ARCH).tar.gz:
