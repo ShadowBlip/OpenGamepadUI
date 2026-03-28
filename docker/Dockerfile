@@ -1,4 +1,4 @@
-FROM rust:1.92
+FROM rust:1.94
 LABEL org.opencontainers.image.title="OpenGamepadUI Builder Container"
 LABEL org.opencontainers.image.description="Build container for OpenGamepadUI"
 LABEL org.opencontainers.image.source="https://github.com/ShadowBlip/OpenGamepadUI"
