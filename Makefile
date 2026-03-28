@@ -10,12 +10,20 @@ GODOT_REVISION := $(GODOT_VERSION).$(GODOT_RELEASE)
 GAMESCOPE ?= gamescope
 GAMESCOPE_CMD ?= $(GAMESCOPE) -e --xwayland-count 2 --
 BUILD_TYPE ?= release
+HOST_ARCH := $(shell uname -m)
+TARGET_ARCH ?= $(HOST_ARCH)
 
-EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_$(BUILD_TYPE).x86_64
+ifeq ($(TARGET_ARCH),x86_64)
+	EXPORT_ARCH = x86_64
+else ifeq ($(TARGET_ARCH),aarch64)
+	EXPORT_ARCH = arm64
+endif
+
+EXPORT_TEMPLATE ?= $(HOME)/.local/share/godot/export_templates/$(GODOT_REVISION)/linux_$(BUILD_TYPE).$(EXPORT_ARCH)
 #EXPORT_TEMPLATE_URL ?= https://downloads.tuxfamily.org/godotengine/$(GODOT_VERSION)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 EXPORT_TEMPLATE_URL ?= https://github.com/godotengine/godot/releases/download/$(GODOT_VERSION)-$(GODOT_RELEASE)/Godot_v$(GODOT_VERSION)-$(GODOT_RELEASE)_export_templates.tpz
 
-ALL_EXTENSIONS := ./addons/core/bin/libopengamepadui-core.linux.template_$(BUILD_TYPE).x86_64.so
+ALL_EXTENSIONS := ./addons/core/bin/libopengamepadui-core.linux.template_$(BUILD_TYPE).$(TARGET_ARCH).so
 ALL_EXTENSION_FILES := $(shell find ./extensions/ -regex  '.*\(\.rs|\.toml\|\.lock\)$$')
 ALL_GDSCRIPT := $(shell find ./ -name '*.gd')
 ALL_SCENES := $(shell find ./ -name '*.tscn')
@@ -84,7 +92,7 @@ disable-ext: ## Disable systemd extensions
 
 .PHONY: install-ext
 install-ext: systemd-sysext ## Install OpenGamepadUI as a systemd extension
-	cp dist/opengamepadui.raw $(HOME)/.var/lib/extensions
+	cp dist/opengamepadui-$(TARGET_ARCH).raw $(HOME)/.var/lib/extensions
 	sudo systemd-sysext refresh
 	systemd-sysext status
 
@@ -108,30 +116,30 @@ test: $(IMPORT_DIR) ## Run all unit tests
 		--script res://addons/gut/gut_cmdln.gd
 
 .PHONY: build
-build: build/opengamepad-ui.x86_64 ## Build and export the project
-build/opengamepad-ui.x86_64: $(IMPORT_DIR) $(PROJECT_FILES) $(EXPORT_TEMPLATE)
+build: build/opengamepad-ui.$(TARGET_ARCH) ## Build and export the project
+build/opengamepad-ui.$(TARGET_ARCH): $(IMPORT_DIR) $(PROJECT_FILES) $(EXPORT_TEMPLATE)
 	@echo "Building OpenGamepadUI v$(OGUI_VERSION)"
 	mkdir -p build
-	$(GODOT) -v --headless --export-$(BUILD_TYPE) "Linux/X11"
+	$(GODOT) -v --headless --export-$(BUILD_TYPE) "Linux/X11 $(TARGET_ARCH)"
 
 .PHONY: metadata
 metadata: build/metadata.json ## Build update metadata
-build/metadata.json: build/opengamepad-ui.x86_64 assets/crypto/keys/opengamepadui.key
+build/metadata.json: build/opengamepad-ui.$(TARGET_ARCH) assets/crypto/keys/opengamepadui.key
 	@echo "Building update metadata"
 	@FILE_SIGS='{'; \
 	cd build; \
 	# Sign any GDExtension libraries \
-	for lib in `ls *.so`; do \
+	for lib in `ls *.$(TARGET_ARCH).so`; do \
 		echo "Signing file: $$lib"; \
 		SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key $$lib | base64 -w 0); \
 		HASH=$$(sha256sum $$lib | cut -d' ' -f1); \
 		FILE_SIGS="$$FILE_SIGS\"$$lib\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	done; \
 	# Sign the binary files \
-	echo "Signing file: opengamepad-ui.x86_64"; \
-	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.x86_64 | base64 -w 0); \
-	HASH=$$(sha256sum opengamepad-ui.x86_64 | cut -d' ' -f1); \
-	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.x86_64\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
+	echo "Signing file: opengamepad-ui.$(TARGET_ARCH)"; \
+	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.$(TARGET_ARCH) | base64 -w 0); \
+	HASH=$$(sha256sum opengamepad-ui.$(TARGET_ARCH) | cut -d' ' -f1); \
+	FILE_SIGS="$$FILE_SIGS\"opengamepad-ui.$(TARGET_ARCH)\": {\"signature\": \"$$SIG\", \"hash\": \"$$HASH\"}, "; \
 	echo "Signing file: opengamepad-ui.pck"; \
 	SIG=$$(openssl dgst -sha256 -sign ../assets/crypto/keys/opengamepadui.key opengamepad-ui.pck | base64 -w 0); \
 	HASH=$$(sha256sum opengamepad-ui.pck | cut -d' ' -f1); \
@@ -161,7 +169,7 @@ force-import: $(ALL_EXTENSIONS)
 extensions: $(ALL_EXTENSIONS) ## Build engine extensions
 $(ALL_EXTENSIONS) &: $(ALL_EXTENSION_FILES)
 	@echo "Building engine extensions..."
-	cd ./extensions && $(MAKE) build
+	cd ./extensions && $(MAKE) build TARGET_ARCH="$(TARGET_ARCH)-unknown-linux-gnu"
 
 .PHONY: edit
 edit: $(IMPORT_DIR) ## Open the project in the Godot editor
@@ -180,10 +188,10 @@ clean: ## Remove Godot build artifacts
 	rm -rf $(IMPORT_DIR)
 
 .PHONY: run run-force
-run: build/opengamepad-ui.x86_64 run-force ## Run the project in gamescope
+run: build/opengamepad-ui.$(TARGET_ARCH) run-force ## Run the project in gamescope
 run-force:
 	$(GAMESCOPE) -w 1920 -h 1080 -f \
-		--xwayland-count 2 -- ./build/opengamepad-ui.x86_64
+		--xwayland-count 2 -- ./build/opengamepad-ui.$(TARGET_ARCH)
 
 $(EXPORT_TEMPLATE):
 	mkdir -p $(HOME)/.local/share/godot/export_templates
@@ -261,8 +269,8 @@ assets/crypto/keys/opengamepadui.pub: assets/crypto/keys/opengamepadui.key
 
 .PHONY: deploy
 deploy: dist-archive ## Build and deploy to a remote device
-	scp dist/opengamepadui.tar.gz $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH)
-	ssh -t $(SSH_USER)@$(SSH_HOST) tar xvfz "$(SSH_DATA_PATH)/opengamepadui.tar.gz"
+	scp dist/opengamepadui-$(TARGET_ARCH).tar.gz $(SSH_USER)@$(SSH_HOST):$(SSH_DATA_PATH)
+	ssh -t $(SSH_USER)@$(SSH_HOST) tar xvfz "$(SSH_DATA_PATH)/opengamepadui-$(TARGET_ARCH).tar.gz"
 
 
 .PHONY: deploy-update
@@ -274,7 +282,7 @@ deploy-update: dist/update.zip ## Build and deploy update zip to remote device
 .PHONY: deploy-ext
 deploy-ext: dist-ext ## Build and deploy systemd extension to remote device
 	ssh $(SSH_USER)@$(SSH_HOST) mkdir -p .var/lib/extensions .config/systemd/user .local/bin
-	scp dist/opengamepadui.raw $(SSH_USER)@$(SSH_HOST):~/.var/lib/extensions
+	scp dist/opengamepadui-$(TARGET_ARCH).raw $(SSH_USER)@$(SSH_HOST):~/.var/lib/extensions
 	scp rootfs/usr/lib/systemd/user/systemd-sysext-updater.service $(SSH_USER)@$(SSH_HOST):~/.config/systemd/user
 	scp rootfs/usr/share/opengamepadui/scripts/update_systemd_ext.sh $(SSH_USER)@$(SSH_HOST):~/.local/bin
 	ssh -t $(SSH_USER)@$(SSH_HOST) systemctl --user enable --now systemd-sysext-updater || echo "WARN: failed to restart sysext updater"
@@ -321,54 +329,62 @@ tunnel: ## Create an SSH tunnel to allow remote debugging
 ##@ Distribution
 
 .PHONY: rootfs
-rootfs: build/opengamepad-ui.x86_64
+rootfs: build/opengamepad-ui.$(TARGET_ARCH)
 	rm -rf $(ROOTFS)
 	mkdir -p $(ROOTFS)
 	cp -r rootfs/* $(ROOTFS)
 	mkdir -p $(ROOTFS)/usr/share/opengamepadui
-	cp -r build/*.so $(ROOTFS)/usr/share/opengamepadui
-	cp -r build/opengamepad-ui.x86_64 $(ROOTFS)/usr/share/opengamepadui
+	cp -r build/*.$(TARGET_ARCH).so $(ROOTFS)/usr/share/opengamepadui
+	cp -r build/opengamepad-ui.$(TARGET_ARCH) $(ROOTFS)/usr/share/opengamepadui
 	cp -r build/opengamepad-ui.pck $(ROOTFS)/usr/share/opengamepadui
-	cp ./extensions/target/release/reaper $(ROOTFS)/usr/share/opengamepadui
+	cp ./extensions/target/$(TARGET_ARCH)-unknown-linux-gnu/release/reaper $(ROOTFS)/usr/share/opengamepadui
 	touch $(ROOTFS)/.gdignore
 
 
-.PHONY: dist 
-dist: dist/opengamepadui.tar.gz dist/opengamepadui.raw dist/update.zip dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm ## Create all redistributable versions of the project
-	cd dist && sha256sum opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm > opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm.sha256.txt
-	cd dist && sha256sum opengamepadui.tar.gz > opengamepadui.tar.gz.sha256.txt
-	cd dist && sha256sum opengamepadui.raw > opengamepadui.raw.sha256.txt
+.PHONY: dist
+dist: dist/opengamepadui-$(TARGET_ARCH).tar.gz dist/opengamepadui-$(TARGET_ARCH).raw dist/update-$(TARGET_ARCH).zip dist/opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm ## Create all redistributable versions of the project
+	cd dist && sha256sum opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm > opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm.sha256.txt
+	cd dist && sha256sum opengamepadui-$(TARGET_ARCH).tar.gz > opengamepadui-$(TARGET_ARCH).tar.gz.sha256.txt
+	cd dist && sha256sum opengamepadui-$(TARGET_ARCH).raw > opengamepadui-$(TARGET_ARCH).raw.sha256.txt
+	cd dist && sha256sum update-$(TARGET_ARCH).zip > update-$(TARGET_ARCH).zip.sha256.txt
+ifeq ($(TARGET_ARCH),x86_64)
+	#@ Backwards compatibility update archive
 	cd dist && sha256sum update.zip > update.zip.sha256.txt
+endif
 
 .PHONY: dist-rpm
-dist-rpm: dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm ## Create a redistributable RPM
-dist/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm: dist/opengamepadui.tar.gz
+dist-rpm: dist/opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm ## Create a redistributable RPM
+dist/opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm: dist/opengamepadui-$(TARGET_ARCH).tar.gz
 	@echo "Building redistributable RPM package"
 	mkdir -p dist $(HOME)/rpmbuild/SOURCES
-	cp dist/opengamepadui.tar.gz $(HOME)/rpmbuild/SOURCES
-	rpmbuild -bb package/rpm/opengamepadui.spec
-	cp $(HOME)/rpmbuild/RPMS/x86_64/opengamepadui-$(OGUI_VERSION)-1.x86_64.rpm dist
+	cp dist/opengamepadui-$(TARGET_ARCH).tar.gz $(HOME)/rpmbuild/SOURCES
+	rpmbuild -bb --target=$(TARGET_ARCH) package/rpm/opengamepadui.spec
+	cp $(HOME)/rpmbuild/RPMS/$(TARGET_ARCH)/opengamepadui-$(OGUI_VERSION)-1.$(TARGET_ARCH).rpm dist
 
 .PHONY: dist-archive
-dist-archive: dist/opengamepadui.tar.gz ## Create a redistributable tar.gz of the project
-dist/opengamepadui.tar.gz: rootfs
+dist-archive: dist/opengamepadui-$(TARGET_ARCH).tar.gz ## Create a redistributable tar.gz of the project
+dist/opengamepadui-$(TARGET_ARCH).tar.gz: rootfs
 	@echo "Building redistributable tar.gz archive"
 	mkdir -p dist
 	mv $(ROOTFS) $(CACHE_DIR)/opengamepadui
-	cd $(CACHE_DIR) && tar cvfz opengamepadui.tar.gz opengamepadui
-	mv $(CACHE_DIR)/opengamepadui.tar.gz dist
+	cd $(CACHE_DIR) && tar cvfz opengamepadui-$(TARGET_ARCH).tar.gz opengamepadui
+	mv $(CACHE_DIR)/opengamepadui-$(TARGET_ARCH).tar.gz dist
 	mv $(CACHE_DIR)/opengamepadui $(ROOTFS)
 
 
 .PHONY: dist-update-zip
-dist-update-zip: dist/update.zip ## Create an update zip archive
-dist/update.zip: build/metadata.json
+dist-update-zip: dist/update-$(TARGET_ARCH).zip ## Create an update zip archive
+dist/update-$(TARGET_ARCH).zip: build/metadata.json
 	@echo "Building redistributable update zip"
 	mkdir -p $(CACHE_DIR)
 	rm -rf $(CACHE_DIR)/update.zip
-	cd build && zip -5 ../$(CACHE_DIR)/update *.so opengamepad-ui.* metadata.json
+	cd build && zip -5 ../$(CACHE_DIR)/update *.$(TARGET_ARCH).so opengamepad-ui.pck opengamepad-ui.$(TARGET_ARCH) metadata.json
 	mkdir -p dist
 	cp $(CACHE_DIR)/update.zip $@
+ifeq ($(TARGET_ARCH),x86_64)
+	#@ Backwards compatibility update archive
+	cp $(CACHE_DIR)/update.zip dist/update.zip
+endif
 
 
 .PHONY: dist-nix
@@ -385,13 +401,13 @@ dist/opengamepadui.nix: $(IMPORT_DIR) $(PROJECT_FILES)
 
 # https://blogs.igalia.com/berto/2022/09/13/adding-software-to-the-steam-deck-with-systemd-sysext/
 .PHONY: dist-ext
-dist-ext: dist/opengamepadui.raw ## Create a systemd-sysext extension archive
-dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/powerstation.tar.gz $(CACHE_DIR)/inputplumber.tar.gz
+dist-ext: dist/opengamepadui-$(TARGET_ARCH).raw ## Create a systemd-sysext extension archive
+dist/opengamepadui-$(TARGET_ARCH).raw: dist/opengamepadui-$(TARGET_ARCH).tar.gz $(CACHE_DIR)/gamescope-session.tar.gz $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz $(CACHE_DIR)/powerstation-$(TARGET_ARCH).tar.gz $(CACHE_DIR)/inputplumber-$(TARGET_ARCH).tar.gz
 	@echo "Building redistributable systemd extension"
 	mkdir -p dist
-	rm -rf dist/opengamepadui.raw $(CACHE_DIR)/opengamepadui.raw
-	cp dist/opengamepadui.tar.gz $(CACHE_DIR)
-	cd $(CACHE_DIR) && tar xvfz opengamepadui.tar.gz opengamepadui/usr
+	rm -rf dist/opengamepadui-$(TARGET_ARCH).raw $(CACHE_DIR)/opengamepadui-$(TARGET_ARCH).raw
+	cp dist/opengamepadui-$(TARGET_ARCH).tar.gz $(CACHE_DIR)
+	cd $(CACHE_DIR) && tar xvfz opengamepadui-$(TARGET_ARCH).tar.gz opengamepadui/usr
 	mkdir -p $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d
 	echo ID=$(SYSEXT_ID) > $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
 	echo VERSION_ID=$(SYSEXT_VERSION_ID) >> $(CACHE_DIR)/opengamepadui/usr/lib/extension-release.d/extension-release.opengamepadui
@@ -405,11 +421,11 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session
 	cp -r $(CACHE_DIR)/gamescope-session-opengamepadui-main/usr/* $(CACHE_DIR)/opengamepadui/usr
 
 	@# Copy powerstation into the extension
-	cd $(CACHE_DIR) && tar xvfz powerstation.tar.gz
+	cd $(CACHE_DIR) && tar xvfz powerstation-$(TARGET_ARCH).tar.gz
 	cp -r $(CACHE_DIR)/powerstation/usr/* $(CACHE_DIR)/opengamepadui/usr
 
 	@# Copy inputplumber into the extension
-	cd $(CACHE_DIR) && tar xvfz inputplumber.tar.gz
+	cd $(CACHE_DIR) && tar xvfz inputplumber-$(TARGET_ARCH).tar.gz
 	cp -r $(CACHE_DIR)/inputplumber/usr/* $(CACHE_DIR)/opengamepadui/usr
 
 	@# Install libserialport for inputplumber in the extension for libiio compatibility in SteamOS
@@ -419,51 +435,71 @@ dist/opengamepadui.raw: dist/opengamepadui.tar.gz $(CACHE_DIR)/gamescope-session
 	cp -r $(CACHE_DIR)/libiio/usr/lib/libiio* $(CACHE_DIR)/opengamepadui/usr/lib
 
 	@# Build the extension archive
-	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui.raw
+	cd $(CACHE_DIR) && mksquashfs opengamepadui opengamepadui-$(TARGET_ARCH).raw
 	rm -rf $(CACHE_DIR)/opengamepadui $(CACHE_DIR)/gamescope-session-opengamepadui-main $(CACHE_DIR)/gamescope-session-main
-	mv $(CACHE_DIR)/opengamepadui.raw $@
+	mv $(CACHE_DIR)/opengamepadui-$(TARGET_ARCH).raw $@
 
 
 $(CACHE_DIR)/gamescope-session.tar.gz:
-	wget -O $@ https://github.com/ChimeraOS/gamescope-session/archive/refs/heads/main.tar.gz
+	wget -O $@ https://github.com/OpenGamingCollective/gamescope-session/archive/refs/heads/main.tar.gz
 
 
 $(CACHE_DIR)/gamescope-session-opengamepadui.tar.gz:
-	wget -O $@ https://github.com/ShadowBlip/gamescope-session-opengamepadui/archive/refs/heads/main.tar.gz
+	wget -O $@ https://github.com/OpenGamingCollective/gamescope-session-opengamepadui/archive/refs/heads/main.tar.gz
 
 
-$(CACHE_DIR)/powerstation.tar.gz:
+$(CACHE_DIR)/powerstation-$(TARGET_ARCH).tar.gz:
 	export PS_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/PowerStation/releases/latest | jq -r '.name') && \
-		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation-x86_64.tar.gz
+		wget -O $@ https://github.com/ShadowBlip/PowerStation/releases/download/$${PS_VERSION}/powerstation-$(TARGET_ARCH).tar.gz
 
 
-$(CACHE_DIR)/inputplumber.tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
+$(CACHE_DIR)/inputplumber-$(TARGET_ARCH).tar.gz: $(CACHE_DIR)/libiio $(CACHE_DIR)/libserialport
 	export IP_VERSION=$$(curl -s https://api.github.com/repos/ShadowBlip/InputPlumber/releases/latest | jq -r '.name') && \
-		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber-x86_64.tar.gz
+		wget -O $@ https://github.com/ShadowBlip/InputPlumber/releases/download/$${IP_VERSION}/inputplumber-$(TARGET_ARCH).tar.gz
 
 
-LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libiio-$(SYSEXT_LIBIIO_VERSION)-x86_64.pkg.tar.zst
+ifeq ($(TARGET_ARCH),x86_64)
+LIBIIO_URL ?= https://mirror.rackspace.com/archlinux/extra/os/$(TARGET_ARCH)/libiio-$(SYSEXT_LIBIIO_VERSION)-$(TARGET_ARCH).pkg.tar.zst
+else ifeq ($(TARGET_ARCH),aarch64)
+LIBIIO_URL ?= http://mirror.archlinuxarm.org/$(TARGET_ARCH)/extra/libiio-$(SYSEXT_LIBIIO_VERSION)-$(TARGET_ARCH).pkg.tar.xz
+endif
 $(CACHE_DIR)/libiio:
 	rm -rf $(CACHE_DIR)/libiio*
+ifeq ($(TARGET_ARCH),x86_64)
 	wget $(LIBIIO_URL) \
 		-O $(CACHE_DIR)/libiio.tar.zst
 	zstd -d $(CACHE_DIR)/libiio.tar.zst
+else ifeq ($(TARGET_ARCH),aarch64)
+	wget $(LIBIIO_URL) \
+		-O $(CACHE_DIR)/libiio.tar.xz
+	xz -d $(CACHE_DIR)/libiio.tar.xz
+endif
 	mkdir -p $(CACHE_DIR)/libiio
 	tar xvf $(CACHE_DIR)/libiio.tar -C $(CACHE_DIR)/libiio
 
 
-LIBSERIALPORT_URL ?= https://mirror.rackspace.com/archlinux/extra/os/x86_64/libserialport-$(SYSEXT_LIBSERIALPORT_VERSION)-x86_64.pkg.tar.zst
+ifeq ($(TARGET_ARCH),x86_64)
+LIBSERIALPORT_URL ?= https://mirror.rackspace.com/archlinux/extra/os/$(TARGET_ARCH)/libserialport-$(SYSEXT_LIBSERIALPORT_VERSION)-$(TARGET_ARCH).pkg.tar.zst
+else ifeq ($(TARGET_ARCH),aarch64)
+LIBSERIALPORT_URL ?= http://mirror.archlinuxarm.org/$(TARGET_ARCH)/extra/libserialport-$(SYSEXT_LIBSERIALPORT_VERSION)-$(TARGET_ARCH).pkg.tar.xz
+endif
 $(CACHE_DIR)/libserialport:
 	rm -rf $(CACHE_DIR)/libserialport*
+ifeq ($(TARGET_ARCH),x86_64)
 	wget $(LIBSERIALPORT_URL) \
 	  -O $(CACHE_DIR)/libserialport.tar.zst
 	zstd -d $(CACHE_DIR)/libserialport.tar.zst
+else ifeq ($(TARGET_ARCH),aarch64)
+	wget $(LIBSERIALPORT_URL) \
+	  -O $(CACHE_DIR)/libserialport.tar.xz
+	xz -d $(CACHE_DIR)/libserialport.tar.xz
+endif
 	mkdir -p $(CACHE_DIR)/libserialport
 	tar xvf $(CACHE_DIR)/libserialport.tar -C $(CACHE_DIR)/libserialport
 
 .PHONY: update-pkgbuild-hash
-update-pkgbuild-hash: dist/opengamepadui.tar.gz ## Update the PKGBUILD hash
-	sed -i "s#^sha256sums=.*#sha256sums=('$$(cat dist/opengamepadui.tar.gz.sha256.txt | cut -d' ' -f1)')#g" \
+update-pkgbuild-hash: dist/opengamepadui-$(TARGET_ARCH).tar.gz ## Update the PKGBUILD hash
+	sed -i "s#^sha256sums_$(TARGET_ARCH)=.*#sha256sums_$(TARGET_ARCH)=('$$(cat dist/opengamepadui-$(TARGET_ARCH).tar.gz.sha256.txt | cut -d' ' -f1)')#g" \
 		package/archlinux/PKGBUILD
 
 # Refer to .releaserc.yaml for release configuration
@@ -480,6 +516,8 @@ in-docker:
 		--workdir /src \
 		-e HOME=/home/build \
 		-e PWD=/src \
+		-e TARGET_ARCH="$(TARGET_ARCH)" \
+		-e PKG_CONFIG_SYSROOT_DIR="/usr/$(TARGET_ARCH)-linux-gnu" \
 		--user $(shell id -u):$(shell id -g) \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
 		make GODOT=/usr/bin/godot $(TARGET)

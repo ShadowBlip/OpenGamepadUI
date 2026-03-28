@@ -1,8 +1,9 @@
 #!/bin/bash
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 PREFIX=$(dirname -- "${SCRIPT_DIR}")
+ARCH=$(uname -m)
 
-OGUI_BIN=${OGUI_BIN:-"${PREFIX}/share/opengamepadui/opengamepad-ui.x86_64"}
+OGUI_BIN=${OGUI_BIN:-"${PREFIX}/share/opengamepadui/opengamepad-ui.${ARCH}"}
 GAMESCOPE_CMD=${GAMESCOPE_CMD:-gamescope -e -w 1920 -h 1080 -f --xwayland-count 2}
 
 # Check to see if a URI is being sent

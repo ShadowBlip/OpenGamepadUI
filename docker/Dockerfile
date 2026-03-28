@@ -1,25 +1,35 @@
-FROM archlinux:base-devel
+FROM rust:1.94
 LABEL org.opencontainers.image.title="OpenGamepadUI Builder Container"
 LABEL org.opencontainers.image.description="Build container for OpenGamepadUI"
 LABEL org.opencontainers.image.source="https://github.com/ShadowBlip/OpenGamepadUI"
 LABEL org.opencontainers.image.version="4.6.1"
 
-RUN sed -i '/ParallelDownloads/s/^#//g' /etc/pacman.conf
-
-# Install dependencies
-RUN echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist\n" >> /etc/pacman.conf
-RUN pacman --noconfirm -Syyu && pacman -S --needed --noconfirm \
-  pkgconf \
+RUN dpkg --add-architecture arm64
+RUN apt-get update && apt-get install -y \
+  fontconfig \
+  git \
+  jq \
+  libclang-dev \
   make \
+  pkgconf \
+  rpm \
+  squashfs-tools \
   unzip \
   wget \
-  git \
-  squashfs-tools \
-  rpm-tools \
-  rust \
-  fontconfig \
   zip \
-  jq
+  zstd
+
+RUN apt-get install -y \
+  g++-aarch64-linux-gnu \
+  libc6-dev-arm64-cross
+
+RUN rustup target add aarch64-unknown-linux-gnu
+RUN rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
+RUN rustup component add clippy
+
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+ENV CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+ENV CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 
 # Download and install the appropriate version of Godot
 ARG GODOT_VERSION=4.6.1
