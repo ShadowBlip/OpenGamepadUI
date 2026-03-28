@@ -482,7 +482,7 @@ in-docker:
 		-e PWD=/src \
 		--user $(shell id -u):$(shell id -g) \
 		$(IMAGE_NAME):$(IMAGE_TAG) \
-		make GODOT=/usr/sbin/godot $(TARGET)
+		make GODOT=/usr/bin/godot $(TARGET)
 
 .PHONY: docker-builder
 docker-builder:
