@@ -1,0 +1,642 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# Main Menu Messages
+msgid "Home"
+msgstr "Αρχική"
+
+msgid "Library"
+msgstr "Βιβλιοθήκη"
+
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgid "Power"
+msgstr "Τροφοδοσία"
+
+# General messages
+msgid "Accept"
+msgstr "Αποδοχή"
+
+msgid "Back"
+msgstr "Πίσω"
+
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgid "Exit"
+msgstr "Έξοδος"
+
+msgid "Submit"
+msgstr "Υποβολή"
+
+msgid "Quick Bar Menu"
+msgstr "Γρήγορο Μενού"
+
+# Help Menu Messages
+msgid "Help"
+msgstr "Βοήθεια"
+
+msgid "Menu Shortcuts"
+msgstr "Συντομεύσεις Μενού"
+
+msgid "Open Main Menu"
+msgstr "Άνοιγμα Κύριου Μενού"
+
+msgid "Open Quick Bar Menu"
+msgstr "Άνοιγμα Γρήγορου Μενού"
+
+msgid "Open On-Screen Keyboard"
+msgstr "Άνοιγμα Εικονικού Πληκτρολογίου"
+
+msgid "Scroll container"
+msgstr "Κύλιση περιεχομένου"
+
+msgid "Switch to left tab"
+msgstr "Μεταβείτε στην αριστερή καρτέλα"
+
+msgid "Switch to right tab"
+msgstr "Μεταβείτε στη δεξιά καρτέλα"
+
+msgid "On-Screen Keyboard Shortcuts"
+msgstr "Συντομεύσεις Εικονικού Πληκτρολογίου"
+
+msgid "Backspace"
+msgstr "Διαγραφή"
+
+msgid "Close keyboard"
+msgstr "Κλείσιμο πληκτρολογίου"
+
+msgid "Toggle Shift"
+msgstr "Εναλλαγή Shift"
+
+msgid "Enter"
+msgstr "Εισαγωγή"
+
+msgid "Steam Deck"
+msgstr "Steam Deck"
+
+msgid "Global"
+msgstr "Καθολικό"
+
+msgid "Unable to save gamepad profile"
+msgstr "Δεν είναι δυνατή η αποθήκευση του προφίλ χειριστηρίου"
+
+msgid "Failed to save gamepad profile"
+msgstr "Αποτυχία αποθήκευσης του προφίλ χειριστηρίου"
+
+msgid "Gamepad profile saved"
+msgstr "Το προφίλ χειριστηρίου αποθηκεύτηκε"
+
+msgid "Play Now"
+msgstr "Παίξε Τώρα"
+
+msgid "Install"
+msgstr "Εγκατάσταση"
+
+msgid "Resume"
+msgstr "Συνέχεια"
+
+msgid "Queued"
+msgstr "Στην Ουρά"
+
+msgid "Installing"
+msgstr "Εγκατάσταση"
+
+msgid "Quick Access Menu"
+msgstr "Γρήγορο Μενού Πρόσβασης"
+
+msgid "Game Name"
+msgstr "Όνομα Παιχνιδιού"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "Εκκίνηση"
+
+msgid "Boxart"
+msgstr "Εξώφυλλο"
+
+msgid "Launch Provider"
+msgstr "Πάροχος Εκκίνησης"
+
+msgid "Library provider to launch this game with"
+msgstr "Πάροχος βιβλιοθήκης για να ξεκινήσει αυτό το παιχνίδι"
+
+msgid "Launch Settings"
+msgstr "Ρυθμίσεις Εκκίνησης"
+
+msgid "Command"
+msgstr "Εντολή"
+
+msgid "Command to use to launch the game"
+msgstr "Εντολή για την εκκίνηση του παιχνιδιού"
+
+msgid "Arguments"
+msgstr "Παράμετροι"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "Παραμέτρους γραμμής εντολών για να περάσετε στο παιχνίδι"
+
+msgid "Launch Directory"
+msgstr "Φάκελος Εκκίνησης"
+
+msgid "Directory to launch the game from"
+msgstr "Φάκελος από τον οποίο θα ξεκινήσει το παιχνίδι"
+
+msgid "Environment Variables"
+msgstr "Μεταβλητές Περιβάλλοντος"
+
+msgid "Environment variables to use when launching the game"
+msgstr "Μεταβλητές περιβάλλοντος για χρήση κατά την εκκίνηση του παιχνιδιού"
+
+msgid "Sandbox Settings"
+msgstr "Ρυθμίσεις Sandbox"
+
+msgid "Use sandboxing"
+msgstr "Χρήση sandboxing"
+
+msgid "Launch the game in a sandbox"
+msgstr "Εκκίνηση του παιχνιδιού σε sandbox"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Πάροχος Εξωφύλλου"
+
+msgid "Provider to fetch artwork for this game"
+msgstr "Πάροχος για την ανάκτηση γραφικών για αυτό το παιχνίδι"
+
+msgid "Images"
+msgstr "Εικόνες"
+
+msgid "Banner"
+msgstr "Πανό"
+
+msgid "Logo"
+msgstr "Λογότυπο"
+
+msgid "Grids"
+msgstr "Πλέγματα"
+
+# Game library menu
+msgid "Hidden in library"
+msgstr "Κρυφό στη βιβλιοθήκη"
+
+msgid "Prevent this item from showing up in your library"
+msgstr "Αποτρέψτε την εμφάνιση αυτού του αντικειμένου στη βιβλιοθήκη σας"
+
+# Settings Menu
+msgid "General"
+msgstr "Γενικά"
+
+msgid "Display"
+msgstr "Οθόνη"
+
+msgid "Network"
+msgstr "Δίκτυο"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+msgid "Plugins"
+msgstr "Πρόσθετα"
+
+msgid "Disks"
+msgstr "Δίσκοι"
+
+msgid "Plugin Store"
+msgstr "Κατάστημα Πρόσθετων"
+
+msgid "Processes"
+msgstr "Διεργασίες"
+
+msgid "Logging"
+msgstr "Καταγραφή"
+
+msgid "Controllers"
+msgstr "Χειριστήρια"
+
+msgid "Windows"
+msgstr "Παράθυρα"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "Ενημερώσεις"
+
+msgid "Automatic Updates"
+msgstr "Αυτόματες Ενημερώσεις"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr "Αυτόματη λήψη και εφαρμογή ενημερώσεων στο παρασκήνιο όταν είναι διαθέσιμες"
+
+msgid "Check for updates"
+msgstr "Έλεγχος για ενημερώσεις"
+
+msgid "Install Updates"
+msgstr "Εγκατάσταση Ενημερώσεων"
+
+msgid "Update"
+msgstr "Ενημέρωση"
+
+msgid "Appearance"
+msgstr "Εμφάνιση"
+
+msgid "Language"
+msgstr "Γλώσσα"
+
+msgid "System language"
+msgstr "Γλώσσα συστήματος"
+
+msgid "English"
+msgstr "Αγγλικά"
+
+msgid "Spanish"
+msgstr "Ισπανικά"
+
+msgid "French"
+msgstr "Γαλλικά"
+
+msgid "Chinese"
+msgstr "Κινέζικα"
+
+msgid "Portuguese"
+msgstr "Πορτογαλικά"
+
+msgid "Russian"
+msgstr "Ρωσικά"
+
+msgid "Greek"
+msgstr "Ελληνικά"
+
+msgid "Theme"
+msgstr "Θέμα"
+
+msgid "System Information"
+msgstr "Πληροφορίες Συστήματος"
+
+msgid "Platform"
+msgstr "Πλατφόρμα"
+
+msgid "Client Version"
+msgstr "Έκδοση προγράμματος"
+
+msgid "Engine Version"
+msgstr "Έκδοση μηχανής"
+
+msgid "Plugin API Version"
+msgstr "Έκδοση API Πρόσθετων"
+
+msgid "OS"
+msgstr "Λειτουργικό Σύστημα"
+
+msgid "Kernel Version"
+msgstr "Έκδοση Πυρήνα"
+
+msgid "Vendor"
+msgstr "Κατασκευαστής"
+
+msgid "Product"
+msgstr "Προϊόν"
+
+msgid "BIOS Version"
+msgstr "Έκδοση BIOS"
+
+msgid "CPU Model"
+msgstr "Μοντέλο CPU"
+
+msgid "GPU Model"
+msgstr "Μοντέλο GPU"
+
+msgid "Driver Version"
+msgstr "Έκδοση Οδηγού"
+
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr "Μέγιστος Αριθμός Πρόσφατων Εφαρμογών"
+
+msgid "Refresh Library"
+msgstr "Ανανέωση Βιβλιοθήκης"
+
+msgid "Trigger reloading your library"
+msgstr "Επαναφόρτωση της βιβλιοθήκης σας"
+
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+msgid "Hidden Library Items"
+msgstr "Κρυφά Αντικείμενα Βιβλιοθήκης"
+
+msgid "No hidden library items"
+msgstr "Δεν υπάρχουν κρυφά αντικείμενα βιβλιοθήκης"
+
+# Display Menu
+msgid "Scale"
+msgstr "Κλίμακα"
+
+msgid "Overlay"
+msgstr "Επικάλυψη"
+
+msgid "Blur"
+msgstr "Θόλωση"
+
+msgid "Blur background game when overlay is open"
+msgstr "Θόλωση του φόντου του παιχνιδιού όταν η επικάλυψη είναι ανοιχτή"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "Aπαιτούμενες εξαρτήσεις δικτύου δεν βρέθηκαν"
+
+msgid "Enable Wireless"
+msgstr "Ενεργοποίηση Ασύρματου Δικτύου"
+
+msgid "Wireless Network"
+msgstr "Ασύρματο Δίκτυο"
+
+msgid "Visible Networks"
+msgstr "Ορατά Δίκτυα"
+
+msgid "Refresh Networks"
+msgstr "Ανανέωση Δικτύων"
+
+msgid "Wired Network"
+msgstr "Ενσύρματο Δίκτυο"
+
+msgid "Password"
+msgstr "Κωδικός Πρόσβασης"
+
+msgid "Enter the password for this network"
+msgstr "Εισάγετε τον κωδικό πρόσβασης για αυτό το δίκτυο"
+
+msgid "Connection Details"
+msgstr "Λεπτομέρειες Σύνδεσης"
+
+msgid "IP Address"
+msgstr "Διεύθυνση IP"
+
+msgid "Subnet Prefix"
+msgstr "Πρόθεμα Υποδικτύου"
+
+msgid "Gateway"
+msgstr "Πύλη"
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr "Η υπηρεσία Bluetooth δεν είναι διαθέσιμη"
+
+msgid "Enabled"
+msgstr "Ενεργοποιημένο"
+
+msgid "Enable Discovery"
+msgstr "Ενεργοποίηση Ανίχνευσης"
+
+# Audio Menu
+msgid "Audio"
+msgstr "Ήχος"
+
+msgid "Volume"
+msgstr "Ένταση"
+
+msgid "Output Device"
+msgstr "Συσκευή Εξόδου"
+
+msgid "Input Device"
+msgstr "Συσκευή Εισόδου"
+
+msgid "Microphone"
+msgstr "Μικρόφωνο"
+
+# Disk Menu
+msgid ""
+"No formattable drives available\n"
+"Verify your media device is plugged in and that it is not mounted to a "
+"protected mount point"
+msgstr ""
+"Δεν υπάρχουν διαθέσιμες μορφοποιήσιμες μονάδες\n"
+"Βεβαιωθείτε ότι η συσκευή μέσων σας είναι συνδεδεμένη και ότι δεν είναι "
+"προσαρτημένη σε προστατευμένο σημείο προσάρτησης"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "Δεν βρέθηκαν πρόσθετα"
+
+# Processes Menu
+msgid "Kill"
+msgstr "Τερματισμός"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "Καθολικό επίπεδο καταγραφής"
+
+msgid "Set the log level for all systems"
+msgstr "Ορίστε το επίπεδο καταγραφής για όλα τα συστήματα"
+
+msgid "Per-system Logging"
+msgstr "Καταγραφή ανά σύστημα"
+
+# General Controller Settings Menu
+msgid "Gamepad Settings"
+msgstr "Ρυθμίσεις Χειριστηρίου"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "SDL HIDAPI Ενεργοποιημένο"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr ""
+"Εναλλακτικό σύστημα εισόδου που μπορεί να προκαλέσει διπλή είσοδο."
+"Ορισμένα παιχνίδια χρησιμοποιούν το SDL για τους ελέγχους γυροσκοπίου ή για όλες τις εισόδους. Απαιτεί επανεκκίνηση."
+
+msgid "InputPlumber service not available"
+msgstr "Η υπηρεσία InputPlumber δεν είναι διαθέσιμη"
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "Όνομα Προφίλ"
+
+msgid "Buttons"
+msgstr "Κουμπιά"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "Άξονες"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "Αλλαγή Εισόδου"
+
+msgid "Keyboard"
+msgstr "Πληκτρολόγιο"
+
+msgid "Mouse"
+msgstr "Ποντίκι"
+
+msgid "Gamepad"
+msgstr "Χειριστήριο"
+
+msgid "Clear"
+msgstr "Καθαρισμός"
+
+msgid "Left Click"
+msgstr "Αριστερό Κλικ"
+
+msgid "Right Click"
+msgstr "Δεξί Κλικ"
+
+msgid "Mouse Motion"
+msgstr "Κίνηση Ποντικιού"
+
+msgid "Wheel Up"
+msgstr "Ροδέλα Πάνω"
+
+msgid "Wheel Down"
+msgstr "Ροδέλα Κάτω"
+
+msgid "Middle Click"
+msgstr "Μεσαίο Κλικ"
+
+# First Boot Menu
+msgid "Welcome"
+msgstr "Καλωσήρθατε"
+
+msgid "Select a language"
+msgstr "Επιλέξτε μια γλώσσα"
+
+msgid "Connect to your network"
+msgstr "Συνδεθείτε στο δίκτυό σας"
+
+msgid "Next"
+msgstr "Επόμενο"
+
+msgid "Install plugins"
+msgstr "Εγκατάσταση πρόσθετων"
+
+msgid "Configure your plugins"
+msgstr "Διαμόρφωση των πρόσθετων σας"
+
+msgid "Finished"
+msgstr "Ολοκληρώθηκε"
+
+msgid "You're ready to go"
+msgstr "Είστε έτοιμοι να ξεκινήσετε"
+
+msgid "Start playing"
+msgstr "Ξεκινήστε να παίζετε"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "Τι θα πρέπει να παίξετε;"
+
+msgid "Installed"
+msgstr "Εγκατεστημένα"
+
+msgid "All Games"
+msgstr "Όλα τα Παιχνίδια"
+
+msgid "Favorites"
+msgstr "Αγαπημένα"
+
+msgid "Collections"
+msgstr "Συλλογές"
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr "Γρήγορες Ρυθμίσεις"
+
+msgid "Performance"
+msgstr "Απόδοση"
+
+msgid "Advanced Mode"
+msgstr "Προηγμένη Λειτουργία"
+
+msgid "Power Tools"
+msgstr "Εργαλεία Ισχύος"
+
+msgid "Brightness"
+msgstr "Φωτεινότητα"
+
+msgid "Saturation"
+msgstr "Κορεσμός"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "Επικάλυψη επιδόσεων"
+
+msgid "FPS Limit"
+msgstr "Όριο FPS"
+
+msgid "Refresh Rate"
+msgstr "Ρυθμός Ανανέωσης"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "Αναμονή για την υπηρεσία PowerStation..."
+
+msgid "CPU Settings"
+msgstr "Ρυθμίσεις CPU"
+
+msgid "CPU Boost"
+msgstr "Ενίσχυση CPU"
+
+msgid "SMT Enabled"
+msgstr "SMT Ενεργοποιημένο"
+
+msgid "CPU Cores"
+msgstr "Πυρήνες CPU"
+
+msgid "GPU Settings"
+msgstr "Ρυθμίσεις GPU"
+
+msgid "TDP Boost"
+msgstr "Ενίσχυση TDP"
+
+msgid "Manual Freq"
+msgstr "Χειροκίνητη Συχνότητα"
+
+msgid "Min Freq"
+msgstr "Ελάχιστη Συχνότητα"
+
+msgid "Max Freq"
+msgstr "Μέγιστη Συχνότητα"
+
+msgid "GPU Temp Limit"
+msgstr "Όριο Θερμοκρασίας GPU"
+
+msgid "Power Profile"
+msgstr "Προφίλ Ισχύος"
+
+msgid "Thermal Throttle Profile"
+msgstr "Προφίλ Θερμικού Περιορισμού"
+
+# Power Menu
+msgid "Suspend"
+msgstr "Αναστολή"
+
+msgid "Reboot"
+msgstr "Επανεκκίνηση"
+
+msgid "Shutdown"
+msgstr "Τερματισμός"
