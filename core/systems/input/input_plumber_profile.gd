@@ -159,9 +159,7 @@ static func get_target_device(target_device_str: String) -> TargetDevice:
 func save(path: String) -> Error:
 	if path.begins_with("user://") or path.begins_with("res://"):
 		path = ProjectSettings.globalize_path(path)
-	var path_parts := Array(path.split("/", false))
-	path_parts.pop_back()
-	var base_path := "/".join(path_parts)
+	var base_path := path.get_base_dir()
 	
 	if DirAccess.make_dir_recursive_absolute(base_path) != OK:
 		print("Failed to mkdir")
