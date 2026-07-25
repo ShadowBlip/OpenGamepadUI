@@ -1,8 +1,8 @@
-FROM rust:1.94
+FROM rust:1.97
 LABEL org.opencontainers.image.title="OpenGamepadUI Builder Container"
 LABEL org.opencontainers.image.description="Build container for OpenGamepadUI"
 LABEL org.opencontainers.image.source="https://github.com/ShadowBlip/OpenGamepadUI"
-LABEL org.opencontainers.image.version="4.6.1"
+LABEL org.opencontainers.image.version="4.7.1"
 
 RUN dpkg --add-architecture arm64
 RUN apt-get update && apt-get install -y \
@@ -32,7 +32,7 @@ ENV CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
 ENV CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 
 # Download and install the appropriate version of Godot
-ARG GODOT_VERSION=4.6.1
+ARG GODOT_VERSION=4.7.1
 ARG GODOT_RELEASE=stable
 RUN mkdir /tmp/godot && \
   wget -q https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE}/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64.zip -O /tmp/godot/godot.zip && \
