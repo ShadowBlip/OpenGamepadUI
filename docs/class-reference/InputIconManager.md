@@ -23,11 +23,11 @@ The InputIconManager will keep track of the last used input device and signal wh
 | ------- | --------- |
 | [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) | [discover_mappings](./#discover_mappings)(mappings_dir: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) | [discover_device_mappings](./#discover_device_mappings)(mappings_dir: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
-| void | [refresh](./#refresh)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [refresh](./#refresh)() |
 | [Texture[]](https://docs.godotengine.org/en/stable/classes/class_texture.html) | [parse_path](./#parse_path)(path: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), mapping_name: [String](https://docs.godotengine.org/en/stable/classes/class_string.html) = "", input_type: [int](https://docs.godotengine.org/en/stable/classes/class_int.html) = last_input_type) |
 | [InputIconMapping](../InputIconMapping) | [load_matching_mapping](./#load_matching_mapping)(device_name: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | [String](https://docs.godotengine.org/en/stable/classes/class_string.html) | [get_mapping_name_from_device](./#get_mapping_name_from_device)(device_name: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
-| void | [set_last_input_type](./#set_last_input_type)(_last_input_type: [int](https://docs.godotengine.org/en/stable/classes/class_int.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [set_last_input_type](./#set_last_input_type)(_last_input_type: [int](https://docs.godotengine.org/en/stable/classes/class_int.html)) |
 
 
 ------------------
@@ -106,7 +106,7 @@ Discover all input icon mapping devices from the specified path
 ### `refresh()`
 
 
-void **refresh**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **refresh**()
 
 
 Refresh all icons
@@ -134,7 +134,7 @@ Returns the mapping name for the given device name. The mapping name is the "nam
 ### `set_last_input_type()`
 
 
-void **set_last_input_type**(_last_input_type: [int](https://docs.godotengine.org/en/stable/classes/class_int.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **set_last_input_type**(_last_input_type: [int](https://docs.godotengine.org/en/stable/classes/class_int.html))
 
 
 Set the last input type to the given value and emit a signal

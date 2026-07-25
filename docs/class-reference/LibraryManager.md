@@ -6,7 +6,6 @@ Unified interface to manage games from multiple sources
 ## Description
 
 The LibraryManager is responsible for managing any number of [Library](../Library) providers and offers a unified interface to manage games from multiple sources. New game library sources can be created in the core code base or in plugins by implementing/extending the [Library](../Library) class and registering the provider with the library manager.
-
 With registered library providers, other systems can request library items from the LibraryManager, and it will use all available sources to return a unified library item: 
 ```gdscript
 
@@ -18,7 +17,7 @@ With registered library providers, other systems can request library items from 
 ```
 
 
- Games in the LibraryManager are stored as [LibraryItem](../LibraryItem) resources, which contains information about each game. Each [LibraryItem](../LibraryItem) has a list of [LibraryLaunchItems](https://docs.godotengine.org/en/stable/classes/class_librarylaunchitems.html) which contains the data for how to launch that game through a specific Library provider.
+Games in the LibraryManager are stored as [LibraryItem](../LibraryItem) resources, which contains information about each game. Each [LibraryItem](../LibraryItem) has a list of [LibraryLaunchItems](https://docs.godotengine.org/en/stable/classes/class_librarylaunchitems.html) which contains the data for how to launch that game through a specific Library provider.
 ## Properties
 
 | Type | Name | Default |
@@ -85,7 +84,6 @@ With registered library providers, other systems can request library items from 
 
 
 Returns library items based on the given modifiers. A modifier is a [Callable](https://docs.godotengine.org/en/stable/classes/class_callable.html) that takes an array of [LibraryItem](../LibraryItem) objects and returns an array of those items that may be sorted or filtered out.
-
 
 ```gdscript
 

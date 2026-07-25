@@ -6,7 +6,6 @@ Fetch and manage artwork from registered [BoxArtProvider](../BoxArtProvider) nod
 ## Description
 
 The BoxArtManager is responsible for managing any number of [BoxArtProvider](../BoxArtProvider) nodes and providing a unified way to fetch box art from multiple sources to any systems that might need them. New box art sources can be created in the core code base or in plugins by implementing/extending the [BoxArtProvider](../BoxArtProvider) class and adding them to the scene.
-
 With registered box art providers, other systems can request box art from the BoxArtManager, and it will use all available sources to return the best artwork:
 ```gdscript
 

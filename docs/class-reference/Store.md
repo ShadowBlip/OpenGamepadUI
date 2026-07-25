@@ -19,10 +19,10 @@
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [load_home](./#load_home)() |
-| void | [load_installed](./#load_installed)() |
-| void | [load_details](./#load_details)(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
-| void | [search](./#search)(str: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [load_home](./#load_home)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [load_installed](./#load_installed)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [load_details](./#load_details)(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [search](./#search)(str: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 
 
 ------------------
@@ -102,7 +102,7 @@
 ### `load_home()`
 
 
-void **load_home**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **load_home**()
 
 
 !!! note
@@ -111,7 +111,7 @@ void **load_home**()
 ### `load_installed()`
 
 
-void **load_installed**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **load_installed**()
 
 
 !!! note
@@ -120,7 +120,7 @@ void **load_installed**()
 ### `load_details()`
 
 
-void **load_details**(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **load_details**(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html))
 
 
 !!! note
@@ -129,7 +129,7 @@ void **load_details**(id: [String](https://docs.godotengine.org/en/stable/classe
 ### `search()`
 
 
-void **search**(str: [String](https://docs.godotengine.org/en/stable/classes/class_string.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **search**(str: [String](https://docs.godotengine.org/en/stable/classes/class_string.html))
 
 
 !!! note

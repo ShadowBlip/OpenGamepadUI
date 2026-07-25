@@ -14,10 +14,10 @@
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [run](./#run)() |
-| void | [set_exit_code](./#set_exit_code)(code: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [run](./#run)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [set_exit_code](./#set_exit_code)(code: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_exit_code](./#get_exit_code)() |
-| void | [abort](./#abort)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [abort](./#abort)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [should_abort](./#should_abort)() |
 
 
@@ -53,7 +53,7 @@
 ### `run()`
 
 
-void **run**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **run**()
 
 
 !!! note
@@ -62,7 +62,7 @@ void **run**()
 ### `set_exit_code()`
 
 
-void **set_exit_code**(code: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **set_exit_code**(code: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -80,7 +80,7 @@ void **set_exit_code**(code: [Variant](https://docs.godotengine.org/en/stable/cl
 ### `abort()`
 
 
-void **abort**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **abort**()
 
 
 !!! note

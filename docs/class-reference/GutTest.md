@@ -18,63 +18,63 @@
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [before_all](./#before_all)() |
-| void | [before_each](./#before_each)() |
-| void | [after_all](./#after_all)() |
-| void | [after_each](./#after_each)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [before_all](./#before_all)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [before_each](./#before_each)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [after_all](./#after_all)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [after_each](./#after_each)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_logger](./#get_logger)() |
-| void | [set_logger](./#set_logger)(logger: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_eq](./#assert_eq)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_ne](./#assert_ne)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_almost_eq](./#assert_almost_eq)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_almost_ne](./#assert_almost_ne)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_gt](./#assert_gt)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_lt](./#assert_lt)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_true](./#assert_true)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_false](./#assert_false)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_between](./#assert_between)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_not_between](./#assert_not_between)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_has](./#assert_has)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_does_not_have](./#assert_does_not_have)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_file_exists](./#assert_file_exists)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_file_does_not_exist](./#assert_file_does_not_exist)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_file_empty](./#assert_file_empty)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_file_not_empty](./#assert_file_not_empty)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_has_method](./#assert_has_method)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_accessors](./#assert_accessors)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), set_to: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_exports](./#assert_exports)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [watch_signals](./#watch_signals)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_connected](./#assert_connected)(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_not_connected](./#assert_not_connected)(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_signal_emitted](./#assert_signal_emitted)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_signal_not_emitted](./#assert_signal_not_emitted)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_signal_emitted_with_parameters](./#assert_signal_emitted_with_parameters)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1) |
-| void | [assert_signal_emit_count](./#assert_signal_emit_count)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_has_signal](./#assert_has_signal)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [set_logger](./#set_logger)(logger: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_eq](./#assert_eq)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_ne](./#assert_ne)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_almost_eq](./#assert_almost_eq)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_almost_ne](./#assert_almost_ne)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_gt](./#assert_gt)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_lt](./#assert_lt)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_true](./#assert_true)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_false](./#assert_false)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_between](./#assert_between)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_between](./#assert_not_between)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_has](./#assert_has)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_does_not_have](./#assert_does_not_have)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_file_exists](./#assert_file_exists)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_file_does_not_exist](./#assert_file_does_not_exist)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_file_empty](./#assert_file_empty)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_file_not_empty](./#assert_file_not_empty)(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_has_method](./#assert_has_method)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_accessors](./#assert_accessors)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), set_to: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_exports](./#assert_exports)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [watch_signals](./#watch_signals)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_connected](./#assert_connected)(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_connected](./#assert_not_connected)(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_signal_emitted](./#assert_signal_emitted)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_signal_not_emitted](./#assert_signal_not_emitted)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_signal_emitted_with_parameters](./#assert_signal_emitted_with_parameters)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_signal_emit_count](./#assert_signal_emit_count)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_has_signal](./#assert_has_signal)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_signal_emit_count](./#get_signal_emit_count)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_signal_parameters](./#get_signal_parameters)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_call_parameters](./#get_call_parameters)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_call_count](./#get_call_count)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [assert_is](./#assert_is)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), a_class: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_typeof](./#assert_typeof)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_not_typeof](./#assert_not_typeof)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_string_contains](./#assert_string_contains)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
-| void | [assert_string_starts_with](./#assert_string_starts_with)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
-| void | [assert_string_ends_with](./#assert_string_ends_with)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
-| void | [assert_called](./#assert_called)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [assert_not_called](./#assert_not_called)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [assert_call_count](./#assert_call_count)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_count: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [assert_null](./#assert_null)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_not_null](./#assert_not_null)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_freed](./#assert_freed)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "something") |
-| void | [assert_not_freed](./#assert_not_freed)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_no_new_orphans](./#assert_no_new_orphans)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_setget](./#assert_setget)(instance: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), name_property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), const_or_setter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, getter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "__not_set__") |
-| void | [assert_set_property](./#assert_set_property)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_readonly_property](./#assert_readonly_property)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_property_with_backing_variable](./#assert_property_with_backing_variable)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), backed_by_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_is](./#assert_is)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), a_class: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_typeof](./#assert_typeof)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_typeof](./#assert_not_typeof)(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_string_contains](./#assert_string_contains)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_string_starts_with](./#assert_string_starts_with)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_string_ends_with](./#assert_string_ends_with)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_called](./#assert_called)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_called](./#assert_not_called)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_call_count](./#assert_call_count)(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_count: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_null](./#assert_null)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_null](./#assert_not_null)(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_freed](./#assert_freed)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "something") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_freed](./#assert_not_freed)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_no_new_orphans](./#assert_no_new_orphans)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_setget](./#assert_setget)(instance: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), name_property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), const_or_setter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, getter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "__not_set__") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_set_property](./#assert_set_property)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_readonly_property](./#assert_readonly_property)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_property_with_backing_variable](./#assert_property_with_backing_variable)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), backed_by_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | void | [assert_property](./#assert_property)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [pending](./#pending)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [pending](./#pending)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [wait_seconds](./#wait_seconds)(time: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), msg: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [yield_for](./#yield_for)(time: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), msg: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [wait_for_signal](./#wait_for_signal)(sig: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), max_wait: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), msg: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
@@ -86,10 +86,10 @@
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_pass_count](./#get_pass_count)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_pending_count](./#get_pending_count)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_assert_count](./#get_assert_count)() |
-| void | [clear_signal_watcher](./#clear_signal_watcher)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [clear_signal_watcher](./#clear_signal_watcher)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_double_strategy](./#get_double_strategy)() |
-| void | [set_double_strategy](./#set_double_strategy)(double_strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [pause_before_teardown](./#pause_before_teardown)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [set_double_strategy](./#set_double_strategy)(double_strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [pause_before_teardown](./#pause_before_teardown)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_summary_text](./#get_summary_text)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [double](./#double)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), double_strat: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, not_used_anymore: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [partial_double](./#partial_double)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), double_strat: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, not_used_anymore: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
@@ -98,10 +98,10 @@
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [double_scene](./#double_scene)(path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [double_script](./#double_script)(path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [double_inner](./#double_inner)(path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), subpath: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [ignore_method_when_doubling](./#ignore_method_when_doubling)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [ignore_method_when_doubling](./#ignore_method_when_doubling)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [stub](./#stub)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), p2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), p3: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [simulate](./#simulate)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), delta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), check_is_processing: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = false) |
-| void | [replace_node](./#replace_node)(base_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), path_or_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), with_this: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [simulate](./#simulate)(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), delta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), check_is_processing: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = false) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [replace_node](./#replace_node)(base_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), path_or_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), with_this: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [use_parameters](./#use_parameters)(params: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [autofree](./#autofree)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [autoqfree](./#autoqfree)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
@@ -109,19 +109,19 @@
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [add_child_autoqfree](./#add_child_autoqfree)(node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), legible_unique_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = false) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [is_passing](./#is_passing)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [is_failing](./#is_failing)() |
-| void | [pass_test](./#pass_test)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [fail_test](./#fail_test)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [pass_test](./#pass_test)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [fail_test](./#fail_test)(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [compare_deep](./#compare_deep)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), max_differences: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [compare_shallow](./#compare_shallow)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), max_differences: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
-| void | [assert_eq_deep](./#assert_eq_deep)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_ne_deep](./#assert_ne_deep)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_eq_shallow](./#assert_eq_shallow)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_ne_shallow](./#assert_ne_shallow)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [assert_same](./#assert_same)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
-| void | [assert_not_same](./#assert_not_same)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_eq_deep](./#assert_eq_deep)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_ne_deep](./#assert_ne_deep)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_eq_shallow](./#assert_eq_shallow)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_ne_shallow](./#assert_ne_shallow)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_same](./#assert_same)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [assert_not_same](./#assert_not_same)(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [skip_if_godot_version_lt](./#skip_if_godot_version_lt)(expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [skip_if_godot_version_ne](./#skip_if_godot_version_ne)(expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [register_inner_classes](./#register_inner_classes)(base_script: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [register_inner_classes](./#register_inner_classes)(base_script: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 
 
 ------------------
@@ -192,7 +192,7 @@
 ### `before_all()`
 
 
-void **before_all**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **before_all**()
 
 
 !!! note
@@ -201,7 +201,7 @@ void **before_all**()
 ### `before_each()`
 
 
-void **before_each**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **before_each**()
 
 
 !!! note
@@ -210,7 +210,7 @@ void **before_each**()
 ### `after_all()`
 
 
-void **after_all**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **after_all**()
 
 
 !!! note
@@ -219,7 +219,7 @@ void **after_all**()
 ### `after_each()`
 
 
-void **after_each**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **after_each**()
 
 
 !!! note
@@ -237,7 +237,7 @@ void **after_each**()
 ### `set_logger()`
 
 
-void **set_logger**(logger: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **set_logger**(logger: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -246,7 +246,7 @@ void **set_logger**(logger: [Variant](https://docs.godotengine.org/en/stable/cla
 ### `assert_eq()`
 
 
-void **assert_eq**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_eq**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -255,7 +255,7 @@ void **assert_eq**(got: [Variant](https://docs.godotengine.org/en/stable/classes
 ### `assert_ne()`
 
 
-void **assert_ne**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_ne**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -264,7 +264,7 @@ void **assert_ne**(got: [Variant](https://docs.godotengine.org/en/stable/classes
 ### `assert_almost_eq()`
 
 
-void **assert_almost_eq**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_almost_eq**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -273,7 +273,7 @@ void **assert_almost_eq**(got: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_almost_ne()`
 
 
-void **assert_almost_ne**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_almost_ne**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), not_expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), error_interval: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -282,7 +282,7 @@ void **assert_almost_ne**(got: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_gt()`
 
 
-void **assert_gt**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_gt**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -291,7 +291,7 @@ void **assert_gt**(got: [Variant](https://docs.godotengine.org/en/stable/classes
 ### `assert_lt()`
 
 
-void **assert_lt**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_lt**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -300,7 +300,7 @@ void **assert_lt**(got: [Variant](https://docs.godotengine.org/en/stable/classes
 ### `assert_true()`
 
 
-void **assert_true**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_true**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -309,7 +309,7 @@ void **assert_true**(got: [Variant](https://docs.godotengine.org/en/stable/class
 ### `assert_false()`
 
 
-void **assert_false**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_false**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -318,7 +318,7 @@ void **assert_false**(got: [Variant](https://docs.godotengine.org/en/stable/clas
 ### `assert_between()`
 
 
-void **assert_between**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_between**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -327,7 +327,7 @@ void **assert_between**(got: [Variant](https://docs.godotengine.org/en/stable/cl
 ### `assert_not_between()`
 
 
-void **assert_not_between**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_between**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_low: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expect_high: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -336,7 +336,7 @@ void **assert_not_between**(got: [Variant](https://docs.godotengine.org/en/stabl
 ### `assert_has()`
 
 
-void **assert_has**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_has**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -345,7 +345,7 @@ void **assert_has**(obj: [Variant](https://docs.godotengine.org/en/stable/classe
 ### `assert_does_not_have()`
 
 
-void **assert_does_not_have**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_does_not_have**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), element: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -354,7 +354,7 @@ void **assert_does_not_have**(obj: [Variant](https://docs.godotengine.org/en/sta
 ### `assert_file_exists()`
 
 
-void **assert_file_exists**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_file_exists**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -363,7 +363,7 @@ void **assert_file_exists**(file_path: [Variant](https://docs.godotengine.org/en
 ### `assert_file_does_not_exist()`
 
 
-void **assert_file_does_not_exist**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_file_does_not_exist**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -372,7 +372,7 @@ void **assert_file_does_not_exist**(file_path: [Variant](https://docs.godotengin
 ### `assert_file_empty()`
 
 
-void **assert_file_empty**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_file_empty**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -381,7 +381,7 @@ void **assert_file_empty**(file_path: [Variant](https://docs.godotengine.org/en/
 ### `assert_file_not_empty()`
 
 
-void **assert_file_not_empty**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_file_not_empty**(file_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -390,7 +390,7 @@ void **assert_file_not_empty**(file_path: [Variant](https://docs.godotengine.org
 ### `assert_has_method()`
 
 
-void **assert_has_method**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_has_method**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -399,7 +399,7 @@ void **assert_has_method**(obj: [Variant](https://docs.godotengine.org/en/stable
 ### `assert_accessors()`
 
 
-void **assert_accessors**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), set_to: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_accessors**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), set_to: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -408,7 +408,7 @@ void **assert_accessors**(obj: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_exports()`
 
 
-void **assert_exports**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_exports**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -417,7 +417,7 @@ void **assert_exports**(obj: [Variant](https://docs.godotengine.org/en/stable/cl
 ### `watch_signals()`
 
 
-void **watch_signals**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **watch_signals**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -426,7 +426,7 @@ void **watch_signals**(object: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_connected()`
 
 
-void **assert_connected**(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_connected**(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -435,7 +435,7 @@ void **assert_connected**(signaler_obj: [Variant](https://docs.godotengine.org/e
 ### `assert_not_connected()`
 
 
-void **assert_not_connected**(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_connected**(signaler_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), connect_to_obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -444,7 +444,7 @@ void **assert_not_connected**(signaler_obj: [Variant](https://docs.godotengine.o
 ### `assert_signal_emitted()`
 
 
-void **assert_signal_emitted**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_signal_emitted**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -453,7 +453,7 @@ void **assert_signal_emitted**(object: [Variant](https://docs.godotengine.org/en
 ### `assert_signal_not_emitted()`
 
 
-void **assert_signal_not_emitted**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_signal_not_emitted**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -462,7 +462,7 @@ void **assert_signal_not_emitted**(object: [Variant](https://docs.godotengine.or
 ### `assert_signal_emitted_with_parameters()`
 
 
-void **assert_signal_emitted_with_parameters**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_signal_emitted_with_parameters**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), index: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = -1)
 
 
 !!! note
@@ -471,7 +471,7 @@ void **assert_signal_emitted_with_parameters**(object: [Variant](https://docs.go
 ### `assert_signal_emit_count()`
 
 
-void **assert_signal_emit_count**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_signal_emit_count**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -480,7 +480,7 @@ void **assert_signal_emit_count**(object: [Variant](https://docs.godotengine.org
 ### `assert_has_signal()`
 
 
-void **assert_has_signal**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_has_signal**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), signal_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -525,7 +525,7 @@ void **assert_has_signal**(object: [Variant](https://docs.godotengine.org/en/sta
 ### `assert_is()`
 
 
-void **assert_is**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), a_class: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_is**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), a_class: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -534,7 +534,7 @@ void **assert_is**(object: [Variant](https://docs.godotengine.org/en/stable/clas
 ### `assert_typeof()`
 
 
-void **assert_typeof**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_typeof**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -543,7 +543,7 @@ void **assert_typeof**(object: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_not_typeof()`
 
 
-void **assert_not_typeof**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_typeof**(object: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), type: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -552,7 +552,7 @@ void **assert_not_typeof**(object: [Variant](https://docs.godotengine.org/en/sta
 ### `assert_string_contains()`
 
 
-void **assert_string_contains**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_string_contains**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
 
 
 !!! note
@@ -561,7 +561,7 @@ void **assert_string_contains**(text: [Variant](https://docs.godotengine.org/en/
 ### `assert_string_starts_with()`
 
 
-void **assert_string_starts_with**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_string_starts_with**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
 
 
 !!! note
@@ -570,7 +570,7 @@ void **assert_string_starts_with**(text: [Variant](https://docs.godotengine.org/
 ### `assert_string_ends_with()`
 
 
-void **assert_string_ends_with**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_string_ends_with**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), search: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), match_case: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = true)
 
 
 !!! note
@@ -579,7 +579,7 @@ void **assert_string_ends_with**(text: [Variant](https://docs.godotengine.org/en
 ### `assert_called()`
 
 
-void **assert_called**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_called**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
 
 
 !!! note
@@ -588,7 +588,7 @@ void **assert_called**(inst: [Variant](https://docs.godotengine.org/en/stable/cl
 ### `assert_not_called()`
 
 
-void **assert_not_called**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_called**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
 
 
 !!! note
@@ -597,7 +597,7 @@ void **assert_not_called**(inst: [Variant](https://docs.godotengine.org/en/stabl
 ### `assert_call_count()`
 
 
-void **assert_call_count**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_count: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_call_count**(inst: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_count: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), parameters: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
 
 
 !!! note
@@ -606,7 +606,7 @@ void **assert_call_count**(inst: [Variant](https://docs.godotengine.org/en/stabl
 ### `assert_null()`
 
 
-void **assert_null**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_null**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -615,7 +615,7 @@ void **assert_null**(got: [Variant](https://docs.godotengine.org/en/stable/class
 ### `assert_not_null()`
 
 
-void **assert_not_null**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_null**(got: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -624,7 +624,7 @@ void **assert_not_null**(got: [Variant](https://docs.godotengine.org/en/stable/c
 ### `assert_freed()`
 
 
-void **assert_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "something")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "something")
 
 
 !!! note
@@ -633,7 +633,7 @@ void **assert_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/clas
 ### `assert_not_freed()`
 
 
-void **assert_not_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), title: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -642,7 +642,7 @@ void **assert_not_freed**(obj: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_no_new_orphans()`
 
 
-void **assert_no_new_orphans**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_no_new_orphans**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -651,7 +651,7 @@ void **assert_no_new_orphans**(text: [Variant](https://docs.godotengine.org/en/s
 ### `assert_setget()`
 
 
-void **assert_setget**(instance: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), name_property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), const_or_setter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, getter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "__not_set__")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_setget**(instance: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), name_property: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), const_or_setter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null, getter: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "__not_set__")
 
 
 !!! note
@@ -660,7 +660,7 @@ void **assert_setget**(instance: [Variant](https://docs.godotengine.org/en/stabl
 ### `assert_set_property()`
 
 
-void **assert_set_property**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_set_property**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -669,7 +669,7 @@ void **assert_set_property**(obj: [Variant](https://docs.godotengine.org/en/stab
 ### `assert_readonly_property()`
 
 
-void **assert_readonly_property**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_readonly_property**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), expected_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -678,7 +678,7 @@ void **assert_readonly_property**(obj: [Variant](https://docs.godotengine.org/en
 ### `assert_property_with_backing_variable()`
 
 
-void **assert_property_with_backing_variable**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), backed_by_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_property_with_backing_variable**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), property_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), new_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), backed_by_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null)
 
 
 !!! note
@@ -696,7 +696,7 @@ void **assert_property**(obj: [Variant](https://docs.godotengine.org/en/stable/c
 ### `pending()`
 
 
-void **pending**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **pending**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -804,7 +804,7 @@ void **pending**(text: [Variant](https://docs.godotengine.org/en/stable/classes/
 ### `clear_signal_watcher()`
 
 
-void **clear_signal_watcher**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **clear_signal_watcher**()
 
 
 !!! note
@@ -822,7 +822,7 @@ void **clear_signal_watcher**()
 ### `set_double_strategy()`
 
 
-void **set_double_strategy**(double_strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **set_double_strategy**(double_strategy: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -831,7 +831,7 @@ void **set_double_strategy**(double_strategy: [Variant](https://docs.godotengine
 ### `pause_before_teardown()`
 
 
-void **pause_before_teardown**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **pause_before_teardown**()
 
 
 !!! note
@@ -912,7 +912,7 @@ void **pause_before_teardown**()
 ### `ignore_method_when_doubling()`
 
 
-void **ignore_method_when_doubling**(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **ignore_method_when_doubling**(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), method_name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -930,7 +930,7 @@ void **ignore_method_when_doubling**(thing: [Variant](https://docs.godotengine.o
 ### `simulate()`
 
 
-void **simulate**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), delta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), check_is_processing: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = false)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **simulate**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), times: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), delta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), check_is_processing: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = false)
 
 
 !!! note
@@ -939,7 +939,7 @@ void **simulate**(obj: [Variant](https://docs.godotengine.org/en/stable/classes/
 ### `replace_node()`
 
 
-void **replace_node**(base_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), path_or_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), with_this: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **replace_node**(base_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), path_or_node: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), with_this: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1011,7 +1011,7 @@ void **replace_node**(base_node: [Variant](https://docs.godotengine.org/en/stabl
 ### `pass_test()`
 
 
-void **pass_test**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **pass_test**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1020,7 +1020,7 @@ void **pass_test**(text: [Variant](https://docs.godotengine.org/en/stable/classe
 ### `fail_test()`
 
 
-void **fail_test**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **fail_test**(text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1047,7 +1047,7 @@ void **fail_test**(text: [Variant](https://docs.godotengine.org/en/stable/classe
 ### `assert_eq_deep()`
 
 
-void **assert_eq_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_eq_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1056,7 +1056,7 @@ void **assert_eq_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/cla
 ### `assert_ne_deep()`
 
 
-void **assert_ne_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_ne_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1065,7 +1065,7 @@ void **assert_ne_deep**(v1: [Variant](https://docs.godotengine.org/en/stable/cla
 ### `assert_eq_shallow()`
 
 
-void **assert_eq_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_eq_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1074,7 +1074,7 @@ void **assert_eq_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_ne_shallow()`
 
 
-void **assert_ne_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_ne_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -1083,7 +1083,7 @@ void **assert_ne_shallow**(v1: [Variant](https://docs.godotengine.org/en/stable/
 ### `assert_same()`
 
 
-void **assert_same**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_same**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -1092,7 +1092,7 @@ void **assert_same**(v1: [Variant](https://docs.godotengine.org/en/stable/classe
 ### `assert_not_same()`
 
 
-void **assert_not_same**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **assert_not_same**(v1: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), v2: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), text: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note
@@ -1119,7 +1119,7 @@ void **assert_not_same**(v1: [Variant](https://docs.godotengine.org/en/stable/cl
 ### `register_inner_classes()`
 
 
-void **register_inner_classes**(base_script: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **register_inner_classes**(base_script: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note

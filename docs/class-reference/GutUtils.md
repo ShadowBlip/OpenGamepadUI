@@ -53,8 +53,8 @@
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_instance](./#get_instance)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_enum_value](./#get_enum_value)(thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), e: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), default: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [nvl](./#nvl)(value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), if_null: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [pretty_print](./#pretty_print)(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [print_properties](./#print_properties)(props: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), print_all_meta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = false) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [pretty_print](./#pretty_print)(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [print_properties](./#print_properties)(props: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), print_all_meta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = false) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_scene_script_object](./#get_scene_script_object)(scene: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_version_text](./#get_version_text)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_bad_version_text](./#get_bad_version_text)() |
@@ -83,7 +83,7 @@
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_singleton_by_name](./#get_singleton_by_name)(name: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [dec2bistr](./#dec2bistr)(decimal_value: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), max_bits: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = 31) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [add_line_numbers](./#add_line_numbers)(contents: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html)) |
-| void | [pp](./#pp)(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), indent: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [pp](./#pp)(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), indent: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "") |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [create_script_from_source](./#create_script_from_source)(source: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), override_path: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = null) |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_display_size](./#get_display_size)() |
 
@@ -471,7 +471,7 @@
 ### `pretty_print()`
 
 
-void **pretty_print**(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **pretty_print**(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html))
 
 
 !!! note
@@ -480,7 +480,7 @@ void **pretty_print**(dict: [Variant](https://docs.godotengine.org/en/stable/cla
 ### `print_properties()`
 
 
-void **print_properties**(props: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), print_all_meta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = false)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **print_properties**(props: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), thing: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), print_all_meta: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = false)
 
 
 !!! note
@@ -741,7 +741,7 @@ void **print_properties**(props: [Variant](https://docs.godotengine.org/en/stabl
 ### `pp()`
 
 
-void **pp**(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), indent: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **pp**(dict: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html), indent: [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) = "")
 
 
 !!! note

@@ -16,7 +16,7 @@
 | Returns | Signature |
 | ------- | --------- |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [open](./#open)(url: [String](https://docs.godotengine.org/en/stable/classes/class_string.html) = "ws://localhost:5000") |
-| void | [close](./#close)() |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [close](./#close)() |
 | [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [make_request](./#make_request)(method: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), args: [Array](https://docs.godotengine.org/en/stable/classes/class_array.html)) |
 
 
@@ -70,7 +70,7 @@
 ### `close()`
 
 
-void **close**()
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **close**()
 
 
 !!! note

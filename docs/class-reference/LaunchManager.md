@@ -44,7 +44,7 @@ The LaunchManager class is responsible starting and managing the lifecycle of ga
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [setup](./#setup)(input_manager: [InputManager](../InputManager)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [setup](./#setup)(input_manager: [InputManager](../InputManager)) |
 | [RunningApp](../RunningApp) | [launch](./#launch)(app: [LibraryLaunchItem](../LibraryLaunchItem)) |
 | [RunningApp](../RunningApp) | [launch_in_background](./#launch_in_background)(app: [LibraryLaunchItem](../LibraryLaunchItem)) |
 | void | [stop](./#stop)(app: [RunningApp](../RunningApp)) |
@@ -149,7 +149,7 @@ The LaunchManager class is responsible starting and managing the lifecycle of ga
 ### `setup()`
 
 
-void **setup**(input_manager: [InputManager](../InputManager))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **setup**(input_manager: [InputManager](../InputManager))
 
 
 !!! note

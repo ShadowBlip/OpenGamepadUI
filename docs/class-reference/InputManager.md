@@ -6,7 +6,6 @@ Manages global input
 ## Description
 
 The InputManager class is responsible for handling global input that should happen everywhere in the application, regardless of the current menu. Examples include opening up the main or quick bar menus.
-
 To include this functionality, add this as a node to the root node in the scene tree.
 ## Properties
 

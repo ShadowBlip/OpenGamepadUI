@@ -7,7 +7,6 @@ Resource API for displaying arbitrary notifications
 
 The NotificationManager is responsible for providing an API to display arbitrary notifications to the user and maintain a history of those notifications. It also manages a queue of notifications so only one notification shows at a time.
 
-
 ```gdscript
 
     const NotificationManager := preload("res://core/global/notification_manager.tres")
@@ -31,9 +30,9 @@ The NotificationManager is responsible for providing an API to display arbitrary
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [show](./#show)(notify: [Notification](../Notification)) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [show](./#show)(notify: [Notification](../Notification)) |
 | [Notification[]](../Notification) | [get_notification_history](./#get_notification_history)() |
-| void | [show_notification](./#show_notification)(text: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), icon: [Texture2D](https://docs.godotengine.org/en/stable/classes/class_texture2d.html) = null, timeout_sec: [float](https://docs.godotengine.org/en/stable/classes/class_float.html) = 5.0) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [show_notification](./#show_notification)(text: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), icon: [Texture2D](https://docs.godotengine.org/en/stable/classes/class_texture2d.html) = null, timeout_sec: [float](https://docs.godotengine.org/en/stable/classes/class_float.html) = 5.0) |
 | [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) | [has_next](./#has_next)() |
 | [Notification](../Notification) | [next](./#next)() |
 
@@ -79,7 +78,7 @@ The NotificationManager is responsible for providing an API to display arbitrary
 ### `show()`
 
 
-void **show**(notify: [Notification](../Notification))
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **show**(notify: [Notification](../Notification))
 
 
 Queues the given notification to be shown
@@ -93,7 +92,7 @@ Returns a list of notifications
 ### `show_notification()`
 
 
-void **show_notification**(text: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), icon: [Texture2D](https://docs.godotengine.org/en/stable/classes/class_texture2d.html) = null, timeout_sec: [float](https://docs.godotengine.org/en/stable/classes/class_float.html) = 5.0)
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **show_notification**(text: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), icon: [Texture2D](https://docs.godotengine.org/en/stable/classes/class_texture2d.html) = null, timeout_sec: [float](https://docs.godotengine.org/en/stable/classes/class_float.html) = 5.0)
 
 
 !!! note

@@ -6,7 +6,6 @@ Manages global input while ion overlay mode
 ## Description
 
 The OverlayInputManager class is responsible for handling global input while the quick bar or configuration menu are open while permitting underlay process chords to function, such as the Steam Quick Access Menu chord.
-
 To include this functionality, add this as a node to the root node in the scene tree.
 ## Properties
 

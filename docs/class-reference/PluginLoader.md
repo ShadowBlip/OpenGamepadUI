@@ -6,7 +6,6 @@ Manage and load plugins
 ## Description
 
 The PluginLoader is responsible for downloading, loading, and initializing OpenGamepadUI plugins. The plugin system for OpenGamepadUI is inspired by the modding system implemented by Delta-V. 
-
 The PluginLoader works by taking advantage of Godot's [method ProjectSettings.load_resource_pack](https://docs.godotengine.org/en/stable/classes/class_method projectsettings.load_resource_pack.html) method, which can allow us to load Godot scripts and scenes from a zip file. The PluginLoader looks for zip files in user://plugins, and parses the plugin.json file contained within them. If the plugin metadata is valid, the loader loads the zip as a resource pack.
 ## Properties
 

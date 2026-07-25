@@ -58,7 +58,6 @@ Returns true if the system has audio controls we support
 
 Sets the current audio device volume based on the given value. The volume value should be in the form of a percent where 1.0 equals 100%. The type can be either absolute (default) or relative volume values.
 
-
 ```gdscript
 
     const AudioManager := preload("res://core/global/audio_manager.tres")

@@ -14,12 +14,12 @@
 
 | Returns | Signature |
 | ------- | --------- |
-| void | [set_state](./#set_state)(stack: [Array](https://docs.godotengine.org/en/stable/classes/class_array.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
-| void | [push_state](./#push_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
-| void | [push_state_front](./#push_state_front)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [set_state](./#set_state)(stack: [Array](https://docs.godotengine.org/en/stable/classes/class_array.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [push_state](./#push_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [push_state_front](./#push_state_front)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [pop_state](./#pop_state)(data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
-| void | [replace_state](./#replace_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
-| void | [remove_state](./#remove_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [replace_state](./#replace_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
+| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [remove_state](./#remove_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {}) |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [current_state](./#current_state)() |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [stack_length](./#stack_length)() |
 | [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) | [has_state](./#has_state)(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html)) |
@@ -57,7 +57,7 @@
 ### `set_state()`
 
 
-void **set_state**(stack: [Array](https://docs.godotengine.org/en/stable/classes/class_array.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **set_state**(stack: [Array](https://docs.godotengine.org/en/stable/classes/class_array.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
 
 
 !!! note
@@ -66,7 +66,7 @@ void **set_state**(stack: [Array](https://docs.godotengine.org/en/stable/classes
 ### `push_state()`
 
 
-void **push_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **push_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
 
 
 !!! note
@@ -75,7 +75,7 @@ void **push_state**(state: [int](https://docs.godotengine.org/en/stable/classes/
 ### `push_state_front()`
 
 
-void **push_state_front**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **push_state_front**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
 
 
 !!! note
@@ -93,7 +93,7 @@ void **push_state_front**(state: [int](https://docs.godotengine.org/en/stable/cl
 ### `replace_state()`
 
 
-void **replace_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **replace_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), unique: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) = true, data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
 
 
 !!! note
@@ -102,7 +102,7 @@ void **replace_state**(state: [int](https://docs.godotengine.org/en/stable/class
 ### `remove_state()`
 
 
-void **remove_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
+[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **remove_state**(state: [int](https://docs.godotengine.org/en/stable/classes/class_int.html), data: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) = {})
 
 
 !!! note
