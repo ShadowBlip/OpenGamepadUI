@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=Install OpenGamepadUI
+Exec=sh -c 'curl -L -O --output-dir /tmp/ https://raw.githubusercontent.com/ShadowBlip/OpenGamepadUI/main/docs/install/deck_install_script.sh 2> /dev/null && bash /tmp/deck_install_script.sh'
+Icon=steamdeck-gaming-return
+Terminal=true
+Type=Application
+StartupNotify=false
