@@ -36,9 +36,9 @@ plugins:
   - - "@semantic-release/exec"
     - shell: true
       prepareCmd: |
-        make in-docker IMAGE_TAG=4.6.1 TARGET='force-import docs'
-        make in-docker IMAGE_TAG=4.6.1 TARGET='dist update-pkgbuild-hash'
-        make in-docker IMAGE_TAG=4.6.1 TARGET='dist update-pkgbuild-hash' TARGET_ARCH="aarch64"
+        make in-docker IMAGE_TAG=4.7.1 TARGET='force-import docs'
+        make in-docker IMAGE_TAG=4.7.1 TARGET='dist update-pkgbuild-hash'
+        make in-docker IMAGE_TAG=4.7.1 TARGET='dist update-pkgbuild-hash' TARGET_ARCH="aarch64"
       publishCmd: "echo '${nextRelease.version}' > .version.txt"
 
   # Commit the following changes to git after other plugins have run
