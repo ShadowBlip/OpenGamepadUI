@@ -297,10 +297,13 @@ func _on_base_state_entered(_from: State) -> void:
 
 	# Manage input focus
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_PASS)
-	if xwayland_ogui.set_input_focus(overlay_window_id, 0) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
-	if xwayland_ogui.set_input_focus(underlay_window_id, 1) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+
+	#TODO: This atom was deprecated, update gamescope_x11_client to use the new
+	# GAMESCOPE_KEYBOARD_FOCUS_DISPLAY and GAMESCOPE_MOUSE_FOCUS_DISPLAY atoms instead
+	#if xwayland_ogui.set_input_focus(overlay_window_id, 0) != OK:
+		#logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	#if xwayland_ogui.set_input_focus(underlay_window_id, 1) != OK:
+		#logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Manage overlay
 	xwayland_ogui.set_overlay(overlay_window_id, 0)
@@ -314,10 +317,10 @@ func _on_base_state_exited(_to: State) -> void:
 
 	# Manage input focus
 	input_plumber.set_intercept_mode(InputPlumberInstance.INTERCEPT_MODE_ALL)
-	if xwayland_ogui.set_input_focus(overlay_window_id, 1) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
-	if xwayland_ogui.set_input_focus(underlay_window_id, 0) != OK:
-		logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	#if xwayland_ogui.set_input_focus(overlay_window_id, 1) != OK:
+		#logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
+	#if xwayland_ogui.set_input_focus(underlay_window_id, 0) != OK:
+		#logger.error("Unable to set STEAM_INPUT_FOCUS atom!")
 
 	# Manage overlay
 	self.set_steam_overlay_focus = xwayland_ogui.get_overlay(underlay_window_id) == 1
