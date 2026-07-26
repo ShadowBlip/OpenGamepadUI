@@ -67,6 +67,7 @@ var should_manage_overlay := true
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
 var _input_manager: InputManager
+var _last_check_running := -1
 
 # Connect to Gamescope signals
 func _init() -> void:
@@ -601,6 +602,14 @@ func _remove_running(app: RunningApp):
 
 # Checks for running apps and updates our state accordingly
 func check_running() -> void:
+	# on_focus_changed and on_focusable_apps_changed can race when a window is
+	# destroyed, if reaper kills the PID while the second signal is pending it
+	# will throw an error. Only permit one check_running() to run per frame.
+	var frame := Engine.get_process_frames()
+	if frame == _last_check_running:
+		return
+	_last_check_running = frame
+
 	# Find the root window
 	if not _xwayland_game:
 		logger.warn("No XWayland instance exists to check for running apps")
