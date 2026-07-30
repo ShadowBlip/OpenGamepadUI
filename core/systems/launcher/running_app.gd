@@ -207,7 +207,9 @@ func discover_app_type(all_windows: PackedInt64Array, app_pids: PackedInt64Array
 func update_wayland_app(app_pids: PackedInt64Array) -> void:
 	# Check if the app, or any of its children, are still running
 	var running := is_running()
-	if not running:
+	if running:
+		self.not_running_count = 0
+	else:
 		self.not_running_count += 1
 
 	# Update the running app's state
@@ -252,7 +254,9 @@ func update_xwayland_app(all_windows: PackedInt64Array, app_pids: PackedInt64Arr
 
 	# Check if the app, or any of its children, are still running
 	var running := is_running()
-	if not running:
+	if running:
+		not_running_count = 0
+	else:
 		not_running_count += 1
 
 	# Update the running app's state
@@ -381,7 +385,9 @@ func get_all_window_ids(all_windows: PackedInt64Array, app_pids: PackedInt64Arra
 ## Returns true if the app's PID is running or any decendents with the same
 ## process group.
 func is_running() -> bool:
-	return OS.is_process_running(pid)
+	if is_ogui_managed:
+		return OS.is_process_running(pid)
+	return Reaper.is_pid_running(pid)
 
 
 ## Return true if the currently running app is focused
