@@ -117,6 +117,13 @@ static func get_parent_pid(pid: int) -> int:
 static func get_pid_group(pid: int) -> int:
 	return get_pid_property_int(pid, "NSpgid")
 
+## Returns whether the given PID exists and has not exited yet.
+static func is_pid_running(pid: int) -> bool:
+	var status := get_pid_status(pid)
+	if status.is_empty():
+		return false
+	var state := status.get("State", "") as String
+	return not state.begins_with("Z") and not state.begins_with("X")
 
 # Returns the PID state the given PID is in
 static func get_pid_state(pid: int) -> String:
