@@ -1,12 +1,22 @@
 pub mod x11_client;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::env;
+use std::sync::mpsc;
+use std::thread;
+use std::time::{Duration, Instant};
 use x11_client::GamescopeXWayland;
+
+use gamescope_x11_client::atoms::GamescopeAtom;
+use gamescope_x11_client::xwayland::XWayland;
 
 use godot::prelude::*;
 
 use godot::classes::{Engine, Resource};
+
+/// How long to wait for an X11 display to connect
+/// before giving up on it.
+const DISPLAY_PROBE_TIMEOUT: Duration = Duration::from_secs(2);
 
 #[derive(GodotClass)]
 #[class(base=Resource)]
@@ -108,7 +118,7 @@ impl IResource for GamescopeInstance {
         }
 
         // Discover any gamescope instances
-        let result = gamescope_x11_client::discover_gamescope_displays();
+        let result = discover_gamescope_displays();
         let x11_displays = match result {
             Ok(displays) => displays,
             Err(e) => {
@@ -157,6 +167,63 @@ impl IResource for GamescopeInstance {
             xwayland_ogui,
             xwayland_game,
             xwayland_primary,
+        }
+    }
+}
+
+/// Returns the names of every X11 display that is a Gamescope XWayland
+fn discover_gamescope_displays() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let mut seen = HashSet::new();
+    let displays = gamescope_x11_client::discover_x11_displays()?
+        .into_iter()
+        .filter(|display| seen.insert(display.clone()));
+
+    let probes: Vec<(String, mpsc::Receiver<bool>)> = displays
+        .map(|display| {
+            let (tx, rx) = mpsc::sync_channel(1);
+            let name = display.clone();
+            thread::spawn(move || {
+                let _ = tx.try_send(is_gamescope_display(&name));
+            });
+            (display, rx)
+        })
+        .collect();
+
+    let deadline = Instant::now() + DISPLAY_PROBE_TIMEOUT;
+    let mut gamescope_displays = Vec::new();
+    for (display, rx) in probes {
+        let remaining = deadline.saturating_duration_since(Instant::now());
+        match rx.recv_timeout(remaining) {
+            Ok(true) => gamescope_displays.push(display),
+            Ok(false) => (),
+            Err(_) => log::warn!("Display {display} did not respond in time; skipping it"),
+        }
+    }
+
+    Ok(gamescope_displays)
+}
+
+/// Connects to the given display and reports whether it is a Gamescope XWayland.
+fn is_gamescope_display(display: &str) -> bool {
+    let mut xwayland = XWayland::new(display.to_string());
+    if let Err(e) = xwayland.connect() {
+        log::debug!("Failed to connect to display {display}: {e:?}");
+        return false;
+    }
+
+    let root_window_id = match xwayland.get_root_window_id() {
+        Ok(root_window_id) => root_window_id,
+        Err(e) => {
+            log::debug!("Failed to get root window for display {display}: {e:?}");
+            return false;
+        }
+    };
+
+    match xwayland.has_xprop(root_window_id, GamescopeAtom::XwaylandServerId) {
+        Ok(is_gamescope) => is_gamescope,
+        Err(e) => {
+            log::debug!("Failed to query display {display}: {e:?}");
+            false
         }
     }
 }
