@@ -27,6 +27,13 @@ var _settings_manager := load("res://core/global/settings_manager.tres") as Sett
 var _power_station := load("res://core/systems/performance/power_station.tres") as PowerStationInstance
 var _launch_manager := load("res://core/global/launch_manager.tres") as LaunchManager
 
+## Whether the GPU settings, the performance level, and the clock
+## frequency, are managed by the session OpenGamepadUI is running on top of.
+## Static so it can be set before this resource is ever loaded -- _init() applies
+## the saved profile as soon as performance_manager.tres is first loaded, so an
+## instance variable would be set too late to stop that first TDP write.
+static var session_manages_gpu_power := false
+
 var display_device := _power_manager.get_display_device()
 var current_profile: PerformanceProfile
 var current_profile_state: PROFILE_STATE # docked or undocked
@@ -170,6 +177,23 @@ func apply_profile(profile: PerformanceProfile) -> void:
 
 	logger.info("Applying performance profile: " + profile.name)
 
+	# Apply CPU settings from the given profile
+	if _power_station.cpu:
+		logger.debug("Applying CPU performance settings from profile")
+		if _power_station.cpu.boost_enabled != profile.cpu_boost_enabled:
+			_power_station.cpu.boost_enabled = profile.cpu_boost_enabled
+		if _power_station.cpu.smt_enabled != profile.cpu_smt_enabled:
+			_power_station.cpu.smt_enabled = profile.cpu_smt_enabled
+		if profile.cpu_core_count_current > 0 and _power_station.cpu.cores_enabled != profile.cpu_core_count_current:
+			_power_station.cpu.cores_enabled = profile.cpu_core_count_current
+
+	# The power profile, clock frequency, thermal limit, and TDP are all owned by
+	# the session we are running on top of when it manages GPU power.
+	if session_manages_gpu_power:
+		logger.info("Applied Performance Profile: " + profile.name + ". GPU settings are managed by the session")
+		profile_applied.emit(profile)
+		return
+
 	# Detect all GPU cards
 	var cards: Array[GpuCard] = []
 	if _power_station.gpu:
@@ -205,16 +229,6 @@ func apply_profile(profile: PerformanceProfile) -> void:
 			if profile.tdp_boost_current > 0 and card.boost != profile.tdp_boost_current:
 				logger.debug("Applying TDP Boost: " + str(profile.tdp_boost_current))
 				card.boost = profile.tdp_boost_current
-
-	# Apply CPU settings from the given profile
-	if _power_station.cpu:
-		logger.debug("Applying CPU performance settings from profile")
-		if _power_station.cpu.boost_enabled != profile.cpu_boost_enabled:
-			_power_station.cpu.boost_enabled = profile.cpu_boost_enabled
-		if _power_station.cpu.smt_enabled != profile.cpu_smt_enabled:
-			_power_station.cpu.smt_enabled = profile.cpu_smt_enabled
-		if profile.cpu_core_count_current > 0 and _power_station.cpu.cores_enabled != profile.cpu_core_count_current:
-			_power_station.cpu.cores_enabled = profile.cpu_core_count_current
 
 	logger.info("Applied Performance Profile: " + profile.name)
 	profile_applied.emit(profile)
