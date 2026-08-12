@@ -485,11 +485,17 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> void:
+	if target_gamepad.is_empty():
+		# If overridden by settings, use that, so the user's selection survives
+		# a restart.
+		#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
+		target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+
 	# Discover the currently set target for each gamepad to properly add additional
 	# capabilities based on that target
 	for device: CompositeDevice in input_plumber.get_composite_devices():
+		# Fall back to the gamepad currently set on this composite device
 		if target_gamepad.is_empty():
-			# First, find the currently set gamepad on the composite device
 			var targets = device.get_target_devices()
 			for target in targets:
 				var target_dbus_path: String = target.get("dbus_path")
@@ -497,11 +503,6 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 					continue
 				target_gamepad = target.get("device_type")
 				break
-			if not target_gamepad.is_empty():
-				break
-			# Then, if overriden by settings, use that instead
-			#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
-			target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", target_gamepad) as String
 
 		# If no profile was specified, unset the gamepad profiles
 		if profile_path == "":
