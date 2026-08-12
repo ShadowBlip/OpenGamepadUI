@@ -488,20 +488,20 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 	# Discover the currently set target for each gamepad to properly add additional
 	# capabilities based on that target
 	for device: CompositeDevice in input_plumber.get_composite_devices():
-		if target_gamepad.is_empty():
-			# First, find the currently set gamepad on the composite device
+		var device_target := target_gamepad
+		if device_target.is_empty():
+			# First, use the target gamepad the user configured, so their
+			# selection survives a restart.
+			device_target = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+		if device_target.is_empty():
+			# Otherwise fall back to the gamepad currently set on the composite device
 			var targets = device.get_target_devices()
 			for target in targets:
 				var target_dbus_path: String = target.get("dbus_path")
 				if not target_dbus_path.contains("target/gamepad"):
 					continue
-				target_gamepad = target.get("device_type")
+				device_target = target.get("device_type")
 				break
-			if not target_gamepad.is_empty():
-				break
-			# Then, if overriden by settings, use that instead
-			#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
-			target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", target_gamepad) as String
 
 		# If no profile was specified, unset the gamepad profiles
 		if profile_path == "":
@@ -525,16 +525,16 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 				logger.warn("Failed to load gamepad profile: " + profile_path)
 				return
 
-		InputPlumber.load_target_modified_profile(device, profile_path, target_gamepad)
+		InputPlumber.load_target_modified_profile(device, profile_path, device_target)
 
 		# Set the target gamepad if one was specified
-		if not target_gamepad.is_empty():
-			var target_devices := PackedStringArray([target_gamepad, "keyboard", "mouse"])
-			match target_gamepad:
+		if not device_target.is_empty():
+			var target_devices := PackedStringArray([device_target, "keyboard", "mouse"])
+			match device_target:
 				"xb360", "xbox-series", "xbox-elite", "gamepad", "hori-steam":
 					target_devices.append("touchpad")
 				_:
-					logger.debug(target_gamepad, "needs no additional target devices.")
+					logger.debug(device_target, "needs no additional target devices.")
 			logger.info("Setting target devices to: ", target_devices)
 			device.set_target_devices(target_devices)
 
