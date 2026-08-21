@@ -45,7 +45,7 @@ func raise() -> void:
 		return
 	if tween:
 		tween.kill()
-	tween = tree.create_tween()
+	tween = tree.create_tween().set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(target, "scale", scale_on_raised, raise_speed)
 	tween.parallel().tween_property(target, "position", raise_to_position, raise_speed)
 	if shadow:
@@ -59,7 +59,7 @@ func lower() -> void:
 		return
 	if tween:
 		tween.kill()
-	tween = tree.create_tween()
+	tween = tree.create_tween().set_trans(Tween.TRANS_QUINT)
 	tween.tween_property(target, "scale", Vector2(1, 1), raise_speed)
 	tween.parallel().tween_property(target, "position", Vector2(0, 0), raise_speed)
 	if shadow:
