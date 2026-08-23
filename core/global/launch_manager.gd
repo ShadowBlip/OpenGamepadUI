@@ -493,6 +493,10 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 			# First, use the target gamepad the user configured, so their
 			# selection survives a restart.
 			device_target = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+		if device_target.is_empty() and is_instance_valid(_input_manager):
+			# Next, use the default for the current mode.
+			# Overlay mode emulates a Steam Deck controller
+			device_target = _input_manager.get_default_target_gamepad()
 		if device_target.is_empty():
 			# Otherwise fall back to the gamepad currently set on the composite device
 			var targets = device.get_target_devices()

@@ -82,6 +82,12 @@ func get_default_global_profile_path() -> String:
 	return "user://data/gamepad/profiles/global_default.json"
 
 
+## Returns the InputPlumber target device to emulate when the user has not
+## configured one.
+func get_default_target_gamepad() -> String:
+	return ""
+
+
 ## Returns true if the given event is an InputPlumber event
 static func is_inputplumber_event(event: InputEvent) -> bool:
 	return event.has_meta("dbus_path")

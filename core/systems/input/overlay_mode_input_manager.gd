@@ -30,6 +30,12 @@ func _get_default_profile_path() -> String:
 	return "res://assets/gamepad/profiles/default_overlay.json"
 
 
+## In overlay mode we run alongside an underlay like Steam
+## Emulate a steam deck controller by default
+func get_default_target_gamepad() -> String:
+	return "deck-uhid"
+
+
 func get_default_global_profile_path() -> String:
 	return "user://data/gamepad/profiles/global_default_overlay.json"
 

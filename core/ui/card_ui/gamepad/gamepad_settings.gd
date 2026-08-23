@@ -74,6 +74,7 @@ func _ready() -> void:
 	# Load the default profile for every attached gamepad
 	var profile_path = settings_manager.get_value("input", "gamepad_profile", "")
 	var saved_gamepad := settings_manager.get_value("input", "gamepad_profile_target", "") as String
+	var default_gamepad := input_manager.get_default_target_gamepad()
 	for composite_device in input_plumber.get_composite_devices():
 		# Set the current profile_gamepad type to the currently configured CompositeDevice target gamepad
 		var targets = composite_device.get_target_devices()
@@ -81,10 +82,12 @@ func _ready() -> void:
 			var target_dbus_path: String = target.get("dbus_path")
 			if not target_dbus_path.contains("target/gamepad"):
 				continue
-			if saved_gamepad.is_empty():
-				self.profile_gamepad = target.get("device_type")
-			else:
+			if not saved_gamepad.is_empty():
 				self.profile_gamepad = saved_gamepad
+			elif not default_gamepad.is_empty():
+				self.profile_gamepad = default_gamepad
+			else:
+				self.profile_gamepad = target.get("device_type")
 			_set_gamepad_profile(composite_device, profile_path)
 			break
 
@@ -640,6 +643,10 @@ func _set_gamepad_profile(device: CompositeDevice, profile_path: String = "") ->
 			self.profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
 		else:
 			self.profile_gamepad = settings_manager.get_library_value(library_item, "gamepad_profile_target", "") as String
+	if self.profile_gamepad.is_empty() and is_instance_valid(input_manager):
+		# Fall back to the default for the current mode, so devices added after
+		# startup get the same target gamepad as the ones present at startup.
+		self.profile_gamepad = input_manager.get_default_target_gamepad()
 
 	logger.debug("Setting " + device.name + " to profile: " + profile_path)
 	InputPlumber.load_target_modified_profile(device, profile_path, self.profile_gamepad)
