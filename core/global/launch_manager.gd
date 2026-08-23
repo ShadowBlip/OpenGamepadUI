@@ -64,6 +64,7 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
+var steam_input_enabled := false
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
 var _input_manager: InputManager
@@ -490,6 +491,10 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 		# a restart.
 		#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
 		target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+	if target_gamepad.is_empty() and is_instance_valid(_input_manager):
+		# Otherwise use the default for the current mode. Overlay mode emulates a
+		# Steam Deck controller when Steam Input is in use.
+		target_gamepad = _input_manager.get_default_target_gamepad()
 
 	# Discover the currently set target for each gamepad to properly add additional
 	# capabilities based on that target

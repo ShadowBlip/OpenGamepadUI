@@ -92,6 +92,12 @@ func _init():
 		logger.info("Launched with --steamos-manager. TDP and GPU clocks are managed by the session")
 		PerformanceManager.session_manages_gpu_power = true
 
+	# Steam Input configures controllers itself when it is in use, so defer to
+	# it instead of applying our own configuration on top.
+	if "--steam-input" in cmdargs:
+		logger.info("Launched with --steam-input, deferring controller configuration to Steam Input.")
+		launch_manager.steam_input_enabled = true
+
 	# Set up plugin manager for quick-bar tags
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("quick-bar")]

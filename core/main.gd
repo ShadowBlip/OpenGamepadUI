@@ -48,6 +48,7 @@ func _show_help() -> void:
 	print("  --only-qam         Launch in overlay mode (Deprecated)")
 	print("  --overlay-mode     Launch in overlay mode")
 	print("  --steamos-manager  Defer conflicting features to SteamOS Manager")
+	print("  --steam-input      Defer controller configuration to Steam Input")
 	print("")
 	print("Environment Variables:")
 	print("  LOG_LEVEL        Set the global log level (debug,info,warn,error)")
