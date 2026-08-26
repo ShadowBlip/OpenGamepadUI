@@ -1,18 +1,8 @@
-# AYANEO 3 detachable controller ("Magic Modules") control attributes.
-#
-# Grants unprivileged access to the sysfs controls exposed by the
-# hid-ayaneo HID driver (module eject/reset) and the ayaneo-ec platform
-# driver (controller power), so the OpenGamepadUI magic-modules plugin
-# can drive the pop-out flow without privileges. These are local
-# physical controls with no data exposure.
-#
-# udev cannot set permissions on arbitrary sysfs attributes directly
-# (MODE/uaccess only apply to device nodes), hence RUN+chmod. The HID
-# device rebinds on every controller power cycle, so the rule must
-# match add|bind.
+# AYANEO 3 magic-module controls for the OpenGamepadUI plugin.
+# sysfs attributes cannot take MODE= (device nodes only), hence RUN.
 
-ACTION=="add|bind", SUBSYSTEM=="hid", DRIVER=="hid-ayaneo", \
-  RUN+="/bin/sh -c 'chmod 0666 /sys%p/eject /sys%p/reset'"
+ACTION=="add|bind", SUBSYSTEM=="hid", DRIVER=="hid-ayaneo", TEST=="eject", \
+  RUN+="/bin/chmod 0666 /sys%p/eject /sys%p/reset"
 
-ACTION=="add", DEVPATH=="*/platform/ayaneo-ec", \
-  RUN+="/bin/sh -c 'chmod 0666 /sys%p/controller_power'"
+ACTION=="add", DEVPATH=="*/platform/ayaneo-ec", TEST=="controller_power", \
+  RUN+="/bin/chmod 0666 /sys%p/controller_power"
