@@ -179,8 +179,13 @@ func _on_state_entered(_from: State) -> void:
 	else:
 		self.profile_label.text = self.library_item.name
 		profile_path = settings_manager.get_library_value(self.library_item, "gamepad_profile", "") as String
-		# Check if we have a profile target, otherwise use the currently set one
-		self.profile_gamepad = settings_manager.get_library_value(self.library_item, "gamepad_profile_target", self.profile_gamepad) as String
+		if launch_manager.steam_is_underlay:
+			self.profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", self.profile_gamepad)
+		else:
+			self.profile_gamepad = settings_manager.get_library_value(self.library_item, "gamepad_profile_target", self.profile_gamepad) as String
+
+	# Don't offer a per-game controller picker that we're going to ignore
+	gamepad_type_dropdown.disabled = self.library_item != null and launch_manager.steam_is_underlay
 
 	self.profile = _load_profile(profile_path)
 	logger.debug("Set profile target gamepad to " + self.profile_gamepad)
@@ -639,7 +644,7 @@ func _set_gamepad_profile(device: CompositeDevice, profile_path: String = "") ->
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
 
 	if self.profile_gamepad.is_empty():
-		if not library_item:
+		if not library_item or launch_manager.steam_is_underlay:
 			self.profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
 		else:
 			self.profile_gamepad = settings_manager.get_library_value(library_item, "gamepad_profile_target", "") as String
@@ -706,7 +711,8 @@ func _save_profile() -> void:
 	# Update the game settings to use this gamepad profile
 	var section := "game.{0}".format([library_item.name.to_lower()])
 	settings_manager.set_value(section, "gamepad_profile", path)
-	settings_manager.set_value(section, "gamepad_profile_target", self.profile_gamepad)
+	if not launch_manager.steam_is_underlay:
+		settings_manager.set_value(section, "gamepad_profile_target", self.profile_gamepad)
 	logger.debug("Saved gamepad profile to: " + path)
 	notify.text = "Gamepad profile saved"
 	notification_manager.show(notify)

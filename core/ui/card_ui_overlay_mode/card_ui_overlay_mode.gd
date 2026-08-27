@@ -77,6 +77,19 @@ func _init():
 	# Ensure LaunchManager doesn't override our custom overlay management l
 	launch_manager.should_manage_overlay = false
 
+	# Workaround old versions that don't pass launch args via update pack
+	# TODO: Parse the parent PID's CLI args and use those instead.
+	if "--skip-update-pack" in cmdargs and launch_args.size() == 0:
+		logger.warn("Launched via update pack without arguments! Falling back to default.")
+		launch_args = PackedStringArray(["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"])
+
+	# Steam Input manages the emulated controller itself. This has to stay in
+	# _init(), which runs before our children are instantiated -- the input
+	# manager and gamepad settings menu both read this during their _ready().
+	if "steam" in launch_args:
+		logger.info("Steam is the underlay process. The emulated controller is managed by the session")
+		launch_manager.steam_is_underlay = true
+
 	# Set up plugin manager for quick-bar tags
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("quick-bar")]
@@ -88,12 +101,6 @@ func _init():
 
 ## Starts the --overlay-mode session.
 func _ready() -> void:
-	# Workaround old versions that don't pass launch args via update pack
-	# TODO: Parse the parent PID's CLI args and use those instead.
-	if "--skip-update-pack" in cmdargs and launch_args.size() == 0:
-		logger.warn("Launched via update pack without arguments! Falling back to default.")
-		launch_args = PackedStringArray(["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"])
-
 	# Configure the locale
 	logger.debug("Setup Locale")
 	var locale := settings_manager.get_value("general", "locale", "en_US") as String

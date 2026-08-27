@@ -33,6 +33,8 @@ func _get_default_profile_path() -> String:
 ## In overlay mode we run alongside an underlay like Steam
 ## Emulate a steam deck controller by default
 func get_default_target_gamepad() -> String:
+	if not launch_manager.steam_is_underlay:
+		return ""
 	return "deck-uhid"
 
 

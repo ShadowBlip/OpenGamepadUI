@@ -64,6 +64,8 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
+## Whether Steam is the process OpenGamepadUI is running on top of in overlay
+var steam_is_underlay := false
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
 var _input_manager: InputManager
@@ -476,6 +478,11 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path := settings_manager.get_value(section, "gamepad_profile", "") as String
 	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
+	if steam_is_underlay and not profile_gamepad.is_empty():
+		# Steam Input binds to the controller it saw at startup, so swapping the
+		# emulated controller per-game breaks it. Keep the session-wide target.
+		logger.debug("Ignoring per-game gamepad target '" + profile_gamepad + "'. Steam is the underlay process")
+		profile_gamepad = ""
 	if profile_path.is_empty():
 		logger.debug("Using global gamepad profile")
 	else:
