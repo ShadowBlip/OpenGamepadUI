@@ -160,6 +160,14 @@ func _on_state_entered(_from: State) -> void:
 	if not self.library_item:
 		self.library_item = launch_manager.get_current_app_library_item()
 
+	# Steam Input configures controllers per-game itself while Steam is running,
+	# so a per-game profile of ours would only ever be ignored. Edit the global
+	# profile instead; the user can still pick a target gamepad, it just applies
+	# to every game.
+	if self.library_item and launch_manager.steam_input_enabled:
+		logger.debug("Steam Input is in use. Editing the global gamepad profile")
+		self.library_item = null
+
 	# Set the current profile_gamepad type to the current CompositeDevice target gamepad
 	var targets = self.gamepad.get_target_devices()
 	for target in targets:
@@ -630,6 +638,11 @@ func _set_gamepad_profile(device: CompositeDevice, profile_path: String = "") ->
 		# there is a library item for it instead.
 		if not library_item:
 			library_item = launch_manager.get_current_app_library_item()
+
+		# Per-game profiles are gated while Steam Input is in use, since
+		# Steam Input configures controllers per-game itself.
+		if launch_manager.steam_input_enabled:
+			library_item = null
 
 		# If no library item was set with the state, then use the default
 		if not library_item:

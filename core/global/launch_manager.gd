@@ -477,6 +477,13 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path := settings_manager.get_value(section, "gamepad_profile", "") as String
 	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
+	if steam_input_enabled and not (profile_path.is_empty() and profile_gamepad.is_empty()):
+		# Steam Input handles per-game controller configuration itself while Steam
+		# is running, so there's no value in us applying our own on top of it.
+		# Defer to Steam and keep the session-wide profile and target.
+		logger.debug("Ignoring per-game gamepad profile. Steam Input is in use")
+		profile_path = ""
+		profile_gamepad = ""
 	if profile_path.is_empty():
 		logger.debug("Using global gamepad profile")
 	else:
