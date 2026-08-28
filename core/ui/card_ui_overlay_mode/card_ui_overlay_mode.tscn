@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b13lnfkjbafkj"]
+[gd_scene format=3 uid="uid://b13lnfkjbafkj"]
 
 [ext_resource type="Theme" uid="uid://ehplgpp70vxa" path="res://assets/themes/card_ui-dracula.tres" id="1_0qmlq"]
 [ext_resource type="Script" uid="uid://sb62l1qao3ce" path="res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.gd" id="2_3ptao"]
@@ -17,7 +17,7 @@
 [ext_resource type="PowerStationInstance" uid="uid://c2mmrnh3rcs58" path="res://core/systems/performance/power_station.tres" id="9_nw6s5"]
 [ext_resource type="Script" uid="uid://c8sid1jrpjqlx" path="res://core/systems/network/network_manager.gd" id="10_atypa"]
 
-[node name="CardUIOverlayMode" type="Control" groups=["main"]]
+[node name="CardUIOverlayMode" type="Control" unique_id=1343253893 groups=["main"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,30 +27,31 @@ grow_vertical = 2
 theme = ExtResource("1_0qmlq")
 script = ExtResource("2_3ptao")
 
-[node name="InputIconProcessor" type="Node" parent="."]
+[node name="InputIconProcessor" type="Node" parent="." unique_id=853481307]
 script = ExtResource("4_6rltg")
 
-[node name="Gamescope" type="Node" parent="."]
+[node name="Gamescope" type="Node" parent="." unique_id=212181471]
 script = ExtResource("5_sgddx")
 instance = ExtResource("6_jj3bv")
 
-[node name="Launcher" type="Node" parent="."]
+[node name="Launcher" type="Node" parent="." unique_id=1185654247]
 script = ExtResource("4_o0rva")
 
-[node name="PluginManager" type="Node" parent="."]
+[node name="PluginManager" type="Node" parent="." unique_id=648389259]
+unique_name_in_owner = true
 script = ExtResource("7_qqh0e")
 
-[node name="PowerStation" type="Node" parent="."]
+[node name="PowerStation" type="Node" parent="." unique_id=178752693]
 script = ExtResource("8_kxe4b")
 instance = ExtResource("9_nw6s5")
 
-[node name="NetworkManager" type="Node" parent="."]
+[node name="NetworkManager" type="Node" parent="." unique_id=931341204]
 script = ExtResource("10_atypa")
 
-[node name="ResourceProcessor" type="ResourceProcessor" parent="."]
+[node name="ResourceProcessor" type="ResourceProcessor" parent="." unique_id=617419788]
 registry = ExtResource("9_4si0w")
 
-[node name="MenuContent" type="MarginContainer" parent="."]
+[node name="MenuContent" type="MarginContainer" parent="." unique_id=1041451952]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -59,31 +60,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AboveContextBarMargin" type="MarginContainer" parent="MenuContent"]
+[node name="AboveContextBarMargin" type="MarginContainer" parent="MenuContent" unique_id=929388515]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="SettingsMenu" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("5_4sdt1")]
+[node name="SettingsMenu" parent="MenuContent/AboveContextBarMargin" unique_id=1866580721 instance=ExtResource("5_4sdt1")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" instance=ExtResource("6_oddte")]
+[node name="GamepadSettings" parent="MenuContent/AboveContextBarMargin" unique_id=142088534 instance=ExtResource("6_oddte")]
 visible = false
 layout_mode = 2
 
-[node name="MenuContainer" type="MarginContainer" parent="MenuContent"]
+[node name="MenuContainer" type="MarginContainer" parent="MenuContent" unique_id=1003279616]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_bottom = 70
 
-[node name="QuickBarMenu" parent="MenuContent/MenuContainer" instance=ExtResource("7_e54f8")]
+[node name="QuickBarMenu" parent="MenuContent/MenuContainer" unique_id=420622476 instance=ExtResource("7_e54f8")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Dialog" parent="." instance=ExtResource("8_otm5f")]
+[node name="Dialog" parent="." unique_id=974357493 instance=ExtResource("8_otm5f")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -95,4 +96,4 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="InputManager" parent="." instance=ExtResource("3_klhmb")]
+[node name="InputManager" parent="." unique_id=110341762 instance=ExtResource("3_klhmb")]
