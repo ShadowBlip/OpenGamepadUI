@@ -38,6 +38,7 @@ var underlay_window_id: int
 # UI References
 @onready var quick_bar_menu := $%QuickBarMenu
 @onready var settings_menu := $%SettingsMenu
+@onready var plugin_manager := $%PluginManager
 
 # Constants
 
@@ -81,9 +82,6 @@ func _init():
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("quick-bar")]
 	plugin_loader.set_plugin_filters(filters)
-	var plugin_manager_scene := load("res://core/systems/plugin/plugin_manager.tscn") as PackedScene
-	var plugin_manager := plugin_manager_scene.instantiate()
-	add_child(plugin_manager)
 
 
 ## Starts the --overlay-mode session.
