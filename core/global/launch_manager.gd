@@ -64,6 +64,7 @@ var _persist_path: String = "/".join([_data_dir, "launcher.json"])
 var _persist_data: Dictionary = {"version": 1}
 var _ogui_window_id := 0
 var should_manage_overlay := true
+var steam_input_enabled := false
 var logger := Log.get_logger("LaunchManager", Log.LEVEL.INFO)
 var _focused_app_id := 0
 var _input_manager: InputManager
@@ -476,6 +477,13 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 	var section := ".".join(["game", app.launch_item.name.to_lower()])
 	var profile_path := settings_manager.get_value(section, "gamepad_profile", "") as String
 	var profile_gamepad := settings_manager.get_value(section, "gamepad_profile_target", "") as String
+	if steam_input_enabled and not (profile_path.is_empty() and profile_gamepad.is_empty()):
+		# Steam Input handles per-game controller configuration itself while Steam
+		# is running, so there's no value in us applying our own on top of it.
+		# Defer to Steam and keep the session-wide profile and target.
+		logger.debug("Ignoring per-game gamepad profile. Steam Input is in use")
+		profile_path = ""
+		profile_gamepad = ""
 	if profile_path.is_empty():
 		logger.debug("Using global gamepad profile")
 	else:
@@ -485,11 +493,21 @@ func set_app_gamepad_profile(app: RunningApp) -> void:
 
 ## Sets the gamepad profile for the running app with the given profile
 func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> void:
+	if target_gamepad.is_empty():
+		# If overridden by settings, use that, so the user's selection survives
+		# a restart.
+		#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
+		target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+	if target_gamepad.is_empty() and is_instance_valid(_input_manager):
+		# Otherwise use the default for the current mode. Overlay mode emulates a
+		# Steam Deck controller when Steam Input is in use.
+		target_gamepad = _input_manager.get_default_target_gamepad()
+
 	# Discover the currently set target for each gamepad to properly add additional
 	# capabilities based on that target
 	for device: CompositeDevice in input_plumber.get_composite_devices():
+		# Fall back to the gamepad currently set on this composite device
 		if target_gamepad.is_empty():
-			# First, find the currently set gamepad on the composite device
 			var targets = device.get_target_devices()
 			for target in targets:
 				var target_dbus_path: String = target.get("dbus_path")
@@ -497,11 +515,6 @@ func set_gamepad_profile(profile_path: String, target_gamepad: String = "") -> v
 					continue
 				target_gamepad = target.get("device_type")
 				break
-			if not target_gamepad.is_empty():
-				break
-			# Then, if overriden by settings, use that instead
-			#TODO: This is a global setting, refactor settings to permit individual gamepads to have different targets
-			target_gamepad = settings_manager.get_value("input", "gamepad_profile_target", target_gamepad) as String
 
 		# If no profile was specified, unset the gamepad profiles
 		if profile_path == "":

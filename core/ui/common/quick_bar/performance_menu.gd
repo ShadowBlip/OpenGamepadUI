@@ -19,7 +19,7 @@ var _profiles_available: PackedStringArray
 @onready var smt_button := $SMTButton as Toggle
 @onready var cpu_label := $CPUSectionLabel as Control
 @onready var gpu_label := $GPUSectionLabel as Control
-@onready var wait_label := $WaitLabel as Control
+@onready var wait_label := $WaitLabel as Label
 @onready var service_timer := $ServiceTimer as Timer
 @onready var apply_timer := $ApplyTimer as Timer
 @onready var mangoapp_slider := $%MangoAppSlider as ValueSlider
@@ -34,33 +34,20 @@ var logger := Log.get_logger("Performance", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready() -> void:
-	# Setup dropdowns
-	var i := 0
-	_get_available_profiles()
-	power_profile_dropdown.clear()
-	for profile in _profiles_available:
-		power_profile_dropdown.add_item(profile, i)
-		i += 1
-
-	# Configure the interface
-	_on_profile_loaded(_performance_manager.current_profile)
-
-	_performance_manager.profile_loaded.connect(_on_profile_loaded)
-	mangoapp_slider.value_changed.connect(_on_mangoapp_changed)
-	mode_toggle.toggled.connect(_on_mode_toggled)
-
-	service_timer.timeout.connect(_on_service_timer_timeout)
-	apply_timer.timeout.connect(_on_apply_timer_timeout)
+	if PerformanceManager.session_manages_gpu_power:
+		wait_label.text = "TDP managed in Steam QAM"
 
 	# Re-start the apply timer when changes happen
 	var on_changed := func() -> void:
 		if _profile_loading:
 			return
 		apply_timer.start()
-	cpu_boost_button.pressed.connect(on_changed)
-	smt_button.pressed.connect(on_changed)
-	gpu_freq_enable.pressed.connect(on_changed)
-	mode_toggle.pressed.connect(on_changed)
+
+	# Restart the timer when any slider changes happen
+	var on_slider_changed := func(_value) -> void:
+		if _profile_loading:
+			return
+		apply_timer.start()
 
 	# Set the total number of available cores if the SMT button is pressed
 	var on_smt_pressed := func() -> void:
@@ -74,32 +61,6 @@ func _ready() -> void:
 			if cpu_cores_slider.value > cores:
 				cpu_cores_slider.value = cores
 			cpu_cores_slider.max_value = cores
-	smt_button.pressed.connect(on_smt_pressed)
-
-	# Restart the timer when any slider changes happen
-	var on_slider_changed := func(_value) -> void:
-		if _profile_loading:
-			return
-		apply_timer.start()
-	cpu_cores_slider.value_changed.connect(on_slider_changed)
-	tdp_slider.value_changed.connect(on_slider_changed)
-	tdp_boost_slider.value_changed.connect(on_slider_changed)
-	gpu_freq_min_slider.value_changed.connect(on_slider_changed)
-	gpu_freq_max_slider.value_changed.connect(on_slider_changed)
-	gpu_temp_slider.value_changed.connect(on_slider_changed)
-
-	# Configure GPU frequency timers so the minimum value can never go higher
-	# than the maximum value slider and the maximum value can never go lower
-	# than the minimum value slider.
-	var on_gpu_freq_changed := func(_value: float, kind: String) -> void:
-		if kind == "min" and gpu_freq_min_slider.value > gpu_freq_max_slider.value:
-			gpu_freq_max_slider.value = gpu_freq_min_slider.value
-			return
-		if kind == "max" and gpu_freq_max_slider.value < gpu_freq_min_slider.value:
-			gpu_freq_min_slider.value = gpu_freq_max_slider.value
-			return
-	gpu_freq_min_slider.value_changed.connect(on_gpu_freq_changed.bind("min"))
-	gpu_freq_max_slider.value_changed.connect(on_gpu_freq_changed.bind("max"))
 
 	# Also restart the apply timer when dropdown changes happen
 	var on_dropdown_changed := func(index) -> void:
@@ -117,7 +78,17 @@ func _ready() -> void:
 			_performance_manager.apply_and_save_profile(_current_profile)
 		else:
 			apply_timer.start()
-	power_profile_dropdown.item_selected.connect(on_dropdown_changed)
+
+	# Configure GPU frequency sliders so the minimum value can never go higher
+	# than the maximum value slider and the maximum value can never go lower
+	# than the minimum value slider.
+	var on_gpu_freq_changed := func(_value: float, kind: String) -> void:
+		if kind == "min" and gpu_freq_min_slider.value > gpu_freq_max_slider.value:
+			gpu_freq_max_slider.value = gpu_freq_min_slider.value
+			return
+		if kind == "max" and gpu_freq_max_slider.value < gpu_freq_min_slider.value:
+			gpu_freq_min_slider.value = gpu_freq_max_slider.value
+			return
 
 	# Toggle visibility when the GPU freq manual toggle is on
 	var on_manual_freq := func() -> void:
@@ -138,6 +109,48 @@ func _ready() -> void:
 		gpu_freq_max_slider.min_value = round(card.clock_limit_mhz_min)
 		gpu_freq_max_slider.max_value = round(card.clock_limit_mhz_max)
 		gpu_freq_max_slider.value = round(card.clock_value_mhz_max)
+
+	# Setup dropdowns
+	var i := 0
+	_get_available_profiles()
+	power_profile_dropdown.clear()
+	for profile in _profiles_available:
+		power_profile_dropdown.add_item(profile, i)
+		i += 1
+
+	# Configure the interface
+	_on_profile_loaded(_performance_manager.current_profile)
+
+	_performance_manager.profile_loaded.connect(_on_profile_loaded)
+	mangoapp_slider.value_changed.connect(_on_mangoapp_changed)
+	mode_toggle.toggled.connect(_on_mode_toggled)
+	mode_toggle.pressed.connect(on_changed)
+
+	service_timer.timeout.connect(_on_service_timer_timeout)
+	apply_timer.timeout.connect(_on_apply_timer_timeout)
+
+	# Configure the CPU controls. These stay available even when the session
+	# manages GPU power, since it has no equivalent of its own.
+	cpu_boost_button.pressed.connect(on_changed)
+	smt_button.pressed.connect(on_changed)
+	smt_button.pressed.connect(on_smt_pressed)
+	cpu_cores_slider.value_changed.connect(on_slider_changed)
+
+	# The GPU settings are all owned by the session we are running on top of when
+	# it manages GPU power, so leave their controls disconnected.
+	if PerformanceManager.session_manages_gpu_power:
+		return
+
+	# Configure the GPU controls
+	gpu_freq_enable.pressed.connect(on_changed)
+	tdp_slider.value_changed.connect(on_slider_changed)
+	tdp_boost_slider.value_changed.connect(on_slider_changed)
+	gpu_freq_min_slider.value_changed.connect(on_slider_changed)
+	gpu_freq_max_slider.value_changed.connect(on_slider_changed)
+	gpu_temp_slider.value_changed.connect(on_slider_changed)
+	gpu_freq_min_slider.value_changed.connect(on_gpu_freq_changed.bind("min"))
+	gpu_freq_max_slider.value_changed.connect(on_gpu_freq_changed.bind("max"))
+	power_profile_dropdown.item_selected.connect(on_dropdown_changed)
 	gpu_freq_enable.pressed.connect(on_manual_freq)
 
 
@@ -258,7 +271,11 @@ func _setup_interface() -> void:
 			cpu_cores_slider.max_value = cpu.cores_count / 2
 		cpu_cores_slider.visible = is_advanced
 
-	# Configure GPU components
+	# Configure GPU components. The GPU settings are all owned by the session we
+	# are running on top of when it manages GPU power, so hide their controls.
+	if PerformanceManager.session_manages_gpu_power:
+		_hide_gpu_components()
+		return
 	if not _power_station.gpu:
 		return
 	var card := _get_integrated_card()
@@ -289,6 +306,19 @@ func _setup_interface() -> void:
 	gpu_freq_max_slider.max_value = round(card.clock_limit_mhz_max)
 
 	gpu_temp_slider.visible = is_advanced
+
+
+## Hides every GPU component. Used when the session we are running on top of
+## manages GPU power itself.
+func _hide_gpu_components() -> void:
+	gpu_label.visible = false
+	tdp_slider.visible = false
+	tdp_boost_slider.visible = false
+	gpu_freq_enable.visible = false
+	power_profile_dropdown.visible = false
+	gpu_freq_min_slider.visible = false
+	gpu_freq_max_slider.visible = false
+	gpu_temp_slider.visible = false
 
 
 ## Returns the primary integrated GPU instance

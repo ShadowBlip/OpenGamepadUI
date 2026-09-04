@@ -11,6 +11,12 @@ class_name PlatformProvider
 @export var name: String ## Name of the platform
 @export var startup_actions: Array[PlatformAction] ## Actions to take upon startup
 @export var shutdown_actions: Array[PlatformAction] ## Actions to take upon shutdown 
+## InputPlumber target device to emulate instead of the default one chosen for
+## the current session. Leave empty to use the default. Set this for devices
+## where the default target is a bad fit, such as handhelds without a dedicated
+## Quick Access Menu button, where Steam ignores the guide+south chord on
+## Steam Deck and Horipad targets and leaves the user no way to open the QAM.
+@export var target_gamepad_override: String
 var logger := Log.get_logger("PlatformProvider", Log.LEVEL.INFO)
 
 

@@ -78,6 +78,26 @@ func _init():
 	# Ensure LaunchManager doesn't override our custom overlay management l
 	launch_manager.should_manage_overlay = false
 
+	# Workaround old versions that don't pass launch args via update pack
+	# TODO: Parse the parent PID's CLI args and use those instead.
+	if "--skip-update-pack" in cmdargs and self.launch_args.size() == 0:
+		logger.warn("Launched via update pack without arguments! Falling back to default.")
+		self.launch_args = PackedStringArray(["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"])
+
+	# SteamOS Manager owns TDP and GPU clocks when it is in use. This has to stay
+	# in _init(), which runs before our children are instantiated -- moving it to
+	# _setup_overlay_mode() would run it from _ready(), after the quick bar has
+	# already loaded the performance manager and applied the saved profile's TDP.
+	if "--steamos-manager" in cmdargs:
+		logger.info("Launched with --steamos-manager. TDP and GPU clocks are managed by the session")
+		PerformanceManager.session_manages_gpu_power = true
+
+	# Steam Input configures controllers itself when it is in use, so defer to
+	# it instead of applying our own configuration on top.
+	if "--steam-input" in cmdargs:
+		logger.info("Launched with --steam-input, deferring controller configuration to Steam Input.")
+		launch_manager.steam_input_enabled = true
+
 	# Set up plugin manager for quick-bar tags
 	var plugin_loader := load("res://core/global/plugin_loader.tres") as PluginLoader
 	var filters : Array[Callable] = [plugin_loader.filter_by_tag.bind("quick-bar")]
@@ -86,12 +106,6 @@ func _init():
 
 ## Starts the --overlay-mode session.
 func _ready() -> void:
-	# Workaround old versions that don't pass launch args via update pack
-	# TODO: Parse the parent PID's CLI args and use those instead.
-	if "--skip-update-pack" in cmdargs and launch_args.size() == 0:
-		logger.warn("Launched via update pack without arguments! Falling back to default.")
-		launch_args = PackedStringArray(["steam", "-gamepadui", "-steamos3", "-steampal", "-steamdeck"])
-
 	# Configure the locale
 	logger.debug("Setup Locale")
 	var locale := settings_manager.get_value("general", "locale", "en_US") as String
