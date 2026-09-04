@@ -19,7 +19,7 @@ var _profiles_available: PackedStringArray
 @onready var smt_button := $SMTButton as Toggle
 @onready var cpu_label := $CPUSectionLabel as Control
 @onready var gpu_label := $GPUSectionLabel as Control
-@onready var wait_label := $WaitLabel as Control
+@onready var wait_label := $WaitLabel as Label
 @onready var service_timer := $ServiceTimer as Timer
 @onready var apply_timer := $ApplyTimer as Timer
 @onready var mangoapp_slider := $%MangoAppSlider as ValueSlider
@@ -34,6 +34,9 @@ var logger := Log.get_logger("Performance", Log.LEVEL.INFO)
 # Called when the node enters the scene tree for the first time.
 # Finds default values and current settings of the hardware.
 func _ready() -> void:
+	if PerformanceManager.session_manages_gpu_power:
+		wait_label.text = "TDP managed in Steam QAM"
+
 	# Re-start the apply timer when changes happen
 	var on_changed := func() -> void:
 		if _profile_loading:
