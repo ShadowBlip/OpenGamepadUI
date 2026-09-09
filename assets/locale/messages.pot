@@ -288,6 +288,9 @@ msgstr ""
 msgid "Greek"
 msgstr ""
 
+msgid "Azerbaijani"
+msgstr ""
+
 msgid "Theme"
 msgstr ""
 
