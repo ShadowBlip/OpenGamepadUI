@@ -1,0 +1,646 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: az_AZ\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# LANGUAGE translation for OpenGamepadUI
+#
+# William Edwards <shadowapex@gmail.com>, 2023.
+#
+msgid "PROJECT DESCRIPTION"
+msgstr ""
+"Project-Id-Version: Open Gamepad UI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# Main Menu Messages
+msgid "Home"
+msgstr "Ana səhifə"
+
+msgid "Library"
+msgstr "Kitabxana"
+
+msgid "Settings"
+msgstr "Parametrlər"
+
+msgid "Power"
+msgstr "Enerji"
+
+# General messages
+msgid "Accept"
+msgstr "Qəbul et"
+
+msgid "Back"
+msgstr "Geri"
+
+msgid "Cancel"
+msgstr "Ləğv et"
+
+msgid "Exit"
+msgstr "Çıx"
+
+msgid "Submit"
+msgstr "Göndər"
+
+msgid "Quick Bar Menu"
+msgstr "Sürətli panel menyusu"
+
+# Help Menu Messages
+msgid "Help"
+msgstr "Kömək"
+
+msgid "Menu Shortcuts"
+msgstr "Menyu qısayolları"
+
+msgid "Open Main Menu"
+msgstr "Əsas menyunu aç"
+
+msgid "Open Quick Bar Menu"
+msgstr "Sürətli panel menyusunu aç"
+
+msgid "Open On-Screen Keyboard"
+msgstr "Ekran klaviaturasını aç"
+
+msgid "Scroll container"
+msgstr "Məzmunu sürüşdür"
+
+msgid "Switch to left tab"
+msgstr "Sol vərəqə keç"
+
+msgid "Switch to right tab"
+msgstr "Sağ vərəqə keç"
+
+msgid "On-Screen Keyboard Shortcuts"
+msgstr "Ekran klaviaturasının qısayolları"
+
+msgid "Backspace"
+msgstr "Əvvəlki simvolu sil"
+
+msgid "Close keyboard"
+msgstr "Klaviaturanı bağla"
+
+msgid "Toggle Shift"
+msgstr "Shift rejimini dəyiş"
+
+msgid "Enter"
+msgstr "Daxil et"
+
+msgid "Steam Deck"
+msgstr "Steam Deck"
+
+msgid "Global"
+msgstr "Ümumi"
+
+msgid "Unable to save gamepad profile"
+msgstr "Oyun pultunun profilini yadda saxlamaq mümkün deyil"
+
+msgid "Failed to save gamepad profile"
+msgstr "Oyun pultunun profilini yadda saxlamaq alınmadı"
+
+msgid "Gamepad profile saved"
+msgstr "Oyun pultunun profili yadda saxlanıldı"
+
+msgid "Play Now"
+msgstr "İndi oyna"
+
+msgid "Install"
+msgstr "Quraşdır"
+
+msgid "Resume"
+msgstr "Davam et"
+
+msgid "Queued"
+msgstr "Növbədədir"
+
+msgid "Installing"
+msgstr "Quraşdırılır"
+
+msgid "Quick Access Menu"
+msgstr "Sürətli giriş menyusu"
+
+msgid "Game Name"
+msgstr "Oyunun adı"
+
+# Game Launch Settings Menu
+msgid "Launch"
+msgstr "Başlat"
+
+msgid "Boxart"
+msgstr "Üz qabığı"
+
+msgid "Launch Provider"
+msgstr "Başlatma təminatçısı"
+
+msgid "Library provider to launch this game with"
+msgstr "Bu oyunu başlatmaq üçün kitabxana təminatçısı"
+
+msgid "Launch Settings"
+msgstr "Başlatma parametrləri"
+
+msgid "Command"
+msgstr "Əmr"
+
+msgid "Command to use to launch the game"
+msgstr "Oyunu başlatmaq üçün istifadə ediləcək əmr"
+
+msgid "Arguments"
+msgstr "Arqumentlər"
+
+msgid "Command-line arguments to pass to the game"
+msgstr "Oyuna ötürüləcək əmr sətri arqumentləri"
+
+msgid "Launch Directory"
+msgstr "Başlatma qovluğu"
+
+msgid "Directory to launch the game from"
+msgstr "Oyunun başladılacağı qovluq"
+
+msgid "Environment Variables"
+msgstr "Mühit dəyişənləri"
+
+msgid "Environment variables to use when launching the game"
+msgstr "Oyunu başladarkən istifadə ediləcək mühit dəyişənləri"
+
+msgid "Sandbox Settings"
+msgstr "Təcrid olunmuş mühitin parametrləri"
+
+msgid "Use sandboxing"
+msgstr "Təcrid olunmuş mühitdən istifadə et"
+
+msgid "Launch the game in a sandbox"
+msgstr "Oyunu təcrid olunmuş mühitdə başlat"
+
+# Boxart Settings Menu
+msgid "Boxart Provider"
+msgstr "Üz qabığı təminatçısı"
+
+msgid "Provider to fetch artwork for this game"
+msgstr "Bu oyunun təsvirlərini əldə etmək üçün təminatçı"
+
+msgid "Images"
+msgstr "Şəkillər"
+
+msgid "Banner"
+msgstr "Baner"
+
+msgid "Logo"
+msgstr "Loqo"
+
+msgid "Grids"
+msgstr "Torlar"
+
+# Game library menu
+msgid "Hidden in library"
+msgstr "Kitabxanada gizlidir"
+
+msgid "Prevent this item from showing up in your library"
+msgstr "Bu elementin kitabxananızda görünməsinə mane ol"
+
+# Settings Menu
+msgid "General"
+msgstr "Ümumi"
+
+msgid "Display"
+msgstr "Ekran"
+
+msgid "Network"
+msgstr "Şəbəkə"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+msgid "Plugins"
+msgstr "Qoşmalar"
+
+msgid "Disks"
+msgstr "Disklər"
+
+msgid "Plugin Store"
+msgstr "Qoşma mağazası"
+
+msgid "Processes"
+msgstr "Proseslər"
+
+msgid "Logging"
+msgstr "Jurnala yazma"
+
+msgid "Controllers"
+msgstr "Oyun pultları"
+
+msgid "Windows"
+msgstr "Pəncərələr"
+
+# General Settings Menu
+msgid "Updates"
+msgstr "Yeniləmələr"
+
+msgid "Automatic Updates"
+msgstr "Avtomatik yeniləmələr"
+
+msgid ""
+"Automatically download and apply updates in the background when they are "
+"available"
+msgstr ""
+"Yeniləmələr mövcud olduqda onları arxa planda avtomatik endir və tətbiq et"
+
+msgid "Check for updates"
+msgstr "Yeniləmələri yoxla"
+
+msgid "Install Updates"
+msgstr "Yeniləmələri quraşdır"
+
+msgid "Update"
+msgstr "Yenilə"
+
+msgid "Appearance"
+msgstr "Görünüş"
+
+msgid "Language"
+msgstr "Dil"
+
+msgid "System language"
+msgstr "Sistem dili"
+
+msgid "English"
+msgstr "İngilis dili"
+
+msgid "Spanish"
+msgstr "İspan dili"
+
+msgid "French"
+msgstr "Fransız dili"
+
+msgid "Chinese"
+msgstr "Çin dili"
+
+msgid "Portuguese"
+msgstr "Portuqal dili"
+
+msgid "Russian"
+msgstr "Rus dili"
+
+msgid "Greek"
+msgstr "Yunan dili"
+
+msgid "Azerbaijani"
+msgstr "Azərbaycan dili"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "System Information"
+msgstr "Sistem məlumatları"
+
+msgid "Platform"
+msgstr "Platforma"
+
+msgid "Client Version"
+msgstr "Müştəri versiyası"
+
+msgid "Engine Version"
+msgstr "Mühərrik versiyası"
+
+msgid "Plugin API Version"
+msgstr "Qoşma API versiyası"
+
+msgid "OS"
+msgstr "OS"
+
+msgid "Kernel Version"
+msgstr "Nüvə versiyası"
+
+msgid "Vendor"
+msgstr "İstehsalçı"
+
+msgid "Product"
+msgstr "Məhsul"
+
+msgid "BIOS Version"
+msgstr "BIOS versiyası"
+
+msgid "CPU Model"
+msgstr "CPU modeli"
+
+msgid "GPU Model"
+msgstr "GPU modeli"
+
+msgid "Driver Version"
+msgstr "Sürücü versiyası"
+
+# Library settings menu
+msgid "Maximum Recent Apps"
+msgstr "Son tətbiqlərin maksimum sayı"
+
+msgid "Refresh Library"
+msgstr "Kitabxananı yenilə"
+
+msgid "Trigger reloading your library"
+msgstr "Kitabxananın yenidən yüklənməsini başlat"
+
+msgid "Refresh"
+msgstr "Yenilə"
+
+msgid "Hidden Library Items"
+msgstr "Gizli kitabxana elementləri"
+
+msgid "No hidden library items"
+msgstr "Gizli kitabxana elementləri yoxdur"
+
+# Display Menu
+msgid "Scale"
+msgstr "Miqyas"
+
+msgid "Overlay"
+msgstr "Üst qat"
+
+msgid "Blur"
+msgstr "Bulanıqlıq"
+
+msgid "Blur background game when overlay is open"
+msgstr "Üst qat açıq olduqda arxa plandakı oyunu bulanıqlaşdır"
+
+# Network Menu
+msgid "Network dependencies not found"
+msgstr "Şəbəkə üçün tələb olunan komponentlər tapılmadı"
+
+msgid "Enable Wireless"
+msgstr "Simsiz şəbəkəni aktivləşdir"
+
+msgid "Wireless Network"
+msgstr "Simsiz şəbəkə"
+
+msgid "Visible Networks"
+msgstr "Görünən şəbəkələr"
+
+msgid "Refresh Networks"
+msgstr "Şəbəkələri yenilə"
+
+msgid "Wired Network"
+msgstr "Simli şəbəkə"
+
+msgid "Password"
+msgstr "Parol"
+
+msgid "Enter the password for this network"
+msgstr "Bu şəbəkənin parolunu daxil et"
+
+msgid "Connection Details"
+msgstr "Əlaqə təfərrüatları"
+
+msgid "IP Address"
+msgstr "IP ünvanı"
+
+msgid "Subnet Prefix"
+msgstr "Alt şəbəkə prefiksi"
+
+msgid "Gateway"
+msgstr "Şəbəkə keçidi"
+
+# Bluetooth Menu
+msgid "Bluetooth service unavailable"
+msgstr "Bluetooth xidməti əlçatan deyil"
+
+msgid "Enabled"
+msgstr "Aktiv"
+
+msgid "Enable Discovery"
+msgstr "Aşkarlanmanı aktivləşdir"
+
+# Audio Menu
+msgid "Audio"
+msgstr "Səs"
+
+msgid "Volume"
+msgstr "Səs səviyyəsi"
+
+msgid "Output Device"
+msgstr "Çıxış cihazı"
+
+msgid "Input Device"
+msgstr "Giriş cihazı"
+
+msgid "Microphone"
+msgstr "Mikrofon"
+
+# Disk Menu
+msgid ""
+"No formattable drives available\n"
+"Verify your media device is plugged in and that it is not mounted to a "
+"protected mount point"
+msgstr ""
+"Formatlana bilən disk yoxdur\n"
+"Yaddaş cihazının qoşulduğunu və qorunan qoşulma nöqtəsinə "
+"qoşulmadığını yoxla"
+
+# Plugins Menu
+msgid "No plugins found"
+msgstr "Qoşmalar tapılmadı"
+
+# Processes Menu
+msgid "Kill"
+msgstr "Məcburi dayandır"
+
+# Log Menu
+msgid "Global Log Level"
+msgstr "Ümumi jurnal səviyyəsi"
+
+msgid "Set the log level for all systems"
+msgstr "Sistemlərin hamısı üçün jurnal səviyyəsini təyin et"
+
+msgid "Per-system Logging"
+msgstr "Hər sistem üzrə jurnala yazma"
+
+# General Controller Settings Menu
+msgid "Gamepad Settings"
+msgstr "Oyun pultunun parametrləri"
+
+msgid "SDL HIDAPI Enabled"
+msgstr "SDL HIDAPI aktivdir"
+
+msgid ""
+"Alternate input system that can cause double input. Some games use SDL for "
+"gyro controls or all input. Requires restart."
+msgstr ""
+"Girişin iki dəfə qeydə alınmasına səbəb ola bilən alternativ giriş sistemi. "
+"Bəzi oyunlar giroskopla idarəetmə və ya bütün girişlər üçün SDL-dən istifadə edir. "
+"Yenidən başlatmaq tələb olunur."
+
+msgid "InputPlumber service not available"
+msgstr "InputPlumber xidməti əlçatan deyil"
+
+# Gamepad Settings Menu
+msgid "Profile Name"
+msgstr "Profil adı"
+
+msgid "Buttons"
+msgstr "Düymələr"
+
+# (plural of "axis", not the wood chopping thing)
+msgid "Axes"
+msgstr "Oxlar"
+
+# Gamepad Mapper Menu
+msgid "Change Input"
+msgstr "Girişi dəyiş"
+
+msgid "Keyboard"
+msgstr "Klaviatura"
+
+msgid "Mouse"
+msgstr "Siçan"
+
+msgid "Gamepad"
+msgstr "Oyun pultu"
+
+msgid "Clear"
+msgstr "Təmizlə"
+
+msgid "Left Click"
+msgstr "Sol klik"
+
+msgid "Right Click"
+msgstr "Sağ klik"
+
+msgid "Mouse Motion"
+msgstr "Siçanın hərəkəti"
+
+msgid "Wheel Up"
+msgstr "Təkər yuxarı"
+
+msgid "Wheel Down"
+msgstr "Təkər aşağı"
+
+msgid "Middle Click"
+msgstr "Orta klik"
+
+# First Boot Menu
+msgid "Welcome"
+msgstr "Xoş gəlmisiniz"
+
+msgid "Select a language"
+msgstr "Dil seç"
+
+msgid "Connect to your network"
+msgstr "Şəbəkənə qoşul"
+
+msgid "Next"
+msgstr "İrəli"
+
+msgid "Install plugins"
+msgstr "Qoşmaları quraşdır"
+
+msgid "Configure your plugins"
+msgstr "Qoşmaların parametrlərini təyin et"
+
+msgid "Finished"
+msgstr "Tamamlandı"
+
+msgid "You're ready to go"
+msgstr "Başlamağa hazırsınız"
+
+msgid "Start playing"
+msgstr "Oynamağa başla"
+
+# Search Bar
+msgid "What should you play?"
+msgstr "Nə oynamaq istəyirsiniz?"
+
+msgid "Installed"
+msgstr "Quraşdırılıb"
+
+msgid "All Games"
+msgstr "Oyunların hamısı"
+
+msgid "Favorites"
+msgstr "Sevimlilər"
+
+msgid "Collections"
+msgstr "Kolleksiyalar"
+
+# Quick Settings
+msgid "Quick Settings"
+msgstr "Sürətli parametrlər"
+
+msgid "Performance"
+msgstr "Məhsuldarlıq"
+
+msgid "Advanced Mode"
+msgstr "Qabaqcıl rejim"
+
+msgid "Power Tools"
+msgstr "Enerji alətləri"
+
+msgid "Brightness"
+msgstr "Parlaqlıq"
+
+msgid "Saturation"
+msgstr "Doyma"
+
+# Performance Menu
+msgid "Performance Overlay"
+msgstr "Məhsuldarlıq üst qatı"
+
+msgid "FPS Limit"
+msgstr "FPS həddi"
+
+msgid "Refresh Rate"
+msgstr "Yenilənmə tezliyi"
+
+# Power Tools Menu
+msgid "Waiting for PowerStation service..."
+msgstr "PowerStation xidməti gözlənilir..."
+
+msgid "CPU Settings"
+msgstr "CPU parametrləri"
+
+msgid "CPU Boost"
+msgstr "CPU-nun sürətləndirilməsi"
+
+msgid "SMT Enabled"
+msgstr "SMT aktivdir"
+
+msgid "CPU Cores"
+msgstr "CPU nüvələri"
+
+msgid "GPU Settings"
+msgstr "GPU parametrləri"
+
+msgid "TDP Boost"
+msgstr "TDP-nin artırılması"
+
+msgid "Manual Freq"
+msgstr "Əl ilə tezlik təyini"
+
+msgid "Min Freq"
+msgstr "Minimum tezlik"
+
+msgid "Max Freq"
+msgstr "Maksimum tezlik"
+
+msgid "GPU Temp Limit"
+msgstr "GPU temperatur həddi"
+
+msgid "Power Profile"
+msgstr "Enerji profili"
+
+msgid "Thermal Throttle Profile"
+msgstr "İstiliyə görə sürət məhdudlaşdırma profili"
+
+# Power Menu
+msgid "Suspend"
+msgstr "Yuxu rejiminə keçir"
+
+msgid "Reboot"
+msgstr "Yenidən başlat"
+
+msgid "Shutdown"
+msgstr "Söndür"
