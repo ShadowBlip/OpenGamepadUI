@@ -24,7 +24,12 @@ func _ready() -> void:
 # signal with the loaded items
 func load_plugin_store_items():
 	# Fetch available plugins from the plugin store
-	var plugin_items = await plugin_loader.get_plugin_store_items()
+	var plugin_items := await plugin_loader.get_plugin_store_items()
+
+	# Bail out early if the node was freed while waiting
+	if not is_instance_valid(self):
+		return
+
 	plugin_store_loaded.emit(plugin_items)
 
 
@@ -96,6 +101,9 @@ func _populate_plugin_store_item(grid: Container, plugin_id: String, plugin: Dic
 	# Load the plugin image
 	if len(plugin["store.images"]) > 0:
 		var image = await http_image.fetch(plugin["store.images"][0])
+		# Bail out before touching any freed objects to avoid a crash.
+		if not is_instance_valid(self) or not is_instance_valid(store_item):
+			return
 		if image != null:
 			store_item.plugin_texture.texture = image
 	

@@ -93,23 +93,35 @@ func disable_plugin(plugin_id: String) -> void:
 	SettingsManager.set_value("plugins.enabled", plugin_id, false)
 
 
-## Returns the parsed dictionary of plugin store items. Returns null if there
-## is a failure.
-func get_plugin_store_items() -> Variant:
+## Returns the parsed dictionary of plugin store items. Returns an empty
+## dictionary if there is a failure.
+func get_plugin_store_items() -> Dictionary:
 	if not parent:
 		logger.error("Plugin loader has not been initialized!")
-		return
+		return {}
 	var http: HTTPRequest = HTTPRequest.new()
 	parent.add_child.call_deferred(http)
 	await http.ready
+
+	# Bail out before touching any freed objects.
+	if not is_instance_valid(parent) or not is_instance_valid(http):
+		return {}
+
 	if http.request(PLUGIN_STORE_URL) != OK:
 		logger.error("Error making http request to plugin store")
-		parent.remove_child(http)
+		if is_instance_valid(parent) and is_instance_valid(http):
+			parent.remove_child(http)
 		http.queue_free()
-		return null
+		return {}
 
 	# Wait for the request signal to complete
 	var args: Array = await http.request_completed
+
+	# Guard against the request node having been freed while we were
+	# awaiting the response.
+	if not is_instance_valid(http):
+		return {}
+
 	var result: int = args[0]
 	var response_code: int = args[1]
 	var headers: PackedStringArray = args[2]
@@ -117,12 +129,20 @@ func get_plugin_store_items() -> Variant:
 
 	if result != HTTPRequest.RESULT_SUCCESS:
 		logger.error("Plugin store http request failed")
-		parent.remove_child(http)
+		if is_instance_valid(parent):
+			parent.remove_child(http)
 		http.queue_free()
-		return null
+		return {}
+
+	if is_instance_valid(parent):
+		parent.remove_child(http)
+	http.queue_free()
 
 	# Parse the results
-	var items: Dictionary = JSON.parse_string(body.get_string_from_utf8())
+	var items: Variant = JSON.parse_string(body.get_string_from_utf8())
+	if items == null or not items is Dictionary:
+		logger.error("Unable to parse plugin store response")
+		return {}
 
 	return items
 
