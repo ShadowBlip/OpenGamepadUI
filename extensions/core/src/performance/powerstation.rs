@@ -1,5 +1,7 @@
 pub mod cpu;
 pub mod cpu_core;
+pub mod fan;
+pub mod fan_device;
 pub mod gpu;
 pub mod gpu_card;
 pub mod gpu_connector;
@@ -10,6 +12,7 @@ use std::{
 };
 
 use cpu::Cpu;
+use fan::Fan;
 use godot::{classes::Engine, prelude::*};
 use gpu::Gpu;
 use zbus::names::BusName;
@@ -19,6 +22,7 @@ use crate::{dbus::RunError, get_dbus_system, get_dbus_system_blocking, RUNTIME};
 pub const POWERSTATION_BUS: &str = "org.shadowblip.PowerStation";
 const POWERSTATION_CPU_PATH: &str = "/org/shadowblip/Performance/CPU";
 const POWERSTATION_GPU_PATH: &str = "/org/shadowblip/Performance/GPU";
+const POWERSTATION_FAN_PATH: &str = "/org/shadowblip/Performance/Fan";
 
 /// Signals that can be emitted
 #[derive(Debug)]
@@ -36,6 +40,7 @@ pub struct PowerStationInstance {
     conn: Option<zbus::blocking::Connection>,
     cpu_instance: Option<Gd<Cpu>>,
     gpu_instance: Option<Gd<Gpu>>,
+    fan_instance: Option<Gd<Fan>>,
 
     #[allow(dead_code)]
     #[var(get = get_cpu)]
@@ -43,6 +48,9 @@ pub struct PowerStationInstance {
     #[allow(dead_code)]
     #[var(get = get_gpu)]
     gpu: Option<Gd<Gpu>>,
+    #[allow(dead_code)]
+    #[var(get = get_fan)]
+    fan: Option<Gd<Fan>>,
 }
 
 #[godot_api]
@@ -81,6 +89,13 @@ impl PowerStationInstance {
         self.gpu_instance.clone()
     }
 
+    /// Returns the PowerStation fan collection. Older PowerStation versions
+    /// return an empty collection because they do not expose the fan interface.
+    #[func]
+    fn get_fan(&self) -> Option<Gd<Fan>> {
+        self.fan_instance.clone()
+    }
+
     /// Process UPower signals and emit them as Godot signals. This method
     /// should be called every frame in the "_process" loop of a node.
     #[func]
@@ -108,6 +123,9 @@ impl PowerStationInstance {
         if let Some(gpu) = self.gpu_instance.as_mut() {
             gpu.bind_mut().process();
         }
+        if let Some(fan) = self.fan_instance.as_mut() {
+            fan.bind_mut().process();
+        }
     }
 
     /// Process and dispatch the given signal
@@ -116,10 +134,14 @@ impl PowerStationInstance {
             Signal::Started => {
                 // Create an instance for the CPU
                 self.cpu_instance = Some(Cpu::new(POWERSTATION_CPU_PATH));
+                self.gpu_instance = Some(Gpu::new(POWERSTATION_GPU_PATH));
+                self.fan_instance = Some(Fan::new(POWERSTATION_FAN_PATH));
                 self.base_mut().emit_signal("started", &[]);
             }
             Signal::Stopped => {
                 self.cpu_instance = None;
+                self.gpu_instance = None;
+                self.fan_instance = None;
                 self.base_mut().emit_signal("stopped", &[]);
             }
         }
@@ -145,8 +167,10 @@ impl IResource for PowerStationInstance {
                 conn,
                 cpu_instance: Default::default(),
                 gpu_instance: Default::default(),
+                fan_instance: Default::default(),
                 cpu: Default::default(),
                 gpu: Default::default(),
+                fan: Default::default(),
             };
         }
 
@@ -161,6 +185,8 @@ impl IResource for PowerStationInstance {
         let cpu = Some(Cpu::new(POWERSTATION_CPU_PATH));
         // Create GPU instance
         let gpu = Some(Gpu::new(POWERSTATION_GPU_PATH));
+        // Create fan collection. It remains empty against older PowerStation.
+        let fan = Some(Fan::new(POWERSTATION_FAN_PATH));
 
         // Create a new PowerStation instance
         Self {
@@ -169,8 +195,10 @@ impl IResource for PowerStationInstance {
             conn,
             cpu_instance: cpu,
             gpu_instance: gpu,
+            fan_instance: fan,
             cpu: None,
             gpu: None,
+            fan: None,
         }
     }
 }
