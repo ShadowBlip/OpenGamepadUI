@@ -12,12 +12,14 @@ class_name PowerStation
 # Keep a reference to instances so they are not cleaned up automatically
 var _cpu: Cpu
 var _gpu: Gpu
+var _fan: Fan
 var logger := Log.get_logger("PowerStation")
 
 
 func _ready() -> void:
 	_cpu = instance.get_cpu()
 	_gpu = instance.get_gpu()
+	_fan = instance.get_fan()
 
 
 func _process(_delta: float) -> void:
