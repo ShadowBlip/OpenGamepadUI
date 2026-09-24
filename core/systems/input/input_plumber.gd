@@ -9,11 +9,14 @@ class_name InputPlumber
 
 @export var instance: InputPlumberInstance = load("res://core/systems/input/input_plumber.tres")
 
+const LIGHTING := preload("res://core/systems/input/lighting_model.tres")
+
 # Keep a reference to dbus devices so they are not cleaned up automatically
 var _dbus_devices := {}
 
 
 func _ready() -> void:
+	LIGHTING.start(instance)
 	# Add listeners for any new devices
 	var on_device_added := func(device: CompositeDevice):
 		var dbus_devices := device.dbus_devices
