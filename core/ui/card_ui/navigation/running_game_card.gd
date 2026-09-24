@@ -241,5 +241,7 @@ func _on_gampad_button_pressed() -> void:
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_PREDELETE:
+	if what != NOTIFICATION_PREDELETE or not is_instance_valid(_xwayland):
+		return
+	if _xwayland.focusable_windows_updated.is_connected(_on_focusable_windows_changed):
 		_xwayland.focusable_windows_updated.disconnect(_on_focusable_windows_changed)
