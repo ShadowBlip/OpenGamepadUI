@@ -36,21 +36,27 @@ impl Default for Snapshot {
     }
 }
 impl Snapshot {
+    fn fixed_cycle(&self) -> bool {
+        self.capabilities.3 == 0 && self.capabilities.4 == 0
+    }
     fn compatible(&self) -> bool {
         self.connected
             && self.capabilities.0 == 1
             && !self.capabilities.1.is_empty()
             && !self.capabilities.2.is_empty()
-            && self.capabilities.3 >= 2000
-            && self.capabilities.4 <= 30000
-            && self.capabilities.3 <= self.capabilities.4
+            && (self.fixed_cycle()
+                || (self.capabilities.3 >= 2000
+                    && self.capabilities.4 <= 30000
+                    && self.capabilities.3 <= self.capabilities.4))
     }
     fn accepts(&self, config: &LedConfiguration) -> bool {
         self.compatible()
             && self.capabilities.2.contains(&config.0)
             && config.1.len() == 3
             && config.2 <= 100
-            && (self.capabilities.3..=self.capabilities.4).contains(&config.3)
+            && (2000..=30000).contains(&config.3)
+            && (self.fixed_cycle()
+                || (self.capabilities.3..=self.capabilities.4).contains(&config.3))
     }
 }
 #[derive(Clone, Debug, Default)]

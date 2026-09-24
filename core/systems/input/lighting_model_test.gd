@@ -230,3 +230,32 @@ func test_stock_quick_settings_scroll_and_controller_focus() -> void:
 	Input.parse_input_event(event)
 	await wait_frames(2)
 	assert_eq(get_viewport().gui_get_focus_owner(), volume.slider)
+
+func test_native_cycle_hides_speed_preserves_period_and_keeps_gamepad_focus() -> void:
+	source.state.cycle_min_ms = 0
+	source.state.cycle_max_ms = 0
+	source.state.config.effect = "cycle"
+	source.state.config.cycle_period_ms = 17000
+	source.lighting_changed.emit()
+	await wait_frames(2)
+	var panel := _panel()
+	await wait_frames(2)
+	assert_false(panel.cycle.visible)
+	assert_true(panel.breathing_note.visible)
+	assert_eq(panel.breathing_note.text, "Colour cycle speed is fixed by the device.")
+	assert_eq(panel._focus_controls().size(), 4)
+	panel.brightness.slider.grab_focus()
+	assert_eq(panel.brightness.slider.find_valid_focus_neighbor(SIDE_BOTTOM), panel.apply_button)
+	model.edit("brightness", 60)
+	model.apply()
+	assert_eq(source.calls.size(), 1)
+	assert_eq(source.calls[0].cycle_period_ms, 17000)
+	source.complete()
+	await wait_frames(2)
+	source.state.cycle_min_ms = 2000
+	source.state.cycle_max_ms = 30000
+	source.lighting_changed.emit()
+	await wait_frames(2)
+	assert_true(panel.cycle.visible)
+	assert_eq(panel.cycle.value, 17.0)
+	assert_false(panel.breathing_note.visible)
