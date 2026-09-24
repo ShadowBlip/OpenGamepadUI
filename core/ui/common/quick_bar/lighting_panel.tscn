@@ -1,0 +1,73 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://core/ui/common/quick_bar/lighting_panel.gd" id="1"]
+[ext_resource type="PackedScene" path="res://core/ui/components/dropdown.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://core/ui/components/slider.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://core/ui/components/button.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://core/ui/components/section_label.tscn" id="5"]
+
+[node name="JoystickLighting" type="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+theme_override_constants/separation = 10
+script = ExtResource("1")
+
+[node name="Title" parent="." instance=ExtResource("5")]
+layout_mode = 2
+text = "Joystick lighting"
+
+[node name="Status" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "Lighting controls are loading."
+
+[node name="Device" parent="." instance=ExtResource("2")]
+layout_mode = 2
+title = "Lighting device"
+description = ""
+
+[node name="Effect" parent="." instance=ExtResource("2")]
+layout_mode = 2
+title = "Effect"
+description = ""
+
+[node name="Red" parent="." instance=ExtResource("3")]
+layout_mode = 2
+text = "Red"
+max_value = 255.0
+
+[node name="Green" parent="." instance=ExtResource("3")]
+layout_mode = 2
+text = "Green"
+max_value = 255.0
+
+[node name="Blue" parent="." instance=ExtResource("3")]
+layout_mode = 2
+text = "Blue"
+max_value = 255.0
+
+[node name="Brightness" parent="." instance=ExtResource("3")]
+layout_mode = 2
+text = "Lighting brightness (%)"
+
+[node name="Cycle" parent="." instance=ExtResource("3")]
+layout_mode = 2
+text = "Colour cycle (seconds)"
+min_value = 2.0
+max_value = 30.0
+value = 8.0
+
+[node name="BreathingNote" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+text = "Breathing speed is fixed by the device."
+
+[node name="Apply" parent="." instance=ExtResource("4")]
+layout_mode = 2
+text = "Apply lighting"
+
+[node name="Off" parent="." instance=ExtResource("4")]
+layout_mode = 2
+text = "Turn off"

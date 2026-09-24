@@ -4,5 +4,6 @@ pub mod event_device;
 pub mod gamepad;
 pub mod input_manager;
 pub mod keyboard;
+pub mod led_device;
 pub mod mouse;
 pub mod target;

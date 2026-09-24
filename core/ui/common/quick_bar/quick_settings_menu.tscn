@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://cemxrvvjgm4g" path="res://core/ui/components/slider.tscn" id="2_v67rd"]
 [ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_ljj2w"]
 
+[ext_resource type="PackedScene" path="res://core/ui/common/quick_bar/lighting_panel.tscn" id="6_lighting"]
+
 [node name="QuickSettingsMenu" type="Control" unique_id=127986489]
 layout_mode = 3
 anchors_preset = 15
@@ -16,7 +18,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_gwnsx")
 
-[node name="QuickVBoxContainer" type="VBoxContainer" parent="." unique_id=367667494]
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="QuickVBoxContainer" type="VBoxContainer" parent="Scroll" unique_id=367667494]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,26 +36,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FocusGroup" parent="QuickVBoxContainer" unique_id=1117910552 node_paths=PackedStringArray("current_focus") instance=ExtResource("2_2f2tv")]
+size_flags_horizontal = 3
+
+[node name="FocusGroup" parent="Scroll/QuickVBoxContainer" unique_id=1117910552 node_paths=PackedStringArray("current_focus") instance=ExtResource("2_2f2tv")]
 unique_name_in_owner = true
 current_focus = NodePath("../VolumeSlider")
 focus_stack = ExtResource("3_ljj2w")
 
-[node name="VolumeSlider" parent="QuickVBoxContainer" unique_id=185484119 instance=ExtResource("2_v67rd")]
+[node name="VolumeSlider" parent="Scroll/QuickVBoxContainer" unique_id=185484119 instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Volume"
 
-[node name="BrightnessSlider" parent="QuickVBoxContainer" unique_id=2142893004 instance=ExtResource("2_v67rd")]
+[node name="BrightnessSlider" parent="Scroll/QuickVBoxContainer" unique_id=2142893004 instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Brightness"
 step = 3.0
 
-[node name="SaturationSlider" parent="QuickVBoxContainer" unique_id=1840954089 instance=ExtResource("2_v67rd")]
+[node name="SaturationSlider" parent="Scroll/QuickVBoxContainer" unique_id=1840954089 instance=ExtResource("2_v67rd")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Saturation"
 value = 100.0
 max_value = 400.0
 step = 5.0
+
+[node name="JoystickLighting" parent="Scroll/QuickVBoxContainer" instance=ExtResource("6_lighting")]
+layout_mode = 2
