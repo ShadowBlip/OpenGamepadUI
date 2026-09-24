@@ -97,12 +97,16 @@ func _refresh() -> void:
 	brightness.visible = available and supported and draft.effect != "off"
 	brightness.editable = not busy
 	brightness.value = int(draft.brightness)
-	cycle.visible = available and supported and draft.effect == "cycle"
+	var snapshot: Dictionary = entry.get("snapshot", {})
+	var fixed_cycle: bool = snapshot.get("cycle_min_ms", 2000) == 0 and snapshot.get("cycle_max_ms", 30000) == 0
+	cycle.visible = available and supported and draft.effect == "cycle" and not fixed_cycle
 	cycle.editable = not busy
-	cycle.min_value = float(entry.get("snapshot", {}).get("cycle_min_ms", 2000)) / 1000.0
-	cycle.max_value = float(entry.get("snapshot", {}).get("cycle_max_ms", 30000)) / 1000.0
+	if not fixed_cycle:
+		cycle.min_value = float(snapshot.get("cycle_min_ms", 2000)) / 1000.0
+		cycle.max_value = float(snapshot.get("cycle_max_ms", 30000)) / 1000.0
 	cycle.value = float(draft.cycle_period_ms) / 1000.0
-	breathing_note.visible = available and supported and draft.effect == "breathing"
+	breathing_note.visible = available and supported and (draft.effect == "breathing" or (draft.effect == "cycle" and fixed_cycle))
+	breathing_note.text = tr("Colour cycle speed is fixed by the device.") if draft.effect == "cycle" else tr("Breathing speed is fixed by the device.")
 	apply_button.visible = available
 	off_button.visible = available and "off" in _effects
 	apply_button.disabled = busy or not supported

@@ -5,8 +5,11 @@ exposes LED API version 1. InputPlumber owns persistence and effects; closing OG
 does not turn lighting off. Decky can configure the same settings independently.
 
 The controls offer only advertised effects: Off, Solid, fixed-tempo hardware
-Breathing, and Colour cycle. RGB is remembered for Solid/Breathing; cycle period
-is 2–30 seconds and brightness is independent. Off preserves the other values.
+Breathing, and Colour cycle. RGB is remembered for Solid/Breathing and brightness
+is independent. Native cycling has fixed tempo: both cycle bounds are zero and
+the panel shows a fixed-speed note instead of a slider. Software-capable devices
+offer a 2–30 second period. The saved period remains unchanged on native hardware;
+Off preserves the other values.
 Apply saves a complete configuration. The status distinguishes saved settings
 from pending, applied, unavailable, and failed hardware state.
 
@@ -32,7 +35,7 @@ cargo build --locked --release
 ```
 
 Use the project's GUT runner for
-core/systems/input/lighting_model_test.gd. Require 12 collected tests, no failures
+core/systems/input/lighting_model_test.gd. Require 13 collected tests, no failures
 or skips, and no SCRIPT ERROR; a GUT process exit of zero alone is insufficient.
 The tests cover lifecycle, multi-device isolation, stale replies, dirty drafts,
 errors, capability controls, and stock quick-settings focus/scroll behavior.

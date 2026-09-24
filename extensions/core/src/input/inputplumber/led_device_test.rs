@@ -281,3 +281,38 @@ mod wire_tests {
             .contains("unsupported"));
     }
 }
+
+#[test]
+fn led_fixed_cycle_capability_preserves_saved_period_and_rejects_malformed_bounds() {
+    let mut snapshot = Snapshot {
+        connected: true,
+        capabilities: (
+            1,
+            "native-rings".into(),
+            vec![
+                "off".into(),
+                "solid".into(),
+                "breathing".into(),
+                "cycle".into(),
+            ],
+            0,
+            0,
+        ),
+        ..Snapshot::default()
+    };
+    assert!(snapshot.compatible());
+    for effect in ["off", "solid", "breathing", "cycle"] {
+        for period in [2000, 17000, 30000] {
+            assert!(snapshot.accepts(&(effect.into(), vec![19, 61, 127], 60, period)));
+        }
+    }
+    for period in [0, 1999, 30001, u32::MAX] {
+        assert!(!snapshot.accepts(&("cycle".into(), vec![255; 3], 60, period)));
+    }
+    for bounds in [(0, 2000), (2000, 0), (1, 1), (30000, 2000), (2000, 30001)] {
+        snapshot.capabilities.3 = bounds.0;
+        snapshot.capabilities.4 = bounds.1;
+        assert!(!snapshot.compatible());
+        assert!(!snapshot.accepts(&("cycle".into(), vec![255; 3], 60, 8000)));
+    }
+}
