@@ -47,6 +47,8 @@ install: ## Install OpenGamepadUI (default: ~/.local)
 		$(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	install -Dm644 usr/lib/systemd/user/ogui-overlay-mode.service \
 		$(PREFIX)/lib/systemd/user/ogui-overlay-mode.service
+	install -Dm644 usr/lib/udev/rules.d/70-ayaneo-modules.rules \
+		$(PREFIX)/lib/udev/rules.d/70-ayaneo-modules.rules
 	@echo "Installation complete"
 
 .PHONY: uninstall
@@ -60,4 +62,5 @@ uninstall: ## Uninstall OpenGamepadUI
 	rm -rf $(PREFIX)/share/opengamepadui/*.so
 	rm -rf $(PREFIX)/lib/systemd/user/systemd-sysext-updater.service
 	rm -rf $(PREFIX)/lib/systemd/user/ogui-overlay-mode.service
+	rm -rf $(PREFIX)/lib/udev/rules.d/70-ayaneo-modules.rules
 	@echo "Uninstall complete"
