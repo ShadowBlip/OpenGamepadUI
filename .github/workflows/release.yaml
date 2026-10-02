@@ -1,16 +1,9 @@
 # Build and publish a release of OpenGamepadUI using semantic-release whenever
-# changes are merged into main.
+# this job is run manually.
 name: "🎉 Release"
 
 on:
-  push:
-    branches:
-      - main
-      - v0.x
-      - v1.x
-    paths-ignore:
-      - README.md
-      - "docs/**"
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: ghcr.io/shadowblip/opengamepadui-builder
