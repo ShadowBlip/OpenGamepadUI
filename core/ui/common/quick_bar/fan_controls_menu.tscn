@@ -1,0 +1,96 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" uid="uid://dmv5615ibo4jd" path="res://core/ui/common/quick_bar/fan_controls_menu.gd" id="1_fan"]
+[ext_resource type="PackedScene" path="res://core/systems/input/focus_group.tscn" id="2_focus"]
+[ext_resource type="Resource" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_stack"]
+[ext_resource type="PackedScene" path="res://core/ui/components/dropdown.tscn" id="4_drop"]
+[ext_resource type="PackedScene" path="res://core/ui/components/slider.tscn" id="5_slider"]
+
+[node name="FanControls" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_fan")
+
+[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_focus")]
+unique_name_in_owner = true
+current_focus = NodePath("../ModeDropdown")
+focus_stack = ExtResource("3_stack")
+
+[node name="ServiceTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+autostart = true
+
+[node name="ApplyTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true
+
+[node name="FanDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+title = "Fan"
+description = ""
+
+[node name="TelemetryLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Telemetry unavailable"
+horizontal_alignment = 1
+
+[node name="BackendLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Backend"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Waiting for PowerStation..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LimitsLabel" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Safety limits"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ModeDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Mode"
+description = ""
+
+[node name="ManualSlider" parent="." instance=ExtResource("5_slider")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Fan (%)"
+value = 50.0
+
+[node name="PresetDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+title = "Preset"
+description = "Editing a preset creates a custom curve."
+
+[node name="CurveSection" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="CurveLabel" type="Label" parent="CurveSection"]
+layout_mode = 2
+text = "Fan Curve"
+
+[node name="CurvePoints" type="VBoxContainer" parent="CurveSection"]
+unique_name_in_owner = true
+layout_mode = 2
