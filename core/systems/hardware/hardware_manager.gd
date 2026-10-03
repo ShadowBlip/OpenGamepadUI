@@ -36,7 +36,14 @@ func get_bios_version() -> String:
 
 ## Returns the hardware product name
 func get_product_name() -> String:
-	return _read_sys("/sys/devices/virtual/dmi/id/product_name")
+	var path := "/sys/devices/virtual/dmi/id/product_name"
+	match Engine.get_architecture_name():
+		"arm64", "arm32":
+			path = "/sys/firmware/devicetree/base/model"
+	var product := _read_sys(path)
+	if product.is_empty():
+		return "Unknown"
+	return product
 
 
 ## Returns the hardware vendor name
@@ -406,8 +413,14 @@ func _exec(command: String, args: PackedStringArray = []) -> Array:
 ## Used to read values from sysfs
 func _read_sys(path: String) -> String:
 	var file := FileAccess.open(path, FileAccess.READ)
+	if not file:
+		return ""
 	var length := file.get_length()
 	var bytes := file.get_buffer(length)
+	# Avoid Unicode warnings by removing any NUL terminators.
+	var nul := bytes.find(0)
+	if nul >= 0:
+		bytes = bytes.slice(0, nul)
 	return bytes.get_string_from_utf8().strip_escapes()
 
 
