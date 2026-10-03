@@ -17,7 +17,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_op1tk")
-custom_maximum_size = Vector2i(0, 600)
+scroll_maximum_size = Vector2i(0, 600)
 
 [node name="FadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_gwl35")]
 unique_name_in_owner = true
