@@ -13,6 +13,7 @@ class_name OverlayInputManager
 
 var menu_state_machine := preload("res://assets/state/state_machines/menu_state_machine.tres") as StateMachine
 var base_state = preload("res://assets/state/states/in_game.tres") as State
+var platform := load("res://core/global/platform.tres") as Platform
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -28,6 +29,19 @@ func _init_inputplumber() -> void:
 
 func _get_default_profile_path() -> String:
 	return "res://assets/gamepad/profiles/default_overlay.json"
+
+
+## In overlay mode we run alongside an underlay like Steam. Emulate a Steam Deck
+## controller by default so Steam recognizes the guide button chords, unless the
+## detected platform asks for a different target.
+func get_default_target_gamepad() -> String:
+	if not launch_manager.steam_input_enabled:
+		return ""
+	if platform.platform and not platform.platform.target_gamepad_override.is_empty():
+		var override := platform.platform.target_gamepad_override
+		logger.debug("Platform overrides the default target gamepad with " + override)
+		return override
+	return "deck-uhid"
 
 
 func get_default_global_profile_path() -> String:
