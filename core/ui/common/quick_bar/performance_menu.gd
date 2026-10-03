@@ -151,8 +151,10 @@ func _on_apply_timer_timeout() -> void:
 	logger.debug("Applying and saving profile")
 
 	# Update the profile based on the currently set values
-	var power_profile := _profiles_available[power_profile_dropdown.selected]
-	_current_profile.gpu_power_profile = power_profile
+	# Avoid error when power profiles are empty
+	var selected := power_profile_dropdown.selected
+	if selected >= 0 and selected < _profiles_available.size():
+		_current_profile.gpu_power_profile = _profiles_available[selected]
 	_current_profile.cpu_boost_enabled = cpu_boost_button.button_pressed
 	_current_profile.cpu_smt_enabled = smt_button.button_pressed
 	_current_profile.cpu_core_count_current = int(cpu_cores_slider.value)
@@ -269,16 +271,22 @@ func _setup_interface() -> void:
 
 	gpu_label.visible = is_advanced
 
-	tdp_slider.visible = is_advanced
-	tdp_slider.min_value = round(_hardware_manager.gpu.tdp_min)
-	tdp_slider.max_value = round(_hardware_manager.gpu.tdp_max)
+	# Avoid showing TDP controls when not supported
+	var gpu_info := _hardware_manager.gpu
+	var tdp_capable := gpu_info != null and gpu_info.tdp_capable
+	var temp_capable := gpu_info != null and gpu_info.tj_temp_capable
+	var profile_capable := gpu_info != null and gpu_info.power_profile_capable
 
-	tdp_boost_slider.visible = is_advanced
-	tdp_boost_slider.max_value = round(_hardware_manager.gpu.max_boost)
+	tdp_slider.visible = is_advanced and tdp_capable
+	tdp_boost_slider.visible = is_advanced and tdp_capable
+	if tdp_capable:
+		tdp_slider.min_value = round(gpu_info.tdp_min)
+		tdp_slider.max_value = round(gpu_info.tdp_max)
+		tdp_boost_slider.max_value = round(gpu_info.max_boost)
 
 	gpu_freq_enable.visible = is_advanced
 
-	power_profile_dropdown.visible = not is_advanced
+	power_profile_dropdown.visible = not is_advanced and profile_capable
 
 	gpu_freq_min_slider.visible = card.manual_clock and is_advanced
 	gpu_freq_min_slider.min_value = round(card.clock_limit_mhz_min)
@@ -288,7 +296,7 @@ func _setup_interface() -> void:
 	gpu_freq_max_slider.min_value = round(card.clock_limit_mhz_min)
 	gpu_freq_max_slider.max_value = round(card.clock_limit_mhz_max)
 
-	gpu_temp_slider.visible = is_advanced
+	gpu_temp_slider.visible = is_advanced and temp_capable
 
 
 ## Returns the primary integrated GPU instance
@@ -331,21 +339,17 @@ func _create_performance_profile(is_advanced: bool) -> PerformanceProfile:
 
 	# GPU Settings
 	var profiles := _performance_manager.get_power_profiles_available() as PackedStringArray
-	if profiles.is_empty():
-		logger.error("No _platform profiles available. Unable to assume sane performance defaults.")
-		return null
 	if "custom" in profiles:
 		profiles.remove_at(profiles.find("custom"))
-	if not "max-performance" in profiles and not "performance" in profiles:
-		logger.error("Performance profile not found. Unable to assume sane performance defaults.")
-		return null
-	var profile_idx := profiles.find("max-performance")
-	if  profile_idx == -1:
-		profile_idx = profiles.find("performance")
-	if profile_idx == -1:
-		logger.error("Performance profile not found. Unable to assume sane performance defaults.")
-		return null
-	new_profile.gpu_power_profile = profiles[profile_idx]
+	# Avoid showing power profiles when not supported
+	if not profiles.is_empty():
+		if not "max-performance" in profiles and not "performance" in profiles:
+			logger.error("Performance profile not found. Unable to assume sane performance defaults.")
+			return null
+		var profile_idx := profiles.find("max-performance")
+		if  profile_idx == -1:
+			profile_idx = profiles.find("performance")
+		new_profile.gpu_power_profile = profiles[profile_idx]
 	new_profile.gpu_freq_max_current = gpu_freq_max_slider.max_value
 	new_profile.gpu_freq_min_current = gpu_freq_min_slider.min_value
 	new_profile.gpu_manual_enabled = false 
