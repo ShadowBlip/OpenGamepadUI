@@ -30,9 +30,9 @@ signal choice_selected(accepted: bool, choices: Dictionary)
 ## Close the dialog when the user selects an option
 @export var close_on_selected := true
 ## Maximum size that the scroll container can grow to
-@export var custom_maximum_size: Vector2i:
+@export var scroll_maximum_size: Vector2i:
 	set(v):
-		custom_maximum_size = v
+		scroll_maximum_size = v
 		if scroll_container:
 			_recalculate_minimum_size()
 
@@ -140,11 +140,11 @@ func _create_option_node(option: Library.InstallOption) -> Control:
 	return option_node
 
 
-## Updates the minimum size of the scroll container up to the custom_maximum_size.
+## Updates the minimum size of the scroll container up to the scroll_maximum_size.
 ## This will allow the scroll container to dynamically grow based on the content
 ## inside the scroll container up to a maximum size.
 func _recalculate_minimum_size() -> void:
-	if custom_maximum_size == Vector2i.ZERO:
+	if scroll_maximum_size == Vector2i.ZERO:
 		return
 	if scroll_container.get_child_count() < 1:
 		return
@@ -157,13 +157,13 @@ func _recalculate_minimum_size() -> void:
 
 	# Check the size of the child to see if the max size has been reached. If not,
 	# adjust the size of the scroll container based on the content.
-	if custom_maximum_size.x != 0.0 and child_size.x > custom_maximum_size.x:
-		scroll_container.custom_minimum_size.x = custom_maximum_size.x
+	if scroll_maximum_size.x != 0.0 and child_size.x > scroll_maximum_size.x:
+		scroll_container.custom_minimum_size.x = scroll_maximum_size.x
 	else:
 		scroll_container.custom_minimum_size.x = child_size.x
 
-	if custom_maximum_size.y != 0.0 and child_size.y > custom_maximum_size.y:
-		scroll_container.custom_minimum_size.y = custom_maximum_size.y
+	if scroll_maximum_size.y != 0.0 and child_size.y > scroll_maximum_size.y:
+		scroll_container.custom_minimum_size.y = scroll_maximum_size.y
 	else:
 		scroll_container.custom_minimum_size.y = child_size.y
 

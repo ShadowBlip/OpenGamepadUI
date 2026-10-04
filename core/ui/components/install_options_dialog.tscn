@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_khr1a")
 text = "Select a location to install"
-custom_maximum_size = Vector2i(0, 600)
+scroll_maximum_size = Vector2i(0, 600)
 
 [node name="FadeEffect" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_2dmlt")]
 unique_name_in_owner = true
