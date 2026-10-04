@@ -82,6 +82,14 @@ func get_default_global_profile_path() -> String:
 	return "user://data/gamepad/profiles/global_default.json"
 
 
+## Returns the InputPlumber target device to emulate when the user has not
+## configured one. Stubbed out here because the full session never overrides the
+## user's controller; it exists so callers can invoke it on any InputManager
+## without crashing. Overridden by OverlayModeInputManager.
+func get_default_target_gamepad() -> String:
+	return ""
+
+
 ## Returns true if the given event is an InputPlumber event
 static func is_inputplumber_event(event: InputEvent) -> bool:
 	return event.has_meta("dbus_path")

@@ -73,6 +73,8 @@ func _ready() -> void:
 
 	# Load the default profile for every attached gamepad
 	var profile_path = settings_manager.get_value("input", "gamepad_profile", "")
+	var saved_gamepad := settings_manager.get_value("input", "gamepad_profile_target", "") as String
+	var default_gamepad := input_manager.get_default_target_gamepad()
 	for composite_device in input_plumber.get_composite_devices():
 		# Set the current profile_gamepad type to the currently configured CompositeDevice target gamepad
 		var targets = composite_device.get_target_devices()
@@ -80,7 +82,12 @@ func _ready() -> void:
 			var target_dbus_path: String = target.get("dbus_path")
 			if not target_dbus_path.contains("target/gamepad"):
 				continue
-			self.profile_gamepad = target.get("device_type")
+			if not saved_gamepad.is_empty():
+				self.profile_gamepad = saved_gamepad
+			elif not default_gamepad.is_empty():
+				self.profile_gamepad = default_gamepad
+			else:
+				self.profile_gamepad = target.get("device_type")
 			_set_gamepad_profile(composite_device, profile_path)
 			break
 
@@ -152,6 +159,14 @@ func _on_state_entered(_from: State) -> void:
 	# there is a library item for it instead.
 	if not self.library_item:
 		self.library_item = launch_manager.get_current_app_library_item()
+
+	# Steam Input configures controllers per-game itself while Steam is running,
+	# so a per-game profile of ours would only ever be ignored. Edit the global
+	# profile instead; the user can still pick a target gamepad, it just applies
+	# to every game.
+	if self.library_item and launch_manager.steam_input_enabled:
+		logger.debug("Steam Input is in use. Editing the global gamepad profile")
+		self.library_item = null
 
 	# Set the current profile_gamepad type to the current CompositeDevice target gamepad
 	var targets = self.gamepad.get_target_devices()
@@ -624,12 +639,27 @@ func _set_gamepad_profile(device: CompositeDevice, profile_path: String = "") ->
 		if not library_item:
 			library_item = launch_manager.get_current_app_library_item()
 
+		# Per-game profiles are gated while Steam Input is in use, since
+		# Steam Input configures controllers per-game itself.
+		if launch_manager.steam_input_enabled:
+			library_item = null
+
 		# If no library item was set with the state, then use the default
 		if not library_item:
 			profile_path = input_manager.get_default_global_profile_path()
 			profile_path = settings_manager.get_value("input", "gamepad_profile", profile_path) as String
 		else:
 			profile_path = settings_manager.get_library_value(library_item, "gamepad_profile", "")
+
+	if self.profile_gamepad.is_empty():
+		if not library_item:
+			self.profile_gamepad = settings_manager.get_value("input", "gamepad_profile_target", "") as String
+		else:
+			self.profile_gamepad = settings_manager.get_library_value(library_item, "gamepad_profile_target", "") as String
+	if self.profile_gamepad.is_empty() and is_instance_valid(input_manager):
+		# Fall back to the default for the current mode, so devices added after
+		# startup get the same target gamepad as the ones present at startup.
+		self.profile_gamepad = input_manager.get_default_target_gamepad()
 
 	logger.debug("Setting " + device.name + " to profile: " + profile_path)
 	InputPlumber.load_target_modified_profile(device, profile_path, self.profile_gamepad)

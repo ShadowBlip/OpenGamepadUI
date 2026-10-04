@@ -10,3 +10,4 @@ icon_mappings = Array[ExtResource("1_81pts")]([])
 name = ""
 startup_actions = Array[ExtResource("3_b007y")]([])
 shutdown_actions = Array[ExtResource("3_b007y")]([])
+target_gamepad_override = "xbox-elite"
