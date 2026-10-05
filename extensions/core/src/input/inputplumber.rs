@@ -1,3 +1,6 @@
+pub mod led_device;
+mod led_discovery;
+use led_device::LedDevice;
 pub mod composite_device;
 pub mod dbus_device;
 pub mod event_device;
@@ -95,6 +98,10 @@ pub struct InputPlumberInstance {
     /// Map of DBus path to dbus device resource. E.g.
     /// {"/org/shadowblip/InputPlumber/target/dbus0": <DBusDevice>}
     dbus_devices: HashMap<String, Gd<DBusDevice>>,
+    led_devices: HashMap<String, Gd<LedDevice>>,
+    led_discovery: Option<tokio::sync::watch::Receiver<led_discovery::Discovery>>,
+    led_task: Option<tokio::task::JoinHandle<()>>,
+    led_owner: String,
     /// The current intercept mode set for all devices
     #[var(get = get_intercept_mode, set = set_intercept_mode)]
     intercept_mode: i64,
@@ -134,6 +141,17 @@ impl InputPlumberInstance {
     /// Emitted when a CompositeDevice is removed
     #[signal]
     fn composite_device_removed(dbus_path: GString);
+
+    #[signal]
+    fn led_device_added(device: Gd<LedDevice>);
+    #[signal]
+    fn led_device_removed(dbus_path: GString);
+
+    /// Cached LED resources; discovery and state requests never block a frame.
+    #[func]
+    fn get_led_devices(&self) -> Array<Gd<LedDevice>> {
+        self.led_devices.values().cloned().collect()
+    }
 
     /// Returns true if the InputPlumber service is currently running
     #[func]
@@ -279,12 +297,50 @@ impl InputPlumberInstance {
             self.process_signal(signal);
         }
 
+        self.process_led_discovery();
+        for device in self.led_devices.values_mut() {
+            device.bind_mut().process();
+        }
+
         // Process signals from tracked devices
         for (_, device) in self.dbus_devices.iter_mut() {
             device.bind_mut().process();
         }
         for (_, device) in self.composite_devices.iter_mut() {
             device.bind_mut().process();
+        }
+    }
+
+    fn process_led_discovery(&mut self) {
+        let Some(updates) = self.led_discovery.as_mut() else {
+            return;
+        };
+        if !updates.has_changed().unwrap_or(true) {
+            return;
+        }
+        let discovery = updates.borrow_and_update().clone();
+        let removed: Vec<_> = self
+            .led_devices
+            .keys()
+            .filter(|path| self.led_owner != discovery.owner || !discovery.paths.contains(*path))
+            .cloned()
+            .collect();
+        for path in removed {
+            if let Some(mut device) = self.led_devices.remove(&path) {
+                device.bind_mut().disconnect_device();
+            }
+            self.base_mut()
+                .emit_signal("led_device_removed", &[path.to_variant()]);
+        }
+        self.led_owner = discovery.owner.clone();
+        for path in discovery.paths {
+            if self.led_devices.contains_key(&path) {
+                continue;
+            }
+            let device = LedDevice::new(path.clone(), discovery.owner.clone());
+            self.led_devices.insert(path, device.clone());
+            self.base_mut()
+                .emit_signal("led_device_added", &[device.to_variant()]);
         }
     }
 
@@ -451,6 +507,10 @@ impl IResource for InputPlumberInstance {
                 rx,
                 conn,
                 proxy: None,
+                led_devices: HashMap::new(),
+                led_discovery: None,
+                led_task: None,
+                led_owner: String::new(),
                 composite_devices: Default::default(),
                 dbus_devices: Default::default(),
                 intercept_mode: Default::default(),
@@ -474,12 +534,18 @@ impl IResource for InputPlumberInstance {
             None
         };
 
+        let (led_updates, led_task) = led_discovery::start();
+
         // Create a new InputPlumber instance
         let mut instance = Self {
             base,
             rx,
             conn,
             proxy,
+            led_devices: HashMap::new(),
+            led_discovery: Some(led_updates),
+            led_task: Some(led_task),
+            led_owner: String::new(),
             composite_devices: HashMap::new(),
             dbus_devices: HashMap::new(),
             intercept_mode: 0,
@@ -599,4 +665,12 @@ async fn run(tx: Sender<Signal>) -> Result<(), RunError> {
     });
 
     Ok(())
+}
+
+impl Drop for InputPlumberInstance {
+    fn drop(&mut self) {
+        if let Some(task) = self.led_task.take() {
+            task.abort();
+        }
+    }
 }
