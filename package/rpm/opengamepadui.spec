@@ -36,6 +36,7 @@ make install PREFIX=%{buildroot}%{_prefix} INSTALL_PREFIX=%{_prefix} ARCH=%{_arc
 /usr/share/icons/hicolor/scalable/apps/opengamepadui.svg
 /usr/share/polkit-1/actions/*
 /usr/lib/systemd/user/*
+/usr/lib/udev/rules.d/70-ayaneo-modules.rules
 
 %changelog
 %autochangelog
