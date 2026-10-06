@@ -51,7 +51,7 @@ state = ExtResource("6_vwiy7")
 
 [node name="FocusGroupSetter" type="Node" parent="StateWatcher" node_paths=PackedStringArray("target")]
 script = ExtResource("7_sb10a")
-target = NodePath("../../MarginContainer/VBoxContainer/VBoxContainer/FocusGroup")
+target = NodePath("../../MarginContainer/VBoxContainer/UpdateSection/FocusGroup")
 on_signal = "state_entered"
 
 [node name="SoftwareUpdater" parent="." instance=ExtResource("2_ogwq4")]
@@ -74,54 +74,55 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="UpdateSection" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="FocusGroup" parent="MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("3_36sdt")]
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/UpdateSection" node_paths=PackedStringArray("current_focus", "focus_neighbor_bottom") instance=ExtResource("3_36sdt")]
 current_focus = NodePath("../AutoUpdateToggle")
 wrap_focus = false
 focus_neighbor_bottom = NodePath("../../ThemeButtonContainer/FocusGroup")
 
-[node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+[node name="UpdatesLabel" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("5_caxj0")]
 layout_mode = 2
 text = "Updates"
 
-[node name="AutoUpdateToggle" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("6_ghdw1")]
+[node name="AutoUpdateToggle" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("6_ghdw1")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Automatic Updates"
 separator_visible = false
 description = "Automatically download and apply updates in the background when they are available"
 
-[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("12_3b8j5")]
+[node name="CheckUpdateButton" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("12_3b8j5")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Check for updates"
 button_text = "Check for updates"
 disabled = false
 
-[node name="UpdateButton" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("12_3b8j5")]
+[node name="UpdateButton" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("12_3b8j5")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Install Updates"
 button_text = "Update"
 disabled = false
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/UpdateSection"]
 layout_mode = 2
 
-[node name="Appearance" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("5_caxj0")]
+[node name="Appearance" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("5_caxj0")]
 layout_mode = 2
 text = "Appearance"
 
-[node name="LanguageDropdown" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("8_r15pa")]
+[node name="LanguageDropdown" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("8_r15pa")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "Language"
 description = "System language"
 
-[node name="ThemeLabel" parent="MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("8_2m3jw")]
+[node name="ThemeLabel" parent="MarginContainer/VBoxContainer/UpdateSection" instance=ExtResource("8_2m3jw")]
 layout_mode = 2
 text = "Theme"
 

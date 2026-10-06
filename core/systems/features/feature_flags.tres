@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="FeatureFlags" format=3 uid="uid://cfb4ht3s2u5ox"]
+
+[ext_resource type="Script" uid="uid://bpubgh1iqco41" path="res://core/systems/features/feature.gd" id="1_feature"]
+[ext_resource type="Script" uid="uid://b6lv3knr8wjqx" path="res://core/systems/features/feature_flags.gd" id="2_feature_flags"]
+
+[sub_resource type="Resource" id="Feature_updater"]
+script = ExtResource("1_feature")
+id = "updater"
+description = "Allow checking for and installing app updates"
+default = true
+
+[sub_resource type="Resource" id="Feature_tdp"]
+script = ExtResource("1_feature")
+id = "tdp"
+description = "Allow managing TDP settings"
+default = true
+
+[resource]
+script = ExtResource("2_feature_flags")
+features = Array[ExtResource("1_feature")]([SubResource("Feature_updater"), SubResource("Feature_tdp")])
