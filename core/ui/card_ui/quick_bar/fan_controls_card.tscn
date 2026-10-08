@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://core/ui/card_ui/quick_bar/qb_card.tscn" id="1_card"]
+[ext_resource type="PackedScene" path="res://core/ui/common/quick_bar/fan_controls_menu.tscn" id="2_menu"]
+
+[node name="FanControlsCard" instance=ExtResource("1_card")]
+visible = false
+title = "Fan Controls"
+
+[node name="SectionLabel" parent="MarginContainer/CardVBoxContainer" index="0"]
+text = "Fan Controls"
+
+[node name="FanControls" parent="MarginContainer/CardVBoxContainer/ContentContainer" index="0" instance=ExtResource("2_menu")]
+layout_mode = 2
+size_flags_vertical = 0
