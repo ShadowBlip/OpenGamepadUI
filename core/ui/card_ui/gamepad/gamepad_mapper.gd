@@ -153,11 +153,11 @@ func populate_gamepad_mappings_for(capabilities: PackedStringArray, gamepad_icon
 		if capability.begins_with("Gamepad:Gyro"):
 			gyro_events.append(capability)
 			continue
-		if capability.begins_with("TouchPad:"):
+		if capability.begins_with("Touchpad:") or capability.begins_with("TouchPad:"):
 			touchpad_events.append(capability)
 			continue
 		logger.warn("Unhandled capability: " + capability)
-	
+
 	# Create all the button mappings
 	var label := $%ButtonsLabel
 	label.visible = button_events.size() > 0
@@ -197,6 +197,10 @@ func populate_mouse_mappings_for(caps: PackedStringArray) -> void:
 	for capability in caps:
 		if capability.begins_with("Mouse:"):
 			mouse_capabilities.append(capability)
+			continue
+		if capability.begins_with("Touchpad:") or capability.begins_with("TouchPad:"):
+			mouse_capabilities.append(capability)
+			continue
 
 	logger.debug("Found target capabilities for mouse: " + str(mouse_capabilities))
 
@@ -209,12 +213,26 @@ func populate_mouse_mappings_for(caps: PackedStringArray) -> void:
 	var motion_events := PackedStringArray()
 	for capability: String in mouse_capabilities:
 		logger.debug("Capability: " + capability)
+
+		# Mouse native
 		if capability.begins_with("Mouse:Button"):
 			button_events.append(capability)
 			continue
 		if capability.begins_with("Mouse:Motion"):
 			motion_events.append(capability)
 			continue
+
+		# Touchpad -> treat as mouse-like sources
+		if capability.begins_with("Touchpad:") or capability.begins_with("TouchPad:"):
+			if capability.find(":Touch:Motion") != -1:
+				motion_events.append(capability)
+				continue
+			if capability.find(":Touch:Button:Press") != -1:
+				button_events.append(capability)
+				continue
+			if capability.find(":Touch:Button:Touch") != -1:
+				button_events.append(capability)
+				continue
 
 	# Delete any old buttons
 	for child in mouse_input_container.get_children():
@@ -241,18 +259,32 @@ func _add_button_for_capability(capability: String, parent: Node, neighbor: Node
 
 	var button := card_button_scene.instantiate() as CardInputIconButton
 	button.name = capability
-	var on_button_ready := func():
-		button.input_icon.max_width = 64
-		button.set_target_device_icon_mapping(gamepad_icons_type)
-		button.input_icon.force_type = 1 # Force type to keyboard/mouse
-		var button_parent := button.get_parent()
-		if button.set_target_icon(capability) != OK:
-			logger.debug("Failed to set icon for capability: " + capability)
-			button_parent.remove_child(button)
-			button.queue_free()
-		if button.input_icon.textures.is_empty():
-			button_parent.remove_child(button)
-			button.queue_free()
+    var on_button_ready := func():
+    	button.input_icon.max_width = 64
+    	button.set_target_device_icon_mapping(gamepad_icons_type)
+
+    	# Only force keyboard/mouse icons for the Mouse tab (you pass "" there)
+    	if gamepad_icons_type.is_empty():
+    		button.input_icon.force_type = 1 # keyboard/mouse
+    	else:
+    		# Let it behave normally for gamepad icon mapping / dropdown
+    		# (do NOT set force_type at all, or set it to the default value if your widget needs it)
+    		pass
+
+    	var button_parent := button.get_parent()
+
+    	# Keep the original behavior: if we cannot render an icon at all, remove the row
+    	if button.set_target_icon(capability) != OK:
+    		logger.debug("Failed to set icon for capability: " + capability)
+    		button_parent.remove_child(button)
+    		button.queue_free()
+    		return
+
+    	if button.input_icon.textures.is_empty():
+    		button_parent.remove_child(button)
+    		button.queue_free()
+    		return
+
 	button.ready.connect(on_button_ready)
 
 	# Update the mapping with the selected capability
