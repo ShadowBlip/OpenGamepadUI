@@ -9,12 +9,14 @@ var NotificationManager := load("res://core/global/notification_manager.tres") a
 var Version := load("res://core/global/version.tres") as Version
 var platform := load("res://core/global/platform.tres") as Platform
 var hardware_manager := load("res://core/systems/hardware/hardware_manager.tres") as HardwareManager
+var feature_flags := load("res://core/systems/features/feature_flags.tres") as FeatureFlags
 var update_available := false
 var update_installed := false
 var logger := Log.get_logger("GeneralSettings")
 
 @onready var updater := $SoftwareUpdater as SoftwareUpdater
 @onready var update_timer := $UpdateTimer as Timer
+@onready var update_section := $%UpdateSection as VBoxContainer
 @onready var auto_update_toggle := $%AutoUpdateToggle
 @onready var check_update_button := $%CheckUpdateButton
 @onready var update_button := $%UpdateButton
@@ -109,8 +111,12 @@ func _ready() -> void:
 			update_timer.stop()
 	auto_update_toggle.toggled.connect(on_auto_update_toggled)
 	update_timer.timeout.connect(_on_autoupdate)
-	if auto_update:
+	if auto_update and feature_flags.is_enabled("updater"):
 		update_timer.start()
+
+	# Hide the update section when the updater feature is disabled
+	feature_flags.feature_changed.connect(_on_feature_changed)
+	_update_update_section(feature_flags.is_enabled("updater"))
 
 	# Configure the language dropdown
 	var current_locale := SettingsManager.get_value("general", "locale", "en_US") as String
@@ -177,6 +183,21 @@ func _add_user_themes() -> void:
 		# Add the button to the settings menu
 		themes_container.add_child(button)
 		logger.debug("Add user theme: " + theme_name)
+
+
+# Shows or hides the update section for the updater feature
+func _update_update_section(enabled: bool) -> void:
+	update_section.visible = enabled
+
+
+# Reacts to a feature flag being toggled at runtime
+func _on_feature_changed(feature: Feature, enabled: bool) -> void:
+	if feature.id != "updater":
+		return
+	_update_update_section(enabled)
+	update_timer.stop()
+	if enabled and SettingsManager.get_value("general.updates", "auto_update", false) as bool:
+		update_timer.start()
 
 
 func _on_autoupdate() -> void:

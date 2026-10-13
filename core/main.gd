@@ -1,10 +1,14 @@
 extends Node
 
 var args := OS.get_cmdline_args()
+var feature_flags := load("res://core/systems/features/feature_flags.tres") as FeatureFlags
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Resolve feature flags from launch arguments and the environment
+	feature_flags.load_from_os()
+
 	# Display a custom help if 'help' in args
 	if "help" in args:
 		_show_help()
@@ -51,4 +55,13 @@ func _show_help() -> void:
 	print("Environment Variables:")
 	print("  LOG_LEVEL        Set the global log level (debug,info,warn,error)")
 	print("  LOG_LEVEL_<NAME> Set the log level for one logger (debug,info,warn,error)")
+	print("  OGUI_FEATURES    Comma-separated list of features to enable")
+	print("  OGUI_DISABLED_FEATURES Comma-separated list of features to disable")
+	print("")
+	print("Features (--feature-<id> / --feature-no-<id>):")
+	for feature in feature_flags.get_features():
+		var description := feature.description
+		if description == "":
+			description = "Feature flag"
+		print("  ", feature.id, "  ", description)
 	print("")
