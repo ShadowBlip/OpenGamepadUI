@@ -1,0 +1,99 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" uid="uid://dmv5615ibo4jd" path="res://core/ui/common/quick_bar/fan_controls_menu.gd" id="1_fan"]
+[ext_resource type="PackedScene" path="res://core/systems/input/focus_group.tscn" id="2_focus"]
+[ext_resource type="Resource" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="3_stack"]
+[ext_resource type="PackedScene" path="res://core/ui/components/dropdown.tscn" id="4_drop"]
+[ext_resource type="PackedScene" path="res://core/ui/components/slider.tscn" id="5_slider"]
+
+[node name="FanControls" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_fan")
+
+[node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_focus")]
+unique_name_in_owner = true
+current_focus = NodePath("../AutomaticButton")
+focus_stack = ExtResource("3_stack")
+
+[node name="ServiceTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+autostart = true
+
+[node name="ProfileLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="TelemetryLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="StatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="AutomaticButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Firmware Automatic"
+
+[node name="FanDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Fan"
+
+[node name="ModeDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Edit mode"
+description = "Only modes advertised by PowerStation. Apply sends the complete profile."
+
+[node name="ManualSlider" parent="." instance=ExtResource("5_slider")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Manual fan (%)"
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 60.0
+
+[node name="EditorLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Complete profile (JSON)"
+
+[node name="ProfileEditor" type="TextEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+wrap_mode = 1
+
+[node name="UseJsonButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Use edited JSON"
+
+[node name="ApplyButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Apply and save profile"
+
+[node name="CurveHelp" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+text = "Curves use sensor IDs above and temperature/percentage pairs. Native curves require every hardware point. PowerStation validates hardware constraints and owns thermal safety."
+
+[node name="ProfileFile" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "quiet.yaml"
+placeholder_text = "Packaged or distro profile filename"
+
+[node name="LoadFileButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load and save file profile"

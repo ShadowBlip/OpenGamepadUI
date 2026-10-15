@@ -12,12 +12,24 @@ class_name PowerStation
 # Keep a reference to instances so they are not cleaned up automatically
 var _cpu: Cpu
 var _gpu: Gpu
+var _fan: Fan
 var logger := Log.get_logger("PowerStation")
 
 
 func _ready() -> void:
 	_cpu = instance.get_cpu()
 	_gpu = instance.get_gpu()
+	_fan = instance.get_fan()
+	if instance.is_running():
+		_restore_fan_profile()
+	else:
+		instance.started.connect(_restore_fan_profile, CONNECT_ONE_SHOT)
+
+
+func _restore_fan_profile() -> void:
+	_fan = instance.get_fan()
+	if _fan:
+		_fan.restore_saved()
 
 
 func _process(_delta: float) -> void:
