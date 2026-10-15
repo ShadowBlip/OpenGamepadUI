@@ -106,7 +106,7 @@ func _refresh() -> void:
 		cycle.max_value = float(snapshot.get("cycle_max_ms", 30000)) / 1000.0
 	cycle.value = float(draft.cycle_period_ms) / 1000.0
 	breathing_note.visible = available and supported and (draft.effect == "breathing" or (draft.effect == "cycle" and fixed_cycle))
-	breathing_note.text = tr("Colour cycle speed is fixed by the device.") if draft.effect == "cycle" else tr("Breathing speed is fixed by the device.")
+	breathing_note.text = tr("Rainbow speed is fixed by the device.") if draft.effect == "cycle" else tr("Breathing speed is fixed by the device.")
 	apply_button.visible = available
 	off_button.visible = available and "off" in _effects
 	apply_button.disabled = busy or not supported

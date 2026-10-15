@@ -3,7 +3,7 @@ class_name LightingModel
 ## Shared settings and drafts. Only InputPlumber owns effects or persistence.
 signal updated
 
-const EFFECT_LABELS := {"off": "Off", "solid": "Solid colour", "breathing": "Breathing", "cycle": "Colour cycle"}
+const EFFECT_LABELS := {"off": "Off", "solid": "Solid colour", "breathing": "Breathing", "cycle": "Rainbow"}
 const DEFAULT_CONFIG := {"effect": "off", "color": [255, 255, 255], "brightness": 30, "cycle_period_ms": 8000}
 var entries: Dictionary = {}
 var selected_id: String = ""
@@ -155,4 +155,6 @@ func status_text() -> String:
 		return "Settings are saved. Waiting for the lighting device."
 	if entry.dirty:
 		return "You have unapplied changes."
+	if snapshot.status == "unconfigured":
+		return "No lighting settings are saved. Choose an effect and apply it; lighting stays unchanged until then."
 	return "Lighting settings applied."

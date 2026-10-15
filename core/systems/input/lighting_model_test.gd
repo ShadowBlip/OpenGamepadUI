@@ -20,6 +20,8 @@ class FakeSource extends RefCounted:
 		if success:
 			state.config = calls.back().duplicate(true)
 			state.revision = str(calls.size())
+			if state.status == "unconfigured":
+				state.status = "applied"
 		apply_finished.emit(calls.size(), success, error)
 
 var model: LightingModel
@@ -46,6 +48,25 @@ func test_external_state_preserves_dirty_draft() -> void:
 	await wait_frames(2)
 	assert_eq(model.current().snapshot.config.brightness, 90)
 	assert_eq(model.current().draft.brightness, 44)
+
+func test_first_use_stays_untouched_until_explicit_apply() -> void:
+	source.state.status = "unconfigured"
+	source.lighting_changed.emit()
+	await wait_frames(2)
+	assert_string_contains(model.status_text(), "No lighting settings are saved")
+	assert_eq(source.calls.size(), 0)
+	var panel := _panel()
+	await wait_frames(2)
+	assert_string_contains(panel.status.text, "lighting stays unchanged")
+	assert_eq(source.calls.size(), 0, "Opening the panel must not apply placeholder Off")
+	model.edit("effect", "solid")
+	assert_eq(model.status_text(), "You have unapplied changes.")
+	assert_eq(source.calls.size(), 0)
+	model.apply()
+	source.complete()
+	await wait_frames(2)
+	assert_eq(source.calls.size(), 1)
+	assert_eq(model.status_text(), "Lighting settings applied.")
 
 func test_apply_keeps_new_edits_and_uses_latest_saved_state() -> void:
 	model.edit("effect", "solid")
@@ -242,7 +263,7 @@ func test_native_cycle_hides_speed_preserves_period_and_keeps_gamepad_focus() ->
 	await wait_frames(2)
 	assert_false(panel.cycle.visible)
 	assert_true(panel.breathing_note.visible)
-	assert_eq(panel.breathing_note.text, "Colour cycle speed is fixed by the device.")
+	assert_eq(panel.breathing_note.text, "Rainbow speed is fixed by the device.")
 	assert_eq(panel._focus_controls().size(), 4)
 	panel.brightness.slider.grab_focus()
 	assert_eq(panel.brightness.slider.find_valid_focus_neighbor(SIDE_BOTTOM), panel.apply_button)
