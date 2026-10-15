@@ -5,10 +5,10 @@
 
 [node name="FanControlsCard" instance=ExtResource("1_card")]
 visible = false
-title = "Fan Controls"
+title = "Fan Settings"
 
 [node name="SectionLabel" parent="MarginContainer/CardVBoxContainer" index="0"]
-text = "Fan Controls"
+text = "Fan Settings"
 
 [node name="FanControls" parent="MarginContainer/CardVBoxContainer/ContentContainer" index="0" instance=ExtResource("2_menu")]
 layout_mode = 2

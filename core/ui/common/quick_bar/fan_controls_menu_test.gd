@@ -1,60 +1,28 @@
 extends GutTest
+const MENU := preload("res://core/ui/common/quick_bar/fan_controls_menu.tscn")
+const Fixtures := preload("res://core/systems/performance/fan_profile_model_test.gd")
 
-const FanControlsMenu := preload("res://core/ui/common/quick_bar/fan_controls_menu.gd")
-const MENU_SCENE := preload("res://core/ui/common/quick_bar/fan_controls_menu.tscn")
+func test_menu_shows_available_modes_and_does_not_display_invalid_duty() -> void:
+	var backend := Fixtures.Backend.new()
+	var menu := MENU.instantiate()
+	menu.connect_backend = false
+	menu.model.start(backend)
+	add_child_autofree(menu)
+	assert_eq(menu.mode_dropdown.option_button.item_count, 3)
+	assert_string_contains(menu.telemetry_label.text, "percentage unavailable")
+	assert_string_contains(menu.telemetry_label.text, "CPU: 50.0 C")
+	assert_false(menu.telemetry_label.text.contains("RPM"))
+	assert_eq(backend.calls.size(), 0)
 
-
-func test_visibility_rules_cover_no_and_multiple_fans() -> void:
-	assert_false(FanControlsMenu.should_show_card(0))
-	assert_true(FanControlsMenu.should_show_card(1))
-	assert_false(FanControlsMenu.should_show_selector(1))
-	assert_true(FanControlsMenu.should_show_selector(2))
-
-
-func test_modes_include_preset_as_editable_curve() -> void:
-	assert_eq(FanControlsMenu.mode_to_index("automatic"), 0)
-	assert_eq(FanControlsMenu.mode_to_index("manual"), 1)
-	assert_eq(FanControlsMenu.mode_to_index("curve"), 2)
-	assert_eq(FanControlsMenu.mode_to_index("preset"), 2)
-
-
-func test_first_custom_curve_uses_device_limits_without_a_preset() -> void:
-	var curve := FanControlsMenu.initial_curve(45.0, 95.0, 0)
-	assert_eq(curve.temperatures, PackedFloat64Array([45.0, 95.0]))
-	assert_eq(curve.percents, PackedInt32Array([0, 100]))
-
-
-func test_fault_message_reports_verified_automatic_fallback() -> void:
-	var message := FanControlsMenu.describe_state({
-		"compatible": true,
-		"fault": "temperature sensor disappeared",
-		"automatic_verified": true,
-		"suspended": false,
-		"mode": "automatic",
-	})
-	assert_true(message.begins_with("Automatic fallback:"))
-
-
-func test_limit_summary_includes_zero_duty_hysteresis_and_thermal_handoff() -> void:
-	var summary := FanControlsMenu.describe_limits(0, 10, 42.0, 45.0, 95.0, 98.0)
-	assert_true(summary.contains("Duty 0-100%"))
-	assert_true(summary.contains("Running floor 10%"))
-	assert_true(summary.contains("Stop <= 42 C / restart > 45 C"))
-	assert_true(summary.contains("Full fan 95 C"))
-	assert_true(summary.contains("Firmware handoff 98 C"))
-
-
-func test_future_api_is_rejected_clearly() -> void:
-	assert_true(FanControlsMenu.supports_api_version(1))
-	assert_false(FanControlsMenu.supports_api_version(0))
-	assert_false(FanControlsMenu.supports_api_version(2))
-	var message := FanControlsMenu.describe_state({"compatible": false})
-	assert_true(message.contains("Update PowerStation"))
-
-
-func test_menu_has_controller_focus_group() -> void:
-	var menu := MENU_SCENE.instantiate()
-	add_child_autoqfree(menu)
-	var focus_group := menu.get_node("FocusGroup") as FocusGroup
-	assert_not_null(focus_group)
-	assert_eq(focus_group.current_focus.name, "ModeDropdown")
+func test_automatic_button_remains_available_without_sensor_telemetry() -> void:
+	var backend := Fixtures.Backend.new()
+	backend.state.sensors[0].telemetry_valid = false
+	var menu := MENU.instantiate()
+	menu.connect_backend = false
+	menu.model.start(backend)
+	add_child_autofree(menu)
+	assert_false(menu.automatic_button.disabled)
+	menu.automatic_button.pressed.emit()
+	assert_eq(backend.calls.size(), 1)
+	assert_eq(backend.calls[0].profile.fans[0].mode, "automatic")
+	assert_eq(menu.focus_group.current_focus.name, "AutomaticButton")

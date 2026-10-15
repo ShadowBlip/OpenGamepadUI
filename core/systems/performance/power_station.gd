@@ -20,6 +20,16 @@ func _ready() -> void:
 	_cpu = instance.get_cpu()
 	_gpu = instance.get_gpu()
 	_fan = instance.get_fan()
+	if instance.is_running():
+		_restore_fan_profile()
+	else:
+		instance.started.connect(_restore_fan_profile, CONNECT_ONE_SHOT)
+
+
+func _restore_fan_profile() -> void:
+	_fan = instance.get_fan()
+	if _fan:
+		_fan.restore_saved()
 
 
 func _process(_delta: float) -> void:

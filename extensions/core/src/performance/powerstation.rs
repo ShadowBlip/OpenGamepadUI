@@ -1,7 +1,9 @@
 pub mod cpu;
 pub mod cpu_core;
 pub mod fan;
+mod fan_client;
 pub mod fan_device;
+mod fan_settings;
 pub mod gpu;
 pub mod gpu_card;
 pub mod gpu_connector;

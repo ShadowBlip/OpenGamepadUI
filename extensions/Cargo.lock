@@ -848,6 +848,7 @@ dependencies = [
  "log",
  "nix 0.31.2",
  "once_cell",
+ "serde_json",
  "tokio",
  "zbus",
  "zvariant",

@@ -14,7 +14,7 @@ script = ExtResource("1_fan")
 
 [node name="FocusGroup" parent="." node_paths=PackedStringArray("current_focus") instance=ExtResource("2_focus")]
 unique_name_in_owner = true
-current_focus = NodePath("../ModeDropdown")
+current_focus = NodePath("../AutomaticButton")
 focus_stack = ExtResource("3_stack")
 
 [node name="ServiceTimer" type="Timer" parent="."]
@@ -22,75 +22,78 @@ unique_name_in_owner = true
 wait_time = 2.0
 autostart = true
 
-[node name="ApplyTimer" type="Timer" parent="."]
+[node name="ProfileLabel" type="Label" parent="."]
 unique_name_in_owner = true
-wait_time = 0.5
-one_shot = true
-
-[node name="FanDropdown" parent="." instance=ExtResource("4_drop")]
-unique_name_in_owner = true
-visible = false
 layout_mode = 2
-title = "Fan"
-description = ""
+autowrap_mode = 3
 
 [node name="TelemetryLabel" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Telemetry unavailable"
-horizontal_alignment = 1
-
-[node name="BackendLabel" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Backend"
-horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="StatusLabel" type="Label" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Waiting for PowerStation..."
-horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="LimitsLabel" type="Label" parent="."]
+[node name="AutomaticButton" type="Button" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Safety limits"
-horizontal_alignment = 1
-autowrap_mode = 3
+text = "Firmware Automatic"
+
+[node name="FanDropdown" parent="." instance=ExtResource("4_drop")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Fan"
 
 [node name="ModeDropdown" parent="." instance=ExtResource("4_drop")]
 unique_name_in_owner = true
 layout_mode = 2
-title = "Mode"
-description = ""
+title = "Edit mode"
+description = "Only modes advertised by PowerStation. Apply sends the complete profile."
 
 [node name="ManualSlider" parent="." instance=ExtResource("5_slider")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
-text = "Fan (%)"
-value = 50.0
+text = "Manual fan (%)"
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 60.0
 
-[node name="PresetDropdown" parent="." instance=ExtResource("4_drop")]
+[node name="EditorLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Complete profile (JSON)"
+
+[node name="ProfileEditor" type="TextEdit" parent="."]
 unique_name_in_owner = true
-visible = false
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
-title = "Preset"
-description = "Editing a preset creates a custom curve."
+wrap_mode = 1
 
-[node name="CurveSection" type="VBoxContainer" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="CurveLabel" type="Label" parent="CurveSection"]
-layout_mode = 2
-text = "Fan Curve"
-
-[node name="CurvePoints" type="VBoxContainer" parent="CurveSection"]
+[node name="UseJsonButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
+text = "Use edited JSON"
+
+[node name="ApplyButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Apply and save profile"
+
+[node name="CurveHelp" type="Label" parent="."]
+layout_mode = 2
+autowrap_mode = 3
+text = "Curves use sensor IDs above and temperature/percentage pairs. Native curves require every hardware point. PowerStation validates hardware constraints and owns thermal safety."
+
+[node name="ProfileFile" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "quiet.yaml"
+placeholder_text = "Packaged or distro profile filename"
+
+[node name="LoadFileButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load and save file profile"
