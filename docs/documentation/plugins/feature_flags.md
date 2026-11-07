@@ -9,7 +9,7 @@ Flags are managed by the
 [FeatureFlags](../../class-reference/FeatureFlags.md) resource, which is shared
 across the whole application. A single feature is described by a
 [Feature](../../class-reference/Feature.md) resource containing its `id`,
-`description`, and `default` state.
+`description`, `default` state, and optional command-line `aliases`.
 
 ## Resolving a flag
 
@@ -32,6 +32,9 @@ opengamepad-ui --feature-updater
 # Disable a feature
 opengamepad-ui --feature-no-updater
 
+# Aliases are plain flags: --overlay-mode enables the "overlay-mode" feature
+opengamepad-ui --overlay-mode
+
 # Per-feature environment variable
 OGUI_FEATURE_UPDATER=0 opengamepad-ui
 
@@ -43,6 +46,11 @@ OGUI_DISABLED_FEATURES=updater opengamepad-ui
 Values are read as booleans: `1`, `true`, `yes`, and `on` enable a feature, and
 `0`, `false`, `no`, and `off` disable it. The environment key for a feature is
 derived from its id, so `steam-deck-mode` becomes `OGUI_FEATURE_STEAM_DECK_MODE`.
+
+A feature can declare `aliases`: plain flags accepted as `--<alias>` instead of
+`--feature-<id>`. An alias always enables its feature; use `--feature-no-<id>`
+to disable one. Aliases resolve from the same command-line source as
+`--feature-<id>` arguments.
 
 Bulk lists are applied before per-feature variables, so a per-feature variable
 wins when both name the same feature. Values that are not boolean strings are
@@ -133,3 +141,6 @@ everything:
 | --- | --- | --- |
 | `updater` | `true` | Allows checking for and installing app updates. The settings menu hides its update section when it is off. |
 | `tdp` | `true` | Allows managing TDP settings. |
+| `card-ui` | `true` | Loads the Card UI, the default interface. Alias: `--card-ui`. |
+| `etoile-ui` | `false` | Loads the Etoile UI instead of the Card UI. Alias: `--etoile-ui`. |
+| `overlay-mode` | `false` | Loads CardUI in overlay mode. Aliases: `--overlay-mode`, `--only-qam`, `--qam-only`. |

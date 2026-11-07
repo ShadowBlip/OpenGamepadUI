@@ -5,7 +5,7 @@
 Registry of feature flags
 ## Description
 
-FeatureFlags parses command-line arguments and environment variables to turn features on or off, and allows features to be toggled at runtime by plugins and platform classes. Signals are emitted when a feature changes so the UI can react.
+FeatureFlags parses command-line arguments and environment variables to turn features on or off, and allows features to be toggled at runtime by plugins and platform classes. A feature can also declare aliases, so "--overlay-mode" works the same as "--feature-overlay-mode". Signals are emitted when a feature changes so the UI can react.
 ## Properties
 
 | Type | Name | Default |
@@ -19,6 +19,7 @@ FeatureFlags parses command-line arguments and environment variables to turn fea
 | ------- | --------- |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [register_feature](./#register_feature)(feature: [Feature](../Feature)) |
 | [Feature](../Feature) | [get_feature](./#get_feature)(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
+| [Feature](../Feature) | [get_feature_by_alias](./#get_feature_by_alias)(alias: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | [Feature[]](../Feature) | [get_features](./#get_features)() |
 | [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) | [is_enabled](./#is_enabled)(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | void | [set_feature](./#set_feature)(id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), enabled: [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html)) |
@@ -54,6 +55,7 @@ Reports unknown features, invalid registrations, and unparseable values.
 
 
 
+
 ------------------
 
 ## Method Descriptions
@@ -72,6 +74,13 @@ Registers a feature. Returns OK if the feature was newly registered.
 
 
 Returns the registered feature with the given id, or null if it is not registered.
+### `get_feature_by_alias()`
+
+
+[Feature](../Feature) **get_feature_by_alias**(alias: [String](https://docs.godotengine.org/en/stable/classes/class_string.html))
+
+
+Returns the registered feature listing the given alias, or null if none match.
 ### `get_features()`
 
 

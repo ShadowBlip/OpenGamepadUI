@@ -5,7 +5,7 @@
 Definition of a single feature flag
 ## Description
 
-A Feature describes one toggleable behavior: its id, description, and default state. Feature objects hold no logic and are registered with [FeatureFlags](../FeatureFlags).
+A Feature describes one toggleable behavior: its id, description, default state, and optional command-line aliases. Feature objects hold no logic and are registered with [FeatureFlags](../FeatureFlags).
 ## Properties
 
 | Type | Name | Default |
@@ -13,6 +13,7 @@ A Feature describes one toggleable behavior: its id, description, and default st
 | [String](https://docs.godotengine.org/en/stable/classes/class_string.html) | [id](./#id) | "" |
 | [String](https://docs.godotengine.org/en/stable/classes/class_string.html) | [description](./#description) | "" |
 | [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) | [default](./#default) | false |
+| [String[]](https://docs.godotengine.org/en/stable/classes/class_string.html) | [aliases](./#aliases) | [] |
 
 ## Methods
 
@@ -47,6 +48,13 @@ Human-readable description, used by help output and settings UI.
 
 
 The state this feature has when no source overrides it.
+### `aliases`
+
+
+[String[]](https://docs.godotengine.org/en/stable/classes/class_string.html) aliases = <span style="color: red;">[]</span>
+
+
+Alternate command-line flags for this feature, usable as "--<alias>" instead of "--feature-<id>", e.g. "overlay-mode" for "--overlay-mode".
 
 
 

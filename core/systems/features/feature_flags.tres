@@ -15,6 +15,27 @@ id = "tdp"
 description = "Allow managing TDP settings"
 default = true
 
+[sub_resource type="Resource" id="Feature_overlay_mode"]
+script = ExtResource("1_feature")
+id = "overlay-mode"
+description = "Launch CardUI in overlay mode"
+default = false
+aliases = Array[String](["overlay-mode", "only-qam", "qam-only"])
+
+[sub_resource type="Resource" id="Feature_card_ui"]
+script = ExtResource("1_feature")
+id = "card-ui"
+description = "Use the Card UI (default interface)"
+default = true
+aliases = Array[String](["card-ui"])
+
+[sub_resource type="Resource" id="Feature_etoile_ui"]
+script = ExtResource("1_feature")
+id = "etoile-ui"
+description = "Use the Etoile UI instead of the default Card UI"
+default = false
+aliases = Array[String](["etoile-ui"])
+
 [resource]
 script = ExtResource("2_feature_flags")
-features = Array[ExtResource("1_feature")]([SubResource("Feature_updater"), SubResource("Feature_tdp")])
+features = Array[ExtResource("1_feature")]([SubResource("Feature_updater"), SubResource("Feature_tdp"), SubResource("Feature_card_ui"), SubResource("Feature_etoile_ui"), SubResource("Feature_overlay_mode")])
