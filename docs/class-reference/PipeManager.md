@@ -5,7 +5,7 @@
 Class for managing control messages sent through a named pipe
 ## Description
 
-The [PipeManager](../PipeManager) creates a named pipe in `/run/user/<uid>/opengamepadui` that can be used as a communication mechanism to send OpenGamepadUI commands from another process. This is mostly done to handle custom `ogui://` URIs which can be used to react in different ways.
+The [PipeManager](../PipeManager) creates a named pipe in `$XDG_RUNTIME_DIR/opengamepadui` that can be used as a communication mechanism to send OpenGamepadUI commands from another process. This is mostly done to handle custom `ogui://` URIs which can be used to react in different ways.
 ## Properties
 
 | Type | Name | Default |
