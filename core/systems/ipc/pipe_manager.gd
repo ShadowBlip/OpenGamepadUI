@@ -4,12 +4,11 @@ class_name PipeManager
 
 ## Class for managing control messages sent through a named pipe
 ##
-## The [PipeManager] creates a named pipe in `/run/user/<uid>/opengamepadui`
+## The [PipeManager] creates a named pipe in `$XDG_RUNTIME_DIR/opengamepadui`
 ## that can be used as a communication mechanism to send OpenGamepadUI commands
 ## from another process. This is mostly done to handle custom `ogui://` URIs
 ## which can be used to react in different ways.
 
-const RUN_FOLDER: String = "/run/user/{}/opengamepadui"
 const URI_PREFIX: String = "ogui://"
 
 signal line_written(line: String)
@@ -26,6 +25,9 @@ var logger := Log.get_logger("PipeManager", Log.LEVEL.DEBUG)
 func _ready() -> void:
 	# Ensure the run directory exists
 	var run_path := get_run_path()
+	if run_path.is_empty():
+		logger.error("$XDG_RUNTIME_DIR is not set; unable to create named pipe")
+		return
 	DirAccess.make_dir_recursive_absolute(run_path)
 	
 	# Create a unix named pipe
@@ -52,25 +54,16 @@ func get_pipe_path() -> String:
 
 ## Returns the run path for the current user (e.g. /run/user/1000/opengamepadui)
 func get_run_path() -> String:
-	var uid := get_uid()
-	if uid < 0:
+	var runtime_dir := get_runtime_dir()
+	if runtime_dir.is_empty():
 		return ""
-	var run_folder := RUN_FOLDER.format([uid], "{}")
 
-	return run_folder
+	return "/".join([runtime_dir, "opengamepadui"])
 
 
-## Returns the current user id (e.g. 1000)
-func get_uid() -> int:
-	var output: Array = []
-	if OS.execute("id", ["-u"], output) != OK:
-		return -1
-	if output.is_empty():
-		return -1
-	var data := output[0] as String
-	var uid := data.to_int()
-
-	return uid
+## Returns the XDG runtime directory (e.g. /run/user/1000)
+func get_runtime_dir() -> String:
+	return OS.get_environment("XDG_RUNTIME_DIR")
 
 
 func _on_line_written(line: String) -> void:

@@ -5,17 +5,18 @@ ARCH=$(uname -m)
 
 OGUI_BIN=${OGUI_BIN:-"${PREFIX}/share/opengamepadui/opengamepad-ui.${ARCH}"}
 GAMESCOPE_CMD=${GAMESCOPE_CMD:-gamescope -e -w 1920 -h 1080 -f --xwayland-count 2}
+RUNTIME_DIR=${XDG_RUNTIME_DIR}
 
 # Check to see if a URI is being sent
 if [[ "$1" == ogui://* ]]; then
-  if ls /run/user/${UID}/opengamepadui/opengamepadui-0 >/dev/null 2>&1; then
-    echo "$1" >/run/user/${UID}/opengamepadui/opengamepadui-0
+  if ls "${RUNTIME_DIR}/opengamepadui/opengamepadui-0" >/dev/null 2>&1; then
+    echo "$1" >"${RUNTIME_DIR}/opengamepadui/opengamepadui-0"
     exit 0
   fi
 fi
 
 # Launch normally if gamescope is already running
-if ls /run/user/${UID}/gamescope* >/dev/null 2>&1; then
+if ls "${RUNTIME_DIR}"/gamescope* >/dev/null 2>&1; then
   echo "Executing: ${OGUI_BIN}" "$@"
   exec ${OGUI_BIN} "$@"
 fi
