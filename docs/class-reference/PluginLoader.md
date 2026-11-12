@@ -27,7 +27,7 @@ The PluginLoader works by taking advantage of Godot's [method ProjectSettings.lo
 | void | [init](./#init)(manager: [PluginManager](../PluginManager)) |
 | void | [enable_plugin](./#enable_plugin)(plugin_id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | void | [disable_plugin](./#disable_plugin)(plugin_id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
-| [Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) | [get_plugin_store_items](./#get_plugin_store_items)() |
+| [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) | [get_plugin_store_items](./#get_plugin_store_items)() |
 | void | [install_plugin](./#install_plugin)(plugin_id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), download_url: [String](https://docs.godotengine.org/en/stable/classes/class_string.html), sha256: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | [int](https://docs.godotengine.org/en/stable/classes/class_int.html) | [uninstall_plugin](./#uninstall_plugin)(plugin_id: [String](https://docs.godotengine.org/en/stable/classes/class_string.html)) |
 | [bool](https://docs.godotengine.org/en/stable/classes/class_bool.html) | [is_extracted](./#is_extracted)(meta: [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html)) |
@@ -148,10 +148,10 @@ Sets the given plugin to disabled
 ### `get_plugin_store_items()`
 
 
-[Variant](https://docs.godotengine.org/en/stable/classes/class_variant.html) **get_plugin_store_items**()
+[Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) **get_plugin_store_items**()
 
 
-Returns the parsed dictionary of plugin store items. Returns null if there is a failure.
+Returns the parsed dictionary of plugin store items. Returns an empty dictionary if there is a failure.
 ### `install_plugin()`
 
 

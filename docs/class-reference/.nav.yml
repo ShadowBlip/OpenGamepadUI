@@ -50,6 +50,8 @@ nav:
   - ./EventDevice.md
   - ./ExpandableCard.md
   - ./FadeEffect.md
+  - ./Feature.md
+  - ./FeatureFlags.md
   - ./FifoReader.md
   - ./FilesystemDevice.md
   - ./FocusGroup.md
@@ -101,8 +103,10 @@ nav:
   - ./InputPlumberTriggerEvent.md
   - ./InputWatcher.md
   - ./InstallLocationCard.md
+  - ./InstallLocationDialog.md
   - ./InstallManager.md
   - ./InstallManager.Request.md
+  - ./InstallOptionDialog.md
   - ./InteractiveProcess.md
   - ./KeyboardContext.md
   - ./KeyboardDevice.md

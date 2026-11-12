@@ -50,7 +50,9 @@ The registered features.
 [CustomLogger](../CustomLogger) logger
 
 
-Reports unknown features, invalid registrations, and unparseable values.
+!!! note
+    There is currently no description for this property. Please help us by contributing one!
+
 
 
 
