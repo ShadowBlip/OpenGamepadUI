@@ -16,16 +16,16 @@ func _ready() -> void:
 		return
 
 	# Launch CardUI in overlay mode
-	if "--qam-only" in args or "--only-qam" in args:
-		print("[WARN] Deprecation Warning: --only-qam and --qam-only launch arguments are deprecated\
-		and will be removed in a future update. Use --overlay-mode instead.")
-		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
-		return
-	elif "--overlay-mode" in args:
+	if feature_flags.is_enabled("overlay-mode"):
 		_change_to_scene("res://core/ui/card_ui_overlay_mode/card_ui_overlay_mode.tscn")
 		return
 
-	# Launch the main interface
+	# Launch the main interface selected by feature flags (CardUI is the default)
+	if feature_flags.is_enabled("etoile-ui"):
+		_change_to_scene("res://core/ui/etoile_ui/etoile_ui.tscn")
+		return
+	if not feature_flags.is_enabled("card-ui"):
+		print("[WARN] No UI feature enabled, loading the default CardUI")
 	_change_to_scene("res://core/ui/card_ui/card_ui.tscn")
 
 
@@ -47,21 +47,21 @@ func _show_help() -> void:
 	print("Available Commands:")
 	print("  help             Display this help message")
 	print("")
-	print("Flags:")
-	print("  --vapor-ui       Load Vapor UI")
-	print("  --only-qam       Launch in overlay mode (Deprecated)")
-	print("  --overlay-mode   Launch in overlay mode")
-	print("")
 	print("Environment Variables:")
 	print("  LOG_LEVEL        Set the global log level (debug,info,warn,error)")
 	print("  LOG_LEVEL_<NAME> Set the log level for one logger (debug,info,warn,error)")
 	print("  OGUI_FEATURES    Comma-separated list of features to enable")
 	print("  OGUI_DISABLED_FEATURES Comma-separated list of features to disable")
 	print("")
-	print("Features (--feature-<id> / --feature-no-<id>):")
+	print("Features (--feature-<id> / --feature-no-<id>, or alias flags):")
 	for feature in feature_flags.get_features():
 		var description := feature.description
 		if description == "":
 			description = "Feature flag"
 		print("  ", feature.id, "  ", description)
+		var alias_text := ""
+		for alias in feature.aliases:
+			alias_text += " --" + str(alias)
+		if alias_text != "":
+			print("    aliases:", alias_text)
 	print("")

@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://b5l4udy1v8ua3"]
+
+[ext_resource type="Script" uid="uid://druyqash5wm0a" path="res://core/ui/etoile_ui/launch/game_details.gd" id="1_qddhj"]
+[ext_resource type="Texture2D" uid="uid://djy4rejy21s6g" path="res://icon.svg" id="1_suqfk"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_8uro1"]
+[ext_resource type="Script" uid="uid://ogqbbfs88xnr" path="res://core/ui/base/component_button.gd" id="4_on6i0"]
+
+[node name="GameDetails" type="Control" unique_id=91513726]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_qddhj")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=635141094]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 366.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_right = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=806158956]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 30
+alignment = 2
+
+[node name="LogoContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=412753625]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="MarginContainer/VBoxContainer/LogoContainer" unique_id=811295811]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+texture = ExtResource("1_suqfk")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/LogoContainer" unique_id=451632056]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer" unique_id=806698345]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1103534997]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1424842000 instance=ExtResource("3_8uro1")]
+
+[node name="LaunchButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=796458150]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
+text = "Play"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="ManageButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=508423808]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
+text = "Manage"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="LinksButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=665443050]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
+text = "Links"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"
+
+[node name="UninstallButton" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=837855716]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+script = ExtResource("4_on6i0")
+text = "Uninstall"
+metadata/_custom_type_script = "uid://ogqbbfs88xnr"

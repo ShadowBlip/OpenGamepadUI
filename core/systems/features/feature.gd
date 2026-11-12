@@ -3,8 +3,9 @@ class_name Feature
 
 ## Definition of a single feature flag
 ##
-## A Feature describes one toggleable behavior: its id, description, and default
-## state. Feature objects hold no logic and are registered with [FeatureFlags].
+## A Feature describes one toggleable behavior: its id, description, default
+## state, and optional command-line aliases. Feature objects hold no logic and
+## are registered with [FeatureFlags].
 
 ## The normalized identifier of this feature (lowercase, hyphen-separated).
 @export var id: String = ""
@@ -14,6 +15,10 @@ class_name Feature
 
 ## The state this feature has when no source overrides it.
 @export var default: bool = false
+
+## Alternate command-line flags for this feature, usable as "--<alias>"
+## instead of "--feature-<id>", e.g. "overlay-mode" for "--overlay-mode".
+@export var aliases: Array[String] = []
 
 
 ## Creates a new feature with a normalized id.

@@ -1,4 +1,4 @@
-extends Control
+extends UserInterface
 
 var platform := load("res://core/global/platform.tres") as Platform
 var gamescope := load("res://core/systems/gamescope/gamescope.tres") as GamescopeInstance

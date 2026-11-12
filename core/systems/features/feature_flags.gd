@@ -5,7 +5,9 @@ class_name FeatureFlags
 ##
 ## FeatureFlags parses command-line arguments and environment variables to turn
 ## features on or off, and allows features to be toggled at runtime by plugins and
-## platform classes. Signals are emitted when a feature changes so the UI can react.
+## platform classes. A feature can also declare aliases, so "--overlay-mode" works
+## the same as "--feature-overlay-mode". Signals are emitted when a feature
+## changes so the UI can react.
 
 signal feature_registered(feature: Feature)
 signal feature_changed(feature: Feature, enabled: bool)
@@ -37,6 +39,7 @@ var _env: Dictionary = {}
 var _env_overrides: Dictionary[String, bool] = {}
 var _arg_overrides: Dictionary[String, bool] = {}
 var _runtime_overrides: Dictionary[String, bool] = {}
+## Reports unknown features, invalid registrations, and unparseable values.
 var logger: CustomLogger = Log.get_logger("FeatureFlags")
 
 
@@ -66,6 +69,18 @@ func get_feature(id: String) -> Feature:
 	for feature in features:
 		if feature and Feature.normalize(feature.id) == normalized:
 			return feature
+	return null
+
+
+## Returns the registered feature listing the given alias, or null if none match.
+func get_feature_by_alias(alias: String) -> Feature:
+	var normalized := Feature.normalize(alias)
+	for feature in features:
+		if not feature:
+			continue
+		for other in feature.aliases:
+			if Feature.normalize(str(other)) == normalized:
+				return feature
 	return null
 
 
@@ -144,16 +159,21 @@ func clear_sources() -> void:
 ## Applies the given command-line arguments. Testable entrypoint.
 func parse_args(args: Array[String]) -> void:
 	for arg in args:
-		if not arg.begins_with(ARG_PREFIX):
+		if arg.begins_with(ARG_PREFIX):
+			var id := arg.trim_prefix(ARG_PREFIX)
+			var enabled := true
+			if id.begins_with("no-"):
+				enabled = false
+				id = id.trim_prefix("no-")
+			if id == "":
+				continue
+			_apply(Feature.normalize(id), enabled, Source.ARG)
 			continue
-		var id := arg.trim_prefix(ARG_PREFIX)
-		var enabled := true
-		if id.begins_with("no-"):
-			enabled = false
-			id = id.trim_prefix("no-")
-		if id == "":
-			continue
-		_apply(Feature.normalize(id), enabled, Source.ARG)
+		# Aliases are plain flags that enable their feature, e.g. "--overlay-mode".
+		if arg.begins_with("--"):
+			var feature := get_feature_by_alias(arg.trim_prefix("--"))
+			if feature:
+				_apply(feature.id, true, Source.ARG)
 
 
 ## Applies the given environment variables. Testable entrypoint.

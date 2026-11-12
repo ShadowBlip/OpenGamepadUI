@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://btrem65c8687w"]
+
+[ext_resource type="Script" uid="uid://be50jkycjisyd" path="res://core/ui/etoile_ui/components/collapsible_button.gd" id="1_2pvnu"]
+[ext_resource type="Texture2D" uid="uid://dj7wg0qnevawx" path="res://assets/ui/icons/material-symbols--chevron-right-rounded.svg" id="2_2ggfo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4eh4g"]
+bg_color = Color(0, 0, 0, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2ggfo"]
+bg_color = Color(0, 0, 0, 0.5)
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+
+[node name="CollapsibleButton" type="MarginContainer" unique_id=1879316149]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("1_2pvnu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=359309382]
+layout_mode = 2
+
+[node name="PrimaryPanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1999954818]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_4eh4g")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PrimaryPanelContainer" unique_id=1292746312]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer" unique_id=2118490674]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=77369522]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=1790736291]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=178998921]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+
+[node name="ExpandIcon" type="TextureRect" parent="HBoxContainer/PrimaryPanelContainer/MarginContainer/HBoxContainer" unique_id=153943390]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+texture = ExtResource("2_2ggfo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SplitPanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1552412160]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_2ggfo")
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/SplitPanelContainer" unique_id=1969255740]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 4
+
+[node name="SplitExpandIcon" type="TextureRect" parent="HBoxContainer/SplitPanelContainer/MarginContainer" unique_id=169981073]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+texture = ExtResource("2_2ggfo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1745103198]
+unique_name_in_owner = true

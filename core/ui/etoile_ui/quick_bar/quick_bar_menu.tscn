@@ -1,0 +1,377 @@
+[gd_scene format=3 uid="uid://djwhelsduv5cm"]
+
+[ext_resource type="Script" uid="uid://bf2icpo61p57r" path="res://core/ui/etoile_ui/quick_bar/quick_bar_menu.gd" id="1_bf2t0"]
+[ext_resource type="PackedScene" uid="uid://shvyhrv5sx3v" path="res://core/systems/state/state_watcher.tscn" id="2_7nyoc"]
+[ext_resource type="PackedScene" uid="uid://c7mcv58e8gto4" path="res://core/ui/etoile_ui/components/glass_panel.tscn" id="2_nejlc"]
+[ext_resource type="PackedScene" uid="uid://8m20p2s0v5gb" path="res://core/systems/input/focus_group.tscn" id="3_5qs52"]
+[ext_resource type="Resource" uid="uid://bp807nlks8eq1" path="res://assets/state/states/quick_bar_menu.tres" id="3_eeplw"]
+[ext_resource type="PackedScene" uid="uid://bw8113ocotx2r" path="res://core/systems/effects/fade_effect.tscn" id="4_imsdn"]
+[ext_resource type="PackedScene" uid="uid://c6fg6uvng0ovi" path="res://core/systems/input/input_watcher.tscn" id="6_eeplw"]
+[ext_resource type="Script" uid="uid://c538myb3wjkad" path="res://core/systems/input/keyboard_opener.gd" id="7_aq7ju"]
+[ext_resource type="Texture2D" uid="uid://dq32os2qn6atc" path="res://assets/ui/icons/help.svg" id="8_g8ygh"]
+[ext_resource type="PackedScene" uid="uid://b76dvfuouhlwd" path="res://core/systems/state/state_updater.tscn" id="9_7nyoc"]
+[ext_resource type="Resource" uid="uid://cadriyl38ny5y" path="res://assets/state/state_machines/popup_state_machine.tres" id="10_eeplw"]
+[ext_resource type="Resource" uid="uid://db5gbdl3xgwlq" path="res://assets/state/states/help_menu.tres" id="11_imsdn"]
+[ext_resource type="Texture2D" uid="uid://bdjnwtumim20t" path="res://assets/ui/icons/material-symbols--settings-outline-rounded.svg" id="11_tyc72"]
+[ext_resource type="Texture2D" uid="uid://ciwqk2qmmp2cf" path="res://assets/ui/icons/material-symbols--keyboard-outline-rounded.svg" id="13_tyc72"]
+[ext_resource type="Resource" uid="uid://d3gp85f35oiw6" path="res://assets/state/states/settings.tres" id="17_tyc72"]
+[ext_resource type="Resource" uid="uid://dpc1o781f43ef" path="res://core/ui/card_ui/quick_bar/quick_bar_menu_focus.tres" id="18_0b7mq"]
+[ext_resource type="Texture2D" uid="uid://bgx8rpwfi1re4" path="res://assets/ui/icons/round-power-settings-new.svg" id="20_rpfsb"]
+[ext_resource type="Texture2D" uid="uid://dmcbtniaek0of" path="res://assets/ui/icons/material-symbols--exit-to-app-rounded.svg" id="20_tyc72"]
+[ext_resource type="Resource" uid="uid://bw0mtk7sso8m2" path="res://assets/state/states/power_menu.tres" id="21_ghcyy"]
+[ext_resource type="Texture2D" uid="uid://bjtfbt8wnillp" path="res://assets/ui/icons/material-symbols--notifications-outline-rounded.svg" id="21_tyc72"]
+[ext_resource type="Script" uid="uid://bldssymap3bh2" path="res://core/ui/base/component_slider.gd" id="22_lrbss"]
+[ext_resource type="PackedScene" uid="uid://btrem65c8687w" path="res://core/ui/etoile_ui/components/collapsible_button.tscn" id="23_ya0sn"]
+[ext_resource type="Texture2D" uid="uid://bmp372vmsk41d" path="res://assets/ui/icons/material-symbols--bluetooth.svg" id="26_tyc72"]
+[ext_resource type="Texture2D" uid="uid://dty1fb5nkj3ni" path="res://assets/ui/icons/wifi-high.svg" id="26_ya0sn"]
+[ext_resource type="Texture2D" uid="uid://iuraatp10cjd" path="res://assets/ui/icons/material-symbols--speed-outline-rounded.svg" id="27_tyc72"]
+[ext_resource type="Texture2D" uid="uid://bbqtqi6j68uwf" path="res://assets/ui/icons/material-symbols--picture-in-picture-outline-rounded.svg" id="28_tyc72"]
+[ext_resource type="Texture2D" uid="uid://dx6rnad4lmct0" path="res://assets/ui/icons/material-symbols--gamepad-outline-rounded.svg" id="29_tyc72"]
+[ext_resource type="Texture2D" uid="uid://dj7wg0qnevawx" path="res://assets/ui/icons/material-symbols--chevron-right-rounded.svg" id="30_ghcyy"]
+[ext_resource type="PackedScene" uid="uid://cpss2bhdwm8t7" path="res://core/ui/common/settings/network_settings_menu.tscn" id="32_ghcyy"]
+[ext_resource type="PackedScene" uid="uid://bn1j2yde6jp73" path="res://core/ui/common/notification/notification_menu.tscn" id="32_j86gm"]
+[ext_resource type="PackedScene" uid="uid://dv3dt0j3jketh" path="res://core/ui/common/quick_bar/performance_menu.tscn" id="32_lrbss"]
+[ext_resource type="PackedScene" uid="uid://6ygxdkvh1hib" path="res://core/ui/card_ui/settings/bluetooth_settings_menu.tscn" id="33_ghcyy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpfsb"]
+bg_color = Color(0, 0, 0, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ghcyy"]
+load_path = "res://.godot/imported/volume-high.svg-65e6e6c3f52ba0fd57f3db189e15ee74.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_j86gm"]
+load_path = "res://.godot/imported/status-active.svg-750c0b790b84fd0e45c3ac19af5465ff.ctex"
+
+[node name="QuickBarMenu" type="MarginContainer" unique_id=144390319]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bf2t0")
+
+[node name="StateWatcher" parent="." unique_id=84377206 instance=ExtResource("2_7nyoc")]
+state = ExtResource("3_eeplw")
+
+[node name="FadeEffect" parent="StateWatcher" unique_id=294868628 node_paths=PackedStringArray("target") instance=ExtResource("4_imsdn")]
+target = NodePath("../..")
+fade_speed = 0.15
+on_signal = "state_entered"
+fade_out_signal = "state_exited"
+on_signal = "state_entered"
+
+[node name="InputWatcher" parent="." unique_id=869951880 instance=ExtResource("6_eeplw")]
+stop_propagation = true
+action = "ogui_east"
+
+[node name="StateUpdater" parent="InputWatcher" unique_id=145718381 instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+action = 2
+on_signal = "input_released"
+
+[node name="GlassPanel" parent="." unique_id=2005112249 instance=ExtResource("2_nejlc")]
+unique_name_in_owner = true
+layout_mode = 2
+shape_type = "Rectangle"
+corner_radius_top_left = 20.0
+corner_radius_top_right = 20.0
+corner_radius_bottom_left = 20.0
+corner_radius_bottom_right = 20.0
+circle_radius = 100.0
+outline_enabled = false
+outline_width = 2.0
+outline_color = Color(1, 1, 1, 0.8)
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_offset = Vector2(10, 10)
+edge_softness = 1.0
+shape_color = Color(0, 0, 0, 1)
+color_gradient_x = 0.0
+color_gradient_y = 0.0
+color_multiplier = 0.9
+glass_opacity = 0.4
+
+[node name="MainContainer" type="MarginContainer" parent="." unique_id=661645641]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer" unique_id=269576084]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer" unique_id=927619013]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1355389031 node_paths=PackedStringArray("focus_neighbor_bottom") instance=ExtResource("3_5qs52")]
+back_action = ""
+focus_neighbor_bottom = NodePath("../../QuickVBoxContainer/VBoxContainer/FocusGroup")
+
+[node name="SettingsButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1913875459 instance=ExtResource("23_ya0sn")]
+layout_mode = 2
+icon_texture = ExtResource("11_tyc72")
+color = Color(0, 0, 0, 0.5)
+
+[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/SettingsButton" unique_id=2032943857 instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+state = ExtResource("17_tyc72")
+on_signal = "button_up"
+
+[node name="KeyboardButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1774688916 instance=ExtResource("23_ya0sn")]
+layout_mode = 2
+icon_texture = ExtResource("13_tyc72")
+
+[node name="KeyboardOpener" type="Node" parent="MainContainer/VBoxContainer/ButtonContainer/KeyboardButton" unique_id=2061925767]
+script = ExtResource("7_aq7ju")
+on_signal = "button_up"
+
+[node name="HelpButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1191674271 instance=ExtResource("23_ya0sn")]
+visible = false
+layout_mode = 2
+icon_texture = ExtResource("8_g8ygh")
+
+[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/HelpButton" unique_id=925844422 instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+state = ExtResource("11_imsdn")
+on_signal = "button_up"
+
+[node name="Spacer" type="Control" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1093384134]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PowerButton" parent="MainContainer/VBoxContainer/ButtonContainer" unique_id=1133527970 instance=ExtResource("23_ya0sn")]
+layout_mode = 2
+icon_texture = ExtResource("20_rpfsb")
+color = Color(0.8001019, 0, 0, 0.5)
+
+[node name="StateUpdater" parent="MainContainer/VBoxContainer/ButtonContainer/PowerButton" unique_id=1864328193 instance=ExtResource("9_7nyoc")]
+state_machine = ExtResource("10_eeplw")
+state = ExtResource("21_ghcyy")
+on_signal = "button_up"
+
+[node name="Spacer" type="Control" parent="MainContainer/VBoxContainer" unique_id=2796884]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="QuickVBoxContainer" type="VBoxContainer" parent="MainContainer/VBoxContainer" unique_id=1864352043]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer" unique_id=2090268693]
+layout_mode = 2
+
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1416614521 node_paths=PackedStringArray("focus_neighbor_bottom", "focus_neighbor_top") instance=ExtResource("3_5qs52")]
+unique_name_in_owner = true
+focus_stack = ExtResource("18_0b7mq")
+back_action = ""
+wrap_focus = false
+focus_neighbor_bottom = NodePath("../../GridContainer/FocusGroup")
+focus_neighbor_top = NodePath("../../../ButtonContainer/FocusGroup")
+
+[node name="ExitGameButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1015749496 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+icon_texture = ExtResource("20_tyc72")
+text = "Exit Game"
+color = Color(0.8, 0, 0, 0.5019608)
+
+[node name="NotificationsButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1977129288 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+icon_texture = ExtResource("21_tyc72")
+text = "Notifications"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="VolumeContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=140792188]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rpfsb")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer" unique_id=1357008629]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer" unique_id=1354865390]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer/HBoxContainer" unique_id=1259434566]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_ghcyy")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="VolumeSlider" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/VolumeContainer/MarginContainer/HBoxContainer" unique_id=576088553]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+script = ExtResource("22_lrbss")
+step = 3.0
+show_label = false
+metadata/_custom_type_script = "uid://bldssymap3bh2"
+
+[node name="BrightnessContainer" type="PanelContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer" unique_id=1453662974]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rpfsb")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer" unique_id=315476820]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer" unique_id=168137224]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer/HBoxContainer" unique_id=2125542627]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+texture = SubResource("CompressedTexture2D_j86gm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BrightnessSlider" type="MarginContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer/VBoxContainer/BrightnessContainer/MarginContainer/HBoxContainer" unique_id=1671685859]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+script = ExtResource("22_lrbss")
+step = 3.0
+show_label = false
+metadata/_custom_type_script = "uid://bldssymap3bh2"
+
+[node name="GridContainer" type="GridContainer" parent="MainContainer/VBoxContainer/QuickVBoxContainer" unique_id=1511935686]
+layout_mode = 2
+columns = 2
+
+[node name="FocusGroup" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=34181148 node_paths=PackedStringArray("focus_neighbor_top") instance=ExtResource("3_5qs52")]
+focus_stack = ExtResource("18_0b7mq")
+back_action = ""
+wrap_focus = false
+focus_neighbor_top = NodePath("../../VBoxContainer/FocusGroup")
+
+[node name="NetworkButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=124915966 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+icon_texture = ExtResource("26_ya0sn")
+text = "Network"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="BluetoothButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=2145148437 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+icon_texture = ExtResource("26_tyc72")
+text = "Bluetooth"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="PerformanceButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=695134273 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+icon_texture = ExtResource("27_tyc72")
+text = "Performance"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="OverlayButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=638110440 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+icon_texture = ExtResource("28_tyc72")
+text = "Overlay"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="ControllersButton" parent="MainContainer/VBoxContainer/QuickVBoxContainer/GridContainer" unique_id=1125671800 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+icon_texture = ExtResource("29_tyc72")
+text = "Controllers"
+expandable = true
+color = Color(0, 0, 0, 0.5)
+
+[node name="SubMenuContainer" type="MarginContainer" parent="." unique_id=2044422490]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SubMenuContainer" unique_id=873123810]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SubMenuContainer/VBoxContainer" unique_id=738895895]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubMenuContainer/VBoxContainer/MarginContainer" unique_id=1439968106]
+layout_mode = 2
+
+[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1248419227 instance=ExtResource("3_5qs52")]
+
+[node name="BackButton" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=910146816 instance=ExtResource("23_ya0sn")]
+unique_name_in_owner = true
+layout_mode = 2
+icon_texture = ExtResource("30_ghcyy")
+color = Color(0, 0, 0, 0.5)
+
+[node name="MenuLabel" type="Label" parent="SubMenuContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1926166771]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Performance Settings"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SubMenuContainer/VBoxContainer" unique_id=1383367833]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+draw_focus_border = true
+
+[node name="SubMenuContentContainer" type="MarginContainer" parent="SubMenuContainer/VBoxContainer/ScrollContainer" unique_id=1834791853]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+
+[node name="Performance" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=984999276 instance=ExtResource("32_lrbss")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="FocusGroup" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance" index="0" unique_id=549046002 node_paths=PackedStringArray("focus_neighbor_top")]
+focus_neighbor_top = NodePath("../../../../MarginContainer/HBoxContainer/FocusGroup")
+
+[node name="NetworkSettings" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=2050539442 instance=ExtResource("32_ghcyy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BluetoothSettingsMenu" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=1368248529 instance=ExtResource("33_ghcyy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="NotificationMenu" parent="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer" unique_id=353444083 instance=ExtResource("32_j86gm")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[editable path="SubMenuContainer/VBoxContainer/ScrollContainer/SubMenuContentContainer/Performance"]

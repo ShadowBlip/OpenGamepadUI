@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmrmkiugq0sgo"]
+
+[ext_resource type="Script" uid="uid://0utn6qg0q21w" path="res://core/ui/etoile_ui/components/network_icon.gd" id="1_l722o"]
+
+[node name="NetworkIcon" type="TextureRect"]
+script = ExtResource("1_l722o")
