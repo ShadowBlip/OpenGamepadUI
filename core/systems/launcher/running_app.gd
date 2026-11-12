@@ -178,6 +178,14 @@ func update(all_windows: PackedInt64Array, app_pids: PackedInt64Array) -> void:
 			if self.app_type != APP_TYPE.UNKNOWN:
 				app_type_detected.emit()
 				self.update(all_windows, app_pids)
+				return
+			# The app may exit before it ever creates a window (e.g. a launcher
+			# that fails). Without this check its type stays unknown and the app
+			# is never detected as stopped. No grace period: the tracked process
+			# (the reaper) only exits once all of the app's processes have.
+			if not is_running():
+				state = STATE.STOPPED
+				app_killed.emit()
 		APP_TYPE.X11:
 			update_xwayland_app(all_windows, app_pids)
 		APP_TYPE.WAYLAND:
