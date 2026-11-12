@@ -71,6 +71,7 @@ theme_override_constants/margin_bottom = 20
 unique_name_in_owner = true
 custom_minimum_size = Vector2(410, 188)
 layout_mode = 2
+follow_focus = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Spacer/CenterContainer/PanelContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2

@@ -21,6 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+follow_focus = true
 script = ExtResource("1_w4xaq")
 
 [node name="InputWatcher" parent="." instance=ExtResource("2_jrm6t")]
