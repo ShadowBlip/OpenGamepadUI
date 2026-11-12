@@ -116,38 +116,13 @@ func _input(event: InputEvent) -> void:
 		_audio_input(event)
 		return
 
-	# Handle guide action release events
+	# Release active Guide actions when the combo ends, even if Guide is released first.
 	if event.is_action_released("ogui_guide_action"):
-		logger.debug("Additional action as guide is released.")
-		# Steam OSK
-		if event.is_action_released("ogui_north_ov"):
-			action_release(dbus_path, "ogui_osk_ov")
-			get_viewport().set_input_as_handled()
-			return
-
-		# Steam QAM
-		if event.is_action_released("ogui_south_ov"):
-			action_release(dbus_path, "ogui_qam_ov")
-			get_viewport().set_input_as_handled()
-			return
-
-		# Steam Video Capture
-		if event.is_action_released("ogui_west_ov"):
-			action_release(dbus_path, "ogui_vc_ov")
-			get_viewport().set_input_as_handled()
-			return
-
-		# Steam Screenshot
-		if event.is_action_released("ogui_rb_ov"):
-			action_release(dbus_path, "ogui_sc_ov")
-			get_viewport().set_input_as_handled()
-			return
-
-		# Quick Bar
-		if event.is_action_released("ogui_east_ov"):
-			action_release(dbus_path, "ogui_qb_ov")
-			get_viewport().set_input_as_handled()
-			return
+		for action: String in ["ogui_osk_ov", "ogui_qam_ov", "ogui_vc_ov", "ogui_sc_ov", "ogui_qb_ov"]:
+			if Input.is_action_pressed(action):
+				action_release(dbus_path, action)
+		get_viewport().set_input_as_handled()
+		return
 
 	# Handle inputs when the guide button is being held
 	if Input.is_action_pressed("ogui_guide_ov"):
@@ -195,7 +170,7 @@ func _input(event: InputEvent) -> void:
 				action_release(dbus_path, "ogui_vc_ov")
 
 			# Steam Screenshot
-			if event.is_action_pressed("ogui_rb_ov"):
+			if event.is_action_released("ogui_rb_ov"):
 				action_release(dbus_path, "ogui_sc_ov")
 
 			# Quick Bar
@@ -257,7 +232,7 @@ func _find_focus() -> Node:
 
 
 ## Handle guide button events and determine whether this is a guide action
-## (e.g. guide + A to open the Quick Bar), or if it's just a normal guide button press.
+## (Guide+B to open the Quick Bar), or if it's just a normal guide button press.
 func _guide_input(event: InputEvent) -> void:
 	var dbus_path := event.get_meta("dbus_path", "") as String
 	# Only act on release events
