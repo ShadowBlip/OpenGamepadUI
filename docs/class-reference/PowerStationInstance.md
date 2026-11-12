@@ -8,6 +8,7 @@
 | Type | Name | Default |
 | ---- | ---- | ------- |
 | [Cpu](../Cpu) | [cpu](./#cpu) |  |
+| [Fan](../Fan) | [fan](./#fan) |  |
 | [Gpu](../Gpu) | [gpu](./#gpu) |  |
 
 ## Methods
@@ -26,6 +27,15 @@
 
 
 [Cpu](../Cpu) cpu
+
+
+!!! note
+    There is currently no description for this property. Please help us by contributing one!
+
+### `fan`
+
+
+[Fan](../Fan) fan
 
 
 !!! note

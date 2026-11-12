@@ -50,6 +50,7 @@ nav:
   - ./EventDevice.md
   - ./ExpandableCard.md
   - ./FadeEffect.md
+  - ./Fan.md
   - ./Feature.md
   - ./FeatureFlags.md
   - ./FifoReader.md
