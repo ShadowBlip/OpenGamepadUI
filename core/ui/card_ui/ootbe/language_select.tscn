@@ -75,6 +75,7 @@ on_signal = "visibility_changed"
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+follow_focus = true
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ScrollContainer"]
 layout_mode = 2

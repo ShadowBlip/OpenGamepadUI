@@ -82,6 +82,7 @@ text = "Connect to your network"
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+follow_focus = true
 
 [node name="SmoothScrollEffect" parent="HBoxContainer/ScrollContainer" node_paths=PackedStringArray("target") instance=ExtResource("10_umeai")]
 target = NodePath("..")
