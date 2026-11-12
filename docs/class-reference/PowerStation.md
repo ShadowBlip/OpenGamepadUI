@@ -5,12 +5,13 @@
 Proxy interface to PowerStation over DBus
 ## Description
 
-Provides wrapper classes and methods for interacting with PowerStation over DBus to control CPU and GPU performance.
+Provides wrapper classes and methods for interacting with PowerStation over DBus to control CPU and GPU performance and fans.
 ## Properties
 
 | Type | Name | Default |
 | ---- | ---- | ------- |
 | [PowerStationInstance](../PowerStationInstance) | [instance](./#instance) | <unknown> |
+| [SettingsManager](../SettingsManager) | [settings_manager](./#settings_manager) | <unknown> |
 | [CustomLogger](../CustomLogger) | [logger](./#logger) | <unknown> |
 
 
@@ -23,6 +24,15 @@ Provides wrapper classes and methods for interacting with PowerStation over DBus
 
 
 [PowerStationInstance](../PowerStationInstance) instance
+
+
+!!! note
+    There is currently no description for this property. Please help us by contributing one!
+
+### `settings_manager`
+
+
+[SettingsManager](../SettingsManager) settings_manager
 
 
 !!! note

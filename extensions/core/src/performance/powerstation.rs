@@ -1,5 +1,6 @@
 pub mod cpu;
 pub mod cpu_core;
+pub mod fan;
 pub mod gpu;
 pub mod gpu_card;
 pub mod gpu_connector;
@@ -10,6 +11,7 @@ use std::{
 };
 
 use cpu::Cpu;
+use fan::Fan;
 use godot::{classes::Engine, prelude::*};
 use gpu::Gpu;
 use zbus::names::BusName;
@@ -18,6 +20,7 @@ use crate::{dbus::RunError, get_dbus_system, get_dbus_system_blocking, RUNTIME};
 
 pub const POWERSTATION_BUS: &str = "org.shadowblip.PowerStation";
 const POWERSTATION_CPU_PATH: &str = "/org/shadowblip/Performance/CPU";
+const POWERSTATION_FAN_PATH: &str = "/org/shadowblip/Performance/Fan";
 const POWERSTATION_GPU_PATH: &str = "/org/shadowblip/Performance/GPU";
 
 /// Signals that can be emitted
@@ -35,11 +38,15 @@ pub struct PowerStationInstance {
     rx: Receiver<Signal>,
     conn: Option<zbus::blocking::Connection>,
     cpu_instance: Option<Gd<Cpu>>,
+    fan_instance: Option<Gd<Fan>>,
     gpu_instance: Option<Gd<Gpu>>,
 
     #[allow(dead_code)]
     #[var(get = get_cpu)]
     cpu: Option<Gd<Cpu>>,
+    #[allow(dead_code)]
+    #[var(get = get_fan)]
+    fan: Option<Gd<Fan>>,
     #[allow(dead_code)]
     #[var(get = get_gpu)]
     gpu: Option<Gd<Gpu>>,
@@ -73,6 +80,12 @@ impl PowerStationInstance {
     #[func]
     fn get_cpu(&self) -> Option<Gd<Cpu>> {
         self.cpu_instance.clone()
+    }
+
+    /// Returns an instance of the fan control
+    #[func]
+    fn get_fan(&self) -> Option<Gd<Fan>> {
+        self.fan_instance.clone()
     }
 
     /// Returns an instance of the GPU
@@ -144,8 +157,10 @@ impl IResource for PowerStationInstance {
                 rx,
                 conn,
                 cpu_instance: Default::default(),
+                fan_instance: Default::default(),
                 gpu_instance: Default::default(),
                 cpu: Default::default(),
+                fan: Default::default(),
                 gpu: Default::default(),
             };
         }
@@ -159,6 +174,8 @@ impl IResource for PowerStationInstance {
 
         // Create CPU instance
         let cpu = Some(Cpu::new(POWERSTATION_CPU_PATH));
+        // Create fan instance
+        let fan = Some(Fan::new(POWERSTATION_FAN_PATH));
         // Create GPU instance
         let gpu = Some(Gpu::new(POWERSTATION_GPU_PATH));
 
@@ -168,8 +185,10 @@ impl IResource for PowerStationInstance {
             rx,
             conn,
             cpu_instance: cpu,
+            fan_instance: fan,
             gpu_instance: gpu,
             cpu: None,
+            fan: None,
             gpu: None,
         }
     }
